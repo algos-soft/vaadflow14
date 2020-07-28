@@ -1,0 +1,28 @@
+target
+
+### Mac ###
+*.DS_Store
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+out/
+log/
+
+build/
+target/
+
+### npm ###
+bower_components
+node
+node_modules/
+package.json
+package-lock.json
+webpack.config.js
+**/webpack.generated.js
+
+# Project exclude paths
+/documentation/
