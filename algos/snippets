@@ -1,0 +1,2 @@
+// Sets items as a collection
+comboBox.setItems(EnumSet.allOf(Status.class));
