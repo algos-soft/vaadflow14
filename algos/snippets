@@ -1,2 +1,7 @@
-// Sets items as a collection
+# Sets items as a collection
 comboBox.setItems(EnumSet.allOf(Status.class));
+
+
+List<String> listaProperties  = new ArrayList<String>(Arrays.asList("codice", "sigla", "descrizione"));
+List<String> places = Arrays.asList("codice", "sigla", "descrizione");
+List<String> places = Collections.singletonList("codice");

@@ -1,0 +1,158 @@
+package it.algos.vaadflow14.backend.service;
+
+import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+
+
+/**
+ * Project vaadflow15
+ * Created by Algos
+ * User: gac
+ * Date: mer, 24-giu-2020
+ * Time: 10:19
+ * <p>
+ * Classe di servizio <br>
+ * <p>
+ * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
+ * L'istanza può essere richiamata con: <br>
+ * 1) StaticContextAccessor.getBean(AAnnotationService.class); <br>
+ * 3) @Autowired private ABeanService annotation; <br>
+ * <p>
+ * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
+ * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ */
+@Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class ABeanService extends AAbstractService {
+
+    /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AReflectionService reflection;
+
+
+    /**
+     * Controlla (prima di salvarla) se la entity indicata è stata modificata <br>
+     * Confronta la versione corrente con quella (se esiste) precedentemente salvata su mongo <br>
+     *
+     * @param entityBeanCurrent in memoria
+     *
+     * @return true se esisteva ed è stata modificata oppure se non esisteva ed è stata creata
+     */
+    public boolean isModificata(AEntity entityBeanCurrent) {
+        AEntity entityBeanRegistrataSulDatabaseMongo = null;
+
+        if (entityBeanCurrent == null) {
+            return false;
+        }
+
+//        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+        return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
+    }
+
+
+    /**
+     * Estrae le differenze delle sole properties modificate <br>
+     * Controlla che le due entities esistano e siano della stessa classe <br>
+     *
+     * @param entityBeanOld originaria
+     * @param entityBeanNew modificata
+     *
+     * @return mappa delle properties modificate con la coppia di valori vecchio e nuovo
+     */
+    public Map<String, WrapDueObject> getMappaModifiche(AEntity entityBeanOld, AEntity entityBeanNew) {
+        Map<String, WrapDueObject> mappaModifiche = new LinkedHashMap<>();
+        List<String> listaProperties;
+        Object oldValue;
+        Object newValue;
+        WrapDueObject wrap;
+
+        if (entityBeanOld == null && entityBeanNew == null && entityBeanOld.getClass() != entityBeanNew.getClass()) {
+            return null;
+        }
+
+        listaProperties = reflection.getFieldsName(entityBeanOld.getClass());
+        for (String key : listaProperties) {
+            oldValue = reflection.getPropertyValue(entityBeanOld, key);
+            newValue = reflection.getPropertyValue(entityBeanNew, key);
+
+            if (oldValue == null && newValue != null) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+
+            if (oldValue != null && newValue == null) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+
+            if (oldValue != null &&!oldValue.equals(newValue)) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+        }
+        return mappaModifiche;
+    }
+
+
+    /**
+     * Estrae le differenze delle sole properties modificate <br>
+     * Controlla che le due entities esistano e siano della stessa classe <br>
+     *
+     * @param entityBeanOld originaria
+     * @param entityBeanNew modificata
+     *
+     * @return lista delle properties modificate con la coppia di valori vecchio e nuovo
+     */
+    public String getModifiche(AEntity entityBeanOld, AEntity entityBeanNew) {
+        String message = VUOTA;
+        Map<String, WrapDueObject> mappaModifiche = getMappaModifiche(entityBeanOld, entityBeanNew);
+        WrapDueObject wrap;
+
+        if (mappaModifiche != null && mappaModifiche.size() > 0) {
+            message += entityBeanOld.getClass().getSimpleName();
+            message += SEP;
+            message += entityBeanOld.id;
+            message += SPAZIO;
+            for (Map.Entry<String, WrapDueObject> mappa : mappaModifiche.entrySet()) {
+                wrap = mappa.getValue();
+                message += mappa.getKey();
+                message += DUE_PUNTI;
+                message += text.setQuadre(wrap.getPrimo() + FORWARD + wrap.getSecondo());
+                message += SPAZIO;
+            }
+        }
+
+        return message.trim();
+    }
+
+}

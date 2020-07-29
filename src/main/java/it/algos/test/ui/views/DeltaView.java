@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:49
+ * To implement a Vaadin view just extend any Vaadin component and
+ * use @Route annotation to announce it in a URL as a Spring managed
+ * bean.
  */
 @Route(value = "delta")
 public class DeltaView extends VerticalLayout {

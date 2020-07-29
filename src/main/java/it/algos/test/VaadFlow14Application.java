@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * User: gac
  * Date: lun, 27-lug-2020
  * Time: 17:04
+ * The entry point of the Spring Boot application.
  */
 @SpringBootApplication(scanBasePackages = {"it.algos"}, exclude = {SecurityAutoConfiguration.class})
 @EnableVaadin({"it.algos"})
