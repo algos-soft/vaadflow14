@@ -26,7 +26,7 @@ public @interface AIScript {
      *
      * @return the boolean
      */
-    boolean sovrascrivibile() default false;
+    boolean sovraScrivibile() default false;
 
 
 }

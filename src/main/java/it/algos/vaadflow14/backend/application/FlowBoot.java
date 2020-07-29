@@ -169,6 +169,7 @@ public class FlowBoot implements ServletContextListener {
          */
         FlowVar.layoutTitle = VUOTA;
 
+
         /*
          * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>

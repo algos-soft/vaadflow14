@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 
 /**
  * /**
@@ -14,7 +16,7 @@ import java.lang.annotation.Target;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per le Domain Class <br>
+ * Annotation per le Entity Class <br>
  * Lista dei fields automatici nel dialogo del Form <br>
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -24,11 +26,13 @@ public @interface AIForm  {
 
     /**
      * (Optional) List of visible fields on Grid
+     * Presentati in successione e separati da virgola
+     * Vengono poi convertiti in una List
      * Defaults to all.
      *
      * @return the string commas separate
      */
-    String fields() default "";
+    String fields() default VUOTA;
 
 
     /**

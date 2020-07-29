@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -21,6 +23,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Time: 16:43
  */
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AWebService extends AAbstractService {
 
     /**

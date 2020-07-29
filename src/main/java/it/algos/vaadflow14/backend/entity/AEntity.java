@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Date: ven, 01-set-2017
  * Time: 18:30
  * <p>
- * Classe astratta generica per regolare alcune property comuni a tutte le Domain Class <br>
+ * Classe astratta generica per regolare alcune property comuni a tutte le Entity Class <br>
  * Le sottoclassi concrete sono di tipo JavaBean <br>
  * <p>
  * Annotated with @Getter (obbligatorio, Lombok) per rendere visibili le properties ai @Builder delle sottoclassi <br>
@@ -74,7 +74,7 @@ public abstract class AEntity implements Serializable {
      * NON va usato @NotEmpty, perché altrimenti binder.validate().isOk() va in errore <br>
      * Ci pensa mongo a riempire il valore
      */
-    @AIField(name = "Key", required = true)
+    @AIField(caption = "Key", required = true)
     @AIColumn(header = "Key", widthEM = 12)
     public String id;
 
@@ -94,18 +94,18 @@ public abstract class AEntity implements Serializable {
      * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
-    @AIField(type = AEFieldType.localDateTime, name = "Creazione della scheda", required = true)
+    @AIField(type = AEFieldType.localDateTime, caption = "Creazione della entity")
     @AIColumn()
     public LocalDateTime creazione;
 
 
     /**
-     * Data di edit del record (facoltativa, modificabile solo da codice, non da UI) <br>
+     * Data dell'ultimo edit del record (facoltativa, modificabile solo da codice, non da UI) <br>
      * Utilizzo obbligatorio o facoltativo. <br>
      * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
-    @AIField(type = AEFieldType.localDateTime, name = "Ultima modifica della scheda", required = true)
+    @AIField(type = AEFieldType.localDateTime, caption = "Ultima modifica della entity")
     @AIColumn()
     public LocalDateTime modifica;
 

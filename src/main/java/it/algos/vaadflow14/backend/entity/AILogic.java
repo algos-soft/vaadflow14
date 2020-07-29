@@ -116,21 +116,6 @@ public interface AILogic {
     ABottomLayout getBottomLayout(AEOperation operationForm);
 
 
-    //    /**
-    //     * Costruisce un layout per  i bottoni di comando in bottomPlacehorder della view <br>
-    //     * <p>
-    //     * Chiamato da AView.initView() <br>
-    //     * Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-    //     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-    //     * Costruisce un'istanza dedicata con i bottoni <br>
-    //     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
-    //     *
-    //     * @param entityBean interessata
-    //     *
-    //     * @return componente grafico per il placeHolder
-    //     */
-    //    ABottomLayout getBottomLayout(AEntity entityBean);
-
     /**
      * Costruisce una lista di nomi delle properties del Form nell'ordine:
      * 1) Cerca nell'annotation @AIForm della Entity e usa quella lista (con o senza ID)
@@ -172,20 +157,13 @@ public interface AILogic {
     List<String> getListaPropertiesFormDelete();
 
 
-    //    /**
-    //     * Esegue l'azione del bottone, textEdit o comboBox. <br>
-    //     *
-    //     * @param wrap con informazioni dell'evento
-    //     */
-    //    @Deprecated
-    //    void performAction(WrapEvento wrap);
-
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
      * @param azione selezionata da eseguire
      */
     public void performAction(AEAction azione);
+
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
@@ -213,11 +191,9 @@ public interface AILogic {
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
      * 3) Sovrascrive la lista nella sottoclasse specifica <br>
      *
-     * @param entityClazz the class of type AEntity
      *
      * @return lista di nomi di properties
      */
-    //    List<String> getGridPropertyNamesList(Class<? extends AEntity> entityClazz);
     List<String> getGridPropertyNamesList();
 
 
@@ -230,6 +206,7 @@ public interface AILogic {
      */
     public AEntity newEntity();
 
+
     /**
      * Retrieves an entity by its id.
      *
@@ -240,6 +217,7 @@ public interface AILogic {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     public AEntity findById(String keyID);
+
 
     //    /**
     //     * Saves a given entity.
@@ -256,6 +234,7 @@ public interface AILogic {
      * Deletes all entities of the collection.
      */
     public boolean deleteAll();
+
 
     /**
      * Creazione di alcuni dati iniziali <br>

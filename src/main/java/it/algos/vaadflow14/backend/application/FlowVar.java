@@ -15,7 +15,7 @@ import java.util.List;
  * Date: mar, 13-ago-2019
  * Time: 10:50
  *
- * <p>Classe statica (astratta) per le variabili generali dell'applicazione <br>
+ * Classe statica (astratta) per le variabili generali dell'applicazione <br>
  * Le variabili (static) sono uniche per tutta l'applicazione <br>
  * Il valore delle variabili è unico per tutta l'applicazione, ma può essere modificato <br>
  * The compiler automatically initializes class fields to their default values before setting <br>
@@ -34,7 +34,6 @@ public class FlowVar {
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */
     public static boolean usaDebug;
-
 
     /**
      * Controlla se l'applicazione usa il login oppure no <br>

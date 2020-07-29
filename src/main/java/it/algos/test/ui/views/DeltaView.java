@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class DeltaView extends VerticalLayout {
 
     /**
-     * Instantiates a new Delta list.
+     * Instantiates a new Delta view.
      */
     public DeltaView() {
         add(VaadinIcon.HOSPITAL.create());

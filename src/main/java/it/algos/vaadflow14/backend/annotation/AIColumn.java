@@ -8,6 +8,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -15,7 +17,7 @@ import java.lang.annotation.Target;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per i fields (property) delle Domain Class <br>
+ * Annotation per i fields (property) delle Entity Class <br>
  * <p>
  * Annotation to add some property for a single columnService of the Grid <br>
  * Alcune property sono in comune con AIField <br>
@@ -33,7 +35,7 @@ public @interface AIColumn {
      * Se manca (valore di default), prende quello indicato in AIField
      * Se manca anche in AIField, prende il valore di default di AIField
      *
-     * @return the ae field type
+     * @return the field type
      */
     AEFieldType type() default AEFieldType.ugualeAlForm;
 
@@ -44,7 +46,7 @@ public @interface AIColumn {
      *
      * @return the string
      */
-    String header() default "";
+    String header() default VUOTA;
 
 
     /**
@@ -59,7 +61,7 @@ public @interface AIColumn {
 
     /**
      * (Optional) color of the component
-     * Defaults to "".
+     * Defaults to blue.
      *
      * @return the string
      */
@@ -109,10 +111,10 @@ public @interface AIColumn {
 
     /**
      * (Optional) method name for reflection
-     * Defaults to blue.
+     * Defaults to empty.
      *
      * @return the string
      */
-    String methodName() default "";
+    String methodName() default VUOTA;
 
 }

@@ -111,6 +111,7 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AAnnotationService annotation;
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -137,6 +138,7 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AWikiService wiki;
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -154,6 +156,7 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AMongoService mongo;
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -162,6 +165,7 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public ABeanService beanService;
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -169,6 +173,7 @@ public abstract class ALogic implements AILogic {
      */
     @Autowired
     public AFileService fileService;
+
 
     /**
      * The Entity Class  (obbligatoria sempre; in ViewForm può essere ricavata dalla entityBean)
@@ -181,25 +186,30 @@ public abstract class ALogic implements AILogic {
      */
     protected AEntity entityBean;
 
+
     /**
      * The Grid  (obbligatoria per ViewList)
      */
     protected AGrid grid;
+
 
     /**
      * The Form (obbligatoria nel ViewForm)
      */
     protected AForm form;
 
+
     /**
      * Tipologia di Form in uso <br>
      */
     protected AEOperation operationForm;
 
+
     /**
      * Flag di preferenza per specificare la property della entity da usare come ID <br>
      */
     protected String keyPropertyName;
+
 
     /**
      * Flag di preferenza per selezionare la ricerca testuale: <br>
@@ -209,37 +219,44 @@ public abstract class ALogic implements AILogic {
      */
     protected AESearch searchType;
 
+
     /**
      * Flag di preferenza per specificare la property della entity su cui effettuare la ricerca <br>
      * Ha senso solo se searchType=EASearch.editField
      */
     protected String searchProperty;
 
+
     /**
      * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneDeleteAll;
+
 
     /**
      * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneReset;
 
+
     /**
      * Flag di preferenza per l'utilizzo del bottone. Di default true. <br>
      */
     protected boolean usaBottoneNew;
+
 
     /**
      * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottonePaginaWiki;
 
+
     /**
      * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
      */
     protected String wikiPageTitle;
 
+    
     protected String searchFieldValue = VUOTA;
 
     protected List<AFiltro> filtri;

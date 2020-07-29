@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -16,7 +18,7 @@ import java.lang.annotation.Target;
  * Annotation per le Entity Class <br>
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.TYPE) //--Class, interface (including annotation type), or enum declaration
 public @interface AIEntity {
 
     /**
@@ -26,15 +28,15 @@ public @interface AIEntity {
      *
      * @return the string
      */
-    String recordName() default "";
+    String recordName() default VUOTA;
 
     /**
-     * (Optional) key nproperty unica
+     * (Optional) key property unica
      * Di default usa la property 'id' della collection mongoDB
      *
      * @return the string
      */
-    String keyPropertyName() default "";
+    String keyPropertyName() default VUOTA;
 
 
 

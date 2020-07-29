@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * /**
  * Project vaadflow15
@@ -38,14 +40,14 @@ public @interface AIView {
      *
      * @return the string
      */
-    String menuName() default "";
+    String menuName() default VUOTA;
 
     /**
      * (Optional) Tag della @Route per aprire il Form
      *
      * @return the string
      */
-    String routeFormName() default "";
+    String routeFormName() default VUOTA;
 
     /**
      * (Optional) Mostra la lista vuota all'apertura. Da usare SOLO se ci sono filtri di selezione.
@@ -60,14 +62,14 @@ public @interface AIView {
      *
      * @return the string
      */
-    String searchProperty() default "";
+    String searchProperty() default VUOTA;
 
     /**
      * (Optional) Property per l'ordinamento
      *
      * @return the string
      */
-    String sortProperty() default "";
+    String sortProperty() default VUOTA;
 
     /**
      * (Optional) Direzione per l'ordinamento
@@ -77,7 +79,7 @@ public @interface AIView {
     String sortDirection() default "ASC";
 
     /**
-     * (Optional) Appartenenza al progetto Base VaadFlow15
+     * (Optional) Appartenenza al progetto Base VaadFlow14
      *
      * @return the boolean
      */

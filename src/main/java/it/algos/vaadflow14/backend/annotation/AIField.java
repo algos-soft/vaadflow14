@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * /**
  * Project vaadflow15
@@ -15,51 +17,12 @@ import java.lang.annotation.Target;
  * Date: lun, 27-apr-2020
  * Time: 14:55
  * <p>
- * Annotation per i fields (property) delle Domain Class <br>
- * Annotation to add some property for a single field.
+ * Annotation per i fields (property) delle Entity Class <br>
+ * Annotation to add some property for a single field <br>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD) //--Field declaration (includes enum constants)
 public @interface AIField {
-
-
-    /**
-     * (Optional) Classe della property.
-     * Utilizzato nei Link.
-     *
-     * @return the class
-     */
-    Class<? extends Object> linkClazz() default Object.class;
-
-    /**
-     * (Optional) Classe della property.
-     * Utilizzato nelle Enumeration.
-     *
-     * @return the class
-     */
-    Class<? extends Object> enumClazz() default Object.class;
-
-    /**
-     * (Optional) Classe della property.
-     * Utilizzato nei Combo.
-     *
-     * @return the class
-     */
-    Class<? extends Object> logicClazz() default Object.class;
-
-    /**
-     * (Optional) Classe della property.
-     * Utilizzato nei Combo.
-     */
-    Class<? extends Object> comboClazz() default Object.class;
-
-    /**
-     * (Optional) valori (items) della enumeration
-     * Defaults to "".
-     *
-     * @return the string
-     */
-    String items() default "";
 
 
     /**
@@ -72,12 +35,53 @@ public @interface AIField {
 
 
     /**
-     * (Optional) The name of the field.
+     * (Optional) Classe della property.
+     * Utilizzato nei Link.
+     *
+     * @return the class
+     */
+    Class<?> linkClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nelle Enumeration.
+     *
+     * @return the class
+     */
+    Class<?> enumClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nei fields calcolati (ed altro).
+     *
+     * @return the class
+     */
+    Class<?> logicClazz() default Object.class;
+
+    /**
+     * (Optional) Classe della property.
+     * Utilizzato nei Combo.
+     */
+    Class<?> comboClazz() default Object.class;
+
+    /**
+     * (Optional) valori (items) della enumeration
+     * Presentati in successione e separati da virgola
+     * Vengono poi convertiti in una List
+     * Defaults to vuota.
+     *
+     * @return the string
+     */
+    String items() default VUOTA;
+
+
+    /**
+     * (Optional) The visible name of the field.
      * Defaults to the property or field name.
      *
      * @return the string
      */
-    String name() default "";
+    String caption() default VUOTA;
 
 
     /**
@@ -121,11 +125,11 @@ public @interface AIField {
 
     /**
      * (Optional) help text on rollover
-     * Defaults to null.
+     * Defaults to vuota.
      *
      * @return the string
      */
-    String help() default "";
+    String help() default VUOTA;
 
 
     /**
@@ -194,11 +198,11 @@ public @interface AIField {
 
     /**
      * (Optional) color of the component
-     * Defaults to "".
+     * Defaults to vuota.
      *
      * @return the string
      */
-    String color() default "";
+    String color() default VUOTA;
 
     /**
      * (Optional) method name for reflection
@@ -210,11 +214,11 @@ public @interface AIField {
 
     /**
      * (Optional) property name for reflection
-     * Defaults to "".
+     * Defaults to vuota.
      *
      * @return the string
      */
-    String propertyLinkata() default "";
+    String propertyLinkata() default VUOTA;
 
 
 }
