@@ -1,10 +1,13 @@
 ${AnsiColor.RED}
-|      _      __ ___    __  ___
-|     | | /| / // _ |  /  |/  /
-|     | |/ |/ // __ | / /|_/ /
-|     |__/|__//_/ |_|/_/  /_/
-|     WebAmbulanze  (c)Algos
-|
+                              _    __   _
+ __   __   __ _    __ _    __| |  / _| | |   ___   __      __
+ \ \ / /  / _` |  / _` |  / _` | | |_  | |  / _ \  \ \ /\ / /
+  \ V /  | (_| | | (_| | | (_| | |  _| | | | (_) |  \ V  V /
+   \_/    \__,_|  \__,_|  \__,_| |_|   |_|  \___/    \_/\_/
+
+VaadFlow FrameWork  (c)Algos
 SpringBoot ver: ${spring-boot.formatted-version}
-WAM ver: ${application.formatted-version}
+Vaadin ver: ${AnsiColor.GREEN}14.3.1${AnsiColor.RED}
+VaadFlow ver: ${AnsiColor.GREEN}${algos.framework.version}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
+
