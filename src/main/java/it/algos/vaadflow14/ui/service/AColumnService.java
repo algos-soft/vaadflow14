@@ -52,7 +52,7 @@ public class AColumnService extends AAbstractService {
      * @param entityClazz  modello-dati specifico
      * @param propertyName della property
      */
-    public void add(Grid<AEntity> grid, Class<? extends AEntity> entityClazz, String propertyName) {
+    public void add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName) {
         add(grid, entityClazz, propertyName, VUOTA);
     }
 
@@ -66,7 +66,7 @@ public class AColumnService extends AAbstractService {
      * @param propertyName   della property
      * @param propertySearch per l'ordinamento
      */
-    public void add(Grid<AEntity> grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
+    public void add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, propertyName);
         AEFieldType type = null;

@@ -36,7 +36,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AGrid extends Grid {
+public class AGrid {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -62,7 +62,6 @@ public class AGrid extends Grid {
 
     protected Label headerLabelPlaceHolder;
 
-
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
@@ -78,6 +77,8 @@ public class AGrid extends Grid {
      */
     @Autowired
     protected AAnnotationService annotation;
+
+    private Grid grid;
 
 
     public AGrid() {

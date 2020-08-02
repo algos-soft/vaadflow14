@@ -227,6 +227,14 @@
         </dependency>
         <!-- json -->
 
+        <!-- gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+        <!-- gson -->
+
         <!-- dialog -->
         <dependency>
             <groupId>de.codecamp.vaadin</groupId>
@@ -267,6 +275,14 @@
         </dependency>
         <!-- mokito -->
 
+        <!-- pagination -->
+        <!-- https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination -->
+        <dependency>
+            <groupId>org.vaadin.klaudeta</groupId>
+            <artifactId>grid-pagination</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <!-- pagination -->
     </dependencies>
 
 

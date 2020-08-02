@@ -5,8 +5,11 @@ import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.mese.AEMese;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.List;
 
 
 /**
@@ -78,6 +81,24 @@ public class SecoloLogic extends ALogic {
         super.usaBottoneNew = false;
     }
 
+    /**
+     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected List<String> getAlertList(AEVista typeVista) {
+        List<String> lista = super.getAlertList(typeVista);
+
+        lista.add("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo ");
+        lista.add("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 <span style=\"color:red\">NON esiste</span> nei calendari.");
+        return lista;
+    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>

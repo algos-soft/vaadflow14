@@ -1,17 +1,19 @@
 package it.algos.vaadflow14.backend.packages.crono.anno;
 
+import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import org.bson.Document;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project vaadflow14
@@ -84,7 +86,7 @@ public class AnnoLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        this.operationForm = AEOperation.showOnly;
+        super.operationForm = AEOperation.showOnly;
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.usaBottoneNew = false;
@@ -187,6 +189,29 @@ public class AnnoLogic extends ALogic {
         }
 
         return mongo.isValid(entityClazz);
+    }
+
+
+    public List<Anno> fetchAnni(int offset, int limit) {
+        List<Anno> lista = new ArrayList<>();
+        Gson gson = new Gson();
+        Anno anno;
+
+        List<Document> products = mongo.mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());
+
+        for (Document doc : products) {
+
+            // 1. JSON file to Java object
+            anno = gson.fromJson(doc.toJson(),Anno.class);
+            lista.add(anno);
+        }
+
+        return lista;
+    }
+
+
+    public int getCount() {
+        return mongo.count("anno");
     }
 
 }

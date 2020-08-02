@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.header;
 
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -59,9 +60,14 @@ public class AHeaderList extends AHeader {
         String tagIni = "<span style=\"color";
         String tagIniBlue = "<span style=\"color:blue\">";
         String tagEnd = "</span>";
+        String tagFine = FlowCost.PUNTO;
 
         if (alertHtml != null) {
             for (String alert : alertHtml) {
+                alert = alert.trim();
+                if (!alert.endsWith(tagFine)) {
+                    alert += tagFine;
+                }
                 if (!alert.startsWith(tagIni)) {
                     alert = tagIniBlue + alert + tagEnd;
                 }

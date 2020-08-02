@@ -81,29 +81,29 @@ public class MeseLogic extends ALogic {
     }
 
 
-    public AHeader superatoDaCancellare(AEVista typeVista) {
-        AHeader header = new AHeaderWrap();
-        header.setMargin(false);
-        header.setSpacing(false);
-        header.setPadding(false);
-
-        String messUno = "Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.";
-        String messDue = "Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.";
-
-        Span span = new Span();
-        span.getElement().setProperty("innerHTML", messUno);
-        span.getElement().getStyle().set("color", "green");
-        span.getElement().getStyle().set("font-weight", "bold");
-        header.add(span);
-
-        Span span2 = new Span();
-        span2.getElement().setProperty("innerHTML", messDue);
-        span2.getElement().getStyle().set("color", "blue");
-        span2.getElement().getStyle().set("font-weight", "bold");
-        header.add(span2);
-
-        return header;
-    }
+//    public AHeader superatoDaCancellare(AEVista typeVista) {
+//        AHeader header = new AHeaderWrap();
+//        header.setMargin(false);
+//        header.setSpacing(false);
+//        header.setPadding(false);
+//
+//        String messUno = "Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.";
+//        String messDue = "Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.";
+//
+//        Span span = new Span();
+//        span.getElement().setProperty("innerHTML", messUno);
+//        span.getElement().getStyle().set("color", "green");
+//        span.getElement().getStyle().set("font-weight", "bold");
+//        header.add(span);
+//
+//        Span span2 = new Span();
+//        span2.getElement().setProperty("innerHTML", messDue);
+//        span2.getElement().getStyle().set("color", "blue");
+//        span2.getElement().getStyle().set("font-weight", "bold");
+//        header.add(span2);
+//
+//        return header;
+//    }
 
 
     /**

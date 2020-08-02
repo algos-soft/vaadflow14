@@ -67,6 +67,7 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "alfaRecord")
 @AIView(menuIcon = VaadinIcon.BOAT)
+@AIList(fields = "ordine,code,descrizione")
 public class Alfa extends AEntity {
 
     /**
