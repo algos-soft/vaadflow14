@@ -4,7 +4,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -16,8 +15,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.VaadinService;
-import it.algos.test.ui.views.DeltaView;
+import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.list.AViewList;
@@ -26,10 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowVar.pathLogo;
 
 
 /**
@@ -79,16 +75,16 @@ public class ALayoutService extends AAbstractService {
         top.setClassName("menu-header");
 
         //@todo Funzionalità ancora da implementare
-//        // Note! Image resource url is resolved here as it is dependent on the
-//        // execution mode (development or production) and browser ES level support
-//        final String resolvedImage = VaadinService.getCurrent().resolveResource(pathLogo);
-//
-//        final Image image = new Image(resolvedImage, "");
-//        image.setHeight("24px");
-//        image.setWidth("24px");
-        String check = "Pippoz";//@todo Funzionalità ancora da implementare  FlowVar.projectName;
+        //        // Note! Image resource url is resolved here as it is dependent on the
+        //        // execution mode (development or production) and browser ES level support
+        //        final String resolvedImage = VaadinService.getCurrent().resolveResource(pathLogo);
+        //
+        //        final Image image = new Image(resolvedImage, "");
+        //        image.setHeight("24px");
+        //        image.setWidth("24px");
+        String check = FlowVar.projectName;
         final Label title = new Label(check);
-//        top.add(image, title);//@todo Funzionalità ancora da implementare
+        //        top.add(image, title);//@todo Funzionalità ancora da implementare
         top.add(title);
 
         return top;
@@ -121,11 +117,12 @@ public class ALayoutService extends AAbstractService {
         final List<Tab> tabs = new ArrayList<>();
         Tab tab = null;
 
-        List<Class> lista = Collections.singletonList(DeltaView.class);//@todo Funzionalità ancora da implementare
-        for (Class<?> view : lista) {
-            tab = createTab(view);
-            if (tab != null) {
-                tabs.add(tab);
+        if (array.isValid(FlowVar.menuRouteList)) {
+            for (Class<?> view : FlowVar.menuRouteList) {
+                tab = createTab(view);
+                if (tab != null) {
+                    tabs.add(tab);
+                }
             }
         }
 
@@ -155,29 +152,29 @@ public class ALayoutService extends AAbstractService {
         RouterLink routerLink = null;
         QueryParameters query = null;
         Icon icon = null;
-        String menuLabel = "Error";
+        String menuName = "Error";
 
         if (annotation.isRouteView(viewRouteClass) && Component.class.isAssignableFrom(viewRouteClass)) {
             routerLink = new RouterLink(null, (Class<Component>) viewRouteClass);
             icon = annotation.getMenuIcon((Class<Component>) viewRouteClass);
-            menuLabel = annotation.getMenuName(viewRouteClass);
+            menuName = annotation.getMenuName(viewRouteClass);
         }
 
         if (annotation.isEntityClass(viewRouteClass)) {
-            query = route.getQueryList( viewRouteClass);
+            query = route.getQueryList(viewRouteClass);
             routerLink = new RouterLink(null, AViewList.class);
             routerLink.setQueryParameters(query);
             icon = annotation.getMenuIcon((Class<AEntity>) viewRouteClass);
-            menuLabel = viewRouteClass.getSimpleName();
+            menuName = viewRouteClass.getSimpleName();
         }
 
-//        if (AEntityService.class.isAssignableFrom(viewRouteClass)) {
-//            query = route.getQuery(KEY_SERVICE_CLASS, viewRouteClass.getCanonicalName());
-//            routerLink = new RouterLink(null, AGenericView.class);
-//            routerLink.setQueryParameters(query);
-//            icon = annotation.getMenuIcon((Class<AEntity>) viewRouteClass);
-//            menuLabel = viewRouteClass.getSimpleName();
-//        }
+        //        if (AEntityService.class.isAssignableFrom(viewRouteClass)) {
+        //            query = route.getQuery(KEY_SERVICE_CLASS, viewRouteClass.getCanonicalName());
+        //            routerLink = new RouterLink(null, AGenericView.class);
+        //            routerLink.setQueryParameters(query);
+        //            icon = annotation.getMenuIcon((Class<AEntity>) viewRouteClass);
+        //            menuLabel = viewRouteClass.getSimpleName();
+        //        }
 
 
         if (routerLink == null) {
@@ -187,11 +184,14 @@ public class ALayoutService extends AAbstractService {
 
         if (icon != null) {
             routerLink.add(icon);
-            icon.setSize("24px");
+            //            icon.setSize("24px");
         }
 
-        if (text.isValid(menuLabel)) {
-            routerLink.add(new Span(menuLabel));
+        if (text.isValid(menuName)) {
+            menuName = FlowCost.HTLM_SPAZIO + menuName;
+            Span span = new Span();
+            span.getElement().setProperty("innerHTML", menuName);
+            routerLink.add(span);
         }
 
         return routerLink;

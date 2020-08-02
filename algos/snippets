@@ -5,3 +5,29 @@ comboBox.setItems(EnumSet.allOf(Status.class));
 List<String> listaProperties  = new ArrayList<String>(Arrays.asList("codice", "sigla", "descrizione"));
 List<String> places = Arrays.asList("codice", "sigla", "descrizione");
 List<String> places = Collections.singletonList("codice");
+
+# @Autowired interno alle Enumeration
+//    @Component
+//    public static class MeseServiceInjector {
+//
+//        @Autowired
+//        private ATextService text;
+//
+//
+//        @PostConstruct
+//        public void postConstruct() {
+//            for (AEMese mese : AEMese.values()) {
+//                mese.setText(text);
+//            }
+//        }
+//
+//    }
+
+
+label.getElement().getStyle().set("color", "blue");
+span.getElement().getStyle().set("font-weight", "bold");
+
+
+     * Deve essere sovrascritto <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>

@@ -809,6 +809,58 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the icon of the property.
+     * Default a VaadinIcon.YOUTUBE che sicuramente non voglio usare
+     * e posso quindi escluderlo
+     *
+     * @param reflectionJavaField di riferimento
+     *
+     * @return the icon of the field
+     */
+    public VaadinIcon getHeaderIcon(final Field reflectionJavaField) {
+        VaadinIcon icon = null;
+        AIColumn annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            icon = annotation.headerIcon();
+            icon = (icon == VaadinIcon.YOUTUBE) ? null : icon;
+        } else {
+            icon = null;
+        }
+
+        return icon;
+    }
+
+    /**
+     * Get the color of the property.
+     *
+     * @param reflectionJavaField di riferimento
+     *
+     * @return the color of the icon
+     */
+    public String getHeaderIconColor(final Field reflectionJavaField) {
+        String color = VUOTA;
+        VaadinIcon icon = null;
+        AIColumn annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            color = annotation.headerIconColor();
+        }
+
+        return color;
+    }
+
+    /**
      * Get the name (columnService) of the property.
      * Se manca, usa il nome della property
      *
@@ -1269,7 +1321,7 @@ public class AAnnotationService extends AAbstractService {
         AIField annotation = this.getAIField(reflectionJavaField);
 
         if (annotation != null) {
-            name = annotation.name();
+            name = annotation.caption();
         }
 
         if (text.isEmpty(name)) {

@@ -53,7 +53,7 @@ public enum AEFieldType {
     ugualeAlForm(0, 0),
 
     //    noone,
-    //    booleano,
+        booleano(0, 0),
     //    color,
     //    custom
     ;

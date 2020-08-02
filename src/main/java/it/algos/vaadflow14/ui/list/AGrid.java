@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.list;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Label;
@@ -149,15 +150,13 @@ public class AGrid extends Grid {
 
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
-//                header = annotation.getHeaderName(beanType, propertyName);
-//                this.addColumn(propertyName).setHeader(header).setResizable(true);
-                 columnService.add(this, beanType, propertyName);
+                columnService.add(this, beanType, propertyName);
             }// end of for cycle
 
-            for (Object colonna : this.getColumns()) {
-                ((Column) colonna).setAutoWidth(true);
-            }// end of for cycle
-            this.recalculateColumnWidths();
+            //            for (Object colonna : this.getColumns()) {
+            //                ((Column) colonna).setAutoWidth(true);
+            //            }// end of for cycle
+            //            this.recalculateColumnWidths();
 
         }// end of if cycle
     }// end of method
@@ -221,14 +220,12 @@ public class AGrid extends Grid {
         this.headerLabelPlaceHolder = new Label();
 
         try {
-             //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-//            HeaderRow topRow = this.prependHeaderRow();
-//            Grid.Column[] matrix = array.getColumnArray(this);
-//            if (matrix != null && matrix.length > 0) {
-//                HeaderRow.HeaderCell informationCell = topRow.join(matrix);
-//                informationCell.setComponent(headerLabelPlaceHolder);
-//            }
-            //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+            HeaderRow topRow = this.prependHeaderRow();
+            Grid.Column[] matrix = array.getColumnArray(this);
+            if (matrix != null && matrix.length > 0) {
+                HeaderRow.HeaderCell informationCell = topRow.join(matrix);
+                informationCell.setComponent(headerLabelPlaceHolder);
+            }
         } catch (Exception unErrore) {
             logger.error(unErrore.toString());
         }
@@ -254,7 +251,7 @@ public class AGrid extends Grid {
                 message += "Al momento non ci sono elementi in questa collezione";
             }
 
-            if (headerLabelPlaceHolder!=null) {
+            if (headerLabelPlaceHolder != null) {
                 headerLabelPlaceHolder.setText(message);
             }
         }

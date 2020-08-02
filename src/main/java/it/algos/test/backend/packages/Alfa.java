@@ -64,7 +64,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderAlfa")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovrascrivibile = false)
+@AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "alfaRecord")
 @AIView(menuIcon = VaadinIcon.BOAT)
 public class Alfa extends AEntity {
@@ -91,7 +91,7 @@ public class Alfa extends AEntity {
      */
     @Size(min = 2, max = 20)
     @Indexed()
-    @AIField(type = AEFieldType.text, required = true, focus = true, name = "Codice", widthEM = 9)
+    @AIField(type = AEFieldType.text, required = true, focus = true, caption = "Codice", widthEM = 9)
     @AIColumn(header = "sigla", widthEM = 8)
     private String code;
 
@@ -99,7 +99,7 @@ public class Alfa extends AEntity {
     /**
      * descrizione (facoltativa)
      */
-    @AIField(type = AEFieldType.text, required = true, name = "Descrizione completa", widthEM = 26)
+    @AIField(type = AEFieldType.text, required = true, caption = "Descrizione completa", widthEM = 26)
     @AIColumn(widthEM = 20, flexGrow = true)
     private String descrizione;
 

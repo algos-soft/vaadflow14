@@ -21,6 +21,8 @@ import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import it.algos.vaadflow14.ui.header.AHeader;
+import it.algos.vaadflow14.ui.header.AHeaderList;
+import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import it.algos.vaadflow14.ui.list.AGrid;
 import it.algos.vaadflow14.ui.service.ARouteService;
@@ -256,7 +258,15 @@ public abstract class ALogic implements AILogic {
      */
     protected String wikiPageTitle;
 
-    
+    /**
+     * Flag di preferenza per i messaggi di avviso in alertPlacehorder <br>
+     * Si può usare la classe AHeaderWrap con i messaggi suddivisi per ruolo (user, admin, developer) <br>
+     * Oppure si può usare la classe AHeaderList con i messaggi in Html (eventualmente colorati) <br>
+     * Di defaul false <br>
+     */
+    protected boolean usaHeaderWrap;
+
+
     protected String searchFieldValue = VUOTA;
 
     protected List<AFiltro> filtri;
@@ -301,9 +311,9 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Preferenze usate da questa classe e dalle Views collegate <br>
-     * Può essere sovrascritto, per aggiungere informazioni <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Preferenze usate da questa istanza e dalle Views collegate <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
         //        this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
@@ -314,6 +324,7 @@ public abstract class ALogic implements AILogic {
         this.usaBottoneNew = true;
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
+        this.usaHeaderWrap = false;
     }
 
 
@@ -322,13 +333,18 @@ public abstract class ALogic implements AILogic {
      * <p>
      * Chiamato da AView.initView() <br>
      * Normalmente ad uso esclusivo del developer <br>
-     * Nell'implementazione standard di default NON presenta nessun avviso <br>
+     * Nell' implementazione standard di default NON presenta nessun avviso <br>
      * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un'istanza dedicata con le liste di avvisi <br>
-     * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
-     * Se l'applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
+     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
+     * <p>
+     * AHeaderWrap:
+     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
+     * Se l' applicazione non usa security, il colore è unico <br<
+     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+     * <p>
+     * AHeaderList:
+     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
      *
      * @param typeVista in cui inserire gli avvisi
      *
@@ -338,9 +354,16 @@ public abstract class ALogic implements AILogic {
     public AHeader getAlertHeaderLayout(AEVista typeVista) {
         AHeader header = null;
         AlertWrap wrap = getAlertWrap(typeVista);
+        List<String> alertHtmlList = getAlertList(typeVista);
 
-        if (wrap != null) {
-            header = appContext.getBean(AHeader.class, wrap);
+        if (usaHeaderWrap) {
+            if (wrap != null) {
+                header = appContext.getBean(AHeaderWrap.class, wrap);
+            }
+        } else {
+            if (alertHtmlList != null) {
+                header = appContext.getBean(AHeaderList.class, alertHtmlList);
+            }
         }
 
         return header;
@@ -348,9 +371,9 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Costruisce un wrapper di liste di informazioni per costruire l'istanza di AHeader <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Sovrascritto nella sottoclasse <br>
+     * Deve essere sovrascritto <br>
      * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *
      * @param typeVista in cui inserire gli avvisi
@@ -359,6 +382,21 @@ public abstract class ALogic implements AILogic {
      */
     protected AlertWrap getAlertWrap(AEVista typeVista) {
         return null;
+    }
+
+
+    /**
+     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    protected  List<String>  getAlertList(AEVista typeVista) {
+        return new ArrayList<String>();
     }
 
 
@@ -408,6 +446,7 @@ public abstract class ALogic implements AILogic {
         List<Button> specifici = this.getListaBottoniSpecifici();
         List<AEButton> finali = this.getListaBottoniFinali();
         AEOperation operationForm = null;
+
         return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
     }
 
@@ -1290,7 +1329,7 @@ public abstract class ALogic implements AILogic {
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
      * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
+     * DEVE essere sovrascritto <br>
      *
      * @return false se non esiste il metodo sovrascritto
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata

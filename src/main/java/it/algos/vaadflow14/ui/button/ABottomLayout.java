@@ -83,28 +83,27 @@ public class ABottomLayout extends AButtonLayout {
      * Altrimenti seleziona i bottoni in base al parametro operationForm <br>
      */
     protected void fixBottoni() {
-         //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-//        if (array.isEmpty(iniziali) && operationForm != null) {
-//            iniziali = new ArrayList<>();
-//            switch (operationForm) {
-//                case edit:
-//                    iniziali.add(AEButton.back);
-//                    iniziali.add(AEButton.registra);
-//                    iniziali.add(AEButton.delete);
-//                    break;
-//                case editNoDelete:
-//                case addNew:
-//                    iniziali.add(AEButton.back);
-//                    iniziali.add(AEButton.registra);
-//                    break;
-//                case showOnly:
-//                    iniziali.add(AEButton.back);
-//                    break;
-//                default:
-//                    logger.warn("Switch - caso non definito", this.getClass(), "fixBottoni");
-//                    break;
-//            }
-//        }
+        if (array.isEmpty(iniziali) && operationForm != null) {
+            iniziali = new ArrayList<>();
+            switch (operationForm) {
+                case edit:
+                    iniziali.add(AEButton.back);
+                    iniziali.add(AEButton.registra);
+                    iniziali.add(AEButton.delete);
+                    break;
+                case editNoDelete:
+                case addNew:
+                    iniziali.add(AEButton.back);
+                    iniziali.add(AEButton.registra);
+                    break;
+                case showOnly:
+                    iniziali.add(AEButton.back);
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito", this.getClass(), "fixBottoni");
+                    break;
+            }
+        }
     }
 
 

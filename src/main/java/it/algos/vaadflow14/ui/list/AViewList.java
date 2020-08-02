@@ -24,7 +24,7 @@ public class AViewList extends AView {
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      * Nella sottoclasse concreta si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Nella sottoclasse concreta si usa una costante statica, per scrivere sempre uguali i riferimenti <br>
-     * Passa nella superclasse anche la entityClazz che viene definita qui (specifica di questo mopdulo) <br>
+     * Passa nella superclasse anche la entityClazz che viene definita qui (specifica di questo modulo) <br>
      */
     public AViewList() {
     }// end of Vaadin/@Route constructor
@@ -35,10 +35,10 @@ public class AViewList extends AView {
      * <p>
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nella List <br>
-     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni <br>
+     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
     @Override
     protected void fixTopLayout() {
@@ -60,8 +60,8 @@ public class AViewList extends AView {
      * Costruisce il 'corpo' centrale della view <br>
      * <p>
      * Differenziato tra AViewList e AViewForm <br>
-     * Costruisce un'istanza dedicata <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+     * Costruisce un' istanza dedicata <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      */
     @Override
     protected void fixBody() {
@@ -82,10 +82,10 @@ public class AViewList extends AView {
      * <p>
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nel Form <br>
-     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni <br>
+     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
      */
     @Override
     protected void fixBottomLayout() {

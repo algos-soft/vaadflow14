@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.footer.AFooter;
 import it.algos.vaadflow14.ui.header.AHeader;
+import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.service.Parametro;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -238,12 +239,12 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * <p>
      * Chiamato da AView.initView() <br>
      * Normalmente ad uso esclusivo del developer <br>
-     * Nell'implementazione standard di default NON presenta nessun avviso <br>
+     * Nell' implementazione standard di default NON presenta nessun avviso <br>
      * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un'istanza dedicata con le liste di avvisi <br>
+     * Costruisce un' istanza dedicata con le liste di avvisi <br>
      * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
-     * Se l'applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
+     * Se l' applicazione non usa security, il colore è unico <br<
+     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
     protected void fixHeaderLayout() {

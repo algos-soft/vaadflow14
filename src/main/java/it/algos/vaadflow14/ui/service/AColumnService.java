@@ -2,6 +2,8 @@ package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
@@ -69,12 +71,17 @@ public class AColumnService extends AAbstractService {
         Field field = reflection.getField(entityClazz, propertyName);
         AEFieldType type = null;
         String header = VUOTA;
+        VaadinIcon headerIcon = null;
+        String colorHeaderIcon = VUOTA;
         boolean isFlexGrow = false;
         String width = VUOTA;
+        Label label = null;
 
         if (field != null) {
             type = annotation.getColumnType(field);
             header = annotation.getColumnHeader(field);
+            headerIcon = annotation.getHeaderIcon(field);
+            colorHeaderIcon = annotation.getHeaderIconColor(field);
             width = annotation.getColumnWith(field);
             isFlexGrow = annotation.isFlexGrow(field);
         }
@@ -85,6 +92,8 @@ public class AColumnService extends AAbstractService {
         } else {
             switch (type) {
                 case text:
+                    colonna = grid.addColumn(propertyName);
+                    break;
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
@@ -100,19 +109,26 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case integer:
-                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        String testo = VUOTA;
-                        int value;
-
-                        try {
-                            value = field.getInt(entity);
-                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
-                        } catch (Exception unErrore) {
-                            logger.error(unErrore, this.getClass(), "add.integer");
-                        }
-
-                        return new Label(testo);
-                    }));//end of lambda expressions and anonymous inner class
+                    colonna = grid.addColumn(propertyName);
+//                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+//                        String testo = VUOTA;
+//                        int value;
+//
+//                        try {
+//                            value = field.getInt(entity);
+//                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
+//                        } catch (Exception unErrore) {
+//                            logger.error(unErrore, this.getClass(), "add.integer");
+//                        }
+//
+//                        return new Label(testo);
+//                    }));//end of lambda expressions and anonymous inner class
+                    break;
+                case combo:
+                    colonna = grid.addColumn(propertyName);
+                    break;
+                case booleano:
+                    colonna = grid.addColumn(propertyName);
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "add");
@@ -122,6 +138,9 @@ public class AColumnService extends AAbstractService {
 
         if (colonna != null) {
             String headerText = "";
+            label = new Label();
+            label.getElement().getStyle().set("color", "blue");
+
             //--l'header di default viene sempre uguale al nome della property
             //--può essere minuscolo o con la prima maiuscola, a seconda del flag di preferenza
             //--può essere modificato con name = "Xyz" nell'annotation @AIColumn della Entity
@@ -132,18 +151,18 @@ public class AColumnService extends AAbstractService {
             //            }// end of if/else cycle
             colonna.setHeader(header);
 
-            //            //--eventuale aggiunta di una icona e l'header non è una String ma diventa un Component
-            //            //--se c'è l'icona e manca il testo della annotation, NON usa il nome della property ma solo l'icona
-            //            if (headerIcon != null) {
-            //                Icon icon = new Icon(headerIcon);
-            //                icon.setSize(widthHeaderIcon);
-            //                icon.setColor(colorHeaderIcon);
-            //                Label label = new Label(explicitHader);
-            //                label.add(icon);
-            //                colonna.setHeader(label);
-            //            } else {
-            //                colonna.setHeader(headerNotNull);
-            //            }// end of if/else cycle
+            //--eventuale aggiunta di una icona e l' header non è una String ma diventa un Component
+            //--se c'è l' icona e manca il testo della annotation, NON usa il nome della property ma solo l' icona
+            if (headerIcon != null) {
+                Icon icon = new Icon(headerIcon);
+                //                icon.setSize(widthHeaderIcon);
+                icon.setColor(colorHeaderIcon);
+                label.add(icon);
+            } else {
+                label.setText(header);
+                //                colonna.setHeader(headerNotNull);
+            }
+            colonna.setHeader(label);
 
             //            if (propertyName.equals(searchProperty)) {
             //                Icon icon = new Icon(VaadinIcon.SEARCH);
@@ -165,11 +184,11 @@ public class AColumnService extends AAbstractService {
             //            //            if (property.equals("id")) {
             //            //                colonna.setWidth("1px");
             //            //            }// end of if cycle
-
+            colonna.setSortable(true);
+            colonna.setSortProperty(propertyName);
 
             colonna.setWidth(width);
             colonna.setFlexGrow(isFlexGrow ? 1 : 0);
-
         }
     }
 
