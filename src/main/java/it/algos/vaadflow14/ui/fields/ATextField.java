@@ -22,7 +22,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATextField extends AField<String>  {
+public class ATextField extends AField<String> {
 
     private final TextField innerField;
 

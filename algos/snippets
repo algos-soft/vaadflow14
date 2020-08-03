@@ -31,3 +31,5 @@ span.getElement().getStyle().set("font-weight", "bold");
      * Deve essere sovrascritto <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+
+ * Per omogeneità è meglio usare 'static final' (piuttosto che l'equivalente 'final static') <br>
