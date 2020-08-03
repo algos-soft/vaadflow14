@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.AILogic;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
+import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -22,7 +23,9 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.SEP;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -62,6 +65,8 @@ public class AGrid {
 
     protected Label headerLabelPlaceHolder;
 
+    protected Map<String, Grid.Column<AEntity>> columnsMap;
+
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
@@ -86,12 +91,14 @@ public class AGrid {
 
 
     public AGrid(Class<? extends AEntity> beanType) {
-        super(beanType);
+        super();
+        this.grid = new Grid(beanType);
     }
 
 
     public AGrid(Class<? extends AEntity> beanType, ALogic service) {
-        super(beanType, false);
+        super();
+        this.grid = new Grid(beanType, false);
         this.service = service;
         this.beanType = beanType;
     }
@@ -114,16 +121,17 @@ public class AGrid {
      */
     @PostConstruct
     protected void postConstruct() {
-        this.setHeightByRows(true);
+        grid.setHeightByRows(true);
 
         if (FlowVar.usaDebug) {//@todo Funzionalità ancora da implementare nelle preferenze
-            this.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
+            grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
         }
 
         //--Costruisce una lista di nomi delle properties della Grid
         gridPropertyNamesList = service != null ? service.getGridPropertyNamesList() : null;
 
         //--Colonne normali indicate in @AIList(fields =... , aggiunte in automatico
+        columnsMap = new HashMap<>();
         this.addColumnsGrid();
         this.creaGridHeader();
     }
@@ -147,12 +155,15 @@ public class AGrid {
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>@todo non è proprio cosi
      */
     protected void addColumnsGrid() {
-        String header = VUOTA;
+        Grid.Column<AEntity> colonna = null;
 
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
-                columnService.add(this, beanType, propertyName);
-            }// end of for cycle
+                colonna = columnService.add(grid, beanType, propertyName);
+                if (colonna!=null) {
+                    columnsMap.put(propertyName, colonna);
+                }
+            }
 
             //            for (Object colonna : this.getColumns()) {
             //                ((Column) colonna).setAutoWidth(true);
@@ -163,12 +174,11 @@ public class AGrid {
     }// end of method
 
 
-    @Override
     public void setItems(Collection items) {
 
         if (array.isValid(items)) {
-            super.deselectAll();
-            super.setItems(items);
+            grid.deselectAll();
+            grid.setItems(items);
         }
 
         fixGridHeader(items);
@@ -185,7 +195,7 @@ public class AGrid {
     public void setAllListener(AILogic service) {
         this.service = service;
 
-        this.addItemDoubleClickListener(event -> performAction((ItemClickEvent) event, AEAction.doubleClick));
+        grid.addItemDoubleClickListener(event -> performAction((ItemClickEvent) event, AEAction.doubleClick));
     }
 
 
@@ -221,8 +231,8 @@ public class AGrid {
         this.headerLabelPlaceHolder = new Label();
 
         try {
-            HeaderRow topRow = this.prependHeaderRow();
-            Grid.Column[] matrix = array.getColumnArray(this);
+            HeaderRow topRow = grid.prependHeaderRow();
+            Grid.Column[] matrix = array.getColumnArray(grid);
             if (matrix != null && matrix.length > 0) {
                 HeaderRow.HeaderCell informationCell = topRow.join(matrix);
                 informationCell.setComponent(headerLabelPlaceHolder);
@@ -270,5 +280,26 @@ public class AGrid {
     //            service.performAction(azione, entityBean);
     //        }
     //    }
+
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+
+    public void deselectAll() {
+        grid.deselectAll();
+    }
+
+
+    public void refreshAll() {
+        grid.getDataProvider().refreshAll();
+    }
+
+
+    public void setItems(List<Mese> items) {
+        grid.setItems(items);
+    }
+
 
 }

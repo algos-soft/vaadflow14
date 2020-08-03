@@ -6,18 +6,17 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.AILogic;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.ui.fields.AField;
+import it.algos.vaadflow14.ui.fields.AIField;
+import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -85,18 +84,27 @@ public class AForm extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
+    public AFieldService fieldService;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
     public AClassService classService;
 
     @Autowired
     public AMongoService mongo;
 
-//    /**
-//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-//     */
-//    @Autowired
-//    public RegioneLogic regioneLogic;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public RegioneLogic regioneLogic;
 
     /**
      * La scheda grafica è composta da due diversi FormLayout sovrapposti <br>
@@ -158,7 +166,7 @@ public class AForm extends VerticalLayout {
      * Serve per presentarli (ordinati) dall'alto in basso nel form <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
-    protected LinkedHashMap<String, AField> fieldsMap;
+    protected HashMap<String, AField> fieldsMap;
 
     /**
      * The Entity Logic (obbligatorio per liste e form)
@@ -287,9 +295,13 @@ public class AForm extends VerticalLayout {
 
         this.creaFields();
 
-        this.addFieldsToBinder();
+        //        this.addFieldsToBinder();
+
+        //--Associa i valori del currentItem al binder. Dal DB alla UI
+        binder.readBean((AEntity) entityBean);
 
         this.addFieldsToLayout();
+
     }
 
 
@@ -300,7 +312,7 @@ public class AForm extends VerticalLayout {
      * Se manca anche 'listaNomi', la costruisce partendo da annotation.getListaPropertiesForm() <br>
      */
     protected void creaFields() {
-        AField field;
+        AIField field;
 
         if (array.isEmpty(fieldsMap)) {
             if (array.isEmpty(listaNomi)) {
@@ -309,9 +321,9 @@ public class AForm extends VerticalLayout {
             fieldsMap = new LinkedHashMap<>();
             if (entityClazz != null) {
                 for (String fieldName : listaNomi) {
-                    field = addField(fieldName);//@todo Funzionalità ancora da implementare. Spostare in un service
+                    field = fieldService.create(binder, entityBean, fieldName);
                     if (field != null) {
-                        fieldsMap.put(fieldName, field);
+                        fieldsMap.put(fieldName, field.getAlgos());
                     }
                 }
             }
@@ -319,95 +331,95 @@ public class AForm extends VerticalLayout {
     }
 
 
-    protected AField addField(String fieldName) {
-        AField field = null;
-        Field reflectionJavaField = reflection.getField(entityClazz, fieldName);
-        AEFieldType type = annotation.getFormType(reflectionJavaField);
-        String label = annotation.getFormFieldName(reflectionJavaField);
-        Class comboClazz = annotation.getComboClass(reflectionJavaField);
-        //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
-        //        Class linkClazz = annotation.getLinkClass(reflectionJavaField);
-        List enumItems = annotation.getEnumItems(reflectionJavaField);
-        List items;
-
-        switch (type) {
-            case text:
-                field = new ATextField(label);
-                break;
-            case integer:
-                field = new AIntegerField(label);
-                break;
-            case yesNo:
-                field = new ABooleanField(label);
-                break;
-            case combo:
-                items = comboClazz != null ? mongo.find(comboClazz) : null;
-                if (items != null) {
-                    field = new AComboField(label);
-                    field.setItem(items);
-                }
-                break;
-            case enumeration:
-                field = new AComboField(label);
-                if (array.isEmpty(enumItems)) {
-                    if (enumMap != null && enumMap.get(fieldName) != null) {
-                        enumItems = enumMap.get(fieldName);
-                    } else {
-                        enumItems = new ArrayList();
-                        enumItems.add("valori riempiti nella sottoclasse specifica");
-                    }
-                }
-                field.setItem(enumItems);
-                break;
-            case gridShowOnly:
-                List<String> listaProperties = new ArrayList<String>(Arrays.asList("ordine", "nome", "sigla", "iso"));
-                field = appContext.getBean(AGridField.class, entityBean.getClass(), listaProperties);
-
-                //                //--Colonne aggiunte in automatico
-                //                if (array.isValid(properties)) {
-                //                    for (String propertyName : properties) {
-                //                        columnService.create(grid, StaTurnoIsc.class, propertyName);
-                //                    }// end of for cycle
-                //                }
-                //                reflectionJavaField
-
-//                items = regioneLogic.findBySigla("LAZ").province;
-//                ((AGridField) field).setItem(items);
-                //
-                //                grid.setWidth("100em");
-                //                formSubLayout.setWidth("100em");
-                //                formSubLayout.add(grid);
-                break;
-            default:
-                logger.warn("Switch - caso non definito per il field \"" + fieldName + "\" del tipo " + type, this.getClass(), "addField");
-                break;
-        }
-
-        return field;
-    }// end of method
-
-
-    /**
-     * Aggiunge ogni singolo field al binder <br>>
-     */
-    protected void addFieldsToBinder() {
-        if (binder == null) {
-            logger.warn("Manca il binder", this.getClass(), "fixView");
-            return;
-        }
-
-        if (binder != null && array.isValid(fieldsMap)) {
-            for (String fieldName : fieldsMap.keySet()) {
-                binder.forField(fieldsMap.get(fieldName)).bind(fieldName);
-            }
-        }
-
-        if (binder != null && entityBean != null) {
-            binder.readBean((AEntity) entityBean);
-        } else {
-            logger.warn("Manca il binder", this.getClass(), "fixView");
-        }
-    }
+    //    protected AField addField(String fieldName) {
+    //        AField field = null;
+    //        Field reflectionJavaField = reflection.getField(entityClazz, fieldName);
+    //        AEFieldType type = annotation.getFormType(reflectionJavaField);
+    //        String label = annotation.getFormFieldName(reflectionJavaField);
+    //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
+    //        //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
+    //        //        Class linkClazz = annotation.getLinkClass(reflectionJavaField);
+    //        List enumItems = annotation.getEnumItems(reflectionJavaField);
+    //        List items;
+    //
+    //        switch (type) {
+    //            case text:
+    //                field = new ATextField(label);
+    //                break;
+    //            case integer:
+    //                field = new AIntegerField(label);
+    //                break;
+    //            case yesNo:
+    //                field = new ABooleanField(label);
+    //                break;
+    //            case combo:
+    //                items = comboClazz != null ? mongo.find(comboClazz) : null;
+    //                if (items != null) {
+    //                    field = new AComboField(label);
+    //                    field.setItem(items);
+    //                }
+    //                break;
+    //            case enumeration:
+    //                field = new AComboField(label);
+    //                if (array.isEmpty(enumItems)) {
+    //                    if (enumMap != null && enumMap.get(fieldName) != null) {
+    //                        enumItems = enumMap.get(fieldName);
+    //                    } else {
+    //                        enumItems = new ArrayList();
+    //                        enumItems.add("valori riempiti nella sottoclasse specifica");
+    //                    }
+    //                }
+    //                field.setItem(enumItems);
+    //                break;
+    //            case gridShowOnly:
+    //                List<String> listaProperties = new ArrayList<String>(Arrays.asList("ordine", "nome", "sigla", "iso"));
+    //                field = appContext.getBean(AGridField.class, entityBean.getClass(), listaProperties);
+    //
+    //                //                //--Colonne aggiunte in automatico
+    //                //                if (array.isValid(properties)) {
+    //                //                    for (String propertyName : properties) {
+    //                //                        columnService.create(grid, StaTurnoIsc.class, propertyName);
+    //                //                    }// end of for cycle
+    //                //                }
+    //                //                reflectionJavaField
+    //
+    ////                items = regioneLogic.findBySigla("LAZ").province;
+    ////                ((AGridField) field).setItem(items);
+    //                //
+    //                //                grid.setWidth("100em");
+    //                //                formSubLayout.setWidth("100em");
+    //                //                formSubLayout.add(grid);
+    //                break;
+    //            default:
+    //                logger.warn("Switch - caso non definito per il field \"" + fieldName + "\" del tipo " + type, this.getClass(), "addField");
+    //                break;
+    //        }
+    //
+    //        return field;
+    //    }// end of method
+    //
+    //
+    //    /**
+    //     * Aggiunge ogni singolo field al binder <br>>
+    //     */
+    //    protected void addFieldsToBinder() {
+    //        if (binder == null) {
+    //            logger.warn("Manca il binder", this.getClass(), "fixView");
+    //            return;
+    //        }
+    //
+    //        if (binder != null && array.isValid(fieldsMap)) {
+    //            for (String fieldName : fieldsMap.keySet()) {
+    //                binder.forField(fieldsMap.get(fieldName)).bind(fieldName);
+    //            }
+    //        }
+    //
+    //        if (binder != null && entityBean != null) {
+    //            binder.readBean((AEntity) entityBean);
+    //        } else {
+    //            logger.warn("Manca il binder", this.getClass(), "fixView");
+    //        }
+    //    }
 
 
     /**
@@ -419,7 +431,11 @@ public class AForm extends VerticalLayout {
 
         if (array.isValid(fieldsMap)) {
             for (String fieldName : fieldsMap.keySet()) {
-                topLayout.add(fieldsMap.get(fieldName));
+                if (fieldsMap.get(fieldName)!=null) {
+                    topLayout.add(fieldsMap.get(fieldName));
+                } else {
+                    logger.error("Manca il field "+fieldName, this.getClass(), "addFieldsToLayout");
+                }
             }
         } else {
             logger.warn("La fieldsMap è vuota", this.getClass(), "addFieldsToLayout");

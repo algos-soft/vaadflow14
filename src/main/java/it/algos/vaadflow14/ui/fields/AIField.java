@@ -15,6 +15,10 @@ public interface AIField {
 
     void setItem(Collection collection);
 
-    Component get();
+    void setText(String caption);
+
+    Component getComp();
+
+    AField getAlgos();
 
 }

@@ -40,7 +40,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Anno", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR)
-@AIList(fields = "ordine,secolo,nome,bisestile")
+@AIList(fields = "ordine,nome,bisestile")
 @AIForm(fields = "ordine,secolo,nome,bisestile")
 public class Anno extends AEntity {
 

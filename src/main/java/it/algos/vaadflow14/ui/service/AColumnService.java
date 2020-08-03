@@ -5,11 +5,10 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
 import it.algos.vaadflow14.backend.service.AAbstractService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -35,7 +34,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
  */
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@VaadinSessionScope()
 public class AColumnService extends AAbstractService {
 
     /**
@@ -52,8 +52,8 @@ public class AColumnService extends AAbstractService {
      * @param entityClazz  modello-dati specifico
      * @param propertyName della property
      */
-    public void add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName) {
-        add(grid, entityClazz, propertyName, VUOTA);
+    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName) {
+        return add(grid, entityClazz, propertyName, VUOTA);
     }
 
 
@@ -66,7 +66,7 @@ public class AColumnService extends AAbstractService {
      * @param propertyName   della property
      * @param propertySearch per l'ordinamento
      */
-    public void add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
+    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, propertyName);
         AEFieldType type = null;
@@ -88,12 +88,12 @@ public class AColumnService extends AAbstractService {
 
         if (type == null) {
             logger.error("Manca il type del field " + propertyName + " della entity " + entityClazz.getSimpleName(), this.getClass(), "add");
-            return;
+            return null;
         } else {
             switch (type) {
                 case text:
-                    colonna = grid.addColumn(propertyName);
-                    break;
+                    //                    colonna = grid.addColumn(propertyName);
+                    //                    break;
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
@@ -109,26 +109,26 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case integer:
-                    colonna = grid.addColumn(propertyName);
-//                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-//                        String testo = VUOTA;
-//                        int value;
-//
-//                        try {
-//                            value = field.getInt(entity);
-//                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
-//                        } catch (Exception unErrore) {
-//                            logger.error(unErrore, this.getClass(), "add.integer");
-//                        }
-//
-//                        return new Label(testo);
-//                    }));//end of lambda expressions and anonymous inner class
+                    //                    colonna = grid.addColumn(propertyName);
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        String testo = VUOTA;
+                        int value;
+
+                        try {
+                            value = field.getInt(entity);
+                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
+                        } catch (Exception unErrore) {
+                            logger.error(unErrore, this.getClass(), "add.integer");
+                        }
+
+                        return new Label(testo);
+                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case combo:
-                    colonna = grid.addColumn(propertyName);
+                    //                    colonna = grid.addColumn(propertyName);
                     break;
                 case booleano:
-                    colonna = grid.addColumn(propertyName);
+                    //                    colonna = grid.addColumn(propertyName);
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "add");
@@ -190,6 +190,7 @@ public class AColumnService extends AAbstractService {
             colonna.setWidth(width);
             colonna.setFlexGrow(isFlexGrow ? 1 : 0);
         }
+        return colonna;
     }
 
 }

@@ -395,7 +395,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return wrapper per passaggio dati
      */
-    protected  List<String>  getAlertList(AEVista typeVista) {
+    protected List<String> getAlertList(AEVista typeVista) {
         return new ArrayList<String>();
     }
 
@@ -568,7 +568,7 @@ public abstract class ALogic implements AILogic {
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected void addGridListeners() {
-        if (grid != null) {
+        if (grid != null && grid.getGrid() != null) {
             grid.setAllListener(this);
         }
     }
@@ -959,13 +959,12 @@ public abstract class ALogic implements AILogic {
     public void refreshGrid() {
         List<? extends AEntity> items;
 
-        if (grid != null) {
+        if (grid != null && grid.getGrid() != null) {
             updateFiltri();
             items = mongo.findAll(entityClazz, filtri, sortView);
             grid.deselectAll();
-            grid.getDataProvider().refreshAll();
+            grid.refreshAll();
             grid.setItems(items);
-            grid.getDataProvider().refreshAll();
         }
     }
 

@@ -78,6 +78,10 @@ public class MeseLogic extends ALogic {
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.usaBottoneNew = false;
+
+        //--provvisorio
+        super.operationForm = AEOperation.edit;
+        super.usaBottoneNew = true;
     }
 
 
@@ -122,6 +126,7 @@ public class MeseLogic extends ALogic {
 
         lista.add("<span style=\"color:green\">Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.</span>");
         lista.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
+        lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
 
         return lista;
     }

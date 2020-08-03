@@ -69,8 +69,8 @@ public class AViewList extends AView {
 
         grid = entityLogic.getBodyGridLayout();
 
-        if (bodyPlacehorder != null && grid != null) {
-            bodyPlacehorder.add(grid);
+        if (bodyPlacehorder != null && grid.getGrid() != null) {
+            bodyPlacehorder.add(grid.getGrid());
         }
 
         this.add(bodyPlacehorder);

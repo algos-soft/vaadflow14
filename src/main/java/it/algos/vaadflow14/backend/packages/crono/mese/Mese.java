@@ -86,7 +86,7 @@ public class Mese extends AEntity {
     @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3)
-    @AIField(type = AEFieldType.text, widthEM = 12)
+    @AIField(type = AEFieldType.text, required = true, widthEM = 12)
     @AIColumn()
     public String sigla;
 
@@ -98,7 +98,6 @@ public class Mese extends AEntity {
     public String toString() {
         return nome;
     }
-
 
 
 }

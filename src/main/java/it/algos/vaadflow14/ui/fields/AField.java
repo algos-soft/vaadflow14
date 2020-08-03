@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.shared.Registration;
 
@@ -13,7 +14,7 @@ import java.util.Collection;
  * Date: mer, 10-giu-2020
  * Time: 16:25
  */
-public  class AField<T> extends CustomField<T> implements AIField {
+public class AField<T> extends CustomField<T> implements AIField {
 
     @Override
     public void setItem(Collection collection) {
@@ -31,10 +32,10 @@ public  class AField<T> extends CustomField<T> implements AIField {
     }
 
 
-//    @Override
-//    public void setValue(T o) {
-//
-//    }
+    //    @Override
+    //    public void setValue(T o) {
+    //
+    //    }
 
 
     @Override
@@ -44,8 +45,26 @@ public  class AField<T> extends CustomField<T> implements AIField {
 
 
     @Override
-    public Component get() {
+    public void setText(String caption) {
+
+    }
+
+
+    @Override
+    public void setValue(Object o) {
+
+    }
+
+
+    @Override
+    public Component getComp() {
         return null;
+    }
+
+
+    @Override
+    public AField getAlgos() {
+        return this;
     }
 
 }

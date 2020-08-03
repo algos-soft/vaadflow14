@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -96,5 +98,11 @@ public class ATextField extends AField<String>  {
     public int compareTo(String o) {
          return innerField.getValue().compareTo( o);
     }
+
+    @Override
+    public Component getComp() {
+        return innerField;
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -48,6 +49,11 @@ public class AIntegerField extends AField<Integer> {
     @Override
     protected void setPresentationValue(Integer value) {
         innerField.setValue(value);
+    }
+
+    @Override
+    public Component getComp() {
+        return innerField;
     }
 
 }

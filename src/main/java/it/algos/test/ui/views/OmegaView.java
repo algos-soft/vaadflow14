@@ -5,17 +5,15 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.anno.AnnoLogic;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.service.AColumnService;
-import jdk.nashorn.internal.ir.LiteralNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,32 +69,32 @@ public class OmegaView extends VerticalLayout {
      */
     @PostConstruct
     protected void postConstruct() {
-//        provaGrid();
-//        this.add(grid);
+        provaGrid();
     }
 
 
     public void provaGrid() {
 
 
-        DataProvider<Anno,Void> dataProvider = DataProvider.fromCallbacks(
-                // First callback fetches items based on a query
-                query -> {
-                    // The index of the first item to load
-                    int offset = query.getOffset();
-
-                    // The number of items to load
-                    int limit = query.getLimit();
-
-                    List<Anno> listaAnni = annoLogic.fetchAnni(offset, limit);
-
-                    return listaAnni != null ? listaAnni.stream() : null;
-                },
-
-                // Second callback fetches the number of items for a query
-                query -> annoLogic.getCount());
-
-        grid = new Grid<>(Anno.class, false);
+        //        DataProvider<Anno,Void> dataProvider = DataProvider.fromCallbacks(
+        //                // First callback fetches items based on a query
+        //                query -> {
+        //                    // The index of the first item to load
+        //                    int offset = query.getOffset();
+        //
+        //                    // The number of items to load
+        //                    int limit = query.getLimit();
+        //
+        //                    List<Anno> listaAnni = annoLogic.fetchAnni(offset, limit);
+        //
+        //                    return listaAnni != null ? listaAnni.stream() : null;
+        //                },
+        //
+        //                // Second callback fetches the number of items for a query
+        //                query -> annoLogic.getCount()
+        //        );
+        List<Anno> items = annoLogic.fetchAnni(5, 24);
+        grid = new Grid<>();
         grid.setPageSize(10);
 
         List<String> colonne = Arrays.asList("ordine", "secolo", "nome", "bisestile");
@@ -104,7 +102,11 @@ public class OmegaView extends VerticalLayout {
             columnService.add(grid, Anno.class, name);
         }
 
-        grid.setDataProvider(dataProvider);
+        grid.setItems(items);
+        VerticalLayout gridPlaceholder = new VerticalLayout();
+        gridPlaceholder.add(grid);
+        gridPlaceholder.setFlexGrow(0);
+        this.add(gridPlaceholder);
     }
 
 
