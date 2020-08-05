@@ -11,7 +11,6 @@ import it.algos.vaadflow14.backend.packages.crono.anno.AnnoLogic;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.klaudeta.PaginatedGrid;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;

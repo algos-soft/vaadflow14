@@ -74,13 +74,12 @@ public class MeseLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.showOnly;
+//        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.usaBottoneNew = false;
 
         //--provvisorio
-        super.operationForm = AEOperation.edit;
         super.usaBottoneNew = true;
     }
 

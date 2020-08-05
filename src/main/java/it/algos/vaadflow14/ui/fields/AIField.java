@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 
 import java.util.Collection;
 
@@ -15,10 +15,14 @@ public interface AIField {
 
     void setItem(Collection collection);
 
+    void setWidth(String width);
+
     void setText(String caption);
 
-    Component getComp();
+    AbstractSinglePropertyField getBinder();
 
-    AField getAlgos();
+    AField get();
+
+    public void setPlaceholder(String placeholder);
 
 }

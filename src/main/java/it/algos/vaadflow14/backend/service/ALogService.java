@@ -29,16 +29,7 @@ import static it.algos.vaadflow14.backend.service.AConsoleColorService.RESET;
  * Date: dom, 03-mag-2020
  * Time: 09:22
  * <p>
- * Classe di collegamento tra la 'business logic' ed il database. <br>
- * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L'istanza può essere richiamata con: <br>
- * 1) @Autowired private LogService ; <br>
- * 2) StaticContextAccessor.getBean(LogService.class); <br>
- * 3) appContext.getBean(LogService.class) (preceduto da @Autowired ApplicationContext appContext) <br>
- * <p>
- * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
- * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * Classe di servizio per i log. <br>
  * <p>
  * Diverse modalità di 'uscita' dei logs, regolate da due flags: <br>
  * A) nella finestra di output del terminale (sempre) <br>
@@ -47,14 +38,14 @@ import static it.algos.vaadflow14.backend.service.AConsoleColorService.RESET;
  * D) in una mail (facoltativo e di norma solo per 'error') <br>
  * <p>
  * Nel log, incolonnare la data, alcuni campi fissi (di larghezza) e poi la descrizione libera <br>
- * A) Se è una multi company con security, i campi fissi sono: la company, l'utente, l'IP ed il type <br>
- * B) Se l'applicazione non è multi company e non ha security, l'unico campo fisso è il type <br>
+ * A) Se è una multi-company con security, i campi fissi sono: la company, l' utente, l'IP ed il type <br>
+ * B) Se l' applicazione non è multi-company e non ha security, l' unico campo fisso è il type <br>
  * <p>
  * Nella mail, invece di incolonnare i campi fissi, si va a capo <br>
  * <p>
  * I type di log vengono presi da una enum <br>
  * Il progetto specifico può aggiungere dei types presi da una propria enum <br>
- * Le enum implementano un'interfaccia comune, per poter essere intercambiabili <br>
+ * Le enum implementano un' interfaccia comune, per poter essere intercambiabili <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -72,7 +63,7 @@ public class ALogService extends AAbstractService {
      * Riferimento al logger usato <br>
      * È nella directory 'config', il file 'logback-spring.xml' <br>
      * Deve essere creato subito dalla factory class LoggerFactory <br>
-     * Va selzionato un appender da usare e che sia presente nel file di configurazione <br>
+     * Va selezionato un appender da usare e che sia presente nel file di configurazione <br>
      */
     public Logger adminLogger;
 

@@ -2,6 +2,8 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +40,7 @@ public class AIntegerField extends AField<Integer> {
 
     public AIntegerField(String label, String placeholder) {
         innerField = new IntegerField(label, placeholder);
+        innerField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         add(innerField);
     }
 
@@ -50,10 +53,18 @@ public class AIntegerField extends AField<Integer> {
     protected void setPresentationValue(Integer value) {
         innerField.setValue(value);
     }
+    @Override
+    public void setWidth(String width) {
+        innerField.setWidth(width);
+    }
 
     @Override
-    public Component getComp() {
+    public IntegerField getBinder() {
         return innerField;
+    }
+    @Override
+    public void setPlaceholder(String placeholder) {
+        innerField.setPlaceholder(placeholder);
     }
 
 }

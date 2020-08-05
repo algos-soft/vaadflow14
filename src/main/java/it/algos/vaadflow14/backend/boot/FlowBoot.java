@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -56,6 +57,15 @@ public abstract class FlowBoot implements ServletContextListener {
     @Autowired
     public FlowData flowData;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logService;
+
+
     //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
     protected AData aData;
 
@@ -105,10 +115,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.inizializzaData();
         this.regolaApplicationProperties();
         this.addMenuRoutes();
-
-        //@todo Funzionalità ancora da implementare
-        //        logService.startup();
-        //@todo Funzionalità ancora da implementare
+        logService.startup();
     }
 
 

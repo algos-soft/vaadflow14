@@ -2,9 +2,9 @@ package it.algos.vaadflow14.backend.enumeration;
 
 public enum AEFieldType {
     //    id(),
-    text(0, 10),
+    text(12, 8),
 
-    integer(0, 4),
+    integer(8, 5),
 
     //    pref,
     //    noBinder,

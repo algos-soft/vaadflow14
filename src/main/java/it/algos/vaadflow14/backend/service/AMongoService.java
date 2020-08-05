@@ -600,12 +600,16 @@ public class AMongoService<capture> extends AAbstractService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.insert/)
      */
     public AEntity insert(AEntity newEntityBean) {
+        AEntity entityBean = null;
+
         try {
-            return mongoOp.insert(newEntityBean);
+            entityBean = mongoOp.insert(newEntityBean);
+            logger.nuovo(entityBean);
         } catch (Exception unErrore) {
-            logger.warn(unErrore, this.getClass(), "insert");
-            return null;
+            logger.error(unErrore, this.getClass(), "insert");
         }
+
+        return entityBean;
     }
 
 

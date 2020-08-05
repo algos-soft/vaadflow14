@@ -323,7 +323,7 @@ public class AForm extends VerticalLayout {
                 for (String fieldName : listaNomi) {
                     field = fieldService.create(binder, entityBean, fieldName);
                     if (field != null) {
-                        fieldsMap.put(fieldName, field.getAlgos());
+                        fieldsMap.put(fieldName, field.get());
                     }
                 }
             }
@@ -432,7 +432,7 @@ public class AForm extends VerticalLayout {
         if (array.isValid(fieldsMap)) {
             for (String fieldName : fieldsMap.keySet()) {
                 if (fieldsMap.get(fieldName)!=null) {
-                    topLayout.add(fieldsMap.get(fieldName));
+                    topLayout.add(fieldsMap.get(fieldName).get());
                 } else {
                     logger.error("Manca il field "+fieldName, this.getClass(), "addFieldsToLayout");
                 }

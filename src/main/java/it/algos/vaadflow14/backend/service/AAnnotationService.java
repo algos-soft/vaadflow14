@@ -836,6 +836,7 @@ public class AAnnotationService extends AAbstractService {
         return icon;
     }
 
+
     /**
      * Get the color of the property.
      *
@@ -859,6 +860,7 @@ public class AAnnotationService extends AAbstractService {
 
         return color;
     }
+
 
     /**
      * Get the name (columnService) of the property.
@@ -1288,26 +1290,6 @@ public class AAnnotationService extends AAbstractService {
     //    }// end of method
 
 
-    //    /**
-    //     * Get the clazz of the property.
-    //     *
-    //     * @param entityClazz the entity class
-    //     * @param fieldName   the property name
-    //     *
-    //     * @return the type for the specific columnService
-    //     */
-    //    public Class getClazz(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        Class clazz = null;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            clazz = getClazz(field);
-    //        }// end of if cycle
-    //
-    //        return clazz;
-    //    }// end of method
-
-
     /**
      * Get the name (field) of the property <br>
      * Se manca, usa il nome della property <br>
@@ -1329,6 +1311,54 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return name;
+    }
+
+
+    /**
+     * Get the name (field) of the property.
+     * Se manca, usa il nome della property
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the capitalized name (rows) of the field
+     */
+    public String getFormFieldNameCapital(final Field reflectionJavaField) {
+        return text.primaMaiuscola(getFormFieldName(reflectionJavaField));
+    }
+
+
+    /**
+     * Get the width of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the name (columnService) of the field
+     */
+    public String getFormWith(final Field reflectionJavaField) {
+        String widthTxt = VUOTA;
+        int widthInt = 0;
+        AIField annotation = null;
+        AEFieldType type = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            widthInt = annotation.widthEM();
+        }
+
+        if (widthInt > 0) {
+            widthTxt = widthInt + TAG_EM;
+        } else {
+            type = getColumnType(reflectionJavaField);
+            if (type != null) {
+                widthTxt = type.getWidthField()>0 ? type.getWidthField() + TAG_EM : VUOTA;
+            }
+        }
+
+        return widthTxt;
     }
 
 
@@ -1375,341 +1405,156 @@ public class AAnnotationService extends AAbstractService {
         return items;
     }
 
-    //    /**
-    //     * Get the name (field) of the property.
-    //     * Se manca, usa il nome della property
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the capitalized name (rows) of the field
-    //     */
-    //    public String getFormFieldNameCapital(final Field reflectionJavaField) {
-    //        return text.primaMaiuscola(getFormFieldName(reflectionJavaField));
-    //    }// end of method
+
+    /**
+     * Get the alert message from @NotNull
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessageNull(Field reflectionJavaField) {
+        String message = VUOTA;
+        NotNull annotation = null;
+        AEFieldType type;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getNotNull(reflectionJavaField);
+        if (annotation != null) {
+            message = annotation.message();
+        }
+
+        if (message.equals("{javax.validation.constraints.NotNull.message}")) {
+            message = VUOTA;
+            type = getFormType(reflectionJavaField);
+            if (type == AEFieldType.text) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
+            }
+            if (type == AEFieldType.integer) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
+            }
+        }
+
+        return message;
+    }
 
 
-    //    /**
-    //     * Get the status focus of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return status of field
-    //     */
-    //    public boolean isFocus(Field reflectionJavaField) {
-    //        boolean status = true;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            status = annotation.focus();
-    //        }// end of if cycle
-    //
-    //        return status;
-    //    }// end of method
+    /**
+     * Get the alert message from @Size
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessageSize(Field reflectionJavaField) {
+        String message = VUOTA;
+        Size annotation = null;
+        int min = 0;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getSize(reflectionJavaField);
+        if (annotation == null) {
+            message = this.getMessage(reflectionJavaField);
+        } else {
+            message = annotation.message();
+            if (message.equals("{javax.validation.constraints.Size.message}")) {
+                min = annotation.min();
+                if (min > 0) {
+                    message = text.primaMaiuscola(reflectionJavaField.getName()) + " deve contenere almeno " + min + " caratteri";
+                }
+            }
+        }
+
+        return message;
+    }
 
 
-    //    /**
-    //     * Get the status focus of the property.
-    //     *
-    //     * @param entityClazz the entity class
-    //     * @param fieldName   the property name
-    //     *
-    //     * @return status of field
-    //     */
-    //    public boolean isFocus(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        boolean status = true;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            status = isFocus(field);
-    //        }// end of if cycle
-    //
-    //        return status;
-    //    }// end of method
+    /**
+     * Get the alert message from @NotNull or from @Size
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessage(Field reflectionJavaField) {
+        return getMessageNull(reflectionJavaField);
+    }
 
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getComboClass(Field reflectionJavaField) {
-    //        Class linkClazz = null;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            linkClazz = annotation.serviceClazz();
-    //        }// end of if cycle
-    //
-    //        return linkClazz;
-    //    }// end of method
-    //
-    //
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getComboClass(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        Class linkClazz = null;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            linkClazz = getComboClass(field);
-    //        }// end of if cycle
-    //
-    //        return linkClazz;
-    //    }// end of method
+    /**
+     * Get the placeholder from @AIField
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the placeholder message
+     */
+    public String getPlaceholder(Field reflectionJavaField) {
+        String placeholder = VUOTA;
+        AIField annotation = null;
 
+        if (reflectionJavaField == null) {
+            return null;
+        }
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getEnumClass(Field reflectionJavaField) {
-    //        Class enumClazz = null;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            enumClazz = annotation.enumClazz();
-    //        }// end of if cycle
-    //
-    //        return enumClazz == Object.class ? null : enumClazz;
-    //    }// end of method
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            placeholder = annotation.placeholder();
+        }
 
+        return placeholder;
+    }
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getLinkClass(Field reflectionJavaField) {
-    //        Class linkClazz = null;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            linkClazz = annotation.linkClazz();
-    //        }// end of if cycle
-    //
-    //        return linkClazz == Object.class ? null : linkClazz;
-    //    }// end of method
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public int getSizeMin(final Field reflectionJavaField) {
+        int min = 0;
+        Size annotation = null;
 
+        if (reflectionJavaField == null) {
+            return 0;
+        }
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getServiceClass(Field reflectionJavaField) {
-    //        Class serviceClazz = null;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            serviceClazz = annotation.serviceClazz();
-    //        }// end of if cycle
-    //
-    //        return serviceClazz == Object.class ? null : serviceClazz;
-    //    }// end of method
+        annotation = this.getSize(reflectionJavaField);
+        if (annotation != null) {
+            min = annotation.min();
+        }
 
+        return min;
+    }
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getEnumClass(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        Class linkClazz = null;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            linkClazz = getEnumClass(field);
-    //        }// end of if cycle
-    //
-    //        return linkClazz;
-    //    }// end of method
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public int getSizeMax(final Field reflectionJavaField) {
+        int max = 0;
+        Size annotation = null;
 
+        if (reflectionJavaField == null) {
+            return 0;
+        }
 
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getLinkClass(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        Class linkClazz = null;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            linkClazz = getLinkClass(field);
-    //        }// end of if cycle
-    //
-    //        return linkClazz;
-    //    }// end of method
+        annotation = this.getSize(reflectionJavaField);
+        if (annotation != null) {
+            max = annotation.max();
+        }
 
-
-    //    /**
-    //     * Get the class of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the class for the specific columnService
-    //     */
-    //    @SuppressWarnings("all")
-    //    public Class getServiceClass(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        Class linkClazz = null;
-    //        Field field = reflection.getField(entityClazz, fieldName);
-    //
-    //        if (field != null) {
-    //            linkClazz = getServiceClass(field);
-    //        }// end of if cycle
-    //
-    //        return linkClazz;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the width of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the width of the field expressed in em
-    //     */
-    //    public int getWidth(Field reflectionJavaField) {
-    //        int widthInt = 0;
-    //        AIField annotation = this.getAIField(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            widthInt = annotation.widthEM();
-    //        }// end of if cycle
-    //
-    //        return widthInt;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the widthEM of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the width of the field expressed in em
-    //     */
-    //    public String getWidthEM(Field reflectionJavaField) {
-    //        String width = "";
-    //        int widthInt = this.getWidth(reflectionJavaField);
-    //        String tag = "em";
-    //
-    //        if (widthInt > 0) {
-    //            width = widthInt + tag;
-    //        }// end of if cycle
-    //
-    //        return width;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the alert message from @NotNull
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the alert message
-    //     */
-    //    public String getMessageNull(Field reflectionJavaField) {
-    //        String message = "";
-    //        NotNull annotation = this.getNotNull(reflectionJavaField);
-    //        EAFieldType type;
-    //
-    //        if (annotation != null) {
-    //            message = annotation.message();
-    //        }// end of if cycle
-    //
-    //        if (message.equals("{javax.validation.constraints.NotNull.message}")) {
-    //            message = "";
-    //            type = getFormType(reflectionJavaField);
-    //            if (type == EAFieldType.text) {
-    //                message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
-    //            }// end of if cycle
-    //            if (type == EAFieldType.integer) {
-    //                message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
-    //            }// end of if cycle
-    //        }// end of if cycle
-    //
-    //        return message;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the alert message from @Size
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the alert message
-    //     */
-    //    public String getMessageSize(Field reflectionJavaField) {
-    //        String message = "";
-    //        Size annotation = this.getSize(reflectionJavaField);
-    //        EAFieldType type = getFormType(reflectionJavaField);
-    //        int min = 0;
-    //
-    //        if (type != EAFieldType.text) {
-    //            return "";
-    //        }// end of if cycle
-    //
-    //        if (annotation == null) {
-    //            message = this.getMessage(reflectionJavaField);
-    //        } else {
-    //            message = annotation.message();
-    //            if (message.equals("{javax.validation.constraints.Size.message}")) {
-    //                min = annotation.min();
-    //                if (min > 0) {
-    //                    message = text.primaMaiuscola(reflectionJavaField.getName()) + " deve contenere almeno " + min + " caratteri";
-    //                }// end of if cycle
-    //            }// end of if cycle
-    //        }// end of if/else cycle
-    //
-    //
-    //        return message;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the alert message from @NotNull or from @Size
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return the alert message
-    //     */
-    //    public String getMessage(Field reflectionJavaField) {
-    //        String message = "";
-    //
-    //        message = getMessageNull(reflectionJavaField);
-    //
-    //        //        if (text.isEmpty(message)) {
-    //        //            message = getMessageSize(reflectionJavaField);
-    //        //        }// end of if cycle
-    //
-    //        return message;
-    //    }// end of method
-
+        return max;
+    }
 
     //    /**
     //     * Get the status required of the property.

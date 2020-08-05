@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -45,27 +46,26 @@ public class Mese extends AEntity {
     /**
      * ordinamento (obbligatorio, unico) <br>
      */
-    @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.integer, caption = "progressivo", widthEM = 5)
+    @Size(max = 12)
+    @AIField(type = AEFieldType.integer, caption = "progressivo")
     @AIColumn(header = "#")
     public int ordine;
 
     /**
      * nome completo (obbligatorio, unico) <br>
      */
-    @NotNull
+    @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.text, widthEM = 12)
+    @AIField(type = AEFieldType.text)
     @AIColumn(flexGrow = true)
     public String nome;
 
     /**
      * numero di giorni presenti (obbligatorio) <br>
      */
-    @NotNull
-    @Indexed()
-    @AIField(type = AEFieldType.integer, widthEM = 3)
+    @NotNull(message = "I giorni devono essere 28, 30 o 31")
+    @AIField(type = AEFieldType.integer)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "green")
     public int giorni;
 
@@ -73,9 +73,9 @@ public class Mese extends AEntity {
     /**
      * numero di giorni presenti se anno bisestile (obbligatorio) <br>
      */
-    @NotNull
-    @Indexed()
-    @AIField(type = AEFieldType.integer, widthEM = 3, caption = "giorni anno bisestile")
+    //    @NotNull(message = "28 o 29")
+    @Size(min = 29, max = 31)
+    @AIField(type = AEFieldType.integer, caption = "bisestile")
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "red")
     public int giorniBisestile;
 
@@ -83,10 +83,9 @@ public class Mese extends AEntity {
     /**
      * nome abbreviato di tre cifre (obbligatorio, unico) <br>
      */
-    @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Size(min = 3)
-    @AIField(type = AEFieldType.text, required = true, widthEM = 12)
+    @Size(min = 3, max = 3, message = "La sigla deve essere di 3 caratteri")
+    @AIField(type = AEFieldType.text, required = true, widthEM = 4, placeholder = "xxx")
     @AIColumn()
     public String sigla;
 

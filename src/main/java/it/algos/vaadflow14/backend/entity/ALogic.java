@@ -819,8 +819,9 @@ public abstract class ALogic implements AILogic {
                 break;
             case conferma:
             case registra:
-                this.saveDaForm(entityBean);
-                this.back();
+                if (saveDaForm(entityBean)) {
+                    this.back();
+                }
                 break;
             case delete:
                 this.delete();
@@ -1176,20 +1177,25 @@ public abstract class ALogic implements AILogic {
      *
      * @return the saved entity
      */
-    public AEntity saveDaForm(AEntity entityBean) {
+    public boolean saveDaForm(AEntity entityBean) {
         if (form != null) {
             entityBean = form.getValidBean();
+        }
+
+        if (entityBean == null) {
+            Notification.show("Alcuni campi non sono adeguati", 3000, Notification.Position.MIDDLE);
+            return false;
         }
 
         if (operationForm != null) {
             switch (operationForm) {
                 case addNew:
-                    return insert(entityBean);
+                    return insert(entityBean) != null;
                 case edit:
                 case editNoDelete:
                 case editProfile:
                 case editDaLink:
-                    return save(entityBean);
+                    return save(entityBean) != null;
                 case showOnly:
                     break;
                 default:
@@ -1197,9 +1203,9 @@ public abstract class ALogic implements AILogic {
                     break;
             }
         } else {
-            return null;
+            return false;
         }
-        return null;
+        return false;
     }
 
 
@@ -1229,7 +1235,8 @@ public abstract class ALogic implements AILogic {
         }
 
         if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
-            logger.error("operationForm errato in una nuova entity", ALogic.class, "save");
+            logger.error("operationForm errato in una nuova entity che NON è stata salvata", ALogic.class, "save");
+            return null;
         }
 
         if (entityBean != null) {

@@ -220,5 +220,13 @@ public @interface AIField {
      */
     String propertyLinkata() default VUOTA;
 
+    /**
+     * (Optional) placeholder for empty field
+     * Defaults to vuota.
+     *
+     * @return the string
+     */
+    String placeholder() default VUOTA;
+
 
 }

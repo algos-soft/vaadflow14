@@ -1,8 +1,11 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.customfield.CustomField;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.Collection;
@@ -45,6 +48,12 @@ public class AField<T> extends CustomField<T> implements AIField {
 
 
     @Override
+    public void setWidth(String width) {
+
+    }
+
+
+    @Override
     public void setText(String caption) {
 
     }
@@ -57,14 +66,17 @@ public class AField<T> extends CustomField<T> implements AIField {
 
 
     @Override
-    public Component getComp() {
+    public AbstractSinglePropertyField getBinder() {
         return null;
     }
 
 
     @Override
-    public AField getAlgos() {
+    public AField get() {
         return this;
+    }
+    @Override
+    public void setPlaceholder(String placeholder) {
     }
 
 }

@@ -22,7 +22,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATextField extends AField<String> {
+public class ATextField extends AField<String>  {
 
     private final TextField innerField;
 
@@ -99,9 +99,20 @@ public class ATextField extends AField<String> {
          return innerField.getValue().compareTo( o);
     }
 
+
     @Override
-    public Component getComp() {
+    public void setWidth(String width) {
+        innerField.setWidth(width);
+    }
+
+
+    @Override
+    public TextField getBinder() {
         return innerField;
+    }
+    @Override
+    public void setPlaceholder(String placeholder) {
+         innerField.setPlaceholder(placeholder);
     }
 
 

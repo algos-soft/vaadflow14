@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
+import it.algos.vaadflow14.ui.service.AColumnService;
+import it.algos.vaadflow14.ui.service.AFieldService;
 import it.algos.vaadflow14.ui.service.ARouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -111,8 +113,8 @@ public abstract class AAbstractService {
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
-    //    @Autowired
-    //    public AColumnService column;
+//    @Autowired
+//    public AColumnService column;
 
 
     /**
@@ -129,8 +131,8 @@ public abstract class AAbstractService {
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
-    //    @Autowired
-    //    public AFieldService field;
+//    @Autowired
+//    public AFieldService field;
 
 
     /**
@@ -151,4 +153,4 @@ public abstract class AAbstractService {
     //    public AEnumerationService enumService;
 
 
-}// end of class
+}
