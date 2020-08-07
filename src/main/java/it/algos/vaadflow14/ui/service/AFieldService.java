@@ -209,6 +209,7 @@ public class AFieldService extends AAbstractService {
         }
 
         fieldName = reflectionJavaField.getName();
+
         if (fieldType != null) {
             builder = binder.forField(field.getBinder());
             switch (fieldType) {
