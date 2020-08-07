@@ -75,7 +75,7 @@ public class ABeanService extends AAbstractService {
             return false;
         }
 
-//        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+        //        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
 
@@ -84,26 +84,26 @@ public class ABeanService extends AAbstractService {
      * Estrae le differenze delle sole properties modificate <br>
      * Controlla che le due entities esistano e siano della stessa classe <br>
      *
-     * @param entityBeanOld originaria
      * @param entityBeanNew modificata
+     * @param entityBeanOld originaria
      *
      * @return mappa delle properties modificate con la coppia di valori vecchio e nuovo
      */
-    public Map<String, WrapDueObject> getMappaModifiche(AEntity entityBeanOld, AEntity entityBeanNew) {
+    public Map<String, WrapDueObject> getMappaModifiche(AEntity entityBeanNew, AEntity entityBeanOld) {
         Map<String, WrapDueObject> mappaModifiche = new LinkedHashMap<>();
         List<String> listaProperties;
         Object oldValue;
         Object newValue;
         WrapDueObject wrap;
 
-        if (entityBeanOld == null && entityBeanNew == null && entityBeanOld.getClass() != entityBeanNew.getClass()) {
+        if (entityBeanNew == null && entityBeanOld == null && entityBeanNew.getClass() != entityBeanOld.getClass()) {
             return null;
         }
 
-        listaProperties = reflection.getFieldsName(entityBeanOld.getClass());
+        listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
         for (String key : listaProperties) {
-            oldValue = reflection.getPropertyValue(entityBeanOld, key);
             newValue = reflection.getPropertyValue(entityBeanNew, key);
+            oldValue = entityBeanOld != null ? reflection.getPropertyValue(entityBeanOld, key) : null;
 
             if (oldValue == null && newValue != null) {
                 wrap = new WrapDueObject(oldValue, newValue);
@@ -115,7 +115,7 @@ public class ABeanService extends AAbstractService {
                 mappaModifiche.put(key, wrap);
             }
 
-            if (oldValue != null &&!oldValue.equals(newValue)) {
+            if (oldValue != null && !oldValue.equals(newValue)) {
                 wrap = new WrapDueObject(oldValue, newValue);
                 mappaModifiche.put(key, wrap);
             }
@@ -128,26 +128,28 @@ public class ABeanService extends AAbstractService {
      * Estrae le differenze delle sole properties modificate <br>
      * Controlla che le due entities esistano e siano della stessa classe <br>
      *
-     * @param entityBeanOld originaria
      * @param entityBeanNew modificata
+     * @param entityBeanOld originaria
      *
      * @return lista delle properties modificate con la coppia di valori vecchio e nuovo
      */
-    public String getModifiche(AEntity entityBeanOld, AEntity entityBeanNew) {
+    public String getModifiche(AEntity entityBeanNew, AEntity entityBeanOld) {
         String message = VUOTA;
-        Map<String, WrapDueObject> mappaModifiche = getMappaModifiche(entityBeanOld, entityBeanNew);
+        Map<String, WrapDueObject> mappaModifiche = getMappaModifiche(entityBeanNew, entityBeanOld);
         WrapDueObject wrap;
+        String valori = VUOTA;
 
         if (mappaModifiche != null && mappaModifiche.size() > 0) {
-            message += entityBeanOld.getClass().getSimpleName();
-            message += SEP;
-            message += entityBeanOld.id;
+            message += entityBeanNew.getClass().getSimpleName();
+            message += DUE_PUNTI;
+            message += entityBeanNew.id;
             message += SPAZIO;
             for (Map.Entry<String, WrapDueObject> mappa : mappaModifiche.entrySet()) {
                 wrap = mappa.getValue();
                 message += mappa.getKey();
                 message += DUE_PUNTI;
-                message += text.setQuadre(wrap.getPrimo() + FORWARD + wrap.getSecondo());
+                valori = text.isValid(wrap.getPrimo()) ? wrap.getPrimo() + FORWARD + wrap.getSecondo() : VUOTA + wrap.getSecondo();
+                message += text.setQuadre(valori);
                 message += SPAZIO;
             }
         }

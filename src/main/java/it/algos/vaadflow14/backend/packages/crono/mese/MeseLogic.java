@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -141,6 +143,16 @@ public class MeseLogic extends ALogic {
     public boolean crea(AEMese aeMese) {
         Mese newEntityBean = newEntity(aeMese);
         return insert(newEntityBean) != null;
+    }
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Mese newEntity() {
+        return newEntity(VUOTA,0,0,VUOTA);
     }
 
 

@@ -193,11 +193,11 @@ public class AForm extends VerticalLayout {
     /**
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
-     * Questo metodo viene chiamato subito dopo che il framework ha terminato l'init() implicito <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
      * del costruttore e PRIMA di qualsiasi altro metodo <br>
      * <p>
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
      */
     @PostConstruct
     protected void postConstruct() {

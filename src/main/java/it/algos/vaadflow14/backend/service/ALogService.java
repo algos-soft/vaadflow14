@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AELogLivello;
@@ -131,9 +130,7 @@ public class ALogService extends AAbstractService {
         String message = VUOTA;
 
         if (entityBean != null) {
-            message += entityBean.getClass().getSimpleName();
-            message += SEP;
-            message += entityBean.toString();
+            message = beanService.getModifiche(entityBean, null);
             info(AELogType.nuovo, message);
         } else {
             error("Non sono riuscito a creare la entity");
@@ -145,10 +142,10 @@ public class ALogService extends AAbstractService {
      * Logger specifico <br>
      * Modifica di una entity esistente <br>
      *
-     * @param entityBeanOld originaria preesistente
      * @param entityBean    da modificare
+     * @param entityBeanOld originaria preesistente
      */
-    public void modificata(AEntity entityBeanOld, AEntity entityBean) {
+    public void modifica(AEntity entityBean, AEntity entityBeanOld) {
         String message = VUOTA;
 
         if (entityBeanOld == null && entityBean == null) {
@@ -165,7 +162,7 @@ public class ALogService extends AAbstractService {
             error("Non sono riuscito a modificare la entity");
         }
 
-        message += beanService.getModifiche(entityBeanOld, entityBean);
+        message += beanService.getModifiche(entityBean, entityBeanOld);
         esegue(AELogType.modifica, message);
     }
 

@@ -5,7 +5,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AENumType;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -47,8 +49,7 @@ public class Mese extends AEntity {
      * ordinamento (obbligatorio, unico) <br>
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Size(max = 12)
-    @AIField(type = AEFieldType.integer, caption = "progressivo")
+    @AIField(type = AEFieldType.integer, caption = "progressivo", numType = AENumType.positiviOnly)
     @AIColumn(header = "#")
     public int ordine;
 
@@ -57,7 +58,7 @@ public class Mese extends AEntity {
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.text)
+    @AIField(type = AEFieldType.text, focus = true)
     @AIColumn(flexGrow = true)
     public String nome;
 
@@ -65,7 +66,7 @@ public class Mese extends AEntity {
      * numero di giorni presenti (obbligatorio) <br>
      */
     @NotNull(message = "I giorni devono essere 28, 30 o 31")
-    @AIField(type = AEFieldType.integer)
+    @AIField(type = AEFieldType.integer, numType = AENumType.range)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "green")
     public int giorni;
 
@@ -73,9 +74,8 @@ public class Mese extends AEntity {
     /**
      * numero di giorni presenti se anno bisestile (obbligatorio) <br>
      */
-    //    @NotNull(message = "28 o 29")
-    @Size(min = 29, max = 31)
-    @AIField(type = AEFieldType.integer, caption = "bisestile")
+    @Range(min = 29, max = 31)
+    @AIField(type = AEFieldType.integer, caption = "bisestile", numType = AENumType.positiviOnly)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "red")
     public int giorniBisestile;
 
@@ -83,6 +83,7 @@ public class Mese extends AEntity {
     /**
      * nome abbreviato di tre cifre (obbligatorio, unico) <br>
      */
+    @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3, max = 3, message = "La sigla deve essere di 3 caratteri")
     @AIField(type = AEFieldType.text, required = true, widthEM = 4, placeholder = "xxx")

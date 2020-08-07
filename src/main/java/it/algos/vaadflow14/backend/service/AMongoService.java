@@ -604,7 +604,6 @@ public class AMongoService<capture> extends AAbstractService {
 
         try {
             entityBean = mongoOp.insert(newEntityBean);
-            logger.nuovo(entityBean);
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "insert");
         }

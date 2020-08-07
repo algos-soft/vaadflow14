@@ -4,7 +4,6 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,7 +17,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Time: 16:28
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AStringBlankValidator implements Validator {
 
     private static final long serialVersionUID = 1L;
@@ -26,21 +25,33 @@ public class AStringBlankValidator implements Validator {
     private String message = VUOTA;
 
 
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso i parametri del costruttore usato <br>
+     */
     public AStringBlankValidator() {
-    }
+    } // end of SpringBoot constructor
 
 
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AStringBlankValidator.class, message) <br>
+     *
+     * @param message da mostrare
+     */
     public AStringBlankValidator(String message) {
         this.message = message;
-    }
+    } // end of SpringBoot constructor
 
 
     @Override
     public ValidationResult apply(Object obj, ValueContext valueContext) {
-        String testo;
+        String testo = VUOTA;
 
         if (obj instanceof String) {
             testo = (String) obj;
+
             if (testo.length() == 0) {
                 if (message.equals("")) {
                     return ValidationResult.error("Il contenuto di questo campo non può essere vuoto");

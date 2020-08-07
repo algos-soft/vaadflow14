@@ -39,6 +39,7 @@ public class ATextField extends AField<String>  {
 
     public ATextField(String label, String placeholder) {
         innerField = new TextField(label, placeholder);
+        innerField.setAutoselect(true);
         add(innerField);
     }
 
@@ -115,5 +116,9 @@ public class ATextField extends AField<String>  {
          innerField.setPlaceholder(placeholder);
     }
 
+    @Override
+    public void setAutofocus() {
+        innerField.setAutofocus(true);
+    }
 
 }

@@ -6,12 +6,15 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AENumType;
 import it.algos.vaadflow14.backend.service.AAbstractService;
+import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.fields.AIntegerField;
 import it.algos.vaadflow14.ui.fields.ATextField;
-import it.algos.vaadflow14.ui.validator.AIntegerZeroValidator;
+import it.algos.vaadflow14.ui.validator.AIntegerValidator;
+import it.algos.vaadflow14.ui.validator.ARangeIntegerValidator;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +67,14 @@ public class AFieldService extends AAbstractService {
 
         field = creaOnly(reflectionJavaField);
         if (field != null) {
-            addFieldToBinder(binder, reflectionJavaField, field);
+            try {
+                addFieldToBinder(binder, reflectionJavaField, field);
+            } catch (Exception unErrore) {
+                if (unErrore instanceof RangeException) {
+                    logger.error(unErrore.getMessage() + " per la property " + propertyName, this.getClass(), "create");
+                }
+                return null;
+            }
         }
 
         return field;
@@ -83,6 +93,7 @@ public class AFieldService extends AAbstractService {
         AEFieldType type = null;
         String width = VUOTA;
         String placeholder = VUOTA;
+        boolean hasFocus = false;
 
         if (reflectionJavaField == null) {
             return null;
@@ -92,6 +103,7 @@ public class AFieldService extends AAbstractService {
         caption = annotation.getFormFieldNameCapital(reflectionJavaField);
         width = annotation.getFormWith(reflectionJavaField);
         placeholder = annotation.getPlaceholder(reflectionJavaField);
+        hasFocus = annotation.focus(reflectionJavaField);
 
         if (type != null) {
             switch (type) {
@@ -122,22 +134,30 @@ public class AFieldService extends AAbstractService {
             field.setPlaceholder(placeholder);
         }
 
+        if (hasFocus) {
+            field.setAutofocus();
+        }
+
         return field;
     }
 
 
-    protected void addFieldToBinder(Binder binder, Field reflectionJavaField, AField field) {
+    protected void addFieldToBinder(Binder binder, Field reflectionJavaField, AField field) throws Exception {
         Binder.BindingBuilder builder = null;
-        AEFieldType type = annotation.getFormType(reflectionJavaField);
+        AEFieldType fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;
+        AENumType numType = AENumType.positiviOnly;
         AStringBlankValidator stringBlankValidator = null;
         StringLengthValidator stringLengthValidator = null;
-        AIntegerZeroValidator integerZeroValidator = null;
+        AIntegerValidator integerValidator = null;
+        ARangeIntegerValidator rangeIntegerValidator = null;
         String message = VUOTA;
         String messageSize = VUOTA;
         String messageNotNull = VUOTA;
-        int min = 0;
-        int max = 0;
+        int stringMin = 0;
+        int stringMax = 0;
+        int intMin = 0;
+        int intMax = 0;
         String widthForNumber = "8em";
 
         //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
@@ -153,16 +173,28 @@ public class AFieldService extends AAbstractService {
         message = annotation.getMessage(reflectionJavaField);
         messageSize = annotation.getMessageSize(reflectionJavaField);
         messageNotNull = annotation.getMessageNull(reflectionJavaField);
-        min = annotation.getSizeMin(reflectionJavaField);
-        max = annotation.getSizeMax(reflectionJavaField);
-        stringBlankValidator = new AStringBlankValidator(message);
-        stringLengthValidator = new StringLengthValidator(messageSize, min, max);
-        integerZeroValidator = new AIntegerZeroValidator();
+        numType = annotation.getNumberType(reflectionJavaField);
+        stringMin = annotation.getStringMin(reflectionJavaField);
+        stringMax = annotation.getStringMax(reflectionJavaField);
+        intMin = annotation.getNumberMin(reflectionJavaField);
+        intMax = annotation.getNumberMax(reflectionJavaField);
+        stringBlankValidator = appContext.getBean(AStringBlankValidator.class, message);
+        if (stringMin > 0 || stringMax > 0) {
+            stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
+        }
+        if (intMin > 0 || intMax > 0) {
+            if (intMin >= intMax) {
+                throw new RangeException("I valori del range sono errati");
+            } else {
+                rangeIntegerValidator = appContext.getBean(ARangeIntegerValidator.class, intMin, intMax);
+            }
+        }
+        integerValidator = appContext.getBean(AIntegerValidator.class, numType);
 
         fieldName = reflectionJavaField.getName();
-        if (type != null) {
+        if (fieldType != null) {
             builder = binder.forField(field.getBinder());
-            switch (type) {
+            switch (fieldType) {
                 case text:
                     if (stringBlankValidator != null) {
                         builder.withValidator(stringBlankValidator);
@@ -172,19 +204,22 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case integer:
-                    if (min > 0) {
+                    if (intMin > 0) {
                         ((IntegerField) field.getBinder()).setHasControls(true);
-                        ((IntegerField) field.getBinder()).setMin(min);
+                        ((IntegerField) field.getBinder()).setMin(intMin);
                         field.setWidth(widthForNumber);
                     }
-                    if (max > 0) {
+                    if (intMax > 0) {
                         ((IntegerField) field.getBinder()).setHasControls(true);
-                        ((IntegerField) field.getBinder()).setMax(max);
+                        ((IntegerField) field.getBinder()).setMax(intMax);
                         field.setWidth(widthForNumber);
                     }
 
-                    if (integerZeroValidator != null) {
-                        builder.withValidator(integerZeroValidator);
+                    if (integerValidator != null) {
+                        builder.withValidator(integerValidator);
+                    }
+                    if (rangeIntegerValidator != null) {
+                        builder.withValidator(rangeIntegerValidator);
                     }
                     break;
                 case yesNo:
@@ -197,7 +232,7 @@ public class AFieldService extends AAbstractService {
                 case gridShowOnly:
                     break;
                 default:
-                    logger.warn("Switch - caso non definito per il field \"" + reflectionJavaField.getName() + "\" del tipo " + type, this.getClass(), "addFieldToBinder");
+                    logger.warn("Switch - caso non definito per il field \"" + reflectionJavaField.getName() + "\" del tipo " + fieldType, this.getClass(), "addFieldToBinder");
                     break;
             }
             if (builder != null) {

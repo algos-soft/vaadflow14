@@ -33,3 +33,41 @@ span.getElement().getStyle().set("font-weight", "bold");
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
 
  * Per omogeneità è meglio usare 'static final' (piuttosto che l'equivalente 'final static') <br>
+
+
+    /**
+     * Costruttore base senza parametri <br>
+     * Non usato. Serve solo per 'coprire' un piccolo bug di Idea <br>
+     * Se manca, manda in rosso i parametri del costruttore usato <br>
+     */
+    public AnnoDialog() {
+
+    } // end of SpringBoot constructor
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(xxx.class, ...parameters) <br>
+     */
+    public ATopLayout(WrapButtons wrapButtons) {
+
+    } // end of SpringBoot constructor
+
+#long to int
+Math.toIntExact(min);
+
+#Long to int
+min.intValue();
+
+    /**
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
+     * del costruttore e PRIMA di qualsiasi altro metodo <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     */
+    @PostConstruct
+    protected void postConstruct() {
+        this.init();
+    }

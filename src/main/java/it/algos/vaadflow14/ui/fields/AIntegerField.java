@@ -40,6 +40,7 @@ public class AIntegerField extends AField<Integer> {
 
     public AIntegerField(String label, String placeholder) {
         innerField = new IntegerField(label, placeholder);
+        innerField.setAutoselect(true);
         innerField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         add(innerField);
     }
@@ -65,6 +66,11 @@ public class AIntegerField extends AField<Integer> {
     @Override
     public void setPlaceholder(String placeholder) {
         innerField.setPlaceholder(placeholder);
+    }
+
+    @Override
+    public void setAutofocus() {
+        innerField.setAutofocus(true);
     }
 
 }

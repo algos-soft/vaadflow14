@@ -6,7 +6,9 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AENumType;
 import it.algos.vaadflow14.ui.view.AView;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -363,6 +365,18 @@ public class AAnnotationService extends AAbstractService {
      */
     public Size getSize(final Field reflectionJavaField) {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(Size.class) : null;
+    }
+
+
+    /**
+     * Get the annotation Range.
+     *
+     * @param reflectionJavaField di riferimento per estrarre l'annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public Range getRange(final Field reflectionJavaField) {
+        return reflectionJavaField != null ? reflectionJavaField.getAnnotation(Range.class) : null;
     }
 
 
@@ -1354,7 +1368,7 @@ public class AAnnotationService extends AAbstractService {
         } else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {
-                widthTxt = type.getWidthField()>0 ? type.getWidthField() + TAG_EM : VUOTA;
+                widthTxt = type.getWidthField() > 0 ? type.getWidthField() + TAG_EM : VUOTA;
             }
         }
 
@@ -1510,14 +1524,17 @@ public class AAnnotationService extends AAbstractService {
         return placeholder;
     }
 
+
     /**
-     * Get the specific annotation of the field.
+     * Get the specific annotation of the field. <br>
+     * Size si usa SOLO per le stringhe <br>
+     * Per i numeri si usa @Range <br>
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the Annotation for the specific field
+     * @return the value
      */
-    public int getSizeMin(final Field reflectionJavaField) {
+    public int getStringMin(final Field reflectionJavaField) {
         int min = 0;
         Size annotation = null;
 
@@ -1533,14 +1550,17 @@ public class AAnnotationService extends AAbstractService {
         return min;
     }
 
+
     /**
      * Get the specific annotation of the field.
+     * Size si usa SOLO per le stringhe <br>
+     * Per i numeri si usa @Range <br>
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the Annotation for the specific field
+     * @return the value
      */
-    public int getSizeMax(final Field reflectionJavaField) {
+    public int getStringMax(final Field reflectionJavaField) {
         int max = 0;
         Size annotation = null;
 
@@ -1554,6 +1574,104 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return max;
+    }
+
+
+    /**
+     * Get the specific annotation of the field. <br>
+     * Range si usa SOLO per i numeri <br>
+     * Per le stringhe si usa @Size <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value
+     */
+    public int getNumberMin(final Field reflectionJavaField) {
+        long min = 0;
+        Range annotation = null;
+
+        if (reflectionJavaField == null) {
+            return 0;
+        }
+
+        annotation = this.getRange(reflectionJavaField);
+        if (annotation != null) {
+            min = annotation.min();
+        }
+
+        return min > 0 ? Math.toIntExact(min) : 0;
+    }
+
+
+    /**
+     * Get the specific annotation of the field. <br>
+     * Range si usa SOLO per i numeri <br>
+     * Per le stringhe si usa @Size <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value
+     */
+    public int getNumberMax(final Field reflectionJavaField) {
+        long max = 0;
+        Range annotation = null;
+
+        if (reflectionJavaField == null) {
+            return 0;
+        }
+
+        annotation = this.getRange(reflectionJavaField);
+        if (annotation != null) {
+            max = annotation.max();
+        }
+
+        return max > 0 ? Math.toIntExact(max) : 0;
+    }
+
+
+    /**
+     * Get the specific annotation of the field. <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     */
+    public AENumType getNumberType(final Field reflectionJavaField) {
+        AENumType type = AENumType.positiviOnly;
+        AIField annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            type = annotation.numType();
+        }
+
+        return type;
+    }
+
+
+    /**
+     * Get the status focus of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean focus(Field reflectionJavaField) {
+        boolean status = false;
+        AIField annotation = null;
+
+        if (reflectionJavaField == null) {
+            return false;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            status = annotation.focus();
+        }
+
+        return status;
     }
 
     //    /**

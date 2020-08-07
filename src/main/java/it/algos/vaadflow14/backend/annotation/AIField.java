@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AENumType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -228,5 +229,12 @@ public @interface AIField {
      */
     String placeholder() default VUOTA;
 
+    /**
+     * (Optional) The type of the number range.
+     * Defaults to the positiviOnly type.
+     *
+     * @return the ae field type
+     */
+    AENumType numType() default AENumType.positiviOnly;
 
 }

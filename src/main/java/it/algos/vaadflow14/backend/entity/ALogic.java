@@ -1060,15 +1060,15 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public AEntity newEntity() {
-        AEntity entityBean = null;
+        AEntity newEntityBean = null;
 
         try {
-            entityBean = (AEntity) entityClazz.newInstance();
+            newEntityBean = (AEntity) entityClazz.newInstance();
         } catch (Exception unErrore) {
             logger.warn(unErrore.toString(), this.getClass(), "newEntity");
         }
 
-        return entityBean;
+        return newEntityBean;
     }
 
 
@@ -1140,7 +1140,14 @@ public abstract class ALogic implements AILogic {
      * @return the saved entity
      */
     public AEntity insert(AEntity newEntityBean) {
-        return mongo.insert(newEntityBean);
+        AEntity entityBean = null;
+        newEntityBean = fixKey(newEntityBean);
+        entityBean = mongo.insert(newEntityBean);
+
+        if (entityBean != null) {
+            logger.nuovo(entityBean);
+        }
+        return entityBean;
     }
 
 
@@ -1266,7 +1273,7 @@ public abstract class ALogic implements AILogic {
             }
         } else {
             if (modificata && entityBeanOld != null) {
-                logger.modificata(entityBeanOld, entityBean);
+                logger.modifica(entityBean, entityBeanOld);
             }
         }
 
