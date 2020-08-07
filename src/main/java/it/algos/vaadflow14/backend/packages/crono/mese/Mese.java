@@ -65,8 +65,9 @@ public class Mese extends AEntity {
     /**
      * numero di giorni presenti (obbligatorio) <br>
      */
+    @Range(min = 28, max = 31)
     @NotNull(message = "I giorni devono essere 28, 30 o 31")
-    @AIField(type = AEFieldType.integer, numType = AENumType.range)
+    @AIField(type = AEFieldType.integer, numType = AENumType.rangeControl)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "green")
     public int giorni;
 
@@ -75,7 +76,7 @@ public class Mese extends AEntity {
      * numero di giorni presenti se anno bisestile (obbligatorio) <br>
      */
     @Range(min = 29, max = 31)
-    @AIField(type = AEFieldType.integer, caption = "bisestile", numType = AENumType.positiviOnly)
+    @AIField(type = AEFieldType.integer, caption = "bisestile", numType = AENumType.rangeControl)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "red")
     public int giorniBisestile;
 

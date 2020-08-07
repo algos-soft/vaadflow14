@@ -14,7 +14,6 @@ import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.fields.AIntegerField;
 import it.algos.vaadflow14.ui.fields.ATextField;
 import it.algos.vaadflow14.ui.validator.AIntegerValidator;
-import it.algos.vaadflow14.ui.validator.ARangeIntegerValidator;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
 import org.springframework.stereotype.Service;
 
@@ -94,6 +93,9 @@ public class AFieldService extends AAbstractService {
         String width = VUOTA;
         String placeholder = VUOTA;
         boolean hasFocus = false;
+        int intMin = 0;
+        int intMax = 0;
+        String widthForNumber = "8em";
 
         if (reflectionJavaField == null) {
             return null;
@@ -104,6 +106,8 @@ public class AFieldService extends AAbstractService {
         width = annotation.getFormWith(reflectionJavaField);
         placeholder = annotation.getPlaceholder(reflectionJavaField);
         hasFocus = annotation.focus(reflectionJavaField);
+        intMin = annotation.getNumberMin(reflectionJavaField);
+        intMax = annotation.getNumberMax(reflectionJavaField);
 
         if (type != null) {
             switch (type) {
@@ -112,6 +116,18 @@ public class AFieldService extends AAbstractService {
                     break;
                 case integer:
                     field = new AIntegerField(caption);
+                    if (field!=null) {
+                        if (intMin > 0) {
+                            ((IntegerField) field.getBinder()).setHasControls(true);
+                            ((IntegerField) field.getBinder()).setMin(intMin);
+                            field.setWidth(widthForNumber);
+                        }
+                        if (intMax > 0) {
+                            ((IntegerField) field.getBinder()).setHasControls(true);
+                            ((IntegerField) field.getBinder()).setMax(intMax);
+                            field.setWidth(widthForNumber);
+                        }
+                    }
                     break;
                 case yesNo:
                     field = new ATextField(caption);
@@ -150,7 +166,6 @@ public class AFieldService extends AAbstractService {
         AStringBlankValidator stringBlankValidator = null;
         StringLengthValidator stringLengthValidator = null;
         AIntegerValidator integerValidator = null;
-        ARangeIntegerValidator rangeIntegerValidator = null;
         String message = VUOTA;
         String messageSize = VUOTA;
         String messageNotNull = VUOTA;
@@ -158,7 +173,6 @@ public class AFieldService extends AAbstractService {
         int stringMax = 0;
         int intMin = 0;
         int intMax = 0;
-        String widthForNumber = "8em";
 
         //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
         //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
@@ -182,14 +196,17 @@ public class AFieldService extends AAbstractService {
         if (stringMin > 0 || stringMax > 0) {
             stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
         }
-        if (intMin > 0 || intMax > 0) {
-            if (intMin >= intMax) {
-                throw new RangeException("I valori del range sono errati");
-            } else {
-                rangeIntegerValidator = appContext.getBean(ARangeIntegerValidator.class, intMin, intMax);
+        if (numType == AENumType.range || numType == AENumType.rangeControl) {
+            if (intMin > 0 || intMax > 0) {
+                if (intMin >= intMax) {
+                    throw new RangeException("I valori del range sono errati");
+                } else {
+                    integerValidator = appContext.getBean(AIntegerValidator.class, numType, intMin, intMax);
+                }
             }
+        } else {
+            integerValidator = appContext.getBean(AIntegerValidator.class, numType);
         }
-        integerValidator = appContext.getBean(AIntegerValidator.class, numType);
 
         fieldName = reflectionJavaField.getName();
         if (fieldType != null) {
@@ -204,22 +221,8 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case integer:
-                    if (intMin > 0) {
-                        ((IntegerField) field.getBinder()).setHasControls(true);
-                        ((IntegerField) field.getBinder()).setMin(intMin);
-                        field.setWidth(widthForNumber);
-                    }
-                    if (intMax > 0) {
-                        ((IntegerField) field.getBinder()).setHasControls(true);
-                        ((IntegerField) field.getBinder()).setMax(intMax);
-                        field.setWidth(widthForNumber);
-                    }
-
                     if (integerValidator != null) {
                         builder.withValidator(integerValidator);
-                    }
-                    if (rangeIntegerValidator != null) {
-                        builder.withValidator(rangeIntegerValidator);
                     }
                     break;
                 case yesNo:
