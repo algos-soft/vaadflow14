@@ -1,12 +1,13 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
-import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.header.AHeaderWrap;
+import it.algos.vaadflow14.ui.service.AFieldService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -40,6 +41,14 @@ public class MeseLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AFieldService fieldService;
 
 
     /**
@@ -76,7 +85,7 @@ public class MeseLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-//        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+        //        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.usaBottoneNew = false;
@@ -86,29 +95,29 @@ public class MeseLogic extends ALogic {
     }
 
 
-//    public AHeader superatoDaCancellare(AEVista typeVista) {
-//        AHeader header = new AHeaderWrap();
-//        header.setMargin(false);
-//        header.setSpacing(false);
-//        header.setPadding(false);
-//
-//        String messUno = "Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.";
-//        String messDue = "Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.";
-//
-//        Span span = new Span();
-//        span.getElement().setProperty("innerHTML", messUno);
-//        span.getElement().getStyle().set("color", "green");
-//        span.getElement().getStyle().set("font-weight", "bold");
-//        header.add(span);
-//
-//        Span span2 = new Span();
-//        span2.getElement().setProperty("innerHTML", messDue);
-//        span2.getElement().getStyle().set("color", "blue");
-//        span2.getElement().getStyle().set("font-weight", "bold");
-//        header.add(span2);
-//
-//        return header;
-//    }
+    //    public AHeader superatoDaCancellare(AEVista typeVista) {
+    //        AHeader header = new AHeaderWrap();
+    //        header.setMargin(false);
+    //        header.setSpacing(false);
+    //        header.setPadding(false);
+    //
+    //        String messUno = "Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.";
+    //        String messDue = "Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.";
+    //
+    //        Span span = new Span();
+    //        span.getElement().setProperty("innerHTML", messUno);
+    //        span.getElement().getStyle().set("color", "green");
+    //        span.getElement().getStyle().set("font-weight", "bold");
+    //        header.add(span);
+    //
+    //        Span span2 = new Span();
+    //        span2.getElement().setProperty("innerHTML", messDue);
+    //        span2.getElement().getStyle().set("color", "blue");
+    //        span2.getElement().getStyle().set("font-weight", "bold");
+    //        header.add(span2);
+    //
+    //        return header;
+    //    }
 
 
     /**
@@ -142,8 +151,20 @@ public class MeseLogic extends ALogic {
      */
     public boolean crea(AEMese aeMese) {
         Mese newEntityBean = newEntity(aeMese);
+        Binder binder;
+        binder = new Binder(entityClazz);
+        List<String> listaNomi;
+        listaNomi = annotation.getListaPropertiesForm(entityClazz);
+        for (String fieldName : listaNomi) {
+            fieldService.create(binder, newEntityBean, fieldName);
+        }
+        binder.readBean((AEntity) newEntityBean);
+        boolean valido ;
+        valido = binder.isValid();
         return insert(newEntityBean) != null;
     }
+
+
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
@@ -152,7 +173,7 @@ public class MeseLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity() {
-        return newEntity(VUOTA,0,0,VUOTA);
+        return newEntity(VUOTA, 0, 0, VUOTA);
     }
 
 
@@ -215,6 +236,9 @@ public class MeseLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
+        for (AEMese aeMese : AEMese.values()) {
+            crea(aeMese);
+        }
         for (AEMese aeMese : AEMese.values()) {
             crea(aeMese);
         }

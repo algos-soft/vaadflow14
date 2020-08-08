@@ -351,7 +351,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the Annotation for the specific field
      */
-    public Indexed getUnique(final Field reflectionJavaField) {
+    public Indexed getIndexed(final Field reflectionJavaField) {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(Indexed.class) : null;
     }
 
@@ -1480,7 +1480,7 @@ public class AAnnotationService extends AAbstractService {
             if (message.equals("{javax.validation.constraints.Size.message}")) {
                 min = annotation.min();
                 if (min > 0) {
-                    message = text.primaMaiuscola(reflectionJavaField.getName()) + " deve contenere almeno " + min + " caratteri";
+                    message =  min + " caratteri";
                 }
             }
         }
@@ -1650,6 +1650,28 @@ public class AAnnotationService extends AAbstractService {
         return type;
     }
 
+    /**
+     * Get the status required of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value
+     */
+    public boolean isUnique(Field reflectionJavaField) {
+        boolean status = false;
+        Indexed annotation = null;
+
+        if (reflectionJavaField == null) {
+            return false;
+        }
+
+        annotation = this.getIndexed(reflectionJavaField);
+        if (annotation != null) {
+            status = annotation.unique();
+        }
+
+        return status;
+    }
 
     /**
      * Get the status focus of the property.
@@ -1705,24 +1727,6 @@ public class AAnnotationService extends AAbstractService {
     //    }// end of method
 
 
-    //    /**
-    //     * Get the status required of the property.
-    //     *
-    //     * @param reflectionJavaField di riferimento per estrarre la Annotation
-    //     *
-    //     * @return status of field
-    //     */
-    //    public boolean isUnique(Field reflectionJavaField) {
-    //        boolean status = false;
-    //        Indexed annotation = this.getUnique(reflectionJavaField);
-    //
-    //        if (annotation != null) {
-    //            status = annotation.unique();
-    //        }// end of if cycle
-    //
-    //        return status;
-    //
-    //    }// end of method
 
 
     //    /**

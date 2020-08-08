@@ -15,8 +15,10 @@ import it.algos.vaadflow14.ui.fields.AIntegerField;
 import it.algos.vaadflow14.ui.fields.ATextField;
 import it.algos.vaadflow14.ui.validator.AIntegerValidator;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
+import it.algos.vaadflow14.ui.validator.AUniqueValidator;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -47,6 +49,8 @@ public class AFieldService extends AAbstractService {
      */
     private static final long serialVersionUID = 1L;
 
+    private AEntity entityBean;
+
 
     /**
      * Create a single field and add it to the binder. <br>
@@ -58,6 +62,7 @@ public class AFieldService extends AAbstractService {
      */
     public AIField create(Binder binder, AEntity entityBean, String propertyName) {
         AField field = null;
+        this.entityBean = entityBean;
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
 
         if (reflectionJavaField == null) {
@@ -116,7 +121,7 @@ public class AFieldService extends AAbstractService {
                     break;
                 case integer:
                     field = new AIntegerField(caption);
-                    if (field!=null) {
+                    if (field != null) {
                         if (intMin > 0) {
                             ((IntegerField) field.getBinder()).setHasControls(true);
                             ((IntegerField) field.getBinder()).setMin(intMin);
@@ -166,6 +171,7 @@ public class AFieldService extends AAbstractService {
         AStringBlankValidator stringBlankValidator = null;
         StringLengthValidator stringLengthValidator = null;
         AIntegerValidator integerValidator = null;
+        AUniqueValidator uniqueValidator = null;
         String message = VUOTA;
         String messageSize = VUOTA;
         String messageNotNull = VUOTA;
@@ -173,6 +179,8 @@ public class AFieldService extends AAbstractService {
         int stringMax = 0;
         int intMin = 0;
         int intMax = 0;
+        boolean isUnique = false;
+         Serializable propertyOldValue = null;
 
         //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
         //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
@@ -184,6 +192,7 @@ public class AFieldService extends AAbstractService {
             return;
         }
 
+        fieldName = reflectionJavaField.getName();
         message = annotation.getMessage(reflectionJavaField);
         messageSize = annotation.getMessageSize(reflectionJavaField);
         messageNotNull = annotation.getMessageNull(reflectionJavaField);
@@ -192,10 +201,17 @@ public class AFieldService extends AAbstractService {
         stringMax = annotation.getStringMax(reflectionJavaField);
         intMin = annotation.getNumberMin(reflectionJavaField);
         intMax = annotation.getNumberMax(reflectionJavaField);
+        isUnique = annotation.isUnique(reflectionJavaField);
+
         stringBlankValidator = appContext.getBean(AStringBlankValidator.class, message);
         if (stringMin > 0 || stringMax > 0) {
             stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
         }
+        if (isUnique) {
+            propertyOldValue = (Serializable) reflection.getPropertyValue(entityBean, fieldName);
+            uniqueValidator = appContext.getBean(AUniqueValidator.class, entityBean, fieldName, propertyOldValue);
+        }
+
         if (numType == AENumType.range || numType == AENumType.rangeControl) {
             if (intMin > 0 || intMax > 0) {
                 if (intMin >= intMax) {
@@ -208,8 +224,6 @@ public class AFieldService extends AAbstractService {
             integerValidator = appContext.getBean(AIntegerValidator.class, numType);
         }
 
-        fieldName = reflectionJavaField.getName();
-
         if (fieldType != null) {
             builder = binder.forField(field.getBinder());
             switch (fieldType) {
@@ -220,10 +234,16 @@ public class AFieldService extends AAbstractService {
                     if (stringLengthValidator != null) {
                         builder.withValidator(stringLengthValidator);
                     }
+                    if (uniqueValidator != null) {
+                        builder.withValidator(uniqueValidator);
+                    }
                     break;
                 case integer:
                     if (integerValidator != null) {
                         builder.withValidator(integerValidator);
+                    }
+                    if (uniqueValidator != null) {
+                        builder.withValidator(uniqueValidator);
                     }
                     break;
                 case yesNo:

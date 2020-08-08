@@ -28,11 +28,11 @@ public enum AEButton {
 
     nuovo("New", VaadinIcon.PLUS_CIRCLE, "secondary", AEAction.nuovo, true, "Crea una nuova entity", "plus", Key.KEY_N, KeyModifier.CONTROL),
 
-    back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ARROW_LEFT, KeyModifier.CONTROL),
+    back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ARROW_LEFT, null),
 
-    annulla("Annulla", VaadinIcon.ARROW_LEFT, "secondary", AEAction.annulla, true, "Annulla l'operazione", "arrow-left", Key.ARROW_LEFT, KeyModifier.CONTROL),
+    annulla("Annulla", VaadinIcon.ARROW_LEFT, "secondary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.KEY_B, KeyModifier.CONTROL),
 
-    conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l'operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),
+    conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),
 
     registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.KEY_S, KeyModifier.CONTROL),
 

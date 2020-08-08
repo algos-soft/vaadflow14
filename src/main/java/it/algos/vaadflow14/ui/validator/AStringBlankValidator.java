@@ -54,7 +54,7 @@ public class AStringBlankValidator implements Validator {
 
             if (testo.length() == 0) {
                 if (message.equals("")) {
-                    return ValidationResult.error("Il contenuto di questo campo non può essere vuoto");
+                    return ValidationResult.error("Non può essere vuoto");
                 } else {
                     return ValidationResult.error(message);
                 }
@@ -63,7 +63,7 @@ public class AStringBlankValidator implements Validator {
             }
         } else {
             if (message.equals("")) {
-                return ValidationResult.error("Il contenuto di questo campo non può essere vuoto");
+                return ValidationResult.error("Non può essere vuoto");
             } else {
                 return ValidationResult.error(message);
             }

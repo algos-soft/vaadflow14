@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
@@ -86,7 +87,7 @@ public class Mese extends AEntity {
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Size(min = 3, max = 3, message = "La sigla deve essere di 3 caratteri")
+    @Size(min = 3, max = 3)
     @AIField(type = AEFieldType.text, required = true, widthEM = 4, placeholder = "xxx")
     @AIColumn()
     public String sigla;
@@ -99,6 +100,5 @@ public class Mese extends AEntity {
     public String toString() {
         return nome;
     }
-
 
 }

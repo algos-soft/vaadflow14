@@ -99,22 +99,22 @@ public class AIntegerValidator implements Validator {
                 case positiviOnly:
                     if (numero <= 0) {
                         if (numero == 0) {
-                            return ValidationResult.error("Valore zero non valido");
+                            return ValidationResult.error("Niente zero");
                         } else {
-                            return ValidationResult.error("Solo valori positivi");
+                            return ValidationResult.error("Solo positivi");
                         }
                     } else {
                         return ValidationResult.ok();
                     }
                 case positiviZero:
                     if (numero < 0) {
-                        return ValidationResult.error("Esclusi valori negativi");
+                        return ValidationResult.error("Esclusi negativi");
                     } else {
                         return ValidationResult.ok();
                     }
                 case positiviNegativi:
                     if (numero == 0) {
-                        return ValidationResult.error("Valore zero non valido");
+                        return ValidationResult.error("Niente zero");
                     } else {
                         return ValidationResult.ok();
                     }
@@ -122,10 +122,10 @@ public class AIntegerValidator implements Validator {
                 case range:
                 case rangeControl:
                     if (numero < min) {
-                        return ValidationResult.error("Deve essere maggiore di " + min);
+                        return ValidationResult.error("Almeno " + min);
                     }
                     if (numero > max) {
-                        return ValidationResult.error("Deve essere minore di " + max);
+                        return ValidationResult.error("Massimo " + max);
                     }
                     return ValidationResult.ok();
                 default:

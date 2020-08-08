@@ -4,11 +4,16 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.service.ALogService;
+import it.algos.vaadflow14.backend.service.AMongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.io.Serializable;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -31,7 +36,20 @@ public class AUniqueValidator implements Validator {
     @Autowired
     public ALogService logger;
 
-    private AEOperation operation;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
+
+    private AEntity entityBean;
+
+    private String propertyName = VUOTA;
+
+    private Serializable propertyOldValue = null;
 
 
     /**
@@ -47,10 +65,14 @@ public class AUniqueValidator implements Validator {
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AUniqueValidator.class, operation) <br>
      *
-     * @param operation per differenziare tra nuova entity e modifica di esistente
+     * @param entityBean       the single entity
+     * @param propertyName     per costruire la query
+     * @param propertyOldValue (serializable) esistente nella entity
      */
-    public AUniqueValidator(AEOperation operation) {
-        this.operation = operation;
+    public AUniqueValidator(AEntity entityBean, String propertyName, Serializable propertyOldValue) {
+        this.entityBean = entityBean;
+        this.propertyName = propertyName;
+        this.propertyOldValue = propertyOldValue;
     } // end of SpringBoot constructor
 
 
@@ -63,32 +85,24 @@ public class AUniqueValidator implements Validator {
      */
     @Override
     public ValidationResult apply(Object obj, ValueContext valueContext) {
-        int numero = 0;
+        AEntity entity = null;
+        Serializable propertyNewValue = null;
 
         if (obj == null) {
             return ValidationResult.error("Occorre inserire un valore");
         }
 
-        if (operation != null) {
-            switch (operation) {
-                case addNew:
-
-                    break;
-                case edit:
-                case editDaLink:
-                case editNoDelete:
-                case editProfile:
-                    break;
-                case showOnly:
-
-                    break;
-                default:
-                    logger.warn("Switch - caso non definito", this.getClass(), "apply");
-                    break;
+        if (obj instanceof Serializable) {
+            propertyNewValue = (Serializable) obj;
+            if (propertyNewValue.equals(propertyOldValue)) {
+                return  ValidationResult.ok();
+            } else {
+                entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
+                return entity != null ? ValidationResult.error("Esiste già") : ValidationResult.ok();
             }
+        } else {
+            return  ValidationResult.ok();
         }
-
-        return ValidationResult.error("Qualcosa non ha funzionato");
     }
 
 
