@@ -156,7 +156,7 @@ public class MeseLogic extends ALogic {
         List<String> listaNomi;
         listaNomi = annotation.getListaPropertiesForm(entityClazz);
         for (String fieldName : listaNomi) {
-            fieldService.create(binder, newEntityBean, fieldName);
+            fieldService.create(AEOperation.addNew,binder, newEntityBean, fieldName);
         }
         binder.readBean((AEntity) newEntityBean);
         boolean valido ;

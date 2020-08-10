@@ -634,7 +634,7 @@ public abstract class ALogic implements AILogic {
      * @return wrapper di dati per il Form
      */
     public WrapForm getWrapForm(AEntity entityBean) {
-        return new WrapForm(entityBean);
+        return new WrapForm(entityBean, operationForm);
     }
 
 

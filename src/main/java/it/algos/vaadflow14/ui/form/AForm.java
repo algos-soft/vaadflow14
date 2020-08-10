@@ -6,6 +6,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.AILogic;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
@@ -178,6 +179,10 @@ public class AForm extends VerticalLayout {
     private LinkedHashMap<String, List> enumMap;
 
     private List<String> listaNomi;
+    /**
+     * Tipologia di Form in uso <br>
+     */
+    private AEOperation operationForm;
 
 
     public AForm() {
@@ -218,6 +223,7 @@ public class AForm extends VerticalLayout {
             this.listaNomi = wrap.getFieldsName();
             this.fieldsMap = wrap.getFieldsMap();
             this.enumMap = wrap.getEnumMap();
+            this.operationForm = wrap.getOperationForm();
         }
     }
 
@@ -321,7 +327,7 @@ public class AForm extends VerticalLayout {
             fieldsMap = new LinkedHashMap<>();
             if (entityClazz != null) {
                 for (String fieldName : listaNomi) {
-                    field = fieldService.create(binder, entityBean, fieldName);
+                    field = fieldService.create(operationForm, binder, entityBean, fieldName);
                     if (field != null) {
                         fieldsMap.put(fieldName, field.get());
                     }
@@ -431,10 +437,10 @@ public class AForm extends VerticalLayout {
 
         if (array.isValid(fieldsMap)) {
             for (String fieldName : fieldsMap.keySet()) {
-                if (fieldsMap.get(fieldName)!=null) {
+                if (fieldsMap.get(fieldName) != null) {
                     topLayout.add(fieldsMap.get(fieldName).get());
                 } else {
-                    logger.error("Manca il field "+fieldName, this.getClass(), "addFieldsToLayout");
+                    logger.error("Manca il field " + fieldName, this.getClass(), "addFieldsToLayout");
                 }
             }
         } else {

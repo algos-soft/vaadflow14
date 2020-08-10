@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.form;
 
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.fields.AField;
 
 import java.util.LinkedHashMap;
@@ -17,6 +18,11 @@ import java.util.List;
  */
 public class WrapForm {
 
+
+    /**
+     * Tipologia di Form in uso <br>
+     */
+    private AEOperation operationForm;
 
     private AEntity entityBean = null;
 
@@ -48,6 +54,12 @@ public class WrapForm {
     }
 
 
+    public WrapForm(AEntity entityBean, AEOperation operationForm) {
+        this.entityBean = entityBean;
+        this.operationForm = operationForm;
+    }
+
+
     public WrapForm(AEntity entityBean, Class<? extends AEntity> entityClazz, boolean usaTopLayout, int stepTopLayout, boolean usaBottomLayout, int stepBottomLayout, List<String> fieldsName, LinkedHashMap<String, AField> fieldsMap, String minWidthForm) {
         this.entityBean = entityBean;
         this.entityClazz = entityClazz;
@@ -66,18 +78,8 @@ public class WrapForm {
     }
 
 
-    public void setEntityBean(AEntity entityBean) {
-        this.entityBean = entityBean;
-    }
-
-
     public Class<? extends AEntity> getEntityClazz() {
         return entityClazz;
-    }
-
-
-    public void setEntityClazz(Class<? extends AEntity> entityClazz) {
-        this.entityClazz = entityClazz;
     }
 
 
@@ -86,18 +88,8 @@ public class WrapForm {
     }
 
 
-    public void setUsaTopLayout(boolean usaTopLayout) {
-        this.usaTopLayout = usaTopLayout;
-    }
-
-
     public int getStepTopLayout() {
         return stepTopLayout;
-    }
-
-
-    public void setStepTopLayout(int stepTopLayout) {
-        this.stepTopLayout = stepTopLayout;
     }
 
 
@@ -106,18 +98,8 @@ public class WrapForm {
     }
 
 
-    public void setUsaBottomLayout(boolean usaBottomLayout) {
-        this.usaBottomLayout = usaBottomLayout;
-    }
-
-
     public int getStepBottomLayout() {
         return stepBottomLayout;
-    }
-
-
-    public void setStepBottomLayout(int stepBottomLayout) {
-        this.stepBottomLayout = stepBottomLayout;
     }
 
 
@@ -126,28 +108,13 @@ public class WrapForm {
     }
 
 
-    public void setMinWidthForm(String minWidthForm) {
-        this.minWidthForm = minWidthForm;
-    }
-
-
     public List<String> getFieldsName() {
         return fieldsName;
     }
 
 
-    public void setFieldsName(List<String> fieldsName) {
-        this.fieldsName = fieldsName;
-    }
-
-
     public LinkedHashMap<String, AField> getFieldsMap() {
         return fieldsMap;
-    }
-
-
-    public void setFieldsMap(LinkedHashMap<String, AField> fieldsMap) {
-        this.fieldsMap = fieldsMap;
     }
 
 
@@ -158,6 +125,11 @@ public class WrapForm {
 
     public void setEnumMap(LinkedHashMap<String, List> enumMap) {
         this.enumMap = enumMap;
+    }
+
+
+    public AEOperation getOperationForm() {
+        return operationForm;
     }
 
 }

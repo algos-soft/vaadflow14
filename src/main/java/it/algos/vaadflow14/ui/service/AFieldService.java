@@ -7,6 +7,7 @@ import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
 import it.algos.vaadflow14.backend.enumeration.AENumType;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.AField;
@@ -56,11 +57,12 @@ public class AFieldService extends AAbstractService {
      * Create a single field and add it to the binder. <br>
      * The field type is chosen according to the annotation @AIField. <br>
      *
+     * @param operation    per differenziare tra nuova entity e modifica di esistente
      * @param binder       collegamento tra i fields e la entityBean
      * @param entityBean   Entity di riferimento
      * @param propertyName della property
      */
-    public AIField create(Binder binder, AEntity entityBean, String propertyName) {
+    public AIField create(AEOperation operation, Binder binder, AEntity entityBean, String propertyName) {
         AField field = null;
         this.entityBean = entityBean;
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
@@ -72,7 +74,7 @@ public class AFieldService extends AAbstractService {
         field = creaOnly(reflectionJavaField);
         if (field != null) {
             try {
-                addFieldToBinder(binder, reflectionJavaField, field);
+                addFieldToBinder(operation, binder, reflectionJavaField, field);
             } catch (Exception unErrore) {
                 if (unErrore instanceof RangeException) {
                     logger.error(unErrore.getMessage() + " per la property " + propertyName, this.getClass(), "create");
@@ -163,7 +165,7 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    protected void addFieldToBinder(Binder binder, Field reflectionJavaField, AField field) throws Exception {
+    protected void addFieldToBinder(AEOperation operation, Binder binder, Field reflectionJavaField, AField field) throws Exception {
         Binder.BindingBuilder builder = null;
         AEFieldType fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;
@@ -180,7 +182,7 @@ public class AFieldService extends AAbstractService {
         int intMin = 0;
         int intMax = 0;
         boolean isUnique = false;
-         Serializable propertyOldValue = null;
+        Serializable propertyOldValue = null;
 
         //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
         //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
@@ -209,7 +211,7 @@ public class AFieldService extends AAbstractService {
         }
         if (isUnique) {
             propertyOldValue = (Serializable) reflection.getPropertyValue(entityBean, fieldName);
-            uniqueValidator = appContext.getBean(AUniqueValidator.class, entityBean, fieldName, propertyOldValue);
+            uniqueValidator = appContext.getBean(AUniqueValidator.class, operation, entityBean, fieldName, propertyOldValue);
         }
 
         if (numType == AENumType.range || numType == AENumType.rangeControl) {
