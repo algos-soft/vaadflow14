@@ -10,13 +10,12 @@ import it.algos.vaadflow14.backend.enumeration.AENumType;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
-import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AIField;
-import it.algos.vaadflow14.ui.fields.AIntegerField;
-import it.algos.vaadflow14.ui.fields.ATextField;
+import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.AIntegerValidator;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
 import it.algos.vaadflow14.ui.validator.AUniqueValidator;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -42,7 +41,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
  */
 @Service
-@VaadinSessionScope()
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AFieldService extends AAbstractService {
 
     /**
@@ -50,7 +49,6 @@ public class AFieldService extends AAbstractService {
      */
     private static final long serialVersionUID = 1L;
 
-    private AEntity entityBean;
 
 
     /**
@@ -64,7 +62,6 @@ public class AFieldService extends AAbstractService {
      */
     public AIField create(AEOperation operation, Binder binder, AEntity entityBean, String propertyName) {
         AField field = null;
-        this.entityBean = entityBean;
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
 
         if (reflectionJavaField == null) {
@@ -74,7 +71,7 @@ public class AFieldService extends AAbstractService {
         field = creaOnly(reflectionJavaField);
         if (field != null) {
             try {
-                addFieldToBinder(operation, binder, reflectionJavaField, field);
+                addFieldToBinder(operation, binder, entityBean,reflectionJavaField, field);
             } catch (Exception unErrore) {
                 if (unErrore instanceof RangeException) {
                     logger.error(unErrore.getMessage() + " per la property " + propertyName, this.getClass(), "create");
@@ -137,7 +134,7 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case yesNo:
-                    field = new ATextField(caption);
+                    field = new ABooleanField(caption);
                     break;
                 case combo:
                 case enumeration:
@@ -165,7 +162,7 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    protected void addFieldToBinder(AEOperation operation, Binder binder, Field reflectionJavaField, AField field) throws Exception {
+    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean,Field reflectionJavaField, AField field) throws Exception {
         Binder.BindingBuilder builder = null;
         AEFieldType fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;

@@ -3,14 +3,17 @@ package it.algos.vaadflow14.backend.packages.crono.secolo;
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AENumType;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -46,18 +49,27 @@ public class Secolo extends AEntity {
     /**
      * ordinamento (obbligatorio, unico) <br>
      */
-    @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.integer, widthEM = 5)
-    @AIColumn(header = "#", widthEM = 5)
+    @AIField(type = AEFieldType.integer, caption = "progressivo", numType = AENumType.positiviOnly)
+    @AIColumn(header = "#")
     public int ordine;
+
+
+    /**
+     * nome completo (obbligatorio, unico) <br>
+     */
+    @NotBlank()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AEFieldType.text, focus = true)
+    @AIColumn(flexGrow = true)
+    public String nome;
 
 
     /**
      * flag di separazione (obbligatorio)
      */
-    @Indexed()
-    @AIField(type = AEFieldType.yesNo, required = true, caption = "A.C.", widthEM = 6)
+    @Indexed( direction = IndexDirection.DESCENDING)
+    @AIField(type = AEFieldType.yesNo, required = true, caption = "Ante"+ FlowCost.HTLM_SPAZIO+"Cristo", widthEM = 6)
     @AIColumn(header = "A.C.", widthEM = 6)
     public boolean anteCristo;
 
@@ -65,25 +77,17 @@ public class Secolo extends AEntity {
     /**
      * primo anno (obbligatorio, unico) <br>
      */
-    @NotNull
-    @AIField(type = AEFieldType.integer, widthEM = 3)
+    @AIField(type = AEFieldType.integer, numType = AENumType.positiviOnly)
     @AIColumn(widthEM = 5)
     public int inizio;
 
     /**
      * ultimo anno (obbligatorio, unico) <br>
      */
-    @NotNull
-    @AIField(type = AEFieldType.integer, widthEM = 3)
+    @AIField(type = AEFieldType.integer, numType = AENumType.positiviOnly)
     @AIColumn(widthEM = 5)
     public int fine;
 
-    /**
-     * titolo (obbligatorio, unico) <br>
-     */
-    @AIField(type = AEFieldType.text, required = true, widthEM = 26)
-    @AIColumn(flexGrow = true)
-    public String nome;
 
 
     /**

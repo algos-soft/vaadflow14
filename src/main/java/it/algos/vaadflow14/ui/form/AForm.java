@@ -96,6 +96,15 @@ public class AForm extends VerticalLayout {
     @Autowired
     public AClassService classService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ABeanService beanService;
+
+
     @Autowired
     public AMongoService mongo;
 
@@ -164,7 +173,7 @@ public class AForm extends VerticalLayout {
     /**
      * Mappa ordinata di tutti i fields del form <br>
      * La chiave è la propertyName del field <br>
-     * Serve per presentarli (ordinati) dall'alto in basso nel form <br>
+     * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
     protected HashMap<String, AField> fieldsMap;
@@ -179,6 +188,7 @@ public class AForm extends VerticalLayout {
     private LinkedHashMap<String, List> enumMap;
 
     private List<String> listaNomi;
+
     /**
      * Tipologia di Form in uso <br>
      */
@@ -293,139 +303,14 @@ public class AForm extends VerticalLayout {
     /**
      * Costruisce graficamente la scheda <br>
      * <p>
-     * Crea i fields <br>
+     * Crea i fields e li posiziona in una mappa <br>
      * Associa i valori di entityBean al binder. Dal DB alla UI <br>
      * Aggiunge ogni singolo field della fieldMap al layout <br>
      */
     protected void fixView() {
-
-        this.creaFields();
-
-        //        this.addFieldsToBinder();
-
-        //--Associa i valori del currentItem al binder. Dal DB alla UI
-        binder.readBean((AEntity) entityBean);
-
+        this.fieldsMap = beanService.creaFields(entityBean, operationForm, binder);
         this.addFieldsToLayout();
-
     }
-
-
-    /**
-     * Crea i fields e li posiziona in una mappa <br>
-     * Se è valida 'fieldsMap'', usa quella <br>
-     * Altrimenti la costruisce usando 'listaNomi' <br>
-     * Se manca anche 'listaNomi', la costruisce partendo da annotation.getListaPropertiesForm() <br>
-     */
-    protected void creaFields() {
-        AIField field;
-
-        if (array.isEmpty(fieldsMap)) {
-            if (array.isEmpty(listaNomi)) {
-                listaNomi = annotation.getListaPropertiesForm(entityClazz);
-            }
-            fieldsMap = new LinkedHashMap<>();
-            if (entityClazz != null) {
-                for (String fieldName : listaNomi) {
-                    field = fieldService.create(operationForm, binder, entityBean, fieldName);
-                    if (field != null) {
-                        fieldsMap.put(fieldName, field.get());
-                    }
-                }
-            }
-        }
-    }
-
-
-    //    protected AField addField(String fieldName) {
-    //        AField field = null;
-    //        Field reflectionJavaField = reflection.getField(entityClazz, fieldName);
-    //        AEFieldType type = annotation.getFormType(reflectionJavaField);
-    //        String label = annotation.getFormFieldName(reflectionJavaField);
-    //        Class comboClazz = annotation.getComboClass(reflectionJavaField);
-    //        //        Class serviceClazz = annotation.getServiceClass(reflectionJavaField);
-    //        //        Class linkClazz = annotation.getLinkClass(reflectionJavaField);
-    //        List enumItems = annotation.getEnumItems(reflectionJavaField);
-    //        List items;
-    //
-    //        switch (type) {
-    //            case text:
-    //                field = new ATextField(label);
-    //                break;
-    //            case integer:
-    //                field = new AIntegerField(label);
-    //                break;
-    //            case yesNo:
-    //                field = new ABooleanField(label);
-    //                break;
-    //            case combo:
-    //                items = comboClazz != null ? mongo.find(comboClazz) : null;
-    //                if (items != null) {
-    //                    field = new AComboField(label);
-    //                    field.setItem(items);
-    //                }
-    //                break;
-    //            case enumeration:
-    //                field = new AComboField(label);
-    //                if (array.isEmpty(enumItems)) {
-    //                    if (enumMap != null && enumMap.get(fieldName) != null) {
-    //                        enumItems = enumMap.get(fieldName);
-    //                    } else {
-    //                        enumItems = new ArrayList();
-    //                        enumItems.add("valori riempiti nella sottoclasse specifica");
-    //                    }
-    //                }
-    //                field.setItem(enumItems);
-    //                break;
-    //            case gridShowOnly:
-    //                List<String> listaProperties = new ArrayList<String>(Arrays.asList("ordine", "nome", "sigla", "iso"));
-    //                field = appContext.getBean(AGridField.class, entityBean.getClass(), listaProperties);
-    //
-    //                //                //--Colonne aggiunte in automatico
-    //                //                if (array.isValid(properties)) {
-    //                //                    for (String propertyName : properties) {
-    //                //                        columnService.create(grid, StaTurnoIsc.class, propertyName);
-    //                //                    }// end of for cycle
-    //                //                }
-    //                //                reflectionJavaField
-    //
-    ////                items = regioneLogic.findBySigla("LAZ").province;
-    ////                ((AGridField) field).setItem(items);
-    //                //
-    //                //                grid.setWidth("100em");
-    //                //                formSubLayout.setWidth("100em");
-    //                //                formSubLayout.add(grid);
-    //                break;
-    //            default:
-    //                logger.warn("Switch - caso non definito per il field \"" + fieldName + "\" del tipo " + type, this.getClass(), "addField");
-    //                break;
-    //        }
-    //
-    //        return field;
-    //    }// end of method
-    //
-    //
-    //    /**
-    //     * Aggiunge ogni singolo field al binder <br>>
-    //     */
-    //    protected void addFieldsToBinder() {
-    //        if (binder == null) {
-    //            logger.warn("Manca il binder", this.getClass(), "fixView");
-    //            return;
-    //        }
-    //
-    //        if (binder != null && array.isValid(fieldsMap)) {
-    //            for (String fieldName : fieldsMap.keySet()) {
-    //                binder.forField(fieldsMap.get(fieldName)).bind(fieldName);
-    //            }
-    //        }
-    //
-    //        if (binder != null && entityBean != null) {
-    //            binder.readBean((AEntity) entityBean);
-    //        } else {
-    //            logger.warn("Manca il binder", this.getClass(), "fixView");
-    //        }
-    //    }
 
 
     /**

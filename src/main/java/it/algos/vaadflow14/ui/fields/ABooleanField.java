@@ -1,6 +1,8 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,7 +38,8 @@ public class ABooleanField extends AField<Boolean> {
 
 
     public ABooleanField(String label, String placeholder) {
-        innerField = new Checkbox(label);
+        innerField = new Checkbox();
+        innerField.setLabelAsHtml(label);
         add(innerField);
     }
 
@@ -50,6 +53,22 @@ public class ABooleanField extends AField<Boolean> {
     @Override
     protected void setPresentationValue(Boolean value) {
         super.setPresentationValue(value);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        innerField.setWidth(width);
+    }
+
+    @Override
+    public AbstractSinglePropertyField getBinder() {
+        return innerField;
+    }
+
+
+    @Override
+    public void setAutofocus() {
+        innerField.setAutofocus(true);
     }
 
 }

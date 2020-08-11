@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -60,7 +61,7 @@ public class AIntegerField extends AField<Integer> {
     }
 
     @Override
-    public IntegerField getBinder() {
+    public AbstractSinglePropertyField getBinder() {
         return innerField;
     }
     @Override

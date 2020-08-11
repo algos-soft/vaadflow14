@@ -1,12 +1,18 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
+import it.algos.vaadflow14.ui.fields.AField;
+import it.algos.vaadflow14.ui.fields.AIField;
+import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +64,40 @@ public class ABeanService extends AAbstractService {
      */
     @Autowired
     public AReflectionService reflection;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AFieldService fieldService;
+
+    /**
+     * Crea i fields e li posiziona in una mappa <br>
+     * <p>
+     * Mappa ordinata di tutti i fields del form <br>
+     * La chiave è la propertyName del field <br>
+     * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
+     * Serve per recuperarli dal nome per successive elaborazioni <br>
+     */
+    public HashMap<String, AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
+        HashMap<String, AField> fieldsMap = new LinkedHashMap<>();
+        List<String> listaNomi;
+        AIField field;
+
+        listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
+        for (String fieldName : listaNomi) {
+            field = fieldService.create(operationForm, binder, entityBean, fieldName);
+            if (field != null) {
+                fieldsMap.put(fieldName, field.get());
+            }
+        }
+
+        binder.readBean((AEntity) entityBean);
+
+        return fieldsMap;
+    }
 
 
     /**

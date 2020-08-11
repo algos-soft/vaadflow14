@@ -42,13 +42,6 @@ public class MeseLogic extends ALogic {
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AFieldService fieldService;
 
 
     /**
@@ -95,31 +88,6 @@ public class MeseLogic extends ALogic {
     }
 
 
-    //    public AHeader superatoDaCancellare(AEVista typeVista) {
-    //        AHeader header = new AHeaderWrap();
-    //        header.setMargin(false);
-    //        header.setSpacing(false);
-    //        header.setPadding(false);
-    //
-    //        String messUno = "Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.";
-    //        String messDue = "Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.";
-    //
-    //        Span span = new Span();
-    //        span.getElement().setProperty("innerHTML", messUno);
-    //        span.getElement().getStyle().set("color", "green");
-    //        span.getElement().getStyle().set("font-weight", "bold");
-    //        header.add(span);
-    //
-    //        Span span2 = new Span();
-    //        span2.getElement().setProperty("innerHTML", messDue);
-    //        span2.getElement().getStyle().set("color", "blue");
-    //        span2.getElement().getStyle().set("font-weight", "bold");
-    //        header.add(span2);
-    //
-    //        return header;
-    //    }
-
-
     /**
      * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
@@ -150,29 +118,25 @@ public class MeseLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(AEMese aeMese) {
-        boolean valido = false;
-        String message = VUOTA;
-        Mese newEntityBean = newEntity(aeMese);
-        Binder binder;
-        binder = new Binder(entityClazz);
-        List<String> listaNomi;
-        listaNomi = annotation.getListaPropertiesForm(entityClazz);
-        for (String fieldName : listaNomi) {
-            fieldService.create(AEOperation.addNew, binder, newEntityBean, fieldName);
-        }
-        binder.readBean((AEntity) newEntityBean);
-        valido = binder.isValid();
-
-        if (valido) {
-            valido = mongo.insert(newEntityBean) != null;
-        } else {
-            message = "Duplicate key error ";
-            message += beanService.getModifiche(newEntityBean);
-            logger.warn(message, this.getClass(), "crea");
-        }
-
-        return valido;
+        return crea(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param nome            nome completo (obbligatorio, unico)
+     * @param giorni          numero di giorni presenti (obbligatorio)
+     * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
+     * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
+     *
+     * @return true se la nuova entity è stata creata e salvata
+     */
+    public boolean crea(String nome, int giorni, int giorniBisestile, String sigla) {
+        return checkAndSave(newEntity(nome, giorni, giorniBisestile, sigla));
+    }
+
+
 
 
     /**
@@ -246,6 +210,9 @@ public class MeseLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
+        for (AEMese aeMese : AEMese.values()) {
+            crea(aeMese);
+        }
         for (AEMese aeMese : AEMese.values()) {
             crea(aeMese);
         }

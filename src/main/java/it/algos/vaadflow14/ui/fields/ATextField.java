@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.textfield.TextField;
@@ -108,7 +109,7 @@ public class ATextField extends AField<String>  {
 
 
     @Override
-    public TextField getBinder() {
+    public AbstractSinglePropertyField getBinder() {
         return innerField;
     }
     @Override

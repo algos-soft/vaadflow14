@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.QueryParameters;
 import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -25,6 +26,7 @@ import it.algos.vaadflow14.ui.header.AHeaderList;
 import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import it.algos.vaadflow14.ui.list.AGrid;
+import it.algos.vaadflow14.ui.service.AFieldService;
 import it.algos.vaadflow14.ui.service.ARouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -176,6 +178,13 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AFileService fileService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AFieldService fieldService;
 
     /**
      * The Entity Class  (obbligatoria sempre; in ViewForm può essere ricavata dalla entityBean)
@@ -1176,6 +1185,36 @@ public abstract class ALogic implements AILogic {
         return newEntityBean;
     }
 
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     * Controlla che la entity sia valida e superi i Validator associati <br>
+     * @param newEntityBean da registrare
+     *
+     * @return true se la nuova entity è stata creata e salvata
+     */
+    public boolean checkAndSave(AEntity newEntityBean) {
+        boolean valido = false;
+        String message = VUOTA;
+        Binder binder;
+        binder = new Binder(entityClazz);
+        List<String> listaNomi;
+        listaNomi = annotation.getListaPropertiesForm(entityClazz);
+        for (String fieldName : listaNomi) {
+            fieldService.create(AEOperation.addNew, binder, newEntityBean, fieldName);
+        }
+        binder.readBean((AEntity) newEntityBean);
+        valido = binder.isValid();
+
+        if (valido) {
+            valido = mongo.insert(newEntityBean) != null;
+        } else {
+            message = "Duplicate key error ";
+            message += beanService.getModifiche(newEntityBean);
+            logger.warn(message, this.getClass(), "crea");
+        }
+
+        return valido;
+    }
 
     /**
      * Save proveniente da un click sul bottone 'registra' del Form. <br>
