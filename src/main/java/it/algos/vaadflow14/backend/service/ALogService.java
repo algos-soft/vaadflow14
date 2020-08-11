@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AELogLivello;
-import it.algos.vaadflow14.backend.enumeration.AELogType;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AETime;
 import it.algos.vaadflow14.backend.enumeration.AILogType;
 import org.slf4j.Logger;
@@ -116,7 +116,7 @@ public class ALogService extends AAbstractService {
         message += " del ";
         message += date.get(FlowVar.versionDate, AETime.normal.getPattern());
 
-        info(AELogType.startup, message);
+        info(AETypeLog.startup, message);
     }
 
 
@@ -131,7 +131,7 @@ public class ALogService extends AAbstractService {
 
         if (entityBean != null) {
             message = beanService.getModifiche(entityBean, null);
-            info(AELogType.nuovo, message);
+            info(AETypeLog.nuovo, message);
         } else {
             error("Non sono riuscito a creare la entity");
         }
@@ -163,7 +163,7 @@ public class ALogService extends AAbstractService {
         }
 
         message += beanService.getModifiche(entityBean, entityBeanOld);
-        esegue(AELogType.modifica, message);
+        esegue(AETypeLog.modifica, message);
     }
 
 
@@ -180,7 +180,7 @@ public class ALogService extends AAbstractService {
             message += entityBean.getClass().getSimpleName();
             message += SEP;
             message += entityBean.toString();
-            info(AELogType.delete, message);
+            info(AETypeLog.delete, message);
         } else {
             error("Non sono riuscito a cancellare la entity");
         }
@@ -200,7 +200,7 @@ public class ALogService extends AAbstractService {
             message += entityClazz.getSimpleName();
             message += SEP;
             message += "Ricreati i dati originari della collection";
-            info(AELogType.reset, message);
+            info(AETypeLog.reset, message);
         } else {
             error("Non trovo la entityClazz", this.getClass(), "reset");
         }
@@ -220,7 +220,7 @@ public class ALogService extends AAbstractService {
             message += entityClazz.getSimpleName();
             message += SEP;
             message += "Cancellata completamente la collection";
-            info(AELogType.deleteAll, message);
+            info(AETypeLog.deleteAll, message);
         } else {
             error("Non trovo la entityClazz", this.getClass(), "reset");
         }
@@ -263,7 +263,7 @@ public class ALogService extends AAbstractService {
     public void info(AILogType type, String message) {
         String typeTxt;
 
-        typeTxt = type != null ? type.getTag() : AELogType.system.getTag();
+        typeTxt = type != null ? type.getTag() : AETypeLog.system.getTag();
         typeTxt = text.fixSizeQuadre(typeTxt, 10);
 
         message = typeTxt + DOPPIO_SPAZIO + message;
@@ -325,7 +325,7 @@ public class ALogService extends AAbstractService {
      * @param methodName di provenienza della richiesta
      */
     public void error(String message, Class clazz, String methodName) {
-        esegue(AELogType.error, message, clazz, methodName);
+        esegue(AETypeLog.error, message, clazz, methodName);
     }
 
 
@@ -359,7 +359,7 @@ public class ALogService extends AAbstractService {
      * @param methodName di provenienza della richiesta
      */
     public void warn(String message, Class clazz, String methodName) {
-        esegue(AELogType.warn, message, clazz, methodName);
+        esegue(AETypeLog.warn, message, clazz, methodName);
     }
 
 
@@ -369,7 +369,7 @@ public class ALogService extends AAbstractService {
      * @param type    livello di log
      * @param message da registrare
      */
-    private void esegue(AELogType type, String message) {
+    private void esegue(AETypeLog type, String message) {
         esegue(type, message, (Class) null, VUOTA);
     }
 
@@ -382,7 +382,7 @@ public class ALogService extends AAbstractService {
      * @param clazz      di provenienza della richiesta
      * @param methodName di provenienza della richiesta
      */
-    private void esegue(AELogType type, String message, Class clazz, String methodName) {
+    private void esegue(AETypeLog type, String message, Class clazz, String methodName) {
         String clazzTxt;
         String sep = " --- ";
         String end = "()";

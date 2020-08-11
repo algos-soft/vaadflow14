@@ -7,6 +7,6 @@ package it.algos.vaadflow14.backend.enumeration;
  * Date: gio, 06-ago-2020
  * Time: 18:47
  */
-public enum AENumType {
+public enum AETypeNum {
     positiviOnly, positiviZero, positiviNegativi, positiviNegativiZero, range, rangeControl
 }

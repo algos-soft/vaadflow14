@@ -4,7 +4,7 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -14,11 +14,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Project vaadflow14
@@ -54,7 +49,7 @@ public class Anno extends AEntity {
      */
     @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.integer, widthEM = 5)
+    @AIField(type = AETypeField.integer, widthEM = 5)
     @AIColumn(header = "#", widthEM = 5)
     public int ordine;
 
@@ -65,7 +60,7 @@ public class Anno extends AEntity {
     @NotNull
     @Indexed()
     @DBRef
-    @AIField(type = AEFieldType.combo, comboClazz = Secolo.class)
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
     @AIColumn(widthEM = 8)
     public Secolo secolo;
 
@@ -75,7 +70,7 @@ public class Anno extends AEntity {
      */
     @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AEFieldType.text,  widthEM = 10)
+    @AIField(type = AETypeField.text,  widthEM = 10)
     @AIColumn(flexGrow = true)
     public String nome;
 
@@ -83,7 +78,7 @@ public class Anno extends AEntity {
      * flag bisestile (obbligatorio)
      */
     @Indexed()
-    @AIField(type = AEFieldType.booleano, caption = "Bisestile", widthEM = 6)
+    @AIField(type = AETypeField.booleano, caption = "Bisestile", widthEM = 6)
     @AIColumn(header = "BS", widthEM = 6)
     public boolean bisestile;
 

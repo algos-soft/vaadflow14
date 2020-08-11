@@ -2,7 +2,7 @@ package it.algos.vaadflow14.backend.entity;
 
 import it.algos.vaadflow14.backend.annotation.AIColumn;
 import it.algos.vaadflow14.backend.annotation.AIField;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -82,7 +82,7 @@ public abstract class AEntity implements Serializable {
     /**
      * Eventuali note (facoltativo) <br>
      */
-    @AIField(type = AEFieldType.textArea, widthEM = 24)
+    @AIField(type = AETypeField.textArea, widthEM = 24)
     @AIColumn()
     public String note;
 
@@ -94,7 +94,7 @@ public abstract class AEntity implements Serializable {
      * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
-    @AIField(type = AEFieldType.localDateTime, caption = "Creazione della entity")
+    @AIField(type = AETypeField.localDateTime, caption = "Creazione della entity")
     @AIColumn()
     public LocalDateTime creazione;
 
@@ -105,7 +105,7 @@ public abstract class AEntity implements Serializable {
      * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
-    @AIField(type = AEFieldType.localDateTime, caption = "Ultima modifica della entity")
+    @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica della entity")
     @AIColumn()
     public LocalDateTime modifica;
 

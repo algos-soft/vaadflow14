@@ -10,7 +10,7 @@ import java.util.List;
  * Date: mer, 26-set-2018
  * Time: 07:39
  */
-public enum AELogType implements AILogType {
+public enum AETypeLog implements AILogType {
 
     system("system"),
 
@@ -60,13 +60,13 @@ public enum AELogType implements AILogType {
     private String tag;
 
 
-    AELogType(String tag) {
+    AETypeLog(String tag) {
         this.tag = tag;
     }
 
 
-    public static AELogType getType(String tag) {
-        for (AELogType type : values()) {
+    public static AETypeLog getType(String tag) {
+        for (AETypeLog type : values()) {
             if (type.getTag().equals(tag)) {
                 return type;
             }
@@ -79,7 +79,7 @@ public enum AELogType implements AILogType {
     public static List<String> getAll() {
         List<String> lista = new ArrayList<>();
 
-        for (AELogType type : values()) {
+        for (AETypeLog type : values()) {
             lista.add(type.tag);
         }
 

@@ -213,9 +213,6 @@ public class MeseLogic extends ALogic {
         for (AEMese aeMese : AEMese.values()) {
             crea(aeMese);
         }
-        for (AEMese aeMese : AEMese.values()) {
-            crea(aeMese);
-        }
 
         return mongo.isValid(entityClazz);
     }

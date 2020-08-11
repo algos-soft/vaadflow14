@@ -1,8 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,7 +21,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATextField extends AField<String>  {
+public class ATextField extends AField<String> {
 
     private final TextField innerField;
 
@@ -98,7 +96,7 @@ public class ATextField extends AField<String>  {
      *                              from being compared to this object.
      */
     public int compareTo(String o) {
-         return innerField.getValue().compareTo( o);
+        return innerField.getValue().compareTo(o);
     }
 
 
@@ -112,10 +110,13 @@ public class ATextField extends AField<String>  {
     public AbstractSinglePropertyField getBinder() {
         return innerField;
     }
+
+
     @Override
     public void setPlaceholder(String placeholder) {
-         innerField.setPlaceholder(placeholder);
+        innerField.setPlaceholder(placeholder);
     }
+
 
     @Override
     public void setAutofocus() {

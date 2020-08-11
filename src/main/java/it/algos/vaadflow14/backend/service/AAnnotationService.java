@@ -5,8 +5,9 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
-import it.algos.vaadflow14.backend.enumeration.AENumType;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.ui.view.AView;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -772,9 +773,9 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the type for the specific field
      */
-    public AEFieldType getFormType(final Field reflectionJavaField) {
-        AEFieldType type = null;
-        AEFieldType standard = AEFieldType.text;
+    public AETypeField getFormType(final Field reflectionJavaField) {
+        AETypeField type = null;
+        AETypeField standard = AETypeField.text;
         AIField annotation = null;
 
         if (reflectionJavaField == null) {
@@ -799,9 +800,9 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the type for the specific column
      */
-    public AEFieldType getColumnType(final Field reflectionJavaField) {
-        AEFieldType type = null;
-        AEFieldType standard = AEFieldType.text;
+    public AETypeField getColumnType(final Field reflectionJavaField) {
+        AETypeField type = null;
+        AETypeField standard = AETypeField.text;
         AIColumn annotation = null;
 
         if (reflectionJavaField == null) {
@@ -811,7 +812,7 @@ public class AAnnotationService extends AAbstractService {
         annotation = this.getAIColumn(reflectionJavaField);
         if (annotation != null) {
             type = annotation.type();
-            if (type != null && type == AEFieldType.ugualeAlForm) {
+            if (type != null && type == AETypeField.ugualeAlForm) {
                 type = getFormType(reflectionJavaField);
             }
         } else {
@@ -918,7 +919,7 @@ public class AAnnotationService extends AAbstractService {
         String widthTxt = VUOTA;
         int widthInt = 0;
         AIColumn annotation = null;
-        AEFieldType type = null;
+        AETypeField type = null;
 
         if (reflectionJavaField == null) {
             return null;
@@ -1352,7 +1353,7 @@ public class AAnnotationService extends AAbstractService {
         String widthTxt = VUOTA;
         int widthInt = 0;
         AIField annotation = null;
-        AEFieldType type = null;
+        AETypeField type = null;
 
         if (reflectionJavaField == null) {
             return null;
@@ -1430,7 +1431,7 @@ public class AAnnotationService extends AAbstractService {
     public String getMessageNull(Field reflectionJavaField) {
         String message = VUOTA;
         NotNull annotation = null;
-        AEFieldType type;
+        AETypeField type;
 
         if (reflectionJavaField == null) {
             return null;
@@ -1444,10 +1445,10 @@ public class AAnnotationService extends AAbstractService {
         if (message.equals("{javax.validation.constraints.NotNull.message}")) {
             message = VUOTA;
             type = getFormType(reflectionJavaField);
-            if (type == AEFieldType.text) {
+            if (type == AETypeField.text) {
                 message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
             }
-            if (type == AEFieldType.integer) {
+            if (type == AETypeField.integer) {
                 message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
             }
         }
@@ -1634,8 +1635,8 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      */
-    public AENumType getNumberType(final Field reflectionJavaField) {
-        AENumType type = AENumType.positiviOnly;
+    public AETypeNum getTypeNumber(final Field reflectionJavaField) {
+        AETypeNum type = AETypeNum.positiviOnly;
         AIField annotation = null;
 
         if (reflectionJavaField == null) {
@@ -1644,7 +1645,28 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
-            type = annotation.numType();
+            type = annotation.typeNum();
+        }
+
+        return type;
+    }
+
+    /**
+     * Get the specific annotation of the field. <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     */
+    public AETypeBool getTypeBoolean(final Field reflectionJavaField) {
+        AETypeBool type = AETypeBool.checkBox;
+        AIField annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            type = annotation.typeBool();
         }
 
         return type;

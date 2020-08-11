@@ -1,7 +1,8 @@
 package it.algos.vaadflow14.backend.annotation;
 
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
-import it.algos.vaadflow14.backend.enumeration.AENumType;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,7 +33,7 @@ public @interface AIField {
      *
      * @return the ae field type
      */
-    AEFieldType type() default AEFieldType.text;
+    AETypeField type() default AETypeField.text;
 
 
     /**
@@ -233,8 +234,16 @@ public @interface AIField {
      * (Optional) The type of the number range.
      * Defaults to the positiviOnly type.
      *
-     * @return the ae field type
+     * @return the field type
      */
-    AENumType numType() default AENumType.positiviOnly;
+    AETypeNum typeNum() default AETypeNum.positiviOnly;
+
+    /**
+     * (Optional) The type of the boolean type range.
+     * Defaults to the checkBox type.
+     *
+     * @return the field type
+     */
+    AETypeBool typeBool() default AETypeBool.checkBox;
 
 }

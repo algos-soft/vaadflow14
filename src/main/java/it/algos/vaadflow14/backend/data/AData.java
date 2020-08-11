@@ -1,11 +1,10 @@
 package it.algos.vaadflow14.backend.data;
 
-import com.google.common.util.concurrent.AbstractService;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.AILogic;
 import it.algos.vaadflow14.backend.entity.GenericLogic;
-import it.algos.vaadflow14.backend.enumeration.AELogType;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AClassService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -117,7 +116,7 @@ public abstract class AData  {
      */
     protected void logDataCreata(String collectionName) {
         if (usaLogger) {
-            logger.log(AELogType.checkData, "La collezione " + collectionName + " mancava ed è stata completamente riscritta");
+            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " mancava ed è stata completamente riscritta");
         }
     }
 
@@ -128,7 +127,7 @@ public abstract class AData  {
      */
     protected void logDataPresente(String collectionName) {
         if (usaLogger) {
-            logger.log(AELogType.checkData, "La collezione " + collectionName + " è presente");
+            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " è presente");
         }
     }
 

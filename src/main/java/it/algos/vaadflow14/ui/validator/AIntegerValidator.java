@@ -4,7 +4,7 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AENumType;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,7 +31,7 @@ public class AIntegerValidator implements Validator {
     @Autowired
     public ALogService logger;
 
-    private AENumType numType;
+    private AETypeNum numType;
 
     private int min = 0;
 
@@ -53,7 +53,7 @@ public class AIntegerValidator implements Validator {
      *
      * @param numType per stabilire quali numeri siano accettabili (negativi, zero, positivi) <br>
      */
-    public AIntegerValidator(AENumType numType) {
+    public AIntegerValidator(AETypeNum numType) {
         this(numType, 0, 0);
     } // end of SpringBoot constructor
 
@@ -66,7 +66,7 @@ public class AIntegerValidator implements Validator {
      * @param min     valore minimo accettabile (compreso)
      * @param max     valore massimo accettabile (compreso)
      */
-    public AIntegerValidator(AENumType numType, int min, int max) {
+    public AIntegerValidator(AETypeNum numType, int min, int max) {
         this.numType = numType;
         this.min = min;
         this.max = max;

@@ -4,7 +4,7 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -83,7 +83,7 @@ public class Alfa extends AEntity {
     @NotNull
     @Indexed()
     @Field("ord")
-    @AIField(type = AEFieldType.integer, widthEM = 3)
+    @AIField(type = AETypeField.integer, widthEM = 3)
     @AIColumn(header = "#", widthEM = 3)
     public int ordine;
 
@@ -92,7 +92,7 @@ public class Alfa extends AEntity {
      */
     @Size(min = 2, max = 20)
     @Indexed()
-    @AIField(type = AEFieldType.text, required = true, focus = true, caption = "Codice", widthEM = 9)
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice", widthEM = 9)
     @AIColumn(header = "sigla", widthEM = 8)
     private String code;
 
@@ -100,25 +100,25 @@ public class Alfa extends AEntity {
     /**
      * descrizione (facoltativa)
      */
-    @AIField(type = AEFieldType.text, required = true, caption = "Descrizione completa", widthEM = 26)
+    @AIField(type = AETypeField.text, required = true, caption = "Descrizione completa", widthEM = 26)
     @AIColumn(widthEM = 20, flexGrow = true)
     private String descrizione;
 
-    @AIField(type = AEFieldType.textArea)
+    @AIField(type = AETypeField.textArea)
     private String onlyField;
 
-    @AIColumn(type = AEFieldType.integer)
+    @AIColumn(type = AETypeField.integer)
     private String onlyColumn;
 
-    @AIField(type = AEFieldType.integer)
-    @AIColumn(type = AEFieldType.textArea)
+    @AIField(type = AETypeField.integer)
+    @AIColumn(type = AETypeField.textArea)
     private String fieldAndColumn;
 
     @AIField()
-    @AIColumn(type = AEFieldType.enumeration)
+    @AIColumn(type = AETypeField.enumeration)
     private String fieldEmptyAndColumn;
 
-    @AIField(type = AEFieldType.textArea)
+    @AIField(type = AETypeField.textArea)
     @AIColumn()
     private String fieldAndColumnEmpty;
 
@@ -126,18 +126,18 @@ public class Alfa extends AEntity {
     @AIColumn()
     private String fieldEmptyAndColumnEmpty;
 
-    @AIField(type = AEFieldType.combo)
-    @AIColumn(type = AEFieldType.ugualeAlForm)
+    @AIField(type = AETypeField.combo)
+    @AIColumn(type = AETypeField.ugualeAlForm)
     private String columnComeField;
 
     @AIField()
-    @AIColumn(type = AEFieldType.ugualeAlForm)
+    @AIColumn(type = AETypeField.ugualeAlForm)
     private String columnComeField2;
 
-    @AIColumn(type = AEFieldType.ugualeAlForm)
+    @AIColumn(type = AETypeField.ugualeAlForm)
     private String columnComeField3;
 
-    @AIColumn(type = AEFieldType.text)
+    @AIColumn(type = AETypeField.text)
     private String columnComeField4;
 
     private String nessuno;

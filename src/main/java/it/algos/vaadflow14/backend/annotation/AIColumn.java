@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -37,7 +37,7 @@ public @interface AIColumn {
      *
      * @return the field type
      */
-    AEFieldType type() default AEFieldType.ugualeAlForm;
+    AETypeField type() default AETypeField.ugualeAlForm;
 
 
     /**

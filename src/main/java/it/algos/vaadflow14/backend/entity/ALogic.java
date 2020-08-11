@@ -1185,9 +1185,11 @@ public abstract class ALogic implements AILogic {
         return newEntityBean;
     }
 
+
     /**
      * Crea e registra una entity solo se non esisteva <br>
      * Controlla che la entity sia valida e superi i Validator associati <br>
+     *
      * @param newEntityBean da registrare
      *
      * @return true se la nuova entity è stata creata e salvata
@@ -1195,14 +1197,9 @@ public abstract class ALogic implements AILogic {
     public boolean checkAndSave(AEntity newEntityBean) {
         boolean valido = false;
         String message = VUOTA;
-        Binder binder;
-        binder = new Binder(entityClazz);
-        List<String> listaNomi;
-        listaNomi = annotation.getListaPropertiesForm(entityClazz);
-        for (String fieldName : listaNomi) {
-            fieldService.create(AEOperation.addNew, binder, newEntityBean, fieldName);
-        }
-        binder.readBean((AEntity) newEntityBean);
+        Binder binder = new Binder(newEntityBean.getClass());
+
+        beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
         valido = binder.isValid();
 
         if (valido) {
@@ -1215,6 +1212,7 @@ public abstract class ALogic implements AILogic {
 
         return valido;
     }
+
 
     /**
      * Save proveniente da un click sul bottone 'registra' del Form. <br>

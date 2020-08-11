@@ -3,11 +3,11 @@ package it.algos.vaadflow14.ui.service;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
-import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
-import it.algos.vaadflow14.backend.enumeration.AENumType;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
@@ -50,7 +50,6 @@ public class AFieldService extends AAbstractService {
     private static final long serialVersionUID = 1L;
 
 
-
     /**
      * Create a single field and add it to the binder. <br>
      * The field type is chosen according to the annotation @AIField. <br>
@@ -71,7 +70,7 @@ public class AFieldService extends AAbstractService {
         field = creaOnly(reflectionJavaField);
         if (field != null) {
             try {
-                addFieldToBinder(operation, binder, entityBean,reflectionJavaField, field);
+                addFieldToBinder(operation, binder, entityBean, reflectionJavaField, field);
             } catch (Exception unErrore) {
                 if (unErrore instanceof RangeException) {
                     logger.error(unErrore.getMessage() + " per la property " + propertyName, this.getClass(), "create");
@@ -93,7 +92,8 @@ public class AFieldService extends AAbstractService {
     public AField creaOnly(Field reflectionJavaField) {
         AField field = null;
         String caption = VUOTA;
-        AEFieldType type = null;
+        AETypeField type = null;
+        AETypeBool typeBool = AETypeBool.checkBox;
         String width = VUOTA;
         String placeholder = VUOTA;
         boolean hasFocus = false;
@@ -112,6 +112,7 @@ public class AFieldService extends AAbstractService {
         hasFocus = annotation.focus(reflectionJavaField);
         intMin = annotation.getNumberMin(reflectionJavaField);
         intMax = annotation.getNumberMax(reflectionJavaField);
+        typeBool = annotation.getTypeBoolean(reflectionJavaField);
 
         if (type != null) {
             switch (type) {
@@ -133,8 +134,8 @@ public class AFieldService extends AAbstractService {
                         }
                     }
                     break;
-                case yesNo:
-                    field = new ABooleanField(caption);
+                case booleano:
+                    field = new ABooleanField(caption, typeBool);
                     break;
                 case combo:
                 case enumeration:
@@ -162,11 +163,11 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean,Field reflectionJavaField, AField field) throws Exception {
+    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean, Field reflectionJavaField, AField field) throws Exception {
         Binder.BindingBuilder builder = null;
-        AEFieldType fieldType = annotation.getFormType(reflectionJavaField);
+        AETypeField fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;
-        AENumType numType = AENumType.positiviOnly;
+        AETypeNum numType = AETypeNum.positiviOnly;
         AStringBlankValidator stringBlankValidator = null;
         StringLengthValidator stringLengthValidator = null;
         AIntegerValidator integerValidator = null;
@@ -195,7 +196,7 @@ public class AFieldService extends AAbstractService {
         message = annotation.getMessage(reflectionJavaField);
         messageSize = annotation.getMessageSize(reflectionJavaField);
         messageNotNull = annotation.getMessageNull(reflectionJavaField);
-        numType = annotation.getNumberType(reflectionJavaField);
+        numType = annotation.getTypeNumber(reflectionJavaField);
         stringMin = annotation.getStringMin(reflectionJavaField);
         stringMax = annotation.getStringMax(reflectionJavaField);
         intMin = annotation.getNumberMin(reflectionJavaField);
@@ -211,7 +212,7 @@ public class AFieldService extends AAbstractService {
             uniqueValidator = appContext.getBean(AUniqueValidator.class, operation, entityBean, fieldName, propertyOldValue);
         }
 
-        if (numType == AENumType.range || numType == AENumType.rangeControl) {
+        if (numType == AETypeNum.range || numType == AETypeNum.rangeControl) {
             if (intMin > 0 || intMax > 0) {
                 if (intMin >= intMax) {
                     throw new RangeException("I valori del range sono errati");
@@ -245,7 +246,7 @@ public class AFieldService extends AAbstractService {
                         builder.withValidator(uniqueValidator);
                     }
                     break;
-                case yesNo:
+                case booleano:
                     binder.forField(field).bind(fieldName);
                     break;
                 case combo:

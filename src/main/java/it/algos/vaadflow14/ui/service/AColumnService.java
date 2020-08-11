@@ -7,7 +7,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEFieldType;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ public class AColumnService extends AAbstractService {
     public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, propertyName);
-        AEFieldType type = null;
+        AETypeField type = null;
         String header = VUOTA;
         VaadinIcon headerIcon = null;
         String colorHeaderIcon = VUOTA;

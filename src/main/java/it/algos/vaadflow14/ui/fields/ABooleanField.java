@@ -2,8 +2,11 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -24,22 +27,64 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ABooleanField extends AField<Boolean> {
 
-    private final Checkbox innerField;
+    private AbstractSinglePropertyField innerField;
+
+    private Checkbox checkBox;
+
+    private RadioButtonGroup<String> radioGroup;
+
+    private AETypeBool typeBool;
 
 
     public ABooleanField() {
-        this(VUOTA);
+        this(VUOTA, AETypeBool.checkBox);
     }
 
 
-    public ABooleanField(String label) {
-        this(label, VUOTA);
+    public ABooleanField(String label, AETypeBool typeBool) {
+        this(label, typeBool, VUOTA);
     }
 
 
-    public ABooleanField(String label, String placeholder) {
-        innerField = new Checkbox();
-        innerField.setLabelAsHtml(label);
+    public ABooleanField(String label, AETypeBool typeBool, String placeholder) {
+        this.typeBool = typeBool;
+        initView(label);
+    }
+
+
+    protected void initView(String label) {
+        if (typeBool != null) {
+            switch (typeBool) {
+                case checkBox:
+                    innerField = new Checkbox();
+                    ((Checkbox) innerField).setLabelAsHtml(label);
+                    break;
+                case radioTrueFalse:
+                    innerField = new RadioButtonGroup<>();
+                    ((RadioButtonGroup) innerField).setItems("Vero", "Falso");
+                    break;
+                case radioSiNo:
+                    innerField = new RadioButtonGroup<>();
+                    ((RadioButtonGroup) innerField).setItems("Si", "No");
+                    break;
+                case radioCustomHoriz:
+
+                    break;
+                case radioCustomVert:
+
+                    break;
+                default:
+                    //                    logger.warn("Switch - caso non definito", this.getClass(), "nomeDelMetodo");
+                    break;
+            }
+
+        }
+        if (typeBool != AETypeBool.checkBox) {
+            Label comp= new Label();
+            comp.setText(label);
+            add(comp);
+        }
+
         add(innerField);
     }
 
@@ -55,20 +100,11 @@ public class ABooleanField extends AField<Boolean> {
         super.setPresentationValue(value);
     }
 
-    @Override
-    public void setWidth(String width) {
-        innerField.setWidth(width);
-    }
 
     @Override
     public AbstractSinglePropertyField getBinder() {
         return innerField;
     }
 
-
-    @Override
-    public void setAutofocus() {
-        innerField.setAutofocus(true);
-    }
 
 }

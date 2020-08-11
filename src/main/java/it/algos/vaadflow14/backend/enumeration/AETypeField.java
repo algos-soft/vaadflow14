@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-public enum AEFieldType {
+public enum AETypeField {
     //    id(),
     text(12, 8),
 
@@ -47,13 +47,13 @@ public enum AEFieldType {
     textArea(0, 6),
 
     //    time,
-    yesNo(0, 4),
+//    yesNo(0, 4),
 
     //    yesnobold,
     ugualeAlForm(0, 0),
 
     //    noone,
-        booleano(0, 0),
+        booleano(4, 4),
     //    color,
     //    custom
     ;
@@ -63,7 +63,7 @@ public enum AEFieldType {
     private int widthColumn;
 
 
-    AEFieldType(int widthField, int widthColumn) {
+    AETypeField(int widthField, int widthColumn) {
         this.widthField = widthField;
         this.widthColumn = widthColumn;
     }
