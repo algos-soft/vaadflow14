@@ -150,18 +150,28 @@ public class MeseLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(AEMese aeMese) {
+        boolean valido = false;
+        String message = VUOTA;
         Mese newEntityBean = newEntity(aeMese);
         Binder binder;
         binder = new Binder(entityClazz);
         List<String> listaNomi;
         listaNomi = annotation.getListaPropertiesForm(entityClazz);
         for (String fieldName : listaNomi) {
-            fieldService.create(AEOperation.addNew,binder, newEntityBean, fieldName);
+            fieldService.create(AEOperation.addNew, binder, newEntityBean, fieldName);
         }
         binder.readBean((AEntity) newEntityBean);
-        boolean valido ;
         valido = binder.isValid();
-        return insert(newEntityBean) != null;
+
+        if (valido) {
+            valido = mongo.insert(newEntityBean) != null;
+        } else {
+            message = "Duplicate key error ";
+            message += beanService.getModifiche(newEntityBean);
+            logger.warn(message, this.getClass(), "crea");
+        }
+
+        return valido;
     }
 
 
@@ -236,9 +246,6 @@ public class MeseLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        for (AEMese aeMese : AEMese.values()) {
-            crea(aeMese);
-        }
         for (AEMese aeMese : AEMese.values()) {
             crea(aeMese);
         }

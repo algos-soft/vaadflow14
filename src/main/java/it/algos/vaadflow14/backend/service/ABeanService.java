@@ -96,7 +96,7 @@ public class ABeanService extends AAbstractService {
         Object newValue;
         WrapDueObject wrap;
 
-        if (entityBeanNew == null && entityBeanOld == null && entityBeanNew.getClass() != entityBeanOld.getClass()) {
+        if (entityBeanNew == null && entityBeanOld == null) {
             return null;
         }
 
@@ -121,6 +121,19 @@ public class ABeanService extends AAbstractService {
             }
         }
         return mappaModifiche;
+    }
+
+
+    /**
+     * Estrae le differenze delle sole properties modificate <br>
+     * Controlla che le due entities esistano e siano della stessa classe <br>
+     *
+     * @param entityBeanNew modificata
+     *
+     * @return lista delle properties modificate con la coppia di valori vecchio e nuovo
+     */
+    public String getModifiche(AEntity entityBeanNew) {
+        return getModifiche(entityBeanNew, null);
     }
 
 

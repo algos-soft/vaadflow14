@@ -68,7 +68,7 @@ public class AUniqueValidator implements Validator {
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AUniqueValidator.class, operation) <br>
      *
-     * @param operationForm        per differenziare tra nuova entity e modifica di esistente
+     * @param operationForm    per differenziare tra nuova entity e modifica di esistente
      * @param entityBean       the single entity
      * @param propertyName     per costruire la query
      * @param propertyOldValue (serializable) esistente nella entity
@@ -99,23 +99,22 @@ public class AUniqueValidator implements Validator {
 
         if (obj instanceof Serializable) {
             propertyNewValue = (Serializable) obj;
-            if (propertyNewValue.equals(propertyOldValue)) {
 
-                if (operationForm==AEOperation.addNew) {
-                    return     ValidationResult.error("Esiste già");
-                } else {
-                    return     ValidationResult.ok();
-                }
-
-            } else {
+            if (operationForm == AEOperation.addNew) {
                 entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
                 return entity != null ? ValidationResult.error("Esiste già") : ValidationResult.ok();
+            } else {
+                if (propertyNewValue.equals(propertyOldValue)) {
+                    return ValidationResult.ok();
+                } else {
+                    entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
+                    return entity != null ? ValidationResult.error("Esiste già") : ValidationResult.ok();
+                }
             }
         } else {
             return ValidationResult.ok();
         }
     }
-
 
 
     /**
