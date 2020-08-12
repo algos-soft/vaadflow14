@@ -4,11 +4,15 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.service.AAbstractService;
+import it.algos.vaadflow14.ui.fields.ACheckBox;
+import javafx.scene.control.CheckBox;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -70,6 +74,7 @@ public class AColumnService extends AAbstractService {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, propertyName);
         AETypeField type = null;
+        AETypeBool typeBool = AETypeBool.checkBox;
         String header = VUOTA;
         VaadinIcon headerIcon = null;
         String colorHeaderIcon = VUOTA;
@@ -79,6 +84,7 @@ public class AColumnService extends AAbstractService {
 
         if (field != null) {
             type = annotation.getColumnType(field);
+            typeBool = annotation.getTypeBoolean(field);
             header = annotation.getColumnHeader(field);
             headerIcon = annotation.getHeaderIcon(field);
             colorHeaderIcon = annotation.getHeaderIconColor(field);
@@ -124,10 +130,22 @@ public class AColumnService extends AAbstractService {
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
                     break;
-                case combo:
-                    //                    colonna = grid.addColumn(propertyName);
-                    break;
                 case booleano:
+//                    colonna = grid.addColumn(propertyName);
+
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        boolean status = false;
+
+                        try {
+                            status = field.getBoolean(entity);
+                        } catch (Exception unErrore) {
+                            logger.error(unErrore, this.getClass(), "add.booleano");
+                        }
+
+                        return new ACheckBox(status);
+                    }));//end of lambda expressions and anonymous inner class
+                    break;
+                case combo:
                     //                    colonna = grid.addColumn(propertyName);
                     break;
                 default:

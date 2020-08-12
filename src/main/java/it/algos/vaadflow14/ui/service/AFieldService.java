@@ -92,6 +92,7 @@ public class AFieldService extends AAbstractService {
     public AField creaOnly(Field reflectionJavaField) {
         AField field = null;
         String caption = VUOTA;
+        String captionRadio = VUOTA;
         AETypeField type = null;
         AETypeBool typeBool = AETypeBool.checkBox;
         String width = VUOTA;
@@ -107,6 +108,7 @@ public class AFieldService extends AAbstractService {
 
         type = annotation.getFormType(reflectionJavaField);
         caption = annotation.getFormFieldNameCapital(reflectionJavaField);
+        captionRadio = annotation.getCaptionRadio(reflectionJavaField);
         width = annotation.getFormWith(reflectionJavaField);
         placeholder = annotation.getPlaceholder(reflectionJavaField);
         hasFocus = annotation.focus(reflectionJavaField);
@@ -135,7 +137,11 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case booleano:
-                    field = new ABooleanField(caption, typeBool);
+                    if (text.isValid(captionRadio)) {
+                        field = new ABooleanField(caption, typeBool, captionRadio);
+                    } else {
+                        field = new ABooleanField(caption, typeBool);
+                    }
                     break;
                 case combo:
                 case enumeration:

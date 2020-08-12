@@ -1672,6 +1672,31 @@ public class AAnnotationService extends AAbstractService {
         return type;
     }
 
+
+    /**
+     * Get the 'caption' (two strings) of the property <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Strings
+     */
+    public String getCaptionRadio(final Field reflectionJavaField) {
+        String caption = VUOTA;
+        AIField annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            caption = annotation.captionRadio();
+        }
+
+        return caption;
+    }
+
+
     /**
      * Get the status required of the property.
      *

@@ -69,7 +69,9 @@ public class Secolo extends AEntity {
      * flag di separazione (obbligatorio)
      */
     @Indexed(direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, required = true, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
+//    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
+//    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
     @AIColumn(header = "A.C.", widthEM = 6)
     public boolean anteCristo;
 

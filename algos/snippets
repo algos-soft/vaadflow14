@@ -71,3 +71,7 @@ min.intValue();
     protected void postConstruct() {
         this.init();
     }
+
+
+Div content = new Div();
+content.getElement().setProperty("innerHTML", "<p>Hello World</p></br><span>Some text after a break</span>");

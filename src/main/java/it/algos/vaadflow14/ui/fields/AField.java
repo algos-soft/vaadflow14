@@ -55,10 +55,10 @@ public class AField<T> extends CustomField<T> implements AIField {
     }
 
 
-    @Override
-    public void setValue(Object o) {
-
-    }
+//    @Override
+//    public void setValue(Object o) {
+//
+//    }
 
 
     @Override
