@@ -1,13 +1,9 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
-import it.algos.vaadflow14.ui.service.AFieldService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -41,7 +37,6 @@ public class MeseLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
-
 
 
     /**
@@ -135,8 +130,6 @@ public class MeseLogic extends ALogic {
     public boolean crea(String nome, int giorni, int giorniBisestile, String sigla) {
         return checkAndSave(newEntity(nome, giorni, giorniBisestile, sigla));
     }
-
-
 
 
     /**

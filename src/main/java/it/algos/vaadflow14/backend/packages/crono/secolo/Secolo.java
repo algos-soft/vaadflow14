@@ -68,7 +68,6 @@ public class Secolo extends AEntity {
     /**
      * flag di separazione (obbligatorio)
      */
-    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
 //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
 //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
@@ -80,14 +79,14 @@ public class Secolo extends AEntity {
      * primo anno (obbligatorio, unico) <br>
      */
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(widthEM = 5)
+    @AIColumn(widthEM = 6)
     public int inizio;
 
     /**
      * ultimo anno (obbligatorio, unico) <br>
      */
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(widthEM = 5)
+    @AIColumn(widthEM = 6)
     public int fine;
 
 

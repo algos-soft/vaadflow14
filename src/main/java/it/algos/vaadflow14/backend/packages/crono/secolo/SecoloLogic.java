@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 
 /**
  * Project vaadflow14
@@ -103,12 +105,38 @@ public class SecoloLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
+     * @param aeSecolo: enumeration per la creazione-reset di tutte le entities
      *
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(AESecolo aeSecolo) {
-        Secolo newEntityBean = newEntity(aeSecolo);
-        return insert(newEntityBean) != null;
+        return crea(aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine(), aeSecolo.getNome());
+    }
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
+     * @param inizio     (obbligatorio, unico)
+     * @param fine       (obbligatorio, unico)
+     * @param nome       (obbligatorio, unico)
+     *
+     * @return true se la nuova entity è stata creata e salvata
+     */
+    public boolean crea(boolean anteCristo, int inizio, int fine, String nome) {
+        return checkAndSave(newEntity(anteCristo, inizio, fine, nome));
+    }
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Secolo newEntity() {
+        return newEntity(false, 0, 0, VUOTA);
     }
 
 
@@ -154,8 +182,10 @@ public class SecoloLogic extends ALogic {
                 .nome(text.isValid(nome) ? nome : null)
 
                 .build();
+
         return (Secolo) fixKey(newEntityBean);
     }
+
 
     /**
      * Creazione di alcuni dati iniziali <br>

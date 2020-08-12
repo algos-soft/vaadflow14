@@ -3,8 +3,11 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -13,6 +16,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -26,7 +30,6 @@ import javax.validation.constraints.NotNull;
  */
 @QueryEntity
 @Document(collection = "anno")
-@TypeAlias("anno")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,7 +38,7 @@ import javax.validation.constraints.NotNull;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Anno", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR)
-@AIList(fields = "ordine,nome,bisestile")
+@AIList(fields = "ordine,secolo,nome,bisestile")
 @AIForm(fields = "ordine,secolo,nome,bisestile")
 public class Anno extends AEntity {
 
@@ -47,10 +50,9 @@ public class Anno extends AEntity {
     /**
      * ordinamento (obbligatorio, unico) <br>
      */
-    @NotNull
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, widthEM = 5)
-    @AIColumn(header = "#", widthEM = 5)
+    @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "#")
     public int ordine;
 
     /**
@@ -58,7 +60,7 @@ public class Anno extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @NotNull
-    @Indexed()
+//    @Indexed()
     @DBRef
     @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
     @AIColumn(widthEM = 8)
@@ -68,9 +70,9 @@ public class Anno extends AEntity {
     /**
      * nome completo (obbligatorio, unico) <br>
      */
-    @NotNull
+    @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text,  widthEM = 10)
+    @AIField(type = AETypeField.text, focus = true)
     @AIColumn(flexGrow = true)
     public String nome;
 
@@ -78,7 +80,7 @@ public class Anno extends AEntity {
      * flag bisestile (obbligatorio)
      */
     @Indexed()
-    @AIField(type = AETypeField.booleano, caption = "Bisestile", widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Bisestile", widthEM = 6)
     @AIColumn(header = "BS", widthEM = 6)
     public boolean bisestile;
 

@@ -12,7 +12,7 @@ public enum AESecolo {
 
     XIXac("XIX", 1900, 1801, true),
 
-    XVIIIac("XVII", 1800, 1701, true),
+    XVIIIac("XVIII", 1800, 1701, true),
 
     XVIIac("XVII", 1700, 1601, true),
 

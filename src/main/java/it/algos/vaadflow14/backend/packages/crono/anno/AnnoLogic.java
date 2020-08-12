@@ -11,9 +11,10 @@ import org.bson.Document;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -108,13 +109,25 @@ public class AnnoLogic extends ALogic {
      *
      * @param ordine (obbligatorio, unico)
      * @param secolo di riferimento (obbligatorio)
-     * @param titolo (obbligatorio, unico)
+     * @param nome   (obbligatorio, unico)
      *
      * @return true se la entity è stata creata
      */
-    public boolean crea(int ordine, Secolo secolo, String titolo) {
-        Anno newEntityBean = newEntity(ordine, secolo, titolo);
-        return insert(newEntityBean) != null;
+    public boolean crea(int ordine, Secolo secolo, String nome) {
+        Anno newEntityBean = newEntity(ordine, secolo, nome);
+        return checkAndSave(newEntity(ordine, secolo, nome));
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Anno newEntity() {
+        return newEntity(0, null, VUOTA);
     }
 
 
@@ -145,6 +158,24 @@ public class AnnoLogic extends ALogic {
     }
 
 
+    public List<Anno> fetchAnni(int offset, int limit) {
+        List<Anno> lista = new ArrayList<>();
+        Gson gson = new Gson();
+        Anno anno;
+
+        List<Document> products = mongo.mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());
+
+        for (Document doc : products) {
+
+            // 1. JSON file to Java object
+            anno = gson.fromJson(doc.toJson(), Anno.class);
+            lista.add(anno);
+        }
+
+        return lista;
+    }
+
+
     /**
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
@@ -170,6 +201,8 @@ public class AnnoLogic extends ALogic {
             titolo = k + AESecolo.TAG_AC;
             secoloEnum = AESecolo.getSecoloAC(k);
             titoloSecolo = secoloEnum.getNome();
+            titoloSecolo = titoloSecolo.toLowerCase();
+            titoloSecolo = text.levaSpaziInterni(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             if (ordine != ANNO_INIZIALE) {
                 numRec = crea(ordine, secolo, titolo) ? numRec + 1 : numRec;
@@ -182,6 +215,8 @@ public class AnnoLogic extends ALogic {
             titolo = k + FlowCost.VUOTA;
             secoloEnum = AESecolo.getSecoloDC(k);
             titoloSecolo = secoloEnum.getNome();
+            titoloSecolo = titoloSecolo.toLowerCase();
+            titoloSecolo = text.levaSpaziInterni(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             if (ordine != ANNO_INIZIALE) {
                 numRec = crea(ordine, secolo, titolo) ? numRec + 1 : numRec;
@@ -189,24 +224,6 @@ public class AnnoLogic extends ALogic {
         }
 
         return mongo.isValid(entityClazz);
-    }
-
-
-    public List<Anno> fetchAnni(int offset, int limit) {
-        List<Anno> lista = new ArrayList<>();
-        Gson gson = new Gson();
-        Anno anno;
-
-        List<Document> products = mongo.mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());
-
-        for (Document doc : products) {
-
-            // 1. JSON file to Java object
-            anno = gson.fromJson(doc.toJson(),Anno.class);
-            lista.add(anno);
-        }
-
-        return lista;
     }
 
 

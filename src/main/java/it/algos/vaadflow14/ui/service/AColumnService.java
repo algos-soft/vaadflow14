@@ -98,8 +98,8 @@ public class AColumnService extends AAbstractService {
         } else {
             switch (type) {
                 case text:
-                    //                    colonna = grid.addColumn(propertyName);
-                    //                    break;
+                                        colonna = grid.addColumn(propertyName);
+                                        break;
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
@@ -115,20 +115,20 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case integer:
-                    //                    colonna = grid.addColumn(propertyName);
-                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        String testo = VUOTA;
-                        int value;
-
-                        try {
-                            value = field.getInt(entity);
-                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
-                        } catch (Exception unErrore) {
-                            logger.error(unErrore, this.getClass(), "add.integer");
-                        }
-
-                        return new Label(testo);
-                    }));//end of lambda expressions and anonymous inner class
+                                        colonna = grid.addColumn(propertyName);
+//                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+//                        String testo = VUOTA;
+//                        int value;
+//
+//                        try {
+//                            value = field.getInt(entity);
+//                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
+//                        } catch (Exception unErrore) {
+//                            logger.error(unErrore, this.getClass(), "add.integer");
+//                        }
+//
+//                        return new Label(testo);
+//                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case booleano:
 //                    colonna = grid.addColumn(propertyName);
@@ -146,7 +146,17 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case combo:
-                    //                    colonna = grid.addColumn(propertyName);
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        String testo = VUOTA;
+
+                        try {
+                            testo = field.get(entity) != null ? field.get(entity).toString() : VUOTA;
+                        } catch (Exception unErrore) {
+                            logger.error(unErrore, this.getClass(), "add.combo");
+                        }
+
+                        return new Label(testo);
+                    }));//end of lambda expressions and anonymous inner class
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "add");
