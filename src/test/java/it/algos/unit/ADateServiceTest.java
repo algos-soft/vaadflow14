@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -123,6 +125,67 @@ public class ADateServiceTest extends ATest {
         }
     }
 
+    @Test
+    @Order(5)
+    @DisplayName("Anno bisestile")
+    void bisestile() {
+        ottenutoBooleano = date.bisestile(1);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(2);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(3);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(4);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(5);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(6);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(7);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(8);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(9);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(10);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1400);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1500);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1896);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1996);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1700);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1800);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1900);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(1600);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = date.bisestile(2000);
+        assertTrue(ottenutoBooleano);
+    }
 
     /**
      * Qui passa una volta sola, chiamato alla fine di tutti i tests <br>

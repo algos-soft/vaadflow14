@@ -3,14 +3,12 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -38,8 +36,8 @@ import javax.validation.constraints.NotNull;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Anno", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR)
-@AIList(fields = "ordine,secolo,nome,bisestile")
-@AIForm(fields = "ordine,secolo,nome,bisestile")
+@AIList(fields = "ordine,secolo,bisestile,nome")
+@AIForm(fields = "ordine,secolo,bisestile,nome")
 public class Anno extends AEntity {
 
     /**
@@ -60,7 +58,6 @@ public class Anno extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @NotNull
-//    @Indexed()
     @DBRef
     @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
     @AIColumn(widthEM = 8)
@@ -72,7 +69,7 @@ public class Anno extends AEntity {
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true)
+    @AIField(type = AETypeField.text, focus = true, caption = "anno")
     @AIColumn(flexGrow = true)
     public String nome;
 
@@ -83,6 +80,7 @@ public class Anno extends AEntity {
     @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Bisestile", widthEM = 6)
     @AIColumn(header = "BS", widthEM = 6)
     public boolean bisestile;
+
 
     /**
      * @return a string representation of the object.

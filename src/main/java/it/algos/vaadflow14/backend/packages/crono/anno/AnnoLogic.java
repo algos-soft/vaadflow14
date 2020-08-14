@@ -7,7 +7,9 @@ import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.service.ADateService;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -50,6 +52,15 @@ public class AnnoLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ADateService date;
 
 
     /**
@@ -107,15 +118,15 @@ public class AnnoLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param ordine (obbligatorio, unico)
-     * @param secolo di riferimento (obbligatorio)
-     * @param nome   (obbligatorio, unico)
+     * @param ordine    (obbligatorio, unico)
+     * @param secolo    di riferimento (obbligatorio)
+     * @param nome      (obbligatorio, unico)
+     * @param bisestile (obbligatorio)
      *
      * @return true se la entity è stata creata
      */
-    public boolean crea(int ordine, Secolo secolo, String nome) {
-        Anno newEntityBean = newEntity(ordine, secolo, nome);
-        return checkAndSave(newEntity(ordine, secolo, nome));
+    public boolean crea(int ordine, Secolo secolo, String nome, boolean bisestile) {
+        return checkAndSave(newEntity(ordine, secolo, nome, bisestile));
     }
 
 
@@ -127,7 +138,7 @@ public class AnnoLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Anno newEntity() {
-        return newEntity(0, null, VUOTA);
+        return newEntity(0, null, VUOTA, false);
     }
 
 
@@ -137,13 +148,14 @@ public class AnnoLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param ordine (obbligatorio, unico)
-     * @param secolo di riferimento (obbligatorio)
-     * @param nome   (obbligatorio, unico)
+     * @param ordine    (obbligatorio, unico)
+     * @param secolo    di riferimento (obbligatorio)
+     * @param nome      (obbligatorio, unico)
+     * @param bisestile (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(int ordine, Secolo secolo, String nome) {
+    public Anno newEntity(int ordine, Secolo secolo, String nome, boolean bisestile) {
         Anno newEntityBean = Anno.builderAnno()
 
                 .ordine(ordine)
@@ -151,6 +163,8 @@ public class AnnoLogic extends ALogic {
                 .secolo(secolo)
 
                 .nome(text.isValid(nome) ? nome : null)
+
+                .bisestile(bisestile)
 
                 .build();
 
@@ -193,7 +207,7 @@ public class AnnoLogic extends ALogic {
         AESecolo secoloEnum;
         Secolo secolo;
         String titoloSecolo;
-        int numRec = 0;
+        boolean bisestile = false;
 
         //--costruisce gli anni prima di cristo dal 1000
         for (int k = ANTE_CRISTO; k > 0; k--) {
@@ -204,8 +218,9 @@ public class AnnoLogic extends ALogic {
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpaziInterni(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+            bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE) {
-                numRec = crea(ordine, secolo, titolo) ? numRec + 1 : numRec;
+                crea(ordine, secolo, titolo, bisestile);
             }
         }
 
@@ -218,8 +233,9 @@ public class AnnoLogic extends ALogic {
             titoloSecolo = titoloSecolo.toLowerCase();
             titoloSecolo = text.levaSpaziInterni(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+            bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE) {
-                numRec = crea(ordine, secolo, titolo) ? numRec + 1 : numRec;
+                crea(ordine, secolo, titolo, bisestile);
             }
         }
 

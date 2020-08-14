@@ -127,6 +127,9 @@ public class ATest {
     @InjectMocks
     protected  AFileService file;
 
+    @InjectMocks
+    protected  AMathService math;
+
     protected Logger adminLogger;
 
     /**
@@ -216,6 +219,14 @@ public class ATest {
 
     protected int ottenutoIntero;
 
+    protected double previstoDouble = 0;
+
+    protected double ottenutoDouble = 0;
+
+    protected int dividendo;
+
+    protected int divisore;
+
     protected AEntity entityBean;
 
     protected List<AEntity> listaBean;
@@ -272,6 +283,9 @@ public class ATest {
         MockitoAnnotations.initMocks(file);
         Assertions.assertNotNull(file);
 
+        MockitoAnnotations.initMocks(math);
+        Assertions.assertNotNull(math);
+
         array.text = text;
         text.array = array;
         logger.text = text;
@@ -286,6 +300,7 @@ public class ATest {
         file.text = text;
         file.array = array;
         file.logger = logger;
+        date.math = math;
     }
 
 

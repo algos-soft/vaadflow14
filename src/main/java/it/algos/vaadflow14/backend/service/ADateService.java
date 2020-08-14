@@ -177,4 +177,34 @@ public class ADateService extends AAbstractService {
         return listaAnno;
     }
 
+
+    /**
+     * Anno bisestile
+     *
+     * @param anno da validare
+     *
+     * @return true se l'anno è bisestile
+     */
+    public boolean bisestile(int anno) {
+        boolean bisestile = false;
+        int deltaGiuliano = 4;
+        int deltaSecolo = 100;
+        int deltaGregoriano = 400;
+        int inizioGregoriano = 1582;
+        boolean bisestileSecolo = false;
+
+        bisestile = math.divisibileEsatto(anno, deltaGiuliano);
+        if (anno > inizioGregoriano && bisestile) {
+            if (math.divisibileEsatto(anno, deltaSecolo)) {
+                if (math.divisibileEsatto(anno, deltaGregoriano)) {
+                    bisestile = true;
+                } else {
+                    bisestile = false;
+                }
+            }
+        }
+
+        return bisestile;
+    }
+
 }
