@@ -284,14 +284,14 @@
         </dependency>
         <!-- mokito -->
 
-<!--        &lt;!&ndash; pagination &ndash;&gt;-->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.vaadin.klaudeta</groupId>-->
-<!--            <artifactId>grid-pagination</artifactId>-->
-<!--            <version>2.0.7</version>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; pagination &ndash;&gt;-->
+        <!-- pagination -->
+        <!-- https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination -->
+        <dependency>
+            <groupId>org.vaadin.klaudeta</groupId>
+            <artifactId>grid-pagination</artifactId>
+            <version>2.0.7</version>
+        </dependency>
+        <!-- pagination -->
     </dependencies>
 
 

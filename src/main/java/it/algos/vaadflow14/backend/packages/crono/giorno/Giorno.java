@@ -1,44 +1,50 @@
-package it.algos.vaadflow14.backend.packages.crono.secolo;
+package it.algos.vaadflow14.backend.packages.crono.giorno;
 
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: dom, 02-ago-2020
- * Time: 06:48
+ * Date: ven, 14-ago-2020
+ * Time: 15:19
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
 @QueryEntity
-@Document(collection = "secolo")
-@TypeAlias("secolo")
+@Document(collection = "giorno")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderSecolo")
+@Builder(builderMethodName = "builderGiorno")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Secolo", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "ordine,anteCristo,inizio,fine,nome")
-@AIForm(fields = "ordine,anteCristo,inizio,fine,nome")
-public class Secolo extends AEntity {
+@AIEntity(recordName = "Giorno", keyPropertyName = "nome")
+@AIList(fields = "ordine,mese,nome")
+@AIForm(fields = "ordine,mese,nome")
+public class Giorno extends AEntity {
 
     /**
      * versione della classe per la serializzazione
@@ -56,38 +62,23 @@ public class Secolo extends AEntity {
 
 
     /**
+     * mese di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Mese.class)
+    @AIColumn(widthEM = 8)
+    public Mese mese;
+
+    /**
      * nome completo (obbligatorio, unico) <br>
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(header = "secolo", flexGrow = true)
+    @AIColumn(header = "giorno",flexGrow = true)
     public String nome;
-
-
-    /**
-     * flag di separazione (obbligatorio)
-     */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
-    //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
-    //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
-    @AIColumn(header = "A.C.", widthEM = 6)
-    public boolean anteCristo;
-
-
-    /**
-     * primo anno (obbligatorio, unico) <br>
-     */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(widthEM = 6)
-    public int inizio;
-
-    /**
-     * ultimo anno (obbligatorio, unico) <br>
-     */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(widthEM = 6)
-    public int fine;
 
 
     /**
@@ -95,7 +86,7 @@ public class Secolo extends AEntity {
      */
     @Override
     public String toString() {
-        return getNome();
+        return nome;
     }
 
 }

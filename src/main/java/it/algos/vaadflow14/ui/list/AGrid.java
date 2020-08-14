@@ -20,6 +20,7 @@ import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.vaadin.klaudeta.PaginatedGrid;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -98,7 +99,7 @@ public class AGrid {
 
     public AGrid(Class<? extends AEntity> beanType, ALogic service) {
         super();
-        this.grid = new Grid(beanType, false);
+        this.grid = new Grid(beanType,false);
         this.service = service;
         this.beanType = beanType;
     }

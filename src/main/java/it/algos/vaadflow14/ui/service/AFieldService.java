@@ -4,6 +4,9 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.entity.AILogic;
+import it.algos.vaadflow14.backend.entity.ALogic;
+import it.algos.vaadflow14.backend.entity.GenericLogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -72,6 +76,7 @@ public class AFieldService extends AAbstractService {
             try {
                 addFieldToBinder(operation, binder, entityBean, reflectionJavaField, field);
             } catch (Exception unErrore) {
+                logger.warn("La property " + propertyName + " non è stata aggiunta al Form", this.getClass(), "create");
                 if (unErrore instanceof RangeException) {
                     logger.error(unErrore.getMessage() + " per la property " + propertyName, this.getClass(), "create");
                 }
@@ -101,6 +106,7 @@ public class AFieldService extends AAbstractService {
         int intMin = 0;
         int intMax = 0;
         String widthForNumber = "8em";
+        Class comboClazz = null;
 
         if (reflectionJavaField == null) {
             return null;
@@ -115,6 +121,7 @@ public class AFieldService extends AAbstractService {
         intMin = annotation.getNumberMin(reflectionJavaField);
         intMax = annotation.getNumberMax(reflectionJavaField);
         typeBool = annotation.getTypeBoolean(reflectionJavaField);
+        comboClazz = annotation.getComboClass(reflectionJavaField);
 
         if (type != null) {
             switch (type) {
@@ -144,6 +151,13 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case combo:
+                    field = new AComboField(caption);
+                    if (comboClazz != null) {
+                        List  items = mongo.findAll(comboClazz);
+                        if (items != null) {
+                            ((AComboField) field).setItem(items);
+                        }
+                    }
                 case enumeration:
                 case gridShowOnly:
                     break;
@@ -218,16 +232,18 @@ public class AFieldService extends AAbstractService {
             uniqueValidator = appContext.getBean(AUniqueValidator.class, operation, entityBean, fieldName, propertyOldValue);
         }
 
-        if (numType == AETypeNum.range || numType == AETypeNum.rangeControl) {
-            if (intMin > 0 || intMax > 0) {
-                if (intMin >= intMax) {
-                    throw new RangeException("I valori del range sono errati");
-                } else {
-                    integerValidator = appContext.getBean(AIntegerValidator.class, numType, intMin, intMax);
+        if (fieldType == AETypeField.integer) {
+            if (numType == AETypeNum.range || numType == AETypeNum.rangeControl) {
+                if (intMin > 0 || intMax > 0) {
+                    if (intMin >= intMax) {
+                        throw new RangeException("I valori del range sono errati");
+                    } else {
+                        integerValidator = appContext.getBean(AIntegerValidator.class, numType, intMin, intMax);
+                    }
                 }
+            } else {
+                integerValidator = appContext.getBean(AIntegerValidator.class, numType);
             }
-        } else {
-            integerValidator = appContext.getBean(AIntegerValidator.class, numType);
         }
 
         if (fieldType != null) {
@@ -256,6 +272,7 @@ public class AFieldService extends AAbstractService {
                     binder.forField(field).bind(fieldName);
                     break;
                 case combo:
+                    binder.forField(field).bind(fieldName);
                     break;
                 case enumeration:
                     break;

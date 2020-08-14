@@ -3,15 +3,20 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.service.ADateService;
+import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,10 +103,13 @@ public class AnnoLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.showOnly;
+        //        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
         super.usaBottoneNew = false;
+
+        //--provvisorio
+        super.usaBottoneNew = true;
     }
 
 
@@ -116,17 +124,38 @@ public class AnnoLogic extends ALogic {
 
 
     /**
+     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected List<String> getAlertList(AEVista typeVista) {
+        List<String> lista = super.getAlertList(typeVista);
+
+        lista.add("Pacchetto convenzionale di 3030 anni. 1000 anni ANTE Cristo e 2030 anni DOPO Cristo.");
+        lista.add("Sono indicati gli anni bisestili secondo il calendario Giuliano (fino al 1582) e Gregoriano poi.");
+        lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
+
+        return lista;
+    }
+
+    /**
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param ordine    (obbligatorio, unico)
      * @param secolo    di riferimento (obbligatorio)
-     * @param nome      (obbligatorio, unico)
      * @param bisestile (obbligatorio)
+     * @param nome      (obbligatorio, unico)
      *
      * @return true se la entity è stata creata
      */
-    public boolean crea(int ordine, Secolo secolo, String nome, boolean bisestile) {
-        return checkAndSave(newEntity(ordine, secolo, nome, bisestile));
+    public boolean crea(int ordine, Secolo secolo, boolean bisestile, String nome) {
+        return checkAndSave(newEntity(ordine, secolo, bisestile, nome));
     }
 
 
@@ -138,7 +167,7 @@ public class AnnoLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Anno newEntity() {
-        return newEntity(0, null, VUOTA, false);
+        return newEntity(0, (Secolo) null, false, VUOTA);
     }
 
 
@@ -150,25 +179,48 @@ public class AnnoLogic extends ALogic {
      *
      * @param ordine    (obbligatorio, unico)
      * @param secolo    di riferimento (obbligatorio)
-     * @param nome      (obbligatorio, unico)
      * @param bisestile (obbligatorio)
+     * @param nome      (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(int ordine, Secolo secolo, String nome, boolean bisestile) {
+    public Anno newEntity(int ordine, Secolo secolo, boolean bisestile, String nome) {
         Anno newEntityBean = Anno.builderAnno()
 
                 .ordine(ordine)
 
                 .secolo(secolo)
 
-                .nome(text.isValid(nome) ? nome : null)
-
                 .bisestile(bisestile)
+
+                .nome(text.isValid(nome) ? nome : null)
 
                 .build();
 
         return (Anno) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     */
+    //@todo provvisorio perchè è troppo lento a visualizzare tutti i records
+    @Override
+    public void refreshGrid() {
+        List<? extends AEntity> items;
+        Query query = new Query();
+
+        if (grid != null && grid.getGrid() != null) {
+            updateFiltri();
+            //            items = mongo.findAll(entityClazz, filtri, sortView);
+            query.addCriteria(Criteria.where("ordine").gte(1990).lte(2025));
+            query.with(Sort.by(Sort.Direction.ASC, "ordine"));
+            items = mongo.findAll(entityClazz, query);
+            grid.deselectAll();
+            grid.refreshAll();
+            grid.setItems(items);
+        }
     }
 
 
@@ -203,7 +255,7 @@ public class AnnoLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
         int ordine;
-        String titolo;
+        String nome;
         AESecolo secoloEnum;
         Secolo secolo;
         String titoloSecolo;
@@ -212,7 +264,7 @@ public class AnnoLogic extends ALogic {
         //--costruisce gli anni prima di cristo dal 1000
         for (int k = ANTE_CRISTO; k > 0; k--) {
             ordine = ANNO_INIZIALE - k;
-            titolo = k + AESecolo.TAG_AC;
+            nome = k + AESecolo.TAG_AC;
             secoloEnum = AESecolo.getSecoloAC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
@@ -220,14 +272,14 @@ public class AnnoLogic extends ALogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE) {
-                crea(ordine, secolo, titolo, bisestile);
+                crea(ordine, secolo, bisestile,nome);
             }
         }
 
         //--costruisce gli anni dopo cristo fino al 2030
         for (int k = 1; k <= DOPO_CRISTO; k++) {
             ordine = k + ANNO_INIZIALE;
-            titolo = k + FlowCost.VUOTA;
+            nome = k + FlowCost.VUOTA;
             secoloEnum = AESecolo.getSecoloDC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
@@ -235,16 +287,11 @@ public class AnnoLogic extends ALogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE) {
-                crea(ordine, secolo, titolo, bisestile);
+                crea(ordine, secolo, bisestile,nome);
             }
         }
 
         return mongo.isValid(entityClazz);
-    }
-
-
-    public int getCount() {
-        return mongo.count("anno");
     }
 
 }

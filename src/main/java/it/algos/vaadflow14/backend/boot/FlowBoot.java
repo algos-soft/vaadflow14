@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.data.AData;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
+import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -334,9 +335,10 @@ public abstract class FlowBoot implements ServletContextListener {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void addMenuRoutes() {
-        FlowVar.menuRouteList.add(Mese.class);
         FlowVar.menuRouteList.add(Secolo.class);
         FlowVar.menuRouteList.add(Anno.class);
+        FlowVar.menuRouteList.add(Mese.class);
+        FlowVar.menuRouteList.add(Giorno.class);
     }
 
 

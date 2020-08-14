@@ -113,22 +113,22 @@ public class MeseLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(AEMese aeMese) {
-        return crea(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
+        return crea(aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla(), aeMese.getNome());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param nome            nome completo (obbligatorio, unico)
      * @param giorni          numero di giorni presenti (obbligatorio)
      * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
      * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
+     * @param nome            nome completo (obbligatorio, unico)
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public boolean crea(String nome, int giorni, int giorniBisestile, String sigla) {
-        return checkAndSave(newEntity(nome, giorni, giorniBisestile, sigla));
+    public boolean crea(int giorni, int giorniBisestile, String sigla, String nome) {
+        return checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome ));
     }
 
 
@@ -140,7 +140,7 @@ public class MeseLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity() {
-        return newEntity(VUOTA, 0, 0, VUOTA);
+        return newEntity(0, 0, VUOTA, VUOTA);
     }
 
 
@@ -154,7 +154,7 @@ public class MeseLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity(AEMese aeMese) {
-        return newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
+        return newEntity(aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla(), aeMese.getNome());
     }
 
 
@@ -164,25 +164,25 @@ public class MeseLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param nome            nome completo (obbligatorio, unico)
      * @param giorni          numero di giorni presenti (obbligatorio)
      * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
      * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
+     * @param nome            nome completo (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Mese newEntity(String nome, int giorni, int giorniBisestile, String sigla) {
+    public Mese newEntity(int giorni, int giorniBisestile, String sigla, String nome) {
         Mese newEntityBean = Mese.builderMese()
 
                 .ordine(getNewOrdine())
-
-                .nome(text.isValid(nome) ? nome : null)
 
                 .giorni(giorni)
 
                 .giorniBisestile(giorniBisestile)
 
                 .sigla(text.isValid(sigla) ? sigla : null)
+
+                .nome(text.isValid(nome) ? nome : null)
 
                 .build();
 

@@ -4,7 +4,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -12,7 +11,6 @@ import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.ACheckBox;
-import javafx.scene.control.CheckBox;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -81,6 +79,7 @@ public class AColumnService extends AAbstractService {
         boolean isFlexGrow = false;
         String width = VUOTA;
         Label label = null;
+        boolean sortable = false;
 
         if (field != null) {
             type = annotation.getColumnType(field);
@@ -98,8 +97,9 @@ public class AColumnService extends AAbstractService {
         } else {
             switch (type) {
                 case text:
-                                        colonna = grid.addColumn(propertyName);
-                                        break;
+                    colonna = grid.addColumn(propertyName);
+                    sortable=true;
+                    break;
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
@@ -115,23 +115,25 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case integer:
-                                        colonna = grid.addColumn(propertyName);
-//                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-//                        String testo = VUOTA;
-//                        int value;
-//
-//                        try {
-//                            value = field.getInt(entity);
-//                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
-//                        } catch (Exception unErrore) {
-//                            logger.error(unErrore, this.getClass(), "add.integer");
-//                        }
-//
-//                        return new Label(testo);
-//                    }));//end of lambda expressions and anonymous inner class
+                    colonna = grid.addColumn(propertyName);
+                    sortable=true;
+
+                    //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    //                        String testo = VUOTA;
+                    //                        int value;
+                    //
+                    //                        try {
+                    //                            value = field.getInt(entity);
+                    //                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
+                    //                        } catch (Exception unErrore) {
+                    //                            logger.error(unErrore, this.getClass(), "add.integer");
+                    //                        }
+                    //
+                    //                        return new Label(testo);
+                    //                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case booleano:
-//                    colonna = grid.addColumn(propertyName);
+                    //                    colonna = grid.addColumn(propertyName);
 
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         boolean status = false;
@@ -212,7 +214,7 @@ public class AColumnService extends AAbstractService {
             //            //            if (property.equals("id")) {
             //            //                colonna.setWidth("1px");
             //            //            }// end of if cycle
-            colonna.setSortable(true);
+            colonna.setSortable(sortable);
             colonna.setSortProperty(propertyName);
 
             colonna.setWidth(width);

@@ -171,8 +171,6 @@ public class SecoloLogic extends ALogic {
 
                 .ordine(getNewOrdine())
 
-                .nome(text.isValid(nome) ? nome : null)
-
                 .anteCristo(anteCristo)
 
                 .inizio(inizio)

@@ -1,9 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -35,7 +33,7 @@ public class AIntegerField extends AField<Integer> {
 
 
     public AIntegerField(String label) {
-        this(label,VUOTA);
+        this(label, VUOTA);
     }
 
 
@@ -46,28 +44,36 @@ public class AIntegerField extends AField<Integer> {
         add(innerField);
     }
 
+
     @Override
     protected Integer generateModelValue() {
         return innerField.getValue();
     }
 
+
     @Override
     protected void setPresentationValue(Integer value) {
         innerField.setValue(value);
     }
+
+
     @Override
     public void setWidth(String width) {
         innerField.setWidth(width);
     }
 
+
     @Override
     public AbstractSinglePropertyField getBinder() {
         return innerField;
     }
+
+
     @Override
     public void setPlaceholder(String placeholder) {
         innerField.setPlaceholder(placeholder);
     }
+
 
     @Override
     public void setAutofocus() {

@@ -70,8 +70,8 @@ public class TestBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Programma di prova per testare vaadflow";
         FlowVar.projectDescrizione = "Modulo di test";
-        FlowVar.projectVersion = 0.71;
-        FlowVar.versionDate = LocalDate.of(2020, 7, 30);
+        FlowVar.projectVersion = 0.72;
+        FlowVar.versionDate = LocalDate.of(2020, 8, 14);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Modulo di prova";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui

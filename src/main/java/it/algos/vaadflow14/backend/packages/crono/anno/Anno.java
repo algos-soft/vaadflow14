@@ -70,7 +70,7 @@ public class Anno extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true, caption = "anno")
-    @AIColumn(flexGrow = true)
+    @AIColumn(header = "anno",flexGrow = true)
     public String nome;
 
     /**

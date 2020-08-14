@@ -35,8 +35,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Mese", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "ordine,nome,giorni,giorniBisestile,sigla")
-@AIForm(fields = "ordine,nome,giorni,giorniBisestile,sigla")
+@AIList(fields = "ordine,giorni,giorniBisestile,sigla,nome")
+@AIForm(fields = "ordine,giorni,giorniBisestile,sigla,nome")
 public class Mese extends AEntity {
 
     /**
@@ -59,7 +59,7 @@ public class Mese extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(flexGrow = true)
+    @AIColumn(header = "mese",flexGrow = true)
     public String nome;
 
     /**

@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,5 +58,11 @@ public class AComboField<T> extends AField<Object> {
     protected void setPresentationValue(Object value) {
         innerField.setValue(value);
     }
+
+    @Override
+    public AbstractSinglePropertyField getBinder() {
+        return innerField;
+    }
+
 
 }
