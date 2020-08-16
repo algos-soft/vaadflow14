@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.service.ADateService;
@@ -42,7 +42,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AnnoLogic extends ALogic {
+public class AnnoLogic extends CronoLogic {
 
     /**
      * Costanti usate nell' ordinamento delle categorie
@@ -94,36 +94,6 @@ public class AnnoLogic extends ALogic {
 
 
     /**
-     * Preferenze standard <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        //        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
-
-        //--provvisorio
-        super.usaBottoneNew = true;
-    }
-
-
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-    @Override
-    protected void fixMappaComboBox() {
-        super.creaComboBox(Secolo.class, "12em", true, false);
-    }
-
-
-    /**
      * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
@@ -143,6 +113,17 @@ public class AnnoLogic extends ALogic {
 
         return lista;
     }
+
+
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+    @Override
+    protected void fixMappaComboBox() {
+        super.creaComboBox(Secolo.class, "12em", true, false);
+    }
+
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -272,7 +253,7 @@ public class AnnoLogic extends ALogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE) {
-                crea(ordine, secolo, bisestile,nome);
+                crea(ordine, secolo, bisestile, nome);
             }
         }
 
@@ -287,7 +268,7 @@ public class AnnoLogic extends ALogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE) {
-                crea(ordine, secolo, bisestile,nome);
+                crea(ordine, secolo, bisestile, nome);
             }
         }
 

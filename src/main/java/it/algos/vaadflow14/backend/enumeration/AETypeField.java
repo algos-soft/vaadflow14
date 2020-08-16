@@ -13,7 +13,7 @@ public enum AETypeField {
     //    integernotzero,
     //    lungo,
     //    onedecimal,
-    //    email,
+    email(20, 20),
     //    password,
 
     combo(0, 8),
@@ -47,13 +47,13 @@ public enum AETypeField {
     textArea(0, 6),
 
     //    time,
-//    yesNo(0, 4),
+    //    yesNo(0, 4),
 
     //    yesnobold,
     ugualeAlForm(0, 0),
 
     //    noone,
-        booleano(4, 4),
+    booleano(4, 4),
     //    color,
     //    custom
     ;

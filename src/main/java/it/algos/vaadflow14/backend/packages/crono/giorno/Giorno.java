@@ -71,6 +71,7 @@ public class Giorno extends AEntity {
     @AIColumn(widthEM = 8)
     public Mese mese;
 
+
     /**
      * nome completo (obbligatorio, unico) <br>
      */

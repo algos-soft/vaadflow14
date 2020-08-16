@@ -2,10 +2,10 @@ package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
+import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,15 +32,16 @@ public class FlowData extends AData {
      * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
      * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
+     * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void initData() {
-//        checkSingolaCollection(Role.class);
+        //        checkSingolaCollection(Role.class);
         checkSingolaCollection(Secolo.class);
         checkSingolaCollection(Anno.class);
         checkSingolaCollection(Mese.class);
-//        checkSingolaCollection(Giorno.class);
-//        checkSingolaCollection(Regione.class);
-//        checkSingolaCollection(Stato.class);
+        checkSingolaCollection(Giorno.class);
+        //        checkSingolaCollection(Regione.class);
+        //        checkSingolaCollection(Stato.class);
     }
 
 }

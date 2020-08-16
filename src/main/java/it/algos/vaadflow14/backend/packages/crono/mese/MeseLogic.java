@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -30,7 +30,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class MeseLogic extends ALogic {
+public class MeseLogic extends CronoLogic {
 
 
     /**
@@ -61,25 +61,6 @@ public class MeseLogic extends ALogic {
     public MeseLogic(AEOperation operationForm) {
         super(operationForm);
         super.entityClazz = Mese.class;
-    }
-
-
-    /**
-     * Preferenze usate da questa istanza e dalle Views collegate <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        //        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
-
-        //--provvisorio
-        super.usaBottoneNew = true;
     }
 
 
@@ -128,7 +109,7 @@ public class MeseLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(int giorni, int giorniBisestile, String sigla, String nome) {
-        return checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome ));
+        return checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome));
     }
 
 

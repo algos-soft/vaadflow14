@@ -1,10 +1,8 @@
 package it.algos.vaadflow14.backend.packages.crono.secolo;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.crono.mese.AEMese;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,7 +31,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SecoloLogic extends ALogic {
+public class SecoloLogic extends CronoLogic {
 
 
     /**
@@ -68,22 +66,6 @@ public class SecoloLogic extends ALogic {
 
 
     /**
-     * Preferenze standard <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.operationForm = AEOperation.showOnly;
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
-    }
-
-    /**
      * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
@@ -101,6 +83,7 @@ public class SecoloLogic extends ALogic {
         lista.add("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 <span style=\"color:red\">NON esiste</span> nei calendari.");
         return lista;
     }
+
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -127,6 +110,7 @@ public class SecoloLogic extends ALogic {
     public boolean crea(boolean anteCristo, int inizio, int fine, String nome) {
         return checkAndSave(newEntity(anteCristo, inizio, fine, nome));
     }
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>

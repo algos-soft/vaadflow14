@@ -155,23 +155,23 @@
 
         <!-- Added to provide logging output as Vaadin uses -->
         <!-- the unbound SLF4J no-operation (NOP) logger implementation -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.slf4j</groupId>-->
+        <!--            <artifactId>slf4j-simple</artifactId>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>javax.servlet</groupId>-->
-<!--            <artifactId>javax.servlet-api</artifactId>-->
-<!--            <version>4.0.1</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>javax.servlet</groupId>-->
+        <!--            <artifactId>javax.servlet-api</artifactId>-->
+        <!--            <version>4.0.1</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>javax.validation</groupId>-->
-<!--            <artifactId>validation-api</artifactId>-->
-<!--            <version>2.0.1.Final</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>javax.validation</groupId>-->
+        <!--            <artifactId>validation-api</artifactId>-->
+        <!--            <version>2.0.1.Final</version>-->
+        <!--        </dependency>-->
 
         <!-- Bean validation implementation -->
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
@@ -182,19 +182,19 @@
         </dependency>
 
         <!-- Vaadin Testbench -->
-<!--        <dependency>-->
-<!--            <groupId>com.vaadin</groupId>-->
-<!--            <artifactId>vaadin-testbench</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.vaadin</groupId>-->
+        <!--            <artifactId>vaadin-testbench</artifactId>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
-<!--        <dependency>-->
-<!--            <groupId>io.github.bonigarcia</groupId>-->
-<!--            <artifactId>webdrivermanager</artifactId>-->
-<!--            <version>3.8.1</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.github.bonigarcia</groupId>-->
+        <!--            <artifactId>webdrivermanager</artifactId>-->
+        <!--            <version>3.8.1</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
 
         <!-- Spring MongoDB -->
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
@@ -292,8 +292,15 @@
             <version>2.0.7</version>
         </dependency>
         <!-- pagination -->
-    </dependencies>
 
+        <!-- excel -->
+        <!-- https://mvnrepository.com/artifact/org.vaadin.haijian/exporter -->
+        <dependency>
+            <groupId>org.vaadin.haijian</groupId>
+            <artifactId>exporter</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+    </dependencies>
 
 
     <build>

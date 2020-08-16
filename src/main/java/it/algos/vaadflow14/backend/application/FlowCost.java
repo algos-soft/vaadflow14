@@ -27,6 +27,8 @@ import java.util.Locale;
  */
 public abstract class FlowCost {
 
+    public static final int MAX = 2147483647;
+
     public static final String PATH_WIKI = "https://it.wikipedia.org/wiki/";
 
     public static final String DEVELOPER_COMPANY = "Algos® ";
@@ -198,5 +200,6 @@ public abstract class FlowCost {
     private static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
+
 
 }

@@ -126,6 +126,7 @@ public class AFieldService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case text:
+                case email:
                     field = new ATextField(caption);
                     break;
                 case integer:

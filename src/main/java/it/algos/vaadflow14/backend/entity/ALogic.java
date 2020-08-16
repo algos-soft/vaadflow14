@@ -3,10 +3,15 @@ package it.algos.vaadflow14.backend.entity;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.QueryParameters;
+import com.vaadin.flow.server.InputStreamFactory;
+import com.vaadin.flow.server.StreamResource;
 import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
@@ -34,6 +39,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
+import org.vaadin.haijian.Exporter;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -239,27 +245,32 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneDeleteAll;
 
 
     /**
-     * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneReset;
 
 
     /**
-     * Flag di preferenza per l'utilizzo del bottone. Di default true. <br>
+     * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
      */
     protected boolean usaBottoneNew;
 
 
     /**
-     * Flag di preferenza per l'utilizzo del bottone. Di default false. <br>
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottonePaginaWiki;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneExport;
 
 
     /**
@@ -331,6 +342,7 @@ public abstract class ALogic implements AILogic {
         this.usaBottoneDeleteAll = false;
         this.usaBottoneReset = false;
         this.usaBottoneNew = true;
+        this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = false;
@@ -530,6 +542,10 @@ public abstract class ALogic implements AILogic {
      */
     protected List<AEButton> getListaBottoniFinali() {
         List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
 
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
@@ -847,6 +863,9 @@ public abstract class ALogic implements AILogic {
             case valueChanged:
                 refreshGrid();
                 break;
+            case export:
+                export();
+                break;
             case showWiki:
                 openWikiPage();
                 break;
@@ -972,7 +991,7 @@ public abstract class ALogic implements AILogic {
         if (grid != null && grid.getGrid() != null) {
             updateFiltri();
             items = mongo.findAll(entityClazz, filtri, sortView);
-            grid.deselectAll();
+            //            grid.deselectAll();
             grid.refreshAll();
             grid.setItems(items);
         }
@@ -1437,6 +1456,26 @@ public abstract class ALogic implements AILogic {
 
         combo.setItems(items);
         mappaComboBox.put(fieldName, combo);
+    }
+
+    protected void export() {
+        Grid grid = new Grid(entityClazz, false);
+        grid.setColumns("nome");
+        grid.setItems(mongo.findAll(entityClazz));
+
+        String message = "Export";
+        InputStreamFactory factory = Exporter.exportAsExcel(grid);
+        StreamResource streamRes = new StreamResource(message + ".xls", factory);
+
+        Anchor anchorEsporta = new Anchor(streamRes, "Download");
+        anchorEsporta.getElement().setAttribute("style", "color: red");
+        anchorEsporta.getElement().setAttribute("Export", true);
+        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+        button.getElement().setAttribute("style", "color: red");
+        anchorEsporta.add(button);
+//        exportPlaceholder.removeAll();
+//        exportPlaceholder.add(anchorEsporta);
+
     }
 
 }

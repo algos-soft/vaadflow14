@@ -1,20 +1,21 @@
 package it.algos.vaadflow14.backend.packages.crono.giorno;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow14
@@ -35,13 +36,22 @@ import java.util.List;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GiornoLogic extends ALogic {
+public class GiornoLogic extends CronoLogic {
 
 
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public MeseLogic meseLogic;
 
 
     /**
@@ -70,27 +80,59 @@ public class GiornoLogic extends ALogic {
 
 
     /**
-     * Preferenze standard <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
      */
     @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
+    protected List<String> getAlertList(AEVista typeVista) {
+        List<String> lista = super.getAlertList(typeVista);
+
+        lista.add("Giorni dell'anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili.");
+        lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
+
+        return lista;
+    }
+
+
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+    @Override
+    protected void fixMappaComboBox() {
+        super.creaComboBox(Mese.class, "10em", true, false);
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code
+     * @param ordine (obbligatorio, unico)
+     * @param mese   di riferimento (obbligatorio)
+     * @param nome   (obbligatorio, unico)
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public boolean crea(String code) {
-        Giorno newEntityBean =null;
-        return insert(newEntityBean) != null;
+    public boolean crea(int ordine, Mese mese, String nome) {
+        return checkAndSave(newEntity(ordine, mese, nome));
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Giorno newEntity() {
+        return newEntity(0, (Mese) null, VUOTA);
     }
 
 
@@ -101,10 +143,11 @@ public class GiornoLogic extends ALogic {
      *
      * @param ordine (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
-     * @param nome (obbligatorio, unico)
+     * @param nome   (obbligatorio, unico)
+     *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Giorno newEntity(int ordine, Mese mese, String nome){
+    public Giorno newEntity(int ordine, Mese mese, String nome) {
         Giorno newEntityBean = Giorno.builderGiorno()
 
                 .ordine(getNewOrdine())
@@ -135,20 +178,22 @@ public class GiornoLogic extends ALogic {
         String titolo;
         AESecolo secoloEnum;
         Secolo secolo;
-        String titoloSecolo;
+        String titoloMese;
         List<HashMap> lista;
+        Mese mese;
 
         //costruisce i 366 records
         lista = date.getAllGiorni();
         for (HashMap mappaGiorno : lista) {
-//            titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
-//            bisestile = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
-//            mese = meseService.findByKeyUnica((String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO));
-//            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_NORMALE);
-//
-//            crea(aeMese);
+            titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
+            titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
+            mese = (Mese) mongo.findById(Mese.class, titoloMese);
+            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_NORMALE);
+
+            crea(0, mese, titolo);
         }
 
         return mongo.isValid(entityClazz);
     }
+
 }

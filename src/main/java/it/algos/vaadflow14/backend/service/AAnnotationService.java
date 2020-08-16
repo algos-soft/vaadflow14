@@ -10,9 +10,11 @@ import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.ui.view.AView;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,8 +25,7 @@ import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.DEFAULT_ICON;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -49,6 +50,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AAnnotationService extends AAbstractService {
+
 
     /**
      * The constant TESTO_NULL.
@@ -1351,7 +1353,7 @@ public class AAnnotationService extends AAbstractService {
      */
     public String getFormWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
-        int widthInt = 0;
+        Integer widthInt = 0;
         AIField annotation = null;
         AETypeField type = null;
 
@@ -1361,7 +1363,7 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
-            widthInt = annotation.widthEM();
+            widthInt = Math.toIntExact(annotation.widthEM());
         }
 
         if (widthInt > 0) {
@@ -1468,6 +1470,7 @@ public class AAnnotationService extends AAbstractService {
         String message = VUOTA;
         Size annotation = null;
         int min = 0;
+        int max = MAX;
 
         if (reflectionJavaField == null) {
             return null;
@@ -1480,13 +1483,26 @@ public class AAnnotationService extends AAbstractService {
             message = annotation.message();
             if (message.equals("{javax.validation.constraints.Size.message}")) {
                 min = annotation.min();
-                if (min > 0) {
-                    message =  min + " caratteri";
+                max = annotation.max();
+                if (min == max) {
+                    message = "Esattamente " + min  + " caratteri";
+                    return message;
+                }
+                if (min > 0 && max < MAX) {
+                    message = "Da " + min + " a " + max + " caratteri";
+                    return message;
+                }
+                if (min > 0 && max == MAX) {
+                    message = "Almeno " + min + " caratteri";
+                    return message;
+                }
+                if (min == 0 && max < MAX) {
+                    message = "Massimo " + max + " caratteri";
+                    return message;
                 }
             }
         }
-
-        return message;
+        return env.getProperty("javax.validation.constraints.Size.message");
     }
 
 
@@ -1651,6 +1667,7 @@ public class AAnnotationService extends AAbstractService {
         return type;
     }
 
+
     /**
      * Get the specific annotation of the field. <br>
      *
@@ -1720,6 +1737,7 @@ public class AAnnotationService extends AAbstractService {
         return status;
     }
 
+
     /**
      * Get the status focus of the property.
      *
@@ -1772,8 +1790,6 @@ public class AAnnotationService extends AAbstractService {
     //    public boolean isNotNull(Field reflectionJavaField) {
     //        return getNotNull(reflectionJavaField) != null;
     //    }// end of method
-
-
 
 
     //    /**

@@ -177,10 +177,10 @@ public class AGrid {
 
     public void setItems(Collection items) {
 
-        if (array.isValid(items)) {
+//        if (array.isValid(items)) {
             grid.deselectAll();
             grid.setItems(items);
-        }
+//        }
 
         fixGridHeader(items);
     }

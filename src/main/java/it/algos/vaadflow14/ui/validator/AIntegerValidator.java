@@ -99,7 +99,7 @@ public class AIntegerValidator implements Validator {
                 case positiviOnly:
                     if (numero <= 0) {
                         if (numero == 0) {
-                            return ValidationResult.error("Niente zero");
+                            return ValidationResult.error("Zero non ammesso");
                         } else {
                             return ValidationResult.error("Solo positivi");
                         }

@@ -66,7 +66,7 @@ public class AColumnService extends AAbstractService {
      * @param grid           a cui aggiungere la colonna
      * @param entityClazz    modello-dati specifico
      * @param propertyName   della property
-     * @param propertySearch per l'ordinamento
+     * @param propertySearch per l' ordinamento
      */
     public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
         Grid.Column<AEntity> colonna = null;
@@ -97,8 +97,9 @@ public class AColumnService extends AAbstractService {
         } else {
             switch (type) {
                 case text:
+                case email:
                     colonna = grid.addColumn(propertyName);
-                    sortable=true;
+                    sortable = true;
                     break;
                 case textArea:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -116,7 +117,7 @@ public class AColumnService extends AAbstractService {
                     break;
                 case integer:
                     colonna = grid.addColumn(propertyName);
-                    sortable=true;
+                    sortable = true;
 
                     //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     //                        String testo = VUOTA;
@@ -179,6 +180,7 @@ public class AColumnService extends AAbstractService {
             //            } else {
             //                headerNotNull = headerNotNull.toLowerCase();
             //            }// end of if/else cycle
+            header = text.primaMaiuscola(header);//@todo Funzionalità ancora da implementare
             colonna.setHeader(header);
 
             //--eventuale aggiunta di una icona e l' header non è una String ma diventa un Component

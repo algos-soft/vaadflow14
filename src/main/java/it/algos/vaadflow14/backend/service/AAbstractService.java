@@ -1,10 +1,9 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.ui.service.AColumnService;
-import it.algos.vaadflow14.ui.service.AFieldService;
 import it.algos.vaadflow14.ui.service.ARouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 
 /**
  * Project vaadflow
@@ -28,7 +27,6 @@ public abstract class AAbstractService {
     @Autowired
     public ApplicationContext appContext;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -36,7 +34,6 @@ public abstract class AAbstractService {
      */
     @Autowired
     public ATextService text;
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -46,7 +43,6 @@ public abstract class AAbstractService {
     @Autowired
     public AArrayService array;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -54,7 +50,6 @@ public abstract class AAbstractService {
      */
     @Autowired
     public AReflectionService reflection;
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -64,7 +59,6 @@ public abstract class AAbstractService {
     @Autowired
     public AAnnotationService annotation;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -72,7 +66,6 @@ public abstract class AAbstractService {
      */
     @Autowired
     public ARouteService route;
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -98,6 +91,14 @@ public abstract class AAbstractService {
     @Autowired
     public ALogService logger;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -113,8 +114,8 @@ public abstract class AAbstractService {
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
-//    @Autowired
-//    public AColumnService column;
+    //    @Autowired
+    //    public AColumnService column;
 
 
     /**
@@ -131,9 +132,8 @@ public abstract class AAbstractService {
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
-//    @Autowired
-//    public AFieldService field;
-
+    //    @Autowired
+    //    public AFieldService field;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -141,7 +141,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AMongoService mongo;
+    public AMathService math;
 
 
     /**
@@ -152,13 +152,8 @@ public abstract class AAbstractService {
     //    @Autowired
     //    public AEnumerationService enumService;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
     @Autowired
-    public AMathService math;
+    protected Environment env;
 
 
 }
