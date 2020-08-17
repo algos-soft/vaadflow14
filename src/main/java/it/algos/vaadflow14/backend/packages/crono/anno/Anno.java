@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
  */
 @QueryEntity
 @Document(collection = "anno")
+@TypeAlias("anno")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

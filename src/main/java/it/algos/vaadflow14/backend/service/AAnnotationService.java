@@ -10,16 +10,15 @@ import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.ui.view.AView;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
@@ -272,7 +271,7 @@ public class AAnnotationService extends AAbstractService {
     /**
      * Get the annotation Route.
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che esista l'annotation specifica <br>
+     * 2) Controlla che esista l' annotation specifica <br>
      *
      * @param genericClazz of all types
      *
@@ -344,6 +343,18 @@ public class AAnnotationService extends AAbstractService {
      */
     public NotNull getNotNull(final Field reflectionJavaField) {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(NotNull.class) : null;
+    }
+
+
+    /**
+     * Get the annotation NotBlank.
+     *
+     * @param reflectionJavaField di riferimento per estrarre l'annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public NotBlank getNotBlank(final Field reflectionJavaField) {
+        return reflectionJavaField != null ? reflectionJavaField.getAnnotation(NotBlank.class) : null;
     }
 
 
@@ -1485,7 +1496,7 @@ public class AAnnotationService extends AAbstractService {
                 min = annotation.min();
                 max = annotation.max();
                 if (min == max) {
-                    message = "Esattamente " + min  + " caratteri";
+                    message = "Esattamente " + min + " caratteri";
                     return message;
                 }
                 if (min > 0 && max < MAX) {
@@ -1659,6 +1670,10 @@ public class AAnnotationService extends AAbstractService {
             return null;
         }
 
+        if (getFormType(reflectionJavaField) != AETypeField.integer) {
+            return null;
+        }
+
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
             type = annotation.typeNum();
@@ -1716,6 +1731,37 @@ public class AAnnotationService extends AAbstractService {
 
     /**
      * Get the status required of the property.
+     * Per i field di testo, controlla sia l' annotation @NotBlank() sia @AIField(required = true) <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value
+     */
+    public boolean isRequired(Field reflectionJavaField) {
+        boolean status = false;
+        NotBlank annotationNotBlank = null;
+        AIField annotationAIField = null;
+
+        if (reflectionJavaField == null) {
+            return false;
+        }
+
+        annotationNotBlank = getNotBlank(reflectionJavaField);
+        if (annotationNotBlank != null) {
+            return true;
+        }
+
+        annotationAIField = this.getAIField(reflectionJavaField);
+        if (annotationAIField != null) {
+            status = annotationAIField.required();
+        }
+
+        return status;
+    }
+
+
+    /**
+     * Get the status unique of the property.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *

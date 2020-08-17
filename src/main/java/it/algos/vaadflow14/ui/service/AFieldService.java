@@ -1,12 +1,10 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.AILogic;
-import it.algos.vaadflow14.backend.entity.ALogic;
-import it.algos.vaadflow14.backend.entity.GenericLogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -15,6 +13,7 @@ import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.AIntegerValidator;
+import it.algos.vaadflow14.ui.validator.APhoneValidator;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
 import it.algos.vaadflow14.ui.validator.AUniqueValidator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,6 +67,7 @@ public class AFieldService extends AAbstractService {
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
 
         if (reflectionJavaField == null) {
+            logger.warn("Manca il field per la property " + propertyName, this.getClass(), "create");
             return null;
         }
 
@@ -126,8 +126,18 @@ public class AFieldService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case text:
-                case email:
                     field = new ATextField(caption);
+                    break;
+                case email:
+                    field = new AEmailField(caption);
+                    ((AEmailField) field).getMail().setClearButtonVisible(true);
+                    field.setErrorMessage("Inserisci un indirizzo eMail valido");
+                    break;
+                case phone:
+                    field = new ATextField(caption);
+                    break;
+                case textArea:
+                    field = new ATextAreaField(caption);
                     break;
                 case integer:
                     field = new AIntegerField(caption);
@@ -154,7 +164,7 @@ public class AFieldService extends AAbstractService {
                 case combo:
                     field = new AComboField(caption);
                     if (comboClazz != null) {
-                        List  items = mongo.findAll(comboClazz);
+                        List items = mongo.findAll(comboClazz);
                         if (items != null) {
                             ((AComboField) field).setItem(items);
                         }
@@ -200,6 +210,7 @@ public class AFieldService extends AAbstractService {
         int stringMax = 0;
         int intMin = 0;
         int intMax = 0;
+        boolean isRequired = false;
         boolean isUnique = false;
         Serializable propertyOldValue = null;
 
@@ -222,9 +233,13 @@ public class AFieldService extends AAbstractService {
         stringMax = annotation.getStringMax(reflectionJavaField);
         intMin = annotation.getNumberMin(reflectionJavaField);
         intMax = annotation.getNumberMax(reflectionJavaField);
+        isRequired = annotation.isRequired(reflectionJavaField);
         isUnique = annotation.isUnique(reflectionJavaField);
 
-        stringBlankValidator = appContext.getBean(AStringBlankValidator.class, message);
+        if (isRequired) {
+            stringBlankValidator = appContext.getBean(AStringBlankValidator.class, message);
+        }
+
         if (stringMin > 0 || stringMax > 0) {
             stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
         }
@@ -261,6 +276,9 @@ public class AFieldService extends AAbstractService {
                         builder.withValidator(uniqueValidator);
                     }
                     break;
+                case phone:
+                    builder.withValidator(new APhoneValidator());
+                    break;
                 case integer:
                     if (integerValidator != null) {
                         builder.withValidator(integerValidator);
@@ -270,12 +288,12 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case booleano:
-                    binder.forField(field).bind(fieldName);
                     break;
                 case combo:
-                    binder.forField(field).bind(fieldName);
                     break;
-                case enumeration:
+                case textArea:
+                    break;
+                case email:
                     break;
                 case gridShowOnly:
                     break;

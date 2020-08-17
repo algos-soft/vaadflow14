@@ -2,9 +2,15 @@ package it.algos.vaadflow14.backend.enumeration;
 
 public enum AETypeField {
     //    id(),
-    text(12, 8),
+    text(8, 18),
 
-    integer(8, 5),
+    email(20, 18),
+
+    phone(11, 11),
+
+    textArea(8, 18),
+
+    integer(5, 8),
 
     //    pref,
     //    noBinder,
@@ -13,15 +19,14 @@ public enum AETypeField {
     //    integernotzero,
     //    lungo,
     //    onedecimal,
-    email(20, 20),
     //    password,
 
-    combo(0, 8),
+    combo(8, 0),
 
     //    multicombo,
     //    combolinkato,
 
-    enumeration(0, 8),
+    enumeration(8, 0),
 
     //    radio,
     //    monthdate,
@@ -29,9 +34,9 @@ public enum AETypeField {
     //    date,
     //    localdate,
 
-    localDateTime(0, 6),
+    localDateTime(6, 0),
 
-    gridShowOnly(20, 0),
+    gridShowOnly(0, 20),
 
     //    localtime,
     //    dateNotEnabled,
@@ -44,7 +49,6 @@ public enum AETypeField {
     //    resource,
     //    vaadinIcon,
     //    json,
-    textArea(0, 6),
 
     //    time,
     //    yesNo(0, 4),
@@ -58,14 +62,19 @@ public enum AETypeField {
     //    custom
     ;
 
+    private int widthColumn;
     private int widthField;
 
-    private int widthColumn;
 
 
-    AETypeField(int widthField, int widthColumn) {
-        this.widthField = widthField;
+    AETypeField(int widthColumn,int widthField) {
         this.widthColumn = widthColumn;
+        this.widthField = widthField;
+    }
+
+
+    public int getWidthColumn() {
+        return widthColumn;
     }
 
 
@@ -74,7 +83,4 @@ public enum AETypeField {
     }
 
 
-    public int getWidthColumn() {
-        return widthColumn;
-    }
 }

@@ -40,7 +40,7 @@ public enum AEButton {
 
     searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
 
-    export("Esporta", VaadinIcon.DOWNLOAD_ALT, "error", AEAction.export, true, "Esportazione della lista", "cross", null, null),
+    export("Esporta", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esportazione della lista", "cross", null, null),
 
     ;
 

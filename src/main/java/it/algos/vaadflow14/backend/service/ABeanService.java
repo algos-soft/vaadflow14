@@ -87,6 +87,10 @@ public class ABeanService extends AAbstractService {
         AIField field;
 
         listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
+        if (true) {
+            listaNomi.add("note");//@todo Funzionalità ancora da implementare
+        }
+
         for (String fieldName : listaNomi) {
             field = fieldService.create(operationForm, binder, entityBean, fieldName);
             if (field != null) {

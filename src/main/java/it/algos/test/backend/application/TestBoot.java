@@ -66,8 +66,8 @@ public class TestBoot extends FlowBoot {
         super.regolaApplicationProperties();
 
         FlowVar.usaDebug = false;
-        FlowVar.usaSecurity = false;
         FlowVar.usaCompany = false;
+        FlowVar.usaSecurity = false;
         FlowVar.projectName = "Programma di prova per testare vaadflow";
         FlowVar.projectDescrizione = "Modulo di test";
         FlowVar.projectVersion = 0.72;

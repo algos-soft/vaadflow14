@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,6 +28,7 @@ import javax.validation.constraints.Size;
  */
 @QueryEntity
 @Document(collection = "mese")
+@TypeAlias("mese")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

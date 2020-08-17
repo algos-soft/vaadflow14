@@ -75,3 +75,8 @@ min.intValue();
 
 Div content = new Div();
 content.getElement().setProperty("innerHTML", "<p>Hello World</p></br><span>Some text after a break</span>");
+
+
+        if (WamEntity.class.isAssignableFrom(entityClass)||Milite.class.isAssignableFrom(entityClass)) {
+            codice
+        }// end of if cycle

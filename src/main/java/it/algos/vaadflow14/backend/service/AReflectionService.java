@@ -58,7 +58,7 @@ public class AReflectionService extends AAbstractService {
 
     /**
      * Fields statici dichiarati in una classe generica. <br>
-     * Solo la classe indicata. Non ricorsivo. Niente fields delle superclassi. <br>
+     * Solo la classe indicata. Non ricorsivo. Niente fields delle superClassi. <br>
      * Esclusa la property: PROPERTY_SERIAL
      * Fields non ordinati <br>
      *
@@ -195,6 +195,18 @@ public class AReflectionService extends AAbstractService {
                 if (fieldTmp.getName().equals(publicFieldName)) {
                     field = fieldTmp;
                     break;
+                }
+            }
+        }
+
+        if (field == null && AEntity.class.isAssignableFrom(genericClazz)) {
+            listaFields = getAllFields(AEntity.class);
+            if (listaFields != null) {
+                for (Field fieldTmp : listaFields) {
+                    if (fieldTmp.getName().equals(publicFieldName)) {
+                        field = fieldTmp;
+                        break;
+                    }
                 }
             }
         }

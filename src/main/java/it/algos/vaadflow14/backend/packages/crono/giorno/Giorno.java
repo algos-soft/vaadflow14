@@ -34,6 +34,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  */
 @QueryEntity
 @Document(collection = "giorno")
+@TypeAlias("giorno")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
