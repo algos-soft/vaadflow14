@@ -174,7 +174,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
     /**
      * Creazione iniziale (business logic) della view DOPO costruttore, init(), postConstruct() e setParameter() <br>
      * <p>
-     * Chiamato da com.vaadin.flow.router.Router tramite l'interfaccia BeforeEnterObserver <br>
+     * Chiamato da com.vaadin.flow.router.Router tramite l' interfaccia BeforeEnterObserver <br>
      * Chiamato DOPO @PostConstruct e DOPO setParameter() <br>
      * Le property necessarie sono già state regolate <br>
      *
