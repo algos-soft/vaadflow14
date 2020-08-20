@@ -606,13 +606,13 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Elimina gli spazi interni della stringa <br>
+     * Elimina gli spazi della stringa <br>
      *
      * @param stringaIn ingresso
      *
      * @return etichetta visualizzata
      */
-    public String levaSpaziInterni(String stringaIn) {
+    public String levaSpazi(String stringaIn) {
         String stringaOut = stringaIn;
         String tag = SPAZIO;
 

@@ -1,11 +1,14 @@
 package it.algos.vaadflow14.backend.packages.security;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.crono.mese.AEMese;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -85,8 +88,20 @@ public class UtenteLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(String username, String password) {
-        Utente newEntityBean = newEntity(username, password);
-        return insert(newEntityBean) != null;
+        return checkAndSave(newEntity(username, password));
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    @Override
+    public AEntity newEntity() {
+        return newEntity(VUOTA, VUOTA);
     }
 
 
@@ -103,9 +118,9 @@ public class UtenteLogic extends ALogic {
     public Utente newEntity(String username, String password) {
         Utente newEntityBean = Utente.builderUtente()
 
-                .username(text.isValid(username) ? username.trim() : null)
+                .username(text.isValid(username) ? username : null)
 
-                .password(text.isValid(password) ? password.trim() : null)
+                .password(text.isValid(password) ? password : null)
 
                 .accountNonExpired(true)
 
@@ -122,6 +137,27 @@ public class UtenteLogic extends ALogic {
 
 
     /**
+     * Operazioni eseguite PRIMA di save o di insert <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    @Override
+    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+        Utente entity = (Utente) super.beforeSave(entityBean, operation);
+
+        entity.username = text.levaSpazi(entity.username);
+
+        return entity;
+    }
+
+
+    /**
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
      * I dati possono essere presi da una Enumeration o creati direttamente <br>
@@ -134,10 +170,10 @@ public class UtenteLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea("mario_rossi","rossi123");
-        crea("marco.beretta","beretta123");
-        crea("antonia-pellegrini","pellegrini123");
-        crea("paolo cremona","cremona123");
+        crea("mario_rossi", "rossi123");
+        crea("marco.beretta", "beretta123");
+        crea("antonia-pellegrini", "pellegrini123");
+        crea("paolo cremona", "cremona123");
 
         return mongo.isValid(entityClazz);
     }

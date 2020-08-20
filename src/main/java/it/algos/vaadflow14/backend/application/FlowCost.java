@@ -199,6 +199,7 @@ public abstract class FlowCost {
 
     //--fields tipici
     public static final String FIELD_NOTE = "note";
+    public static final String FIELD_USER = "username";
 
     public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 

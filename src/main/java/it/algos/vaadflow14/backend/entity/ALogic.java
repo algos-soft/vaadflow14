@@ -1170,6 +1170,7 @@ public abstract class ALogic implements AILogic {
     public AEntity insert(AEntity newEntityBean) {
         AEntity entityBean = null;
         newEntityBean = fixKey(newEntityBean);
+        newEntityBean = beforeSave(newEntityBean,AEOperation.addNew);
         entityBean = mongo.insert(newEntityBean);
 
         if (entityBean != null) {
@@ -1195,7 +1196,7 @@ public abstract class ALogic implements AILogic {
             if (text.isValid(keyPropertyName)) {
                 keyPropertyValue = reflection.getPropertyValueStr(newEntityBean, keyPropertyName);
                 if (text.isValid(keyPropertyValue)) {
-                    keyPropertyValue = text.levaSpaziInterni(keyPropertyValue);
+                    keyPropertyValue = text.levaSpazi(keyPropertyValue);
                     newEntityBean.id = keyPropertyValue.toLowerCase();
                 }
             }
@@ -1222,6 +1223,7 @@ public abstract class ALogic implements AILogic {
         valido = binder.isValid();
 
         if (valido) {
+            newEntityBean = beforeSave(newEntityBean,AEOperation.addNew);
             valido = mongo.insert(newEntityBean) != null;
         } else {
             message = "Duplicate key error ";
@@ -1273,6 +1275,23 @@ public abstract class ALogic implements AILogic {
 
 
     /**
+     * Operazioni eseguite PRIMA di save o di insert <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
+     */
+    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+        //@todo Funzionalità ancora da implementare - Aggfiungere controllo date creazione e modifica
+        return entityBean;
+    }
+
+
+    /**
      * Saves a given entity.
      * Use the returned instance for further operations as the save operation
      * might have changed the entity instance completely.
@@ -1282,6 +1301,7 @@ public abstract class ALogic implements AILogic {
     public AEntity save(AEntity entityBean) {
         boolean modificata = false;
         AEntity entityBeanOld = null;
+        entityBean = beforeSave(entityBean,operationForm);
 
         if (entityBean == null) {
             logger.error("La entityBean è nulla", ALogic.class, "save");
@@ -1458,6 +1478,7 @@ public abstract class ALogic implements AILogic {
         mappaComboBox.put(fieldName, combo);
     }
 
+
     protected void export() {
         Grid grid = new Grid(entityClazz, false);
         grid.setColumns("nome");
@@ -1473,8 +1494,8 @@ public abstract class ALogic implements AILogic {
         Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
         button.getElement().setAttribute("style", "color: red");
         anchorEsporta.add(button);
-//        exportPlaceholder.removeAll();
-//        exportPlaceholder.add(anchorEsporta);
+        //        exportPlaceholder.removeAll();
+        //        exportPlaceholder.add(anchorEsporta);
 
     }
 

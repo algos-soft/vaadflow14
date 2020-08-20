@@ -249,7 +249,7 @@ public class AnnoLogic extends CronoLogic {
             secoloEnum = AESecolo.getSecoloAC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
-            titoloSecolo = text.levaSpaziInterni(titoloSecolo);
+            titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE) {
@@ -264,7 +264,7 @@ public class AnnoLogic extends CronoLogic {
             secoloEnum = AESecolo.getSecoloDC(k);
             titoloSecolo = secoloEnum.getNome();
             titoloSecolo = titoloSecolo.toLowerCase();
-            titoloSecolo = text.levaSpaziInterni(titoloSecolo);
+            titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE) {

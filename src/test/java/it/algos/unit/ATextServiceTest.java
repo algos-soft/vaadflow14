@@ -2,13 +2,7 @@ package it.algos.unit;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.Label;
-import it.algos.vaadflow14.backend.service.AReflectionService;
-import it.algos.vaadflow14.backend.service.ATextService;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -726,43 +720,49 @@ class ATextServiceTest extends ATest {
     public void levaSpaziInterni() {
         sorgente = "Mariolino Birichino";
         previsto = "MariolinoBirichino";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "XVI secolo a.C.";
         previsto = "XVIsecoloa.C.";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "999 a.C.";
         previsto = "999a.C.";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "7 gennaio";
         previsto = "7gennaio";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "Ascoli Piceno";
         previsto = "AscoliPiceno";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "Valle d'Aosta";
         previsto = "Valled'Aosta";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
         sorgente = "Corea del Nord";
         previsto = "CoreadelNord";
-        ottenuto = text.levaSpaziInterni(sorgente);
+        ottenuto = text.levaSpazi(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = " Corea del Nord ";
+        previsto = "CoreadelNord";
+        ottenuto = text.levaSpazi(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
     }
