@@ -154,6 +154,9 @@ public class AFieldService extends AAbstractService {
                 case phone:
                     field = new ATextField(fieldKey, caption);
                     break;
+                case password:
+                    field = new APasswordField(fieldKey, caption);
+                    break;
                 case textArea:
                     field = new ATextAreaField(fieldKey, caption);
                     break;
@@ -223,6 +226,7 @@ public class AFieldService extends AAbstractService {
         AUniqueValidator uniqueValidator = null;
         String message = VUOTA;
         String messageSize = VUOTA;
+        String messageNotBlank = VUOTA;
         String messageNotNull = VUOTA;
         int stringMin = 0;
         int stringMax = 0;
@@ -245,6 +249,7 @@ public class AFieldService extends AAbstractService {
         fieldName = reflectionJavaField.getName();
         message = annotation.getMessage(reflectionJavaField);
         messageSize = annotation.getMessageSize(reflectionJavaField);
+        messageNotBlank = annotation.getMessageBlank(reflectionJavaField);
         messageNotNull = annotation.getMessageNull(reflectionJavaField);
         numType = annotation.getTypeNumber(reflectionJavaField);
         stringMin = annotation.getStringMin(reflectionJavaField);
@@ -255,7 +260,7 @@ public class AFieldService extends AAbstractService {
         isUnique = annotation.isUnique(reflectionJavaField);
 
         if (isRequired) {
-            stringBlankValidator = appContext.getBean(AStringBlankValidator.class, message);
+            stringBlankValidator = appContext.getBean(AStringBlankValidator.class, messageNotBlank);
         }
 
         if (stringMin > 0 || stringMax > 0) {
@@ -308,6 +313,11 @@ public class AFieldService extends AAbstractService {
                 case booleano:
                     break;
                 case combo:
+                    break;
+                case password:
+                    if (stringBlankValidator != null) {
+                        builder.withValidator(stringBlankValidator);
+                    }
                     break;
                 case textArea:
                     break;

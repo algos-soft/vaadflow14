@@ -1,4 +1,4 @@
-package it.algos.security.application;
+package it.algos.security.backend.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
@@ -7,6 +7,7 @@ import it.algos.simple.ui.views.DeltaView;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
+import it.algos.vaadflow14.backend.packages.security.Utente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -92,16 +93,7 @@ public class SecurityBoot extends FlowBoot {
     protected void addMenuRoutes() {
         super.addMenuRoutes();
 
-//        FlowVar.menuRouteList.add(OmegaView.class);
-        //        menuRouteList.add(Anno.class);
-        //        menuRouteList.add(Giorno.class);
-        //        menuRouteList.add(TestView.class);
-        //        menuRouteList.add(AboutView.class);
-        //        menuRouteList.add(HomeView.class);
-        //        menuRouteList.add(Role.class);
-        //        menuRouteList.add(Stato.class);
-        //        menuRouteList.add(Regione.class);
-        //        menuRouteList.add(Provincia.class);
+        FlowVar.menuRouteList.add(Utente.class);
     }
 
 }

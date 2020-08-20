@@ -2,11 +2,13 @@ package it.algos.vaadflow14.backend.enumeration;
 
 public enum AETypeField {
     //    id(),
-    text(8, 18),
+    text(10, 14),
 
     email(20, 18),
 
     phone(11, 11),
+
+    password(10, 14),
 
     textArea(8, 18),
 
@@ -63,11 +65,11 @@ public enum AETypeField {
     ;
 
     private int widthColumn;
+
     private int widthField;
 
 
-
-    AETypeField(int widthColumn,int widthField) {
+    AETypeField(int widthColumn, int widthField) {
         this.widthColumn = widthColumn;
         this.widthField = widthField;
     }

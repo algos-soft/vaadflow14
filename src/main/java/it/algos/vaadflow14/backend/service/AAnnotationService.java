@@ -1448,6 +1448,42 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the alert message from @NotBlank
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessageBlank(Field reflectionJavaField) {
+        String message = VUOTA;
+        NotBlank annotation = null;
+        AETypeField type;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getNotBlank(reflectionJavaField);
+        if (annotation != null) {
+            message = annotation.message();
+        }
+
+        if (message.equals("{javax.validation.constraints.NotBlank.message}")) {
+            message = VUOTA;
+            type = getFormType(reflectionJavaField);
+            if (type == AETypeField.text || type == AETypeField.password || type == AETypeField.phone) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
+            }
+            if (type == AETypeField.integer) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
+            }
+        }
+
+        return message;
+    }
+
+
+    /**
      * Get the alert message from @NotNull
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation

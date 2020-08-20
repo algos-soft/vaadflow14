@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.company;
 
 import com.mysema.query.annotations.QueryEntity;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -33,6 +34,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Company", keyPropertyName = "code", usaFieldNote = true)
+@AIView(menuIcon = VaadinIcon.FACTORY, sortProperty = "ordine")
 @AIList(fields = "ordine,code,telefono,email,descrizione")
 @AIForm(fields = "ordine,code,telefono,email,descrizione")
 public class Company extends AEntity {
@@ -84,14 +86,6 @@ public class Company extends AEntity {
     @AIField(type = AETypeField.text, caption = "Descrizione completa")
     @AIColumn(header = "Descrizione", flexGrow = true)
     private String descrizione;
-
-
-    //    /**
-    //     * Eventuali note (facoltativo) <br>
-    //     */
-    //    @AIField(type = AETypeField.textArea)
-    //    @AIColumn()
-    //    public String note;
 
 
     /**

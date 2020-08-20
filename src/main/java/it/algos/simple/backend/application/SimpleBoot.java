@@ -7,6 +7,7 @@ import it.algos.simple.ui.views.DeltaView;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
+import it.algos.vaadflow14.backend.packages.security.Utente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -91,6 +92,8 @@ public class SimpleBoot extends FlowBoot {
     @Override
     protected void addMenuRoutes() {
         super.addMenuRoutes();
+
+        FlowVar.menuRouteList.add(Utente.class);
 
         FlowVar.menuRouteList.add(Alfa.class);
         FlowVar.menuRouteList.add(DeltaView.class);

@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.security.Utente;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,6 +37,8 @@ public class FlowData extends AData {
      */
     public void initData() {
         //        checkSingolaCollection(Role.class);
+        checkSingolaCollection(Utente.class);
+
         checkSingolaCollection(Secolo.class);
         checkSingolaCollection(Anno.class);
         checkSingolaCollection(Mese.class);

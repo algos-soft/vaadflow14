@@ -144,10 +144,10 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
             try {
                 entityClazz = (Class<AEntity>) Class.forName(canonicalName);
             } catch (Exception unErrore) {
-                logger.error("Non sono riuscito a creare la entityClazz", AView.class, "fixPropertyGenericView");
+                logger.error("Non sono riuscito a creare la entityClazz", AView.class, "fixEntityClazz");
             }
         } else {
-            logger.info("Esisteva già la entityClazz", AView.class, "fixPropertyGenericView");
+            logger.info("Esisteva già la entityClazz", AView.class, "fixEntityClazz");
         }
     }
 

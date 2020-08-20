@@ -145,6 +145,13 @@
         </dependency>
         <!-- Vaadin -->
 
+        <!-- Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Security -->
+
         <!--Logback requires the Janino library for conditional logging-->
         <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
         <dependency>
