@@ -32,7 +32,7 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Company", keyPropertyName = "code")
+@AIEntity(recordName = "Company", keyPropertyName = "code", usaFieldNote = true)
 @AIList(fields = "ordine,code,telefono,email,descrizione")
 @AIForm(fields = "ordine,code,telefono,email,descrizione")
 public class Company extends AEntity {
@@ -86,12 +86,13 @@ public class Company extends AEntity {
     private String descrizione;
 
 
-    /**
-     * Eventuali note (facoltativo) <br>
-     */
-    @AIField(type = AETypeField.textArea)
-    @AIColumn()
-    public String note;
+    //    /**
+    //     * Eventuali note (facoltativo) <br>
+    //     */
+    //    @AIField(type = AETypeField.textArea)
+    //    @AIColumn()
+    //    public String note;
+
 
     /**
      * @return a string representation of the object.

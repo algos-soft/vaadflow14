@@ -12,10 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -73,6 +70,7 @@ public class ABeanService extends AAbstractService {
     @Autowired
     public AFieldService fieldService;
 
+
     /**
      * Crea i fields e li posiziona in una mappa <br>
      * <p>
@@ -80,27 +78,47 @@ public class ABeanService extends AAbstractService {
      * La chiave è la propertyName del field <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
+     *
+     * @param entityBean    selezionata
+     * @param operationForm tipologia di Form in uso
+     * @param binder        layer tra DB e UI
      */
-    public HashMap<String, AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
-        HashMap<String, AField> fieldsMap = new LinkedHashMap<>();
-        List<String> listaNomi;
+    public List< AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
+        return creaFields(entityBean, operationForm, binder, (List) null);
+    }
+
+
+    /**
+     * Crea i fields e li posiziona in una mappa <br>
+     * <p>
+     * Mappa ordinata di tutti i fields del form <br>
+     * La chiave è la propertyName del field <br>
+     * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
+     * Serve per recuperarli dal nome per successive elaborazioni <br>
+     *
+     * @param entityBean    selezionata
+     * @param operationForm tipologia di Form in uso
+     * @param binder        layer tra DB e UI
+     * @param listaNomi     delle property da associare al binder
+     */
+    public List< AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
+        List< AField> fieldsList = new ArrayList<>();
         AIField field;
 
-        listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
-        if (true) {
-            listaNomi.add("note");//@todo Funzionalità ancora da implementare
+        if (array.isEmpty(listaNomi)) {
+            listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
         }
 
         for (String fieldName : listaNomi) {
             field = fieldService.create(operationForm, binder, entityBean, fieldName);
             if (field != null) {
-                fieldsMap.put(fieldName, field.get());
+                fieldsList.add(field.get());
             }
         }
 
         binder.readBean((AEntity) entityBean);
 
-        return fieldsMap;
+        return fieldsList;
     }
 
 

@@ -6,8 +6,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-
 /**
  * Project vaadflow14
  * Created by Algos
@@ -26,18 +24,9 @@ public class AEmailField extends AField<String> {
     private final EmailField innerField;
 
 
-    public AEmailField() {
-        this(VUOTA);
-    }
-
-
-    public AEmailField(String label) {
-        this(label, VUOTA);
-    }
-
-
-    public AEmailField(String label, String placeholder) {
-        innerField = new EmailField(label, placeholder);
+    public AEmailField(String fieldKey, String label) {
+        innerField = new EmailField(label);
+        super.fieldKey = fieldKey;
         innerField.setAutoselect(true);
         add(innerField);
     }
@@ -113,15 +102,10 @@ public class AEmailField extends AField<String> {
 
 
     @Override
-    public void setPlaceholder(String placeholder) {
-        innerField.setPlaceholder(placeholder);
-    }
-
-
-    @Override
     public void setAutofocus() {
         innerField.setAutofocus(true);
     }
+
 
     public EmailField getMail() {
         return innerField;

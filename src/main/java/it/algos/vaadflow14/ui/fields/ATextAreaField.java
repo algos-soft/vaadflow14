@@ -2,12 +2,9 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.context.annotation.Scope;
 
 /**
  * Project vaadflow14
@@ -27,18 +24,9 @@ public class ATextAreaField extends AField<String> {
     private final TextArea innerField;
 
 
-    public ATextAreaField() {
-        this(VUOTA);
-    }
-
-
-    public ATextAreaField(String label) {
-        this(label, VUOTA);
-    }
-
-
-    public ATextAreaField(String label, String placeholder) {
-        innerField = new TextArea(label, placeholder);
+    public ATextAreaField(String fieldKey, String label) {
+        innerField = new TextArea(label);
+        super.fieldKey = fieldKey;
         innerField.setAutoselect(true);
         add(innerField);
     }
@@ -110,12 +98,6 @@ public class ATextAreaField extends AField<String> {
     @Override
     public AbstractSinglePropertyField getBinder() {
         return innerField;
-    }
-
-
-    @Override
-    public void setPlaceholder(String placeholder) {
-        innerField.setPlaceholder(placeholder);
     }
 
 

@@ -78,14 +78,12 @@ public abstract class AEntity implements Serializable {
     @AIColumn(header = "Key", widthEM = 12)
     public String id;
 
-    //@todo Funzionalità ancora da implementare
-    //@todo Per adesso non ci riesco. Non funziona il binder della superclasse
-//    /**
-//     * Eventuali note (facoltativo) <br>
-//     */
-//    @AIField(type = AETypeField.textArea, widthEM = 24)
-//    @AIColumn()
-//    public String note;
+    /**
+     * Eventuali note (facoltativo) <br>
+     */
+    @AIField(type = AETypeField.textArea, widthEM = 24)
+    @AIColumn()
+    public String note;
 
 
     /**

@@ -2,15 +2,14 @@ package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -172,9 +171,14 @@ public class AForm extends VerticalLayout {
     protected Class<? extends AEntity> entityClazz;
 
     /**
-     * Mappa ordinata di tutti i fields del form <br>
-     * La chiave è la propertyName del field <br>
+     * Lista ordinata di tutti i fields del form <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
+     */
+    protected List<AField> fieldsList;
+
+    /**
+     * Mappa di tutti i fields del form <br>
+     * La chiave è la propertyName del field <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
     protected HashMap<String, AField> fieldsMap;
@@ -194,6 +198,8 @@ public class AForm extends VerticalLayout {
      * Tipologia di Form in uso <br>
      */
     private AEOperation operationForm;
+
+    private boolean usaFieldNote = false;
 
 
     public AForm() {
@@ -296,6 +302,8 @@ public class AForm extends VerticalLayout {
             return;
         }
 
+        this.usaFieldNote = annotation.isUsaFieldNote(entityClazz);
+
         //--Crea un nuovo binder (vuoto) per questo Form e questa entityBean
         binder = new Binder(entityClazz);
     }
@@ -309,28 +317,115 @@ public class AForm extends VerticalLayout {
      * Aggiunge ogni singolo field della fieldMap al layout <br>
      */
     protected void fixView() {
-        this.fieldsMap = beanService.creaFields(entityBean, operationForm, binder);
+        //--Crea i fields normali in automatico
+        this.creaFieldsBase();
+
+        //--Eventuali fields specifici aggiunti oltre quelli automatici
+        this.creaFieldsExtra();
+
+        //--Aggiunge ogni singolo field della lista fieldsList al layout grafico
         this.addFieldsToLayout();
+
+        //--Crea una mappa fieldMap, per recuperare i fields dal nome
+        this.creaMappaFields();
+
+        //--Regola in lettura eventuali fields extra non associati al binder. Dal DB alla UI
+        this.readFieldsExtra();
     }
 
 
     /**
-     * Aggiunge ogni singolo field della fieldMap al layout <br>>
+     * Crea i fields normali <br>
+     * Associa i fields normali al binder <br>
+     * Trasferisce (binder read) i valori dal DB alla UI <br>
+     * <p>
+     * Lista ordinata di tutti i fields normali del form <br>
+     * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
+     */
+    public void creaFieldsBase() {
+        this.fieldsList = beanService.creaFields(entityBean, operationForm, binder);
+    }
+
+
+    /**
+     * Crea i fields (eventuali) extra oltre a quelli normali <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    public void creaFieldsExtra() {
+        AField field = null;
+
+        if (usaFieldNote) {
+            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE);
+            if (field != null) {
+                fieldsList.add(field);
+            }
+        }
+    }
+
+
+    /**
+     * Aggiunge ogni singolo field della lista fieldsList al layout <br>
      * Può essere sovrascritto nella sottoclasse <br>
      */
     protected void addFieldsToLayout() {
         topLayout.removeAll();
 
-        if (array.isValid(fieldsMap)) {
-            for (String fieldName : fieldsMap.keySet()) {
-                if (fieldsMap.get(fieldName) != null) {
-                    topLayout.add(fieldsMap.get(fieldName).get());
-                } else {
-                    logger.error("Manca il field " + fieldName, this.getClass(), "addFieldsToLayout");
-                }
+        if (array.isValid(fieldsList)) {
+            for (AField field : fieldsList) {
+                topLayout.add(field.get());
             }
         } else {
-            logger.warn("La fieldsMap è vuota", this.getClass(), "addFieldsToLayout");
+            logger.warn("La fieldsList è vuota", this.getClass(), "addFieldsToLayout");
+        }
+    }
+
+
+    /**
+     * Crea una mappa fieldMap, per recuperare i fields dal nome <br>
+     */
+    public void creaMappaFields() {
+        if (array.isValid(fieldsList)) {
+            if (fieldsMap == null) {
+                fieldsMap = new HashMap<String, AField>();
+
+                for (AField field : fieldsList) {
+                    fieldsMap.put(field.getKey(), field.get());
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Regola in lettura eventuali valori NON associati al binder. <br>
+     * Dal DB alla UI <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void readFieldsExtra() {
+        AField field = null;
+
+        if (usaFieldNote) {
+            if (fieldsMap != null) {
+                field = fieldsMap.get(FlowCost.FIELD_NOTE);
+                field.setValue(entityBean.note);
+            }
+        }
+    }
+
+
+    /**
+     * Regola in scrittura eventuali valori NON associati al binder
+     * Dalla  UI al DB
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void writeFieldsExtra() {
+        AField field = null;
+
+        if (usaFieldNote) {
+            if (fieldsMap != null) {
+                field = fieldsMap.get(FlowCost.FIELD_NOTE);
+                entityBean.note = (String) field.getValue();
+            }
         }
     }
 
@@ -342,6 +437,8 @@ public class AForm extends VerticalLayout {
      * @return the checked entity
      */
     public AEntity getValidBean() {
+        writeFieldsExtra();
+
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
         return binder.writeBeanIfValid(entityBean) ? entityBean : null;
     }

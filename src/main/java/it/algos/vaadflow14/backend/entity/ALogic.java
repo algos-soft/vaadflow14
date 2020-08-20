@@ -603,8 +603,8 @@ public abstract class ALogic implements AILogic {
      * Costruisce un layout per il Form in bodyPlacehorder della view <br>
      * <p>
      * Chiamato da AView.initView() <br>
-     * Costruisce un'istanza dedicata <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+     * Costruisce un' istanza dedicata <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      *
      * @param entityClazz the class of type AEntity
      *
@@ -627,9 +627,9 @@ public abstract class ALogic implements AILogic {
      * Costruisce un layout per il Form in bodyPlacehorder della view <br>
      * <p>
      * Chiamato da AView.initView() <br>
-     * Costruisce un'istanza dedicata <br>
-     * Passa all'istanza un wrapper di dati <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+     * Costruisce un' istanza dedicata <br>
+     * Passa all' istanza un wrapper di dati <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      *
      * @param entityBean interessata
      *

@@ -7,8 +7,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-
 /**
  * Project vaadflow15
  * Created by Algos
@@ -27,18 +25,9 @@ public class AIntegerField extends AField<Integer> {
     private final IntegerField innerField;
 
 
-    public AIntegerField() {
-        this(VUOTA);
-    }
-
-
-    public AIntegerField(String label) {
-        this(label, VUOTA);
-    }
-
-
-    public AIntegerField(String label, String placeholder) {
-        innerField = new IntegerField(label, placeholder);
+    public AIntegerField(String fieldKey, String label) {
+        innerField = new IntegerField(label);
+        super.fieldKey = fieldKey;
         innerField.setAutoselect(true);
         innerField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         add(innerField);
@@ -66,12 +55,6 @@ public class AIntegerField extends AField<Integer> {
     @Override
     public AbstractSinglePropertyField getBinder() {
         return innerField;
-    }
-
-
-    @Override
-    public void setPlaceholder(String placeholder) {
-        innerField.setPlaceholder(placeholder);
     }
 
 

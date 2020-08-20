@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -90,12 +89,30 @@ public class AFieldService extends AAbstractService {
 
     /**
      * Create a single field.
-     * The field type is chosen according to the annotation @AIField.
+     *
+     * @param entityClazz  di riferimento
+     * @param propertyName della property
+     */
+    public AField creaOnly(Class entityClazz, String propertyName) {
+        Field reflectionJavaField = reflection.getField(entityClazz, propertyName);
+
+        if (reflectionJavaField != null) {
+            return creaOnly(reflectionJavaField);
+        } else {
+            logger.warn("Manca il field per la property " + propertyName, this.getClass(), "creaOnly");
+            return null;
+        }
+    }
+
+
+    /**
+     * Create a single field.
      *
      * @param reflectionJavaField di riferimento
      */
     public AField creaOnly(Field reflectionJavaField) {
         AField field = null;
+        String fieldKey;
         String caption = VUOTA;
         String captionRadio = VUOTA;
         AETypeField type = null;
@@ -112,6 +129,7 @@ public class AFieldService extends AAbstractService {
             return null;
         }
 
+        fieldKey = reflectionJavaField.getName();
         type = annotation.getFormType(reflectionJavaField);
         caption = annotation.getFormFieldNameCapital(reflectionJavaField);
         captionRadio = annotation.getCaptionRadio(reflectionJavaField);
@@ -126,21 +144,21 @@ public class AFieldService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case text:
-                    field = new ATextField(caption);
+                    field = new ATextField(fieldKey, caption);
                     break;
                 case email:
-                    field = new AEmailField(caption);
+                    field = new AEmailField(fieldKey, caption);
                     ((AEmailField) field).getMail().setClearButtonVisible(true);
                     field.setErrorMessage("Inserisci un indirizzo eMail valido");
                     break;
                 case phone:
-                    field = new ATextField(caption);
+                    field = new ATextField(fieldKey, caption);
                     break;
                 case textArea:
-                    field = new ATextAreaField(caption);
+                    field = new ATextAreaField(fieldKey, caption);
                     break;
                 case integer:
-                    field = new AIntegerField(caption);
+                    field = new AIntegerField(fieldKey, caption);
                     if (field != null) {
                         if (intMin > 0) {
                             ((IntegerField) field.getBinder()).setHasControls(true);
@@ -183,7 +201,7 @@ public class AFieldService extends AAbstractService {
         }
 
         if (field != null && text.isValid(placeholder)) {
-            field.setPlaceholder(placeholder);
+//            field.setPlaceholder(placeholder);//@todo Funzionalità ancora da implementare
         }
 
         if (hasFocus) {

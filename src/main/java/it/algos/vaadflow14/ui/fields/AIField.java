@@ -23,7 +23,8 @@ public interface AIField {
 
     AField get();
 
-    public void setPlaceholder(String placeholder);
     public void setAutofocus();
+
+    public String getKey();
 
 }

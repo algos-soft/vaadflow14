@@ -683,10 +683,23 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Flag per usare il field della superclasse AEntity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean isUsaFieldNote(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaFieldNote() : false;
+    }
+
+
+    /**
      * Restituisce il nome del record (da usare nel Dialog)
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
+     * 3) Controlla che esista l' annotation specifica <br>
      * 4) Cerca in @AIEntity della classe AEntity la property 'recordName'
      * 5) Se non lo trova, cerca in @Document della classe AEntity la property collection
      *

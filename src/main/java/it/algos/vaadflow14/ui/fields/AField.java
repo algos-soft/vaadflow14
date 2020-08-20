@@ -15,6 +15,9 @@ import java.util.Collection;
  */
 public class AField<T> extends CustomField<T> implements AIField {
 
+    protected String fieldKey;
+
+
     @Override
     public void setItem(Collection collection) {
     }
@@ -55,10 +58,10 @@ public class AField<T> extends CustomField<T> implements AIField {
     }
 
 
-//    @Override
-//    public void setValue(Object o) {
-//
-//    }
+    //    @Override
+    //    public void setValue(Object o) {
+    //
+    //    }
 
 
     @Override
@@ -73,13 +76,15 @@ public class AField<T> extends CustomField<T> implements AIField {
     }
 
 
+
     @Override
-    public void setPlaceholder(String placeholder) {
+    public void setAutofocus() {
     }
 
 
     @Override
-    public void setAutofocus() {
+    public String getKey() {
+        return fieldKey;
     }
 
 }

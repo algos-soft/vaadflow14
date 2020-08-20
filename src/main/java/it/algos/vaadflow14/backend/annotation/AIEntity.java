@@ -38,6 +38,14 @@ public @interface AIEntity {
      */
     String keyPropertyName() default VUOTA;
 
+    /**
+     * (Optional) il campo della superclasse
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaFieldNote() default false;
+
 
 
 }

@@ -197,9 +197,11 @@ public abstract class FlowCost {
 
     public static final String DIR_PACKAGES = "packages/";
 
-    private static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
+    //--fields tipici
+    public static final String FIELD_NOTE = "note";
+
+    public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
-
 
 }
