@@ -66,8 +66,8 @@ public class SimpleBoot extends FlowBoot {
         super.regolaApplicationProperties();
 
         FlowVar.usaDebug = false;
-        FlowVar.usaCompany = false;
         FlowVar.usaSecurity = false;
+        FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
         FlowVar.projectVersion = 0.73;

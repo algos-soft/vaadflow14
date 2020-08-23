@@ -84,6 +84,8 @@ public class MainLayout extends AppLayout {
         menu = layoutService.creaMenuTabs();
         addToDrawer(menu);
 
+        this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
+
         addToNavbar(createTopBar());
 
         // questo non lo metterei

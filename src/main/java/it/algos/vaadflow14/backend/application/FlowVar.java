@@ -36,14 +36,6 @@ public class FlowVar {
     public static boolean usaDebug;
 
     /**
-     * Controlla se l' applicazione è multi-company oppure no <br>
-     * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
-     * Se usaCompany=true anche usaSecurity deve essere true <br>
-     */
-    public static boolean usaCompany;
-
-    /**
      * Controlla se l' applicazione usa il login oppure no <br>
      * Se si usa il login, occorre la classe SecurityConfiguration <br>
      * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
@@ -53,6 +45,15 @@ public class FlowVar {
      * Può essere true anche se usaCompany=false <br>
      */
     public static boolean usaSecurity;
+
+
+    /**
+     * Controlla se l' applicazione è multi-company oppure no <br>
+     * Di default (per sicurezza) uguale a true <br>
+     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Se usaCompany=true anche usaSecurity deve essere true <br>
+     */
+    public static boolean usaCompany;
 
 
     /**
@@ -144,7 +145,7 @@ public class FlowVar {
 
 
     /**
-     * Path per recuperare dalle risorse un'immagine da inserire nella barra di menu di MainLayout. <br>
+     * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
      * Ogni applicazione può modificarla <br>
      * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
      */

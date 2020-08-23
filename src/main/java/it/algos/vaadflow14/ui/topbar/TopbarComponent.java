@@ -11,14 +11,19 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.login.ALogin;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Componente per la barra superiore della finestra <br>
- * Se l' applicazione non usa  <br>
+ * Se è FlowVar.usaSecurity=false <br>
+ * 1 - immagine (opzionale) dell' applicazione in FlowVar.pathLogo; se manca sostituisce un' immagine di default <br>
+ * 2 - nome (obbligatorio) dell' applicazione previsto in FlowVar.projectName <br>
+ * 3 - descrizione (opzionale) dell' applicazione prevista in FlowVar.projectDescrizione; in seconda riga e più piccola <br>
  * <p>
+ * Se è FlowVar.usaSecurity=true e FlowVar.usaCompany=false <br>
  * Tre oggetti da sinistra a destra (occupano tutto lo spazio disponibile, col componente centrale che si espande):
  * 1 - immagine (opzionale); se manca sostituisce un' immagine di default <br>
  * 2 - descrizione della company/applicazione (obbligatorio);
@@ -143,7 +148,7 @@ public class TopbarComponent extends HorizontalLayout {
         divTitolo.add(label2);
 
         //--menu utente eventuale
-        if (nickName != null && !nickName.isEmpty()) {
+        if (FlowVar.usaSecurity&&nickName != null && !nickName.isEmpty()) {
 
             menuUser = new MenuBar();
             menuUser.setOpenOnHover(true);
