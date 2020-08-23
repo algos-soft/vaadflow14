@@ -88,7 +88,7 @@ public class MainLayout extends AppLayout {
 
         // questo non lo metterei
         if (FlowVar.usaSecurity) {
-            logoutButton = layoutService.creaLogoutButton();
+            logoutButton = layoutService.creaLogoutButton();//@todo Va levato quando funziona nella barra a destra
             logoutButton.addClickListener(e -> logout());
             menu.add(logoutButton);
         }
