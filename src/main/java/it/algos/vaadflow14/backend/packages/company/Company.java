@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -80,7 +81,7 @@ public class Company extends AEntity {
 
 
     /**
-     * descrizione (facoltativa)
+     * descrizione (obbligatoria)
      */
     @NotBlank()
     @AIField(type = AETypeField.text, caption = "Descrizione completa")

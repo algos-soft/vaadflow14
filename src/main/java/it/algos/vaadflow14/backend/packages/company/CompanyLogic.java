@@ -1,7 +1,6 @@
-package it.algos.vaadflow14.backend.packages.security;
+package it.algos.vaadflow14.backend.packages.company;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,22 +12,22 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 20-ago-2020
- * Time: 12:55
+ * Date: dom, 23-ago-2020
+ * Time: 15:44
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private Utente ; <br>
- * 2) StaticContextAccessor.getBean(Utente.class) (senza parametri) <br>
- * 3) appContext.getBean(Utente.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * 1) @Autowired private Company ; <br>
+ * 2) StaticContextAccessor.getBean(Company.class) (senza parametri) <br>
+ * 3) appContext.getBean(Company.class) (preceduto da @Autowired ApplicationContext appContext) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UtenteLogic extends ALogic {
+public class CompanyLogic extends ALogic {
 
 
     /**
@@ -43,7 +42,7 @@ public class UtenteLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
-    public UtenteLogic() {
+    public CompanyLogic() {
         this(AEOperation.edit);
     }
 
@@ -56,9 +55,9 @@ public class UtenteLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public UtenteLogic(AEOperation operationForm) {
+    public CompanyLogic(AEOperation operationForm) {
         super(operationForm);
-        super.entityClazz = Utente.class;
+        super.entityClazz = Company.class;
     }
 
 
@@ -71,36 +70,19 @@ public class UtenteLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = true;
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param username o nickName
-     * @param password in chiaro
+     * @param code        di riferimento
+     * @param descrizione completa
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public boolean crea(String username, String password) {
-        return checkAndSave(newEntity(username, password));
-    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * Senza properties per compatibilità con la superclasse <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    @Override
-    public AEntity newEntity() {
-        return newEntity(VUOTA, VUOTA);
+    public boolean crea(String code, String descrizione) {
+        return checkAndSave(newEntity(code, VUOTA, VUOTA, descrizione));
     }
 
 
@@ -109,50 +91,41 @@ public class UtenteLogic extends ALogic {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param username o nickName
-     * @param password in chiaro
-     *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Utente newEntity(String username, String password) {
-        Utente newEntityBean = Utente.builderUtente()
-
-                .username(text.isValid(username) ? username : null)
-
-                .password(text.isValid(password) ? password : null)
-
-                .accountNonExpired(true)
-
-                .accountNonLocked(true)
-
-                .credentialsNonExpired(true)
-
-                .enabled(true)
-
-                .build();
-
-        return (Utente) fixKey(newEntityBean);
+    public Company newEntity() {
+        return newEntity(VUOTA, VUOTA, VUOTA, VUOTA);
     }
 
 
     /**
-     * Operazioni eseguite PRIMA di save o di insert <br>
-     * Regolazioni automatiche di property <br>
-     * Controllo della validità delle properties obbligatorie <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, Edit)
+     * @param code        di riferimento
+     * @param telefono    fisso o cellulare
+     * @param email       di posta elettronica
+     * @param descrizione completa
      *
-     * @return the modified entity
+     * @return la nuova entity appena creata (non salvata)
      */
-    @Override
-    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
-        Utente entity = (Utente) super.beforeSave(entityBean, operation);
+    public Company newEntity(String code, String telefono, String email, String descrizione) {
+        Company newEntityBean = Company.builderCompany()
 
-        entity.username = text.levaSpazi(entity.username);
+                .ordine(getNewOrdine())
 
-        return entity;
+                .code(text.isValid(code) ? code : null)
+
+                .telefono(text.isValid(telefono) ? telefono : null)
+
+                .email(text.isValid(email) ? email : null)
+
+                .descrizione(text.isValid(descrizione) ? descrizione : null)
+
+                .build();
+
+        return (Company) fixKey(newEntityBean);
     }
 
 
@@ -166,31 +139,8 @@ public class UtenteLogic extends ALogic {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Utente findById(String keyID) {
-        return (Utente) super.findById(keyID);
-    }
-
-
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-    @Override
-    public boolean reset() {
-        super.deleteAll();
-
-        crea("aaa", "a");
-        crea("mario_rossi", "rossi123");
-        crea("marco.beretta", "beretta123");
-        crea("antonia-pellegrini", "pellegrini123");
-        crea("paolo cremona", "cremona123");
-
-        return mongo.isValid(entityClazz);
+    public Company findById(String keyID) {
+        return (Company) super.findById(keyID);
     }
 
 }

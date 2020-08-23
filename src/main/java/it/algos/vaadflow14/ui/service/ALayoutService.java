@@ -37,7 +37,7 @@ import java.util.List;
  * Classe di servizio <br>
  * <p>
  * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L'istanza può essere richiamata con: <br>
+ * L' istanza può essere richiamata con: <br>
  * 1) StaticContextAccessor.getBean(ALayoutService.class); <br>
  * 3) @Autowired private ALayoutService annotation; <br>
  * <p>
@@ -50,18 +50,19 @@ import java.util.List;
 public class ALayoutService extends AAbstractService {
 
 
-    /**
-     * menu toggle. <br>
-     *
-     * @return the drawer toggle
-     */
-    public DrawerToggle creaDrawer() {
-        final DrawerToggle drawerToggle = new DrawerToggle();
-        //@todo Controllare
-        //        drawerToggle.addClassName("menu-toggle");
-
-        return drawerToggle;
-    }
+//    /**
+//     * Menu drawer toggle a sinistra. <br>
+//     *
+//     * @return the drawer toggle
+//     */
+//    public DrawerToggle creaDrawer() {
+//        final DrawerToggle drawerToggle = new DrawerToggle();
+//
+//        //@todo Controllare
+//        //        drawerToggle.addClassName("menu-toggle");
+//
+//        return drawerToggle;
+//    }
 
 
     /**

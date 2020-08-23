@@ -1,20 +1,21 @@
 package it.algos.vaadflow14.ui;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.KeyModifier;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.login.ALogin;
+import it.algos.vaadflow14.backend.service.AVaadinService;
 import it.algos.vaadflow14.ui.service.ALayoutService;
+import it.algos.vaadflow14.ui.topbar.TopbarComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -33,7 +34,31 @@ import java.util.Optional;
 public class MainLayout extends AppLayout {
 
 
-    private final Tabs menu;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public AVaadinService vaadin;
+
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public ATextService text;
+
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public ALogin login;
+
+    private Tabs menu;
 
 
     private Button logoutButton;
@@ -45,15 +70,23 @@ public class MainLayout extends AppLayout {
      * @param layoutService the layout service
      */
     @Autowired
-    public MainLayout(ALayoutService layoutService) {
+    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService) {
         setPrimarySection(Section.DRAWER);
-        addToNavbar(true, layoutService.creaDrawer());
+
+        //--allinea il login alla sessione
+        //--lo crea se manca e lo rende disponibile a tutti
+        if (FlowVar.usaSecurity) {
+            vaadinService.fixLogin();
+        }
+
+        addToNavbar(true, new DrawerToggle());
 
         menu = layoutService.creaMenuTabs();
         addToDrawer(menu);
 
-        addToNavbar(layoutService.creaTop());
+        addToNavbar(createTopBar());
 
+        // questo non lo metterei
         if (FlowVar.usaSecurity) {
             logoutButton = layoutService.creaLogoutButton();
             logoutButton.addClickListener(e -> logout());
@@ -63,9 +96,39 @@ public class MainLayout extends AppLayout {
     }
 
 
+    /**
+     * Se l' applicazione è multiCompany e multiUtente, li visualizzo <br>
+     * Altrimenti il nome del programma <br>
+     */
+    protected TopbarComponent createTopBar() {
+        TopbarComponent topbar;
+        String style;
+
+        //        if (text.isValid(getUserName())) {
+        //            Company company=login.getCompany();
+        //            topbar = new TopbarComponent(login, FlowVar.pathLogo, company.getCode().toUpperCase(), "", getUserName());
+        //        } else {
+        //            topbar = new TopbarComponent(FlowVar.pathLogo, getDescrizione());
+        //        }
+        topbar = new TopbarComponent((ALogin) null, FlowVar.pathLogo, FlowVar.projectName, FlowVar.projectDescrizione, "romualdo");
+
+        style = "display:inline-flex; width:100%; flex-direction:row; padding-left:0em; padding-top:0.5em; padding-bottom:0.5em; padding-right:1em; align-items:center";
+        topbar.getElement().setAttribute("style", style);
+        //        topbar.setProfileListener(() -> profilePressed());
+
+        topbar.setLogoutListener(() -> {
+            VaadinSession.getCurrent().getSession().invalidate();
+            UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
+        });
+
+        return topbar;
+    }
+
+
     private void logout() {
-        //        AccessControlFactory.getInstance().createAccessControl().signOut();
-        System.exit(0);
+        VaadinSession.getCurrent().getSession().invalidate();
+        UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
+        //        System.exit(0); //@todo Creare una preferenza e sostituirla qui
     }
 
 
@@ -120,7 +183,7 @@ public class MainLayout extends AppLayout {
         //        }
 
         // Finally, add logout button for all users
-//        addToDrawer(logoutButton);
+        //        addToDrawer(logoutButton);
 
     }
 

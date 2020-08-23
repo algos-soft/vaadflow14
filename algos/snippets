@@ -80,3 +80,8 @@ content.getElement().setProperty("innerHTML", "<p>Hello World</p></br><span>Some
         if (WamEntity.class.isAssignableFrom(entityClass)||Milite.class.isAssignableFrom(entityClass)) {
             codice
         }// end of if cycle
+
+
+		grid.addColumn(User::getEmail).setWidth("270px").setHeader("Email").setFlexGrow(5);
+		grid.addColumn(u -> u.getFirstName() + " " + u.getLastName()).setHeader("Name").setWidth("200px").setFlexGrow(5);
+		grid.addColumn(User::getRole).setHeader("Role").setWidth("150px");

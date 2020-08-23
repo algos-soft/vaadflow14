@@ -183,6 +183,7 @@ public class AFooter extends VerticalLayout {
         //
 
         if (FlowVar.usaSecurity) {
+            this.add(text.getLabelUserSmall(message));//@todo Funzionalità ancora da implementare
         } else {
             this.add(text.getLabelUserSmall(message));
         }

@@ -86,8 +86,12 @@ public abstract class FlowCost {
     public static final String SUFFIX_VIEW = "View";
 
     /**
-     * The constant ROUTE_NAME_HOME.
+     * The constant ROUTE_NAME.
      */
+    public static final String ROUTE_NAME_LOGIN = "Login";
+
+    public static final String ROUTE_NAME_LOGIN_ERROR = ROUTE_NAME_LOGIN + "?error";
+
     public static final String ROUTE_NAME_ABOUT = "About";
 
     public static final String ROUTE_NAME_HOME = "Home";
@@ -97,6 +101,10 @@ public abstract class FlowCost {
     public static final String ROUTE_NAME_GENERIC_LIST = "list";
 
     public static final String ROUTE_NAME_GENERIC_FORM = "form";
+
+    public static final String TAG_LOGIN = "login";
+
+    public static final String TAG_LOGOUT = "logout";
 
 
     public static final String KEY_NULL = "null";
@@ -114,6 +122,10 @@ public abstract class FlowCost {
     public static final String KEY_FORM_TYPE = "formType";
 
     public static final String KEY_SERVICE_CLASS = "serviceClass";
+
+    public static final String KEY_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
+
+    public static final String KEY_SESSION_LOGIN = "SESSION_LOGIN";
 
     /**
      * The constant PROPERTY_SERIAL.
@@ -199,6 +211,7 @@ public abstract class FlowCost {
 
     //--fields tipici
     public static final String FIELD_NOTE = "note";
+
     public static final String FIELD_USER = "username";
 
     public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};

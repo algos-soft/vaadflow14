@@ -1,8 +1,6 @@
 package it.algos.security.ui.springsecurity;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.packages.security.Utente;
-import it.algos.vaadflow14.backend.packages.security.UtenteLogic;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.ui.security.CustomRequestCache;
 import it.algos.vaadflow14.ui.security.SecurityUtils;
@@ -22,6 +20,9 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import javax.annotation.PostConstruct;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN;
+import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN_ERROR;
+
 /**
  * Configures spring security, doing the following:
  * <li>Bypass security checks for static resources,</li>
@@ -32,9 +33,9 @@ import javax.annotation.PostConstruct;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String LOGIN_PROCESSING_URL = "/" + WamLoginView.ROUTE;
-    private static final String LOGIN_FAILURE_URL = "/"+ WamLoginView.ROUTE+"?error";
-    private static final String LOGIN_URL = "/"+ WamLoginView.ROUTE;
+    private static final String LOGIN_PROCESSING_URL = "/" + ROUTE_NAME_LOGIN;
+    private static final String LOGIN_FAILURE_URL = "/"+ ROUTE_NAME_LOGIN_ERROR;
+    private static final String LOGIN_URL = "/"+ ROUTE_NAME_LOGIN;
     private static final String LOGOUT_SUCCESS_URL = "/";
 
     private final UserDetailsService userDetailsService;
