@@ -856,7 +856,7 @@ public abstract class ALogic implements AILogic {
                 break;
             case conferma:
             case registra:
-                if (saveDaForm(entityBean)) {
+                if (saveDaForm()) {
                     this.back();
                 }
                 break;
@@ -1280,12 +1280,29 @@ public abstract class ALogic implements AILogic {
 
     /**
      * Save proveniente da un click sul bottone 'registra' del Form. <br>
+     * La entityBean viene recuperare dal form <br>
+     *
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
+     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     */
+    public boolean saveDaForm() {
+        AEntity entityBean = null;
+        if (form != null) {
+            entityBean = form.getValidBean();
+        }
+
+        return save(entityBean);
+    }
+
+
+    /**
+     * Save proveniente da un click sul bottone 'registra' del Form. <br>
      * La entityBean che arriva NON è necessariamente sincronizzata <br>
      * Meglio recuperare dal form la versione più affidabile <br>
      *
      * @return the saved entity
      */
-    public boolean saveDaForm(AEntity entityBean) {
+    public boolean saveDaForm2(AEntity entityBean) {
         if (form != null) {
             entityBean = form.getValidBean();
         }
@@ -1303,7 +1320,7 @@ public abstract class ALogic implements AILogic {
                 case editNoDelete:
                 case editProfile:
                 case editDaLink:
-                    return save(entityBean) != null;
+                    return save(entityBean);
                 case showOnly:
                     break;
                 default:
@@ -1323,7 +1340,7 @@ public abstract class ALogic implements AILogic {
      * Controllo della validità delle properties obbligatorie <br>
      * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
      * Controlla se la entity registra le date di creazione e modifica <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param entityBean da regolare prima del save
      * @param operation  del dialogo (NEW, Edit)
@@ -1363,35 +1380,41 @@ public abstract class ALogic implements AILogic {
      * Use the returned instance for further operations as the save operation
      * might have changed the entity instance completely.
      *
-     * @return the saved entity
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
+     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
      */
-    public AEntity save(AEntity entityToSave) {
+    public boolean save(AEntity entityToSave) {
+        boolean status = false;
         AEntity entityBean = beforeSave(entityToSave, operationForm);
 
         if (entityBean == null) {
             logger.error("La entityBean è nulla", ALogic.class, "save");
             Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
-            return entityToSave;
+            return status;
         }
 
         if (beanService.isModificata(entityBean)) {
             if (operationForm == AEOperation.addNew) {
                 logger.nuovo(entityBean);
+            } else {
+                logger.modifica(entityBean);
             }
         } else {
-            return entityBean;
+            return true;
         }
 
         if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
             logger.error("operationForm errato in una nuova entity che NON è stata salvata", ALogic.class, "save");
-            return null;
+            return status;
         }
 
         if (entityBean != null) {
-            if (operationForm == AEOperation.addNew && entityBean.id == null && text.isValid(keyPropertyName)) {
-                entityBean.id = reflection.getPropertyValueStr(entityBean, keyPropertyName);
+            if (operationForm == AEOperation.addNew && entityBean.id == null) {
+                //                entityBean.id = reflection.getPropertyValueStr(entityBean, keyPropertyName);
+                entityBean = fixKey(entityBean);
             }
             entityBean = mongo.save(entityBean);
+            status = true;
         } else {
             logger.error("Object to save must not be null", this.getClass(), "save");
         }
@@ -1414,7 +1437,7 @@ public abstract class ALogic implements AILogic {
             }
         }
 
-        return entityBean;
+        return status;
     }
 
 

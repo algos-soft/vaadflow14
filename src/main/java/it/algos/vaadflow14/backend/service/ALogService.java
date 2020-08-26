@@ -137,6 +137,15 @@ public class ALogService extends AAbstractService {
         }
     }
 
+    /**
+     * Logger specifico <br>
+     * Modifica di una entity esistente <br>
+     *
+     * @param entityBean    da modificare
+     */
+    public void modifica(AEntity entityBean) {
+        modifica(entityBean,mongo.find(entityBean));
+    }
 
     /**
      * Logger specifico <br>
