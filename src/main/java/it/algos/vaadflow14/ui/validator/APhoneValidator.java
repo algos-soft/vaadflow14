@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Scope;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -33,6 +35,10 @@ public class APhoneValidator implements Validator {
 
     @Override
     public ValidationResult apply(Object value, ValueContext valueContext) {
+        if (value instanceof String && value.equals(VUOTA)) {
+            return ValidationResult.ok();
+        }
+
         String patterns = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
 
                 + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"

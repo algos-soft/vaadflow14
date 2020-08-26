@@ -517,6 +517,28 @@ public class AMongoService<capture> extends AAbstractService {
         return mongoOp.findOne(query, entityClazz);
     }
 
+    /**
+     * Cerca una singola entity di una collection con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param query       A standard MongoDB query document that specifies which documents to find.
+     *
+     * @return the founded entity unique
+     *
+     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
+     */
+    public AEntity findByUniqueKey(Class<? extends AEntity> entityClazz, Query query) {
+        if (entityClazz == null || query == null) {
+            return null;
+        }
+
+        if (mongoOp.count(query, entityClazz) != 1) {
+            return null;
+        }
+
+        return mongoOp.findOne(query, entityClazz);
+    }
 
     /**
      * Find lista (interna). <br>

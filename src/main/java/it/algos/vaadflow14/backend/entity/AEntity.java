@@ -90,7 +90,7 @@ public abstract class AEntity implements Serializable {
      * Data di creazione del nuovo record (facoltativa, non modificabile) <br>
      * Gestita in automatico. <br>
      * Utilizzo obbligatorio o facoltativo. <br>
-     * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
+     * Regolato uguale per tutta l' applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
     @AIField(type = AETypeField.localDateTime, caption = "Creazione della entity")
@@ -101,7 +101,7 @@ public abstract class AEntity implements Serializable {
     /**
      * Data dell' ultimo edit del record (facoltativa, modificabile solo da codice, non da UI) <br>
      * Utilizzo obbligatorio o facoltativo. <br>
-     * Regolato uguale per tutta l'applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
+     * Regolato uguale per tutta l' applicazione col flag KEY_USE_PROPERTY_CREAZIONE_AND_MODIFICA <br>
      * Field visibile solo al developer <br>
      */
     @AIField(type = AETypeField.localDateTime, caption = "Ultima modifica della entity")

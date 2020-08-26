@@ -13,8 +13,10 @@ import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 import de.codecamp.vaadin.components.messagedialog.MessageDialog;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import it.algos.vaadflow14.backend.wrapper.WrapSearch;
@@ -42,6 +44,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.haijian.Exporter;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -191,6 +194,15 @@ public abstract class ALogic implements AILogic {
      */
     @Autowired
     public AFieldService fieldService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AVaadinService vaadinService;
+
 
     /**
      * The Entity Class  (obbligatoria sempre; in ViewForm può essere ricavata dalla entityBean)
@@ -1169,27 +1181,53 @@ public abstract class ALogic implements AILogic {
      */
     public AEntity insert(AEntity newEntityBean) {
         AEntity entityBean = null;
-        newEntityBean = fixKey(newEntityBean);
-        newEntityBean = beforeSave(newEntityBean,AEOperation.addNew);
-        entityBean = mongo.insert(newEntityBean);
+        entityBean = fixKey(newEntityBean);
+        entityBean = beforeSave(entityBean, AEOperation.addNew);
+
+        if (entityBean == null) {
+            Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
+            return newEntityBean;
+        }
+
+        entityBean = mongo.insert(entityBean);
 
         if (entityBean != null) {
             logger.nuovo(entityBean);
+        } else {
+            Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
         }
+
         return entityBean;
     }
 
 
+    //    /**
+    //     * Regola la chiave se esiste il campo keyPropertyName. <br>
+    //     *
+    //     * @param newEntityBean to be checked
+    //     *
+    //     * @return the checked entity
+    //     */
+    //    public AEntity fixKey(AEntity newEntityBean) {
+    //        return fixKeyAndCompany(newEntityBean, (Company) null);
+    //    }
+
+
     /**
      * Regola la chiave se esiste il campo keyPropertyName. <br>
+     * Se la company è nulla, la recupera dal login <br>
+     * Se la company è ancora nulla, la entity viene creata comunque
+     * ma verrà controllata ancora nel metodo beforeSave() <br>
      *
      * @param newEntityBean to be checked
+     *                      //     * @param company       to be checked
      *
      * @return the checked entity
      */
     public AEntity fixKey(AEntity newEntityBean) {
         String keyPropertyName;
         String keyPropertyValue;
+        Company company;
 
         if (text.isEmpty(newEntityBean.id)) {
             keyPropertyName = annotation.getKeyPropertyName(newEntityBean.getClass());
@@ -1200,6 +1238,11 @@ public abstract class ALogic implements AILogic {
                     newEntityBean.id = keyPropertyValue.toLowerCase();
                 }
             }
+        }
+
+        if (newEntityBean instanceof ACEntity) {
+            company = vaadinService.getCompany();
+            ((ACEntity) newEntityBean).company = company;
         }
 
         return newEntityBean;
@@ -1223,7 +1266,7 @@ public abstract class ALogic implements AILogic {
         valido = binder.isValid();
 
         if (valido) {
-            newEntityBean = beforeSave(newEntityBean,AEOperation.addNew);
+            newEntityBean = beforeSave(newEntityBean, AEOperation.addNew);
             valido = mongo.insert(newEntityBean) != null;
         } else {
             message = "Duplicate key error ";
@@ -1278,6 +1321,8 @@ public abstract class ALogic implements AILogic {
      * Operazioni eseguite PRIMA di save o di insert <br>
      * Regolazioni automatiche di property <br>
      * Controllo della validità delle properties obbligatorie <br>
+     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
+     * Controlla se la entity registra le date di creazione e modifica <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param entityBean da regolare prima del save
@@ -1286,7 +1331,29 @@ public abstract class ALogic implements AILogic {
      * @return the modified entity
      */
     public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
-        //@todo Funzionalità ancora da implementare - Aggfiungere controllo date creazione e modifica
+        Company company;
+
+        if (FlowVar.usaCompany && entityBean instanceof ACEntity) {
+            company = ((ACEntity) entityBean).company;
+            company = company != null ? company : vaadinService.getCompany();
+            if (company == null) {
+                return null;
+            } else {
+                ((ACEntity) entityBean).company = company;
+            }
+        }
+
+        if (annotation.isUsaCreazioneModifica(entityClazz)) {
+            if (operation == AEOperation.addNew) {
+                entityBean.creazione = LocalDateTime.now();
+            }
+            if (operation != AEOperation.showOnly) {
+                if (beanService.isModificata(entityBean)) {
+                    entityBean.modifica = LocalDateTime.now();
+                }
+            }
+        }
+
         return entityBean;
     }
 
@@ -1298,23 +1365,21 @@ public abstract class ALogic implements AILogic {
      *
      * @return the saved entity
      */
-    public AEntity save(AEntity entityBean) {
-        boolean modificata = false;
-        AEntity entityBeanOld = null;
-        entityBean = beforeSave(entityBean,operationForm);
+    public AEntity save(AEntity entityToSave) {
+        AEntity entityBean = beforeSave(entityToSave, operationForm);
 
         if (entityBean == null) {
             logger.error("La entityBean è nulla", ALogic.class, "save");
-            return null;
+            Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
+            return entityToSave;
         }
 
         if (beanService.isModificata(entityBean)) {
             if (operationForm == AEOperation.addNew) {
                 logger.nuovo(entityBean);
-            } else {
-                modificata = true;
-                entityBeanOld = mongo.find(entityBean);
             }
+        } else {
+            return entityBean;
         }
 
         if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
@@ -1346,10 +1411,6 @@ public abstract class ALogic implements AILogic {
                 }
             } else {
                 logger.warn("Non sono riuscito a creare la entity ", this.getClass(), "save");
-            }
-        } else {
-            if (modificata && entityBeanOld != null) {
-                logger.modifica(entityBean, entityBeanOld);
             }
         }
 

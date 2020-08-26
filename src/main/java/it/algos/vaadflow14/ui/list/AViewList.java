@@ -50,9 +50,9 @@ public class AViewList extends AView {
 
         if (topPlacehorder != null && topLayout != null) {
             topPlacehorder.add(topLayout);
+            this.add(topPlacehorder);
         }
 
-        this.add(topPlacehorder);
     }
 
 

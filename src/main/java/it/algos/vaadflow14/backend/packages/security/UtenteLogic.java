@@ -4,9 +4,13 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.company.Company;
+import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.MONGO_FIELD_USER;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -35,6 +39,15 @@ public class UtenteLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public CompanyLogic companyLogic;
 
 
     /**
@@ -92,6 +105,22 @@ public class UtenteLogic extends ALogic {
 
 
     /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param company  obbligatoria se FlowVar.usaCompany=true
+     * @param username o nickName
+     * @param password in chiaro
+     *
+     * @return true se la nuova entity è stata creata e salvata
+     */
+    public boolean crea(Company company, String username, String password) {
+        Utente entity = newEntity(username, password);
+        entity.company = company;
+        return checkAndSave(entity);
+    }
+
+
+    /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * Senza properties per compatibilità con la superclasse <br>
@@ -108,6 +137,8 @@ public class UtenteLogic extends ALogic {
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * <p>
+     * //     * @param company  obbligatoria se FlowVar.usaCompany=true
      *
      * @param username o nickName
      * @param password in chiaro
@@ -147,10 +178,12 @@ public class UtenteLogic extends ALogic {
      * @return the modified entity
      */
     @Override
-    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+    public Utente beforeSave(AEntity entityBean, AEOperation operation) {
         Utente entity = (Utente) super.beforeSave(entityBean, operation);
 
-        entity.username = text.levaSpazi(entity.username);
+        if (entity != null) {
+            entity.username = text.levaSpazi(entity.username);
+        }
 
         return entity;
     }
@@ -172,6 +205,16 @@ public class UtenteLogic extends ALogic {
 
 
     /**
+     * Retrieves an entity by userName.
+     *
+     * @param userName must not be {@literal null}.
+     */
+    public Utente findByUser(String userName) {
+        return (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, userName);
+    }
+
+
+    /**
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
      * I dati possono essere presi da una Enumeration o creati direttamente <br>
@@ -184,11 +227,11 @@ public class UtenteLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea("aaa", "a");
-        crea("mario_rossi", "rossi123");
-        crea("marco.beretta", "beretta123");
-        crea("antonia-pellegrini", "pellegrini123");
-        crea("paolo cremona", "cremona123");
+        crea(companyLogic.getAlgos(), "Gac", "fulvia");
+        crea(companyLogic.getDemo(), "mario_rossi", "rossi123");
+        crea(null, "marco.beretta", "beretta123");
+        crea(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123");
+        crea(null, "paolo cremona", "cremona123");
 
         return mongo.isValid(entityClazz);
     }

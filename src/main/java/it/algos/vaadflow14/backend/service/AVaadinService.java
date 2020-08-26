@@ -84,7 +84,7 @@ public class AVaadinService extends AAbstractService {
 
         if (isNotLogin()) {
             username = getLoggedUsername();
-            utente = utenteLogic.findById(username);
+            utente = utenteLogic.findByUser(username);
 
             if (utente != null) {
                 if (FlowVar.usaCompany) {
@@ -152,6 +152,27 @@ public class AVaadinService extends AAbstractService {
      */
     public boolean isNotLogin() {
         return getLogin() == null;
+    }
+
+
+    /**
+     * Restituisce l' utente, se esiste la sessione, se il login è registrato e se l' utente è valido <br>
+     *
+     * @return utente loggato
+     */
+    public Utente getUtente() {
+        ALogin login = getLogin();
+        return login != null ? login.getUtente() : null;
+    }
+
+    /**
+     * Restituisce la company, se esiste la sessione, se il login è registrato e se la company è valida <br>
+     *
+     * @return company loggato
+     */
+    public Company getCompany() {
+        ALogin login = getLogin();
+        return login != null ? login.getCompany() : null;
     }
 
 }

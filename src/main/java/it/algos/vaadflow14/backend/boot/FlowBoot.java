@@ -8,6 +8,8 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -344,7 +346,9 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList.add(Anno.class);
         FlowVar.menuRouteList.add(Mese.class);
         FlowVar.menuRouteList.add(Giorno.class);
+        FlowVar.menuRouteList.add(Utente.class);
         FlowVar.menuRouteList.add(Company.class);
+        FlowVar.menuRouteList.add(Preferenza.class);
     }
 
 

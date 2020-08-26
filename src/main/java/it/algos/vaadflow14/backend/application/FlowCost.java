@@ -141,6 +141,8 @@ public abstract class FlowCost {
      */
     public static final VaadinIcon DEFAULT_ICON = VaadinIcon.ASTERISK;
 
+    public static final String DEFAULT_IMAGE = "frontend/images/medal.ico";
+
     /**
      * The constant START_DATE.
      */
@@ -212,10 +214,19 @@ public abstract class FlowCost {
     //--fields tipici
     public static final String FIELD_NOTE = "note";
 
-    public static final String FIELD_USER = "username";
+    public static final String MONGO_FIELD_USER = "user";
 
     public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
+
+    //--Costanti usate per identificare alcune company
+    public static final String COMPANY_ALGOS = "algos";
+
+    public static final String COMPANY_DEMO = "demo";
+
+    public static final String COMPANY_TEST = "test";
+
+    public final static String LUMO_PRIMARY_COLOR = "#1676F3";  // non riesco a recuperarlo dal context allora visto che so qual è lo ridefinisco qui
 
 }

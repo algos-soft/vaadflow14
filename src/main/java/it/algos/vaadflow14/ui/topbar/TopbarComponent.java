@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.ui.topbar;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Div;
@@ -9,12 +11,20 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.tabs.Tab;
-import it.algos.vaadflow14.backend.application.FlowCost;
+import com.vaadin.flow.server.VaadinSession;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.login.ALogin;
+import it.algos.vaadflow14.backend.packages.company.Company;
+import it.algos.vaadflow14.backend.service.AVaadinService;
+import it.algos.vaadflow14.ui.service.ALayoutService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.annotation.PostConstruct;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.LUMO_PRIMARY_COLOR;
 
 /**
  * Componente per la barra superiore della finestra <br>
@@ -30,22 +40,41 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * se multiCompany una sigla o una descrizione della company,
  * altrimenti una sigla o una descrizione dell' applicazione stessa
  * 3 - utente loggato (opzionale); se multiCompany l' username dell' utente loggato
+ * <p>
+ * Se è FlowVar.usaSecurity=true e FlowVar.usaCompany=true <br>
  */
+@Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TopbarComponent extends HorizontalLayout {
 
-    private static String DEFAULT_IMAGE = "frontend/images/medal.ico";
 
     //    private Image image;
 
     //    private Label label;
 
-    public MenuBar menuUser;
+    //    public MenuBar menuUser;
 
-    public SubMenu projectSubMenu;
+    //    public SubMenu projectSubMenu;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AVaadinService vaadinService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALayoutService layoutService;
 
     protected ALogin login;
 
-    protected boolean usaProfile;
+    protected boolean usaProfile; //@todo Creare una preferenza e sostituirla qui
 
     protected MenuItem itemUser;
 
@@ -59,50 +88,31 @@ public class TopbarComponent extends HorizontalLayout {
     //--property
     private String sottotitolo;
 
-    //--property
-    private String pathImage;
+    //    private AMenuService menuService;
 
     //--property
     private String nickName;
 
-//    private AMenuService menuService;
+
+    /**
+     * Costruttore senza parametri <br>
+     * //     * L' istanza viene costruita con appContext.getBean(TopbarComponent.class) <br>
+     */
+    public TopbarComponent() {
+    } // end of SpringBoot constructor
 
 
     /**
-     * Costruttore base con i parametri obbligatori <br>
-     *
-     * @param titolo della company/applicazione (obbligatorio)
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
+     * del costruttore e PRIMA di qualsiasi altro metodo <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
      */
-    public TopbarComponent(String titolo, String sottotitolo) {
-        this(null, "", titolo, sottotitolo, VUOTA);
-    }
-
-
-    /**
-     * Costruttore con alcuni parametri <br>
-     *
-     * @param pathImage dell' immagine (facoltativo)
-     * @param titolo    della company/applicazione (obbligatorio)
-     */
-    public TopbarComponent(String pathImage, String titolo, String sottotitolo) {
-        this(null, pathImage, titolo, sottotitolo, VUOTA);
-    }
-
-
-    /**
-     * Costruttore completo con tutti i parametri <br>
-     *
-     * @param pathImage dell' immagine (facoltativo)
-     * @param titolo    della company/applicazione (obbligatorio)
-     * @param nickName  utente loggato se multiCompany (facoltativo)
-     */
-    public TopbarComponent(ALogin login, String pathImage, String titolo, String sottotitolo, String nickName) {
-        this.login = login;
-        this.pathImage = pathImage;
-        this.titolo = titolo;
-        this.sottotitolo = sottotitolo;
-        this.nickName = nickName;
-
+    @PostConstruct
+    protected void postConstruct() {
         this.initView();
     }
 
@@ -111,83 +121,27 @@ public class TopbarComponent extends HorizontalLayout {
      * Creazione dei componenti grafici <br>
      */
     protected void initView() {
-        Tab tab;
+        String style;
+        Image image = null;
+        Div divTitolo = null;
+        MenuBar menuUser = null;
+
         setWidth("100%");
         setDefaultVerticalComponentAlignment(Alignment.CENTER);
-        //        Icon icon = new Icon(VaadinIcon.USER);
+        style = "display:inline-flex; width:100%; flex-direction:row; padding-left:0em; padding-top:0em; padding-bottom:0em; padding-right:1em; align-items:center";
+        this.getElement().setAttribute("style", style);
 
         //--Preferenze specifiche
         this.fixPreferenze();
 
-        //--immagine eventuale
-        Image image;
-        if (pathImage != null && !pathImage.isEmpty()) {
-            image = new Image(pathImage, "Algos");
-        } else {
-            image = new Image(DEFAULT_IMAGE, "Algos");
-        }
-        image.setHeight("9mm");
+        //--Immagine facoltativa
+        image = this.fixLogo();
 
-
-        //--titolo su 2 righe
-        Div divTitolo = new Div();
-        divTitolo.getElement().setAttribute("style", "display:flex; flex-direction:column; min-width:2em");
-
-//        String commonStyle = "line-height:120%; white-space:nowrap; overflow:hidden; color:" + WamCost.LUMO_PRIMARY_COLOR; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-
-        Label label1 = new Label(titolo);
-//        label1.getElement().setAttribute("style", commonStyle);
-        label1.getStyle().set("font-size", "120%");
-        label1.getStyle().set("font-weight", "bold");
-
-        Label label2 = new Label(sottotitolo);
-//        label2.getElement().setAttribute("style", commonStyle);
-        label2.getStyle().set("font-size", "70%");
-
-        divTitolo.add(label1);
-        divTitolo.add(label2);
+        //--titolo
+        divTitolo = this.fixTitolo();
 
         //--menu utente eventuale
-        if (FlowVar.usaSecurity&&nickName != null && !nickName.isEmpty()) {
-
-            menuUser = new MenuBar();
-            menuUser.setOpenOnHover(true);
-            itemUser = menuUser.addItem(nickName);
-            //            if (login != null) {
-            //                if (login.isDeveloper()) {
-            //                    icon = new Icon(VaadinIcon.MAGIC);
-            //                }
-            //                if (login.isAdmin()) {
-            //                    icon = new Icon(VaadinIcon.SPECIALIST);
-            //                }
-            //            }
-            itemUser.addComponentAsFirst(getIcon());
-
-            projectSubMenu = itemUser.getSubMenu();
-            tab = new Tab();
-            tab.add(VaadinIcon.EDIT.create(), new Label("Profilo"));
-
-            if (usaProfile) {
-                MenuItem profile = projectSubMenu.addItem(tab, menuItemClickEvent -> {
-                    if (profileListener != null) {
-                        profileListener.profile();
-                    }
-                });
-            }
-
-//            menuService = StaticContextAccessor.getBean(AMenuService.class);
-//            tab = menuService.creaMenuLogout();
-//            //appLayout.setToolbarIconButtons(new MenuItem("Logout", "exit-to-app", () -> UI.getCurrent().getPage().executeJavaScript("location.assign('logout')")));
-//            projectSubMenu.addItem(tab);
-//            Tab tab = creaAlgosTab(LogoutView.class);
-
-            //            MenuItem logout = projectSubMenu.addItem(tab, menuItemClickEvent -> {
-//                if (logoutListener != null) {
-//                    logoutListener.logout();
-//                }
-//            });
-        }
-
+        menuUser = fixMenuUser();
 
         if (menuUser != null) {
             Div elasticSpacer = new Div();
@@ -208,6 +162,95 @@ public class TopbarComponent extends HorizontalLayout {
 
 
     /**
+     * Logo della pagina (facoltativo) <br>
+     */
+    private Image fixLogo() {
+        Image image = null;
+
+        //@todo Creare una preferenza e sostituirla qui
+        image = new Image(FlowVar.pathLogo, "Algos");
+        image.setHeight("9mm");
+
+        return image;
+    }
+
+
+    /**
+     * Titolo della pagina <br>
+     * <p>
+     * Se è FlowVar.usaSecurity=false, su due righe di grandezza diversa (la seconda più piccola) <br>
+     * 1 - nome (obbligatorio) dell' applicazione previsto in FlowVar.projectName <br>
+     * 2 - descrizione (opzionale) dell' applicazione prevista in FlowVar.projectDescrizione <br>
+     */
+    private Div fixTitolo() {
+        Div div = new Div();
+        ALogin login;
+        Company company;
+        String commonStyle = "line-height:120%; white-space:nowrap; overflow:hidden; color:" + LUMO_PRIMARY_COLOR;
+        Label primaRiga = new Label(FlowVar.projectName);
+        Label secondaRiga = new Label(FlowVar.projectDescrizione);
+
+        if (FlowVar.usaCompany) {
+            login = vaadinService.getLogin();
+            company = login != null ? login.getCompany() : null;
+            if (company != null) {
+                primaRiga = new Label(company.getCode());
+                secondaRiga = new Label(company.getDescrizione());
+            }
+        } else {
+        }
+        div.getElement().setAttribute("style", "display:flex; flex-direction:column; min-width:2em");
+
+        primaRiga.getElement().setAttribute("style", commonStyle);
+        primaRiga.getStyle().set("font-size", "120%");
+        primaRiga.getStyle().set("font-weight", "bold");
+
+        secondaRiga.getElement().setAttribute("style", commonStyle);
+        secondaRiga.getStyle().set("font-size", "70%");
+
+        div.add(primaRiga);
+        div.add(secondaRiga);
+
+        return div;
+    }
+
+
+    private MenuBar fixMenuUser() {
+        MenuBar menuUser = null;
+        MenuItem itemUser;
+        SubMenu projectSubMenu;
+
+        ALogin login;
+        Button profileButton;
+        Button logoutButton;
+
+        if (FlowVar.usaSecurity && vaadinService != null && vaadinService.isLogin()) {
+            login = vaadinService.getLogin();
+            menuUser = new MenuBar();
+            menuUser.setOpenOnHover(true);
+
+            if (login != null) {
+                itemUser = menuUser.addItem(login.getUtente().username);
+                itemUser.addComponentAsFirst(getIcon());
+                projectSubMenu = itemUser.getSubMenu();
+
+                if (usaProfile) {
+                    profileButton = layoutService.creaProfileButton();
+                    projectSubMenu.addItem(profileButton);
+                    profileButton.addClickListener(e -> profile());
+                }
+
+                logoutButton = layoutService.creaLogoutButton();
+                projectSubMenu.addItem(logoutButton);
+                logoutButton.addClickListener(e -> logout());
+            }
+        }
+
+        return menuUser;
+    }
+
+
+    /**
      * Preferenze <br>
      * Può essere sovrascritto, per modificare le preferenze standard <br>
      * Invocare PRIMA il metodo della superclasse <br>
@@ -221,13 +264,13 @@ public class TopbarComponent extends HorizontalLayout {
         Icon icon = new Icon(VaadinIcon.USER);
 
         if (login != null) {
-             //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-//            if (login.isDeveloper()) {
-//                icon = new Icon(VaadinIcon.MAGIC);
-//            }
-//            if (login.isAdmin()) {
-//                icon = new Icon(VaadinIcon.SPECIALIST);
-//            }
+            //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+            //            if (login.isDeveloper()) {
+            //                icon = new Icon(VaadinIcon.MAGIC);
+            //            }
+            //            if (login.isAdmin()) {
+            //                icon = new Icon(VaadinIcon.SPECIALIST);
+            //            }
             icon = new Icon(VaadinIcon.MAGIC);
         }
 
@@ -235,14 +278,14 @@ public class TopbarComponent extends HorizontalLayout {
     }
 
 
-    //    public void setLabel(String text) {
-    //        label.setText(text);
-    //    }
+    private void profile() {
+    }
 
 
-    //    public void setUsername(String username) {
-    //        itemUser.setText(username);
-    //    }
+    private void logout() {
+        VaadinSession.getCurrent().getSession().invalidate();
+        UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
+    }
 
 
     public void setLogoutListener(LogoutListener listener) {

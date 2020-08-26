@@ -689,9 +689,21 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the status
      */
-    public boolean isUsaFieldNote(final Class<? extends AEntity> entityClazz) {
+    public boolean isUsaNote(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaFieldNote() : false;
+        return annotation != null ? annotation.usaNote() : false;
+    }
+
+    /**
+     * Flag per usare il field della superclasse AEntity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean isUsaCreazioneModifica(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaCreazioneModifica() : false;
     }
 
 

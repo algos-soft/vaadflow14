@@ -65,7 +65,7 @@ public class SimpleBoot extends FlowBoot {
     protected void regolaApplicationProperties() {
         super.regolaApplicationProperties();
 
-        FlowVar.usaDebug = false;
+        FlowVar.usaDebug = true;
         FlowVar.usaSecurity = false;
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
@@ -92,8 +92,6 @@ public class SimpleBoot extends FlowBoot {
     @Override
     protected void addMenuRoutes() {
         super.addMenuRoutes();
-
-        FlowVar.menuRouteList.add(Utente.class);
 
         FlowVar.menuRouteList.add(Alfa.class);
         FlowVar.menuRouteList.add(DeltaView.class);

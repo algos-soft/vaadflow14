@@ -14,12 +14,20 @@ public enum AETypeField {
 
     integer(5, 8),
 
-    //    pref,
+    lungo(5, 8),
+
+    localDate(6, 0),
+
+    localDateTime(6, 0),
+
+    localTime(6, 0),
+
+    preferenza(6, 0),
+
     //    noBinder,
     //    calculatedTxt,
     //    calculatedInt,
     //    integernotzero,
-    //    lungo,
     //    onedecimal,
     //    password,
 
@@ -34,9 +42,6 @@ public enum AETypeField {
     //    monthdate,
     //    weekdate,
     //    date,
-    //    localdate,
-
-    localDateTime(6, 0),
 
     gridShowOnly(0, 20),
 

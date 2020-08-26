@@ -27,7 +27,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * CRUD View <br>
  * AViewGeneric <br>
  * <p>
- * Contiene la 'business logic'. <br>
+ * Contiene la 'ui logic'. <br>
  * Nella superclasse AViewProperty vengono riportate, per comodità, le properties ed i link ai services <br>
  */
 //@Route(value = ROUTE_NAME_GENERIC_VIEW, layout = MainLayout.class)
@@ -39,7 +39,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
     /**
      * Regola i parametri del browser per una view costruita da @Route <br>
      * <p>
-     * Chiamato da com.vaadin.flow.router.Router tramite l'interfaccia HasUrlParameter <br>
+     * Chiamato da com.vaadin.flow.router.Router tramite l' interfaccia HasUrlParameter <br>
      * Chiamato DOPO @PostConstruct ma PRIMA di beforeEnter() <br>
      *
      * @param beforeEvent  con la location, ui, navigationTarget, source, ecc
@@ -200,10 +200,6 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
-        this.removeAll();
-        this.setMargin(false);
-        this.setSpacing(false);
-
         //--Login and context della sessione
         //        this.mongo = appContext.getBean(AMongoService.class);
         //        context = vaadinService.getSessionContext();
@@ -256,9 +252,9 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
         if (alertPlacehorder != null && header != null) {
             alertPlacehorder.add(header);
+            this.add(alertPlacehorder);
         }
 
-        this.add(alertPlacehorder);
     }
 
 
@@ -267,10 +263,10 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * <p>
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nella List <br>
-     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni <br>
+     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
     protected void fixTopLayout() {
     }
@@ -280,8 +276,8 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Costruisce il 'corpo' centrale della view <br>
      * <p>
      * Differenziato tra AViewList e AViewForm <br>
-     * Costruisce un'istanza dedicata <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+     * Costruisce un' istanza dedicata <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      */
     protected void fixBody() {
     }
@@ -292,10 +288,10 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * <p>
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nel Form <br>
-     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni <br>
+     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
      */
     protected void fixBottomLayout() {
     }

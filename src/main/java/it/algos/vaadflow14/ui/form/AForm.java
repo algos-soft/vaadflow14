@@ -302,7 +302,7 @@ public class AForm extends VerticalLayout {
             return;
         }
 
-        this.usaFieldNote = annotation.isUsaFieldNote(entityClazz);
+        this.usaFieldNote = annotation.isUsaNote(entityClazz);
 
         //--Crea un nuovo binder (vuoto) per questo Form e questa entityBean
         binder = new Binder(entityClazz);

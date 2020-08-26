@@ -44,8 +44,16 @@ public @interface AIEntity {
      *
      * @return the status
      */
-    boolean usaFieldNote() default false;
+    boolean usaNote() default false;
 
+
+    /**
+     * (Optional) registra la creazione e la modifica
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaCreazioneModifica() default false;
 
 
 }

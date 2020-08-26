@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
@@ -36,7 +37,8 @@ public class FlowData extends AData {
      * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void initData() {
-        //        checkSingolaCollection(Role.class);
+        checkSingolaCollection(Company.class);
+
         checkSingolaCollection(Utente.class);
 
         checkSingolaCollection(Secolo.class);

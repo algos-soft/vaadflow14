@@ -65,12 +65,12 @@ public class MainLayout extends AppLayout {
 
 
     /**
-     * Costruttore con una classe di servizio iniettata. <br>
+     * Costruttore con alcune classi di servizio iniettate. <br>
      *
      * @param layoutService the layout service
      */
     @Autowired
-    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService) {
+    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService,TopbarComponent topbarComponent) {
         setPrimarySection(Section.DRAWER);
 
         //--allinea il login alla sessione
@@ -86,7 +86,7 @@ public class MainLayout extends AppLayout {
 
         this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
 
-        addToNavbar(createTopBar());
+        addToNavbar(topbarComponent);
 
         // questo non lo metterei
         if (FlowVar.usaSecurity) {
@@ -97,34 +97,6 @@ public class MainLayout extends AppLayout {
 
     }
 
-
-    /**
-     * Se l' applicazione è multiCompany e multiUtente, li visualizzo <br>
-     * Altrimenti il nome del programma <br>
-     */
-    protected TopbarComponent createTopBar() {
-        TopbarComponent topbar;
-        String style;
-
-        //        if (text.isValid(getUserName())) {
-        //            Company company=login.getCompany();
-        //            topbar = new TopbarComponent(login, FlowVar.pathLogo, company.getCode().toUpperCase(), "", getUserName());
-        //        } else {
-        //            topbar = new TopbarComponent(FlowVar.pathLogo, getDescrizione());
-        //        }
-        topbar = new TopbarComponent((ALogin) null, FlowVar.pathLogo, FlowVar.projectName, FlowVar.projectDescrizione, "romualdo");
-
-        style = "display:inline-flex; width:100%; flex-direction:row; padding-left:0em; padding-top:0.5em; padding-bottom:0.5em; padding-right:1em; align-items:center";
-        topbar.getElement().setAttribute("style", style);
-        //        topbar.setProfileListener(() -> profilePressed());
-
-        topbar.setLogoutListener(() -> {
-            VaadinSession.getCurrent().getSession().invalidate();
-            UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
-        });
-
-        return topbar;
-    }
 
 
     private void logout() {

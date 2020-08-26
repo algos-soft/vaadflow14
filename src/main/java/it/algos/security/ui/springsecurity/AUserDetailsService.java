@@ -1,12 +1,8 @@
 package it.algos.security.ui.springsecurity;
 
-import com.vaadin.flow.server.VaadinRequest;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinServletRequest;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.login.ALogin;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
@@ -37,7 +33,6 @@ public class AUserDetailsService implements UserDetailsService {
     public PasswordEncoder passwordEncoder;
 
 
-
     public AUserDetailsService() {
     }// end of Spring constructor
 
@@ -52,10 +47,14 @@ public class AUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String uniqueUserName) throws UsernameNotFoundException {
         String passwordHash = VUOTA;
+        Utente utente;
         Company company;
         Collection<? extends GrantedAuthority> authorities;
         AMongoService mongo = StaticContextAccessor.getBean(AMongoService.class);
-        Utente utente = (Utente) mongo.findOneUnique(Utente.class, FlowCost.FIELD_USER, uniqueUserName);
+
+        uniqueUserName = uniqueUserName.toLowerCase();
+        utente = (Utente) mongo.findById(Utente.class, uniqueUserName);
+//        utente = (Utente) mongo.findOneUnique(Utente.class, FlowCost.FIELD_USER, uniqueUserName);
 
         if (utente != null) {
             passwordHash = passwordEncoder.encode(utente.getPassword());

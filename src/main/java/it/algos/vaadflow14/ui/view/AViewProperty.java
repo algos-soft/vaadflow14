@@ -195,6 +195,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Invocare PRIMA il metodo della superclasse <br>
      */
     protected void fixLayout() {
+        this.removeAll();
         this.setMargin(false);
         this.setSpacing(true);
         this.setPadding(true);
@@ -215,17 +216,19 @@ public abstract class AViewProperty extends VerticalLayout {
         this.topPlacehorder.setPadding(false);
 
         this.bodyPlacehorder = new VerticalLayout();
-        this.bottomPlacehorder = new VerticalLayout();
-        this.footerPlacehorder = new VerticalLayout();
-
+        this.bodyPlacehorder.removeAll();
         bodyPlacehorder.setMargin(false);
         bodyPlacehorder.setSpacing(false);
         bodyPlacehorder.setPadding(false);
 
+        this.bottomPlacehorder = new VerticalLayout();
+        this.bottomPlacehorder.removeAll();
         bottomPlacehorder.setMargin(false);
         bottomPlacehorder.setSpacing(false);
         bottomPlacehorder.setPadding(false);
 
+        this.footerPlacehorder = new VerticalLayout();
+        this.footerPlacehorder.removeAll();
         footerPlacehorder.setMargin(false);
         footerPlacehorder.setSpacing(false);
         footerPlacehorder.setPadding(false);

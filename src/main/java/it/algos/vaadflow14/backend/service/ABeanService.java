@@ -12,7 +12,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -83,7 +86,7 @@ public class ABeanService extends AAbstractService {
      * @param operationForm tipologia di Form in uso
      * @param binder        layer tra DB e UI
      */
-    public List< AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
+    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
         return creaFields(entityBean, operationForm, binder, (List) null);
     }
 
@@ -101,8 +104,8 @@ public class ABeanService extends AAbstractService {
      * @param binder        layer tra DB e UI
      * @param listaNomi     delle property da associare al binder
      */
-    public List< AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
-        List< AField> fieldsList = new ArrayList<>();
+    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
+        List<AField> fieldsList = new ArrayList<>();
         AIField field;
 
         if (array.isEmpty(listaNomi)) {
@@ -137,7 +140,7 @@ public class ABeanService extends AAbstractService {
             return false;
         }
 
-        //        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+        entityBeanRegistrataSulDatabaseMongo = mongo.find(entityBeanCurrent);
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
 

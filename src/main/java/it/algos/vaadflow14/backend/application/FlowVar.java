@@ -29,7 +29,7 @@ public class FlowVar {
 
 
     /**
-     * Controlla se l'applicazione gira in 'debug mode' oppure no <br>
+     * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
      * Di default (per sicurezza) uguale a true <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */
@@ -56,8 +56,10 @@ public class FlowVar {
     public static boolean usaCompany;
 
 
+
+
     /**
-     * Nome identificativo dell'applicazione <br>
+     * Nome identificativo dell' applicazione <br>
      * Usato (eventualmente) nella barra di menu in testa pagina <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
@@ -66,14 +68,14 @@ public class FlowVar {
 
 
     /**
-     * Descrizione completa dell'applicazione <br>
+     * Descrizione completa dell' applicazione <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
      */
     public static String projectDescrizione;
 
 
     /**
-     * Versione dell'applicazione <br>
+     * Versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */
@@ -81,7 +83,7 @@ public class FlowVar {
 
 
     /**
-     * Data della versione dell'applicazione <br>
+     * Data della versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */

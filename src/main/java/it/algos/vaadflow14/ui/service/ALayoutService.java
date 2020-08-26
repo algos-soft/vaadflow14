@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -200,6 +202,21 @@ public class ALayoutService extends AAbstractService {
 
 
     /**
+     * Create profile button but don't add it yet; admin view might be added. <br>
+     * in between (see #onAttach()) <br>
+     *
+     * @return the button
+     */
+    public Button creaProfileButton() {
+        Button profileButton;
+
+        profileButton = createMenuButton("Profile", VaadinIcon.EDIT.create());
+        profileButton.getElement().setAttribute("title", "Profile (Ctrl+E)");
+
+        return profileButton;
+    }
+
+    /**
      * Create logout button but don't add it yet; admin view might be added. <br>
      * in between (see #onAttach()) <br>
      *
@@ -214,6 +231,12 @@ public class ALayoutService extends AAbstractService {
         return logoutButton;
     }
 
+
+
+    //    private void logout() {
+//        VaadinSession.getCurrent().getSession().invalidate();
+//        UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
+//    }
 
     private Button createMenuButton(String caption, Icon icon) {
         final Button routerButton = new Button(caption);

@@ -3,14 +3,12 @@ package it.algos.vaadflow14.backend.packages.security;
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.packages.company.Company;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,11 +38,11 @@ import java.util.Collection;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Utente", keyPropertyName = "username")
+@AIEntity(recordName = "Utente", keyPropertyName = "username", usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
 @AIList(fields = "username,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
 @AIForm(fields = "username,password,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
-public class Utente extends AEntity implements UserDetails {
+public class Utente extends ACEntity implements UserDetails {
 
     /**
      * versione della classe per la serializzazione
@@ -52,15 +50,15 @@ public class Utente extends AEntity implements UserDetails {
     private final static long serialVersionUID = 1L;
 
 
-    /**
-     * Riferimento dinamico alla company CON @DBRef <br>
-     * Nullo se il flag FlowVar.usaCompany=false <br>
-     * Obbligatorio se il flag FlowVar.usaCompany=true <br>
-     */
-    @DBRef
-    @AIField(type = AETypeField.combo)
-    @AIColumn()
-    public Company company;
+    //    /**
+    //     * Riferimento dinamico alla company CON @DBRef <br>
+    //     * Nullo se il flag FlowVar.usaCompany=false <br>
+    //     * Obbligatorio se il flag FlowVar.usaCompany=true <br>
+    //     */
+    //    @DBRef
+    //    @AIField(type = AETypeField.combo)
+    //    @AIColumn()
+    //    public Company company;
 
 
     /**
@@ -131,8 +129,6 @@ public class Utente extends AEntity implements UserDetails {
 
         return listAuthority;
     }
-
-
 
 
     /**

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.company;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -141,6 +142,51 @@ public class CompanyLogic extends ALogic {
     @Override
     public Company findById(String keyID) {
         return (Company) super.findById(keyID);
+    }
+
+
+    /**
+     * Creazione di alcuni dati iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return false se non esiste il metodo sovrascritto
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    @Override
+    public boolean reset() {
+        super.deleteAll();
+
+        crea("Algos", "Company Algos di prova");
+        crea("Demo", "Company demo");
+        crea("Test", "Company di test");
+
+        return mongo.isValid(entityClazz);
+    }
+
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getAlgos() {
+        return findById(FlowCost.COMPANY_ALGOS);
+    }
+
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getDemo() {
+        return findById(FlowCost.COMPANY_DEMO);
+    }
+
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getTest() {
+        return findById(FlowCost.COMPANY_TEST);
     }
 
 }

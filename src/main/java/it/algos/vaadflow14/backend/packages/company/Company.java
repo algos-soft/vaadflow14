@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -34,7 +33,7 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Company", keyPropertyName = "code", usaFieldNote = true)
+@AIEntity(recordName = "Company", keyPropertyName = "code", usaNote = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.FACTORY, sortProperty = "ordine")
 @AIList(fields = "ordine,code,telefono,email,descrizione")
 @AIForm(fields = "ordine,code,telefono,email,descrizione")
@@ -58,7 +57,7 @@ public class Company extends AEntity {
      * codice di riferimento (obbligatorio)
      */
     @NotBlank()
-    @Size(min = 3, max = 3)
+    @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 8)
     @AIColumn(widthEM = 6)
