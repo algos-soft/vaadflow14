@@ -290,6 +290,7 @@ public abstract class ALogic implements AILogic {
      */
     protected String wikiPageTitle;
 
+
     /**
      * Flag di preferenza per i messaggi di avviso in alertPlacehorder <br>
      * Si può usare la classe AHeaderWrap con i messaggi suddivisi per ruolo (user, admin, developer) <br>
@@ -1291,7 +1292,7 @@ public abstract class ALogic implements AILogic {
             entityBean = form.getValidBean();
         }
 
-        return save(entityBean);
+        return entityBean != null ? save(entityBean) : false;
     }
 
 

@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.ui.form.AForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -72,6 +73,41 @@ public class PreferenzaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+    }
+
+
+    /**
+     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Costruisce un' istanza dedicata <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return componente grafico per il placeHolder
+     */
+    @Override
+    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
+        return appContext.getBean(PreferenzaForm.class, entityClazz);
+    }
+
+
+    /**
+     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Costruisce un' istanza dedicata <br>
+     * Passa all' istanza un wrapper di dati <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+     *
+     * @param entityBean interessata
+     *
+     * @return componente grafico per il placeHolder
+     */
+    @Override
+    public AForm getBodyFormLayout(AEntity entityBean) {
+        return appContext.getBean(PreferenzaForm.class);
     }
 
 
@@ -150,35 +186,34 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
-        entityBean= super.beforeSave(entityBean, operation);
+        Preferenza entityPreferenza = (Preferenza) super.beforeSave(entityBean, operation);
 
-        return fixValue(entityBean);
+        return fixValue(entityPreferenza);
     }
 
 
     /**
      * Regola il valore (obbligatorio) della entity prima di salvarla <br>
      *
-     *
-     * @param entityBean da regolare prima del save
+     * @param entityPreferenza da regolare prima del save
      *
      * @return true se la entity è stata salvata
      */
-    public AEntity fixValue(AEntity entityBean) {
+    public Preferenza fixValue(Preferenza entityPreferenza) {
         Object value = "mario";
-//        Preferenza entity = setValue(keyCode, value, companyPrefix);
-//
-//        if (entity != null) {
-//            entity = (Preferenza) this.save(entity);
-//            salvata = entity != null;
-//        }// end of if cycle
+        //        Preferenza entity = setValue(keyCode, value, companyPrefix);
+        //
+        //        if (entity != null) {
+        //            entity = (Preferenza) this.save(entity);
+        //            salvata = entity != null;
+        //        }// end of if cycle
 
-        if (value==null) {
-            entityBean=null;
+        if (value == null) {
+            entityPreferenza = null;
         }
+        entityPreferenza.value = AETypePref.string.objectToBytes(value);
 
-
-        return entityBean;
-    } // end of method
+        return entityPreferenza;
+    }
 
 }

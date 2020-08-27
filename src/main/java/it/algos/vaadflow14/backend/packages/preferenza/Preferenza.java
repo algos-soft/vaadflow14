@@ -43,7 +43,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
 @AIList(fields = "code,descrizione")
-@AIForm(fields = "code,descrizione")
+@AIForm(fields = "ordine,code,descrizione,type")
 public class Preferenza extends ACEntity {
 
     /**

@@ -1385,7 +1385,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the name (columnService) of the field
+     * @return the width of the field
      */
     public String getFormWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
@@ -1420,7 +1420,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the class for the specific columnService
+     * @return the class
      */
     @SuppressWarnings("all")
     public Class getComboClass(Field reflectionJavaField) {
@@ -1432,6 +1432,25 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return comboClazz == Object.class ? null : comboClazz;
+    }
+
+    /**
+     * Get the class of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the class
+     */
+    @SuppressWarnings("all")
+    public Class getEnumClass(Field reflectionJavaField) {
+        Class enumClazz = null;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            enumClazz = annotation.enumClazz();
+        }
+
+        return enumClazz == Object.class ? null : enumClazz;
     }
 
 

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -191,6 +192,8 @@ public class AFieldService extends AAbstractService {
                         }
                     }
                 case enumeration:
+                    field = getEnumerationField(reflectionJavaField,caption);
+                    break;
                 case gridShowOnly:
                     break;
                 default:
@@ -199,12 +202,14 @@ public class AFieldService extends AAbstractService {
             }
         }
 
-        if (field != null) {
-            field.setWidth(width);
+        if (field == null) {
+            return null;
         }
 
+        field.setWidth(width);
+
         if (field != null && text.isValid(placeholder)) {
-//            field.setPlaceholder(placeholder);//@todo Funzionalità ancora da implementare
+            //            field.setPlaceholder(placeholder);//@todo Funzionalità ancora da implementare
         }
 
         if (hasFocus) {
@@ -333,6 +338,47 @@ public class AFieldService extends AAbstractService {
                 builder.bind(fieldName);
             }
         }
+    }
+
+
+    /**
+     * Prima cerca i valori nella @Annotation items=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una classe enumeration definita in enumClazz=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una collection definita con serviceClazz=...dell' interfaccia AIField <br>
+     *
+     * @param reflectionJavaField di riferimento
+     * @param caption             label sopra il field
+     */
+    public AField getEnumerationField(Field reflectionJavaField, String caption) {
+        AField field = null;
+        List<String> enumItems = null;
+        List enumObjects = null;
+        Class enumClazz = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        enumItems = annotation.getEnumItems(reflectionJavaField);
+        if (array.isEmpty(enumItems)) {
+            enumClazz = annotation.getEnumClass(reflectionJavaField);
+            if (enumClazz != null) {
+                Object[] elementi = enumClazz.getEnumConstants();
+                if (elementi != null) {
+                    enumObjects = Arrays.asList(elementi);
+                    field = new AComboField(caption);
+                    ((AComboField) field).setItem(enumObjects);
+                    return field;
+                }
+            }
+        }
+
+        if (array.isValid(enumItems)) {
+            field = new AComboField(caption);
+            ((AComboField) field).setItem(enumItems);
+        }
+
+        return field;
     }
 
 }
