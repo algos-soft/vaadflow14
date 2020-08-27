@@ -34,9 +34,7 @@ import java.util.List;
  * La scheda grafica è composta da due diversi FormLayout sovrapposti in modo da poter avere due diverse suddivisioni
  * di colonne. Tipicamente due nella prima ed una sola nella seconda <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AForm extends VerticalLayout {
+public abstract class AForm extends VerticalLayout {
 
     /**
      * Istanza di una interfaccia <br>

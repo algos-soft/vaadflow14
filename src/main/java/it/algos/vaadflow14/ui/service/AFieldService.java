@@ -145,7 +145,7 @@ public class AFieldService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case text:
-                    field = new ATextField(fieldKey, caption);
+                    field = appContext.getBean(ATextField.class, fieldKey, caption);
                     break;
                 case email:
                     field = new AEmailField(fieldKey, caption);
@@ -192,7 +192,7 @@ public class AFieldService extends AAbstractService {
                         }
                     }
                 case enumeration:
-                    field = getEnumerationField(reflectionJavaField,caption);
+                    field = getEnumerationField(reflectionJavaField, caption);
                     break;
                 case gridShowOnly:
                     break;

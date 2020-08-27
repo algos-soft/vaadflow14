@@ -27,6 +27,7 @@ import it.algos.vaadflow14.ui.button.WrapButtons;
 import it.algos.vaadflow14.ui.enumerastion.AEButton;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
+import it.algos.vaadflow14.ui.form.AGenericForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import it.algos.vaadflow14.ui.header.AHeader;
 import it.algos.vaadflow14.ui.header.AHeaderList;
@@ -629,7 +630,7 @@ public abstract class ALogic implements AILogic {
 
         //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
         if (entityClazz != null) {
-            form = appContext.getBean(AForm.class, entityClazz);
+            form = appContext.getBean(AGenericForm.class, entityClazz);
         }
 
         return form;
@@ -654,7 +655,7 @@ public abstract class ALogic implements AILogic {
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            form = appContext.getBean(AForm.class, getWrapForm(entityBean));
+            form = appContext.getBean(AGenericForm.class, getWrapForm(entityBean));
         }
 
         return form;

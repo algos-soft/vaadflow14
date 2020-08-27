@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.ui.form.AForm;
+import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -107,7 +108,7 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AForm getBodyFormLayout(AEntity entityBean) {
-        return appContext.getBean(PreferenzaForm.class);
+        return appContext.getBean(PreferenzaForm.class,getWrapForm(entityBean));
     }
 
 

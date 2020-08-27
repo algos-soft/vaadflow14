@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Scope;
  * Time: 17:30
  * Simple layer around TextField <br>
  * Banale, ma serve per avere tutti i fields omogenei <br>
- * Normalmente i fields vengono creati con new xxxField() <br>
- * Se necessitano di injection, occorre usare appContext.getBean(xxxField.class) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -24,12 +22,19 @@ public class ATextField extends AField<String> {
     private final TextField innerField;
 
 
-    public ATextField(String fieldKey, String label) {
-        innerField = new TextField(label);
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ATextField.class, fieldKey, caption) <br>
+     *
+     * @param fieldKey nome interno del field
+     * @param caption  label visibile del field
+     */
+    public ATextField(String fieldKey, String caption) {
+        innerField = new TextField(caption);
         super.fieldKey = fieldKey;
         innerField.setAutoselect(true);
         add(innerField);
-    }
+    } // end of SpringBoot constructor
 
 
     @Override
