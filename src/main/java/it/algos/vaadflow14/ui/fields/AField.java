@@ -13,9 +13,24 @@ import java.util.Collection;
  * Date: mer, 10-giu-2020
  * Time: 16:25
  */
-public class AField<T> extends CustomField<T> implements AIField {
+public abstract class AField<T> extends CustomField<T> implements AIField {
 
     protected String fieldKey;
+
+    protected String caption;
+
+
+//    /**
+//     * Costruttore con parametri <br>
+//     * L' istanza viene costruita nella sottoclasse concreta <br>
+//     *
+//     * @param fieldKey nome interno del field
+//     * @param caption  label visibile del field
+//     */
+//    public AField(String fieldKey, String caption) {
+//        this.fieldKey = fieldKey;
+//        this.caption = caption;
+//    } // end of SpringBoot constructor
 
 
     @Override
@@ -76,7 +91,6 @@ public class AField<T> extends CustomField<T> implements AIField {
     }
 
 
-
     @Override
     public void setAutofocus() {
     }
@@ -86,6 +100,13 @@ public class AField<T> extends CustomField<T> implements AIField {
     public String getKey() {
         return fieldKey;
     }
+
+
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        super.setErrorMessage(errorMessage);
+    }
+
 
 }
 

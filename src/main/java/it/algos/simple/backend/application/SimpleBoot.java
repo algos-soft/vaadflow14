@@ -3,6 +3,7 @@ package it.algos.simple.backend.application;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
 import it.algos.simple.backend.packages.Alfa;
+import it.algos.simple.backend.packages.Beta;
 import it.algos.simple.ui.views.DeltaView;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
@@ -94,6 +95,7 @@ public class SimpleBoot extends FlowBoot {
         super.addMenuRoutes();
 
         FlowVar.menuRouteList.add(Alfa.class);
+        FlowVar.menuRouteList.add(Beta.class);
         FlowVar.menuRouteList.add(DeltaView.class);
         FlowVar.menuRouteList.add(OmegaView.class);
         //        menuRouteList.add(Anno.class);

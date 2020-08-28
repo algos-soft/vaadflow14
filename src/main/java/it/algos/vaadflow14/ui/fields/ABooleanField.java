@@ -6,9 +6,13 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.service.ATextService;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +25,20 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * User: gac
  * Date: gio, 11-giu-2020
  * Time: 21:54
- * Simple layer around boolean value <br>
- * Banale, ma serve per avere tutti i fields omogenei <br>
- * Normalmente i fields vengono creati con new xxxField() <br>
- * Se necessitano di injection, occorre usare appContext.getBean(xxxField.class) <br>
+ * Layer around boolean value <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ABooleanField extends AField<Boolean> {
 
-    //    private AbstractSinglePropertyField innerField;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ATextService text;
+
     private boolean usaCheckBox;
 
     private Checkbox checkBox;
@@ -39,31 +47,45 @@ public class ABooleanField extends AField<Boolean> {
 
     private AETypeBool typeBool;
 
-    private String captionRadio = VUOTA;
+    private String boolEnum = VUOTA;
 
     private String firstItem;
 
     private String secondItem;
 
 
-    public ABooleanField() {
-        this(VUOTA, AETypeBool.checkBox);
-    }
-
-
-    public ABooleanField(String label, AETypeBool typeBool) {
-        this(label, typeBool, VUOTA);
-    }
-
-
-    public ABooleanField(String label, AETypeBool typeBool, String captionRadio) {
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ABooleanField.class, fieldKey, typeBool, caption) <br>
+     *
+     * @param fieldKey nome interno del field
+     * @param typeBool per la tipologia di visualizzazione
+     * @param caption  label visibile del field
+     * @param boolEnum valori custom della scelta booleana
+     */
+    public ABooleanField(String fieldKey, AETypeBool typeBool, String caption, String boolEnum) {
         this.typeBool = typeBool;
-        this.captionRadio = captionRadio;
-        initView(label);
+        this.caption = caption;
+        this.boolEnum = boolEnum;
+    } // end of SpringBoot constructor
+
+
+    /**
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
+     * del costruttore e PRIMA di qualsiasi altro metodo <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     */
+    @PostConstruct
+    protected void postConstruct() {
+        initView();
     }
 
 
-    protected void initView(String label) {
+    protected void initView() {
         usaCheckBox = typeBool == AETypeBool.checkBox;
 
         if (usaCheckBox) {
@@ -75,22 +97,23 @@ public class ABooleanField extends AField<Boolean> {
         if (typeBool != null) {
             switch (typeBool) {
                 case checkBox:
-                    checkBox.setLabelAsHtml(label);
+                    checkBox.setLabelAsHtml(caption);
                     break;
                 case radioTrueFalse:
                     radioGroup.setItems("Vero", "Falso");
-                    radioGroup.setLabel(label);
+                    radioGroup.setLabel(caption);
                     break;
                 case radioSiNo:
                     radioGroup.setItems("Si", "No");
-                    radioGroup.setLabel(label);
+                    radioGroup.setLabel(caption);
                     break;
                 case radioCustomHoriz:
                     radioGroup.setItems(getItems());
                     break;
                 case radioCustomVert:
                     radioGroup.setItems(getItems());
-                    radioGroup.setLabel(label);
+                    radioGroup.setLabel(caption);
+                    //                    radioGroup.getElement().setAttribute("style", "spacing:0em; margin:0em; padding:0em;");
                     radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
                     break;
                 default:
@@ -111,17 +134,19 @@ public class ABooleanField extends AField<Boolean> {
         List<String> items = new ArrayList<>();
         String[] parti;
 
-        if (captionRadio != null && captionRadio.length() > 0 && captionRadio.contains(VIRGOLA)) {
-            parti = captionRadio.split(VIRGOLA);
+        if (text.isValid(boolEnum) && boolEnum.contains(VIRGOLA)) {
+            parti = boolEnum.split(VIRGOLA);
             if (parti != null && parti.length == 2) {
                 firstItem = parti[0].trim();
                 secondItem = parti[1].trim();
+                firstItem = text.primaMaiuscola(firstItem);
+                secondItem = text.primaMaiuscola(secondItem);
                 items.add(firstItem);
                 items.add(secondItem);
             }
         } else {
-            items.add("Vero");
-            items.add("Falso");
+            items.add("Si");
+            items.add("No");
         }
 
         return items;
@@ -187,6 +212,7 @@ public class ABooleanField extends AField<Boolean> {
                 radioGroup.setValue(secondItem);
             }
         }
+        checkBox.setValue(value);
     }
 
 

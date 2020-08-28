@@ -27,4 +27,8 @@ public interface AIField {
 
     public String getKey();
 
+    public void setErrorMessage(String errorMessage);
+
+
+
 }

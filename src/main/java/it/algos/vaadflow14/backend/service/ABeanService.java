@@ -86,7 +86,7 @@ public class ABeanService extends AAbstractService {
      * @param operationForm tipologia di Form in uso
      * @param binder        layer tra DB e UI
      */
-    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
+    public List<AIField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
         return creaFields(entityBean, operationForm, binder, (List) null);
     }
 
@@ -104,8 +104,8 @@ public class ABeanService extends AAbstractService {
      * @param binder        layer tra DB e UI
      * @param listaNomi     delle property da associare al binder
      */
-    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
-        List<AField> fieldsList = new ArrayList<>();
+    public List<AIField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
+        List<AIField> fieldsList = new ArrayList<>();
         AIField field;
 
         if (array.isEmpty(listaNomi)) {

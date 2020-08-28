@@ -30,8 +30,9 @@ public class ATextField extends AField<String> {
      * @param caption  label visibile del field
      */
     public ATextField(String fieldKey, String caption) {
-        innerField = new TextField(caption);
         super.fieldKey = fieldKey;
+        super.caption = caption;
+        innerField = new TextField(caption);
         innerField.setAutoselect(true);
         add(innerField);
     } // end of SpringBoot constructor

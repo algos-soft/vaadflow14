@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.Collection;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-
 /**
  * Project vaadflow15
  * Created by Algos
@@ -18,8 +16,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Time: 22:00
  * Simple layer around ComboBox value <br>
  * Banale, ma serve per avere tutti i fields omogenei <br>
- * Normalmente i fields vengono creati con new xxxField() <br>
- * Se necessitano di injection, occorre usare appContext.getBean(xxxField.class) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -27,26 +23,45 @@ public class AComboField<T> extends AField<Object> {
 
     private final ComboBox innerField;
 
-
-    public AComboField() {
-        this(VUOTA);
-    }
+    private String placeholder;
 
 
-    public AComboField(String label) {
-        this(label, VUOTA);
-    }
-
-
-    public AComboField(String label, String placeholder) {
-        innerField = new ComboBox(label);
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption) <br>
+     *
+     * @param fieldKey nome interno del field
+     * @param caption  label visibile del field
+     */
+    public AComboField(String fieldKey, String caption) {
+        super.fieldKey = fieldKey;
+        super.caption = caption;
+        innerField = new ComboBox(caption);
         add(innerField);
-    }
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, placeholder) <br>
+     *
+     * @param fieldKey    nome interno del field
+     * @param caption     label visibile del field
+     * @param placeholder iniziale
+     */
+    public AComboField(String fieldKey, String caption, String placeholder) {
+        innerField = new ComboBox(caption);
+        super.fieldKey = fieldKey;
+        this.placeholder = placeholder;
+        add(innerField);
+    } // end of SpringBoot constructor
+
 
     @Override
     public void setItem(Collection collection) {
         innerField.setItems(collection);
     }
+
 
     @Override
     protected Object generateModelValue() {
@@ -58,6 +73,7 @@ public class AComboField<T> extends AField<Object> {
     protected void setPresentationValue(Object value) {
         innerField.setValue(value);
     }
+
 
     @Override
     public AbstractSinglePropertyField getBinder() {

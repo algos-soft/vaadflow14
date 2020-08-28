@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
  * Date: lun, 28-mag-2018
  * Time: 08:37
  */
+@Deprecated
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ACheckBox extends Checkbox {

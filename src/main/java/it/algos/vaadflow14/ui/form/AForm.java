@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.entity.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.AField;
+import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -172,7 +173,7 @@ public abstract class AForm extends VerticalLayout {
      * Lista ordinata di tutti i fields del form <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      */
-    protected List<AField> fieldsList;
+    protected List<AIField> fieldsList;
 
     /**
      * Mappa di tutti i fields del form <br>
@@ -350,7 +351,7 @@ public abstract class AForm extends VerticalLayout {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     public void creaFieldsExtra() {
-        AField field = null;
+        AIField field = null;
 
         if (usaFieldNote) {
             field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE);
@@ -369,7 +370,7 @@ public abstract class AForm extends VerticalLayout {
         topLayout.removeAll();
 
         if (array.isValid(fieldsList)) {
-            for (AField field : fieldsList) {
+            for (AIField field : fieldsList) {
                 topLayout.add(field.get());
             }
         } else {
@@ -386,7 +387,7 @@ public abstract class AForm extends VerticalLayout {
             if (fieldsMap == null) {
                 fieldsMap = new HashMap<String, AField>();
 
-                for (AField field : fieldsList) {
+                for (AIField field : fieldsList) {
                     fieldsMap.put(field.getKey(), field.get());
                 }
             }
@@ -400,12 +401,12 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void readFieldsExtra() {
-        AField field = null;
+        AIField field = null;
 
         if (usaFieldNote) {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                field.setValue(entityBean.note);
+                field.get().setValue(entityBean.note);
             }
         }
     }

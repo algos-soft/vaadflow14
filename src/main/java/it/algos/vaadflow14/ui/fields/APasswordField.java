@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * User: gac
  * Date: gio, 20-ago-2020
  * Time: 08:23
+ * Simple layer around PasswordField <br>
+ * Banale, ma serve per avere tutti i fields omogenei <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -21,12 +24,20 @@ public class APasswordField extends AField<String> {
     private final PasswordField innerField;
 
 
-    public APasswordField(String fieldKey, String label) {
-        innerField = new PasswordField(label);
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(APasswordField.class, fieldKey, caption) <br>
+     *
+     * @param fieldKey nome interno del field
+     * @param caption  label visibile del field
+     */
+    public APasswordField(String fieldKey, String caption) {
         super.fieldKey = fieldKey;
+        super.caption = caption;
+        innerField = new PasswordField(caption);
         innerField.setAutoselect(true);
         add(innerField);
-    }
+    } // end of SpringBoot constructor
 
 
     @Override

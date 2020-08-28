@@ -246,12 +246,13 @@ public @interface AIField {
      */
     AETypeBool typeBool() default AETypeBool.checkBox;
 
+
     /**
-     * (Optional) The two string for boolean type.
+     * (Optional) The two strings for boolean type.
      * Defaults to vuota.
      *
      * @return the strings
      */
-    String captionRadio() default VUOTA;
+    String boolEnum() default VUOTA;
 
 }

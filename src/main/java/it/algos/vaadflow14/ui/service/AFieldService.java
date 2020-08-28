@@ -63,7 +63,7 @@ public class AFieldService extends AAbstractService {
      * @param propertyName della property
      */
     public AIField create(AEOperation operation, Binder binder, AEntity entityBean, String propertyName) {
-        AField field = null;
+        AIField field = null;
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
 
         if (reflectionJavaField == null) {
@@ -94,7 +94,7 @@ public class AFieldService extends AAbstractService {
      * @param entityClazz  di riferimento
      * @param propertyName della property
      */
-    public AField creaOnly(Class entityClazz, String propertyName) {
+    public AIField creaOnly(Class entityClazz, String propertyName) {
         Field reflectionJavaField = reflection.getField(entityClazz, propertyName);
 
         if (reflectionJavaField != null) {
@@ -111,11 +111,11 @@ public class AFieldService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento
      */
-    public AField creaOnly(Field reflectionJavaField) {
-        AField field = null;
+    public AIField creaOnly(Field reflectionJavaField) {
+        AIField field = null;
         String fieldKey;
         String caption = VUOTA;
-        String captionRadio = VUOTA;
+        String boolEnum = VUOTA;
         AETypeField type = null;
         AETypeBool typeBool = AETypeBool.checkBox;
         String width = VUOTA;
@@ -133,7 +133,7 @@ public class AFieldService extends AAbstractService {
         fieldKey = reflectionJavaField.getName();
         type = annotation.getFormType(reflectionJavaField);
         caption = annotation.getFormFieldNameCapital(reflectionJavaField);
-        captionRadio = annotation.getCaptionRadio(reflectionJavaField);
+        boolEnum = annotation.getBoolEnum(reflectionJavaField);
         width = annotation.getFormWith(reflectionJavaField);
         placeholder = annotation.getPlaceholder(reflectionJavaField);
         hasFocus = annotation.focus(reflectionJavaField);
@@ -145,24 +145,22 @@ public class AFieldService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case text:
+                case phone:
                     field = appContext.getBean(ATextField.class, fieldKey, caption);
                     break;
                 case email:
-                    field = new AEmailField(fieldKey, caption);
+                    field = appContext.getBean(AEmailField.class, fieldKey, caption);
                     ((AEmailField) field).getMail().setClearButtonVisible(true);
                     field.setErrorMessage("Inserisci un indirizzo eMail valido");
                     break;
-                case phone:
-                    field = new ATextField(fieldKey, caption);
-                    break;
                 case password:
-                    field = new APasswordField(fieldKey, caption);
+                    field = appContext.getBean(APasswordField.class, fieldKey, caption);
                     break;
                 case textArea:
-                    field = new ATextAreaField(fieldKey, caption);
+                    field = appContext.getBean(ATextAreaField.class, fieldKey, caption);
                     break;
                 case integer:
-                    field = new AIntegerField(fieldKey, caption);
+                    field = appContext.getBean(AIntegerField.class, fieldKey, caption);
                     if (field != null) {
                         if (intMin > 0) {
                             ((IntegerField) field.getBinder()).setHasControls(true);
@@ -177,14 +175,15 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case booleano:
-                    if (text.isValid(captionRadio)) {
-                        field = new ABooleanField(caption, typeBool, captionRadio);
-                    } else {
-                        field = new ABooleanField(caption, typeBool);
-                    }
+                    field = appContext.getBean(ABooleanField.class, fieldKey, typeBool, caption, boolEnum);
+                    //                    if (text.isValid(captionRadio)) {
+                    //                        field = new ABooleanField(caption, typeBool, captionRadio);
+                    //                    } else {
+                    //                        field = new ABooleanField(caption, typeBool);
+                    //                    }
                     break;
                 case combo:
-                    field = new AComboField(caption);
+                    field = appContext.getBean(AComboField.class, fieldKey, caption);
                     if (comboClazz != null) {
                         List items = mongo.findAll(comboClazz);
                         if (items != null) {
@@ -192,7 +191,7 @@ public class AFieldService extends AAbstractService {
                         }
                     }
                 case enumeration:
-                    field = getEnumerationField(reflectionJavaField, caption);
+                    field = getEnumerationField(reflectionJavaField, fieldKey, caption);
                     break;
                 case gridShowOnly:
                     break;
@@ -220,7 +219,7 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean, Field reflectionJavaField, AField field) throws Exception {
+    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean, Field reflectionJavaField, AIField field) throws Exception {
         Binder.BindingBuilder builder = null;
         AETypeField fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;
@@ -347,9 +346,10 @@ public class AFieldService extends AAbstractService {
      * Poi cerca i valori di una collection definita con serviceClazz=...dell' interfaccia AIField <br>
      *
      * @param reflectionJavaField di riferimento
+     * @param fieldKey            nome interno del field
      * @param caption             label sopra il field
      */
-    public AField getEnumerationField(Field reflectionJavaField, String caption) {
+    public AField getEnumerationField(Field reflectionJavaField, String fieldKey, String caption) {
         AField field = null;
         List<String> enumItems = null;
         List enumObjects = null;
@@ -366,7 +366,7 @@ public class AFieldService extends AAbstractService {
                 Object[] elementi = enumClazz.getEnumConstants();
                 if (elementi != null) {
                     enumObjects = Arrays.asList(elementi);
-                    field = new AComboField(caption);
+                    field = appContext.getBean(AComboField.class, fieldKey, caption);
                     ((AComboField) field).setItem(enumObjects);
                     return field;
                 }
@@ -374,7 +374,7 @@ public class AFieldService extends AAbstractService {
         }
 
         if (array.isValid(enumItems)) {
-            field = new AComboField(caption);
+            field = appContext.getBean(AComboField.class, fieldKey, caption);
             ((AComboField) field).setItem(enumItems);
         }
 

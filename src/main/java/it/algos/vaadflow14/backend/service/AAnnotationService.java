@@ -1786,13 +1786,13 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
-     * Get the 'caption' (two strings) of the property <br>
+     * Get the 'enum' (two strings) of the property <br>
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
      * @return the Strings
      */
-    public String getCaptionRadio(final Field reflectionJavaField) {
+    public String getBoolEnum(final Field reflectionJavaField) {
         String caption = VUOTA;
         AIField annotation = null;
 
@@ -1802,7 +1802,7 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
-            caption = annotation.captionRadio();
+            caption = annotation.boolEnum();
         }
 
         return caption;

@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,8 +15,6 @@ import org.springframework.context.annotation.Scope;
  * Time: 17:44
  * Simple layer around EmailField <br>
  * Banale, ma serve per avere tutti i fields omogenei <br>
- * Normalmente i fields vengono creati con new xxxField() <br>
- * Se necessitano di injection, occorre usare appContext.getBean(xxxField.class) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -24,12 +23,21 @@ public class AEmailField extends AField<String> {
     private final EmailField innerField;
 
 
-    public AEmailField(String fieldKey, String label) {
-        innerField = new EmailField(label);
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AEmailField.class, fieldKey, caption) <br>
+     *
+     * @param fieldKey nome interno del field
+     * @param caption  label visibile del field
+     */
+    public AEmailField(String fieldKey, String caption) {
         super.fieldKey = fieldKey;
+        super.caption = caption;
+        innerField = new EmailField(caption);
         innerField.setAutoselect(true);
         add(innerField);
-    }
+    } // end of SpringBoot constructor
+
 
 
     @Override
