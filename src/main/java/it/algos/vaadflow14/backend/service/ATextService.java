@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.html.Label;
+import javafx.scene.control.ComboBox;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -184,6 +185,31 @@ public class ATextService extends AAbstractService {
         return testoOut.trim();
     }
 
+
+    /**
+     * Elimina il testo prima di tagIniziale. <br>
+     * <p>
+     * Esegue solo se il testo è valido <br>
+     * Se tagIniziale è vuoto, restituisce il testo <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param testoIn       ingresso
+     * @param tagIniziale da dove inizia il testo da tenere
+     *
+     * @return testo ridotto in uscita
+     */
+    public String levaTestaDa(final String testoIn, String tagIniziale) {
+        String testoOut = testoIn.trim();
+
+        if (this.isValid(testoOut) && this.isValid(tagIniziale)) {
+            tagIniziale = tagIniziale.trim();
+            if (testoOut.contains(tagIniziale)) {
+                testoOut = testoOut.substring(testoOut.indexOf(tagIniziale)+tagIniziale.length());
+            }
+        }
+
+        return testoOut.trim();
+    }
 
     /**
      * Elimina dal testo il tagFinale, se esiste. <br>
@@ -622,5 +648,6 @@ public class ATextService extends AAbstractService {
 
         return stringaOut;
     }
+
 
 }

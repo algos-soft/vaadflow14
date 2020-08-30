@@ -1,8 +1,11 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.shared.Registration;
+import it.algos.vaadflow14.backend.service.ALogService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 
@@ -14,6 +17,14 @@ import java.util.Collection;
  * Time: 16:25
  */
 public abstract class AField<T> extends CustomField<T> implements AIField {
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
 
     protected String fieldKey;
 
@@ -86,7 +97,7 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
 
 
     @Override
-    public AField get() {
+    public Component get() {
         return this;
     }
 

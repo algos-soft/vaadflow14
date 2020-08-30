@@ -4,7 +4,6 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
@@ -17,10 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Project vaadflow14
@@ -61,34 +56,12 @@ public class Preferenza extends ACEntity {
     public int ordine;
 
     /**
-     * codice di riferimento (obbligatorio, unico)
-     */
-    @NotBlank()
-    @Size(min = 3)
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice")
-    @AIColumn(header = "Code")
-    private String code;
-
-
-    /**
-     * descrizione (obbligatoria)
-     */
-    @NotBlank()
-    @Size(min = 5)
-    @AIField(type = AETypeField.text, caption = "Descrizione completa")
-    @AIColumn(header = "Descrizione", flexGrow = true)
-    private String descrizione;
-
-
-    /**
      * tipo di dato memorizzato (obbligatorio)
      */
     @NotNull
     @AIField(type = AETypeField.enumeration, enumClazz = AETypePref.class, required = true, focus = true, widthEM = 12)
     @AIColumn(widthEM = 6, sortable = true)
     public AETypePref type;
-
 
     /**
      * valore della preferenza (obbligatorio)
@@ -97,6 +70,25 @@ public class Preferenza extends ACEntity {
     @AIField(type = AETypeField.preferenza, required = true, caption = "Valore", widthEM = 12)
     @AIColumn(widthEM = 10)
     public byte[] value;
+
+    /**
+     * codice di riferimento (obbligatorio, unico)
+     */
+    @NotBlank()
+    @Size(min = 3)
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.text, widthEM = 8, focus = true, caption = "Codice")
+    @AIColumn(header = "Code")
+    private String code;
+
+    /**
+     * descrizione (obbligatoria)
+     */
+    @NotBlank()
+    @Size(min = 5)
+    @AIField(type = AETypeField.text, widthEM = 14, caption = "Descrizione completa")
+    @AIColumn(header = "Descrizione", flexGrow = true)
+    private String descrizione;
 
 
     /**

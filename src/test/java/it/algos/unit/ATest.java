@@ -260,7 +260,6 @@ public class ATest {
         Assertions.assertNotNull(logger);
 
         MockitoAnnotations.initMocks(date);
-        Assertions.assertNotNull(date);
 
         adminLogger = LoggerFactory.getLogger("wam.admin");
         Assertions.assertNotNull(adminLogger);

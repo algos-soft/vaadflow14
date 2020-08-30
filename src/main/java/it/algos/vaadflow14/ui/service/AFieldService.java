@@ -71,7 +71,7 @@ public class AFieldService extends AAbstractService {
             return null;
         }
 
-        field = creaOnly(reflectionJavaField);
+        field = creaOnly(reflectionJavaField, entityBean);
         if (field != null) {
             try {
                 addFieldToBinder(operation, binder, entityBean, reflectionJavaField, field);
@@ -94,11 +94,11 @@ public class AFieldService extends AAbstractService {
      * @param entityClazz  di riferimento
      * @param propertyName della property
      */
-    public AIField creaOnly(Class entityClazz, String propertyName) {
+    public AIField creaOnly(Class entityClazz, String propertyName, AEntity entityBean) {
         Field reflectionJavaField = reflection.getField(entityClazz, propertyName);
 
         if (reflectionJavaField != null) {
-            return creaOnly(reflectionJavaField);
+            return creaOnly(reflectionJavaField, entityBean);
         } else {
             logger.warn("Manca il field per la property " + propertyName, this.getClass(), "creaOnly");
             return null;
@@ -111,7 +111,7 @@ public class AFieldService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento
      */
-    public AIField creaOnly(Field reflectionJavaField) {
+    public AIField creaOnly(Field reflectionJavaField, AEntity entityBean) {
         AIField field = null;
         String fieldKey;
         String caption = VUOTA;
@@ -192,6 +192,9 @@ public class AFieldService extends AAbstractService {
                     }
                 case enumeration:
                     field = getEnumerationField(reflectionJavaField, fieldKey, caption);
+                    break;
+                case preferenza:
+                    field = appContext.getBean(APreferenzaField.class, fieldKey, caption, entityBean);
                     break;
                 case gridShowOnly:
                     break;
@@ -317,6 +320,8 @@ public class AFieldService extends AAbstractService {
                 case booleano:
                     break;
                 case combo:
+                    break;
+                case enumeration:
                     break;
                 case password:
                     if (stringBlankValidator != null) {

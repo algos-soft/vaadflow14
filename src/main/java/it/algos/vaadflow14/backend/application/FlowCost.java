@@ -214,11 +214,25 @@ public abstract class FlowCost {
     //--fields tipici
     public static final String FIELD_NOTE = "note";
 
+    public static final String FIELD_TYPE = "type";
+
+    public static final String FIELD_VALUE = "value";
+
+    public static final String BOOL_FIELD = "Valore (booleano)";
+    public static final String DATE_PICKER_FIELD = "Valore (giorno)";
+
+    public static final String TIME_PICKER_FIELD = "Valore (orario)";
+
+    public static final String ENUM_FIELD_NEW = "Valore (x,y,z;y)";
+
+    public static final String ENUM_FIELD_SHOW = "Valore (enumeration)";
+
     public static final String MONGO_FIELD_USER = "user";
 
     public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
+
 
     //--Costanti usate per identificare alcune company
     public static final String COMPANY_ALGOS = "algos";

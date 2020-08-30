@@ -8,6 +8,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -23,6 +25,16 @@ public class AIntegerField extends AField<Integer> {
 
     private final IntegerField innerField;
 
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ATextField.class, caption) <br>
+     *
+     * @param caption label visibile del field
+     */
+    public AIntegerField(String caption) {
+        this(VUOTA, caption);
+    } // end of SpringBoot constructor
 
     /**
      * Costruttore con parametri <br>

@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -90,7 +89,14 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
-        return appContext.getBean(PreferenzaForm.class, entityClazz);
+        form = null;
+
+        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
+        if (entityClazz != null) {
+            form = appContext.getBean(PreferenzaForm.class, entityClazz);
+        }
+
+        return form;
     }
 
 
@@ -108,7 +114,14 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AForm getBodyFormLayout(AEntity entityBean) {
-        return appContext.getBean(PreferenzaForm.class,getWrapForm(entityBean));
+        form = null;
+
+        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
+        if (entityBean != null) {
+            form = appContext.getBean(PreferenzaForm.class, getWrapForm(entityBean));
+        }
+
+        return form;
     }
 
 
@@ -201,7 +214,7 @@ public class PreferenzaLogic extends ALogic {
      * @return true se la entity è stata salvata
      */
     public Preferenza fixValue(Preferenza entityPreferenza) {
-        Object value = "mario";
+        Object value;
         //        Preferenza entity = setValue(keyCode, value, companyPrefix);
         //
         //        if (entity != null) {
@@ -209,12 +222,55 @@ public class PreferenzaLogic extends ALogic {
         //            salvata = entity != null;
         //        }// end of if cycle
 
-        if (value == null) {
-            entityPreferenza = null;
-        }
-        entityPreferenza.value = AETypePref.string.objectToBytes(value);
-
+        //        if (value == null) {
+        //            entityPreferenza = null;
+        //        }
+        //        entityPreferenza.value = AETypePref.string.objectToBytes(value);
+        //
         return entityPreferenza;
+    }
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Preferenza findById(String keyID) {
+        return (Preferenza) super.findById(keyID);
+    }
+
+
+    public Object getValue(String keyID) {
+        Object value = null;
+        Preferenza pref = findById(keyID);
+
+        if (pref != null) {
+            value = pref.getType().bytesToObject(pref.value);
+        }
+
+        return value;
+    }
+
+
+    public String getString(String keyID) {
+        String value = VUOTA;
+        Object objValue = getValue(keyID);
+
+        if (objValue != null && objValue instanceof String) {
+            value = (String) objValue;
+        }
+
+        return value;
+    }
+
+    public String getEnumRawValue(String keyID) {
+        return getString(keyID);
     }
 
 }

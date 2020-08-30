@@ -313,10 +313,15 @@ public class AArrayService extends AAbstractService {
         return matrice;
     }
 
+
     public List<String> getList(String testo) {
         List<String> lista = null;
         String tag = VIRGOLA;
         String[] parti = null;
+
+        if (text.isEmpty(testo)) {
+            return null;
+        }
 
         if (text.isValid(testo) && testo.contains(tag)) {
             parti = testo.split(tag);
@@ -324,6 +329,10 @@ public class AArrayService extends AAbstractService {
 
         if (parti != null && parti.length > 0) {
             lista = Arrays.asList(parti);
+        }
+
+        if (lista == null) {
+            lista = new ArrayList<>(Arrays.asList(testo));
         }
 
         return lista;

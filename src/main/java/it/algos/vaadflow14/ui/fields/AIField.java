@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.Component;
 
 import java.util.Collection;
 
@@ -21,7 +22,7 @@ public interface AIField {
 
     AbstractSinglePropertyField getBinder();
 
-    AField get();
+    Component get();
 
     public void setAutofocus();
 

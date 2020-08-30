@@ -7,6 +7,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Project vaadflow15
@@ -22,8 +23,6 @@ import java.util.Collection;
 public class AComboField<T> extends AField<Object> {
 
     private final ComboBox innerField;
-
-    private String placeholder;
 
 
     /**
@@ -43,23 +42,49 @@ public class AComboField<T> extends AField<Object> {
 
     /**
      * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, placeholder) <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
      *
-     * @param fieldKey    nome interno del field
-     * @param caption     label visibile del field
-     * @param placeholder iniziale
+     * @param caption label visibile del field
+     * @param items   collezione dei valori previsti
      */
-    public AComboField(String fieldKey, String caption, String placeholder) {
+    public AComboField(String caption, List<String> items) {
         innerField = new ComboBox(caption);
         super.fieldKey = fieldKey;
-        this.placeholder = placeholder;
+        this.setItem(items);
+        add(innerField);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items, value) <br>
+     *
+     * @param caption label visibile del field
+     * @param items   collezione dei valori previsti
+     * @param value   selezionato
+     */
+    public AComboField(String caption, List<String> items, String value) {
+        innerField = new ComboBox(caption);
+        super.fieldKey = fieldKey;
+        this.setItem(items);
+        this.setValue(value);
         add(innerField);
     } // end of SpringBoot constructor
 
 
     @Override
+    public void setValue(Object value) {
+        innerField.setValue(value);
+    }
+
+
+    @Override
     public void setItem(Collection collection) {
-        innerField.setItems(collection);
+        try {
+            innerField.setItems(collection);
+        } catch (Exception unErrore) {
+            System.out.println("Items nulli in AComboField.setItems()");
+        }
     }
 
 

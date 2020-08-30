@@ -7,7 +7,6 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AETypeBool;
 import it.algos.vaadflow14.backend.service.ATextService;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,6 +51,18 @@ public class ABooleanField extends AField<Boolean> {
     private String firstItem;
 
     private String secondItem;
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AEmailField.class, caption) <br>
+     *
+     * @param typeBool per la tipologia di visualizzazione
+     * @param caption  label visibile del field
+     */
+    public ABooleanField(String caption, AETypeBool typeBool) {
+        this(VUOTA, typeBool, caption, VUOTA);
+    } // end of SpringBoot constructor
 
 
     /**

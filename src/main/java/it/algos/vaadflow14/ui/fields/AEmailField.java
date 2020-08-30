@@ -2,10 +2,11 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -25,6 +26,17 @@ public class AEmailField extends AField<String> {
 
     /**
      * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AEmailField.class, caption) <br>
+     *
+     * @param caption label visibile del field
+     */
+    public AEmailField(String caption) {
+        this(VUOTA, caption);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AEmailField.class, fieldKey, caption) <br>
      *
      * @param fieldKey nome interno del field
@@ -37,7 +49,6 @@ public class AEmailField extends AField<String> {
         innerField.setAutoselect(true);
         add(innerField);
     } // end of SpringBoot constructor
-
 
 
     @Override

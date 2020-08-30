@@ -820,7 +820,7 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Esegue l' azione del bottone, textEdit o comboBox. <br>
      * Invocata solo dal Form <br>
      *
      * @param azione     selezionata da eseguire

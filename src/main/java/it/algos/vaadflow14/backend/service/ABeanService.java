@@ -115,7 +115,7 @@ public class ABeanService extends AAbstractService {
         for (String fieldName : listaNomi) {
             field = fieldService.create(operationForm, binder, entityBean, fieldName);
             if (field != null) {
-                fieldsList.add(field.get());
+                fieldsList.add(field);
             }
         }
 

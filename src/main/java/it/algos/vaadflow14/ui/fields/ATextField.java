@@ -6,6 +6,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -20,6 +22,17 @@ import org.springframework.context.annotation.Scope;
 public class ATextField extends AField<String> {
 
     private final TextField innerField;
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ATextField.class, caption) <br>
+     *
+     * @param caption label visibile del field
+     */
+    public ATextField(String caption) {
+        this(VUOTA, caption);
+    } // end of SpringBoot constructor
 
 
     /**
