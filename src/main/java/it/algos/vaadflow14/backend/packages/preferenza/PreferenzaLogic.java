@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.ui.form.AForm;
+import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -73,6 +74,24 @@ public class PreferenzaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+    }
+
+
+    /**
+     * Costruisce un wrapper di dati <br>
+     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
+     * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBean interessata
+     *
+     * @return wrapper di dati per il Form
+     */
+    @Override
+    public WrapForm getWrapForm(AEntity entityBean) {
+        WrapForm wrap = super.getWrapForm(entityBean);
+        wrap.setUsaBottomLayout(true);
+        return wrap;
     }
 
 
@@ -268,6 +287,7 @@ public class PreferenzaLogic extends ALogic {
 
         return value;
     }
+
 
     public String getEnumRawValue(String keyID) {
         return getString(keyID);

@@ -32,7 +32,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderSecolo")
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Secolo", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")

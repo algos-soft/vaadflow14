@@ -683,8 +683,8 @@ public abstract class ALogic implements AILogic {
      * Chiamato da AView.initView() <br>
      * Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
      * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni <br>
+     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
      *
      * @return componente grafico per il placeHolder
      */

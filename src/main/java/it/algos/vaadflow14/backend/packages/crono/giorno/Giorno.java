@@ -39,7 +39,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderGiorno")
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
 @AIEntity(recordName = "Giorno", keyPropertyName = "nome")

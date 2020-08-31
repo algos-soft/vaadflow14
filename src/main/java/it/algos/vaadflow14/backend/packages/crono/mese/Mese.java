@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderMese")
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Mese", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")

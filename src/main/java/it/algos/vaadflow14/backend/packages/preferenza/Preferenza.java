@@ -33,9 +33,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderPreferenza")
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Preferenza", keyPropertyName = "code")
+@AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
 @AIList(fields = "code,descrizione")
 @AIForm(fields = "ordine,code,descrizione,type")

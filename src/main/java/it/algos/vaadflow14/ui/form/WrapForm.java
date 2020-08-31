@@ -134,4 +134,9 @@ public class WrapForm {
         return operationForm;
     }
 
+
+    public void setUsaBottomLayout(boolean usaBottomLayout) {
+        this.usaBottomLayout = usaBottomLayout;
+    }
+
 }

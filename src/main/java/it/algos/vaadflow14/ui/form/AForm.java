@@ -145,7 +145,7 @@ public abstract class AForm extends VerticalLayout {
 
     /**
      * La scheda grafica è composta da due diversi FormLayout sovrapposti <br>
-     * L'uso di questo layout è regolata dal parametro 'usaBottomLayout', di default 'false' <br>
+     * L' uso di questo layout è regolata dal parametro 'usaBottomLayout', di default 'false' <br>
      */
     protected boolean usaBottomLayout;
 
@@ -379,7 +379,15 @@ public abstract class AForm extends VerticalLayout {
             for (AIField field : fieldsList) {
                 comp = field.get();
                 if (comp != null) {
-                    topLayout.add(comp);
+                    if (field.getKey().equals(FlowCost.FIELD_NOTE)) {
+                        if (usaBottomLayout) {
+                            bottomLayout.add(comp);
+                        } else {
+                            topLayout.add(comp);
+                        }
+                    } else {
+                        topLayout.add(comp);
+                    }
                 } else {
                     logger.error("Manca il field " + field.getKey() + " dalla lista", this.getClass(), "addFieldsToLayout");
                 }
@@ -417,7 +425,11 @@ public abstract class AForm extends VerticalLayout {
         if (usaFieldNote) {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                //                field.get().setValue(entityBean.note);
+                if (field != null) {
+                    if (text.isValid(entityBean.note)) {
+                        field.getBinder().setValue(entityBean.note);
+                    }
+                }
             }
         }
     }
@@ -434,7 +446,9 @@ public abstract class AForm extends VerticalLayout {
         if (usaFieldNote) {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                //                entityBean.note = (String) field.getValue();
+                if (field != null) {
+                    entityBean.note = (String) field.getBinder().getValue();
+                }
             }
         }
     }
