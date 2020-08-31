@@ -5,7 +5,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.ui.view.AView;
@@ -693,6 +694,7 @@ public class AAnnotationService extends AAbstractService {
         AIEntity annotation = this.getAIEntity(entityClazz);
         return annotation != null ? annotation.usaNote() : false;
     }
+
 
     /**
      * Flag per usare il field della superclasse AEntity. <br>
@@ -1434,6 +1436,7 @@ public class AAnnotationService extends AAbstractService {
         return comboClazz == Object.class ? null : comboClazz;
     }
 
+
     /**
      * Get the class of the property.
      *
@@ -1768,8 +1771,30 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      */
-    public AETypeBool getTypeBoolean(final Field reflectionJavaField) {
-        AETypeBool type = AETypeBool.checkBox;
+    public AETypeBoolCol getTypeBoolCol(final Field reflectionJavaField) {
+        AETypeBoolCol type = AETypeBoolCol.boolGrezzo;
+        AIColumn annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            type = annotation.typeBool();
+        }
+
+        return type;
+    }
+
+
+    /**
+     * Get the specific annotation of the field. <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     */
+    public AETypeBoolField getTypeBoolField(final Field reflectionJavaField) {
+        AETypeBoolField type = AETypeBoolField.checkBox;
         AIField annotation = null;
 
         if (reflectionJavaField == null) {
@@ -1792,8 +1817,8 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the Strings
      */
-    public String getBoolEnum(final Field reflectionJavaField) {
-        String caption = VUOTA;
+    public String getBoolEnumField(final Field reflectionJavaField) {
+        String stringa = VUOTA;
         AIField annotation = null;
 
         if (reflectionJavaField == null) {
@@ -1802,10 +1827,39 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
-            caption = annotation.boolEnum();
+            stringa = annotation.boolEnum();
         }
 
-        return caption;
+        return stringa;
+    }
+
+
+    /**
+     * Get the 'enum' (two strings) of the property <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Strings
+     */
+    public List<String> getBoolEnumCol(final Field reflectionJavaField) {
+        List<String> lista = null;
+        String stringa = VUOTA;
+        AIColumn annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            stringa = annotation.boolEnum();
+        }
+
+        if (text.isValid(stringa) && stringa.contains(VIRGOLA)) {
+            lista = text.getArray(stringa);
+        }
+
+        return (lista != null && lista.size() == 2) ? lista : null;
     }
 
 

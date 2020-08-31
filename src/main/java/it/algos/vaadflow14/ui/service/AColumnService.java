@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -7,13 +8,17 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.service.AAbstractService;
-import it.algos.vaadflow14.ui.fields.ACheckBox;
+import it.algos.vaadflow14.ui.fields.AComboField;
+import it.algos.vaadflow14.ui.fields.AField;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -72,7 +77,7 @@ public class AColumnService extends AAbstractService {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, propertyName);
         AETypeField type = null;
-        AETypeBool typeBool = AETypeBool.checkBox;
+        AETypeBoolField typeBool = AETypeBoolField.checkBox;
         String header = VUOTA;
         VaadinIcon headerIcon = null;
         String colorHeaderIcon = VUOTA;
@@ -83,7 +88,7 @@ public class AColumnService extends AAbstractService {
 
         if (field != null) {
             type = annotation.getColumnType(field);
-            typeBool = annotation.getTypeBoolean(field);
+            typeBool = annotation.getTypeBoolField(field);
             header = annotation.getColumnHeader(field);
             headerIcon = annotation.getHeaderIcon(field);
             colorHeaderIcon = annotation.getHeaderIconColor(field);
@@ -135,19 +140,19 @@ public class AColumnService extends AAbstractService {
                     //                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case booleano:
-                    //                    colonna = grid.addColumn(propertyName);
+                    colonna = addBoolean(grid, field);
 
-                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        boolean status = false;
-
-                        try {
-                            status = field.getBoolean(entity);
-                        } catch (Exception unErrore) {
-                            logger.error(unErrore, this.getClass(), "add.booleano");
-                        }
-
-                        return new ACheckBox(status);
-                    }));//end of lambda expressions and anonymous inner class
+                    //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    //                        boolean status = false;
+                    //
+                    //                        try {
+                    //                            status = field.getBoolean(entity);
+                    //                        } catch (Exception unErrore) {
+                    //                            logger.error(unErrore, this.getClass(), "add.booleano");
+                    //                        }
+                    //
+                    //                        return new ACheckBox(status);
+                    //                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case combo:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -217,12 +222,182 @@ public class AColumnService extends AAbstractService {
             //            //            if (property.equals("id")) {
             //            //                colonna.setWidth("1px");
             //            //            }// end of if cycle
-            colonna.setSortable(sortable);
-            colonna.setSortProperty(propertyName);
+            if (sortable) {
+                colonna.setSortable(true);
+                colonna.setSortProperty(propertyName);
+            }
 
             colonna.setWidth(width);
             colonna.setFlexGrow(isFlexGrow ? 1 : 0);
         }
+        return colonna;
+    }
+
+
+    /**
+     * Prima cerca i valori nella @Annotation items=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una classe enumeration definita in enumClazz=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una collection definita con serviceClazz=...dell' interfaccia AIField <br>
+     *
+     * @param reflectionJavaField di riferimento
+     * @param fieldKey            nome interno del field
+     * @param caption             label sopra il field
+     */
+    public AField getEnumerationField(Field reflectionJavaField, String fieldKey, String caption) {
+        AField field = null;
+        List<String> enumItems = null;
+        List enumObjects = null;
+        Class enumClazz = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        enumItems = annotation.getEnumItems(reflectionJavaField);
+        if (array.isEmpty(enumItems)) {
+            enumClazz = annotation.getEnumClass(reflectionJavaField);
+            if (enumClazz != null) {
+                Object[] elementi = enumClazz.getEnumConstants();
+                if (elementi != null) {
+                    enumObjects = Arrays.asList(elementi);
+                    field = appContext.getBean(AComboField.class, fieldKey, caption);
+                    ((AComboField) field).setItem(enumObjects);
+                    return field;
+                }
+            }
+        }
+
+        if (array.isValid(enumItems)) {
+            field = appContext.getBean(AComboField.class, fieldKey, caption);
+            ((AComboField) field).setItem(enumItems);
+        }
+
+        return field;
+    }
+
+
+    public Grid.Column<AEntity> addBoolean(Grid grid, Field field) {
+        Grid.Column<AEntity> colonna = null;
+
+        colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+            final AETypeBoolCol typeBool = annotation.getTypeBoolCol(field);
+            final List<String> valori = annotation.getBoolEnumCol(field);
+            boolean status = false;
+            Icon icon;
+            String testo = VUOTA;
+            Label label = new Label();
+
+            try {
+                status = field.getBoolean(entity);
+            } catch (Exception unErrore) {
+                logger.error(unErrore.toString());
+            }
+
+            switch (typeBool) {
+                case boolGrezzo:
+                    try {
+                        status = field.getBoolean(entity);
+                        testo = status ? "vero" : "falso";
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+
+                    if (text.isValid(testo)) {
+                        label.setText(testo);
+                        if (status) {
+                            label.getStyle().set("color", "green");
+                        } else {
+                            label.getStyle().set("color", "red");
+                        }
+                    }
+                    return label;
+                case checkBox:
+                    try {
+                        status = field.getBoolean(entity);
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+                    return new Checkbox(status);
+                case checkIcon:
+                    if (status) {
+                        icon = new Icon(VaadinIcon.CHECK);
+                        icon.setColor("green");
+                    } else {
+                        icon = new Icon(VaadinIcon.CLOSE);
+                        icon.setColor("red");
+                    }
+                    icon.setSize("1em");
+                    return icon;
+                case checkIconReverse:
+                    if (status) {
+                        icon = new Icon(VaadinIcon.CLOSE);
+                        icon.setColor("red");
+                    } else {
+                        icon = new Icon(VaadinIcon.CHECK);
+                        icon.setColor("green");
+                    }
+                    icon.setSize("1em");
+                    return icon;
+                case customLabel:
+                    try {
+                        status = field.getBoolean(entity);
+                        testo = status ? valori.get(0):valori.get(1);
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+
+                    if (text.isValid(testo)) {
+                        label.setText(testo);
+                        if (status) {
+                            label.getStyle().set("color", "green");
+                        } else {
+                            label.getStyle().set("color", "red");
+                        }
+                    }
+                    return label;
+                case yesNo:
+                    try {
+                        status = field.getBoolean(entity);
+                        testo = status ? "si" : "no";
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+
+                    if (text.isValid(testo)) {
+                        label.setText(testo);
+                        if (status) {
+                            label.getStyle().set("color", "green");
+                        } else {
+                            label.getStyle().set("color", "red");
+                        }
+                    }
+                    return label;
+                case yesNoBold:
+                    try {
+                        status = field.getBoolean(entity);
+                        testo = status ? "si" : "no";
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+
+                    if (text.isValid(testo)) {
+                        label.setText(testo);
+                        label.getStyle().set("font-weight", "bold");
+                        if (status) {
+                            label.getStyle().set("color", "green");
+                        } else {
+                            label.getStyle().set("color", "red");
+                        }
+                    }
+                    return label;
+                default:
+                    logger.warn("Switch - caso non definito", this.getClass(), "addBoolean");
+                    break;
+            }
+
+            return new Label("g");
+        }));//end of lambda expressions and anonymous inner class
+
         return colonna;
     }
 

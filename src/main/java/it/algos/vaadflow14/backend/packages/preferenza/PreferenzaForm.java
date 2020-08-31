@@ -5,7 +5,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.service.AEnumerationService;
 import it.algos.vaadflow14.ui.fields.*;
@@ -97,7 +97,7 @@ public class PreferenzaForm extends AForm {
                 valueField = appContext.getBean(AIntegerField.class, caption);
                 break;
             case bool:
-                valueField = appContext.getBean(ABooleanField.class, BOOL_FIELD, AETypeBool.radioTrueFalse);
+                valueField = appContext.getBean(ABooleanField.class, BOOL_FIELD, AETypeBoolField.radioTrueFalse);
                 break;
             case localdate:
                 valueField = appContext.getBean(ADateField.class);

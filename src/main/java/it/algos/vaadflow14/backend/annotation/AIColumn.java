@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 
 import java.lang.annotation.ElementType;
@@ -116,5 +117,21 @@ public @interface AIColumn {
      * @return the string
      */
     String methodName() default VUOTA;
+
+    /**
+     * (Optional) The type of the boolean type range.
+     * Defaults to the checkBox type.
+     *
+     * @return the field type
+     */
+    AETypeBoolCol typeBool() default AETypeBoolCol.checkIcon;
+
+    /**
+     * (Optional) The two strings for boolean type.
+     * Defaults to vuota.
+     *
+     * @return the strings
+     */
+    String boolEnum() default VUOTA;
 
 }

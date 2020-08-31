@@ -5,7 +5,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
@@ -68,7 +68,7 @@ public class Secolo extends AEntity {
     /**
      * flag di separazione (obbligatorio)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
     //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
     //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
     @AIColumn(header = "A.C.", widthEM = 6)

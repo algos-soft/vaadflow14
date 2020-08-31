@@ -194,14 +194,14 @@ public abstract class AForm extends VerticalLayout {
 
     protected WrapForm wrap;
 
-    private LinkedHashMap<String, List> enumMap;
-
-    private List<String> listaNomi;
-
     /**
      * Tipologia di Form in uso <br>
      */
     protected AEOperation operationForm;
+
+    private LinkedHashMap<String, List> enumMap;
+
+    private List<String> listaNomi;
 
     private boolean usaFieldNote = false;
 
@@ -359,7 +359,7 @@ public abstract class AForm extends VerticalLayout {
         AIField field = null;
 
         if (usaFieldNote) {
-            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE,entityBean);
+            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
             if (field != null) {
                 fieldsList.add(field);
             }
@@ -381,7 +381,7 @@ public abstract class AForm extends VerticalLayout {
                 if (comp != null) {
                     topLayout.add(comp);
                 } else {
-                    logger.error("Manca il field "+field.getKey()+" dalla lista", this.getClass(), "addFieldsToLayout");
+                    logger.error("Manca il field " + field.getKey() + " dalla lista", this.getClass(), "addFieldsToLayout");
                 }
             }
         } else {
@@ -450,7 +450,14 @@ public abstract class AForm extends VerticalLayout {
         writeFieldsExtra();
 
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
-        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
+        //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
+        try {
+            binder.writeBeanIfValid(entityBean);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getValidBean");
+        }
+
+        return entityBean;
     }
 
 

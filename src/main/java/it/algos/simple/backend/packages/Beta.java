@@ -4,9 +4,9 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -36,22 +36,16 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Beta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
-@AIList(fields = "ordine,code,uno,due,tre,quattro,cinque,sei")
-@AIForm(fields = "ordine,code,uno,due,tre,quattro,cinque,sei")
+@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette")
+@AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette")
 public class Beta extends AEntity {
+
+    public static final int WIDTH = 6;
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
-    public int ordine;
 
     /**
      * codice di riferimento (obbligatorio, unico)
@@ -61,51 +55,57 @@ public class Beta extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice")
     @AIColumn(header = "Code")
-    private String code;
+    public String code;
 
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.checkBox, caption = "Checkbox base con spiegazione")
-    @AIColumn()
-    private String uno;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Checkbox base con spiegazione")
+    @AIColumn(typeBool = AETypeBoolCol.boolGrezzo, header = "Bool", widthEM = WIDTH)
+    public boolean uno;
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Label del radio gruppo standard orizzontale")
-    @AIColumn()
-    private String due;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioTrueFalse, caption = "Label del radio gruppo standard orizzontale")
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Check", widthEM = WIDTH)
+    public boolean due;
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioSiNo, caption = "Label del radio gruppo standard orizzontale")
-    @AIColumn()
-    private String tre;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo, caption = "Label del radio gruppo standard orizzontale")
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "True", widthEM = WIDTH)
+    public boolean tre;
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, caption = "Label del radio gruppo custom orizzontale",boolEnum = "casa,ufficio")
-    @AIColumn()
-    private String quattro;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, caption = "Label del radio gruppo custom orizzontale", boolEnum = "casa,ufficio")
+    @AIColumn(typeBool = AETypeBoolCol.checkIconReverse, header = "False", widthEM = WIDTH)
+    public boolean quattro;
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomVert, caption = "Label del radio gruppo custom verticale",boolEnum = "Aperto,Chiuso")
-    @AIColumn()
-    private String cinque;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomVert, caption = "Label del radio gruppo custom verticale", boolEnum = "Aperto,Chiuso")
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "Si/No", widthEM = WIDTH)
+    public boolean cinque;
 
     /**
      * booleano
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz,boolEnum = "Senza label,Solo valori")
-    @AIColumn()
-    private String sei;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, boolEnum = "Senza label,Solo valori")
+    @AIColumn(typeBool = AETypeBoolCol.yesNoBold, header = "Bold", widthEM = WIDTH)
+    public boolean sei;
 
+    /**
+     * booleano
+     */
+    @AIField(type = AETypeField.booleano, boolEnum = "Custom colonna")
+    @AIColumn(typeBool = AETypeBoolCol.customLabel, header = "Custom", boolEnum = "acceso,spento", widthEM = WIDTH)
+    public boolean sette;
 
 
     /**

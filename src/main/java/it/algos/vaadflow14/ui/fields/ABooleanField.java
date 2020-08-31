@@ -4,8 +4,9 @@ import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,9 +43,9 @@ public class ABooleanField extends AField<Boolean> {
 
     private Checkbox checkBox;
 
-    private RadioButtonGroup<String> radioGroup;
+    private RadioButtonGroup<Boolean> radioGroup;
 
-    private AETypeBool typeBool;
+    private AETypeBoolField typeBool;
 
     private String boolEnum = VUOTA;
 
@@ -60,7 +61,7 @@ public class ABooleanField extends AField<Boolean> {
      * @param typeBool per la tipologia di visualizzazione
      * @param caption  label visibile del field
      */
-    public ABooleanField(String caption, AETypeBool typeBool) {
+    public ABooleanField(String caption, AETypeBoolField typeBool) {
         this(VUOTA, typeBool, caption, VUOTA);
     } // end of SpringBoot constructor
 
@@ -74,7 +75,7 @@ public class ABooleanField extends AField<Boolean> {
      * @param caption  label visibile del field
      * @param boolEnum valori custom della scelta booleana
      */
-    public ABooleanField(String fieldKey, AETypeBool typeBool, String caption, String boolEnum) {
+    public ABooleanField(String fieldKey, AETypeBoolField typeBool, String caption, String boolEnum) {
         this.typeBool = typeBool;
         this.caption = caption;
         this.boolEnum = boolEnum;
@@ -92,18 +93,27 @@ public class ABooleanField extends AField<Boolean> {
      */
     @PostConstruct
     protected void postConstruct() {
+        //@todo Funzionalità ancora da implementare
+        //@todo Per adesso funziona solo il checkbox
+        typeBool = AETypeBoolField.checkBox;
+        //@todo Funzionalità ancora da implementare
+
         initView();
     }
 
 
     protected void initView() {
-        usaCheckBox = typeBool == AETypeBool.checkBox;
+        usaCheckBox = typeBool == AETypeBoolField.checkBox;
+        List<Boolean> items = new ArrayList<>();
 
         if (usaCheckBox) {
             checkBox = new Checkbox();
         } else {
-            radioGroup = new RadioButtonGroup<String>();
+            radioGroup = new RadioButtonGroup<>();
         }
+
+        items.add(true);
+        items.add(false);
 
         if (typeBool != null) {
             switch (typeBool) {
@@ -111,19 +121,25 @@ public class ABooleanField extends AField<Boolean> {
                     checkBox.setLabelAsHtml(caption);
                     break;
                 case radioTrueFalse:
-                    radioGroup.setItems("Vero", "Falso");
+                    //                    radioGroup.setItems("Vero", "Falso");
+                    radioGroup.setItems(items);
                     radioGroup.setLabel(caption);
+                    radioGroup.setRenderer(new TextRenderer<>(e -> "mario"));
                     break;
                 case radioSiNo:
-                    radioGroup.setItems("Si", "No");
+                    //                    radioGroup.setItems("Si", "No");
+                    radioGroup.setItems(items);
                     radioGroup.setLabel(caption);
+                    radioGroup.setRenderer(new TextRenderer<>(e -> "aldo"));
                     break;
                 case radioCustomHoriz:
-                    radioGroup.setItems(getItems());
+                    radioGroup.setItems(items);
+                    radioGroup.setRenderer(new TextRenderer<>(e -> "marco"));
                     break;
                 case radioCustomVert:
-                    radioGroup.setItems(getItems());
+                    radioGroup.setItems(items);
                     radioGroup.setLabel(caption);
+                    radioGroup.setRenderer(new TextRenderer<>(e -> "franco"));
                     //                    radioGroup.getElement().setAttribute("style", "spacing:0em; margin:0em; padding:0em;");
                     radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
                     break;
@@ -172,7 +188,12 @@ public class ABooleanField extends AField<Boolean> {
 
     @Override
     public Boolean getValue() {
-        return super.getValue();
+        if (usaCheckBox) {
+            //            return checkBox.getValue();
+            return false;
+        } else {
+            return true;
+        }
     }
 
 
@@ -182,35 +203,13 @@ public class ABooleanField extends AField<Boolean> {
     }
 
 
-    //    @Override
-    public void xsetValue(Boolean value) {
-        //        String firstItem = getItems().get(0);
-        //        String secondItem = getItems().get(1);
-        //
-        //        if (typeBool == AETypeBool.checkBox) {
-        //            super.setValue(value);
-        //        } else {
-        //            if (((RadioButtonGroup) innerField) != null) {
-        //                if (value) {
-        //                    ((RadioButtonGroup) innerField).setValue(firstItem);
-        //                } else {
-        //                    ((RadioButtonGroup) innerField).setValue(secondItem);
-        //                }
-        //            }
-        //            super.setValue(value);
-        //        }
-    }
-
-
-    @Override
-    protected void updateValue() {
-        super.updateValue();
-    }
-
-
     @Override
     protected Boolean generateModelValue() {
-        return super.generateModelValue();
+        if (usaCheckBox) {
+            return checkBox.getValue();
+        } else {
+            return true;
+        }
     }
 
 
@@ -218,9 +217,9 @@ public class ABooleanField extends AField<Boolean> {
     protected void setPresentationValue(Boolean value) {
         if (!usaCheckBox) {
             if (value) {
-                radioGroup.setValue(firstItem);
+                radioGroup.setValue(value);
             } else {
-                radioGroup.setValue(secondItem);
+                radioGroup.setValue(value);
             }
         }
         checkBox.setValue(value);

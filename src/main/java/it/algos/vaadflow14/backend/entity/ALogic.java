@@ -1416,7 +1416,7 @@ public abstract class ALogic implements AILogic {
                 entityBean = fixKey(entityBean);
             }
             entityBean = mongo.save(entityBean);
-            status = true;
+            status = entityBean != null;
         } else {
             logger.error("Object to save must not be null", this.getClass(), "save");
         }

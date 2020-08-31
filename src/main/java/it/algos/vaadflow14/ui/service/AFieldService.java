@@ -5,7 +5,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeBool;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.service.AAbstractService;
@@ -117,7 +117,7 @@ public class AFieldService extends AAbstractService {
         String caption = VUOTA;
         String boolEnum = VUOTA;
         AETypeField type = null;
-        AETypeBool typeBool = AETypeBool.checkBox;
+        AETypeBoolField typeBool = AETypeBoolField.checkBox;
         String width = VUOTA;
         String placeholder = VUOTA;
         boolean hasFocus = false;
@@ -133,13 +133,13 @@ public class AFieldService extends AAbstractService {
         fieldKey = reflectionJavaField.getName();
         type = annotation.getFormType(reflectionJavaField);
         caption = annotation.getFormFieldNameCapital(reflectionJavaField);
-        boolEnum = annotation.getBoolEnum(reflectionJavaField);
+        boolEnum = annotation.getBoolEnumField(reflectionJavaField);
         width = annotation.getFormWith(reflectionJavaField);
         placeholder = annotation.getPlaceholder(reflectionJavaField);
         hasFocus = annotation.focus(reflectionJavaField);
         intMin = annotation.getNumberMin(reflectionJavaField);
         intMax = annotation.getNumberMax(reflectionJavaField);
-        typeBool = annotation.getTypeBoolean(reflectionJavaField);
+        typeBool = annotation.getTypeBoolField(reflectionJavaField);
         comboClazz = annotation.getComboClass(reflectionJavaField);
 
         if (type != null) {
