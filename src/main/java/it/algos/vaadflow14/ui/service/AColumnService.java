@@ -17,6 +17,7 @@ import it.algos.vaadflow14.ui.fields.AField;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -127,6 +128,21 @@ public class AColumnService extends AAbstractService {
                     break;
                 case booleano:
                     colonna = addBoolean(grid, field);
+                    break;
+                case localDate:
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        LocalDate data;
+                        String testo = VUOTA;
+
+                        try {
+                            data = (LocalDate) field.get(entity);
+                            testo = date.get(data);
+                        } catch (Exception unErrore) {
+                            logger.error(unErrore, this.getClass(), "add.localDate");
+                        }
+
+                        return new Label(testo);
+                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case enumeration:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {

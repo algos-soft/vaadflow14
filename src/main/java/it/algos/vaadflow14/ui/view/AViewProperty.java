@@ -3,7 +3,7 @@ package it.algos.vaadflow14.ui.view;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.AILogic;
+import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.*;

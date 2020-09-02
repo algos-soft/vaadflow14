@@ -183,6 +183,9 @@ public class AFieldService extends AAbstractService {
                     //                        field = new ABooleanField(caption, typeBool);
                     //                    }
                     break;
+                case localDate:
+                    field = appContext.getBean(ADateField.class, fieldKey, caption);
+                    break;
                 case combo:
                     if (comboClazz != null) {
                         items = mongo.findAll(comboClazz);
@@ -326,6 +329,8 @@ public class AFieldService extends AAbstractService {
                     break;
                 case booleano:
                     break;
+                case localDate:
+                    break;
                 case combo:
 //                    field.getBinder().setReadOnly(false);
                     break;
@@ -349,7 +354,6 @@ public class AFieldService extends AAbstractService {
             if (builder != null) {
                 builder.bind(fieldName);
             }
-            field.getBinder().setReadOnly(false);//@todo Funzionalità ancora da implementare per gestire nuovo/modifica
         }
     }
 

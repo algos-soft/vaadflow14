@@ -156,9 +156,16 @@ public class FlowVar {
 
     /**
      * Lista dei moduli di menu da inserire nel Drawer del MainLayout per le gestione delle @Routes. <br>
-     * Regolata dall'applicazione durante l'esecuzione del 'container startup' (non-UI logic) <br>
+     * Regolata dall' applicazione durante l' esecuzione del 'container startup' (non-UI logic) <br>
      * Usata da ALayoutService per conto di MainLayout allo start della UI-logic <br>
      */
     public static List<Class<?>> menuRouteList;
+
+    /**
+     * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
+     * Di default (per sicurezza) uguale a false <br>
+     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     */
+    public static boolean usaCronoPackages;
 
 }

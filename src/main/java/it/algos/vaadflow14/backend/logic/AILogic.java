@@ -1,6 +1,7 @@
-package it.algos.vaadflow14.backend.entity;
+package it.algos.vaadflow14.backend.logic;
 
 
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;

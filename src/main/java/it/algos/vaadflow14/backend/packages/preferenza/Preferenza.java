@@ -86,8 +86,8 @@ public class Preferenza extends ACEntity {
      */
     @NotBlank()
     @Size(min = 5)
-    @AIField(type = AETypeField.text, widthEM = 14, caption = "Descrizione completa")
-    @AIColumn(header = "Descrizione", flexGrow = true)
+    @AIField(type = AETypeField.text, widthEM = 14)
+    @AIColumn(flexGrow = true)
     private String descrizione;
 
 

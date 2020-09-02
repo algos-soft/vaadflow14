@@ -2,8 +2,8 @@ package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.AILogic;
-import it.algos.vaadflow14.backend.entity.GenericLogic;
+import it.algos.vaadflow14.backend.logic.AILogic;
+import it.algos.vaadflow14.backend.logic.GenericLogic;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AClassService;

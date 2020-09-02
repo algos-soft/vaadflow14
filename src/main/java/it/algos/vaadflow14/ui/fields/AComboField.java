@@ -44,6 +44,20 @@ public class AComboField<T> extends AField<Object> {
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
      *
+     * @param caption  label visibile del field
+     * @param items    collezione dei valori previsti
+     */
+    public AComboField( String caption, List<String> items) {
+        innerField = new ComboBox(caption);
+        super.fieldKey = fieldKey;
+        this.setItem(items);
+        add(innerField);
+    } // end of SpringBoot constructor
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
+     *
      * @param fieldKey nome interno del field
      * @param caption  label visibile del field
      * @param items    collezione dei valori previsti

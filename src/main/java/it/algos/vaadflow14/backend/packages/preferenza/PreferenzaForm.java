@@ -118,7 +118,7 @@ public class PreferenzaForm extends AForm {
                     }
                     items = enumerationService.getList(enumValue);
                     if (array.isValid(items)) {
-                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW, items);
+                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW,items);
                     }
                 }
                 break;

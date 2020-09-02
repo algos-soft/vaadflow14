@@ -4,11 +4,11 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
 import it.algos.simple.backend.packages.Alfa;
 import it.algos.simple.backend.packages.Beta;
+import it.algos.simple.backend.packages.Gamma;
 import it.algos.simple.ui.views.DeltaView;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
-import it.algos.vaadflow14.backend.packages.security.Utente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -76,6 +76,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
+        FlowVar.usaCronoPackages = false;
     }
 
 
@@ -96,17 +97,8 @@ public class SimpleBoot extends FlowBoot {
 
         FlowVar.menuRouteList.add(Alfa.class);
         FlowVar.menuRouteList.add(Beta.class);
-        FlowVar.menuRouteList.add(DeltaView.class);
+        FlowVar.menuRouteList.add(Gamma.class);
         FlowVar.menuRouteList.add(OmegaView.class);
-        //        menuRouteList.add(Anno.class);
-        //        menuRouteList.add(Giorno.class);
-        //        menuRouteList.add(TestView.class);
-        //        menuRouteList.add(AboutView.class);
-        //        menuRouteList.add(HomeView.class);
-        //        menuRouteList.add(Role.class);
-        //        menuRouteList.add(Stato.class);
-        //        menuRouteList.add(Regione.class);
-        //        menuRouteList.add(Provincia.class);
     }
 
 }

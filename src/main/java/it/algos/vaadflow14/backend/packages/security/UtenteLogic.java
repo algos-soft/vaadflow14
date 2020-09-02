@@ -1,8 +1,9 @@
 package it.algos.vaadflow14.backend.packages.security;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.packages.company.Company;
@@ -86,9 +87,25 @@ public class UtenteLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = true;
+        if (FlowVar.usaSecurity) {
+            if (vaadinService.isDeveloper()) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+
+            }
+            if (!vaadinService.isAdminOrDeveloper()) {
+                super.operationForm = AEOperation.showOnly;
+            }
+
+            super.usaBottoneNew = vaadinService.isAdminOrDeveloper();
+            super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
+        } else {
+            if (FlowVar.usaDebug) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+            }
+            super.usaBottoneNew = true;
+        }
     }
 
 

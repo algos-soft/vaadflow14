@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.entity;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -14,6 +14,8 @@ import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.entity.ACEntity;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.packages.company.Company;
@@ -1427,11 +1429,6 @@ public abstract class ALogic implements AILogic {
         }
 
         if (beanService.isModificata(entityBean)) {
-            if (operationForm == AEOperation.addNew) {
-                logger.nuovo(entityBean);
-            } else {
-                logger.modifica(entityBean);
-            }
         } else {
             return true;
         }
@@ -1443,11 +1440,15 @@ public abstract class ALogic implements AILogic {
 
         if (entityBean != null) {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
-                //                entityBean.id = reflection.getPropertyValueStr(entityBean, keyPropertyName);
                 entityBean = fixKey(entityBean);
             }
             entityBean = mongo.save(entityBean);
             status = entityBean != null;
+            if (operationForm == AEOperation.addNew) {
+                logger.nuovo(entityBean);
+            } else {
+                logger.modifica(entityBean);
+            }
         } else {
             logger.error("Object to save must not be null", this.getClass(), "save");
         }

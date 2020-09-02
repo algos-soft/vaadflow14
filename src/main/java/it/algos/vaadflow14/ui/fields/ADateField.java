@@ -63,6 +63,7 @@ public class ADateField extends AField<LocalDate> {
 
     @Override
     protected LocalDate generateModelValue() {
+        LocalDate local= innerField.getValue();
         return innerField.getValue();
     }
 

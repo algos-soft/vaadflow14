@@ -4,6 +4,7 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
@@ -79,8 +80,8 @@ public class Anno extends AEntity {
      * flag bisestile (obbligatorio)
      */
     @Indexed()
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Bisestile", widthEM = 6)
-    @AIColumn(header = "BS", widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", widthEM = 6)
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS")
     public boolean bisestile;
 
 

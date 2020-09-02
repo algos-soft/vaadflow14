@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.entity.AILogic;
-import it.algos.vaadflow14.backend.entity.GenericLogic;
+import it.algos.vaadflow14.backend.logic.AILogic;
+import it.algos.vaadflow14.backend.logic.GenericLogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

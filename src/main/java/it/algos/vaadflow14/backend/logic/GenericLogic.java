@@ -1,6 +1,7 @@
-package it.algos.vaadflow14.backend.entity;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;

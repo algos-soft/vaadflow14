@@ -327,6 +327,13 @@ public abstract class FlowBoot implements ServletContextListener {
          * Usata da ALayoutService per conto di MainLayout allo start della UI-logic <br>
          */
         FlowVar.menuRouteList = new ArrayList<>();
+
+        /**
+         * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
+         * Di default (per sicurezza) uguale a false <br>
+         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+         */
+        FlowVar.usaCronoPackages = false;
     }
 
 
@@ -342,10 +349,13 @@ public abstract class FlowBoot implements ServletContextListener {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void addMenuRoutes() {
-        FlowVar.menuRouteList.add(Secolo.class);
-        FlowVar.menuRouteList.add(Anno.class);
-        FlowVar.menuRouteList.add(Mese.class);
-        FlowVar.menuRouteList.add(Giorno.class);
+        if (FlowVar.usaCronoPackages) {
+            FlowVar.menuRouteList.add(Secolo.class);
+            FlowVar.menuRouteList.add(Anno.class);
+            FlowVar.menuRouteList.add(Mese.class);
+            FlowVar.menuRouteList.add(Giorno.class);
+        }
+
         FlowVar.menuRouteList.add(Utente.class);
         FlowVar.menuRouteList.add(Company.class);
         FlowVar.menuRouteList.add(Preferenza.class);

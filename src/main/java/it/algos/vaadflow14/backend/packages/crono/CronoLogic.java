@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.packages.crono;
 
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 
 /**
