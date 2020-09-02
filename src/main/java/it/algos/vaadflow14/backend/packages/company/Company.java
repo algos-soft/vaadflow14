@@ -5,7 +5,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -33,10 +32,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Company", keyPropertyName = "code", usaNote = true, usaCreazioneModifica = true)
+@AIEntity(recordName = "Company", keyPropertyName = "code", usaRowIndex = true, usaNote = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.FACTORY, sortProperty = "ordine")
-@AIList(fields = "ordine,code,telefono,email,descrizione")
-@AIForm(fields = "ordine,code,telefono,email,descrizione")
+@AIList(fields = "code,telefono,email,descrizione")
+@AIForm(fields = "code,telefono,email,descrizione")
 public class Company extends AEntity {
 
     /**
@@ -44,14 +43,6 @@ public class Company extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
-    public int ordine;
 
     /**
      * codice di riferimento (obbligatorio)

@@ -212,13 +212,18 @@ public abstract class FlowCost {
     public static final String DIR_PACKAGES = "packages/";
 
     //--fields tipici
+    public static final String FIELD_COMPANY = "company";
+
     public static final String FIELD_NOTE = "note";
 
     public static final String FIELD_TYPE = "type";
 
     public static final String FIELD_VALUE = "value";
 
+    public static final String FIELD_INDEX = "rowIndex";
+
     public static final String BOOL_FIELD = "Valore (booleano)";
+
     public static final String DATE_PICKER_FIELD = "Valore (giorno)";
 
     public static final String TIME_PICKER_FIELD = "Valore (orario)";

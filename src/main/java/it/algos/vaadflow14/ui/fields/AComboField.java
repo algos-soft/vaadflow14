@@ -44,10 +44,12 @@ public class AComboField<T> extends AField<Object> {
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
      *
-     * @param caption label visibile del field
-     * @param items   collezione dei valori previsti
+     * @param fieldKey nome interno del field
+     * @param caption  label visibile del field
+     * @param items    collezione dei valori previsti
      */
-    public AComboField(String caption, List<String> items) {
+    public AComboField(String fieldKey, String caption, List<String> items) {
+        super.fieldKey = fieldKey;
         innerField = new ComboBox(caption);
         super.fieldKey = fieldKey;
         this.setItem(items);
@@ -90,6 +92,7 @@ public class AComboField<T> extends AField<Object> {
 
     @Override
     protected Object generateModelValue() {
+        Object alfa = innerField.getValue(); //@todo Linea di codice DA RIMETTERE (sistemare su una sola riga)
         return innerField.getValue();
     }
 

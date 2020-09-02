@@ -78,9 +78,13 @@ public class SecoloLogic extends CronoLogic {
     @Override
     protected List<String> getAlertList(AEVista typeVista) {
         List<String> lista = super.getAlertList(typeVista);
+        String message;
 
         lista.add("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo ");
-        lista.add("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 <span style=\"color:red\">NON esiste</span> nei calendari.");
+        message = "Sono indicati gli anni iniziali e finali di ogni secolo.";
+        message += " L' anno <span style=\"color:black\"><b>0</b></span>";
+        message += " <span style=\"color:red\"><b>NON esiste</b></span> nei calendari.";
+        lista.add(message);
         return lista;
     }
 
@@ -152,8 +156,6 @@ public class SecoloLogic extends CronoLogic {
      */
     public Secolo newEntity(boolean anteCristo, int inizio, int fine, String nome) {
         Secolo newEntityBean = Secolo.builderSecolo()
-
-                .ordine(getNewOrdine())
 
                 .anteCristo(anteCristo)
 

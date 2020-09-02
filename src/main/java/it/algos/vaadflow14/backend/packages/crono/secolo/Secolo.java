@@ -5,6 +5,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
@@ -34,10 +35,10 @@ import javax.validation.constraints.NotBlank;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Secolo", keyPropertyName = "nome")
+@AIEntity(recordName = "Secolo", keyPropertyName = "nome", usaRowIndex = true, usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "ordine,anteCristo,inizio,fine,nome")
-@AIForm(fields = "ordine,anteCristo,inizio,fine,nome")
+@AIList(fields = "anteCristo,inizio,fine,nome")
+@AIForm(fields = "anteCristo,inizio,fine,nome")
 public class Secolo extends AEntity {
 
     /**
@@ -47,20 +48,11 @@ public class Secolo extends AEntity {
 
 
     /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
-    public int ordine;
-
-
-    /**
      * nome completo (obbligatorio, unico) <br>
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true)
+    @AIField(type = AETypeField.text, focus = true, caption = "secolo")
     @AIColumn(header = "secolo", flexGrow = true)
     public String nome;
 
@@ -71,21 +63,21 @@ public class Secolo extends AEntity {
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
     //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
     //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
-    @AIColumn(header = "A.C.", widthEM = 6)
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "A.C.")
     public boolean anteCristo;
 
 
     /**
      * primo anno (obbligatorio, unico) <br>
      */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
+    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno iniziale")
     @AIColumn(widthEM = 6)
     public int inizio;
 
     /**
      * ultimo anno (obbligatorio, unico) <br>
      */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
+    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno finale")
     @AIColumn(widthEM = 6)
     public int fine;
 

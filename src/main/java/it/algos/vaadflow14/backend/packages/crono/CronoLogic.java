@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.crono;
 
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 
@@ -35,15 +36,31 @@ public abstract class CronoLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        //        super.operationForm = AEOperation.showOnly; //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
-
-        //--provvisorio
-        super.usaBottoneNew = true;
-        super.usaBottoneExport = true;
+        //--Quattro packages cronologici (secolo, anno, mese, giorno)
+        //--Bottoni DeleteAll e Reset presenti solo se FlowVar.usaDebug=true (debug si abilita solo per il developer)
+        //--Bottone New presente solo login.isDeveloper()=true
+        //--Entity modificabile e cancellabile solo login.isDeveloper()=true, altrimenti AEOperation.showOnly
+        if (FlowVar.usaSecurity) {
+            if (vaadinService.isDeveloper()) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+                super.usaBottoneNew = true;
+            } else {
+                super.usaBottoneNew = false;
+                super.operationForm = AEOperation.showOnly;
+            }
+            super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
+        } else {
+            if (FlowVar.usaDebug) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+                super.usaBottoneNew = true;
+            } else {
+                super.usaBottoneNew = false;
+                super.operationForm = AEOperation.showOnly;
+            }
+            super.usaBottoneExport = true;
+        }
     }
 
 }

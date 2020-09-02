@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.entity.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,21 +101,23 @@ public class UtenteLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public boolean crea(String username, String password) {
-        return checkAndSave(newEntity(username, password));
+        return checkAndSave(newEntity(username, password, (AERole) null));
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
+     * Può forzare una company DIVERSA da quella corrente usata da newEntity() <br>
      *
      * @param company  obbligatoria se FlowVar.usaCompany=true
      * @param username o nickName
      * @param password in chiaro
+     * @param role     authority per il login
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public boolean crea(Company company, String username, String password) {
-        Utente entity = newEntity(username, password);
+    public boolean crea(Company company, String username, String password, AERole role) {
+        Utente entity = newEntity(username, password, role);
         entity.company = company;
         return checkAndSave(entity);
     }
@@ -129,7 +132,7 @@ public class UtenteLogic extends ALogic {
      */
     @Override
     public AEntity newEntity() {
-        return newEntity(VUOTA, VUOTA);
+        return newEntity(VUOTA, VUOTA, (AERole) null);
     }
 
 
@@ -142,10 +145,11 @@ public class UtenteLogic extends ALogic {
      *
      * @param username o nickName
      * @param password in chiaro
+     * @param role     authority per il login
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Utente newEntity(String username, String password) {
+    public Utente newEntity(String username, String password, AERole role) {
         Utente newEntityBean = Utente.builderUtente()
 
                 .username(text.isValid(username) ? username : null)
@@ -159,6 +163,8 @@ public class UtenteLogic extends ALogic {
                 .credentialsNonExpired(true)
 
                 .enabled(true)
+
+                .role(role != null ? role : AERole.user)
 
                 .build();
 
@@ -227,11 +233,11 @@ public class UtenteLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea(companyLogic.getAlgos(), "Gac", "fulvia");
-        crea(companyLogic.getDemo(), "mario_rossi", "rossi123");
-        crea(null, "marco.beretta", "beretta123");
-        crea(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123");
-        crea(null, "paolo cremona", "cremona123");
+        crea(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer);
+        crea(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin);
+        crea(null, "marco.beretta", "beretta123", AERole.admin);
+        crea(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user);
+        crea(null, "paolo cremona", "cremona123", AERole.guest);
 
         return mongo.isValid(entityClazz);
     }

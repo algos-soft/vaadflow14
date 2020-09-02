@@ -7,7 +7,6 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -17,11 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Project vaadflow14
@@ -42,7 +36,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIEntity(recordName = "Giorno", keyPropertyName = "nome")
+@AIEntity(recordName = "Giorno", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
 @AIList(fields = "ordine,mese,nome")
 @AIForm(fields = "ordine,mese,nome")
 public class Giorno extends AEntity {
@@ -79,7 +73,7 @@ public class Giorno extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(header = "giorno",flexGrow = true)
+    @AIColumn(header = "giorno", flexGrow = true)
     public String nome;
 
 

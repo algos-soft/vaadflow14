@@ -8,5 +8,5 @@ package it.algos.vaadflow14.backend.enumeration;
  * Time: 19:08
  */
 public enum AERole {
-    guest, user, admin,developer
+    guest, user, admin, developer
 }

@@ -165,6 +165,7 @@ public class AVaadinService extends AAbstractService {
         return login != null ? login.getUtente() : null;
     }
 
+
     /**
      * Restituisce la company, se esiste la sessione, se il login è registrato e se la company è valida <br>
      *
@@ -173,6 +174,23 @@ public class AVaadinService extends AAbstractService {
     public Company getCompany() {
         ALogin login = getLogin();
         return login != null ? login.getCompany() : null;
+    }
+
+
+    public boolean isDeveloper() {
+        ALogin login = getLogin();
+        return login != null && login.isDeveloper();
+    }
+
+
+    public boolean isAdmin() {
+        ALogin login = getLogin();
+        return login != null && login.isAdmin();
+    }
+
+
+    public boolean isAdminOrDeveloper() {
+        return isAdmin() || isDeveloper();
     }
 
 }

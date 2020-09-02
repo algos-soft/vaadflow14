@@ -20,7 +20,6 @@ import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.vaadin.klaudeta.PaginatedGrid;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -28,8 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SEP;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow15
@@ -99,7 +97,7 @@ public class AGrid {
 
     public AGrid(Class<? extends AEntity> beanType, ALogic service) {
         super();
-        this.grid = new Grid(beanType,false);
+        this.grid = new Grid(beanType, false);
         this.service = service;
         this.beanType = beanType;
     }
@@ -158,10 +156,14 @@ public class AGrid {
     protected void addColumnsGrid() {
         Grid.Column<AEntity> colonna = null;
 
+        if (annotation.usaRowIndex(beanType)) {
+            grid.addColumn(item -> "").setKey(FIELD_INDEX).setHeader("#").setWidth("3.5em").setFlexGrow(0);
+        }
+
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
                 colonna = columnService.add(grid, beanType, propertyName);
-                if (colonna!=null) {
+                if (colonna != null) {
                     columnsMap.put(propertyName, colonna);
                 }
             }
@@ -177,10 +179,10 @@ public class AGrid {
 
     public void setItems(Collection items) {
 
-//        if (array.isValid(items)) {
-            grid.deselectAll();
-            grid.setItems(items);
-//        }
+        //        if (array.isValid(items)) {
+        grid.deselectAll();
+        grid.setItems(items);
+        //        }
 
         fixGridHeader(items);
     }
@@ -195,6 +197,12 @@ public class AGrid {
      */
     public void setAllListener(AILogic service) {
         this.service = service;
+
+        if (annotation.usaRowIndex(beanType)) {
+            grid.addAttachListener(event -> {
+                grid.getColumnByKey(FIELD_INDEX).getElement().executeJs("this.renderer = function(root, column, rowData) {root.textContent = rowData.index + 1}");
+            });
+        }
 
         grid.addItemDoubleClickListener(event -> performAction((ItemClickEvent) event, AEAction.doubleClick));
     }

@@ -125,6 +125,7 @@ public class TopbarComponent extends HorizontalLayout {
         Image image = null;
         Div divTitolo = null;
         MenuBar menuUser = null;
+        login = vaadinService.getLogin();
 
         setWidth("100%");
         setDefaultVerticalComponentAlignment(Alignment.CENTER);
@@ -184,14 +185,12 @@ public class TopbarComponent extends HorizontalLayout {
      */
     private Div fixTitolo() {
         Div div = new Div();
-        ALogin login;
         Company company;
         String commonStyle = "line-height:120%; white-space:nowrap; overflow:hidden; color:" + LUMO_PRIMARY_COLOR;
         Label primaRiga = new Label(FlowVar.projectName);
         Label secondaRiga = new Label(FlowVar.projectDescrizione);
 
         if (FlowVar.usaCompany) {
-            login = vaadinService.getLogin();
             company = login != null ? login.getCompany() : null;
             if (company != null) {
                 primaRiga = new Label(company.getCode());
@@ -220,12 +219,10 @@ public class TopbarComponent extends HorizontalLayout {
         MenuItem itemUser;
         SubMenu projectSubMenu;
 
-        ALogin login;
         Button profileButton;
         Button logoutButton;
 
         if (FlowVar.usaSecurity && vaadinService != null && vaadinService.isLogin()) {
-            login = vaadinService.getLogin();
             menuUser = new MenuBar();
             menuUser.setOpenOnHover(true);
 
@@ -233,6 +230,18 @@ public class TopbarComponent extends HorizontalLayout {
                 itemUser = menuUser.addItem(login.getUtente().username);
                 itemUser.addComponentAsFirst(getIcon());
                 projectSubMenu = itemUser.getSubMenu();
+
+                if (itemUser != null) {
+                    if (login.isDeveloper()) {
+                        itemUser.getElement().getStyle().set("color", "red");
+                    } else {
+                        if (login.isAdmin()) {
+                            itemUser.getElement().getStyle().set("color", "blue");
+                        } else {
+                            itemUser.getElement().getStyle().set("color", "green");
+                        }
+                    }
+                }
 
                 if (usaProfile) {
                     profileButton = layoutService.creaProfileButton();
@@ -261,17 +270,16 @@ public class TopbarComponent extends HorizontalLayout {
 
 
     protected Icon getIcon() {
-        Icon icon = new Icon(VaadinIcon.USER);
+        Icon icon = new Icon(VaadinIcon.ABACUS);
 
         if (login != null) {
-            //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-            //            if (login.isDeveloper()) {
-            //                icon = new Icon(VaadinIcon.MAGIC);
-            //            }
-            //            if (login.isAdmin()) {
-            //                icon = new Icon(VaadinIcon.SPECIALIST);
-            //            }
-            icon = new Icon(VaadinIcon.MAGIC);
+            icon = new Icon(VaadinIcon.USER);
+            if (login.isDeveloper()) {
+                icon = new Icon(VaadinIcon.MAGIC);
+            }
+            if (login.isAdmin()) {
+                icon = new Icon(VaadinIcon.SPECIALIST);
+            }
         }
 
         return icon;

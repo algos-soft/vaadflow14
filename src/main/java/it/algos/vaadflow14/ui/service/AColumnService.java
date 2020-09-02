@@ -124,35 +124,15 @@ public class AColumnService extends AAbstractService {
                 case integer:
                     colonna = grid.addColumn(propertyName);
                     sortable = true;
-
-                    //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                    //                        String testo = VUOTA;
-                    //                        int value;
-                    //
-                    //                        try {
-                    //                            value = field.getInt(entity);
-                    //                            testo = value + "";//@todo Funzionalità ancora da implementare per formattazione
-                    //                        } catch (Exception unErrore) {
-                    //                            logger.error(unErrore, this.getClass(), "add.integer");
-                    //                        }
-                    //
-                    //                        return new Label(testo);
-                    //                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case booleano:
                     colonna = addBoolean(grid, field);
-
-                    //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                    //                        boolean status = false;
-                    //
-                    //                        try {
-                    //                            status = field.getBoolean(entity);
-                    //                        } catch (Exception unErrore) {
-                    //                            logger.error(unErrore, this.getClass(), "add.booleano");
-                    //                        }
-                    //
-                    //                        return new ACheckBox(status);
-                    //                    }));//end of lambda expressions and anonymous inner class
+                    break;
+                case enumeration:
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        Object obj = reflection.getPropertyValue((AEntity) entity, propertyName);
+                        return new Label(obj != null ? obj.toString() : VUOTA);
+                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case combo:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {

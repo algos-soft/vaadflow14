@@ -67,14 +67,14 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Quindi la ViewList (con la Grid) e la ViewForm ( con il Form), hanno istanze diverse della sottoclasse xxxLogic <br>
  * <p>
  * Questo 'service' garantisce i metodi di collegamento per accedere al database <br>
- * Implementa le API dell'interfaccia  <br>
- * Classe astratta. L'implementazione concreta standard è GenericLogic <br>
+ * Implementa le API dell' interfaccia  <br>
+ * Classe astratta. L' implementazione concreta standard è GenericLogic <br>
  * Contiene i riferimenti ad altre classi per usarli nelle sottoclassi concrete <br>
  * I riferimenti sono 'public' per poterli usare con TestUnit <br>
  * <p>
  * Le sottoclassi concrete vengono create in AView.fixEntityLogic() <br>
  * col metodo logic = (AILogic) appContext.getBean(Class.forName(canonicalName)); <br>
- * sono pertanto SCOPE_PROTOTYPE e ne viene creata un'istanza diversa per ogni view <br>
+ * sono pertanto SCOPE_PROTOTYPE e ne viene creata un' istanza diversa per ogni view <br>
  * possono quini mantenere delle property senza possibilità che si 'mischino' con altri utenti di altri browser <br>
  */
 public abstract class ALogic implements AILogic {
@@ -586,8 +586,8 @@ public abstract class ALogic implements AILogic {
      * Costruisce un layout per la Grid in bodyPlacehorder della view <br>
      * <p>
      * Chiamato da AView.initView() <br>
-     * Costruisce un'istanza dedicata <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+     * Costruisce un' istanza dedicata <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      *
      * @return componente grafico per il placeHolder
      */
@@ -1022,10 +1022,13 @@ public abstract class ALogic implements AILogic {
         //--filtro base della entity
         this.creaFiltroBaseEntity();
 
-        //--filtro del campo search
+        //--filtro (eventuale) per la company in uso
+        this.creaFiltroCompany();
+
+        //--filtro (eventuale) del campo search
         this.creaFiltroSearch();
 
-        //--filtri aggiuntivi dei comboBox
+        //--filtri aggiuntivi (eventuali) dei comboBox
         this.creaFiltriComboBox();
     }
 
@@ -1039,6 +1042,34 @@ public abstract class ALogic implements AILogic {
 
         if (sort != null) {
             filtro = new AFiltro(sort);
+        }
+
+        if (filtro != null) {
+            filtri.add(filtro);
+        }
+    }
+
+
+    /**
+     * Filtro (eventuale) per la company in uso. <br>
+     * Solo se FlowVar.usaCompany=true <br>
+     * Solo se la entity è sottoclasse di ACEntity <br>
+     * Come developer, vedo comunque tutto <br>
+     * Come admin e user vedo SOLO le entities che hanno la croce selezionata <br>
+     */
+    public void creaFiltroCompany() {
+        AFiltro filtro = null;
+        Company company = vaadinService.getCompany();
+        boolean needCompany = annotation.usaCompany(entityClazz);
+
+        if (FlowVar.usaCompany) {
+            if (company != null) {
+                if (!vaadinService.isDeveloper() && needCompany) {
+                    filtri.add(new AFiltro(Criteria.where(FlowVar.companyClazzName).is(company)));
+                }
+            } else {
+                logger.error("Non è selezionata nessuna company", this.getClass(), "creaFiltroCompany");
+            }
         }
 
         if (filtro != null) {
@@ -1362,7 +1393,7 @@ public abstract class ALogic implements AILogic {
             }
         }
 
-        if (annotation.isUsaCreazioneModifica(entityClazz)) {
+        if (annotation.usaCreazioneModifica(entityClazz)) {
             if (operation == AEOperation.addNew) {
                 entityBean.creazione = LocalDateTime.now();
             }

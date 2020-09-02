@@ -4,6 +4,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
@@ -690,7 +691,33 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the status
      */
-    public boolean isUsaNote(final Class<? extends AEntity> entityClazz) {
+    public boolean usaRowIndex(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaRowIndex() : false;
+    }
+
+
+    /**
+     * Flag per usare il field della superclasse AEntity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaCompany(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaCompany() : FlowVar.usaCompany;
+    }
+
+
+    /**
+     * Flag per usare il field della superclasse AEntity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaNote(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
         return annotation != null ? annotation.usaNote() : false;
     }
@@ -703,7 +730,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the status
      */
-    public boolean isUsaCreazioneModifica(final Class<? extends AEntity> entityClazz) {
+    public boolean usaCreazioneModifica(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
         return annotation != null ? annotation.usaCreazioneModifica() : false;
     }

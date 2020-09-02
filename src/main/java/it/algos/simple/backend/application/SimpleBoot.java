@@ -66,7 +66,7 @@ public class SimpleBoot extends FlowBoot {
     protected void regolaApplicationProperties() {
         super.regolaApplicationProperties();
 
-        FlowVar.usaDebug = true;
+        FlowVar.usaDebug = false;
         FlowVar.usaSecurity = false;
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";

@@ -176,8 +176,6 @@ public class GiornoLogic extends CronoLogic {
         super.deleteAll();
         int ordine;
         String titolo;
-        AESecolo secoloEnum;
-        Secolo secolo;
         String titoloMese;
         List<HashMap> lista;
         Mese mese;
@@ -190,7 +188,7 @@ public class GiornoLogic extends CronoLogic {
             mese = (Mese) mongo.findById(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_NORMALE);
 
-            crea(0, mese, titolo);
+            crea(ordine, mese, titolo);
         }
 
         return mongo.isValid(entityClazz);

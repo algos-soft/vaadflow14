@@ -44,6 +44,14 @@ public @interface AIEntity {
      *
      * @return the status
      */
+    boolean usaCompany() default true;
+
+    /**
+     * (Optional) il campo della superclasse
+     * Di default false
+     *
+     * @return the status
+     */
     boolean usaNote() default false;
 
 
@@ -54,6 +62,14 @@ public @interface AIEntity {
      * @return the status
      */
     boolean usaCreazioneModifica() default false;
+
+    /**
+     * (Optional) prima colonna indice qa sinistra della grid
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaRowIndex() default false;
 
 
 }

@@ -306,7 +306,7 @@ public abstract class AForm extends VerticalLayout {
             return;
         }
 
-        this.usaFieldNote = annotation.isUsaNote(entityClazz);
+        this.usaFieldNote = annotation.usaNote(entityClazz);
 
         //--Crea un nuovo binder (vuoto) per questo Form e questa entityBean
         binder = new Binder(entityClazz);
@@ -470,7 +470,6 @@ public abstract class AForm extends VerticalLayout {
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "getValidBean");
         }
-
         return entityBean;
     }
 

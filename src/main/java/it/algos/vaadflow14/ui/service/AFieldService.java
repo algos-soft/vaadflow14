@@ -125,6 +125,7 @@ public class AFieldService extends AAbstractService {
         int intMax = 0;
         String widthForNumber = "8em";
         Class comboClazz = null;
+        List items;
 
         if (reflectionJavaField == null) {
             return null;
@@ -183,13 +184,19 @@ public class AFieldService extends AAbstractService {
                     //                    }
                     break;
                 case combo:
-                    field = appContext.getBean(AComboField.class, fieldKey, caption);
                     if (comboClazz != null) {
-                        List items = mongo.findAll(comboClazz);
+                        items = mongo.findAll(comboClazz);
                         if (items != null) {
-                            ((AComboField) field).setItem(items);
+                            field = appContext.getBean(AComboField.class, fieldKey, caption, items);
+                            boolean sttaus=  ((AComboField<?>) field).isReadOnly();
+                             sttaus=  ((AComboField<?>) field).isReadOnly();
+                        } else {
+                            logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
                         }
+                    } else {
+                        logger.warn("Manca la comboClazz per " + fieldKey, this.getClass(), "creaOnly.combo");
                     }
+                    break;
                 case enumeration:
                     field = getEnumerationField(reflectionJavaField, fieldKey, caption);
                     break;
@@ -320,6 +327,7 @@ public class AFieldService extends AAbstractService {
                 case booleano:
                     break;
                 case combo:
+//                    field.getBinder().setReadOnly(false);
                     break;
                 case enumeration:
                     break;
@@ -341,6 +349,7 @@ public class AFieldService extends AAbstractService {
             if (builder != null) {
                 builder.bind(fieldName);
             }
+            field.getBinder().setReadOnly(false);//@todo Funzionalità ancora da implementare per gestire nuovo/modifica
         }
     }
 

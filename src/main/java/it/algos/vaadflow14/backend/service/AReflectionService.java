@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -200,7 +201,7 @@ public class AReflectionService extends AAbstractService {
         }
 
         if (field == null && AEntity.class.isAssignableFrom(genericClazz)) {
-            listaFields = getAllFields(AEntity.class);
+            listaFields = getAllFields(ACEntity.class);
             if (listaFields != null) {
                 for (Field fieldTmp : listaFields) {
                     if (fieldTmp.getName().equals(publicFieldName)) {

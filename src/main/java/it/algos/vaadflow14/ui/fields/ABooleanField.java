@@ -76,6 +76,7 @@ public class ABooleanField extends AField<Boolean> {
      * @param boolEnum valori custom della scelta booleana
      */
     public ABooleanField(String fieldKey, AETypeBoolField typeBool, String caption, String boolEnum) {
+        super.fieldKey = fieldKey;
         this.typeBool = typeBool;
         this.caption = caption;
         this.boolEnum = boolEnum;

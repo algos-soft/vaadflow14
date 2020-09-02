@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.login;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
+import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,6 +94,21 @@ public class ALogin {
     //    public boolean isAdmin() {
     //        return roleType == EARoleType.admin;
     //    }// end of method
+
+
+    public boolean isDeveloper() {
+        return utente.role == AERole.developer;
+    }
+
+
+    public boolean isAdmin() {
+        return utente.role == AERole.admin;
+    }
+
+
+    public boolean isUser() {
+        return utente.role == AERole.user;
+    }
 
 
     /**

@@ -114,8 +114,6 @@ public class CompanyLogic extends ALogic {
     public Company newEntity(String code, String telefono, String email, String descrizione) {
         Company newEntityBean = Company.builderCompany()
 
-                .ordine(getNewOrdine())
-
                 .code(text.isValid(code) ? code : null)
 
                 .telefono(text.isValid(telefono) ? telefono : null)

@@ -4,6 +4,9 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
+import it.algos.vaadflow14.backend.enumeration.AERole;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -38,27 +41,18 @@ import java.util.Collection;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Utente", keyPropertyName = "username", usaCreazioneModifica = true)
+@AIEntity(recordName = "Utente", keyPropertyName = "username", usaRowIndex = true, usaCompany = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
-@AIList(fields = "username,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
-@AIForm(fields = "username,password,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
+@AIList(fields = "username,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
+@AIForm(fields = "username,password,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
 public class Utente extends ACEntity implements UserDetails {
+
+    public static final int WIDTH = 5;
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-
-    //    /**
-    //     * Riferimento dinamico alla company CON @DBRef <br>
-    //     * Nullo se il flag FlowVar.usaCompany=false <br>
-    //     * Obbligatorio se il flag FlowVar.usaCompany=true <br>
-    //     */
-    //    @DBRef
-    //    @AIField(type = AETypeField.combo)
-    //    @AIColumn()
-    //    public Company company;
 
 
     /**
@@ -87,33 +81,41 @@ public class Utente extends ACEntity implements UserDetails {
     /**
      * flag account valido (facoltativo, di default true)
      */
-    @AIField(type = AETypeField.booleano)
-    @AIColumn(header = "ane")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Expr", widthEM = WIDTH)
     public boolean accountNonExpired;
 
 
     /**
      * flag account non bloccato (facoltativo, di default true)
      */
-    @AIField(type = AETypeField.booleano)
-    @AIColumn(header = "anl")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Lock", widthEM = WIDTH)
     public boolean accountNonLocked;
 
 
     /**
      * flag credenziali non scadute (facoltativo, di default true)
      */
-    @AIField(type = AETypeField.booleano)
-    @AIColumn(header = "cne")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Cexp", widthEM = WIDTH)
     public boolean credentialsNonExpired;
 
 
     /**
      * flag abilitato (facoltativo, di default true)
      */
-    @AIField(type = AETypeField.booleano)
-    @AIColumn(header = "ok")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = WIDTH)
     public boolean enabled;
+
+
+    /**
+     * role authority (obbligatorio se FlowVar.usaCompany=true, di default user)
+     */
+    @AIField(type = AETypeField.enumeration, enumClazz = AERole.class)
+    @AIColumn()
+    public AERole role;
 
 
     /**

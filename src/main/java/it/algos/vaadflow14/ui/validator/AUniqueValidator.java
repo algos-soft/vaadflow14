@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.AMongoService;
+import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -44,6 +45,14 @@ public class AUniqueValidator implements Validator {
      */
     @Autowired
     public AMongoService mongo;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ATextService text;
 
 
     private AEOperation operationForm;
@@ -92,6 +101,7 @@ public class AUniqueValidator implements Validator {
     public ValidationResult apply(Object obj, ValueContext valueContext) {
         AEntity entity = null;
         Serializable propertyNewValue = null;
+        String message = VUOTA;
 
         if (obj == null) {
             return ValidationResult.error("Occorre inserire un valore");
@@ -99,16 +109,17 @@ public class AUniqueValidator implements Validator {
 
         if (obj instanceof Serializable) {
             propertyNewValue = (Serializable) obj;
+            message = text.primaMaiuscola(propertyName) + " indicato esiste già";
 
             if (operationForm == AEOperation.addNew) {
                 entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
-                return entity != null ? ValidationResult.error("Esiste già") : ValidationResult.ok();
+                return entity != null ? ValidationResult.error(message) : ValidationResult.ok();
             } else {
                 if (propertyNewValue.equals(propertyOldValue)) {
                     return ValidationResult.ok();
                 } else {
                     entity = mongo.findOneUnique(entityBean.getClass(), propertyName, (Serializable) obj);
-                    return entity != null ? ValidationResult.error("Esiste già") : ValidationResult.ok();
+                    return entity != null ? ValidationResult.error(message) : ValidationResult.ok();
                 }
             }
         } else {

@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.data.binder.Binder;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
-import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +110,10 @@ public class ABeanService extends AAbstractService {
 
         if (array.isEmpty(listaNomi)) {
             listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
+        }
+
+        if (FlowVar.usaCompany&&annotation.usaCompany(entityBean.getClass())) {
+            listaNomi.add(0, FIELD_COMPANY);
         }
 
         for (String fieldName : listaNomi) {

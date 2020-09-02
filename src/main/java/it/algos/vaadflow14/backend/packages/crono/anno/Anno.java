@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @Builder(builderMethodName = "builderAnno")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Anno", keyPropertyName = "nome")
+@AIEntity(recordName = "Anno", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR)
 @AIList(fields = "ordine,secolo,bisestile,nome")
 @AIForm(fields = "ordine,secolo,bisestile,nome")
@@ -72,7 +72,7 @@ public class Anno extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true, caption = "anno")
-    @AIColumn(header = "anno",flexGrow = true)
+    @AIColumn(header = "anno", flexGrow = true)
     public String nome;
 
     /**
