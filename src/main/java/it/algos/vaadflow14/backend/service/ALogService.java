@@ -114,7 +114,7 @@ public class ALogService extends AAbstractService {
         message += "Versione ";
         message += FlowVar.projectVersion;
         message += " del ";
-        message += date.get(FlowVar.versionDate, AETime.normal.getPattern());
+        message += date.get(FlowVar.versionDate, AETime.dateNormal.getPattern());
 
         info(AETypeLog.startup, message);
     }

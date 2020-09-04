@@ -1,6 +1,7 @@
 package it.algos.simple.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.simple.backend.packages.Gamma;
 import it.algos.vaadflow14.backend.data.FlowData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

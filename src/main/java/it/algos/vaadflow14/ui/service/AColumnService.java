@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -130,19 +131,25 @@ public class AColumnService extends AAbstractService {
                     colonna = addBoolean(grid, field);
                     break;
                 case localDate:
-                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        LocalDate data;
-                        String testo = VUOTA;
-
-                        try {
-                            data = (LocalDate) field.get(entity);
-                            testo = date.get(data);
-                        } catch (Exception unErrore) {
-                            logger.error(unErrore, this.getClass(), "add.localDate");
-                        }
-
-                        return new Label(testo);
-                    }));//end of lambda expressions and anonymous inner class
+                case localDateTime:
+                case localTime:
+                case monthdate:
+                case weekdate:
+                    colonna = addDate(grid, field, type);
+                    //
+                    //                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    //                        LocalDate data;
+                    //                        String testo = VUOTA;
+                    //
+                    //                        try {
+                    //                            data = (LocalDate) field.get(entity);
+                    //                            testo = date.get(data);
+                    //                        } catch (Exception unErrore) {
+                    //                            logger.error(unErrore, this.getClass(), "add.localDate");
+                    //                        }
+                    //
+                    //                        return new Label(testo);
+                    //                    }));//end of lambda expressions and anonymous inner class
                     break;
                 case enumeration:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
@@ -337,7 +344,7 @@ public class AColumnService extends AAbstractService {
                 case customLabel:
                     try {
                         status = field.getBoolean(entity);
-                        testo = status ? valori.get(0):valori.get(1);
+                        testo = status ? valori.get(0) : valori.get(1);
                     } catch (Exception unErrore) {
                         logger.error(unErrore.toString());
                     }
@@ -393,6 +400,60 @@ public class AColumnService extends AAbstractService {
 
             return new Label("g");
         }));//end of lambda expressions and anonymous inner class
+
+        return colonna;
+    }
+
+
+    public Grid.Column<AEntity> addDate(Grid grid, Field field, AETypeField type) {
+        Grid.Column<AEntity> colonna = null;
+
+        switch (type) {
+            case localDate:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    LocalDate data;
+                    String testo = VUOTA;
+
+                    try {
+                        data = (LocalDate) field.get(entity);
+                        testo = date.get(data);
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "addDate.localDate");
+                    }
+
+                    return new Label(testo);
+                }));//end of lambda expressions and anonymous inner class
+                break;
+            case localDateTime:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    Object obj;
+                    LocalDateTime timeStamp;
+                    String testo = VUOTA;
+
+                    try {
+                        obj = field.get(entity);
+                        if (obj instanceof LocalDateTime) {
+                            timeStamp = (LocalDateTime) obj;
+                            //                            testo = date.get(timeStamp); //@todo aggiungere un selettore per modificare il format dalla annotation
+                        } else {
+                            logger.warn("localdatetime non definito", this.getClass(), "addDate.localDate");
+                        }
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "addDate.localDate");
+                    }
+
+                    return new Label(testo);
+                }));//end of lambda expressions and anonymous inner class
+            case localTime:
+                break;
+            case monthdate:
+                break;
+            case weekdate:
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "add");
+                break;
+        }
 
         return colonna;
     }

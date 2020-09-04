@@ -5,7 +5,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -14,6 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Project vaadflow14
@@ -35,8 +37,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Gamma", keyPropertyName = "code", usaRowIndex = true)
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,uno,due,tre,quattro")
-@AIForm(fields = "code,uno,due,tre,quattro")
+@AIList(fields = "code,uno,due,tre,quattro,cinque")
+@AIForm(fields = "code,uno,due,tre,quattro,cinque")
 public class Gamma extends AEntity {
 
     /**
@@ -53,26 +55,27 @@ public class Gamma extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice")
     @AIColumn(header = "Code")
-    private String code;
+    public String code;
 
-    @AIField(type = AETypeField.localDate)
+    @AIField(type = AETypeField.localDate, caption = "Data semplice")
     @AIColumn()
-    private String uno;
+    public LocalDate uno;
 
-    @AIField(type = AETypeField.localDateTime)
+    @AIField(type = AETypeField.localDateTime, caption = "Data e orario")
     @AIColumn()
-    private String due;
+    public LocalDateTime due;
 
-    @AIField(type = AETypeField.localTime)
+    @AIField(type = AETypeField.localTime, caption = "Solo orario")
     @AIColumn()
-    private String tre;
+    public LocalTime tre;
 
-    @AIField(type = AETypeField.text)
+    @AIField(type = AETypeField.monthdate, caption = "Data col mese")
     @AIColumn()
-    private String quattro;
+    public LocalDate quattro;
 
-
-
+    @AIField(type = AETypeField.weekdate, caption = "Data con la settimana")
+    @AIColumn()
+    public LocalTime cinque;
 
 
     /**

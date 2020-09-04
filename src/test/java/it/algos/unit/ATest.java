@@ -48,48 +48,6 @@ public class ATest {
      */
     protected static final List<String> LIST_SHORT_STRING = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING));
 
-    // alcune date di riferimento
-    protected final static Date DATE_UNO = new Date(1413870120000L); // 21 ottobre 2014, 7 e 42
-
-    protected final static Date DATE_DUE = new Date(1412485440000L); // 5 ottobre 2014, 7 e 04
-
-    protected final static Date DATE_TRE = new Date(1412485920000L); // 5 ottobre 2014, 7 e 12
-
-    protected final static Date DATE_QUATTRO = new Date(1394259124000L); // 8 marzo 2014, 7 e 12 e 4
-
-    protected final static LocalDate LOCAL_DATE_UNO = LocalDate.of(2014, 10, 21);
-
-    protected final static LocalDate LOCAL_DATE_DUE = LocalDate.of(2014, 10, 5);
-
-    protected final static LocalDate LOCAL_DATE_TRE = LocalDate.of(2015, 10, 5);
-
-    protected final static LocalDate LOCAL_DATE_QUATTRO = LocalDate.of(2015, 3, 8);
-
-    protected final static LocalDate LOCAL_DATE_VUOTA = LocalDate.of(1970, 1, 1);
-
-    protected final static LocalDate LOCAL_DATE_PRIMO_VALIDO = LocalDate.of(1970, 1, 2);
-
-    protected final static LocalDate LOCAL_DATE_OLD = LocalDate.of(1946, 10, 28);
-
-    protected final static LocalDateTime LOCAL_DATE_TIME_UNO = LocalDateTime.of(2014, 10, 21, 7, 42);
-
-    protected final static LocalDateTime LOCAL_DATE_TIME_DUE = LocalDateTime.of(2014, 10, 5, 7, 4);
-
-    protected final static LocalDateTime LOCAL_DATE_TIME_VUOTA = LocalDateTime.of(1970, 1, 1, 0, 0);
-
-    protected final static LocalDateTime LOCAL_DATE_TIME_PRIMO_VALIDO = LocalDateTime.of(1970, 1, 1, 0, 1);
-
-    protected final static LocalDateTime LOCAL_DATE_TIME_OLD = LocalDateTime.of(1946, 10, 28, 0, 0);
-
-    protected final static LocalTime LOCAL_TIME_UNO = LocalTime.of(7, 42);
-
-    protected final static LocalTime LOCAL_TIME_DUE = LocalTime.of(7, 4);
-
-    protected final static LocalTime LOCAL_TIME_TRE = LocalTime.of(22, 0);
-
-    protected final static LocalTime LOCAL_TIME_QUATTRO = LocalTime.of(6, 0);
-
-    protected final static LocalTime LOCAL_TIME_VUOTO = LocalTime.of(0, 0);
 
     /**
      * The App context.
@@ -125,10 +83,10 @@ public class ATest {
     protected AWebService web;
 
     @InjectMocks
-    protected  AFileService file;
+    protected AFileService file;
 
     @InjectMocks
-    protected  AMathService math;
+    protected AMathService math;
 
     protected Logger adminLogger;
 

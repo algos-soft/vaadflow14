@@ -22,6 +22,10 @@ public enum AETypeField {
 
     localTime(6, 0),
 
+    monthdate(6, 0),
+
+    weekdate(6, 0),
+
     preferenza(6, 0),
 
     //    noBinder,
