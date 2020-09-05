@@ -75,18 +75,18 @@ public interface AILogic {
     AGrid getBodyGridLayout();
 
 
-//    /**
-//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * Costruisce un'istanza dedicata <br>
-//     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
-//     *
-//     * @param entityClazz the class of type AEntity
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    AForm getBodyFormLayout(Class<? extends AEntity> entityClazz);
+    //    /**
+    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+    //     * <p>
+    //     * Chiamato da AView.initView() <br>
+    //     * Costruisce un'istanza dedicata <br>
+    //     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+    //     *
+    //     * @param entityClazz the class of type AEntity
+    //     *
+    //     * @return componente grafico per il placeHolder
+    //     */
+    //    AForm getBodyFormLayout(Class<? extends AEntity> entityClazz);
 
 
     /**
@@ -192,11 +192,25 @@ public interface AILogic {
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
      * 3) Sovrascrive la lista nella sottoclasse specifica <br>
      *
-     *
      * @return lista di nomi di properties
      */
     List<String> getGridPropertyNamesList();
 
+
+    /**
+     * Costruisce una lista ordinata di nomi delle properties del Form. <br>
+     * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
+     * todo ancora da sviluppare
+     *
+     * @return lista di nomi di properties
+     */
+     List<String> getFormPropertyNamesList();
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>

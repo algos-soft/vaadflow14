@@ -30,8 +30,9 @@ public class ProvaField extends CustomField<LocalDateTime>  {
     private final TimePicker timePicker = new TimePicker();
 
 
-    public ProvaField() {
+    public ProvaField(String key,String caption) {
         super();
+        setLabel(caption);
         add(datePicker, timePicker);
     }
 

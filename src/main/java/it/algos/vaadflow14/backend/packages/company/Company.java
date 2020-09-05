@@ -52,7 +52,7 @@ public class Company extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 8)
     @AIColumn(widthEM = 6)
-    private String code;
+    public String code;
 
 
     /**
@@ -60,14 +60,14 @@ public class Company extends AEntity {
      */
     @AIField(type = AETypeField.phone, caption = "Telefono/cellulare")
     @AIColumn()
-    private String telefono;
+    public String telefono;
 
     /**
      * mail (facoltativa)
      */
     @AIField(type = AETypeField.email, caption = "Posta elettronica")
     @AIColumn()
-    private String email;
+    public String email;
 
 
     /**
@@ -76,7 +76,7 @@ public class Company extends AEntity {
     @NotBlank()
     @AIField(type = AETypeField.text, caption = "Descrizione completa")
     @AIColumn(header = "Descrizione", flexGrow = true)
-    private String descrizione;
+    public String descrizione;
 
 
     /**

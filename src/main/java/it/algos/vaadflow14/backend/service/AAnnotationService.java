@@ -443,8 +443,8 @@ public class AAnnotationService extends AAbstractService {
      * Restituisce il nome del menu. <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
-     * 4) Cerca la property 'menuName' nell'Annotation @AIView della classe AViewList <br>
+     * 3) Controlla che esista l' annotation specifica <br>
+     * 4) Cerca la property 'menuName' nell' Annotation @AIView della classe AViewList <br>
      * 5) Se non la trova, cerca nella classe la property statica MENU_NAME <br>
      * 6) Se non la trova, di default usa la property 'value' di @Route <br>
      * 7) Se non la trova, di default usa nome della classe <br>
@@ -466,7 +466,7 @@ public class AAnnotationService extends AAbstractService {
 
         // Se non la trova, cerca nella classe la property statica MENU_NAME
         if (text.isEmpty(menuName)) {
-            menuName = reflection.getMenuName(entityViewClazz);
+//            menuName = reflection.getMenuName(entityViewClazz);  //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         }
 
         // Se non la trova, di default usa la property 'value' di @Route

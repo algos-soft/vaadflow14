@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.PROPERTY_SERIAL;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -58,23 +56,34 @@ public class AReflectionService extends AAbstractService {
 
 
     /**
-     * Fields statici dichiarati in una classe generica. <br>
+     * Lista dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
+     * Controlla che il parametro in ingresso non sia nullo <br>
      * Solo la classe indicata. Non ricorsivo. Niente fields delle superClassi. <br>
-     * Esclusa la property: PROPERTY_SERIAL
-     * Fields non ordinati <br>
+     * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields PRIVATI <br>
+     * Fields NON ordinati <br>
+     * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
+     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
-     * @param genericClazz da cui estrarre i fields statici
+     * @param entityClazz da cui estrarre i fields statici
      *
      * @return lista di static fields della classe generica
      */
-    public List<Field> getFields(Class<?> genericClazz) {
+    public List<Field> getFields(Class<? extends AEntity> entityClazz) {
         List<Field> listaFields = null;
-        List<Field> listaFieldsAll = genericClazz != null ? Arrays.asList(genericClazz.getDeclaredFields()) : null;
+        List<Field> listaGrezza = null;
 
-        if (listaFieldsAll != null) {
+        //--Controlla che il parametro in ingresso non sia nullo
+        if (entityClazz == null) {
+            return null;
+        }
+
+        listaGrezza = getAllFields(entityClazz);
+        if (array.isValid(listaGrezza)) {
             listaFields = new ArrayList<>();
-            for (Field field : listaFieldsAll) {
-                if (!field.getName().equals(PROPERTY_SERIAL)) {
+            for (Field field : listaGrezza) {
+                if (field.getDeclaringClass() == entityClazz) {
                     listaFields.add(field);
                 }
             }
@@ -85,45 +94,39 @@ public class AReflectionService extends AAbstractService {
 
 
     /**
-     * Fields statici dichiarati in una classe di tipo AEntity. <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
+     * Lista dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
+     * Controlla che il parametro in ingresso non sia nullo <br>
      * Ricorsivo. Comprende la entity e tutte le sue superclassi (fino a ACEntity e AEntity) <br>
-     * Escluse le properties: PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA
-     * Fields non ordinati <br>
+     * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields PRIVATI <br>
+     * Fields NON ordinati <br>
+     * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
+     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
      * @param entityClazz da cui estrarre i fields statici
      *
      * @return lista di static fields della Entity e di tutte le sue superclassi
      */
     public List<Field> getAllFields(Class<? extends AEntity> entityClazz) {
-        List<Field> listaFields = new ArrayList<>();
-        Class<?> clazz = entityClazz;
+        List<Field> listaFields = null;
+        //        Class<?> clazz = entityClazz;
         Field[] fieldsArray = null;
 
-        // Controlla che il parametro in ingresso non sia nullo
+        //--Controlla che il parametro in ingresso non sia nullo
         if (entityClazz == null) {
             return null;
         }
 
-        // Controlla che il parametro in ingresso sia della classe prevista
-        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            return null;
-        }
-
         //--recupera tutti i fields della entity e di tutte le superclassi
-        while (clazz != Object.class) {
-            try {
-                fieldsArray = clazz.getDeclaredFields();
-                for (Field field : fieldsArray) {
-                    if (!FlowCost.ESCLUSI_ALL.contains(field.getName())) {
-                        listaFields.add(field);
-                    }
+        fieldsArray = entityClazz.getFields();
+        if (fieldsArray != null) {
+            listaFields = new ArrayList<>();
+            for (Field field : fieldsArray) {
+                if (!FlowCost.ESCLUSI_ALL.contains(field.getName())) {
+                    listaFields.add(field);
                 }
-            } catch (Exception unErrore) {
-                //                logger.error(unErrore.toString());//@todo Funzionalità ancora da implementare
             }
-            clazz = clazz.getSuperclass();
         }
 
         return listaFields;
@@ -131,20 +134,26 @@ public class AReflectionService extends AAbstractService {
 
 
     /**
-     * Nomi dei fields statici dichiarati in una classe generica. <br>
+     * Nomi dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
+     * Controlla che il parametro in ingresso non sia nullo <br>
      * Solo la classe indicata. Non ricorsivo. Niente fields delle superclassi. <br>
-     * Escluse le properties: PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA
-     * Fields non ordinati <br>
+     * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields PRIVATI <br>
+     * Fields NON ordinati <br>
+     * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
+     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
-     * @param genericClazz da cui estrarre i fields statici
+     * @param entityClazz da cui estrarre i fields statici
      *
      * @return lista di nomi di static fields della classe generica
      */
-    public List<String> getFieldsName(Class<?> genericClazz) {
-        List<String> listaNomi = new ArrayList<>();
-        List<Field> listaFields = getFields(genericClazz);
+    public List<String> getFieldsName(Class<? extends AEntity> entityClazz) {
+        List<String> listaNomi = null;
+        List<Field> listaFields = getFields(entityClazz);
 
         if (array.isValid(listaFields)) {
+            listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
                 listaNomi.add(field.getName());
             }
@@ -155,20 +164,26 @@ public class AReflectionService extends AAbstractService {
 
 
     /**
-     * Nomi dei fields statici dichiarati in una classe di tipo AEntity. <br>
+     * Nomi di tutti i fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
+     * Controlla che il parametro in ingresso non sia nullo <br>
      * Ricorsivo. Comprende la entity e tutte le sue superclassi (fino a ACEntity e AEntity) <br>
-     * Escluse le properties: PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA
-     * Nomi non ordinati
+     * Escluse le properties: PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields PRIVATI <br>
+     * Fields NON ordinati <br>
+     * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
+     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
      * @param entityClazz da cui estrarre i fields statici
      *
-     * @return lista di nomi dei fields della Entity e di tutte le supeclassi
+     * @return lista di nomi dei fields della Entity e di tutte le superclassi
      */
     public List<String> getAllFieldsName(Class<? extends AEntity> entityClazz) {
         List<String> listaNomi = null;
         List<Field> listaFields = getAllFields(entityClazz);
 
-        if (listaFields != null) {
+        if (array.isValid(listaFields)) {
             listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
                 listaNomi.add(field.getName());
@@ -187,9 +202,9 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the field
      */
-    public Field getField(final Class<?> genericClazz, final String publicFieldName) {
+    public Field getField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
         Field field = null;
-        List<Field> listaFields = getFields(genericClazz);
+        List<Field> listaFields = getFields(entityClazz);
 
         if (listaFields != null) {
             for (Field fieldTmp : listaFields) {
@@ -200,7 +215,7 @@ public class AReflectionService extends AAbstractService {
             }
         }
 
-        if (field == null && AEntity.class.isAssignableFrom(genericClazz)) {
+        if (field == null && AEntity.class.isAssignableFrom(entityClazz)) {
             listaFields = getAllFields(ACEntity.class);
             if (listaFields != null) {
                 for (Field fieldTmp : listaFields) {
@@ -217,15 +232,15 @@ public class AReflectionService extends AAbstractService {
 
 
     /**
-     * Controlla l'esistenza di un field statico di una classe generica. <br>
+     * Controlla l' esistenza di un field statico di una classe generica. <br>
      *
      * @param genericClazz    da cui estrarre il field statico da controllare
      * @param publicFieldName property statica e pubblica
      *
      * @return true se esiste
      */
-    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
-        return getField(genericClazz, publicFieldName) != null;
+    public boolean hasField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        return getField(entityClazz, publicFieldName) != null;
     }
 
 
@@ -237,8 +252,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return true se NON esiste
      */
-    public boolean hasNotField(final Class<?> genericClazz, final String publicFieldName) {
-        return getField(genericClazz, publicFieldName) == null;
+    public boolean hasNotField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        return getField(entityClazz, publicFieldName) == null;
     }
 
 
@@ -250,15 +265,15 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the property value
      */
-    public Object getStaticPropertyValue(final Class<?> genericClazz, final String publicFieldName) {
+    public Object getStaticPropertyValue(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
         Object value = null;
         Field field = null;
 
-        if (genericClazz == null || text.isEmpty(publicFieldName)) {
+        if (entityClazz == null || text.isEmpty(publicFieldName)) {
             return null;
         }
 
-        field = getField(genericClazz, publicFieldName);
+        field = getField(entityClazz, publicFieldName);
         if (field != null) {
             try {
                 value = field.get(null);
@@ -279,9 +294,9 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the string value
      */
-    public String getStaticPropertyValueStr(final Class<?> genericClazz, final String publicFieldName) {
+    public String getStaticPropertyValueStr(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
         String value = VUOTA;
-        Object objValue = getStaticPropertyValue(genericClazz, publicFieldName);
+        Object objValue = getStaticPropertyValue(entityClazz, publicFieldName);
 
         if (objValue instanceof String) {
             value = (String) objValue;
@@ -298,8 +313,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the vaadin icon
      */
-    public VaadinIcon getVaadinIcon(final Class<?> genericClazz) {
-        Object objValue = getStaticPropertyValue(genericClazz, "VAADIN_ICON");
+    public VaadinIcon getVaadinIcon(final Class<? extends AEntity> entityClazz) {
+        Object objValue = getStaticPropertyValue(entityClazz, "VAADIN_ICON");
         return (objValue instanceof VaadinIcon) ? (VaadinIcon) objValue : null;
     }
 
@@ -311,8 +326,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the iron icon
      */
-    public String getIronIcon(final Class<?> genericClazz) {
-        return getStaticPropertyValueStr(genericClazz, "IRON_ICON");
+    public String getIronIcon(final Class<? extends AEntity> entityClazz) {
+        return getStaticPropertyValueStr(entityClazz, "IRON_ICON");
     }
 
 
@@ -323,8 +338,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the menu name
      */
-    public String getMenuName(final Class<?> genericClazz) {
-        return getStaticPropertyValueStr(genericClazz, "MENU_NAME");
+    public String getMenuName(final Class<? extends AEntity> entityClazz) {
+        return getStaticPropertyValueStr(entityClazz, "MENU_NAME");
     }
 
 

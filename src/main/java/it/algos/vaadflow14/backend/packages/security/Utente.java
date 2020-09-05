@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.*;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -47,7 +48,7 @@ import java.util.Collection;
 @AIForm(fields = "username,password,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
 public class Utente extends ACEntity implements UserDetails {
 
-    public static final int WIDTH = 5;
+    private static final int WIDTH = 5;
 
     /**
      * versione della classe per la serializzazione

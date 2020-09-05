@@ -29,7 +29,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: mar, 28-apr-2020
  * Time: 21:18
  */
-public class ATest {
+public abstract class ATest {
 
     /**
      * The constant PIENA.

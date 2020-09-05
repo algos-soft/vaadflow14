@@ -199,11 +199,11 @@ public abstract class AForm extends VerticalLayout {
      */
     protected AEOperation operationForm;
 
-    private LinkedHashMap<String, List> enumMap;
-
-    private List<String> listaNomi;
-
     protected boolean usaFieldNote = false;
+
+    protected List<String> fieldsNameList;
+
+    private LinkedHashMap<String, List> enumMap;
 
 
     public AForm() {
@@ -241,7 +241,7 @@ public abstract class AForm extends VerticalLayout {
         if (wrap != null) {
             this.entityClazz = wrap.getEntityClazz();
             this.entityBean = wrap.getEntityBean();
-            this.listaNomi = wrap.getFieldsName();
+            this.fieldsNameList = wrap.getFieldsName();
             this.fieldsMap = wrap.getFieldsMap();
             this.enumMap = wrap.getEnumMap();
             this.operationForm = wrap.getOperationForm();
@@ -252,8 +252,7 @@ public abstract class AForm extends VerticalLayout {
     /**
      * Preferenze standard <br>
      * Normalmente il primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto per modificarle <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
         if (wrap != null) {
@@ -321,41 +320,71 @@ public abstract class AForm extends VerticalLayout {
      * Aggiunge ogni singolo field della fieldMap al layout <br>
      */
     protected void fixView() {
-        //--Crea i fields normali in automatico
-        this.creaFieldsBase();
+        //--Crea in automatico i fields normali associati al binder
+        //--Li aggiunge al binder
+        //--Li aggiunge alla fieldsList
+        this.creaFieldsBinder();
 
-        //--Legge il binder
+        //--Sincronizza il binder all' apertura della scheda
+        //--Trasferisce (binder read) i valori dal DB alla UI
         binder.readBean((AEntity) entityBean);
 
-        //--Eventuali fields specifici aggiunti oltre quelli automatici
+        //--Eventuali fields aggiunti extra binder
+        //--Li aggiunge alla fieldsList
         this.creaFieldsExtra();
+
+        //--Regola in lettura eventuali fields extra non associati al binder. Dal DB alla UI
+        this.readFieldsExtra();
+
+        //--Riordina (eventualmente) la lista fieldsList,
+        //--I fieldsExtra vengono necessariamente inseriti DOPO i fields normali mentre, magari, devono apparire prima
+        this.reorderFieldList();
 
         //--Aggiunge ogni singolo field della lista fieldsList al layout grafico
         this.addFieldsToLayout();
 
         //--Crea una mappa fieldMap, per recuperare i fields dal nome
         this.creaMappaFields();
-
-        //--Regola in lettura eventuali fields extra non associati al binder. Dal DB alla UI
-        this.readFieldsExtra();
     }
 
 
     /**
-     * Crea i fields normali <br>
-     * Associa i fields normali al binder <br>
+     * Crea in automatico i fields normali associati al binder <br>
+     * Aggiunge i fields normali al binder <br>
      * Trasferisce (binder read) i valori dal DB alla UI <br>
-     * <p>
+     * Li aggiunge alla fieldsList <br>
      * Lista ordinata di tutti i fields normali del form <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void creaFieldsBase() {
+    protected void creaFieldsBinder() {
+        fieldsNameList = getPropertyNamesList();
         this.fieldsList = beanService.creaFields(entityBean, operationForm, binder);
     }
 
 
     /**
-     * Crea i fields (eventuali) extra oltre a quelli normali <br>
+     * Costruisce una lista ordinata di nomi delle properties del Form. <br>
+     * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
+     *
+     * @return lista di nomi di properties
+     */
+    protected List<String> getPropertyNamesList() {
+        return entityLogic.getFormPropertyNamesList();
+    }
+
+
+    /**
+     * Crea gli eventuali fields extra NON associati al binder, oltre a quelli normali <br>
+     * Li aggiunge alla fieldsList <br>
+     * Lista ordinata di tutti i fields normali del form <br>
+     * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsExtra() {
@@ -367,6 +396,36 @@ public abstract class AForm extends VerticalLayout {
                 fieldsList.add(field);
             }
         }
+    }
+
+
+    /**
+     * Regola in lettura eventuali valori NON associati al binder. <br>
+     * Dal DB alla UI <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void readFieldsExtra() {
+        AIField field = null;
+
+        if (usaFieldNote) {
+            if (fieldsMap != null) {
+                field = fieldsMap.get(FlowCost.FIELD_NOTE);
+                if (field != null) {
+                    if (text.isValid(entityBean.note)) {
+                        //                        field.getBinder().setValue(entityBean.note);
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Riordina (eventualmente) la lista fieldsList <br>
+     * I fieldsExtra vengono necessariamente inseriti DOPO i fields normali mentre potrebbero dover apparire prima <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void reorderFieldList() {
     }
 
 
@@ -418,27 +477,6 @@ public abstract class AForm extends VerticalLayout {
 
 
     /**
-     * Regola in lettura eventuali valori NON associati al binder. <br>
-     * Dal DB alla UI <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void readFieldsExtra() {
-        AIField field = null;
-
-        if (usaFieldNote) {
-            if (fieldsMap != null) {
-                field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                if (field != null) {
-                    if (text.isValid(entityBean.note)) {
-//                        field.getBinder().setValue(entityBean.note);
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
      * Regola in scrittura eventuali valori NON associati al binder
      * Dalla  UI al DB
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
@@ -450,7 +488,7 @@ public abstract class AForm extends VerticalLayout {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
                 if (field != null) {
-//                    entityBean.note = (String) field.getBinder().getValue();
+                    //                    entityBean.note = (String) field.getBinder().getValue();
                 }
             }
         }

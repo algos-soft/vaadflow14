@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_CODE;
 
@@ -38,7 +39,7 @@ public class GammaForm extends AForm {
      * La chiave è la propertyName del field <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
-    protected HashMap<String, CustomField> fieldsMap2;
+    protected LinkedHashMap<String, CustomField> fieldsMap2;
 
     private CustomField field;
 
@@ -79,8 +80,8 @@ public class GammaForm extends AForm {
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      */
     @Override
-    public void creaFieldsBase() {
-        fieldsMap2 = new HashMap<>();
+    public void creaFieldsBinder() {
+        fieldsMap2 = new LinkedHashMap<>();
 
         //        fieldText = appContext.getBean(ATextField.class, FIELD_CODE, "testo");
         //        binder.forField(fieldText.getBinder()).bind(FIELD_CODE);
@@ -94,7 +95,7 @@ public class GammaForm extends AForm {
         //        fieldProva = appContext.getBean(ProvaField.class);
         //        binder.forField(fieldProva).bind("uno");
         field = creaField(binder, FIELD_CODE, AETypeField.text);
-        fieldsMap2.put(FIELD_CODE, field);
+        fieldsMap2.put(FIELD_CODE,field);
 
         field = creaField(binder, "uno", AETypeField.localDateTime);
         fieldsMap2.put("uno", field);
@@ -103,16 +104,15 @@ public class GammaForm extends AForm {
     }
 
 
-    public CustomField creaField(Binder binder, String key, AETypeField type) {
+    public CustomField creaField(Binder binder, String fieldKey, AETypeField type) {
         CustomField field = null;
 
-        //--mettere uno switch su type
         switch (type) {
             case text:
-                field = appContext.getBean(ATextField.class, "fieldKey", "caption");
+                field = appContext.getBean(ATextField.class, fieldKey, "caption");
                 break;
             case localDateTime:
-                field = appContext.getBean(ProvaField.class);
+                field = appContext.getBean(ProvaField.class,fieldKey,"prova");
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "nomeDelMetodo");
@@ -120,7 +120,7 @@ public class GammaForm extends AForm {
         }
 
         //--aggiungere i validator
-        binder.forField(field).bind(key);
+        binder.forField(field).bind(fieldKey);
 
         return field;
     }

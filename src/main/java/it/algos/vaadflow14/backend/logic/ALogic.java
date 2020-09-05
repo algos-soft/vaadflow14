@@ -615,28 +615,28 @@ public abstract class ALogic implements AILogic {
     }
 
 
-//    /**
-//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * Costruisce un' istanza dedicata <br>
-//     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-//     *
-//     * @param entityClazz the class of type AEntity
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    @Override
-//    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
-//        form = null;
-//
-//        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
-//        if (entityClazz != null) {
-//            form = appContext.getBean(AGenericForm.class, entityClazz);
-//        }
-//
-//        return form;
-//    }
+    //    /**
+    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+    //     * <p>
+    //     * Chiamato da AView.initView() <br>
+    //     * Costruisce un' istanza dedicata <br>
+    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+    //     *
+    //     * @param entityClazz the class of type AEntity
+    //     *
+    //     * @return componente grafico per il placeHolder
+    //     */
+    //    @Override
+    //    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
+    //        form = null;
+    //
+    //        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
+    //        if (entityClazz != null) {
+    //            form = appContext.getBean(AGenericForm.class, entityClazz);
+    //        }
+    //
+    //        return form;
+    //    }
 
 
     /**
@@ -980,20 +980,49 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Costruisce una lista di nomi delle properties della Grid nell'ordine: <br>
-     * 1) Cerca nell'annotation @AIList della Entity e usa quella lista (con o senza ID) <br>
+     * Costruisce una lista ordinata di nomi delle properties della Grid. <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIList della Entity e usa quella lista (con o senza ID) <br>
      * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
-     * 3) Sovrascrive la lista nella sottoclasse specifica <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * todo ancora da sviluppare
-     *
-     * @param entityClazz the class of type AEntity
      *
      * @return lista di nomi di properties
      */
     //    @Override
-    //    public List<String> getGridPropertyNamesList(Class<? extends AEntity> entityClazz) {
     public List<String> getGridPropertyNamesList() {
         return annotation.getListaPropertiesGrid(entityClazz);
+    }
+
+
+    /**
+     * Costruisce una lista ordinata di nomi delle properties del Form. <br>
+     * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
+     * todo ancora da sviluppare
+     *
+     * @return lista di nomi di properties
+     */
+    public List<String> getFormPropertyNamesList() {
+        List<String> fieldsNameList = annotation.getListaPropertiesForm(entityClazz);
+        List<String> fieldsNameList2 = reflection.getAllFieldsName(entityClazz);
+
+        if (array.isEmpty(fieldsNameList)) {
+            reflection.getAllFieldsName(entityBean.getClass());
+        }
+
+        if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {
+            fieldsNameList.add(0, FIELD_COMPANY);
+        }
+
+
+        return fieldsNameList;
     }
 
 

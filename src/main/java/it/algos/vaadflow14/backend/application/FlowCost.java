@@ -136,6 +136,8 @@ public abstract class FlowCost {
 
     public static final String PROPERTY_MODIFICA = "modifica";
 
+    public static final String PROPERTY_NOTE = "note";
+
     /**
      * The constant DEFAULT_ICON.
      */
@@ -238,7 +240,7 @@ public abstract class FlowCost {
 
     public static final String MONGO_FIELD_USER = "user";
 
-    public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
+    public static final String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
 
     public static final List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
 
