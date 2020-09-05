@@ -410,6 +410,21 @@ public class AColumnService extends AAbstractService {
         Grid.Column<AEntity> colonna = null;
 
         switch (type) {
+            case localDateTime:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    LocalDateTime data;
+                    String testo = VUOTA;
+
+                    try {
+                        data = (LocalDateTime) field.get(entity);
+                        testo = date.getDataOrario(data); //@todo aggiungere un selettore per modificare il format dalla annotation
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "addDate.localDate");
+                    }
+
+                    return new Label(testo.trim());
+                }));//end of lambda expressions and anonymous inner class
+                break;
             case localDate:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     LocalDate data;
@@ -425,20 +440,6 @@ public class AColumnService extends AAbstractService {
                     return new Label(testo);
                 }));//end of lambda expressions and anonymous inner class
                 break;
-            case localDateTime:
-                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                    LocalDateTime data;
-                    String testo = VUOTA;
-
-                    try {
-                        data = (LocalDateTime) field.get(entity);
-                        testo = date.getDataOrario(data); //@todo aggiungere un selettore per modificare il format dalla annotation
-                    } catch (Exception unErrore) {
-                        logger.error(unErrore, this.getClass(), "addDate.localDate");
-                    }
-
-                    return new Label(testo.trim());
-                }));//end of lambda expressions and anonymous inner class
             case localTime:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     LocalTime data;

@@ -203,7 +203,7 @@ public abstract class AForm extends VerticalLayout {
 
     private List<String> listaNomi;
 
-    private boolean usaFieldNote = false;
+    protected boolean usaFieldNote = false;
 
 
     public AForm() {
@@ -324,6 +324,9 @@ public abstract class AForm extends VerticalLayout {
         //--Crea i fields normali in automatico
         this.creaFieldsBase();
 
+        //--Legge il binder
+        binder.readBean((AEntity) entityBean);
+
         //--Eventuali fields specifici aggiunti oltre quelli automatici
         this.creaFieldsExtra();
 
@@ -346,7 +349,7 @@ public abstract class AForm extends VerticalLayout {
      * Lista ordinata di tutti i fields normali del form <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      */
-    public void creaFieldsBase() {
+    protected void creaFieldsBase() {
         this.fieldsList = beanService.creaFields(entityBean, operationForm, binder);
     }
 
@@ -355,7 +358,7 @@ public abstract class AForm extends VerticalLayout {
      * Crea i fields (eventuali) extra oltre a quelli normali <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    public void creaFieldsExtra() {
+    protected void creaFieldsExtra() {
         AIField field = null;
 
         if (usaFieldNote) {
@@ -401,7 +404,7 @@ public abstract class AForm extends VerticalLayout {
     /**
      * Crea una mappa fieldMap, per recuperare i fields dal nome <br>
      */
-    public void creaMappaFields() {
+    protected void creaMappaFields() {
         if (array.isValid(fieldsList)) {
             if (fieldsMap == null) {
                 fieldsMap = new HashMap<String, AIField>();

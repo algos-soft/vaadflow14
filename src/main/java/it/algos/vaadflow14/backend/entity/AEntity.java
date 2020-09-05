@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.annotation.AIColumn;
 import it.algos.vaadflow14.backend.annotation.AIField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -63,6 +64,7 @@ import java.time.LocalDateTime;
  * Le singole property possono essere annotate con @DBRef per un riferimento DINAMICO (not embedded)
  * (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
  */
+@Setter
 @Getter
 public abstract class AEntity implements Serializable {
 

@@ -123,8 +123,6 @@ public class ABeanService extends AAbstractService {
             }
         }
 
-        binder.readBean((AEntity) entityBean);
-
         return fieldsList;
     }
 

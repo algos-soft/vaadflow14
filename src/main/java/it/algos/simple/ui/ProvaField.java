@@ -1,10 +1,11 @@
-package it.algos.vaadflow14.ui.fields;
+package it.algos.simple.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.ui.fields.AIField;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -22,14 +23,14 @@ import java.util.Collection;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProvaField extends CustomField<LocalDateTime> implements AIField {
+public class ProvaField extends CustomField<LocalDateTime>  {
 
     private final DatePicker datePicker = new DatePicker();
 
     private final TimePicker timePicker = new TimePicker();
 
 
-    public ProvaField(String caption) {
+    public ProvaField() {
         super();
         add(datePicker, timePicker);
     }
@@ -51,69 +52,69 @@ public class ProvaField extends CustomField<LocalDateTime> implements AIField {
     }// end of method
 
 
-    @Override
-    public String getErrorMessage() {
-        return null;
-    }
-
-
-    @Override
-    public void setErrorMessage(String s) {
-
-    }
-
-
-    @Override
-    public boolean isInvalid() {
-        return false;
-    }
-
-
-    @Override
-    public void setInvalid(boolean b) {
-
-    }
-
-
-    @Override
-    public void setItem(Collection collection) {
-
-    }
-
-
-    @Override
-    public void setText(String caption) {
-
-    }
-
-
-    @Override
-    public void setWidth(String width) {
-        datePicker.setWidth(width);
-    }
-
-
-    @Override
-    public DatePicker getBinder() {
-        return datePicker;
-    }
-
-
-    @Override
-    public Component get() {
-        return this;
-    }
-
-
-    @Override
-    public void setAutofocus() {
-
-    }
-
-
-    @Override
-    public String getKey() {
-        return null;
-    }
+//    @Override
+//    public String getErrorMessage() {
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public void setErrorMessage(String s) {
+//
+//    }
+//
+//
+//    @Override
+//    public boolean isInvalid() {
+//        return false;
+//    }
+//
+//
+//    @Override
+//    public void setInvalid(boolean b) {
+//
+//    }
+//
+//
+//    @Override
+//    public void setItem(Collection collection) {
+//
+//    }
+//
+//
+//    @Override
+//    public void setText(String caption) {
+//
+//    }
+//
+//
+//    @Override
+//    public void setWidth(String width) {
+//        datePicker.setWidth(width);
+//    }
+//
+//
+//    @Override
+//    public DatePicker getBinder() {
+//        return datePicker;
+//    }
+//
+//
+//    @Override
+//    public Component get() {
+//        return this;
+//    }
+//
+//
+//    @Override
+//    public void setAutofocus() {
+//
+//    }
+//
+//
+//    @Override
+//    public String getKey() {
+//        return null;
+//    }
 
 }
