@@ -37,7 +37,7 @@ import java.time.LocalTime;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Gamma", keyPropertyName = "code", usaRowIndex = true)
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,uno,due,tre,quattro,cinque")
+@AIList(fields = "code,uno")
 @AIForm(fields = "code,uno,due,tre,quattro,cinque")
 public class Gamma extends AEntity {
 
@@ -57,13 +57,14 @@ public class Gamma extends AEntity {
     @AIColumn(header = "Code")
     public String code;
 
-    @AIField(type = AETypeField.localDate, caption = "Data semplice")
-    @AIColumn()
-    public LocalDate uno;
 
     @AIField(type = AETypeField.localDateTime, caption = "Data e orario")
     @AIColumn()
-    public LocalDateTime due;
+    public LocalDateTime uno;
+
+    @AIField(type = AETypeField.localDate, caption = "Data semplice")
+    @AIColumn()
+    public LocalDate due;
 
     @AIField(type = AETypeField.localTime, caption = "Solo orario")
     @AIColumn()

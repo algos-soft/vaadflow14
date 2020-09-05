@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
@@ -81,7 +80,7 @@ public class ADateField extends AField<LocalDate> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public DatePicker getBinder() {
         return innerField;
     }
 

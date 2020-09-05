@@ -6,6 +6,9 @@ import it.algos.vaadflow14.backend.data.FlowData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -25,6 +28,12 @@ public class SimpleData extends FlowData {
      */
     @Override
     public void initData() {
+        Gamma gamma = new Gamma();
+        gamma.setCode("Adesso");
+        gamma.setUno(LocalDateTime.now());
+        gamma.setDue(LocalDate.now());
+        gamma.setTre(LocalDateTime.now().toLocalTime());
+        mongo.save(gamma);
     }
 
 }

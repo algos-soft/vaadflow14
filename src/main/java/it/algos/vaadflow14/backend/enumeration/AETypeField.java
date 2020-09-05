@@ -16,9 +16,9 @@ public enum AETypeField {
 
     lungo(5, 8),
 
-    localDate(6, 0),
+    localDate(8, 0),
 
-    localDateTime(6, 0),
+    localDateTime(9, 0),
 
     localTime(6, 0),
 

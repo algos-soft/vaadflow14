@@ -6,8 +6,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -379,7 +379,7 @@ public abstract class AForm extends VerticalLayout {
             for (AIField field : fieldsList) {
                 comp = field.get();
                 if (comp != null) {
-                    if (field.getKey().equals(FlowCost.FIELD_NOTE)) {
+                    if (text.isValid(field.getKey()) && field.getKey().equals(FlowCost.FIELD_NOTE)) {
                         if (usaBottomLayout) {
                             bottomLayout.add(comp);
                         } else {
@@ -427,7 +427,7 @@ public abstract class AForm extends VerticalLayout {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
                 if (field != null) {
                     if (text.isValid(entityBean.note)) {
-                        field.getBinder().setValue(entityBean.note);
+//                        field.getBinder().setValue(entityBean.note);
                     }
                 }
             }
@@ -447,7 +447,7 @@ public abstract class AForm extends VerticalLayout {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
                 if (field != null) {
-                    entityBean.note = (String) field.getBinder().getValue();
+//                    entityBean.note = (String) field.getBinder().getValue();
                 }
             }
         }

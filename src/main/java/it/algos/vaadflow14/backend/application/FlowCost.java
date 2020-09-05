@@ -227,6 +227,7 @@ public abstract class FlowCost {
     public static final String DATE_PICKER_FIELD = "Valore (giorno)";
 
     public static final String TIME_PICKER_FIELD = "Valore (orario)";
+    public static final String DATE_TIME_PICKER_FIELD = "Valore (data e ora)";
 
     public static final String ENUM_FIELD_NEW = "Valore (x,y,z;y)";
 

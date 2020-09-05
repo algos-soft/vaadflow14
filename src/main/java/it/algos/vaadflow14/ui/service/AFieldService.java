@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
+import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
@@ -185,14 +186,24 @@ public class AFieldService extends AAbstractService {
                     break;
                 case localDate:
                     field = appContext.getBean(ADateField.class, fieldKey, caption);
+                    //                    field = appContext.getBean(ProvaField.class, caption);
+                    break;
+                case localDateTime:
+                    //                    field = appContext.getBean(ADateField.class, fieldKey, caption);
+                    //                    field = appContext.getBean(ProvaField.class, caption);
+                    field = appContext.getBean(ADateTimeField.class, fieldKey, caption);
+                    break;
+                case localTime:
+                    //                    field = appContext.getBean(ADateField.class, fieldKey, caption);
+                    field = appContext.getBean(ATimeField.class, fieldKey, caption);
                     break;
                 case combo:
                     if (comboClazz != null) {
                         items = mongo.findAll(comboClazz);
                         if (items != null) {
                             field = appContext.getBean(AComboField.class, fieldKey, caption, items);
-                            boolean sttaus=  ((AComboField<?>) field).isReadOnly();
-                             sttaus=  ((AComboField<?>) field).isReadOnly();
+                            boolean sttaus = ((AComboField<?>) field).isReadOnly();
+                            sttaus = ((AComboField<?>) field).isReadOnly();
                         } else {
                             logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
                         }
@@ -332,7 +343,7 @@ public class AFieldService extends AAbstractService {
                 case localDate:
                     break;
                 case combo:
-//                    field.getBinder().setReadOnly(false);
+                    //                    field.getBinder().setReadOnly(false);
                     break;
                 case enumeration:
                     break;

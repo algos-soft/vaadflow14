@@ -94,11 +94,20 @@ public enum AETime {
      */
     iso8601("data e orario iso8601", "yyyy-MM-dd'T'HH:mm:ss", "2017-02-16T21:00:00", false),
 
+
+    /**
+     * Pattern: d-M-yy H:mm <br>
+     * Esempio: 18-4-17 13:45 <br>
+     */
+    normaleOrario("data e orario", "d-M-yy H:mm", "18-4-17 13:45", false),
+
+
     /**
      * Pattern: EEEE, d-MMMM-yyy 'alle' H:mm <br>
      * Esempio: domenica, 5-ottobre-2014 alle 13:45 <br>
      */
     completaOrario("data e orario completi", "EEEE, d-MMMM-yyy 'alle' H:mm", "domenica, 5-ottobre-2014 alle 13:45", false),
+
 
     /**
      * Pattern: H:mm <br>

@@ -615,28 +615,28 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Costruisce un' istanza dedicata <br>
-     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
-        form = null;
-
-        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
-        if (entityClazz != null) {
-            form = appContext.getBean(AGenericForm.class, entityClazz);
-        }
-
-        return form;
-    }
+//    /**
+//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Costruisce un' istanza dedicata <br>
+//     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+//     *
+//     * @param entityClazz the class of type AEntity
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    @Override
+//    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
+//        form = null;
+//
+//        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
+//        if (entityClazz != null) {
+//            form = appContext.getBean(AGenericForm.class, entityClazz);
+//        }
+//
+//        return form;
+//    }
 
 
     /**

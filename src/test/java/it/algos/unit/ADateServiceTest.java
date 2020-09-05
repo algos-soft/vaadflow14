@@ -488,11 +488,28 @@ public class ADateServiceTest extends ATest {
         ottenuto = date.getCorta(LOCAL_DATE_DUE);
         System.out.println(AETime.dateShort.getTag() + tag + ottenuto);
 
+        ottenuto = date.getNormale(LOCAL_DATE_DUE);
+        System.out.println(AETime.dateNormal.getTag() + tag + ottenuto);
+
         ottenuto = date.getLunga(LOCAL_DATE_DUE);
         System.out.println(AETime.dateLong.getTag() + tag + ottenuto);
 
         ottenuto = date.getCompleta(LOCAL_DATE_DUE);
         System.out.println(AETime.completa.getTag() + tag + ottenuto);
+
+        System.out.println("");
+        System.out.println("Data e orario nel formato normale e completo");
+        ottenuto = date.getDataOrario(LOCAL_DATE_TIME_UNO);
+        System.out.println(AETime.normaleOrario.getTag() + tag + ottenuto);
+
+        ottenuto = date.getDataOrarioCompleta(LOCAL_DATE_TIME_UNO);
+        System.out.println(AETime.completaOrario.getTag() + tag + ottenuto);
+
+        ottenuto = date.getDataOrario(LOCAL_DATE_TIME_DUE);
+        System.out.println(AETime.normaleOrario.getTag() + tag + ottenuto);
+
+        ottenuto = date.getDataOrarioCompleta(LOCAL_DATE_TIME_DUE);
+        System.out.println(AETime.completaOrario.getTag() + tag + ottenuto);
 
         System.out.println("");
         System.out.println("Orario nel formato standard");

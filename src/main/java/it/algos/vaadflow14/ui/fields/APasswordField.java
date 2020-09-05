@@ -1,9 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -104,7 +102,7 @@ public class APasswordField extends AField<String> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public PasswordField getBinder() {
         return innerField;
     }
 

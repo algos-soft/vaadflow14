@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -115,7 +115,7 @@ public class ATextField extends AField<String> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public TextField getBinder() {
         return innerField;
     }
 

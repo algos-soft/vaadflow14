@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -73,7 +72,7 @@ public class AIntegerField extends AField<Integer> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public IntegerField getBinder() {
         return innerField;
     }
 

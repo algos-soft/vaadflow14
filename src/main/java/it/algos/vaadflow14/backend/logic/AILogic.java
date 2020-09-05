@@ -75,18 +75,18 @@ public interface AILogic {
     AGrid getBodyGridLayout();
 
 
-    /**
-     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Costruisce un'istanza dedicata <br>
-     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return componente grafico per il placeHolder
-     */
-    AForm getBodyFormLayout(Class<? extends AEntity> entityClazz);
+//    /**
+//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Costruisce un'istanza dedicata <br>
+//     * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
+//     *
+//     * @param entityClazz the class of type AEntity
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    AForm getBodyFormLayout(Class<? extends AEntity> entityClazz);
 
 
     /**

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;

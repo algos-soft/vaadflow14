@@ -380,6 +380,19 @@ public class ADateService extends AAbstractService {
      *
      * @return la data sotto forma di stringa
      */
+    public String getNormale(LocalDate localDate) {
+        return get(localDate, AETime.dateNormal);
+    }
+
+    /**
+     * Restituisce la data nella forma del pattern previsto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localDate da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
     public String getLunga(LocalDate localDate) {
         return get(localDate, AETime.dateLong);
     }
@@ -398,6 +411,31 @@ public class ADateService extends AAbstractService {
         return get(localDate, AETime.completa);
     }
 
+    /**
+     * Restituisce la data e l' orario nella forma del pattern previsto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDataOrario(LocalDateTime localDateTime) {
+        return get(localDateTime, AETime.normaleOrario);
+    }
+
+    /**
+     * Restituisce la data e l' orario nella forma del pattern previsto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDataOrarioCompleta(LocalDateTime localDateTime) {
+        return get(localDateTime, AETime.completaOrario);
+    }
 
     /**
      * Restituisce l' orario nella forma del pattern previsto. <br>
@@ -425,6 +463,7 @@ public class ADateService extends AAbstractService {
     public String getOrario(LocalDateTime localDateTime) {
         return getOrario(localDateTimeToLocalTime(localDateTime));
     }
+
 
     /**
      * Restituisce l' orario nella forma del pattern previsto. <br>

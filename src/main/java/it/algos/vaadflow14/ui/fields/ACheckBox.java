@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class ACheckBox extends AField<Boolean> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public Checkbox getBinder() {
         return innerField;
     }
 

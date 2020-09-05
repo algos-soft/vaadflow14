@@ -1,13 +1,17 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.customfield.CustomField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Collection;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -21,11 +25,13 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATimeField extends AField<LocalTime> {
+public class ATimeField extends CustomField<LocalTime> implements AIField {
 
     private final TimePicker timePicker;
 
     private final Duration STEP = Duration.ofMinutes(15);
+
+    String fieldKey;
 
 
     /**
@@ -56,9 +62,9 @@ public class ATimeField extends AField<LocalTime> {
      * @param caption  label visibile del field
      */
     public ATimeField(String fieldKey, String caption) {
-        super.fieldKey = fieldKey;
-        super.caption = caption.equals(VUOTA) ? FlowCost.TIME_PICKER_FIELD : caption;
-        timePicker = new TimePicker(super.caption);
+        this.fieldKey = fieldKey;
+        //        super.caption = caption.equals(VUOTA) ? FlowCost.TIME_PICKER_FIELD : caption;
+        timePicker = new TimePicker(caption);
         timePicker.setStep(STEP);
         add(timePicker);
     } // end of SpringBoot constructor
@@ -78,6 +84,46 @@ public class ATimeField extends AField<LocalTime> {
 
     public void setStep(Duration step) {
         timePicker.setStep(step);
+    }
+
+
+    @Override
+    public void setItem(Collection collection) {
+
+    }
+
+
+    @Override
+    public void setText(String caption) {
+
+    }
+
+
+    @Override
+    public AbstractSinglePropertyField getBinder() {
+        return timePicker;
+    }
+
+
+    @Override
+    public Component get() {
+        return this;
+    }
+
+
+    @Override
+    public void setAutofocus() {
+
+    }
+
+
+    @Override
+    public String getKey() {
+        return fieldKey;
+    }
+    @Override
+    public void setWidth(String width) {
+        timePicker.setWidth(width);
     }
 
 }

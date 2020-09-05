@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -169,7 +169,7 @@ public class ARadioField extends AField<String> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public RadioButtonGroup getBinder() {
         return radioGroup;
     }
 

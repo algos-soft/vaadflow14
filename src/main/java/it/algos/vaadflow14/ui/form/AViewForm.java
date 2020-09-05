@@ -89,7 +89,7 @@ public class AViewForm extends AView {
             form = entityLogic.getBodyFormLayout(entityBean);
         } else {
             logger.warn("Manca entityBean", this.getClass(), "fixBody");
-            form = entityLogic.getBodyFormLayout(entityClazz);
+            form = entityLogic.getBodyFormLayout(entityLogic.newEntity());
         }
 
         if (bodyPlacehorder != null && form != null) {

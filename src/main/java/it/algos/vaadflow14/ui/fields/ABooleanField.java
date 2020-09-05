@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.renderer.TextRenderer;

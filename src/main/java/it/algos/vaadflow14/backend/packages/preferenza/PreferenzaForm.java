@@ -51,7 +51,7 @@ public class PreferenzaForm extends AForm {
 
     public void fixType() {
         AIField field;
-        Component comp = null;
+        Object comp = null;
         ComboBox combo;
 
         field = fieldsMap.get(FIELD_TYPE);

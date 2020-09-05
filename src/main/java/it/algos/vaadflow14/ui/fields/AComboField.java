@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -118,7 +118,7 @@ public class AComboField<T> extends AField<Object> {
 
 
     @Override
-    public AbstractSinglePropertyField getBinder() {
+    public ComboBox getBinder() {
         return innerField;
     }
 
