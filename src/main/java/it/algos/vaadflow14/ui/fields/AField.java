@@ -122,5 +122,9 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
     }
 
 
+    public void setFieldKey(String fieldKey) {
+        this.fieldKey = fieldKey;
+    }
+
 }
 

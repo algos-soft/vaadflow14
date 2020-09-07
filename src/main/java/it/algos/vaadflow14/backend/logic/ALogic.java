@@ -1011,10 +1011,9 @@ public abstract class ALogic implements AILogic {
      */
     public List<String> getFormPropertyNamesList() {
         List<String> fieldsNameList = annotation.getListaPropertiesForm(entityClazz);
-        List<String> fieldsNameList2 = reflection.getAllFieldsName(entityClazz);
 
         if (array.isEmpty(fieldsNameList)) {
-            reflection.getAllFieldsName(entityBean.getClass());
+            reflection.getFieldsName(entityBean.getClass());
         }
 
         if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {

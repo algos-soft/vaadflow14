@@ -37,8 +37,8 @@ import java.time.LocalTime;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Gamma", keyPropertyName = "code", usaRowIndex = true)
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,uno")
-@AIForm(fields = "code,uno,due,tre,quattro,cinque")
+@AIList(fields = "code,uno,due,tre")
+@AIForm(fields = "code,uno,due,tre")
 public class Gamma extends AEntity {
 
     /**

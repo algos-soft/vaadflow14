@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -41,7 +40,7 @@ public class PreferenzaForm extends AForm {
     @Autowired
     public AEnumerationService enumerationService;
 
-    private AbstractField valueField;
+    private AField valueField;
 
 
     public PreferenzaForm(WrapForm wrap) {
@@ -50,19 +49,17 @@ public class PreferenzaForm extends AForm {
 
 
     public void fixType() {
-        AIField field;
+        AField field;
         Object comp = null;
         ComboBox combo;
 
         field = fieldsMap.get(FIELD_TYPE);
         if (field != null) {
-            comp = field.getBinder();
-        }
-        if (comp != null && comp instanceof ComboBox) {
-            combo = (ComboBox) comp;
-            combo.addValueChangeListener(e -> sincro((AETypePref) e.getValue()));
-        }
-
+//            if (field != null && field instanceof ComboBox) {
+//                combo = (ComboBox) comp;
+//                combo.addValueChangeListener(e -> sincro((AETypePref) e.getValue()));
+            }
+        //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
     }
 
 
@@ -70,7 +67,7 @@ public class PreferenzaForm extends AForm {
      * Cambia il valueField sincronizzandolo col comboBox
      * Senza valori, perché è attivo SOLO in modalità AddNew (new record)
      */
-    protected AbstractField sincro(AETypePref type) {
+    protected AField sincro(AETypePref type) {
         String caption = "Valore ";
         List<String> items;
         String enumValue = getString();
@@ -118,7 +115,7 @@ public class PreferenzaForm extends AForm {
                     }
                     items = enumerationService.getList(enumValue);
                     if (array.isValid(items)) {
-                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW,items);
+                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW, items);
                     }
                 }
                 break;

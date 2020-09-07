@@ -222,6 +222,10 @@ public abstract class FlowCost {
 
     public static final String FIELD_TYPE = "type";
 
+    public static final String FIELD_ORDINE = "ordine";
+
+    public static final String FIELD_NOME = "nome";
+
     public static final String FIELD_VALUE = "value";
 
     public static final String FIELD_INDEX = "rowIndex";

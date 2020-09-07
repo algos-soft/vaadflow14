@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
@@ -110,8 +109,77 @@ public class AFieldService extends AAbstractService {
     /**
      * Create a single field.
      *
+     * @param entityBean di riferimento
+     * @param fieldKey   della property
+     */
+    public AField creaOnly(AEntity entityBean, String fieldKey) {
+        AField field = null;
+        Field reflectionJavaField;
+        AETypeField type;
+        String caption=VUOTA;
+        AETypeBoolField typeBool;
+
+        if (entityBean == null) {
+            return null;
+        }
+
+        reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        String boolEnum = VUOTA;
+
+        type = annotation.getFormType(reflectionJavaField);
+        if (type != null) {
+            switch (type) {
+                case text:
+                    field = appContext.getBean(ATextField.class);
+                    break;
+                case password:
+                    field = appContext.getBean(APasswordField.class);
+                    break;
+                case booleano:
+                    typeBool = annotation.getTypeBoolField(reflectionJavaField);
+                    boolEnum = annotation.getBoolEnumField(reflectionJavaField);
+                    caption = annotation.getFormFieldName(reflectionJavaField);
+                    field = appContext.getBean(ABooleanField.class, typeBool, boolEnum,caption);
+                    break;
+                case localDateTime:
+                    field = appContext.getBean(ADateTimeField.class);
+                    break;
+                case localDate:
+                    field = appContext.getBean(ADateField.class);
+                    break;
+                case localTime:
+                    field = appContext.getBean(ATimeField.class);
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito", this.getClass(), "creaOnly");
+                    break;
+            }
+        }
+
+        if (field != null) {
+            if (text.isEmpty(caption)) {
+                caption = annotation.getFormFieldName(reflectionJavaField);
+                field.setLabel(caption);
+            }
+
+            fieldKey = reflectionJavaField.getName();
+            field.setFieldKey(fieldKey);
+        }
+
+        return field;
+    }
+
+
+    /**
+     * Create a single field.
+     *
      * @param reflectionJavaField di riferimento
      */
+    @Deprecated
     public AIField creaOnly(Field reflectionJavaField, AEntity entityBean) {
         AIField field = null;
         String fieldKey;
@@ -148,7 +216,7 @@ public class AFieldService extends AAbstractService {
             switch (type) {
                 case text:
                 case phone:
-                    field = appContext.getBean(ATextField.class, fieldKey, caption);
+                    //                    field = appContext.getBean(ATextField.class);
                     break;
                 case email:
                     field = appContext.getBean(AEmailField.class, fieldKey, caption);
@@ -191,11 +259,11 @@ public class AFieldService extends AAbstractService {
                 case localDateTime:
                     //                    field = appContext.getBean(ADateField.class, fieldKey, caption);
                     //                    field = appContext.getBean(ProvaField.class, caption);
-                    field = appContext.getBean(ADateTimeField.class, fieldKey, caption);
+                    //                    field = appContext.getBean(ADateTimeField.class, fieldKey, caption);
                     break;
                 case localTime:
                     //                    field = appContext.getBean(ADateField.class, fieldKey, caption);
-                    field = appContext.getBean(ATimeField.class, fieldKey, caption);
+                    //                    field = appContext.getBean(ATimeField.class, fieldKey, caption);
                     break;
                 case combo:
                     if (comboClazz != null) {

@@ -1,8 +1,6 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -50,37 +48,36 @@ public class ABooleanField extends AField<Boolean> {
 
     private String boolEnum = VUOTA;
 
+    private String caption = VUOTA;
+
     private String firstItem;
 
     private String secondItem;
 
 
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AEmailField.class, caption) <br>
-     *
-     * @param typeBool per la tipologia di visualizzazione
-     * @param caption  label visibile del field
-     */
-    public ABooleanField(String caption, AETypeBoolField typeBool) {
-        this(VUOTA, typeBool, caption, VUOTA);
-    } // end of SpringBoot constructor
+    //    /**
+    //     * Costruttore con parametri <br>
+    //     * L' istanza viene costruita con appContext.getBean(AEmailField.class, caption) <br>
+    //     *
+    //     * @param typeBool per la tipologia di visualizzazione
+    //     * @param caption  label visibile del field
+    //     */
+    //    public ABooleanField(String caption, AETypeBoolField typeBool) {
+    //        this(VUOTA, typeBool, caption, VUOTA);
+    //    } // end of SpringBoot constructor
 
 
     /**
      * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(ABooleanField.class, fieldKey, typeBool, caption) <br>
+     * L' istanza viene costruita con appContext.getBean(ABooleanField.class, typeBool, boolEnum) <br>
      *
-     * @param fieldKey nome interno del field
      * @param typeBool per la tipologia di visualizzazione
-     * @param caption  label visibile del field
      * @param boolEnum valori custom della scelta booleana
      */
-    public ABooleanField(String fieldKey, AETypeBoolField typeBool, String caption, String boolEnum) {
-        super.fieldKey = fieldKey;
+    public ABooleanField(AETypeBoolField typeBool, String boolEnum, String caption) {
         this.typeBool = typeBool;
-        this.caption = caption;
         this.boolEnum = boolEnum;
+        this.caption = caption;
     } // end of SpringBoot constructor
 
 
@@ -97,7 +94,7 @@ public class ABooleanField extends AField<Boolean> {
     protected void postConstruct() {
         //@todo Funzionalità ancora da implementare
         //@todo Per adesso funziona solo il checkbox
-        typeBool = AETypeBoolField.checkBox;
+        //        typeBool = AETypeBoolField.checkBox;
         //@todo Funzionalità ancora da implementare
 
         initView();
@@ -109,7 +106,8 @@ public class ABooleanField extends AField<Boolean> {
         List<Boolean> items = new ArrayList<>();
 
         if (usaCheckBox) {
-            checkBox = new Checkbox();
+            checkBox = new Checkbox("Pippoz");
+            //            checkBox.getElement().setAttribute("style", "align-left: flex-start;");
         } else {
             radioGroup = new RadioButtonGroup<>();
         }
@@ -119,29 +117,27 @@ public class ABooleanField extends AField<Boolean> {
 
         if (typeBool != null) {
             switch (typeBool) {
+                case radioTrueFalse:
+                    radioGroup.setItems(items);
+                    radioGroup.setLabel(caption);
+                    radioGroup.setRenderer(new TextRenderer<>(e -> e ? "vero" : "falso"));
+                    break;
                 case checkBox:
                     checkBox.setLabelAsHtml(caption);
                     break;
-                case radioTrueFalse:
-                    //                    radioGroup.setItems("Vero", "Falso");
-                    radioGroup.setItems(items);
-                    radioGroup.setLabel(caption);
-                    radioGroup.setRenderer(new TextRenderer<>(e -> "mario"));
-                    break;
                 case radioSiNo:
-                    //                    radioGroup.setItems("Si", "No");
                     radioGroup.setItems(items);
                     radioGroup.setLabel(caption);
-                    radioGroup.setRenderer(new TextRenderer<>(e -> "aldo"));
+                    radioGroup.setRenderer(new TextRenderer<>(e -> e ? "Si" : "No"));
                     break;
                 case radioCustomHoriz:
                     radioGroup.setItems(items);
-                    radioGroup.setRenderer(new TextRenderer<>(e -> "marco"));
+                    radioGroup.setRenderer(new TextRenderer<>(e -> e ? getItems().get(0) : getItems().get(1)));
                     break;
                 case radioCustomVert:
                     radioGroup.setItems(items);
                     radioGroup.setLabel(caption);
-                    radioGroup.setRenderer(new TextRenderer<>(e -> "franco"));
+                    radioGroup.setRenderer(new TextRenderer<>(e -> e ? getItems().get(0) : getItems().get(1)));
                     //                    radioGroup.getElement().setAttribute("style", "spacing:0em; margin:0em; padding:0em;");
                     radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
                     break;
@@ -183,59 +179,26 @@ public class ABooleanField extends AField<Boolean> {
 
 
     @Override
-    protected void setModelValue(Boolean newModelValue, boolean fromClient) {
-        super.setModelValue(newModelValue, fromClient);
-    }
-
-
-    @Override
-    public Boolean getValue() {
-        if (usaCheckBox) {
-            //            return checkBox.getValue();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
-    @Override
-    public void setValue(Boolean value) {
-        super.setValue(value);
-    }
-
-
-    @Override
     protected Boolean generateModelValue() {
         if (usaCheckBox) {
             return checkBox.getValue();
         } else {
-            return true;
+            return radioGroup.getValue();
         }
     }
 
 
     @Override
     protected void setPresentationValue(Boolean value) {
-        if (!usaCheckBox) {
+        if (usaCheckBox) {
+            checkBox.setValue(value);
+        } else {
             if (value) {
                 radioGroup.setValue(value);
             } else {
                 radioGroup.setValue(value);
             }
         }
-        checkBox.setValue(value);
     }
-
-
-    @Override
-    public AbstractSinglePropertyField getBinder() {
-        if (usaCheckBox) {
-            return checkBox;
-        } else {
-            return radioGroup;
-        }
-    }
-
 
 }

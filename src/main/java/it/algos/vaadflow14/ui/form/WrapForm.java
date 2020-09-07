@@ -1,10 +1,12 @@
 package it.algos.vaadflow14.ui.form;
 
+import com.vaadin.flow.component.customfield.CustomField;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class WrapForm {
 
     private List<String> fieldsName = null;
 
-    private LinkedHashMap<String, AIField> fieldsMap;
+    private HashMap<String, AField> fieldsMap;
 
     private LinkedHashMap<String, List> enumMap;
 
@@ -62,7 +64,7 @@ public class WrapForm {
     }
 
 
-    public WrapForm(AEntity entityBean, Class<? extends AEntity> entityClazz, boolean usaTopLayout, int stepTopLayout, boolean usaBottomLayout, int stepBottomLayout, List<String> fieldsName, LinkedHashMap<String, AIField> fieldsMap, String minWidthForm) {
+    public WrapForm(AEntity entityBean, Class<? extends AEntity> entityClazz, boolean usaTopLayout, int stepTopLayout, boolean usaBottomLayout, int stepBottomLayout, List<String> fieldsName, HashMap<String, AField> fieldsMap, String minWidthForm) {
         this.entityBean = entityBean;
         this.entityClazz = entityClazz;
         this.usaTopLayout = usaTopLayout;
@@ -115,7 +117,7 @@ public class WrapForm {
     }
 
 
-    public LinkedHashMap<String, AIField> getFieldsMap() {
+    public HashMap<String, AField> getFieldsMap() {
         return fieldsMap;
     }
 

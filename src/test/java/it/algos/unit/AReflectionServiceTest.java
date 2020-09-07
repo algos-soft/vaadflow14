@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.AReflectionService;
@@ -14,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -41,6 +43,8 @@ public class AReflectionServiceTest extends ATest {
 
     protected static Class<? extends AEntity> SECOLO_CLASS = Secolo.class;
 
+    protected static Class<?> MESE_LOGIC_CLASS = MeseLogic.class;
+
     /**
      * Classe principale di riferimento <br>
      */
@@ -66,6 +70,7 @@ public class AReflectionServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.logger = logger;
     }
 
 
@@ -77,8 +82,10 @@ public class AReflectionServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
-    }
 
+        ottenutoField = null;
+        listaFields = null;
+    }
 
 
     @Test
@@ -200,6 +207,39 @@ public class AReflectionServiceTest extends ATest {
         assertEquals(previstoIntero, lista.size());
     }
 
+
+    @Test
+    @Order(5)
+    @DisplayName("4 - Singolo field di una classe")
+    void getField() {
+        System.out.println("Singolo field di una classe");
+        System.out.println("");
+
+        sorgente = FIELD_CODE;
+        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        Assertions.assertNull(ottenutoField);
+        System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName()  +PUNTO+ sorgente);
+
+        sorgente = FIELD_COMPANY;
+        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        Assertions.assertNotNull(ottenutoField);
+        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO+ sorgente);
+
+        sorgente = FIELD_NOTE;
+        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        Assertions.assertNotNull(ottenutoField);
+        System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO+ sorgente);
+
+        sorgente = FIELD_ORDINE;
+        ottenutoField = service.getField(MESE_CLASS, sorgente);
+        Assertions.assertNotNull(ottenutoField);
+        System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO+ sorgente);
+
+        sorgente = FIELD_NOTE;
+        ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
+        Assertions.assertNull(ottenutoField);
+        System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO+ sorgente);
+    }
 
 
     private void printField(Class<? extends AEntity> clazz, String methodName, List<Field> lista) {

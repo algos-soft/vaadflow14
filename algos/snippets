@@ -87,3 +87,7 @@ content.getElement().setProperty("innerHTML", "<p>Hello World</p></br><span>Some
 		grid.addColumn(User::getRole).setHeader("Role").setWidth("150px");
 
 Notification.show("Alcuni campi non sono adeguati", 3000, Notification.Position.MIDDLE);
+
+        //--Controlla che il parametro in ingresso sia della classe prevista
+        if (AEntity.class.isAssignableFrom(genericClazz)) {
+        }

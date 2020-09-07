@@ -1,20 +1,24 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -178,14 +182,14 @@ public abstract class AForm extends VerticalLayout {
      * Lista ordinata di tutti i fields del form <br>
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      */
-    protected List<AIField> fieldsList;
+    protected List<AField> fieldsList;
 
     /**
      * Mappa di tutti i fields del form <br>
      * La chiave è la propertyName del field <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
-    protected HashMap<String, AIField> fieldsMap;
+    protected HashMap<String, AField> fieldsMap;
 
     /**
      * The Entity Logic (obbligatorio per liste e form)
@@ -358,8 +362,22 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsBinder() {
+        AField field = null;
         fieldsNameList = getPropertyNamesList();
-        this.fieldsList = beanService.creaFields(entityBean, operationForm, binder);
+
+        if (array.isValid(fieldsNameList)) {
+            fieldsList=new ArrayList<>();
+            for (String fieldKey : fieldsNameList) {
+                field = fieldService.creaOnly(entityBean, fieldKey);
+                if (field != null) {
+                    fieldsList.add(field);
+                    binder.forField(field).bind(fieldKey);
+                } else {
+                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+                }
+            }
+        }
     }
 
 
@@ -388,13 +406,13 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsExtra() {
-        AIField field = null;
+        CustomField field = null;
 
         if (usaFieldNote) {
-            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
-            if (field != null) {
-                fieldsList.add(field);
-            }
+//            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
+//            if (field != null) {
+//                fieldsList.add(field);
+//            }
         }
     }
 
@@ -405,14 +423,14 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void readFieldsExtra() {
-        AIField field = null;
+        CustomField field = null;
 
         if (usaFieldNote) {
             if (fieldsMap != null) {
                 field = fieldsMap.get(FlowCost.FIELD_NOTE);
                 if (field != null) {
                     if (text.isValid(entityBean.note)) {
-                        //                        field.getBinder().setValue(entityBean.note);
+                        field.setValue(entityBean.note);
                     }
                 }
             }
@@ -438,21 +456,19 @@ public abstract class AForm extends VerticalLayout {
         Component comp;
 
         if (array.isValid(fieldsList)) {
-            for (AIField field : fieldsList) {
-                comp = field.get();
-                if (comp != null) {
-                    if (text.isValid(field.getKey()) && field.getKey().equals(FlowCost.FIELD_NOTE)) {
-                        if (usaBottomLayout) {
-                            bottomLayout.add(comp);
-                        } else {
-                            topLayout.add(comp);
-                        }
-                    } else {
-                        topLayout.add(comp);
-                    }
-                } else {
-                    logger.error("Manca il field " + field.getKey() + " dalla lista", this.getClass(), "addFieldsToLayout");
-                }
+            for (CustomField field : fieldsList) {
+                topLayout.add(field);
+
+                //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE la posizione del campo Note
+                //                    if (text.isValid(field.getKey()) && field.getKey().equals(FlowCost.FIELD_NOTE)) {
+                //                        if (usaBottomLayout) {
+                //                            bottomLayout.add(comp);
+                //                        } else {
+                //                            topLayout.add(comp);
+                //                        }
+                //                    } else {
+                //                        topLayout.add(comp);
+                //                    }
             }
         } else {
             logger.warn("La fieldsList è vuota", this.getClass(), "addFieldsToLayout");
@@ -465,12 +481,10 @@ public abstract class AForm extends VerticalLayout {
      */
     protected void creaMappaFields() {
         if (array.isValid(fieldsList)) {
-            if (fieldsMap == null) {
-                fieldsMap = new HashMap<String, AIField>();
+            fieldsMap = new HashMap<String, AField>();
 
-                for (AIField field : fieldsList) {
-                    fieldsMap.put(field.getKey(), field);
-                }
+            for (AField field : fieldsList) {
+                fieldsMap.put(field.getKey(), field);
             }
         }
     }
@@ -486,10 +500,10 @@ public abstract class AForm extends VerticalLayout {
 
         if (usaFieldNote) {
             if (fieldsMap != null) {
-                field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                if (field != null) {
-                    //                    entityBean.note = (String) field.getBinder().getValue();
-                }
+                //                field = fieldsMap.get(FlowCost.FIELD_NOTE);
+                //                if (field != null) {
+                //                    //                    entityBean.note = (String) field.getBinder().getValue();
+                //                }
             }
         }
     }

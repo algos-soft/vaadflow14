@@ -60,42 +60,42 @@ public class Beta extends AEntity {
     /**
      * booleano (colonna deprecated)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Checkbox base con spiegazione")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioTrueFalse, caption = "Radio gruppo vero/falso")
     @AIColumn(typeBool = AETypeBoolCol.boolGrezzo, header = "Bool", widthEM = 5)
     public boolean uno;
 
     /**
      * booleano (colonna semplice)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioTrueFalse, caption = "Label del radio gruppo standard orizzontale")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Checkbox base con spiegazione")
     @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Chk")
     public boolean due;
 
     /**
      * booleano (colonna standard)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo, caption = "Label del radio gruppo standard orizzontale")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo, caption = "Radio gruppo si/no")
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "True")
     public boolean tre;
 
     /**
      * booleano (colonna invertita non normale)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, caption = "Label del radio gruppo custom orizzontale", boolEnum = "casa,ufficio")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, caption = "Radio gruppo custom orizzontale", boolEnum = "casa,ufficio")
     @AIColumn(typeBool = AETypeBoolCol.checkIconReverse, header = "Rev")
     public boolean quattro;
 
     /**
      * booleano (colonna opzionale)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomVert, caption = "Label del radio gruppo custom verticale", boolEnum = "Aperto,Chiuso")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomVert, caption = "Radio gruppo custom verticale", boolEnum = "Aperto,Chiuso")
     @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "SiNo")
     public boolean cinque;
 
     /**
      * booleano (colonna opzionale)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, boolEnum = "Senza label,Solo valori")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioCustomHoriz, boolEnum = "Senza label, Solo valori")
     @AIColumn(typeBool = AETypeBoolCol.yesNoBold, header = "Bold")
     public boolean sei;
 

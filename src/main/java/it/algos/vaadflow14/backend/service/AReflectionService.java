@@ -2,7 +2,6 @@ package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,19 +39,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AReflectionService extends AAbstractService {
 
+
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-
-    /**
-     * Private constructor to avoid client applications to use constructor <br>
-     * In alcune circostanze SpringBoot non riesce a costruire l'istanza <br>
-     * Rimesso 'public' al posto del precedente 'private' <br>
-     */
-    public AReflectionService() {
-    }// end of constructor
 
 
     /**
@@ -202,29 +193,13 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the field
      */
-    public Field getField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+    public Field getField(final Class<?> genericClazz, final String publicFieldName) {
         Field field = null;
-        List<Field> listaFields = getFields(entityClazz);
 
-        if (listaFields != null) {
-            for (Field fieldTmp : listaFields) {
-                if (fieldTmp.getName().equals(publicFieldName)) {
-                    field = fieldTmp;
-                    break;
-                }
-            }
-        }
-
-        if (field == null && AEntity.class.isAssignableFrom(entityClazz)) {
-            listaFields = getAllFields(ACEntity.class);
-            if (listaFields != null) {
-                for (Field fieldTmp : listaFields) {
-                    if (fieldTmp.getName().equals(publicFieldName)) {
-                        field = fieldTmp;
-                        break;
-                    }
-                }
-            }
+        try {
+            field = genericClazz.getField(publicFieldName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getField");
         }
 
         return field;
@@ -239,21 +214,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return true se esiste
      */
-    public boolean hasField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
-        return getField(entityClazz, publicFieldName) != null;
-    }
-
-
-    /**
-     * Controlla la mancanza di un field statico di una classe generica. <br>
-     *
-     * @param genericClazz    da cui estrarre il field statico da controllare
-     * @param publicFieldName property statica e pubblica
-     *
-     * @return true se NON esiste
-     */
-    public boolean hasNotField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
-        return getField(entityClazz, publicFieldName) == null;
+    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
+        return getField(genericClazz, publicFieldName) != null;
     }
 
 
@@ -265,15 +227,15 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the property value
      */
-    public Object getStaticPropertyValue(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+    public Object getStaticPropertyValue(final Class<?> genericClazz, final String publicFieldName) {
         Object value = null;
         Field field = null;
 
-        if (entityClazz == null || text.isEmpty(publicFieldName)) {
+        if (genericClazz == null || text.isEmpty(publicFieldName)) {
             return null;
         }
 
-        field = getField(entityClazz, publicFieldName);
+        field = getField(genericClazz, publicFieldName);
         if (field != null) {
             try {
                 value = field.get(null);
@@ -294,9 +256,9 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the string value
      */
-    public String getStaticPropertyValueStr(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+    public String getStaticPropertyValueStr(final Class<?> genericClazz, final String publicFieldName) {
         String value = VUOTA;
-        Object objValue = getStaticPropertyValue(entityClazz, publicFieldName);
+        Object objValue = getStaticPropertyValue(genericClazz, publicFieldName);
 
         if (objValue instanceof String) {
             value = (String) objValue;
@@ -313,8 +275,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the vaadin icon
      */
-    public VaadinIcon getVaadinIcon(final Class<? extends AEntity> entityClazz) {
-        Object objValue = getStaticPropertyValue(entityClazz, "VAADIN_ICON");
+    public VaadinIcon getVaadinIcon(final Class<?> genericClazz) {
+        Object objValue = getStaticPropertyValue(genericClazz, "VAADIN_ICON");
         return (objValue instanceof VaadinIcon) ? (VaadinIcon) objValue : null;
     }
 
@@ -326,8 +288,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the iron icon
      */
-    public String getIronIcon(final Class<? extends AEntity> entityClazz) {
-        return getStaticPropertyValueStr(entityClazz, "IRON_ICON");
+    public String getIronIcon(final Class<?> genericClazz) {
+        return getStaticPropertyValueStr(genericClazz, "IRON_ICON");
     }
 
 
@@ -338,8 +300,8 @@ public class AReflectionService extends AAbstractService {
      *
      * @return the menu name
      */
-    public String getMenuName(final Class<? extends AEntity> entityClazz) {
-        return getStaticPropertyValueStr(entityClazz, "MENU_NAME");
+    public String getMenuName(final Class<?> genericClazz) {
+        return getStaticPropertyValueStr(genericClazz, "MENU_NAME");
     }
 
 

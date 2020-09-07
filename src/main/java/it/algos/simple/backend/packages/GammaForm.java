@@ -1,20 +1,16 @@
 package it.algos.simple.backend.packages;
 
 import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.simple.ui.ProvaField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.ui.fields.ATextField;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_CODE;
+import java.util.List;
 
 /**
  * Project vaadflow14
@@ -34,12 +30,14 @@ public class GammaForm extends AForm {
 
     //    private ADateTimeField fieldDateTime;
 
+    protected List<CustomField> fieldsList2;
+
     /**
      * Mappa di tutti i fields del form <br>
      * La chiave è la propertyName del field <br>
      * Serve per recuperarli dal nome per successive elaborazioni <br>
      */
-    protected LinkedHashMap<String, CustomField> fieldsMap2;
+    protected HashMap<String, CustomField> fieldsMap2;
 
     private CustomField field;
 
@@ -81,7 +79,24 @@ public class GammaForm extends AForm {
      */
     @Override
     public void creaFieldsBinder() {
-        fieldsMap2 = new LinkedHashMap<>();
+        CustomField field = null;
+        fieldsNameList = getPropertyNamesList();
+        //        List<Field> listaFields = reflection.getFields(entityClazz);
+        //        this.fieldsList = beanService.creaFields(entityBean, operationForm, binder);
+
+        fieldsList2 = new ArrayList<>();
+        if (array.isValid(fieldsNameList)) {
+            for (String fieldKey : fieldsNameList) {
+                field = fieldService.creaOnly(entityBean, fieldKey);
+                if (field != null) {
+                    fieldsList2.add(field);
+                    binder.forField(field).bind(fieldKey);
+                } else {
+                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+                }
+            }
+        }
 
         //        fieldText = appContext.getBean(ATextField.class, FIELD_CODE, "testo");
         //        binder.forField(fieldText.getBinder()).bind(FIELD_CODE);
@@ -94,36 +109,36 @@ public class GammaForm extends AForm {
 
         //        fieldProva = appContext.getBean(ProvaField.class);
         //        binder.forField(fieldProva).bind("uno");
-        field = creaField(binder, FIELD_CODE, AETypeField.text);
-        fieldsMap2.put(FIELD_CODE,field);
-
-        field = creaField(binder, "uno", AETypeField.localDateTime);
-        fieldsMap2.put("uno", field);
-
+        //        field = creaField(binder, FIELD_CODE, AETypeField.text);
+        //        fieldsMap2.put(FIELD_CODE, field);
+        //
+        //        field = creaField(binder, "uno", AETypeField.localDateTime);
+        //        fieldsMap2.put("uno", field);
+        //
         binder.readBean(entityBean);
     }
 
 
-    public CustomField creaField(Binder binder, String fieldKey, AETypeField type) {
-        CustomField field = null;
-
-        switch (type) {
-            case text:
-                field = appContext.getBean(ATextField.class, fieldKey, "caption");
-                break;
-            case localDateTime:
-                field = appContext.getBean(ProvaField.class,fieldKey,"prova");
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "nomeDelMetodo");
-                break;
-        }
-
-        //--aggiungere i validator
-        binder.forField(field).bind(fieldKey);
-
-        return field;
-    }
+    //    public CustomField creaField(Binder binder, String fieldKey, AETypeField type) {
+    //        CustomField field = null;
+    //
+    //        switch (type) {
+    //            case text:
+    //                field = appContext.getBean(ATextField.class, fieldKey, "caption");
+    //                break;
+    //            case localDateTime:
+    //                field = appContext.getBean(ProvaField.class, fieldKey, "prova");
+    //                break;
+    //            default:
+    //                logger.warn("Switch - caso non definito", this.getClass(), "nomeDelMetodo");
+    //                break;
+    //        }
+    //
+    //        //--aggiungere i validator
+    //        binder.forField(field).bind(fieldKey);
+    //
+    //        return field;
+    //    }
 
 
     /**
@@ -132,7 +147,7 @@ public class GammaForm extends AForm {
      */
     @Override
     protected void addFieldsToLayout() {
-        for (CustomField field : fieldsMap2.values()) {
+        for (CustomField field : fieldsList2) {
             topLayout.add(field);
         }
     }
