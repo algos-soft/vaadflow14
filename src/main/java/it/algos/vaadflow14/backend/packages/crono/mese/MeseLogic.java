@@ -91,9 +91,9 @@ public class MeseLogic extends CronoLogic {
      *
      * @param aeMese: enumeration per la creazione-reset di tutte le entities
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(AEMese aeMese) {
+    public Mese crea(AEMese aeMese) {
         return crea(aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla(), aeMese.getNome());
     }
 
@@ -106,10 +106,10 @@ public class MeseLogic extends CronoLogic {
      * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
      * @param nome            nome completo (obbligatorio, unico)
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(int giorni, int giorniBisestile, String sigla, String nome) {
-        return checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome));
+    public Mese crea(int giorni, int giorniBisestile, String sigla, String nome) {
+        return (Mese)checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome));
     }
 
 

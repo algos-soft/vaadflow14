@@ -152,10 +152,10 @@ public class PreferenzaLogic extends ALogic {
      * @param type        (obbligatorio) per convertire in byte[] i valori
      * @param value       (obbligatorio) memorizza tutto in byte[]
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(String code, String descrizione, AETypePref type, Object value) {
-        return checkAndSave(newEntity(code, descrizione, type, value));
+    public Preferenza crea(String code, String descrizione, AETypePref type, Object value) {
+        return (Preferenza)checkAndSave(newEntity(code, descrizione, type, value));
     }
 
 

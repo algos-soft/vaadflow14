@@ -1,12 +1,15 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.html.Label;
+import it.algos.vaadflow14.backend.annotation.AIColumn;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import javafx.scene.control.ComboBox;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -649,5 +652,21 @@ public class ATextService extends AAbstractService {
         return stringaOut;
     }
 
+    /**
+     * Get the width of the property.
+     *
+     * @param widthInt larghezza espressa come intero
+     *
+     * @return larghezza espressa come stringa
+     */
+    public String getColumnWith(int widthInt) {
+        String widthTxt = VUOTA;
+
+        if (widthInt > 0) {
+            widthTxt = widthInt + TAG_EM;
+        }
+
+        return widthTxt;
+    }
 
 }

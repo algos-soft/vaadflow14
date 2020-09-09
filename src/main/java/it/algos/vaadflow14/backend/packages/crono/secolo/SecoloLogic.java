@@ -94,9 +94,9 @@ public class SecoloLogic extends CronoLogic {
      *
      * @param aeSecolo: enumeration per la creazione-reset di tutte le entities
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(AESecolo aeSecolo) {
+    public Secolo crea(AESecolo aeSecolo) {
         return crea(aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine(), aeSecolo.getNome());
     }
 
@@ -109,10 +109,10 @@ public class SecoloLogic extends CronoLogic {
      * @param fine       (obbligatorio, unico)
      * @param nome       (obbligatorio, unico)
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(boolean anteCristo, int inizio, int fine, String nome) {
-        return checkAndSave(newEntity(anteCristo, inizio, fine, nome));
+    public Secolo crea(boolean anteCristo, int inizio, int fine, String nome) {
+        return (Secolo)checkAndSave(newEntity(anteCristo, inizio, fine, nome));
     }
 
 

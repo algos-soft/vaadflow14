@@ -48,7 +48,7 @@ public class Company extends AEntity {
      * codice di riferimento (obbligatorio)
      */
     @NotBlank()
-    @Size(min = 3)
+//    @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 8)
     @AIColumn(widthEM = 6)
@@ -73,7 +73,7 @@ public class Company extends AEntity {
     /**
      * descrizione (obbligatoria)
      */
-    @NotBlank()
+//    @NotBlank()
     @AIField(type = AETypeField.text, caption = "Descrizione completa")
     @AIColumn(header = "Descrizione", flexGrow = true)
     public String descrizione;

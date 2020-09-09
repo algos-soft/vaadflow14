@@ -133,10 +133,10 @@ public class AnnoLogic extends CronoLogic {
      * @param bisestile (obbligatorio)
      * @param nome      (obbligatorio, unico)
      *
-     * @return true se la entity è stata creata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(int ordine, Secolo secolo, boolean bisestile, String nome) {
-        return checkAndSave(newEntity(ordine, secolo, bisestile, nome));
+    public Anno crea(int ordine, Secolo secolo, boolean bisestile, String nome) {
+        return (Anno)checkAndSave(newEntity(ordine, secolo, bisestile, nome));
     }
 
 

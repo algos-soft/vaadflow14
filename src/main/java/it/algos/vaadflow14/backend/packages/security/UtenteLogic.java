@@ -3,11 +3,12 @@ package it.algos.vaadflow14.backend.packages.security;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AERole;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -115,10 +116,10 @@ public class UtenteLogic extends ALogic {
      * @param username o nickName
      * @param password in chiaro
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(String username, String password) {
-        return checkAndSave(newEntity(username, password, (AERole) null));
+    public Preferenza crea(String username, String password) {
+        return (Preferenza) checkAndSave(newEntity(username, password, (AERole) null));
     }
 
 
@@ -131,12 +132,12 @@ public class UtenteLogic extends ALogic {
      * @param password in chiaro
      * @param role     authority per il login
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(Company company, String username, String password, AERole role) {
+    public Utente crea(Company company, String username, String password, AERole role) {
         Utente entity = newEntity(username, password, role);
         entity.company = company;
-        return checkAndSave(entity);
+        return (Utente) checkAndSave(entity);
     }
 
 
@@ -204,7 +205,7 @@ public class UtenteLogic extends ALogic {
     public Utente beforeSave(AEntity entityBean, AEOperation operation) {
         Utente entity = (Utente) super.beforeSave(entityBean, operation);
 
-        if (entity != null) {
+        if (entity != null && entity.username != null) {
             entity.username = text.levaSpazi(entity.username);
         }
 

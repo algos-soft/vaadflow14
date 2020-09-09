@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.annotation;
 
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 
 import java.lang.annotation.ElementType;
@@ -133,5 +134,13 @@ public @interface AIColumn {
      * @return the strings
      */
     String boolEnum() default VUOTA;
+
+    /**
+     * The type of the data type
+     * Defaults to standard type.
+     *
+     * @return the strings
+     */
+    AETypeData typeData() default AETypeData.standard;
 
 }

@@ -1,6 +1,6 @@
 package it.algos.unit;
 
-import it.algos.vaadflow14.backend.enumeration.AETime;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 
@@ -456,7 +456,7 @@ public class ADateServiceTest extends ATest {
         String tag = ": ";
 
         System.out.println("");
-        for (AETime pattern : AETime.values()) {
+        for (AETypeData pattern : AETypeData.values()) {
             if (pattern.isSenzaTime()) {
                 ottenuto = date.get(LOCAL_DATE_DUE, pattern);
             } else {
@@ -466,7 +466,7 @@ public class ADateServiceTest extends ATest {
         }
 
         System.out.println("");
-        for (AETime pattern : AETime.values()) {
+        for (AETypeData pattern : AETypeData.values()) {
             if (pattern.isSenzaTime()) {
                 ottenuto = date.get(LOCAL_DATE_UNO, pattern);
             } else {
@@ -482,37 +482,41 @@ public class ADateServiceTest extends ATest {
     @DisplayName("15 - Formati principali con metodi diretti")
     void get4() {
         System.out.println("Data nei formati più usati");
-        System.out.println("");
+        System.out.println("--------------------------");
         String tag = ": ";
 
         ottenuto = date.getCorta(LOCAL_DATE_DUE);
-        System.out.println(AETime.dateShort.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.dateShort.getTag() + tag + ottenuto);
 
         ottenuto = date.getNormale(LOCAL_DATE_DUE);
-        System.out.println(AETime.dateNormal.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.dateNormal.getTag() + tag + ottenuto);
 
         ottenuto = date.getLunga(LOCAL_DATE_DUE);
-        System.out.println(AETime.dateLong.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.dateLong.getTag() + tag + ottenuto);
 
         ottenuto = date.getCompleta(LOCAL_DATE_DUE);
-        System.out.println(AETime.completa.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.dataCompleta.getTag() + tag + ottenuto);
 
+        System.out.println("");
         System.out.println("");
         System.out.println("Data e orario nel formato normale e completo");
+        System.out.println("--------------------------------------------");
         ottenuto = date.getDataOrario(LOCAL_DATE_TIME_UNO);
-        System.out.println(AETime.normaleOrario.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.normaleOrario.getTag() + tag + ottenuto);
 
         ottenuto = date.getDataOrarioCompleta(LOCAL_DATE_TIME_UNO);
-        System.out.println(AETime.completaOrario.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.completaOrario.getTag() + tag + ottenuto);
 
         ottenuto = date.getDataOrario(LOCAL_DATE_TIME_DUE);
-        System.out.println(AETime.normaleOrario.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.normaleOrario.getTag() + tag + ottenuto);
 
         ottenuto = date.getDataOrarioCompleta(LOCAL_DATE_TIME_DUE);
-        System.out.println(AETime.completaOrario.getTag() + tag + ottenuto);
+        System.out.println(AETypeData.completaOrario.getTag() + tag + ottenuto);
 
         System.out.println("");
+        System.out.println("");
         System.out.println("Orario nel formato standard");
+        System.out.println("---------------------------");
         ottenuto = date.getOrario(LOCAL_DATE_TIME_UNO);
         System.out.println(LOCAL_DATE_TIME_UNO+ SEP + ottenuto);
 
@@ -526,7 +530,9 @@ public class ADateServiceTest extends ATest {
         System.out.println(LOCAL_DATE_TIME_DUE_MEZZANOTTE+ SEP + ottenuto);
 
         System.out.println("");
+        System.out.println("");
         System.out.println("Orario nel formato completo");
+        System.out.println("---------------------------");
         ottenuto = date.getOrarioCompleto(LOCAL_DATE_TIME_UNO);
         System.out.println(LOCAL_DATE_TIME_UNO+ SEP + ottenuto);
 

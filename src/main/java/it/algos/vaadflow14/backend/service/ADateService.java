@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.enumeration.AEMese;
-import it.algos.vaadflow14.backend.enumeration.AETime;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -170,7 +170,7 @@ public class ADateService extends AAbstractService {
      * @return testo standard ISO senza OffsetSeconds
      */
     public String getISO(LocalDateTime localDateTime) {
-        return localDateTime.format(DateTimeFormatter.ofPattern(AETime.iso8601.getPattern(), LOCALE));
+        return localDateTime.format(DateTimeFormatter.ofPattern(AETypeData.iso8601.getPattern(), LOCALE));
     }
 
 
@@ -183,7 +183,7 @@ public class ADateService extends AAbstractService {
      */
     private Date dateFromISO(String isoStringa) {
         Date data = null;
-        DateFormat format = new SimpleDateFormat(AETime.iso8601.getPattern());
+        DateFormat format = new SimpleDateFormat(AETypeData.iso8601.getPattern());
 
         try {
             data = format.parse(isoStringa);
@@ -275,7 +275,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String get(LocalDate localDate) {
-        return get(localDate, AETime.standard);
+        return get(localDate, AETypeData.standard);
     }
 
 
@@ -284,17 +284,25 @@ public class ADateService extends AAbstractService {
      * <p>
      * Returns a string representation of the date <br>
      *
-     * @param localDate da rappresentare
-     * @param pattern   per la formattazione
+     * @param dateObj da rappresentare
+     * @param pattern per la formattazione
      *
      * @return la data sotto forma di stringa
      */
-    public String get(LocalDate localDate, AETime pattern) {
-        if (pattern.isSenzaTime()) {
-            return get(localDate, pattern.getPattern());
-        } else {
+    public String get(Object dateObj, AETypeData pattern) {
+        if (dateObj != null) {
+            if (dateObj instanceof LocalDateTime) {
+                return get((LocalDateTime) dateObj, pattern);
+            }
+            if (dateObj instanceof LocalDate) {
+                return get((LocalDate) dateObj, pattern);
+            }
+            if (dateObj instanceof LocalTime) {
+                return get((LocalTime) dateObj, pattern);
+            }
             return VUOTA;
         }
+        return VUOTA;
     }
 
 
@@ -308,11 +316,64 @@ public class ADateService extends AAbstractService {
      *
      * @return la data sotto forma di stringa
      */
-    public String get(LocalDateTime localDateTime, AETime pattern) {
+    public String get(LocalDateTime localDateTime, AETypeData pattern) {
         if (pattern.isSenzaTime()) {
             return VUOTA;
         } else {
             return get(localDateTime, pattern.getPattern());
+        }
+    }
+
+
+    /**
+     * Restituisce la data nella forma del pattern ricevuto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localDate da rappresentare
+     * @param pattern   per la formattazione
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalDate localDate, AETypeData pattern) {
+        if (pattern.isSenzaTime()) {
+            return get(localDate, pattern.getPattern());
+        } else {
+            return VUOTA;
+        }
+    }
+
+
+    /**
+     * Restituisce la data nella forma del pattern ricevuto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localTime da rappresentare
+     * @param pattern   per la formattazione
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalTime localTime, AETypeData pattern) {
+        return get(localTime, pattern.getPattern());
+    }
+
+
+    /**
+     * Restituisce la data nella forma del pattern ricevuto. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     *
+     * @param localDateTime da rappresentare
+     * @param pattern       per la formattazione
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalDateTime localDateTime, String pattern) {
+        if (localDateTime != null) {
+            return localDateTime.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
+        } else {
+            return VUOTA;
         }
     }
 
@@ -341,14 +402,14 @@ public class ADateService extends AAbstractService {
      * <p>
      * Returns a string representation of the date <br>
      *
-     * @param localDateTime da rappresentare
-     * @param pattern       per la formattazione
+     * @param localTime da rappresentare
+     * @param pattern   per la formattazione
      *
      * @return la data sotto forma di stringa
      */
-    public String get(LocalDateTime localDateTime, String pattern) {
-        if (localDateTime != null) {
-            return localDateTime.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
+    public String get(LocalTime localTime, String pattern) {
+        if (localTime != null) {
+            return localTime.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
         } else {
             return VUOTA;
         }
@@ -367,7 +428,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getCorta(LocalDate localDate) {
-        return get(localDate, AETime.dateShort);
+        return get(localDate, AETypeData.dateShort);
     }
 
 
@@ -381,8 +442,9 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getNormale(LocalDate localDate) {
-        return get(localDate, AETime.dateNormal);
+        return get(localDate, AETypeData.dateNormal);
     }
+
 
     /**
      * Restituisce la data nella forma del pattern previsto. <br>
@@ -394,7 +456,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getLunga(LocalDate localDate) {
-        return get(localDate, AETime.dateLong);
+        return get(localDate, AETypeData.dateLong);
     }
 
 
@@ -408,8 +470,9 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getCompleta(LocalDate localDate) {
-        return get(localDate, AETime.completa);
+        return get(localDate, AETypeData.dataCompleta);
     }
+
 
     /**
      * Restituisce la data e l' orario nella forma del pattern previsto. <br>
@@ -421,8 +484,9 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getDataOrario(LocalDateTime localDateTime) {
-        return get(localDateTime, AETime.normaleOrario);
+        return get(localDateTime, AETypeData.normaleOrario);
     }
+
 
     /**
      * Restituisce la data e l' orario nella forma del pattern previsto. <br>
@@ -434,8 +498,9 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getDataOrarioCompleta(LocalDateTime localDateTime) {
-        return get(localDateTime, AETime.completaOrario);
+        return get(localDateTime, AETypeData.completaOrario);
     }
+
 
     /**
      * Restituisce l' orario nella forma del pattern previsto. <br>
@@ -447,7 +512,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getOrario(LocalTime localTime) {
-        return localTime.format(DateTimeFormatter.ofPattern(AETime.orario.getPattern(), LOCALE));
+        return localTime.format(DateTimeFormatter.ofPattern(AETypeData.orario.getPattern(), LOCALE));
     }
 
 
@@ -475,7 +540,7 @@ public class ADateService extends AAbstractService {
      * @return la data sotto forma di stringa
      */
     public String getOrarioCompleto(LocalDateTime localDateTime) {
-        return localDateTimeToLocalTime(localDateTime).format(DateTimeFormatter.ofPattern(AETime.orarioLungo.getPattern(), LOCALE));
+        return localDateTimeToLocalTime(localDateTime).format(DateTimeFormatter.ofPattern(AETypeData.orarioLungo.getPattern(), LOCALE));
     }
 
 

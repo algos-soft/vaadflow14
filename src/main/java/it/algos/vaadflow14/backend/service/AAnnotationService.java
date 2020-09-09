@@ -6,10 +6,7 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.view.AView;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,10 +65,6 @@ public class AAnnotationService extends AAbstractService {
      */
     public static final String INT_ZERO = " deve essere maggiore di zero";
 
-    /**
-     * The constant TAG_EM.
-     */
-    public static final String TAG_EM = "em";
 
     /**
      * The constant TAG_PX.
@@ -1889,6 +1882,26 @@ public class AAnnotationService extends AAbstractService {
         return (lista != null && lista.size() == 2) ? lista : null;
     }
 
+    /**
+     * Get the specific annotation of the field. <br>
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     */
+    public AETypeData getTypeDataCol(final Field reflectionJavaField) {
+        AETypeData type = AETypeData.standard;
+        AIColumn annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIColumn(reflectionJavaField);
+        if (annotation != null) {
+            type = annotation.typeData();
+        }
+
+        return type;
+    }
 
     /**
      * Get the status required of the property.

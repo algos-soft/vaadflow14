@@ -80,10 +80,10 @@ public class CompanyLogic extends ALogic {
      * @param code        di riferimento
      * @param descrizione completa
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(String code, String descrizione) {
-        return checkAndSave(newEntity(code, VUOTA, VUOTA, descrizione));
+    public Company crea(String code, String descrizione) {
+        return (Company)checkAndSave(newEntity(code, VUOTA, VUOTA, descrizione));
     }
 
 

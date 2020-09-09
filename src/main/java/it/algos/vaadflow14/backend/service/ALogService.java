@@ -4,7 +4,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AELogLivello;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETime;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AILogType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +114,7 @@ public class ALogService extends AAbstractService {
         message += "Versione ";
         message += FlowVar.projectVersion;
         message += " del ";
-        message += date.get(FlowVar.versionDate, AETime.dateNormal.getPattern());
+        message += date.get(FlowVar.versionDate, AETypeData.dateNormal.getPattern());
 
         info(AETypeLog.startup, message);
     }

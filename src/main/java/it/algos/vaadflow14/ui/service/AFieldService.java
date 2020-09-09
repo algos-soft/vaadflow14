@@ -62,6 +62,7 @@ public class AFieldService extends AAbstractService {
      * @param entityBean   Entity di riferimento
      * @param propertyName della property
      */
+    @Deprecated
     public AIField create(AEOperation operation, Binder binder, AEntity entityBean, String propertyName) {
         AIField field = null;
         Field reflectionJavaField = reflection.getField(entityBean.getClass(), propertyName);
@@ -71,7 +72,7 @@ public class AFieldService extends AAbstractService {
             return null;
         }
 
-        field = creaOnly(reflectionJavaField, entityBean);
+        //        field = creaOnly(reflectionJavaField, entityBean);
         if (field != null) {
             try {
                 addFieldToBinder(operation, binder, entityBean, reflectionJavaField, field);
@@ -94,11 +95,13 @@ public class AFieldService extends AAbstractService {
      * @param entityClazz  di riferimento
      * @param propertyName della property
      */
+    @Deprecated
     public AIField creaOnly(Class entityClazz, String propertyName, AEntity entityBean) {
         Field reflectionJavaField = reflection.getField(entityClazz, propertyName);
 
         if (reflectionJavaField != null) {
-            return creaOnly(reflectionJavaField, entityBean);
+            //            return creaOnly(reflectionJavaField, entityBean);
+            return null;
         } else {
             logger.warn("Manca il field per la property " + propertyName, this.getClass(), "creaOnly");
             return null;
@@ -113,37 +116,52 @@ public class AFieldService extends AAbstractService {
      * @param fieldKey   della property
      */
     public AField creaOnly(AEntity entityBean, String fieldKey) {
-        AField field = null;
         Field reflectionJavaField;
-        AETypeField type;
-        String caption=VUOTA;
-        AETypeBoolField typeBool;
 
         if (entityBean == null) {
             return null;
         }
 
         reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        return creaOnly(reflectionJavaField);
+    }
+
+
+    /**
+     * Create a single field.
+     *
+     * @param reflectionJavaField di riferimento
+     */
+    public AField creaOnly(Field reflectionJavaField) {
+        AField field = null;
+        AETypeField type;
+        String caption = VUOTA;
+        AETypeBoolField typeBool;
+        String boolEnum;
+        String fieldKey;
+
         if (reflectionJavaField == null) {
             return null;
         }
-
-        String boolEnum = VUOTA;
 
         type = annotation.getFormType(reflectionJavaField);
         if (type != null) {
             switch (type) {
                 case text:
+                case phone:
                     field = appContext.getBean(ATextField.class);
                     break;
                 case password:
                     field = appContext.getBean(APasswordField.class);
                     break;
+                case email:
+                    field = appContext.getBean(AEmailField.class);
+                    break;
                 case booleano:
                     typeBool = annotation.getTypeBoolField(reflectionJavaField);
                     boolEnum = annotation.getBoolEnumField(reflectionJavaField);
                     caption = annotation.getFormFieldName(reflectionJavaField);
-                    field = appContext.getBean(ABooleanField.class, typeBool, boolEnum,caption);
+                    field = appContext.getBean(ABooleanField.class, typeBool, boolEnum, caption);
                     break;
                 case localDateTime:
                     field = appContext.getBean(ADateTimeField.class);
@@ -171,6 +189,126 @@ public class AFieldService extends AAbstractService {
         }
 
         return field;
+    }
+
+
+    public void addToBinder(AEntity entityBean, Binder binder, AEOperation operation,Field reflectionJavaField, AField field) {
+        Binder.BindingBuilder builder = null;
+        AETypeField fieldType = annotation.getFormType(reflectionJavaField);
+        String fieldName = VUOTA;
+        AETypeNum numType = AETypeNum.positiviOnly;
+        AStringBlankValidator stringBlankValidator = null;
+        StringLengthValidator stringLengthValidator = null;
+        AIntegerValidator integerValidator = null;
+        AUniqueValidator uniqueValidator = null;
+        String message = VUOTA;
+        String messageSize = VUOTA;
+        String messageNotBlank = VUOTA;
+        String messageNotNull = VUOTA;
+        int stringMin = 0;
+        int stringMax = 0;
+        int intMin = 0;
+        int intMax = 0;
+        boolean isRequired = false;
+        boolean isUnique = false;
+        Serializable propertyOldValue = null;
+
+        fieldName = reflectionJavaField.getName();
+        message = annotation.getMessage(reflectionJavaField);
+        messageSize = annotation.getMessageSize(reflectionJavaField);
+        messageNotBlank = annotation.getMessageBlank(reflectionJavaField);
+        messageNotNull = annotation.getMessageNull(reflectionJavaField);
+        numType = annotation.getTypeNumber(reflectionJavaField);
+        stringMin = annotation.getStringMin(reflectionJavaField);
+        stringMax = annotation.getStringMax(reflectionJavaField);
+        intMin = annotation.getNumberMin(reflectionJavaField);
+        intMax = annotation.getNumberMax(reflectionJavaField);
+        isRequired = annotation.isRequired(reflectionJavaField);
+        isUnique = annotation.isUnique(reflectionJavaField);
+
+        if (isRequired) {
+            stringBlankValidator = appContext.getBean(AStringBlankValidator.class, messageNotBlank);
+        }
+
+        if (stringMin > 0 || stringMax > 0) {
+            stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
+        }
+        if (isUnique) {
+            try {
+                propertyOldValue = (Serializable)reflectionJavaField.get(entityBean);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+            uniqueValidator = appContext.getBean(AUniqueValidator.class, operation, entityBean, fieldName, propertyOldValue);
+        }
+
+        if (fieldType == AETypeField.integer) {
+            if (numType == AETypeNum.range || numType == AETypeNum.rangeControl) {
+                if (intMin > 0 || intMax > 0) {
+                    if (intMin >= intMax) {
+                        throw new RangeException("I valori del range sono errati");
+                    } else {
+                        integerValidator = appContext.getBean(AIntegerValidator.class, numType, intMin, intMax);
+                    }
+                }
+            } else {
+                integerValidator = appContext.getBean(AIntegerValidator.class, numType);
+            }
+        }
+
+        if (fieldType != null) {
+            builder = binder.forField(field);
+            switch (fieldType) {
+                case text:
+                    if (stringBlankValidator != null) {
+                        builder.withValidator(stringBlankValidator);
+                    }
+                    if (stringLengthValidator != null) {
+                        builder.withValidator(stringLengthValidator);
+                    }
+                    if (uniqueValidator != null) {
+                        builder.withValidator(uniqueValidator);
+                    }
+                    break;
+                case phone:
+                    builder.withValidator(new APhoneValidator());
+                    break;
+                case integer:
+                    if (integerValidator != null) {
+                        builder.withValidator(integerValidator);
+                    }
+                    if (uniqueValidator != null) {
+                        builder.withValidator(uniqueValidator);
+                    }
+                    break;
+                case booleano:
+                    break;
+                case localDate:
+                    break;
+                case combo:
+                    //                    field.getBinder().setReadOnly(false);
+                    break;
+                case enumeration:
+                    break;
+                case password:
+                    if (stringBlankValidator != null) {
+                        builder.withValidator(stringBlankValidator);
+                    }
+                    break;
+                case textArea:
+                    break;
+                case email:
+                    break;
+                case gridShowOnly:
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito per il field \"" + reflectionJavaField.getName() + "\" del tipo " + fieldType, this.getClass(), "addFieldToBinder");
+                    break;
+            }
+            if (builder != null) {
+                builder.bind(fieldName);
+            }
+        }
     }
 
 
@@ -216,11 +354,11 @@ public class AFieldService extends AAbstractService {
             switch (type) {
                 case text:
                 case phone:
-                    //                    field = appContext.getBean(ATextField.class);
+                    field = appContext.getBean(ATextField.class);
                     break;
                 case email:
                     field = appContext.getBean(AEmailField.class, fieldKey, caption);
-                    ((AEmailField) field).getMail().setClearButtonVisible(true);
+                    //                    ((AEmailField) field).getMail().setClearButtonVisible(true);
                     field.setErrorMessage("Inserisci un indirizzo eMail valido");
                     break;
                 case password:
@@ -311,7 +449,8 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    protected void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean, Field reflectionJavaField, AIField field) throws Exception {
+    @Deprecated
+    public void addFieldToBinder(AEOperation operation, Binder binder, AEntity entityBean, Field reflectionJavaField, AIField field) throws Exception {
         Binder.BindingBuilder builder = null;
         AETypeField fieldType = annotation.getFormType(reflectionJavaField);
         String fieldName = VUOTA;

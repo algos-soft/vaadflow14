@@ -117,10 +117,10 @@ public class GiornoLogic extends CronoLogic {
      * @param mese   di riferimento (obbligatorio)
      * @param nome   (obbligatorio, unico)
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(int ordine, Mese mese, String nome) {
-        return checkAndSave(newEntity(ordine, mese, nome));
+    public Giorno crea(int ordine, Mese mese, String nome) {
+        return (Giorno)checkAndSave(newEntity(ordine, mese, nome));
     }
 
 

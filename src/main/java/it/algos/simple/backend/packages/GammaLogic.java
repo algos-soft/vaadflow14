@@ -110,10 +110,10 @@ public class GammaLogic extends ALogic {
      *
      * @param code obbligatorio
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean crea(String code) {
-        return checkAndSave(newEntity( code));
+    public Gamma crea(String code) {
+        return (Gamma)checkAndSave(newEntity( code));
     }
 
 

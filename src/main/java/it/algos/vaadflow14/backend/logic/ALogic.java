@@ -1318,9 +1318,9 @@ public abstract class ALogic implements AILogic {
      *
      * @param newEntityBean da registrare
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public boolean checkAndSave(AEntity newEntityBean) {
+    public AEntity checkAndSave(AEntity newEntityBean) {
         boolean valido = false;
         String message = VUOTA;
         Binder binder = new Binder(newEntityBean.getClass());
@@ -1337,7 +1337,7 @@ public abstract class ALogic implements AILogic {
             logger.warn(message, this.getClass(), "crea");
         }
 
-        return valido;
+        return newEntityBean;
     }
 
 

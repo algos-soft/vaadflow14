@@ -150,6 +150,10 @@ public abstract class FlowCost {
      */
     public static final LocalDate START_DATE = LocalDate.of(1970, 1, 1);
 
+    /**
+     * The constant TAG_EM.
+     */
+    public static final String TAG_EM = "em";
 
     public static final String TAG_GENERIC_VIEW = "view";
 

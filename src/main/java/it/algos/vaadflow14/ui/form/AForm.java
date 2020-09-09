@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -362,16 +363,19 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsBinder() {
+        Field reflectionJavaField;
         AField field = null;
         fieldsNameList = getPropertyNamesList();
 
         if (array.isValid(fieldsNameList)) {
-            fieldsList=new ArrayList<>();
+            fieldsList = new ArrayList<>();
             for (String fieldKey : fieldsNameList) {
-                field = fieldService.creaOnly(entityBean, fieldKey);
+                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+                field = fieldService.creaOnly(reflectionJavaField);
                 if (field != null) {
+                    fieldService.addToBinder(entityBean,binder, operationForm,reflectionJavaField,field);
                     fieldsList.add(field);
-                    binder.forField(field).bind(fieldKey);
+//                    binder.forField(field).bind(fieldKey);
                 } else {
                     AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
                     logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
@@ -409,10 +413,10 @@ public abstract class AForm extends VerticalLayout {
         CustomField field = null;
 
         if (usaFieldNote) {
-//            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
-//            if (field != null) {
-//                fieldsList.add(field);
-//            }
+            //            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
+            //            if (field != null) {
+            //                fieldsList.add(field);
+            //            }
         }
     }
 

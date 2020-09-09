@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -241,7 +241,7 @@ public @interface AIField {
 
 
     /**
-     * (Optional) The type of the boolean type range.
+     * (Optional) The type of the boolean type.
      * Defaults to the checkBox type.
      *
      * @return the field type
@@ -256,5 +256,13 @@ public @interface AIField {
      * @return the strings
      */
     String boolEnum() default VUOTA;
+
+    /**
+     * The type of the data type
+     * Defaults to standard type.
+     *
+     * @return the strings
+     */
+    AETypeData getTypeData() default AETypeData.standard;
 
 }
