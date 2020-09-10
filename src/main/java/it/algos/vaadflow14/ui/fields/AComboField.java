@@ -3,6 +3,9 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.GeneratedVaadinComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -27,6 +30,15 @@ public class AComboField<T> extends AField<Object> {
 
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ViaLogic viaLogic;
+
+
+    /**
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue) <br>
      *
@@ -42,10 +54,10 @@ public class AComboField<T> extends AField<Object> {
          * Allow users to enter a value which doesn't exist in the data set, and
          * set it as the value of the ComboBox.
          */
-//        if (isAllowCustomValue) {
-//            comboBox.setAllowCustomValue(true);
-//            this.addCustomListener();
-//        }
+        if (isAllowCustomValue) {
+            comboBox.setAllowCustomValue(true);
+            this.addCustomListener();
+        }
 
         add(comboBox);
     } // end of SpringBoot constructor
@@ -77,9 +89,10 @@ public class AComboField<T> extends AField<Object> {
 
     public void addCustomListener() {
         comboBox.addCustomValueSetListener(event -> {
-            Object newValue = ((GeneratedVaadinComboBox.CustomValueSetEvent) event).getDetail();
-            comboBox.setValue(newValue);
-            items.add(newValue);
+            String newValue = ((GeneratedVaadinComboBox.CustomValueSetEvent) event).getDetail();
+            Object via=  viaLogic.crea(0,newValue);
+            comboBox.setValue(via);
+            items.add(via);
             setItems(items);
         });
     }
