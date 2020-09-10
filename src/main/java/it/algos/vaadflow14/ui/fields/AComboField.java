@@ -1,12 +1,11 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.combobox.GeneratedVaadinComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,82 +21,41 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AComboField<T> extends AField<Object> {
 
-    private final ComboBox innerField;
+    private ComboBox comboBox;
+
+    private List items;
 
 
     /**
      * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption) <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue) <br>
      *
-     * @param fieldKey nome interno del field
-     * @param caption  label visibile del field
+     * @param items      collezione dei valori previsti
+     * @param isRequired true, se NON ammette il valore nullo
      */
-    public AComboField(String fieldKey, String caption) {
-        super.fieldKey = fieldKey;
-        super.caption = caption;
-        innerField = new ComboBox(caption);
-        add(innerField);
+    public AComboField(List<String> items, boolean isRequired, boolean isAllowCustomValue) {
+        comboBox = new ComboBox();
+        this.setItems(items);
+        comboBox.setClearButtonVisible(!isRequired);
+
+        /**
+         * Allow users to enter a value which doesn't exist in the data set, and
+         * set it as the value of the ComboBox.
+         */
+//        if (isAllowCustomValue) {
+//            comboBox.setAllowCustomValue(true);
+//            this.addCustomListener();
+//        }
+
+        add(comboBox);
     } // end of SpringBoot constructor
 
 
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
-     *
-     * @param caption  label visibile del field
-     * @param items    collezione dei valori previsti
-     */
-    public AComboField( String caption, List<String> items) {
-        innerField = new ComboBox(caption);
-        super.fieldKey = fieldKey;
-        this.setItem(items);
-        add(innerField);
-    } // end of SpringBoot constructor
 
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items) <br>
-     *
-     * @param fieldKey nome interno del field
-     * @param caption  label visibile del field
-     * @param items    collezione dei valori previsti
-     */
-    public AComboField(String fieldKey, String caption, List<String> items) {
-        super.fieldKey = fieldKey;
-        innerField = new ComboBox(caption);
-        super.fieldKey = fieldKey;
-        this.setItem(items);
-        add(innerField);
-    } // end of SpringBoot constructor
-
-
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AComboField.class, fieldKey, caption, items, value) <br>
-     *
-     * @param caption label visibile del field
-     * @param items   collezione dei valori previsti
-     * @param value   selezionato
-     */
-    public AComboField(String caption, List<String> items, String value) {
-        innerField = new ComboBox(caption);
-        super.fieldKey = fieldKey;
-        this.setItem(items);
-        this.setValue(value);
-        add(innerField);
-    } // end of SpringBoot constructor
-
-
-    @Override
-    public void setValue(Object value) {
-        innerField.setValue(value);
-    }
-
-
-    @Override
-    public void setItem(Collection collection) {
+    public void setItems(List items) {
         try {
-            innerField.setItems(collection);
+            this.items = items;
+            comboBox.setItems(items);
         } catch (Exception unErrore) {
             System.out.println("Items nulli in AComboField.setItems()");
         }
@@ -106,21 +64,24 @@ public class AComboField<T> extends AField<Object> {
 
     @Override
     protected Object generateModelValue() {
-        Object alfa = innerField.getValue(); //@todo Linea di codice DA RIMETTERE (sistemare su una sola riga)
-        return innerField.getValue();
+        Object alfa= comboBox.getValue();
+        return comboBox.getValue();
     }
 
 
     @Override
     protected void setPresentationValue(Object value) {
-        innerField.setValue(value);
+        comboBox.setValue(value);
     }
 
 
-    @Override
-    public ComboBox getBinder() {
-        return innerField;
+    public void addCustomListener() {
+        comboBox.addCustomValueSetListener(event -> {
+            Object newValue = ((GeneratedVaadinComboBox.CustomValueSetEvent) event).getDetail();
+            comboBox.setValue(newValue);
+            items.add(newValue);
+            setItems(items);
+        });
     }
-
 
 }

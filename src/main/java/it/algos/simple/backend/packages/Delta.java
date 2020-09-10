@@ -1,42 +1,46 @@
-package it.algos.vaadflow14.backend.packages.company;
+package it.algos.simple.backend.packages;
 
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: sab, 15-ago-2020
- * Time: 14:52
+ * Date: mer, 09-set-2020
+ * Time: 20:25
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
 @QueryEntity
-@Document(collection = "company")
-@TypeAlias("company")
+@Document(collection = "delta")
+@TypeAlias("delta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderCompany")
+@Builder(builderMethodName = "builderDelta")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Company", keyPropertyName = "code", usaRowIndex = true, usaNote = true, usaCreazioneModifica = true)
-@AIView(menuIcon = VaadinIcon.FACTORY)
-@AIList(fields = "code,telefono,email,descrizione")
-@AIForm(fields = "code,telefono,email,descrizione")
-public class Company extends AEntity {
+@AIEntity(recordName = "Delta", keyPropertyName = "code")
+@AIView(menuIcon = VaadinIcon.COG)
+@AIList(fields = "code,secolo,via")
+@AIForm(fields = "code,secolo,via")
+public class Delta extends AEntity {
 
     /**
      * versione della classe per la serializzazione
@@ -45,38 +49,35 @@ public class Company extends AEntity {
 
 
     /**
-     * codice di riferimento (obbligatorio)
+     * codice di riferimento (obbligatorio, unico)
      */
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 8)
-    @AIColumn(widthEM = 6)
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice")
+    @AIColumn(header = "Code")
     public String code;
 
 
     /**
-     * telefono (facoltativo)
+     * secolo di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
      */
-    @AIField(type = AETypeField.phone, caption = "Telefono/cellulare")
-    @AIColumn()
-    public String telefono;
-
-    /**
-     * mail (facoltativa)
-     */
-    @AIField(type = AETypeField.email, caption = "Posta elettronica")
-    @AIColumn()
-    public String email;
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
+    @AIColumn(widthEM = 10)
+    public Secolo secolo;
 
 
     /**
-     * descrizione (obbligatoria)
+     * via (facoltativo)
+     * riferimento dinamico CON @DBRef
      */
-    @NotBlank()
-    @AIField(type = AETypeField.text, caption = "Descrizione completa")
-    @AIColumn(header = "Descrizione", flexGrow = true)
-    public String descrizione;
+    @DBRef
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class)
+    @AIColumn(widthEM = 8)
+    public Via via;
 
 
     /**

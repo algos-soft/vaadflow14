@@ -136,7 +136,7 @@ public class AnnoLogic extends CronoLogic {
      * @return la nuova entity appena creata e salvata
      */
     public Anno crea(int ordine, Secolo secolo, boolean bisestile, String nome) {
-        return (Anno)checkAndSave(newEntity(ordine, secolo, bisestile, nome));
+        return (Anno) checkAndSave(newEntity(ordine, secolo, bisestile, nome));
     }
 
 
@@ -252,7 +252,7 @@ public class AnnoLogic extends CronoLogic {
             titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
-            if (ordine != ANNO_INIZIALE) {
+            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
                 crea(ordine, secolo, bisestile, nome);
             }
         }
@@ -267,7 +267,7 @@ public class AnnoLogic extends CronoLogic {
             titoloSecolo = text.levaSpazi(titoloSecolo);
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
-            if (ordine != ANNO_INIZIALE) {
+            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
                 crea(ordine, secolo, bisestile, nome);
             }
         }

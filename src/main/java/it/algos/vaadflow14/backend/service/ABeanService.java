@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
+import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,7 +88,7 @@ public class ABeanService extends AAbstractService {
      * @param operationForm tipologia di Form in uso
      * @param binder        layer tra DB e UI
      */
-    public List<AIField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
+    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder) {
         return creaFields(entityBean, operationForm, binder, (List) null);
     }
 
@@ -104,9 +106,10 @@ public class ABeanService extends AAbstractService {
      * @param binder        layer tra DB e UI
      * @param listaNomi     delle property da associare al binder
      */
-    public List<AIField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
-        List<AIField> fieldsList = new ArrayList<>();
-        AIField field;
+    public List<AField> creaFields(AEntity entityBean, AEOperation operationForm, Binder binder, List<String> listaNomi) {
+        List<AField> fieldsList = new ArrayList<>();
+        Field reflectionJavaField;
+        AField field = null;
 
         if (array.isEmpty(listaNomi)) {
             listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
@@ -116,9 +119,11 @@ public class ABeanService extends AAbstractService {
             listaNomi.add(0, FIELD_COMPANY);
         }
 
-        for (String fieldName : listaNomi) {
-            field = fieldService.create(operationForm, binder, entityBean, fieldName);
+        for (String fieldKey : listaNomi) {
+            reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+            field = fieldService.creaOnly( reflectionJavaField);
             if (field != null) {
+                fieldService.addToBinder(entityBean,binder, operationForm,reflectionJavaField,field);
                 fieldsList.add(field);
             }
         }

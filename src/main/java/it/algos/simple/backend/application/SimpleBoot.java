@@ -4,11 +4,12 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
 import it.algos.simple.backend.packages.Alfa;
 import it.algos.simple.backend.packages.Beta;
+import it.algos.simple.backend.packages.Delta;
 import it.algos.simple.backend.packages.Gamma;
-import it.algos.simple.ui.views.DeltaView;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -71,8 +72,8 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = 0.74;
-        FlowVar.versionDate = LocalDate.of(2020, 8, 31);
+        FlowVar.projectVersion = 0.75;
+        FlowVar.versionDate = LocalDate.of(2020, 9, 10);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
@@ -98,7 +99,9 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Alfa.class);
         FlowVar.menuRouteList.add(Beta.class);
         FlowVar.menuRouteList.add(Gamma.class);
+        FlowVar.menuRouteList.add(Delta.class);
         FlowVar.menuRouteList.add(OmegaView.class);
+        FlowVar.menuRouteList.add(Via.class);
     }
 
 }

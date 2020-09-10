@@ -373,9 +373,9 @@ public abstract class AForm extends VerticalLayout {
                 reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
                 field = fieldService.creaOnly(reflectionJavaField);
                 if (field != null) {
-                    fieldService.addToBinder(entityBean,binder, operationForm,reflectionJavaField,field);
+                    fieldService.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
                     fieldsList.add(field);
-//                    binder.forField(field).bind(fieldKey);
+                    //                    binder.forField(field).bind(fieldKey);
                 } else {
                     AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
                     logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
@@ -525,11 +525,15 @@ public abstract class AForm extends VerticalLayout {
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
         //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
         try {
-            binder.writeBeanIfValid(entityBean);
+            if (binder.writeBeanIfValid(entityBean)) {
+                return entityBean;
+            } else {
+                return null;
+            }
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "getValidBean");
+            return null;
         }
-        return entityBean;
     }
 
 

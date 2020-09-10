@@ -4,17 +4,19 @@ public enum AETypeField {
     //    id(),
     text(10, 14),
 
-    email(20, 18),
-
     phone(11, 11),
 
     password(10, 14),
+
+    email(20, 18),
 
     textArea(8, 18),
 
     integer(5, 8),
 
     lungo(5, 8),
+
+    booleano(4, 4),
 
     localDateTime(9, 0),
 
@@ -41,7 +43,6 @@ public enum AETypeField {
     //    calculatedInt,
     //    integernotzero,
     //    onedecimal,
-    //    password,
 
     combo(8, 0),
 
@@ -50,33 +51,19 @@ public enum AETypeField {
 
     enumeration(8, 0),
 
-    //    radio,
-    //    monthdate,
-    //    weekdate,
-    //    date,
-
     gridShowOnly(0, 20),
 
-    //    localtime,
     //    dateNotEnabled,
     //    decimal,
-    //    checkbox,
-    //    checkboxreverse,
-    //    checkboxlabel,
     //    link,
     //    image,
     //    resource,
     //    vaadinIcon,
     //    json,
 
-    //    time,
-    //    yesNo(0, 4),
-
-    //    yesnobold,
     ugualeAlForm(0, 0),
 
     //    noone,
-    booleano(4, 4),
     //    color,
     //    custom
     ;

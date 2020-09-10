@@ -103,8 +103,9 @@ public class AColumnService extends AAbstractService {
         } else {
             switch (type) {
                 case text:
-                case email:
                 case phone:
+                case password:
+                case email:
                     colonna = grid.addColumn(propertyName);
                     sortable = true;
                     break;
@@ -148,12 +149,6 @@ public class AColumnService extends AAbstractService {
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
                     break;
-                case enumeration:
-                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        Object obj = reflection.getPropertyValue((AEntity) entity, propertyName);
-                        return new Label(obj != null ? obj.toString() : VUOTA);
-                    }));//end of lambda expressions and anonymous inner class
-                    break;
                 case combo:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         String testo = VUOTA;
@@ -165,6 +160,12 @@ public class AColumnService extends AAbstractService {
                         }
 
                         return new Label(testo);
+                    }));//end of lambda expressions and anonymous inner class
+                    break;
+                case enumeration:
+                    colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                        Object obj = reflection.getPropertyValue((AEntity) entity, propertyName);
+                        return new Label(obj != null ? obj.toString() : VUOTA);
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 default:

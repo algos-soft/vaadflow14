@@ -56,6 +56,11 @@ public class AAnnotationService extends AAbstractService {
     public static final String TESTO_NULL = " non può essere vuoto";
 
     /**
+     * The constant OBJECT_NULL.
+     */
+    public static final String OBJECT_NULL = " non può essere nullo";
+
+    /**
      * The constant INT_NULL.
      */
     public static final String INT_NULL = " deve contenere solo caratteri numerici";
@@ -459,7 +464,7 @@ public class AAnnotationService extends AAbstractService {
 
         // Se non la trova, cerca nella classe la property statica MENU_NAME
         if (text.isEmpty(menuName)) {
-//            menuName = reflection.getMenuName(entityViewClazz);  //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+            //            menuName = reflection.getMenuName(entityViewClazz);  //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         }
 
         // Se non la trova, di default usa la property 'value' di @Route
@@ -1559,13 +1564,11 @@ public class AAnnotationService extends AAbstractService {
         }
 
         if (message.equals("{javax.validation.constraints.NotNull.message}")) {
-            message = VUOTA;
             type = getFormType(reflectionJavaField);
-            if (type == AETypeField.text) {
-                message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
-            }
             if (type == AETypeField.integer) {
                 message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
+            } else {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + OBJECT_NULL;
             }
         }
 
@@ -1882,6 +1885,7 @@ public class AAnnotationService extends AAbstractService {
         return (lista != null && lista.size() == 2) ? lista : null;
     }
 
+
     /**
      * Get the specific annotation of the field. <br>
      *
@@ -1903,6 +1907,7 @@ public class AAnnotationService extends AAbstractService {
         return type;
     }
 
+
     /**
      * Get the status required of the property.
      * Per i field di testo, controlla sia l' annotation @NotBlank() sia @AIField(required = true) <br>
@@ -1914,6 +1919,7 @@ public class AAnnotationService extends AAbstractService {
     public boolean isRequired(Field reflectionJavaField) {
         boolean status = false;
         NotBlank annotationNotBlank = null;
+        NotNull annotationNotNull = null;
         AIField annotationAIField = null;
 
         if (reflectionJavaField == null) {
@@ -1925,9 +1931,38 @@ public class AAnnotationService extends AAbstractService {
             return true;
         }
 
+        annotationNotNull = getNotNull(reflectionJavaField);
+        if (annotationNotNull != null) {
+            return true;
+        }
+
         annotationAIField = this.getAIField(reflectionJavaField);
         if (annotationAIField != null) {
             status = annotationAIField.required();
+        }
+
+        return status;
+    }
+
+
+    /**
+     * Get the status required of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the value
+     */
+    public boolean isAllowCustomValue(Field reflectionJavaField) {
+        boolean status = false;
+        AIField annotationAIField = null;
+
+        if (reflectionJavaField == null) {
+            return false;
+        }
+
+        annotationAIField = this.getAIField(reflectionJavaField);
+        if (annotationAIField != null) {
+            status = annotationAIField.allowCustomValue();
         }
 
         return status;

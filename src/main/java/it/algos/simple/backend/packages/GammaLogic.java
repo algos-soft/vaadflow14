@@ -81,29 +81,29 @@ public class GammaLogic extends ALogic {
 
 
 
-    /**
-     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Costruisce un' istanza dedicata <br>
-     * Passa all' istanza un wrapper di dati <br>
-     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-     *
-     * @param entityBean interessata
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public AForm getBodyFormLayout(AEntity entityBean) {
-        form = null;
-
-        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
-        if (entityBean != null) {
-            form = appContext.getBean(GammaForm.class, getWrapForm(entityBean));
-        }
-
-        return form;
-    }
+//    /**
+//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Costruisce un' istanza dedicata <br>
+//     * Passa all' istanza un wrapper di dati <br>
+//     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+//     *
+//     * @param entityBean interessata
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    @Override
+//    public AForm getBodyFormLayout(AEntity entityBean) {
+//        form = null;
+//
+//        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
+//        if (entityBean != null) {
+//            form = appContext.getBean(GammaForm.class, getWrapForm(entityBean));
+//        }
+//
+//        return form;
+//    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>

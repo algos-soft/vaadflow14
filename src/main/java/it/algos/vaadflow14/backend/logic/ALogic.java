@@ -1314,7 +1314,7 @@ public abstract class ALogic implements AILogic {
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
-     * Controlla che la entity sia valida e superi i Validator associati <br>
+     * Controlla che la entity sia valida e superi i validators associati <br>
      *
      * @param newEntityBean da registrare
      *
@@ -1326,6 +1326,9 @@ public abstract class ALogic implements AILogic {
         Binder binder = new Binder(newEntityBean.getClass());
 
         beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
+        //--Sincronizza il binder all' apertura della scheda
+        //--Trasferisce (binder read) i valori dal DB alla UI
+        binder.readBean(newEntityBean);
         valido = binder.isValid();
 
         if (valido) {

@@ -22,64 +22,52 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AIntegerField extends AField<Integer> {
 
-    private final IntegerField innerField;
+    private  IntegerField integerField;
 
 
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(ATextField.class, caption) <br>
-     *
-     * @param caption label visibile del field
-     */
-    public AIntegerField(String caption) {
-        this(VUOTA, caption);
-    } // end of SpringBoot constructor
 
     /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AIntegerField.class, fieldKey, caption) <br>
+     * Costruttore senza parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AIntegerField.class) <br>
      *
-     * @param fieldKey nome interno del field
-     * @param caption  label visibile del field
      */
-    public AIntegerField(String fieldKey, String caption) {
-        super.fieldKey = fieldKey;
-        super.caption = caption;
-        innerField = new IntegerField(caption);
-        innerField.setAutoselect(true);
-        innerField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
-        add(innerField);
+    public AIntegerField() {
+        integerField = new IntegerField();
+        integerField.setAutoselect(true);
+        integerField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
+        add(integerField);
     } // end of SpringBoot constructor
 
 
 
     @Override
     protected Integer generateModelValue() {
-        return innerField.getValue();
+        return integerField.getValue();
     }
 
 
     @Override
     protected void setPresentationValue(Integer value) {
-        innerField.setValue(value);
+        integerField.setValue(value);
     }
 
-
-    @Override
-    public void setWidth(String width) {
-        innerField.setWidth(width);
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     *
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     *
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    public int compareTo(Integer o) {
+        return integerField.getValue().compareTo(o);
     }
 
-
-    @Override
-    public IntegerField getBinder() {
-        return innerField;
-    }
-
-
-    @Override
-    public void setAutofocus() {
-        innerField.setAutofocus(true);
-    }
 
 }

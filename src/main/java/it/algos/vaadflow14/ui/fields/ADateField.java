@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ADateField extends AField<LocalDate> {
 
-    private final DatePicker datePicker;
+    private  DatePicker datePicker;
 
 
     /**

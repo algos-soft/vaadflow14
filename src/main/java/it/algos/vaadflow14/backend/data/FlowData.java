@@ -37,16 +37,15 @@ public class FlowData extends AData {
      * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void initData() {
-        checkSingolaCollection(Company.class);
-
-        checkSingolaCollection(Utente.class);
-
         checkSingolaCollection(Secolo.class);
         checkSingolaCollection(Anno.class);
         checkSingolaCollection(Mese.class);
         checkSingolaCollection(Giorno.class);
         //        checkSingolaCollection(Regione.class);
         //        checkSingolaCollection(Stato.class);
+
+        checkSingolaCollection(Company.class);
+        checkSingolaCollection(Utente.class);
     }
 
 }

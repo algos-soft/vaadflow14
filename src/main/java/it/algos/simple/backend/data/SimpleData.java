@@ -1,6 +1,7 @@
 package it.algos.simple.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.simple.backend.packages.Beta;
 import it.algos.simple.backend.packages.Gamma;
 import it.algos.simple.backend.packages.GammaLogic;
 import it.algos.vaadflow14.backend.data.FlowData;
@@ -40,36 +41,53 @@ public class SimpleData extends FlowData {
      */
     @Override
     public void initData() {
-        LocalDate adesso=LocalDate.now();
-        LocalDateTime adessoDate=LocalDateTime.now();
-        LocalTime adessoTime=LocalDateTime.now().toLocalTime();
+        Beta beta = Beta.builderBeta().code("valori booleani").build();
+        beta.id = "binario";
+        mongo.save(beta);
 
-        Gamma gamma = gammaLogic.crea("Adesso");
-        gamma.setUno(adesso);
-        gamma.setDue(adesso);
-        gamma.setTre(adesso);
-        gamma.setQuattro(adesso);
-        gamma.setCinque(adesso);
-        gamma.setSei(adesso);
-        gamma.setSette(adesso);
-        gamma.setOtto(adesso);
-        gamma.setNove(adesso);
-        gamma.setDieci(adesso);
-        gamma.setUndici(adesso);
-        gamma.setDodici(adesso);
-        gamma.setTredici(adessoDate);
-        gamma.setQuattordici(adessoDate);
-        gamma.setQuindici(adessoDate);
-        gamma.setSedici(adessoTime);
-        gamma.setDiciassette(adessoTime);
-        gammaLogic.save(gamma);
+        LocalDate adesso = LocalDate.now();
+        LocalDateTime adessoDate = LocalDateTime.now();
+        LocalTime adessoTime = LocalDateTime.now().toLocalTime();
+        Gamma gamma = Gamma.builderGamma()
 
-        //        gamma.setCinque(LocalDate.now());
-        //        gamma.setSei(LocalDate.now());
-        //        gamma.setSette(LocalDate.now());
-        //        gamma.setOtto(LocalDate.now());
+                .uno(adesso)
 
-//        mongo.save(gamma);
+                .due(adesso)
+
+                .tre(adesso)
+
+                .quattro(adesso)
+
+                .cinque(adesso)
+
+                .sei(adesso)
+
+                .sette(adesso)
+
+                .otto(adesso)
+
+                .nove(adesso)
+
+                .dieci(adesso)
+
+                .undici(adesso)
+
+                .dodici(adesso)
+
+                .tredici(adessoDate)
+
+                .quattordici(adessoDate)
+
+                .quindici(adessoDate)
+
+                .sedici(adessoTime)
+
+                .diciassette(adessoTime)
+
+                .build();
+
+        gamma.id = "adesso";
+        mongo.save(gamma);
     }
 
 }

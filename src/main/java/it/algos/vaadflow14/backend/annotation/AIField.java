@@ -192,12 +192,12 @@ public @interface AIField {
 
     /**
      * (Optional) Status (allowed new selection in popup) of the the field.
-     * Meaning sense only for EAFieldType.combo.
+     * Meaning sense only for AETypeField.combo.
      * Defaults to false.
      *
      * @return the boolean
      */
-    boolean newItemsAllowed() default false;
+    boolean allowCustomValue() default false;
 
     /**
      * (Optional) color of the component
