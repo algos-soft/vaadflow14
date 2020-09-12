@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapQuattroStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
@@ -477,7 +478,9 @@ public class AWikiService extends AAbstractService {
                             listaRiga.add(value.trim());
                         }
                     }
-                    listaTable.add(listaRiga);
+                    if (!listaRiga.get(0).equals(ESCLAMATIVO)) {
+                        listaTable.add(listaRiga);
+                    }
                 }
             }
         }
@@ -510,13 +513,15 @@ public class AWikiService extends AAbstractService {
         String testoTable = VUOTA;
         String tag1 = "{| class=\"wikitable";
         String tag2 = "{|class=\"wikitable";
+        String tag3 = "{| class=\"sortable wikitable";
+        String tag4 = "{|class=\"sortable wikitable";
         String tagEnd = "|}\n";
         int posIni = 0;
         int posEnd = 0;
         String testoPagina = legge(wikiTitle);
 
         if (text.isValid(testoPagina)) {
-            if (testoPagina.contains(tag1) || testoPagina.contains(tag2)) {
+            if (testoPagina.contains(tag1) || testoPagina.contains(tag2)|| testoPagina.contains(tag3)|| testoPagina.contains(tag4)) {
                 if (testoPagina.contains(tag1)) {
                     for (int k = 1; k <= pos; k++) {
                         posIni = testoPagina.indexOf(tag1, posIni + tag1.length());
@@ -525,6 +530,16 @@ public class AWikiService extends AAbstractService {
                 if (testoPagina.contains(tag2)) {
                     for (int k = 1; k <= pos; k++) {
                         posIni = testoPagina.indexOf(tag2, posIni + tag2.length());
+                    }
+                }
+                if (testoPagina.contains(tag3)) {
+                    for (int k = 1; k <= pos; k++) {
+                        posIni = testoPagina.indexOf(tag3, posIni + tag3.length());
+                    }
+                }
+                if (testoPagina.contains(tag4)) {
+                    for (int k = 1; k <= pos; k++) {
+                        posIni = testoPagina.indexOf(tag4, posIni + tag4.length());
                     }
                 }
                 posEnd = testoPagina.indexOf(tagEnd, posIni) + tagEnd.length();

@@ -66,7 +66,7 @@ public class ARouteService extends AAbstractService {
 
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     * Novo record <br>
+     * Nuovo record <br>
      *
      * @param entityClazzCanonicalName verso cui navigare
      *
@@ -229,7 +229,7 @@ public class ARouteService extends AAbstractService {
 
 
     /**
-     * Naviga verso l'URL indicato con la mappa di parametri <br>
+     * Naviga verso l' URL indicato con la mappa di parametri <br>
      *
      * @param interfacciaUtente del chiamante
      * @param routeName         destinazione del Router
@@ -340,8 +340,8 @@ public class ARouteService extends AAbstractService {
 
 
     /**
-     * Estrae un'istanza di classe AService dalla mappa di parametri arrivata dal browser. <br>
-     * Costruisce l'istanza dal nome completo <br>
+     * Estrae un' istanza di classe AService dalla mappa di parametri arrivata dal browser. <br>
+     * Costruisce l' istanza dal nome completo <br>
      */
     public ALogic getService(Parametro parametro) {
         ALogic entityLogic = null;

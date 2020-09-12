@@ -231,6 +231,18 @@ public class AMongoService<capture> extends AAbstractService {
         return (int) mongoOp.count(query, collectionName);
     }
 
+    /**
+     * Cerca tutte le entities di una collection ordinate. <br>
+     * Gli ordinamenti dei vari filtri vengono concatenati nell'ordine di costruzione <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param sortPrevalente (facoltativa) indipendentemente dai filtri
+     *
+     * @return entity
+     */
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Sort sortPrevalente) {
+        return findAll(entityClazz, (List<AFiltro>)null,sortPrevalente);
+    }
 
     /**
      * Cerca tutte le entities di una collection filtrate. <br>
@@ -248,7 +260,7 @@ public class AMongoService<capture> extends AAbstractService {
 
     /**
      * Cerca tutte le entities di una collection filtrate e ordinate. <br>
-     * Gli ordinamenti dei vari filtri vengono concatenati nell'ordine di costruzione <br>
+     * Gli ordinamenti dei vari filtri vengono concatenati nell' ordine di costruzione <br>
      * Se esiste sortPrevalente, sostituisce i sort dei vari filtri <br>
      *
      * @param entityClazz    corrispondente ad una collection sul database mongoDB
@@ -260,6 +272,7 @@ public class AMongoService<capture> extends AAbstractService {
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
         Query query = new Query();
         CriteriaDefinition criteria;
+        Sort sort;
         if (entityClazz == null) {
             return null;
         }
@@ -269,6 +282,14 @@ public class AMongoService<capture> extends AAbstractService {
                 criteria = listaFiltri.get(0).getCriteria();
                 if (criteria != null) {
                     query.addCriteria(criteria);
+                }
+                sort = listaFiltri.get(0).getSort();
+                if (sort != null) {
+                    query.with(sort);
+                } else {
+                    if (sortPrevalente != null) {
+                        query.with(sortPrevalente);
+                    }
                 }
             } else {
                 for (AFiltro filtro : listaFiltri) {
@@ -281,7 +302,12 @@ public class AMongoService<capture> extends AAbstractService {
                     }
                 }
             }
+        } else {
+            if (sortPrevalente!=null) {
+                query.with(sortPrevalente);
+            }
         }
+
         return findAll(entityClazz, query);
     }
 
@@ -517,6 +543,7 @@ public class AMongoService<capture> extends AAbstractService {
         return mongoOp.findOne(query, entityClazz);
     }
 
+
     /**
      * Cerca una singola entity di una collection con una query. <br>
      * Restituisce un valore valido SOLO se ne esiste una sola <br>
@@ -539,6 +566,7 @@ public class AMongoService<capture> extends AAbstractService {
 
         return mongoOp.findOne(query, entityClazz);
     }
+
 
     /**
      * Find lista (interna). <br>

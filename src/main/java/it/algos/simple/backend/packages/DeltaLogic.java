@@ -1,8 +1,13 @@
 package it.algos.simple.backend.packages;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
+import it.algos.vaadflow14.ui.fields.AComboField;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -12,28 +17,35 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: sab, 05-set-2020
- * Time: 07:24
+ * Date: ven, 11-set-2020
+ * Time: 07:22
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private Gamma ; <br>
- * 2) StaticContextAccessor.getBean(Gamma.class) (senza parametri) <br>
- * 3) appContext.getBean(Gamma.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * 1) @Autowired private Delta ; <br>
+ * 2) StaticContextAccessor.getBean(Delta.class) (senza parametri) <br>
+ * 3) appContext.getBean(Delta.class) (preceduto da @Autowired ApplicationContext appContext) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GammaLogic extends ALogic {
-
+public class DeltaLogic extends ALogic {
 
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ViaLogic viaLogic;
 
 
     /**
@@ -42,7 +54,7 @@ public class GammaLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
-    public GammaLogic() {
+    public DeltaLogic() {
         this(AEOperation.edit);
     }
 
@@ -55,9 +67,9 @@ public class GammaLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public GammaLogic(AEOperation operationForm) {
+    public DeltaLogic(AEOperation operationForm) {
         super(operationForm);
-        super.entityClazz = Gamma.class;
+        super.entityClazz = Delta.class;
     }
 
 
@@ -73,45 +85,15 @@ public class GammaLogic extends ALogic {
     }
 
 
-    //    /**
-    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-    //     * <p>
-    //     * Chiamato da AView.initView() <br>
-    //     * Costruisce un' istanza dedicata <br>
-    //     * Passa all' istanza un wrapper di dati <br>
-    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-    //     *
-    //     * @param entityBean interessata
-    //     *
-    //     * @return componente grafico per il placeHolder
-    //     */
-    //    @Override
-    //    public AForm getBodyFormLayout(AEntity entityBean) {
-    //        form = null;
-    //
-    //        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
-    //        if (entityBean != null) {
-    //            form = appContext.getBean(GammaForm.class, getWrapForm(entityBean));
-    //        }
-    //
-    //        return form;
-    //    }
-
-
     /**
      * Crea e registra una entity solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entity con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
      *
-     * @param keyPropertyValue obbligatorio
+     * @param code obbligatorio
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la nuova entity è stata creata e salvata
      */
-    @Override
-    public Gamma crea(String keyPropertyValue) {
-        return (Gamma) checkAndSave(newEntity(keyPropertyValue));
+    public Delta crea(String code) {
+        return (Delta) checkAndSave(newEntity(code));
     }
 
 
@@ -122,7 +104,7 @@ public class GammaLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Gamma newEntity() {
+    public Delta newEntity() {
         return newEntity(VUOTA);
     }
 
@@ -134,14 +116,40 @@ public class GammaLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Gamma newEntity(String code) {
-        Gamma newEntityBean = Gamma.builderGamma()
+    public Delta newEntity(String code) {
+        Delta newEntityBean = Delta.builderDelta()
 
                 .code(text.isValid(code) ? code : null)
 
                 .build();
 
-        return (Gamma) fixKey(newEntityBean);
+        return (Delta) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Save proveniente da un click sul bottone 'registra' del Form. <br>
+     * La entityBean viene recuperare dal form <br>
+     *
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
+     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     */
+    @Override
+    public boolean saveDaForm() {
+        Delta entityBean = null;
+        if (form != null) {
+            entityBean = (Delta) form.getValidBean();
+        }
+
+        AComboField combo = (AComboField) form.fieldsMap.get("via");
+        ComboBox box = combo.comboBox;
+        Object obj = box.getValue();
+        if (obj instanceof String) {
+            Via via = viaLogic.crea((String)obj);
+            entityBean.via = via;
+        }
+
+        return entityBean != null ? save(entityBean) : false;
     }
 
 }

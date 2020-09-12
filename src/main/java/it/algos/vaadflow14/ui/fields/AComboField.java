@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.GeneratedVaadinComboBox;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow15
@@ -24,7 +27,7 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AComboField<T> extends AField<Object> {
 
-    private ComboBox comboBox;
+    public ComboBox comboBox;
 
     private List items;
 
@@ -90,10 +93,9 @@ public class AComboField<T> extends AField<Object> {
     public void addCustomListener() {
         comboBox.addCustomValueSetListener(event -> {
             String newValue = ((GeneratedVaadinComboBox.CustomValueSetEvent) event).getDetail();
-            Object via=  viaLogic.crea(0,newValue);
-            comboBox.setValue(via);
-            items.add(via);
+            items.add(newValue);
             setItems(items);
+            comboBox.setValue(newValue);
         });
     }
 

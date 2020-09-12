@@ -10,6 +10,8 @@ public enum AETypeField {
 
     email(20, 18),
 
+    cap(6, 6),
+
     textArea(8, 18),
 
     integer(5, 8),

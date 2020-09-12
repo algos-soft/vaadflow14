@@ -1049,7 +1049,7 @@ public abstract class ALogic implements AILogic {
         AFiltro filtro = null;
         filtri = new ArrayList<>();
 
-        //--filtro base della entity
+        //--filtro base della entity con ordinamento
         this.creaFiltroBaseEntity();
 
         //--filtro (eventuale) per la company in uso
@@ -1065,8 +1065,9 @@ public abstract class ALogic implements AILogic {
 
     /**
      * Filtro base della entity. <br>
+     * Comprensivo di ordinamento di default <br>
      */
-    public void creaFiltroBaseEntity() {
+    public AFiltro creaFiltroBaseEntity() {
         AFiltro filtro = null;
         Sort sort = annotation.getSort(entityClazz);
 
@@ -1077,6 +1078,8 @@ public abstract class ALogic implements AILogic {
         if (filtro != null) {
             filtri.add(filtro);
         }
+
+        return filtro;
     }
 
 
@@ -1087,7 +1090,7 @@ public abstract class ALogic implements AILogic {
      * Come developer, vedo comunque tutto <br>
      * Come admin e user vedo SOLO le entities che hanno la croce selezionata <br>
      */
-    public void creaFiltroCompany() {
+    public AFiltro creaFiltroCompany() {
         AFiltro filtro = null;
         Company company = vaadinService.getCompany();
         boolean needCompany = annotation.usaCompany(entityClazz);
@@ -1105,6 +1108,8 @@ public abstract class ALogic implements AILogic {
         if (filtro != null) {
             filtri.add(filtro);
         }
+
+        return filtro;
     }
 
 
@@ -1151,6 +1156,44 @@ public abstract class ALogic implements AILogic {
         if (filtro != null) {
             filtri.add(filtro);
         }
+    }
+
+
+    /**
+     * Cerca tutte le entities di questa collection. <br>
+     *
+     * @return lista di entityBeans
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
+     */
+    public List<AEntity> findAll() {
+        List<AEntity> items = new ArrayList<>();
+        List<AFiltro> filtri = new ArrayList<>();
+
+        //--filtro base della entity con ordinamento
+        filtri.add(creaFiltroBaseEntity());
+
+        //--filtro (eventuale) per la company in uso
+        filtri.add(creaFiltroCompany());
+
+        return mongo.findAll(entityClazz, filtri, sortView);
+    }
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entity con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+     *
+     * @param keyPropertyValue obbligatorio
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    @Override
+    public Object crea(String keyPropertyValue) {
+        return null;
     }
 
 

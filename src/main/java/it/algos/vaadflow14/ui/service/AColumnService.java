@@ -106,6 +106,7 @@ public class AColumnService extends AAbstractService {
                 case phone:
                 case password:
                 case email:
+                case cap:
                     colonna = grid.addColumn(propertyName);
                     sortable = true;
                     break;

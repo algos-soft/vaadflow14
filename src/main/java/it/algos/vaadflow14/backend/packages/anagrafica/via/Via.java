@@ -15,10 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
 /**
  * Project vaadflow14
  * Created by Algos
@@ -66,10 +62,9 @@ public class Via extends AEntity {
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true)
-    @AIField(type = AETypeField.text,  focus = true)
+    @AIField(type = AETypeField.text, focus = true)
     @AIColumn()
     public String nome;
-
 
 
     /**

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 
+import it.algos.simple.backend.packages.Gamma;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
@@ -210,7 +211,22 @@ public interface AILogic {
      *
      * @return lista di nomi di properties
      */
-     List<String> getFormPropertyNamesList();
+    List<String> getFormPropertyNamesList();
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entity con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+     *
+     * @param keyPropertyValue obbligatorio
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    public Object crea(String keyPropertyValue);
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>

@@ -69,5 +69,9 @@ public class AIntegerField extends AField<Integer> {
         return integerField.getValue().compareTo(o);
     }
 
+    @Override
+    public void setWidth(String width) {
+        integerField.setWidth(width);
+    }
 
 }

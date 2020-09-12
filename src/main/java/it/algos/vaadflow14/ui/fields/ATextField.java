@@ -64,5 +64,9 @@ public class ATextField extends AField<String> {
         return textField.getValue().compareTo(o);
     }
 
+    @Override
+    public void setWidth(String width) {
+        textField.setWidth(width);
+    }
 
 }

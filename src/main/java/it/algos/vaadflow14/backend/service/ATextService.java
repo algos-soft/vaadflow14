@@ -549,6 +549,28 @@ public class ATextService extends AAbstractService {
         return stringaOut.trim();
     }
 
+    /**
+     * Elimina (eventuali) 'apici'' in testa ed in coda alla stringa. <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa senza apici iniziali e finali
+     */
+    public String setNoApici(String stringaIn) {
+        String stringaOut = stringaIn.trim();
+        String apice="'";
+        int cicli = 4;
+
+        if (this.isValid(stringaOut)) {
+            for (int k = 0; k < cicli; k++) {
+                stringaOut = this.levaTesta(stringaOut, apice);
+                stringaOut = this.levaCoda(stringaOut, apice);
+            }
+        }
+
+        return stringaOut.trim();
+    }
 
     /**
      * Allunga un testo alla lunghezza desiderata. <br>

@@ -3,8 +3,6 @@ package it.algos.unit;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -229,7 +227,6 @@ public class AFileServiceTest extends ATest {
         System.out.println("file.getName() = " + unFile.getName());
         System.out.println("file.getPath() = " + unFile.getPath());
         System.out.println("file.getAbsolutePath() = " + unFile.getAbsolutePath());
-
         try {
             System.out.println("file.getCanonicalPath() = " + unFile.getCanonicalPath());
         } catch (Exception unErrore) {
@@ -243,7 +240,6 @@ public class AFileServiceTest extends ATest {
         System.out.println("file.getName() = " + unFile.getName());
         System.out.println("file.getPath() = " + unFile.getPath());
         System.out.println("file.getAbsolutePath() = " + unFile.getAbsolutePath());
-
         try {
             System.out.println("file.getCanonicalPath() = " + unFile.getCanonicalPath());
         } catch (Exception unErrore) {
@@ -1076,7 +1072,7 @@ public class AFileServiceTest extends ATest {
     public void leggeMappaCSV() {
         List<LinkedHashMap<String, String>> lista;
         String result = System.getenv("PATH");
-        String path = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow15/" + result;
+        String path = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/" + result;
 
         sorgente = "regioni";
         sorgente = path + "/" + sorgente;
@@ -1129,7 +1125,7 @@ public class AFileServiceTest extends ATest {
         System.out.println("");
         System.out.println("Province");
         System.out.println("*******");
-        int num=0;
+        int num = 0;
         for (Map<String, String> riga : lista) {
             System.out.print(++num);
             System.out.print(SEP);
@@ -1205,6 +1201,22 @@ public class AFileServiceTest extends ATest {
     @Order(27)
     @DisplayName("leggeFileConfig")
     public void leggeFileConfig() {
+    }
+
+
+    @Test
+    @Order(28)
+    @DisplayName("28 - Path progetto")
+    public void pathProgetto() {
+        String tag = "backend.application.FlowCost";
+        String path = FlowCost.class.getCanonicalName();
+        Package aPackage = FlowCost.class.getPackage();
+        ClassLoader loader = FlowCost.class.getClassLoader();
+
+        System.out.println(" ");
+        System.out.println("pathProgettoGrezzo = " + path);
+        System.out.println("aPackage = " + aPackage);
+        System.out.println("ClassLoader = " + loader);
     }
 
 

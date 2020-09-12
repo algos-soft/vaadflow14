@@ -9,7 +9,10 @@ import it.algos.simple.backend.packages.Gamma;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
+import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -72,12 +75,12 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = 0.75;
-        FlowVar.versionDate = LocalDate.of(2020, 9, 10);
+        FlowVar.projectVersion = 0.76;
+        FlowVar.versionDate = LocalDate.of(2020, 9, 12);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
-        FlowVar.usaCronoPackages = false;
+        FlowVar.usaCronoPackages = true;
     }
 
 
@@ -102,6 +105,9 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Delta.class);
         FlowVar.menuRouteList.add(OmegaView.class);
         FlowVar.menuRouteList.add(Via.class);
+        FlowVar.menuRouteList.add(Address.class);
+        FlowVar.menuRouteList.add(Stato.class);
+        FlowVar.menuRouteList.add(Regione.class);
     }
 
 }

@@ -6,25 +6,22 @@ import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: dom, 16-ago-2020
- * Time: 19:08
- * https://www.baeldung.com/java-regex-validate-phone-numbers
+ * Date: ven, 11-set-2020
+ * Time: 20:45
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class APhoneValidator implements Validator {
+public class ACapValidator implements Validator {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -37,9 +34,9 @@ public class APhoneValidator implements Validator {
 
     /**
      * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(APhoneValidator.class) <br>
+     * L' istanza viene costruita con appContext.getBean(ACapValidator.class) <br>
      */
-    public APhoneValidator() {
+    public ACapValidator() {
     } // end of SpringBoot constructor
 
 
@@ -49,17 +46,11 @@ public class APhoneValidator implements Validator {
             return ValidationResult.ok();
         }
 
-        String patterns = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
-
-                + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
-
-                + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$"
-
-                + "|^(0{1}[1-9]{1,3})[\\s|\\.|\\-]?(\\d{5,})$";
+        String patterns = "^[0-9]{5}$";
         Pattern pattern = Pattern.compile(patterns);
         Matcher matcher = pattern.matcher((String) value);
 
-        return matcher.matches() ? ValidationResult.ok() : ValidationResult.error("Numero di telefono non valido");
+        return matcher.matches() ? ValidationResult.ok() : ValidationResult.error("Cap non valido (5 numeri)");
     }
 
 

@@ -13,6 +13,7 @@ import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -30,7 +31,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * <p>
  * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>
- * L'istanza può essere richiamata con: <br>
+ * L' istanza può essere richiamata con: <br>
  * 1) StaticContextAccessor.getBean(AAnnotationService.class); <br>
  * 3) @Autowired public AArrayService annotation; <br>
  * <p>
@@ -48,22 +49,22 @@ public class AFieldService extends AAbstractService {
     private static final long serialVersionUID = 1L;
 
 
-//    /**
-//     * Create a single field.
-//     *
-//     * @param entityBean di riferimento
-//     * @param fieldKey   della property
-//     */
-//    public AField creaOnly(AEntity entityBean, String fieldKey) {
-//        Field reflectionJavaField;
-//
-//        if (entityBean == null) {
-//            return null;
-//        }
-//
-//        reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-//        return creaOnly(reflectionJavaField);
-//    }
+    //    /**
+    //     * Create a single field.
+    //     *
+    //     * @param entityBean di riferimento
+    //     * @param fieldKey   della property
+    //     */
+    //    public AField creaOnly(AEntity entityBean, String fieldKey) {
+    //        Field reflectionJavaField;
+    //
+    //        if (entityBean == null) {
+    //            return null;
+    //        }
+    //
+    //        reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+    //        return creaOnly(reflectionJavaField);
+    //    }
 
 
     /**
@@ -79,15 +80,18 @@ public class AFieldService extends AAbstractService {
         String boolEnum;
         String fieldKey;
         Class comboClazz = null;
+        Sort sort;
         List items;
         boolean isRequired = false;
         boolean isAllowCustomValue = false;
+        String width = VUOTA;
 
         if (reflectionJavaField == null) {
             return null;
         }
 
         fieldKey = reflectionJavaField.getName();
+        width = annotation.getFormWith(reflectionJavaField);
         type = annotation.getFormType(reflectionJavaField);
         if (type != null) {
             switch (type) {
@@ -100,6 +104,9 @@ public class AFieldService extends AAbstractService {
                     break;
                 case email:
                     field = appContext.getBean(AEmailField.class);
+                    break;
+                case cap:
+                    field = appContext.getBean(ATextField.class);
                     break;
                 case integer:
                     field = appContext.getBean(AIntegerField.class);
@@ -122,13 +129,12 @@ public class AFieldService extends AAbstractService {
                     break;
                 case combo:
                     comboClazz = annotation.getComboClass(reflectionJavaField);
-                    items = comboClazz != null ? mongo.findAll(comboClazz) : null;
+                    sort = annotation.getSort(comboClazz);
+                    items = comboClazz != null ? mongo.findAll(comboClazz,sort) : null;
                     isRequired = annotation.isRequired(reflectionJavaField);
                     isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
                     if (items != null) {
                         field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
-                        //                        boolean sttaus = ((AComboField<?>) field).isReadOnly();
-                        //                        sttaus = ((AComboField<?>) field).isReadOnly();
                     } else {
                         logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
                     }
@@ -147,6 +153,7 @@ public class AFieldService extends AAbstractService {
                 field.setLabel(caption);
             }
             field.setFieldKey(fieldKey);
+            field.setWidth(width);
         }
 
         return field;
@@ -159,7 +166,7 @@ public class AFieldService extends AAbstractService {
         String fieldName = VUOTA;
         AETypeNum numType = AETypeNum.positiviOnly;
         AStringBlankValidator stringBlankValidator = null;
-//        ANotNullValidator notNullValidator = null;
+        //        ANotNullValidator notNullValidator = null;
         StringLengthValidator stringLengthValidator = null;
         AIntegerValidator integerValidator = null;
         AUniqueValidator uniqueValidator = null;
@@ -190,7 +197,7 @@ public class AFieldService extends AAbstractService {
 
         if (isRequired) {
             stringBlankValidator = appContext.getBean(AStringBlankValidator.class, messageNotBlank);
-//            notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
+            //            notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
         }
 
         if (stringMin > 0 || stringMax > 0) {
@@ -251,6 +258,12 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case email:
+                    if (isRequired) {
+                        builder.asRequired();
+                    }
+                    break;
+                case cap:
+                    builder.withValidator(appContext.getBean(ACapValidator.class));
                     if (isRequired) {
                         builder.asRequired();
                     }

@@ -2,7 +2,6 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEVia;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -78,6 +77,23 @@ public class ViaLogic extends ALogic {
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entity con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+     *
+     * @param keyPropertyValue obbligatorio
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    @Override
+    public Via crea(String keyPropertyValue) {
+        return (Via) checkAndSave(newEntity(keyPropertyValue));
+    }
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
      *
      * @param aeVia: enumeration per la creazione-reset di tutte le entities
      *
@@ -97,7 +113,7 @@ public class ViaLogic extends ALogic {
      * @return true se la nuova entity è stata creata e salvata
      */
     public Via crea(int ordine, String nome) {
-        return (Via) checkAndSave(newEntity(0, nome));
+        return (Via) checkAndSave(newEntity(ordine, nome));
     }
 
 
@@ -110,6 +126,20 @@ public class ViaLogic extends ALogic {
      */
     public Via newEntity() {
         return newEntity(0, VUOTA);
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @param nome nome completo (obbligatorio, unico)
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Via newEntity(String nome) {
+        return newEntity(0,nome);
     }
 
 

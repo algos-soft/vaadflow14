@@ -1,0 +1,21 @@
+_id,ordine,nome,iso,sigla,tipo,_class
+Abruzzo,1,Abruzzo,IT-65,ABR,Statuto ordinario,regione
+Basilicata,2,Basilicata,IT-77,BAS,Statuto ordinario,regione
+Calabria,3,Calabria,IT-78,CAL,Statuto ordinario,regione
+Campania,4,Campania,IT-72,CAM,Statuto ordinario,regione
+Emilia-Romagna,5,Emilia-Romagna,IT-45,EMR,Statuto ordinario,regione
+Friuli-Venezia Giulia,6,Friuli-Venezia Giulia,IT-36,FVG,Statuto speciale,regione
+Lazio,7,Lazio,IT-62,LAZ,Statuto ordinario,regione
+Liguria,8,Liguria,IT-42,LIG,Statuto ordinario,regione
+Lombardia,9,Lombardia,IT-25,LOM,Statuto ordinario,regione
+Marche,10,Marche,IT-57,MAR,Statuto ordinario,regione
+Molise,11,Molise,IT-67,MOL,Statuto ordinario,regione
+Piemonte,12,Piemonte,IT-21,PNM,Statuto ordinario,regione
+Puglia,13,Puglia,IT-75,PUG,Statuto ordinario,regione
+Sardegna,14,Sardegna,IT-88,SAR,Statuto speciale,regione
+Sicilia,15,Sicilia,IT-82,SIC,Statuto speciale,regione
+Toscana,16,Toscana,IT-52,TOS,Statuto ordinario,regione
+Trentino-Alto Adige,17,Trentino-Alto Adige,IT-32,TAA,Statuto speciale,regione
+Umbria,18,Umbria,IT-55,UMB,Statuto ordinario,regione
+Valle d'Aosta,19,Valle d'Aosta,IT-23,VAO,Statuto speciale,regione
+Veneto,20,Veneto,IT-34,VEN,Statuto ordinario,regione
