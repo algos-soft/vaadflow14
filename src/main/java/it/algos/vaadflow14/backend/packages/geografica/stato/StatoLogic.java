@@ -117,6 +117,21 @@ public class StatoLogic extends ALogic {
 
 
     /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Stato findById(String keyID) {
+        return (Stato) super.findById(keyID);
+    }
+
+
+    /**
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
@@ -199,9 +214,9 @@ public class StatoLogic extends ALogic {
         super.deleteAll();
         String nome;
         int pos = AEStatoEuropeo.values().length;
-        int posEuropeo ;
+        int posEuropeo;
         int posCorrente;
-        boolean ue ;
+        boolean ue;
 
         List<List<String>> listaStati = wiki.getStati();
         if (array.isValid(listaStati)) {
@@ -222,5 +237,57 @@ public class StatoLogic extends ALogic {
 
         return mongo.isValid(entityClazz);
     }
+
+
+    public Stato getItalia() {
+        return findById("italia");
+    }
+
+
+    public Stato getFrancia() {
+        return findById("francia");
+    }
+
+
+    public Stato getSvizzera() {
+        return findById("svizzera");
+    }
+
+
+    public Stato getAustria() {
+        return findById("austria");
+    }
+
+
+    public Stato getGermania() {
+        return findById("germania");
+    }
+
+
+    public Stato getSpagna() {
+        return findById("spagna");
+    }
+
+
+    public Stato getPortogallo() {
+        return findById("portogallo");
+    }
+
+    public Stato getSlovenia() {
+        return findById("slovenia");
+    }
+
+    public Stato getBelgio() {
+        return findById("belgio");
+    }
+
+    public Stato getOlanda() {
+        return findById("paesibassi");
+    }
+
+    public Stato getCroazia() {
+        return findById("croazia");
+    }
+
 
 }

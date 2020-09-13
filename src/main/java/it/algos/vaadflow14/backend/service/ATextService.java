@@ -452,13 +452,15 @@ public class ATextService extends AAbstractService {
     public String setNoGraffe(String stringaIn) {
         String stringaOut = stringaIn;
 
-        if (stringaIn != null && stringaIn.length() > 0) {
-            stringaOut = stringaIn.trim();
-            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
-            stringaOut = levaTesta(stringaOut, GRAFFA_INI);
-            stringaOut = levaCoda(stringaOut, GRAFFA_END);
-            stringaOut = levaCoda(stringaOut, GRAFFA_END);
-        }// fine del blocco if
+        if (isValid(stringaIn)) {
+            stringaIn = stringaIn.trim();
+
+            if (stringaIn.startsWith(GRAFFE_INI)&&stringaIn.endsWith(GRAFFE_END)) {
+                stringaOut = stringaIn;
+                stringaOut = levaCoda(stringaOut, GRAFFE_END);
+                stringaOut = levaTesta(stringaOut, GRAFFE_INI);
+            }
+        }
 
         return stringaOut.trim();
     }
@@ -475,13 +477,15 @@ public class ATextService extends AAbstractService {
      * @return stringa con doppie quadre eliminate
      */
     public String setNoQuadre(String stringaIn) {
-        String stringaOut = stringaIn.trim();
-        int cicli = 3;
+        String stringaOut = stringaIn;
 
-        if (this.isValid(stringaOut)) {
-            for (int k = 0; k < cicli; k++) {
-                stringaOut = this.levaTesta(stringaOut, QUADRA_INI);
-                stringaOut = this.levaCoda(stringaOut, QUADRA_END);
+        if (isValid(stringaIn)) {
+            stringaIn = stringaIn.trim();
+
+            if (stringaIn.startsWith(QUADRE_INI)&&stringaIn.endsWith(QUADRE_END)) {
+                stringaOut = stringaIn;
+                stringaOut = levaCoda(stringaOut, QUADRE_END);
+                stringaOut = levaTesta(stringaOut, QUADRE_INI);
             }
         }
 

@@ -4,6 +4,10 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
+import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -33,11 +37,18 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RegioneLogic extends ALogic {
 
-
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public StatoLogic statoLogic;
 
 
     /**
@@ -89,14 +100,15 @@ public class RegioneLogic extends ALogic {
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param nome    (obbligatorio, unico)
+     * @param stato   (obbligatorio)
      * @param iso     di riferimento (obbligatorio, unico)
      * @param sigla   (consuetudinaria, obbligatoria)
      * @param statuto (obbligatorio)
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Regione crea(String nome, String iso, String sigla, AEStatuto statuto) {
-        return (Regione) checkAndSave(newEntity(nome, iso, sigla, statuto));
+    public Regione crea(String nome, Stato stato, String iso, String sigla, AEStatuto statuto) {
+        return (Regione) checkAndSave(newEntity(nome, stato, iso, sigla, statuto));
     }
 
 
@@ -108,7 +120,7 @@ public class RegioneLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Regione newEntity() {
-        return newEntity(VUOTA, VUOTA, VUOTA, (AEStatuto) null);
+        return newEntity(VUOTA, (Stato) null, VUOTA, VUOTA, (AEStatuto) null);
     }
 
 
@@ -119,16 +131,19 @@ public class RegioneLogic extends ALogic {
      * All properties <br>
      *
      * @param nome    (obbligatorio, unico)
+     * @param stato   (obbligatorio)
      * @param iso     di riferimento (obbligatorio, unico)
      * @param sigla   (consuetudinaria, obbligatoria)
      * @param statuto (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Regione newEntity(String nome, String iso, String sigla, AEStatuto statuto) {
+    public Regione newEntity(String nome, Stato stato, String iso, String sigla, AEStatuto statuto) {
         Regione newEntityBean = Regione.builderRegione()
 
                 .nome(text.isValid(nome) ? nome : null)
+
+                .stato(stato)
 
                 .iso(text.isValid(iso) ? iso : null)
 
@@ -163,7 +178,12 @@ public class RegioneLogic extends ALogic {
         svizzera();
         austria();
         germania();
-        //        spagna();
+        spagna();
+        portogallo();
+//        slovenia(); // sono troppi
+        belgio();
+        olanda();
+        croazia();
 
         return mongo.isValid(entityClazz);
     }
@@ -176,6 +196,7 @@ public class RegioneLogic extends ALogic {
         String path = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/config/regioni";
         List<LinkedHashMap<String, String>> mappaCSV;
         String nome = VUOTA;
+        Stato stato = statoLogic.getItalia();
         String iso = VUOTA;
         String sigla = VUOTA;
         String statutoTxt = VUOTA;
@@ -188,7 +209,7 @@ public class RegioneLogic extends ALogic {
             sigla = riga.get("sigla");
             statutoTxt = riga.get("tipo");
             statuto = AEStatuto.get(statutoTxt);
-            crea(nome, iso, sigla, statuto);
+            crea(nome, stato, iso, sigla, statuto);
         }
     }
 
@@ -198,21 +219,43 @@ public class RegioneLogic extends ALogic {
      */
     public void francia() {
         String paginaWiki = "ISO_3166-2:FR";
-        List<List<String>> listaGrezza = wiki.getTable(paginaWiki);
+        List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
+        Stato stato = statoLogic.getFrancia();
         String iso = VUOTA;
         String sigla = VUOTA;
-        String[] parti = null;
+        String isoTag = "FR-";
 
-        if (listaGrezza != null && listaGrezza.size() > 1) {
-            for (List<String> rigaGrezza : listaGrezza) {
-                parti = rigaGrezza.get(0).split(DOPPIO_PIPE_REGEX);
-                if (parti.length > 2) {
-                    nome = parti[2];
-                    iso = parti[0];
-                    sigla = text.levaTestaDa(iso, TRATTINO);
-                    crea(nome, iso, sigla, AEStatuto.francia);
-                }
+        //--13 regioni metropolitane
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.franciaMetropolitana);
+            }
+        }
+
+        //--3 regioni d'oltremare
+        listaWrap = wiki.getDueColonne(paginaWiki, 3, 2, 2, 4);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.franciaOltremare);
+            }
+        }
+
+        //--9 collettività d'oltremare
+        listaWrap = wiki.getDueColonne(paginaWiki, 4, 2, 1, 3);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.franciaCollettivita);
             }
         }
     }
@@ -222,26 +265,22 @@ public class RegioneLogic extends ALogic {
      * Cantoni svizzeri <br>
      */
     public void svizzera() {
-        String paginaWiki = "Cantoni della Svizzera";
-        List<List<String>> listaGrezza = wiki.getTable(paginaWiki);
+        String paginaWiki = "ISO_3166-2:CH";
+        List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
+        Stato stato = statoLogic.getSvizzera();
         String iso = VUOTA;
         String sigla = VUOTA;
         String isoTag = "CH-";
 
-        if (listaGrezza != null && listaGrezza.size() >= 25) {
-            listaGrezza = listaGrezza.subList(0, 25);
-            for (List<String> rigaGrezza : listaGrezza) {
-                if (rigaGrezza.size() > 2) {
-                    nome = rigaGrezza.get(3);
-                    nome = text.setNoQuadre(nome);
-                    if (nome.contains(PIPE)) {
-                        nome = text.levaTestaDa(nome, PIPE);
-                    }
-                    sigla = rigaGrezza.get(2);
-                    iso = isoTag + sigla;
-                    crea(nome, iso, sigla, AEStatuto.svizzera);
-                }
+        //--26 cantoni
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.svizzera);
             }
         }
     }
@@ -251,30 +290,23 @@ public class RegioneLogic extends ALogic {
      * Länder austriaci <br>
      */
     public void austria() {
-        String paginaWiki = "Stati federati dell'Austria";
-        List<List<String>> listaGrezza = wiki.getTable(paginaWiki,1,1);
+        String paginaWiki = "ISO_3166-2:AT";
+        List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
+        Stato stato = statoLogic.getAustria();
         String iso = VUOTA;
         String sigla = VUOTA;
         String isoTag = "AT-";
-        int pos = 1;
 
-        if (listaGrezza != null && listaGrezza.size() > 1) {
-            for (List<String> rigaGrezza : listaGrezza) {
-                if (rigaGrezza.size() > 2) {
-                    nome = rigaGrezza.get(2);
-                    if (nome.contains("<br")) {
-                        nome = text.levaCodaDa(nome, "<br");
-                    }
-                    nome = text.setNoQuadre(nome);
-                    if (nome.contains(PIPE)) {
-                        nome = text.levaTestaDa(nome, PIPE);
-                    }
-                    iso = isoTag + pos;
-                    sigla = VUOTA + pos;
-                    pos++;
-                    crea(nome, iso, sigla, AEStatuto.austria);
-                }
+        //--9 lander
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                sigla = PUNTO + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.austria);
             }
         }
     }
@@ -284,58 +316,180 @@ public class RegioneLogic extends ALogic {
      * Länder tedeschi <br>
      */
     public void germania() {
-        String paginaWiki = "Stati federati della Germania";
-        List<List<String>> listaGrezza = wiki.getTable(paginaWiki,1,1);
+        String paginaWiki = "ISO_3166-2:DE";
+        List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
+        Stato stato = statoLogic.getGermania();
         String iso = VUOTA;
         String sigla = VUOTA;
         String isoTag = "DE-";
 
-        if (listaGrezza != null && listaGrezza.size() > 1) {
-            for (List<String> rigaGrezza : listaGrezza) {
-                if (rigaGrezza.size() > 5) {
-                    nome = rigaGrezza.get(1);
-                    nome = text.setNoQuadre(nome);
-                    if (nome.contains(PIPE)) {
-                        nome = text.levaTestaDa(nome, PIPE);
-                    }
-                    sigla = rigaGrezza.get(5);
-                    sigla = text.setNoApici(sigla);
-                    iso = isoTag + sigla;
-                    crea(nome, iso, sigla, AEStatuto.germania);
-                }
+        //--16 lander
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.germania);
             }
         }
     }
 
 
     /**
-     * Länder tedeschi <br>
+     * Comunità spagnole <br>
      */
     public void spagna() {
-        String paginaWiki = "Comunità autonome della Spagna";
-        List<List<String>> listaGrezza = wiki.getTable(paginaWiki);
+        String paginaWiki = "ISO_3166-2:ES";
+        List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
+        Stato stato = statoLogic.getSpagna();
         String iso = VUOTA;
         String sigla = VUOTA;
-        String isoTag = "DE-";
+        String isoTag = "ES-";
 
-        if (listaGrezza != null && listaGrezza.size() > 1) {
-            for (List<String> rigaGrezza : listaGrezza) {
-                if (rigaGrezza.size() > 5) {
-                    nome = rigaGrezza.get(1);
-                    nome = text.setNoQuadre(nome);
-                    if (nome.contains(PIPE)) {
-                        nome = text.levaTestaDa(nome, PIPE);
-                    }
-                    sigla = rigaGrezza.get(5);
-                    sigla = text.setNoApici(sigla);
-                    iso = isoTag + sigla;
-                    crea(nome, iso, sigla, AEStatuto.spagna);
-                }
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.spagna);
             }
         }
     }
 
+
+    /**
+     * Distretti portoghesi <br>
+     */
+    public void portogallo() {
+        String paginaWiki = "ISO_3166-2:PT";
+        List<WrapDueStringhe> listaWrap = null;
+        String nome = VUOTA;
+        Stato stato = statoLogic.getPortogallo();
+        String iso = VUOTA;
+        String sigla = VUOTA;
+
+        //--18 distretti
+        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 2, 3);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.portogalloDistretto);
+            }
+        }
+
+        //--2 regioni autonome
+        listaWrap = wiki.getDueColonne(paginaWiki, 2, 2, 2, 3);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.portogalloRegione);
+            }
+        }
+    }
+
+
+    /**
+     * Comuni sloveni <br>
+     */
+    public void slovenia() {
+        String paginaWiki = "ISO_3166-2:SI";
+        List<WrapDueStringhe> listaWrap = null;
+        String nome = VUOTA;
+        Stato stato = statoLogic.getSlovenia();
+        String iso = VUOTA;
+        String sigla = VUOTA;
+
+        //--212 comuni
+        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 1, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.slovenia);
+            }
+        }
+    }
+
+    /**
+     * Regioni belghe <br>
+     */
+    public void belgio() {
+        String paginaWiki = "ISO_3166-2:BE";
+        List<WrapDueStringhe> listaWrap = null;
+        String nome = VUOTA;
+        Stato stato = statoLogic.getBelgio();
+        String iso = VUOTA;
+        String sigla = VUOTA;
+        String isoTag = "BE-";
+
+        //--3 regioni
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                sigla =  sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.belgio);
+            }
+        }
+    }
+
+
+    /**
+     * Province olandesi <br>
+     */
+    public void olanda() {
+        String paginaWiki = "ISO_3166-2:NL";
+        List<WrapDueStringhe> listaWrap = null;
+        String nome = VUOTA;
+        Stato stato = statoLogic.getOlanda();
+        String iso = VUOTA;
+        String sigla = VUOTA;
+        String isoTag = "NL-";
+
+        //--9 province
+        listaWrap = wiki.getTemplateList(paginaWiki, 1, 2, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                sigla = wrap.getPrima();
+                iso = isoTag + sigla;
+                crea(nome, stato, iso, sigla, AEStatuto.olanda);
+            }
+        }
+    }
+
+    /**
+     * Regioni croate <br>
+     */
+    public void croazia() {
+        String paginaWiki = "ISO_3166-2:HR";
+        List<WrapDueStringhe> listaWrap = null;
+        String nome = VUOTA;
+        Stato stato = statoLogic.getCroazia();
+        String iso = VUOTA;
+        String sigla = VUOTA;
+
+        //--21 regioni
+        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 1, 2);
+        if (listaWrap != null && listaWrap.size() > 0) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = wrap.getSeconda();
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                crea(nome, stato, iso, sigla, AEStatuto.croazia);
+            }
+        }
+    }
 
 }

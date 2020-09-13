@@ -1,16 +1,15 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapQuattroStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.net.URLEncoder;
 import java.util.*;
@@ -81,13 +80,13 @@ public class AWikiService extends AAbstractService {
     public ATextService text;
 
 
-//    /**
-//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-//     */
-//    @Autowired
-//    public RegioneLogic regioneLogic;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public RegioneLogic regioneLogic;
 
 
     /**
@@ -355,64 +354,327 @@ public class AWikiService extends AAbstractService {
     //    }
 
 
-//    /**
-//     * Estrae una wikitable da una pagina wiki <br>
-//     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
-//     *
-//     * @return lista di valori per ogni riga significativa della wikitable
-//     */
-//    public List<List<String>> getProvince() {
-//        List<List<String>> listaTable = new ArrayList<>();
-//        List<List<String>> listaGrezza = getTable(PAGINA_PROVINCE, 1, 1);
-//        List<String> listaProvinceDellaRegione;
-//        List<String> riga;
-//        Regione regione;
-//        String siglaRegione;
-//        String nomeRegione;
-//        String testoRiga;
-//
-//        //--nella tabella su wiki c'è una riga in più di riepilogo che non interessa
-//        if (listaGrezza != null && listaGrezza.size() == 21) {
-//            for (List<String> rigaGrezza : listaGrezza.subList(0, 20)) {
-//                //                regione = rigaGrezza.get(1);
-//                siglaRegione = fixRegione(rigaGrezza.get(0));
-//                regione = regioneLogic.findBySigla(siglaRegione);
-//                nomeRegione = regione != null ? regione.getNome() : VUOTA;
-//                testoRiga = rigaGrezza.get(5);
-//                listaProvinceDellaRegione = getListaProvince(testoRiga);
-//                for (String provincia : listaProvinceDellaRegione) {
-//                    riga = new ArrayList<>();
-//                    riga.add(provincia);
-//                    riga.add(provincia);//@todo PROVVISORIO
-//                    riga.add(nomeRegione);
-//                    listaTable.add(riga);
-//                }
-//            }
-//        }
-//
-//        return listaTable;
-//    }
+    //    /**
+    //     * Estrae una wikitable da una pagina wiki <br>
+    //     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
+    //     *
+    //     * @return lista di valori per ogni riga significativa della wikitable
+    //     */
+    //    public List<List<String>> getProvince() {
+    //        List<List<String>> listaTable = new ArrayList<>();
+    //        List<List<String>> listaGrezza = getTable(PAGINA_PROVINCE, 1, 1);
+    //        List<String> listaProvinceDellaRegione;
+    //        List<String> riga;
+    //        Regione regione;
+    //        String siglaRegione;
+    //        String nomeRegione;
+    //        String testoRiga;
+    //
+    //        //--nella tabella su wiki c'è una riga in più di riepilogo che non interessa
+    //        if (listaGrezza != null && listaGrezza.size() == 21) {
+    //            for (List<String> rigaGrezza : listaGrezza.subList(0, 20)) {
+    //                //                regione = rigaGrezza.get(1);
+    //                siglaRegione = fixRegione(rigaGrezza.get(0));
+    //                regione = regioneLogic.findBySigla(siglaRegione);
+    //                nomeRegione = regione != null ? regione.getNome() : VUOTA;
+    //                testoRiga = rigaGrezza.get(5);
+    //                listaProvinceDellaRegione = getListaProvince(testoRiga);
+    //                for (String provincia : listaProvinceDellaRegione) {
+    //                    riga = new ArrayList<>();
+    //                    riga.add(provincia);
+    //                    riga.add(provincia);//@todo PROVVISORIO
+    //                    riga.add(nomeRegione);
+    //                    listaTable.add(riga);
+    //                }
+    //            }
+    //        }
+    //
+    //        return listaTable;
+    //    }
 
 
-//    private List<String> getListaProvince(String testoRiga) {
-//        List<String> lista = new ArrayList<>();
-//        String tag = "]]";
-//        String[] parti = testoRiga.split(tag);
-//        int pos = 0;
-//        String provincia = VUOTA;
-//
-//        for (String testo : parti) {
-//            if (testo.contains(PIPE)) {
-//                pos = testo.lastIndexOf(PIPE) + 1;
-//                provincia = testo.substring(pos, testo.length());
-//                if (text.isValid(provincia)) {
-//                    lista.add(provincia.trim());
-//                }
-//            }
-//        }
-//
-//        return lista;
-//    }
+    //    private List<String> getListaProvince(String testoRiga) {
+    //        List<String> lista = new ArrayList<>();
+    //        String tag = "]]";
+    //        String[] parti = testoRiga.split(tag);
+    //        int pos = 0;
+    //        String provincia = VUOTA;
+    //
+    //        for (String testo : parti) {
+    //            if (testo.contains(PIPE)) {
+    //                pos = testo.lastIndexOf(PIPE) + 1;
+    //                provincia = testo.substring(pos, testo.length());
+    //                if (text.isValid(provincia)) {
+    //                    lista.add(provincia.trim());
+    //                }
+    //            }
+    //        }
+    //
+    //        return lista;
+    //    }
+
+
+    /**
+     * Estrae il contenuto del template bandierina indicato <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return coppia di valori: sigla e nome
+     */
+    public WrapDueStringhe getTemplateBandierina(String wikiTitle) {
+        WrapDueStringhe wrap = null;
+        String tag = "Template:";
+        String testoGrezzo = VUOTA;
+        String sigla = VUOTA;
+
+        if (text.isEmpty(wikiTitle)) {
+            return null;
+        }
+
+        wikiTitle = text.setNoGraffe(wikiTitle);
+        sigla = text.levaTestaDa(wikiTitle, TRATTINO);
+        testoGrezzo = legge(tag + wikiTitle);
+
+        if (testoGrezzo.startsWith(GRAFFE_INI)) {
+            wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
+        } else {
+            wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
+        }
+
+        return wrap;
+    }
+
+
+    /**
+     * Restituisce un wrapper di valori: sigla e nome estratti dal template bandierine <br>
+     * '{{band div|FRA|Borgogna-Franca Contea}}<noinclude>[[Categoria:Template bandierine regionali francesi|BFC]]</noinclude>' <br>
+     *
+     * @param testoGrezzo del template wiki
+     * @param sigla       della suddivisione richiesta
+     *
+     * @return wrapper di valori: sigla e nome
+     */
+    public WrapDueStringhe estraeBandierinaGraffe(String testoGrezzo, String sigla) {
+        WrapDueStringhe wrap = null;
+        String testoGraffa = VUOTA;
+        String[] parti = null;
+        String nome = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoGraffa = estraeGraffa(testoGrezzo);
+        }
+
+        if (text.isValid(testoGraffa)) {
+            parti = testoGraffa.split(PIPE_REGEX);
+        }
+
+        if (parti != null && parti.length == 3) {
+            nome = parti[2];
+            wrap = new WrapDueStringhe(sigla, nome);
+        }
+
+        return wrap;
+    }
+
+
+    /**
+     * Restituisce un wrapper di valori: sigla e nome estratti dal template bandierine <br>
+     * '[[File:Blason_Auvergne-Rhône-Alpes.svg|20px]] [[Alvernia-Rodano-Alpi]] <noinclude>[[Categoria:Template bandierine regionali francesi|ARA]]</noinclude>' <br>
+     *
+     * @param testoGrezzo del template wiki
+     * @param sigla       della suddivisione richiesta
+     *
+     * @return wrapper di valori: sigla e nome
+     */
+    public WrapDueStringhe estraeBandierinaQuadre(String testoGrezzo, String sigla) {
+        WrapDueStringhe wrap = null;
+        String testoQuadra = VUOTA;
+        String tag = "<noinclude";
+        String nome = VUOTA;
+
+        if (text.isValid(testoGrezzo)) {
+            testoQuadra = text.levaCodaDa(testoGrezzo, tag);
+        }
+
+        //--estrae la seconda quadra
+        if (text.isValid(testoQuadra)) {
+            testoQuadra = text.levaTestaDa(testoQuadra, QUADRE_END);
+        }
+
+        if (text.isValid(testoQuadra)) {
+            nome = text.setNoQuadre(testoQuadra).trim();
+            if (nome.contains(PIPE)) {
+                nome = text.levaTestaDa(nome, PIPE);
+            }
+            wrap = new WrapDueStringhe(sigla, nome);
+        }
+
+        return wrap;
+    }
+
+
+    /**
+     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+     *
+     * @param wikiTitle    della pagina wiki
+     * @param posTabella   della wikitable nella pagina se ce ne sono più di una
+     * @param rigaIniziale da cui estrarre le righe, scartando la testa della table
+     * @param numColonna   da cui estrarre la cella
+     *
+     * @return lista di coppia di valori: sigla e nome
+     */
+    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
+        List<String> lista = getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
+        return getTemplateList(lista);
+    }
+
+
+    /**
+     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+     *
+     * @param listaTemplate bandierine
+     *
+     * @return lista di coppia di valori: sigla e nome
+     */
+    public List<WrapDueStringhe> getTemplateList(List<String> listaTemplate) {
+        List<WrapDueStringhe> lista = null;
+        WrapDueStringhe wrap;
+
+        if (array.isValid(listaTemplate)) {
+            lista = new ArrayList<>();
+            for (String wikiTitle : listaTemplate) {
+                wrap = getTemplateBandierina(wikiTitle);
+                if (wrap != null) {
+                    lista.add(wrap);
+                }
+            }
+        }
+
+        return lista;
+    }
+
+
+    /**
+     * Restituisce una colonna estratta da una wiki table <br>
+     *
+     * @param wikiTitle    della pagina wiki
+     * @param posTabella   della wikitable nella pagina se ce ne sono più di una
+     * @param rigaIniziale da cui estrarre le righe, scartando la testa della table
+     * @param numColonna   da cui estrarre la cella
+     *
+     * @return lista di coppia di valori: sigla e nome
+     */
+    public List<String> getColonna(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
+        List<String> colonna = null;
+        List<List<String>> lista;
+        String cella = VUOTA;
+        String[] parti = null;
+
+        if (text.isEmpty(wikiTitle)) {
+            return null;
+        }
+
+        lista = getTable(wikiTitle, posTabella, rigaIniziale);
+        if (array.isValid(lista)) {
+            colonna = new ArrayList<>();
+            for (List<String> riga : lista) {
+                if (riga.size() <= 2) {
+                    parti = riga.get(0).split(DOPPIO_PIPE_REGEX);
+                    if (parti != null && parti.length >= numColonna) {
+                        cella = parti[numColonna - 1];
+                    }
+                } else {
+                    if (!riga.get(0).startsWith(ESCLAMATIVO)) {
+                        cella = riga.get(numColonna - 1);
+                    }
+                }
+                if (text.isValid(cella)) {
+                    cella = cella.trim();
+                    cella = text.setNoGraffe(cella);
+                    colonna.add(cella);
+                }
+            }
+        }
+
+        return colonna;
+    }
+
+
+    /**
+     * Restituisce due colonne sincronizzate da una wiki table <br>
+     * Esclude il testo di eventuali note <br>
+     *
+     * @param wikiTitle     della pagina wiki
+     * @param posTabella    della wikitable nella pagina se ce ne sono più di una
+     * @param rigaIniziale  da cui estrarre le righe, scartando la testa della table
+     * @param numColonnaUno da cui estrarre la cella
+     * @param numColonnaDue da cui estrarre la cella
+     *
+     * @return lista di coppia di valori: sigla e nome
+     */
+    public List<WrapDueStringhe> getDueColonne(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
+        List<WrapDueStringhe> listaWrap = null;
+        WrapDueStringhe wrap;
+        List<String> colonna = null;
+        List<List<String>> lista;
+        String cella = VUOTA;
+        String[] parti = null;
+        String prima;
+        String seconda;
+
+        if (text.isEmpty(wikiTitle)) {
+            return null;
+        }
+
+        lista = getTable(wikiTitle, posTabella, rigaIniziale);
+        if (array.isValid(lista)) {
+            listaWrap = new ArrayList<>();
+            for (List<String> riga : lista) {
+                wrap = null;
+                prima = VUOTA;
+                seconda = VUOTA;
+                if (riga.size() <= 2) {
+                    cella = riga.get(0);
+                    parti = cella.split(DOPPIO_PIPE_REGEX);
+                    if (parti != null && parti.length >= numColonnaDue) {
+                        prima = parti[numColonnaUno - 1];
+                        seconda = parti[numColonnaDue - 1];
+                    }
+                } else {
+                    if (!riga.get(0).startsWith(ESCLAMATIVO)) {
+                        prima = riga.get(numColonnaUno - 1);
+                        seconda = riga.get(numColonnaDue - 1);
+                    }
+                }
+                if (text.isValid(prima) && text.isValid(seconda)) {
+                    prima = text.levaCodaDa(prima, REF);
+                    seconda = text.levaCodaDa(seconda, REF);
+                    prima = text.setNoGraffe(prima);
+                    seconda = text.setNoGraffe(seconda);
+                    prima = text.setNoQuadre(prima);
+                    seconda = text.setNoQuadre(seconda);
+                    if (prima.contains(PIPE)) {
+                        if (prima.contains(GRAFFE_INI) && prima.contains(GRAFFE_END)) {
+                        } else {
+                            prima = text.levaTestaDa(prima, PIPE);
+                        }
+                    }
+                    if (seconda.contains(PIPE)) {
+                        if (seconda.contains(GRAFFE_INI) && seconda.contains(GRAFFE_END)) {
+                        } else {
+                            seconda = text.levaTestaDa(seconda, PIPE);
+                        }
+                    }
+                    wrap = new WrapDueStringhe(prima, seconda);
+                }
+                if (wrap != null) {
+                    listaWrap.add(wrap);
+                }
+            }
+        }
+
+        return listaWrap;
+    }
 
 
     /**
@@ -432,7 +694,8 @@ public class AWikiService extends AAbstractService {
      * Estrae una wikitable da una pagina wiki <br>
      * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
      *
-     * @param wikiTitle della pagina wiki
+     * @param wikiTitle  della pagina wiki
+     * @param posTabella della wikitable nella pagina se ce ne sono più di una
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
@@ -445,8 +708,9 @@ public class AWikiService extends AAbstractService {
      * Estrae una wikitable da una pagina wiki <br>
      * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
      *
-     * @param wikiTitle  della pagina wiki
-     * @param posTabella della wikitable nella pagina se ce ne sono più di una
+     * @param wikiTitle    della pagina wiki
+     * @param posTabella   della wikitable nella pagina se ce ne sono più di una
+     * @param rigaIniziale da cui estrarre le righe, scartando la testa della table
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
@@ -521,7 +785,7 @@ public class AWikiService extends AAbstractService {
         String testoPagina = legge(wikiTitle);
 
         if (text.isValid(testoPagina)) {
-            if (testoPagina.contains(tag1) || testoPagina.contains(tag2)|| testoPagina.contains(tag3)|| testoPagina.contains(tag4)) {
+            if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4)) {
                 if (testoPagina.contains(tag1)) {
                     for (int k = 1; k <= pos; k++) {
                         posIni = testoPagina.indexOf(tag1, posIni + tag1.length());
@@ -655,14 +919,14 @@ public class AWikiService extends AAbstractService {
         }
 
         //--parametri slots/main -> content
-        if (objectRevisions.get(SLOTS) != null && objectRevisions.get(SLOTS) instanceof JSONObject) {
+        if (objectRevisions != null && objectRevisions.get(SLOTS) != null && objectRevisions.get(SLOTS) instanceof JSONObject) {
             objectSlots = (JSONObject) objectRevisions.get(SLOTS);
             if (objectSlots.get(MAIN) != null && objectSlots.get(MAIN) instanceof JSONObject) {
                 objectMain = (JSONObject) objectSlots.get(MAIN);
             }
         }
 
-        if (objectMain.get(CONTENT) != null) {
+        if (objectMain != null && objectMain.get(CONTENT) != null) {
             textContent = (String) objectMain.get(CONTENT);
         }
 
@@ -964,6 +1228,28 @@ public class AWikiService extends AAbstractService {
         //        }
 
         return listaWrap;
+    }
+
+
+    public String estraeGraffaCon(String testoCompleto) {
+        String testoValido = VUOTA;
+        int posIni;
+        int posEnd;
+
+        if (testoCompleto.contains(GRAFFE_INI) && testoCompleto.contains(GRAFFE_END)) {
+            posIni = testoCompleto.indexOf(GRAFFA_INI);
+            posEnd = testoCompleto.indexOf(GRAFFE_END) + GRAFFE_END.length();
+            if (posIni >= 0 && posEnd > posIni) {
+                testoValido = testoCompleto.substring(posIni, posEnd);
+            }
+        }
+
+        return testoValido;
+    }
+
+
+    public String estraeGraffa(String testoCompleto) {
+        return text.setNoGraffe(estraeGraffaCon(testoCompleto));
     }
 
 }

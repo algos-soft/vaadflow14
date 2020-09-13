@@ -45,6 +45,8 @@ public abstract class FlowCost {
 
     public static final String HTLM_SPAZIO = "&nbsp;";
 
+    public static final String REF = "<ref>";
+
     public static final String DOPPIO_SPAZIO = SPAZIO + SPAZIO;
 
     public static final String TRATTINO = "-";

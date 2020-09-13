@@ -5,10 +5,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -35,8 +37,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Regione", keyPropertyName = "nome", usaRowIndex = true, usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "id")
-@AIList(fields = "nome,iso,sigla,statuto")
-@AIForm(fields = "nome,iso,sigla,statuto")
+@AIList(fields = "nome,stato,iso,sigla,statuto")
+@AIForm(fields = "nome,stato,iso,sigla,statuto")
 public class Regione extends AEntity {
 
     /**
@@ -57,6 +59,15 @@ public class Regione extends AEntity {
 
 
     /**
+     * stato (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @DBRef
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class)
+    @AIColumn(widthEM = 8)
+    public Stato stato;
+
+    /**
      * codice iso di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il codice ISO numerico è obbligatorio")
@@ -71,7 +82,7 @@ public class Regione extends AEntity {
      */
     @NotBlank(message = "Sigla obbligatoria")
     @Size(min = 2)
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, caption = "sigla breve", widthEM = 12)
     @AIColumn(widthEM = 6)
     public String sigla;
@@ -82,7 +93,7 @@ public class Regione extends AEntity {
      */
     @NotNull()
     @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class)
-    @AIColumn(widthEM = 10)
+    @AIColumn(header = "Tipologia", widthEM = 13)
     public AEStatuto statuto;
 
 

@@ -14,13 +14,31 @@ public enum AEStatuto {
 
     germania("Land tedesco"),
 
-    francia("Regione francese"),
+    franciaMetropolitana("Regione metropolitana"),
+
+    franciaOltremare("Regione d'oltremare"),
+
+    franciaCollettivita("Collettività d'oltremare"),
 
     svizzera("Cantone svizzero"),
 
     austria("Land austriaco"),
 
     spagna("Comunità autonoma"),
+
+    spagnaRegione("Regione spagnola"),
+
+    portogalloDistretto("Distretto portoghese"),
+
+    portogalloRegione("Regione autonoma"),
+
+    slovenia("Comune sloveno"),
+
+    belgio("Regione belga"),
+
+    olanda("Provincia olandese"),
+
+    croazia("Regione croata"),
     ;
 
     private String nome;

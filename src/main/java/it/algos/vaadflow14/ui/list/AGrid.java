@@ -157,7 +157,7 @@ public class AGrid {
         Grid.Column<AEntity> colonna = null;
 
         if (annotation.usaRowIndex(beanType)) {
-            grid.addColumn(item -> "").setKey(FIELD_INDEX).setHeader("#").setWidth("3.5em").setFlexGrow(0);
+            grid.addColumn(item -> "").setKey(FIELD_INDEX).setHeader("#").setWidth("4em").setFlexGrow(0);
         }
 
         if (gridPropertyNamesList != null) {
