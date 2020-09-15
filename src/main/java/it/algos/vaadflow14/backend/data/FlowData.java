@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
@@ -46,6 +47,7 @@ public class FlowData extends AData {
 
         checkSingolaCollection(Company.class);
         checkSingolaCollection(Utente.class);
+        checkSingolaCollection(Via.class);
     }
 
 }

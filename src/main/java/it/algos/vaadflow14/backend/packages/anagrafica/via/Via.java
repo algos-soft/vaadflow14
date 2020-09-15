@@ -52,7 +52,7 @@ public class Via extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
+    @AIColumn(header = "#", widthEM = 2.5)
     public int ordine;
 
 

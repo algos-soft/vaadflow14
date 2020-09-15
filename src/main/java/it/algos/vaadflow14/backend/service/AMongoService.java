@@ -231,18 +231,20 @@ public class AMongoService<capture> extends AAbstractService {
         return (int) mongoOp.count(query, collectionName);
     }
 
+
     /**
      * Cerca tutte le entities di una collection ordinate. <br>
      * Gli ordinamenti dei vari filtri vengono concatenati nell'ordine di costruzione <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param entityClazz    corrispondente ad una collection sul database mongoDB
      * @param sortPrevalente (facoltativa) indipendentemente dai filtri
      *
      * @return entity
      */
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Sort sortPrevalente) {
-        return findAll(entityClazz, (List<AFiltro>)null,sortPrevalente);
+        return findAll(entityClazz, (List<AFiltro>) null, sortPrevalente);
     }
+
 
     /**
      * Cerca tutte le entities di una collection filtrate. <br>
@@ -297,13 +299,17 @@ public class AMongoService<capture> extends AAbstractService {
                     if (criteria != null) {
                         query.addCriteria(criteria);
                     }
-                    if (sortPrevalente != null && filtro.getSort() != null) {
-                        query.with(filtro.getSort());
+                    sort = filtro.getSort();
+                    if (sort != null) {
+                        query.with(sort);
                     }
+                }
+                if (!query.isSorted() && sortPrevalente != null) {
+                    query.with(sortPrevalente);
                 }
             }
         } else {
-            if (sortPrevalente!=null) {
+            if (sortPrevalente != null) {
                 query.with(sortPrevalente);
             }
         }

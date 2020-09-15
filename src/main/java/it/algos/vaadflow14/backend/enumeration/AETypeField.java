@@ -70,31 +70,31 @@ public enum AETypeField {
     //    custom
     ;
 
-    private int widthColumn;
+    private double widthColumn;
 
-    private int widthField;
+    private double widthField;
 
     private AETypeData data;
 
 
-    AETypeField(int widthColumn, int widthField) {
+    AETypeField(double widthColumn, double widthField) {
         this(widthColumn, widthField, AETypeData.dateNormal);
     }
 
 
-    AETypeField(int widthColumn, int widthField, AETypeData data) {
+    AETypeField(double widthColumn, double widthField, AETypeData data) {
         this.widthColumn = widthColumn;
         this.widthField = widthField;
         this.data = data;
     }
 
 
-    public int getWidthColumn() {
+    public double getWidthColumn() {
         return widthColumn;
     }
 
 
-    public int getWidthField() {
+    public double getWidthField() {
         return widthField;
     }
 

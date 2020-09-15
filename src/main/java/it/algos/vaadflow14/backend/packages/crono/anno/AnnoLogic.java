@@ -121,7 +121,7 @@ public class AnnoLogic extends CronoLogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox(Secolo.class, "12em", true, false);
+        super.creaComboBox(Secolo.class, 12, true, false);
     }
 
 

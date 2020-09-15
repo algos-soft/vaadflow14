@@ -52,7 +52,7 @@ public class Mese extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
+    @AIColumn(header = "#", widthEM = 3)
     public int ordine;
 
     /**

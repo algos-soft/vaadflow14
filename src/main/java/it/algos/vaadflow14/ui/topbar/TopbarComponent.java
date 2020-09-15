@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.topbar;
 
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.LUMO_PRIMARY_COLOR;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Componente per la barra superiore della finestra <br>
@@ -122,7 +123,8 @@ public class TopbarComponent extends HorizontalLayout {
      */
     protected void initView() {
         String style;
-        Image image = null;
+        Image logo = null;
+        Button device = null;
         Div divTitolo = null;
         MenuBar menuUser = null;
         login = vaadinService.getLogin();
@@ -136,20 +138,23 @@ public class TopbarComponent extends HorizontalLayout {
         this.fixPreferenze();
 
         //--Immagine facoltativa
-        image = this.fixLogo();
+        logo = this.fixLogo();
 
         //--titolo
         divTitolo = this.fixTitolo();
 
+        //--controllo del browser collegato
+        device = this.fixDevice();
+
         //--menu utente eventuale
         menuUser = fixMenuUser();
 
+        Div elasticSpacer = new Div();
+        elasticSpacer.getStyle().set("flex-grow", "1");
         if (menuUser != null) {
-            Div elasticSpacer = new Div();
-            elasticSpacer.getStyle().set("flex-grow", "1");
-            this.add(image, divTitolo, elasticSpacer, menuUser);
+            this.add(logo, divTitolo, elasticSpacer, menuUser);
         } else {
-            this.add(image, divTitolo);
+            this.add(logo, divTitolo);
         }
 
         //--giustifica a sinistra ed a destra
@@ -213,6 +218,22 @@ public class TopbarComponent extends HorizontalLayout {
         return div;
     }
 
+    /**
+     * Logo del tipo di browser collegato (facoltativo) <br>
+     */
+    private Button fixDevice() {
+        Button button= new Button();
+        VaadinSession vaadSession = VaadinSession.getCurrent();
+        if (vaadSession!=null) {
+            button.setText("Mobile");
+        } else {
+            button.setText("Desktop");
+        }
+
+//        FontAwesome.Brands.Icon image = null;
+//        image=FontAwesome.Brands.FIREFOX.create();
+        return button;
+    }
 
     private MenuBar fixMenuUser() {
         MenuBar menuUser = null;

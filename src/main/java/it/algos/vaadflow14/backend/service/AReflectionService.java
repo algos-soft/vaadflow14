@@ -356,6 +356,17 @@ public class AReflectionService extends AAbstractService {
         return value;
     }
 
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return true se esiste
+     */
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        return getField(entityClazz, publicFieldName) != null;
+    }
 
     //    /**
     //     * Mappa di tutti i valori delle properties di una classe

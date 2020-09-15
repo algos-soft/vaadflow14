@@ -93,7 +93,7 @@ public class GiornoLogic extends CronoLogic {
     protected List<String> getAlertList(AEVista typeVista) {
         List<String> lista = super.getAlertList(typeVista);
 
-        lista.add("Giorni dell'anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili.");
+        lista.add("Giorni dell' anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili.");
         lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
 
         return lista;
@@ -106,7 +106,7 @@ public class GiornoLogic extends CronoLogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox(Mese.class, "10em", true, false);
+        super.creaComboBox(Mese.class, 10, true, false);
     }
 
 

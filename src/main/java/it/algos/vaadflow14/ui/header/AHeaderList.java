@@ -61,13 +61,22 @@ public class AHeaderList extends AHeader {
         String tagIniBlue = "<span style=\"color:blue\">";
         String tagEnd = "</span>";
         String tagFine = FlowCost.PUNTO;
+        boolean puntoFinale = true; //@todo Creare una preferenza e sostituirla qui
 
         if (alertHtml != null) {
             for (String alert : alertHtml) {
                 alert = alert.trim();
-                if (!alert.endsWith(tagFine)) {
-                    alert += tagFine;
+
+                if (puntoFinale) {
+                    if (!alert.endsWith(tagFine)) {
+                        alert += tagFine;
+                    }
+                } else {
+                    if (alert.endsWith(tagFine)) {
+                        alert = text.levaCoda(alert, tagFine);
+                    }
                 }
+
                 if (!alert.startsWith(tagIni)) {
                     alert = tagIniBlue + alert + tagEnd;
                 }

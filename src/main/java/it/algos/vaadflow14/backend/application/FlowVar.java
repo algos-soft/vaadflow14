@@ -168,4 +168,11 @@ public class FlowVar {
      */
     public static boolean usaCronoPackages;
 
+    /**
+     * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
+     * Di default (per sicurezza) uguale a false <br>
+     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     */
+    public static boolean usaGeografiaPackages;
+
 }

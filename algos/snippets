@@ -92,3 +92,26 @@ Notification.show("Alcuni campi non sono adeguati", 3000, Notification.Position.
         //--Controlla che il parametro in ingresso sia della classe prevista
         if (AEntity.class.isAssignableFrom(genericClazz)) {
         }
+
+
+    public static String[] getValues() {
+        String[] valori;
+        EAPrefType[] types = values();
+        valori = new String[values().length];
+
+        for (int k = 0; k < types.length; k++) {
+            valori[k] = types[k].toString();
+        }// end of for cycle
+
+        return valori;
+    }// end of static method
+
+    public static List<String> getValues() {
+        List<String> lista = new ArrayList<>();
+
+        for (EACroce croce : values()) {
+            lista.add(croce.name());
+        }// end of for cycle
+
+        return lista;
+    }// end of static method

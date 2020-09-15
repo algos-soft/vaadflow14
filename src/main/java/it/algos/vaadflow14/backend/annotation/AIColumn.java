@@ -53,12 +53,12 @@ public @interface AIColumn {
 
     /**
      * (Optional) The width of the column.
-     * Expressed in int, to be converted in String ending with "em"
+     * Expressed in double, to be converted in String ending with "em"
      * Defaults to 0.
      *
      * @return the int
      */
-    int widthEM() default 0;
+    double widthEM() default 0;
 
 
     /**

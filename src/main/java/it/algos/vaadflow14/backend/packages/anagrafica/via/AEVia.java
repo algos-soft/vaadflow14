@@ -8,57 +8,59 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
  * Time: 11:16
  */
 public enum AEVia {
-    via(2),
+    via(1),
 
-    piazza(1),
+    largo(2),
 
-    largo(3),
+    corso(3),
 
-    corso(4),
+    piazza(4),
 
     viale(5),
 
-    vicolo(6),
+    piazzale(6),
 
-    piazzale(7),
+    vicolo(7),
 
-    stradone(8),
+    lungomare(8),
 
-    galleria(9),
+    circonvallazione(9),
 
-    quartiere(10),
+    bastioni(10),
 
-    fondamenta(11),
+    quartiere(11),
 
-    campo(12),
+    porta(12),
 
-    calle(13),
+    rione(13),
 
-    campiello(14),
+    vico(14),
 
-    lungomare(15),
+    stradone(15),
 
-    bastioni(16),
+    galleria(16),
 
-    porta(17),
+    fondamenta(17),
 
-    giardino(18),
+    campo(18),
 
-    sentiero(19),
+    calle(19),
 
-    stazione(20),
+    campiello(20),
 
-    rione(21),
+    giardino(21),
 
-    banchi(22),
+    sentiero(22),
 
-    costa(23),
+    stazione(23),
 
-    corte(24),
+    banchi(24),
 
-    circonvallazione(25),
+    costa(25),
 
-    vico(26),
+    corte(26),
+
+
     ;
 
     private int pos;

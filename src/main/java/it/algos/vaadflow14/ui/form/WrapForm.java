@@ -16,7 +16,7 @@ import java.util.List;
  * User: gac
  * Date: mer, 10-giu-2020
  * Time: 21:15
- * Wrap di informazioni passato dalla Logic alla creazione del Form <br>
+ * Wrap di informazioni passate dalla Logic alla creazione del Form <br>
  * La Logic mantiene lo stato ed elabora informazioni che verranno usate dal Form <br>
  */
 public class WrapForm {

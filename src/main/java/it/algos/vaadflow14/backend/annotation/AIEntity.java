@@ -71,5 +71,14 @@ public @interface AIEntity {
      */
     boolean usaRowIndex() default false;
 
+    /**
+     * (Optional) The width of the index.
+     * Expressed in double, to be converted in String ending with "em"
+     * Defaults to 2.5
+     *
+     * @return the int
+     */
+    double rowIndexWidthEM() default 2.5;
+
 
 }

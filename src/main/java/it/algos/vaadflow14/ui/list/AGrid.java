@@ -1,20 +1,24 @@
 package it.algos.vaadflow14.ui.list;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
+import it.algos.vaadflow14.backend.service.AReflectionService;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +70,7 @@ public class AGrid {
 
     protected Map<String, Grid.Column<AEntity>> columnsMap;
 
+
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
@@ -81,6 +86,15 @@ public class AGrid {
      */
     @Autowired
     protected AAnnotationService annotation;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AReflectionService reflection;
+
 
     private Grid grid;
 
@@ -155,11 +169,35 @@ public class AGrid {
      */
     protected void addColumnsGrid() {
         Grid.Column<AEntity> colonna = null;
+        String indexWidth = VUOTA;
 
+        //--se usa la numerazione automatica, questa occupa la prima colonna
         if (annotation.usaRowIndex(beanType)) {
-            grid.addColumn(item -> "").setKey(FIELD_INDEX).setHeader("#").setWidth("4em").setFlexGrow(0);
+            indexWidth = annotation.getIndexWith(beanType);
+            grid.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth(indexWidth).setFlexGrow(0);
         }
 
+        //--se esiste la colonna 'ordine', la posiziono prima di un eventuale colonna col bottone 'edit'
+        //--ed elimino la property dalla lista gridPropertyNamesList
+        if (true) {
+            if (reflection.isEsiste(beanType, FIELD_ORDINE)) {
+                if (gridPropertyNamesList.contains(FIELD_ORDINE)) {
+                    colonna = columnService.add(grid, beanType, FIELD_ORDINE);
+                    if (colonna != null) {
+                        columnsMap.put(FIELD_ORDINE, colonna);
+                    }
+                    gridPropertyNamesList.remove(FIELD_ORDINE);
+                }
+            }
+        }
+
+        //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come seconda colonna (dopo ordinamento)
+        //--Apre il dialog di detail
+        if (((ALogic) service).usaBottoneEdit) {
+            this.addDetailDialog();
+        }
+
+        //--costruisce in automatico tutte le colonne dalla lista gridPropertyNamesList
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
                 colonna = columnService.add(grid, beanType, propertyName);
@@ -173,8 +211,42 @@ public class AGrid {
             //            }// end of for cycle
             //            this.recalculateColumnWidths();
 
-        }// end of if cycle
-    }// end of method
+        }
+    }
+
+
+    /**
+     * Apre il dialog di detail <br>
+     * Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come prima o ultima colonna <br>
+     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
+     */
+    protected void addDetailDialog() {
+        //--Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true.
+        if (true) {//@todo Funzionalità ancora da implementare
+            ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+            Grid.Column colonna = grid.addColumn(renderer);
+
+            colonna.setWidth("2.5em");
+            colonna.setFlexGrow(0);
+        } else {
+            grid.setSelectionMode(Grid.SelectionMode.NONE);
+            //            grid.addItemDoubleClickListener(event -> apreDialogo((ItemDoubleClickEvent) event));
+        }
+    }
+
+
+    protected Button createEditButton(AEntity entityBean) {
+        Button buttonEdit = new Button();
+        String iconaTxt = "edit";
+
+        buttonEdit.setIcon(new Icon("lumo", iconaTxt));
+        buttonEdit.addClassName("review__edit");
+        buttonEdit.getElement().setAttribute("theme", "tertiary");
+        buttonEdit.setHeight("1em");
+        buttonEdit.addClickListener(event -> service.performAction(AEAction.doubleClick, entityBean));
+
+        return buttonEdit;
+    }
 
 
     public void setItems(Collection items) {
@@ -208,7 +280,7 @@ public class AGrid {
     }
 
 
-    //@todo Funzionalità ancora da implementare
+    //@todo Funzionalità eventualmente ancora da implementare
     public void detail(ItemDoubleClickEvent click) {
         String keyID = VUOTA;
         keyID = ((AEntity) click.getItem()).id;

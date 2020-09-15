@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.WebBrowser;
 import com.vaadin.flow.server.WrappedSession;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.login.ALogin;
@@ -81,6 +82,11 @@ public class AVaadinService extends AAbstractService {
         if (!FlowVar.usaSecurity) {
             return;
         }
+
+        //--indipendentemente dal login, controlla il browser che si è collegato
+        //--l' informazione viene mentenuta nella sessione
+        //--vale anche per un applicazione con usaCompany=false oppure con usaSecurity=false
+        fixBrowser();
 
         if (isNotLogin()) {
             username = getLoggedUsername();
@@ -191,6 +197,30 @@ public class AVaadinService extends AAbstractService {
 
     public boolean isAdminOrDeveloper() {
         return isAdmin() || isDeveloper();
+    }
+
+
+    /**
+     * indipendentemente dal login, controlla il browser che si è collegato <br>
+     * l' informazione viene mentenuta nella sessione <br>
+     * vale anche per un applicazione con usaCompany=false oppure con usaSecurity=false <br>
+     */
+    public void fixBrowser() {
+        VaadinSession vaadSession = VaadinSession.getCurrent();
+        WebBrowser webBrowser;
+        boolean isMobile = false;
+
+        if (vaadSession == null) {
+            return;
+        }
+
+        webBrowser = vaadSession.getBrowser();
+        if (webBrowser != null) {
+            if (webBrowser.isAndroid() || webBrowser.isIPhone() || webBrowser.isWindowsPhone()) {
+                isMobile = true;
+            }
+        }
+        vaadSession.setAttribute(KEY_SESSION_MOBILE, isMobile);
     }
 
 }

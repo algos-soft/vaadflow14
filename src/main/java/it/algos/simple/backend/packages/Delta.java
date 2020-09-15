@@ -45,7 +45,7 @@ public class Delta extends AEntity {
     /**
      * versione della classe per la serializzazione
      */
-    private final static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 
     /**

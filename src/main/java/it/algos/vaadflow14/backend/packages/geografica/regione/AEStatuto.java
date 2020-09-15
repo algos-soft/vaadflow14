@@ -1,5 +1,10 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
+import org.springframework.security.config.web.server.ServerHttpSecurity.AuthorizeExchangeSpec;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -58,12 +63,23 @@ public enum AEStatuto {
         AEStatuto aeStatuto = AEStatuto.ordinaria;
 
         for (AEStatuto statuto : AEStatuto.values()) {
-            if (statuto.nome.equals(nome)) {
+            if (statuto.getNome().equals(nome)) {
                 aeStatuto = statuto;
             }
         }
 
         return aeStatuto;
+    }
+
+
+    public static List<AEStatuto> getValues() {
+        List<AEStatuto> lista = new ArrayList<>();
+
+        for (AEStatuto aeStatuto : values()) {
+            lista.add(aeStatuto);
+        }
+
+        return lista;
     }
 
 

@@ -18,6 +18,7 @@ import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
@@ -47,6 +48,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.haijian.Exporter;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -82,6 +84,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 public abstract class ALogic implements AILogic {
 
     protected static final String BLOCCATA = "Collezione bloccata. Non si può ne creare, ne modificare, ne cancellare la singola entity.";
+
+    private static final int WIDTH = 10;
 
     /**
      * Istanza di una interfaccia SpringBoot <br>
@@ -206,42 +210,40 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AVaadinService vaadinService;
 
+    /**
+     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true. <br>
+     */
+    public boolean usaBottoneEdit;
 
     /**
      * The Entity Class  (obbligatoria sempre; in ViewForm può essere ricavata dalla entityBean)
      */
     protected Class<? extends AEntity> entityClazz;
 
-
     /**
      * The Entity Bean  (obbligatoria per ViewForm)
      */
     protected AEntity entityBean;
-
 
     /**
      * The Grid  (obbligatoria per ViewList)
      */
     protected AGrid grid;
 
-
     /**
      * The Form (obbligatoria nel ViewForm)
      */
     protected AForm form;
-
 
     /**
      * Tipologia di Form in uso <br>
      */
     protected AEOperation operationForm;
 
-
     /**
      * Flag di preferenza per specificare la property della entity da usare come ID <br>
      */
     protected String keyPropertyName;
-
 
     /**
      * Flag di preferenza per selezionare la ricerca testuale: <br>
@@ -251,31 +253,26 @@ public abstract class ALogic implements AILogic {
      */
     protected AESearch searchType;
 
-
     /**
      * Flag di preferenza per specificare la property della entity su cui effettuare la ricerca <br>
      * Ha senso solo se searchType=EASearch.editField
      */
     protected String searchProperty;
 
-
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneDeleteAll;
-
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneReset;
 
-
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
      */
     protected boolean usaBottoneNew;
-
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -287,7 +284,6 @@ public abstract class ALogic implements AILogic {
      */
     protected boolean usaBottoneExport;
 
-
     /**
      * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
      */
@@ -298,7 +294,7 @@ public abstract class ALogic implements AILogic {
      * Flag di preferenza per i messaggi di avviso in alertPlacehorder <br>
      * Si può usare la classe AHeaderWrap con i messaggi suddivisi per ruolo (user, admin, developer) <br>
      * Oppure si può usare la classe AHeaderList con i messaggi in Html (eventualmente colorati) <br>
-     * Di defaul false <br>
+     * Di default false <br>
      */
     protected boolean usaHeaderWrap;
 
@@ -362,6 +358,7 @@ public abstract class ALogic implements AILogic {
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = false;
+        this.usaBottoneEdit = true;
     }
 
 
@@ -454,8 +451,8 @@ public abstract class ALogic implements AILogic {
      * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
      * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
      * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     * Costruisce un' istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      *
      * @return componente grafico per il placeHolder
      */
@@ -1119,14 +1116,16 @@ public abstract class ALogic implements AILogic {
     public void creaFiltroSearch() {
         AFiltro filtro = null;
         CriteriaDefinition criteria = null;
+        Sort sort = null;
 
         if (text.isValid(searchFieldValue)) {
+            sort = Sort.by(Sort.Direction.ASC, searchProperty);
             //            if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) { //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
             if (false) {
-                filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue));
+                filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue), sort);
             } else {
                 if (text.isValid(searchFieldValue)) {
-                    filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue, "i"));
+                    filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue, "i"), sort);
                 }
             }
         }
@@ -1497,8 +1496,6 @@ public abstract class ALogic implements AILogic {
         AEntity entityBean = beforeSave(entityToSave, operationForm);
 
         if (entityBean == null) {
-            logger.error("La entityBean è nulla", ALogic.class, "save");
-            Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
             return status;
         }
 
@@ -1624,26 +1621,40 @@ public abstract class ALogic implements AILogic {
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
+    @Deprecated
     protected void creaComboBox(Class entityClazz) {
-        creaComboBox(entityClazz, "8em", true, true);
+        creaComboBox(entityClazz, WIDTH, true, false);
     }
 
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
+    @Deprecated
+    protected void creaComboBox(Class entityClazz, int width) {
+        creaComboBox(entityClazz, width, true, false);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    @Deprecated
     protected void creaComboBox(Class entityClazz, boolean clearButtonVisible, boolean required) {
-        creaComboBox(entityClazz, "8em", clearButtonVisible, required);
+        creaComboBox(entityClazz, WIDTH, clearButtonVisible, required);
     }
 
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
-    protected void creaComboBox(Class entityClazz, String width, boolean clearButtonVisible, boolean required) {
+    @Deprecated
+    protected void creaComboBox(Class entityClazz, int width, boolean clearButtonVisible, boolean required) {
         String tag = TRE_PUNTI;
+        String widthEM = width > 0 ? width + TAG_EM : VUOTA;
+
         ComboBox combo = new ComboBox();
-        combo.setWidth(width);
+        combo.setWidth(widthEM);
         combo.setPreventInvalidInput(true);
         combo.setAllowCustomValue(false);
         combo.setPlaceholder(annotation.getRecordName(entityClazz) + tag);
@@ -1652,6 +1663,76 @@ public abstract class ALogic implements AILogic {
 
         combo.setItems(mongo.find(entityClazz));
         mappaComboBox.put(annotation.getCollectionName(entityClazz), combo);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    protected void creaComboBox(String propertyName) {
+        creaComboBox(propertyName, WIDTH, null);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    protected void creaComboBox(String propertyName, int width) {
+        creaComboBox(propertyName, width, null);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    protected void creaComboBox(String propertyName, Object initialValue) {
+        creaComboBox(propertyName, WIDTH, initialValue);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    protected void creaComboBox(String propertyName, int width, Object initialValue) {
+        Field reflectionJavaField = null;
+        String tag = TRE_PUNTI;
+        ComboBox combo = null;
+        Class comboEnumClazz = null;
+        List items = null;
+        String widthEM = width > 0 ? width + TAG_EM : VUOTA;
+        Sort sort;
+
+        reflectionJavaField = reflection.getField(entityClazz, propertyName);
+        AETypeField type = annotation.getColumnType(reflectionJavaField);
+
+        if (type != AETypeField.combo && type != AETypeField.enumeration) {
+            return;
+        }
+
+        if (type == AETypeField.combo) {
+            comboEnumClazz = annotation.getComboClass(reflectionJavaField);
+            sort = annotation.getSort(comboEnumClazz);
+            items = comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
+            //            items = mongo.find(comboEnumClazz);
+        }
+        if (type == AETypeField.enumeration) {
+            comboEnumClazz = annotation.getEnumClass(reflectionJavaField);
+            items = fieldService.getEnumerationItems(reflectionJavaField);
+        }
+        combo = new ComboBox();
+        combo.setWidth(widthEM);
+        combo.setPreventInvalidInput(true);
+        combo.setAllowCustomValue(false);
+        combo.setPlaceholder(text.primaMaiuscola(propertyName) + tag);
+        combo.setClearButtonVisible(true);
+        combo.setRequired(false);
+
+        combo.setItems(items);
+        if (initialValue != null) {
+            combo.setValue(initialValue);
+        }
+
+        mappaComboBox.put(propertyName, combo);
     }
 
 

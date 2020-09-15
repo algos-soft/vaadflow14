@@ -2,6 +2,7 @@ package it.algos.unit;
 
 import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
+import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -40,6 +41,8 @@ public class AWikiServiceTest extends ATest {
 
     private List<WrapDueStringhe> listaWrap;
 
+    private List<WrapTreStringhe> listaWrapTre;
+
     private WrapDueStringhe dueStringhe;
 
 
@@ -72,6 +75,7 @@ public class AWikiServiceTest extends ATest {
 
         listaGrezza = null;
         listaWrap = null;
+        listaWrapTre = null;
         dueStringhe = null;
     }
 
@@ -147,7 +151,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(6)
     @DisplayName("6 - legge una lista di template")
     public void getTemplateBandierine() {
@@ -165,11 +169,11 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(7)
     @DisplayName("7 - legge una coppia di colonne da una table")
     public void getDueColonne() {
-        sorgente = "13 - Comunità autonome della Spagna";
+        sorgente = "ISO_3166-2:ES";
         previstoIntero = 17;
         listaWrap = service.getDueColonne(sorgente, 1, 2, 2, 11);
         assertNotNull(listaWrap);
@@ -179,7 +183,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(8)
     @DisplayName("8 - legge le righe delle regioni italiane")
     public void getTableRegioni() {
@@ -202,7 +206,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(9)
     @DisplayName("9 - legge le righe delle province")
     public void getTableProvince() {
@@ -221,10 +225,18 @@ public class AWikiServiceTest extends ATest {
         System.out.println("9 - Province: " + listaGrezza.size());
         System.out.println("********");
         print(listaGrezza);
+
+        //--province bis
+        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2, 3);
+        assertNotNull(listaWrapTre);
+        assertEquals(previstoIntero, listaWrapTre.size());
+        System.out.println(VUOTA);
+        System.out.println("9 - Province: " + listaWrapTre.size());
+        printWrapTre(listaWrapTre);
     }
 
 
-    //    @Test
+    @Test
     @Order(10)
     @DisplayName("10 - legge le regioni della Francia")
     public void getTableFrancia() {
@@ -270,7 +282,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    //        @Test
     @Order(12)
     @DisplayName("12 - legge i lander della Austria")
     public void getTableAustria() {
@@ -345,7 +357,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(17)
     @DisplayName("17 - legge i comuni del Belgio")
     public void getTableBelgio() {
@@ -359,7 +371,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(18)
     @DisplayName("18 - legge le province dell'Olanda")
     public void getTableOlanda() {
@@ -373,7 +386,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-    @Test
+
+    //    @Test
     @Order(19)
     @DisplayName("19 - legge le province della Croazia")
     public void getTableCroazia() {
@@ -391,6 +405,7 @@ public class AWikiServiceTest extends ATest {
     private void print(List<List<String>> listaTable) {
         if (array.isValid(listaTable)) {
             for (List<String> lista : listaTable) {
+                System.out.println(VUOTA);
                 if (array.isValid(lista)) {
                     for (String stringa : lista) {
                         System.out.println(stringa);
@@ -415,6 +430,16 @@ public class AWikiServiceTest extends ATest {
         if (array.isValid(listaWrap)) {
             for (WrapDueStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
+            }
+        }
+    }
+
+
+    private void printWrapTre(List<WrapTreStringhe> listaWrap) {
+        System.out.println("********");
+        if (array.isValid(listaWrap)) {
+            for (WrapTreStringhe wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
             }
         }
     }

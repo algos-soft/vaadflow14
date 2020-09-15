@@ -696,6 +696,31 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the width of the index (optional).
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the width of the index
+     */
+    public String getIndexWith(final Class<? extends AEntity> entityClazz) {
+        String widthTxt = VUOTA;
+        double widthDouble = 0;
+        String tagIndex =  TAG_EM;
+        AIEntity annotation = this.getAIEntity(entityClazz);
+
+        if (annotation != null) {
+            widthDouble = annotation.rowIndexWidthEM();
+        }
+
+        if (widthDouble > 0) {
+            widthTxt = widthDouble + tagIndex;
+        }
+
+        return widthTxt;
+    }
+
+
+    /**
      * Flag per usare il field della superclasse AEntity. <br>
      *
      * @param entityClazz the class of type AEntity
@@ -978,11 +1003,11 @@ public class AAnnotationService extends AAbstractService {
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
-     * @return the name (columnService) of the field
+     * @return the width of the field
      */
     public String getColumnWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
-        int widthInt = 0;
+        double widthDouble=0;
         AIColumn annotation = null;
         AETypeField type = null;
 
@@ -992,11 +1017,11 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIColumn(reflectionJavaField);
         if (annotation != null) {
-            widthInt = annotation.widthEM();
+            widthDouble = annotation.widthEM();
         }
 
-        if (widthInt > 0) {
-            widthTxt = widthInt + TAG_EM;
+        if (widthDouble > 0) {
+            widthTxt = widthDouble + TAG_EM;
         } else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {
@@ -1416,7 +1441,7 @@ public class AAnnotationService extends AAbstractService {
      */
     public String getFormWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
-        Integer widthInt = 0;
+        double widthDouble  = 0;
         AIField annotation = null;
         AETypeField type = null;
 
@@ -1426,11 +1451,11 @@ public class AAnnotationService extends AAbstractService {
 
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
-            widthInt = Math.toIntExact(annotation.widthEM());
+            widthDouble = annotation.widthEM();
         }
 
-        if (widthInt > 0) {
-            widthTxt = widthInt + TAG_EM;
+        if (widthDouble > 0) {
+            widthTxt = widthDouble + TAG_EM;
         } else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {

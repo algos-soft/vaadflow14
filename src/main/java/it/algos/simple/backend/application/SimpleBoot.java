@@ -81,6 +81,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.usaCronoPackages = true;
+        FlowVar.usaGeografiaPackages = true;
     }
 
 
@@ -106,8 +107,6 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(OmegaView.class);
         FlowVar.menuRouteList.add(Via.class);
         FlowVar.menuRouteList.add(Address.class);
-        FlowVar.menuRouteList.add(Stato.class);
-        FlowVar.menuRouteList.add(Regione.class);
     }
 
 }

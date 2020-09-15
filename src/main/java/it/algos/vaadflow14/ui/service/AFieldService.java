@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -82,6 +83,7 @@ public class AFieldService extends AAbstractService {
         Class comboClazz = null;
         Sort sort;
         List items;
+        List<String> enumItems;
         boolean isRequired = false;
         boolean isAllowCustomValue = false;
         String width = VUOTA;
@@ -130,7 +132,7 @@ public class AFieldService extends AAbstractService {
                 case combo:
                     comboClazz = annotation.getComboClass(reflectionJavaField);
                     sort = annotation.getSort(comboClazz);
-                    items = comboClazz != null ? mongo.findAll(comboClazz,sort) : null;
+                    items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
                     isRequired = annotation.isRequired(reflectionJavaField);
                     isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
                     if (items != null) {
@@ -140,6 +142,12 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case enumeration:
+                    items = getEnumerationItems(reflectionJavaField);
+                    if (items != null) {
+                        field = appContext.getBean(AComboField.class, items, true, false);
+                    } else {
+                        logger.warn("Mancano gli items per l' enumeration di " + fieldKey, this.getClass(), "creaOnly.enumeration");
+                    }
                     break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
@@ -150,6 +158,11 @@ public class AFieldService extends AAbstractService {
         if (field != null) {
             if (text.isEmpty(caption)) {
                 caption = annotation.getFormFieldName(reflectionJavaField);
+                if (true) {//@todo Funzionalità ancora da implementare con preferenza
+                    caption = caption.toLowerCase();
+                } else {
+                    caption = text.primaMaiuscola(caption);
+                }
                 field.setLabel(caption);
             }
             field.setFieldKey(fieldKey);
@@ -361,6 +374,34 @@ public class AFieldService extends AAbstractService {
     //            return null;
     //        }
     //    }
+
+
+    /**
+     * Prima cerca i valori nella @Annotation items=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una classe enumeration definita in enumClazz=... dell' interfaccia AIField <br>
+     * Poi cerca i valori di una collection definita con serviceClazz=...dell' interfaccia AIField <br>
+     */
+    public List getEnumerationItems(Field reflectionJavaField) {
+        List items = null;
+        Class enumClazz = null;
+        List<String> enumItems;
+        Object[] elementiEnum = null;
+
+        enumItems = annotation.getEnumItems(reflectionJavaField);
+        if (array.isValid(enumItems)) {
+            return enumItems;
+        }
+
+        enumClazz = annotation.getEnumClass(reflectionJavaField);
+        if (enumClazz != null) {
+            elementiEnum = enumClazz.getEnumConstants();
+            if (elementiEnum != null) {
+                return Arrays.asList(elementiEnum);
+            }
+        }
+
+        return items;
+    }
 
 
     //    /**

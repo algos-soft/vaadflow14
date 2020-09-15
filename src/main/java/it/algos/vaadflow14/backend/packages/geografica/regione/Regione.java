@@ -5,6 +5,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -35,10 +36,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderRegione")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Regione", keyPropertyName = "nome", usaRowIndex = true, usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "id")
-@AIList(fields = "nome,stato,iso,sigla,statuto")
-@AIForm(fields = "nome,stato,iso,sigla,statuto")
+@AIEntity(recordName = "Regione", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
+@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "nome")
+@AIList(fields = "ordine,nome,stato,iso,sigla,status")
+@AIForm(fields = "ordine,nome,stato,iso,sigla,status")
 public class Regione extends AEntity {
 
     /**
@@ -48,12 +49,20 @@ public class Regione extends AEntity {
 
 
     /**
+     * ordine di presentazione per il popup (obbligatorio, unico) <br>
+     */
+    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
+    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "#", widthEM = 3)
+    public int ordine;
+
+    /**
      * nome (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 18)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 19)
     @AIColumn(widthEM = 18)
     public String nome;
 
@@ -62,6 +71,7 @@ public class Regione extends AEntity {
      * stato (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
+    @NotNull
     @DBRef
     @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class)
     @AIColumn(widthEM = 8)
@@ -92,9 +102,9 @@ public class Regione extends AEntity {
      * statuto normativo (obbligatorio) <br>
      */
     @NotNull()
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class)
-    @AIColumn(header = "Tipologia", widthEM = 13)
-    public AEStatuto statuto;
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class, widthEM = 19)
+    @AIColumn(widthEM = 13)
+    public AEStatuto status;
 
 
     /**

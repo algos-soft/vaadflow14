@@ -433,6 +433,10 @@ public class AWikiService extends AAbstractService {
 
         wikiTitle = text.setNoGraffe(wikiTitle);
         sigla = text.levaTestaDa(wikiTitle, TRATTINO);
+        if (sigla.length() < 2) {
+            sigla = "0" + sigla;
+        }
+
         testoGrezzo = legge(tag + wikiTitle);
 
         if (testoGrezzo.startsWith(GRAFFE_INI)) {
@@ -519,7 +523,7 @@ public class AWikiService extends AAbstractService {
      * @param wikiTitle    della pagina wiki
      * @param posTabella   della wikitable nella pagina se ce ne sono più di una
      * @param rigaIniziale da cui estrarre le righe, scartando la testa della table
-     * @param numColonna   da cui estrarre la cella
+     * @param numColonna   da cui estrarre il template-bandierine
      *
      * @return lista di coppia di valori: sigla e nome
      */
@@ -551,6 +555,23 @@ public class AWikiService extends AAbstractService {
         }
 
         return lista;
+    }
+
+
+    /**
+     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+     *
+     * @param wikiTitle             della pagina wiki
+     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
+     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
+     * @param numColonnaBandierine  da cui estrarre il template-bandierine
+     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
+     *
+     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
+     */
+    public List<WrapTreStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
+        List<String> lista = getColonna(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine);
+        return null;
     }
 
 

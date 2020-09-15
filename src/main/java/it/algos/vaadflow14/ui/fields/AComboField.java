@@ -98,5 +98,9 @@ public class AComboField<T> extends AField<Object> {
             comboBox.setValue(newValue);
         });
     }
+    @Override
+    public void setWidth(String width) {
+        comboBox.setWidth(width);
+    }
 
 }

@@ -8,6 +8,9 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.Provincia;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -334,6 +337,13 @@ public abstract class FlowBoot implements ServletContextListener {
          * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
          */
         FlowVar.usaCronoPackages = false;
+
+        /**
+         * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
+         * Di default (per sicurezza) uguale a false <br>
+         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+         */
+        FlowVar.usaGeografiaPackages = false;
     }
 
 
@@ -359,6 +369,13 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList.add(Utente.class);
         FlowVar.menuRouteList.add(Company.class);
         FlowVar.menuRouteList.add(Preferenza.class);
+
+        if (FlowVar.usaGeografiaPackages) {
+            FlowVar.menuRouteList.add(Stato.class);
+            FlowVar.menuRouteList.add(Regione.class);
+            FlowVar.menuRouteList.add(Provincia.class);
+        }
+
     }
 
 

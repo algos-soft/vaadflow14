@@ -42,7 +42,7 @@ import java.util.Collection;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Utente", keyPropertyName = "username", usaRowIndex = true, usaCompany = true, usaCreazioneModifica = true)
+@AIEntity(recordName = "Utente", keyPropertyName = "username", usaRowIndex = true,usaCompany = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
 @AIList(fields = "username,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
 @AIForm(fields = "username,password,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")

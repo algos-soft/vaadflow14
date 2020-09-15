@@ -130,6 +130,7 @@ public abstract class FlowCost {
     public static final String KEY_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 
     public static final String KEY_SESSION_LOGIN = "SESSION_LOGIN";
+    public static final String KEY_SESSION_MOBILE = "sessionMobile";
 
     /**
      * The constant PROPERTY_SERIAL.
