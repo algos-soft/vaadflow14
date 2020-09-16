@@ -695,4 +695,20 @@ public class ATextService extends AAbstractService {
         return widthTxt;
     }
 
+    public String estrae(String valueIn, String tagIni, String tagEnd) {
+        String valueOut = valueIn;
+        int length = 0;
+        int posIni = 0;
+        int posEnd = 0;
+
+        if (isValid(valueIn) && valueIn.contains(tagIni) && valueIn.contains(tagEnd)) {
+            length = tagIni.length();
+            posIni = valueIn.indexOf(tagIni);
+            posEnd = valueIn.indexOf(tagEnd, posIni + length);
+            valueOut = valueIn.substring(posIni + length, posEnd);
+        }
+
+        return valueOut.trim();
+    }
+
 }

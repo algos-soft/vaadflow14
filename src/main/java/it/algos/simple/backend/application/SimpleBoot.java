@@ -75,8 +75,8 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = 0.76;
-        FlowVar.versionDate = LocalDate.of(2020, 9, 12);
+        FlowVar.projectVersion = 0.77;
+        FlowVar.versionDate = LocalDate.of(2020, 9, 16);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui

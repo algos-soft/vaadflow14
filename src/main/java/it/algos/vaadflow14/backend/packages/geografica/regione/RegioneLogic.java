@@ -11,6 +11,9 @@ import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -200,6 +203,35 @@ public class RegioneLogic extends ALogic {
                 .build();
 
         return (Regione) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Retrieves an entity by its key.
+     *
+     * @param key must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     */
+    public Regione findByIsoItalian(String key) {
+        return (Regione) mongo.findOneUnique(Regione.class, "iso", "IT-" + key);
+    }
+
+
+    /**
+     * Retrieves all entities.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     */
+    public List<Regione> findAllItalian() {
+        List<Regione> items;
+        Query query = new Query();
+
+        query.addCriteria(Criteria.where("stato.id").is("italia"));
+        query.with(Sort.by(Sort.Direction.ASC, "ordine"));
+        items = mongo.findAll(entityClazz, query);
+
+        return items;
     }
 
 

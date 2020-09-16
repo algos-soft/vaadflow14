@@ -1319,6 +1319,16 @@ public abstract class ALogic implements AILogic {
 
 
     /**
+     * Returns the number of entities available.
+     *
+     * @return the number of entities
+     */
+    public int count() {
+        return mongo.count(entityClazz);
+    }
+
+
+    /**
      * Regola la chiave se esiste il campo keyPropertyName. <br>
      * Se la company è nulla, la recupera dal login <br>
      * Se la company è ancora nulla, la entity viene creata comunque
@@ -1669,36 +1679,43 @@ public abstract class ALogic implements AILogic {
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
-    protected void creaComboBox(String propertyName) {
-        creaComboBox(propertyName, WIDTH, null);
+    protected ComboBox creaComboBox(String propertyName) {
+        return creaComboBox(propertyName, (List) null, WIDTH, null);
     }
 
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
-    protected void creaComboBox(String propertyName, int width) {
-        creaComboBox(propertyName, width, null);
+    protected ComboBox creaComboBox(String propertyName, List items) {
+        return creaComboBox(propertyName, items, WIDTH, null);
     }
 
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
-    protected void creaComboBox(String propertyName, Object initialValue) {
-        creaComboBox(propertyName, WIDTH, initialValue);
+    protected ComboBox creaComboBox(String propertyName, int width) {
+        return creaComboBox(propertyName, (List) null, width, null);
     }
 
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
      */
-    protected void creaComboBox(String propertyName, int width, Object initialValue) {
+    protected ComboBox creaComboBox(String propertyName, Object initialValue) {
+        return creaComboBox(propertyName, (List) null, WIDTH, initialValue);
+    }
+
+
+    /**
+     * Crea un ComboBox e lo aggiunge alla mappa <br>
+     */
+    protected ComboBox creaComboBox(String propertyName, List items, int width, Object initialValue) {
+        ComboBox combo = null;
         Field reflectionJavaField = null;
         String tag = TRE_PUNTI;
-        ComboBox combo = null;
         Class comboEnumClazz = null;
-        List items = null;
         String widthEM = width > 0 ? width + TAG_EM : VUOTA;
         Sort sort;
 
@@ -1706,18 +1723,18 @@ public abstract class ALogic implements AILogic {
         AETypeField type = annotation.getColumnType(reflectionJavaField);
 
         if (type != AETypeField.combo && type != AETypeField.enumeration) {
-            return;
+            return null;
         }
 
         if (type == AETypeField.combo) {
             comboEnumClazz = annotation.getComboClass(reflectionJavaField);
             sort = annotation.getSort(comboEnumClazz);
-            items = comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
+            items = items!=null?items:comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
             //            items = mongo.find(comboEnumClazz);
         }
         if (type == AETypeField.enumeration) {
             comboEnumClazz = annotation.getEnumClass(reflectionJavaField);
-            items = fieldService.getEnumerationItems(reflectionJavaField);
+            items = items = items!=null?items:fieldService.getEnumerationItems(reflectionJavaField);
         }
         combo = new ComboBox();
         combo.setWidth(widthEM);
@@ -1733,6 +1750,7 @@ public abstract class ALogic implements AILogic {
         }
 
         mappaComboBox.put(propertyName, combo);
+        return combo;
     }
 
 

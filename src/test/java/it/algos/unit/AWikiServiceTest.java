@@ -110,9 +110,20 @@ public class AWikiServiceTest extends ATest {
     public void leggeTable() {
         sorgente = "ISO 3166-2:IT";
         previsto = "{| class=\"wikitable sortable\"";
+
+        //--regione
         ottenuto = service.leggeTable(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
+        System.out.println("3 - Legge una tabella wiki completa");
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+
+        //--provincia
+        ottenuto = service.leggeTable(sorgente,2);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        System.out.println(VUOTA);
         System.out.println("3 - Legge una tabella wiki completa");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
@@ -148,6 +159,14 @@ public class AWikiServiceTest extends ATest {
         System.out.println("5 - Template Spagna: " + lista.size());
         System.out.println(VUOTA);
         printColonna(lista);
+
+        sorgente = "ISO_3166-2:IT";
+        lista = service.getColonna(sorgente, 2, 2, 2);
+        assertNotNull(lista);
+        System.out.println(VUOTA);
+        System.out.println("5 - province: " + lista.size());
+        System.out.println(VUOTA);
+        printColonna(lista);
     }
 
 
@@ -175,10 +194,19 @@ public class AWikiServiceTest extends ATest {
     public void getDueColonne() {
         sorgente = "ISO_3166-2:ES";
         previstoIntero = 17;
-        listaWrap = service.getDueColonne(sorgente, 1, 2, 2, 11);
+        listaWrap = service.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println("7 - Spagna: " + listaWrap.size());
+        printWrap(listaWrap);
+
+        sorgente = "ISO_3166-2:IT";
+        previstoIntero = 14;
+        listaWrap = service.getDueColonne(sorgente, 2, 2, 1, 3);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("7 - Province (capoluogo): " + listaWrap.size());
         printWrap(listaWrap);
     }
 
@@ -212,31 +240,34 @@ public class AWikiServiceTest extends ATest {
     public void getTableProvince() {
         sorgente = "ISO 3166-2:IT";
 
-        //--province
-        previstoIntero = 93;
-        previsto = "<code>IT-AG</code>";
-        previsto2 = "[[Sicilia]] (<code>82</code>)";
-        listaGrezza = service.getTable(sorgente, 3);
-        assertNotNull(listaGrezza);
-        assertEquals(previstoIntero, listaGrezza.size());
-        assertEquals(previsto, listaGrezza.get(0).get(0));
-        assertEquals(previsto2, listaGrezza.get(0).get(2));
-        System.out.println(VUOTA);
-        System.out.println("9 - Province: " + listaGrezza.size());
-        System.out.println("********");
-        print(listaGrezza);
+//        //--province
+//        previstoIntero = 93;
+//        previsto = "<code>IT-AG</code>";
+//        previsto2 = "[[Sicilia]] (<code>82</code>)";
+//        listaGrezza = service.getTable(sorgente, 3);
+//        assertNotNull(listaGrezza);
+//        assertEquals(previstoIntero, listaGrezza.size());
+//        assertEquals(previsto, listaGrezza.get(0).get(0));
+//        assertEquals(previsto2, listaGrezza.get(0).get(2));
+//        System.out.println(VUOTA);
+//        System.out.println("9 - Province (deprecated): " + listaGrezza.size());
+//        System.out.println("********");
+//        print(listaGrezza);
 
         //--province bis
-        listaWrapTre = service.getTemplateList(sorgente, 1, 2, 2, 3);
+        previstoIntero = 14;
+        listaWrapTre= service.getTemplateList(sorgente, 2, 2, 1, 3);
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
         System.out.println(VUOTA);
         System.out.println("9 - Province: " + listaWrapTre.size());
         printWrapTre(listaWrapTre);
     }
 
 
-    @Test
+//    @Test
     @Order(10)
     @DisplayName("10 - legge le regioni della Francia")
     public void getTableFrancia() {

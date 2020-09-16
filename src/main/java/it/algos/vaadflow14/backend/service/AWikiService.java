@@ -472,7 +472,7 @@ public class AWikiService extends AAbstractService {
             parti = testoGraffa.split(PIPE_REGEX);
         }
 
-        if (parti != null && parti.length == 3) {
+        if (parti != null && parti.length >= 3) {
             nome = parti[2];
             wrap = new WrapDueStringhe(sigla, nome);
         }
@@ -558,6 +558,22 @@ public class AWikiService extends AAbstractService {
     }
 
 
+//    /**
+//     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+//     *
+//     * @param wikiTitle             della pagina wiki
+//     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
+//     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
+//     * @param numColonnaBandierine  da cui estrarre il template-bandierine
+//     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
+//     *
+//     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
+//     */
+//    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
+//        List<WrapDueStringhe> lista = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
+//        return null;
+//    }
+
     /**
      * Restituisce una lista di stringhe estratte dai template bandierine <br>
      *
@@ -570,8 +586,24 @@ public class AWikiService extends AAbstractService {
      * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
      */
     public List<WrapTreStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
-        List<String> lista = getColonna(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine);
-        return null;
+        List<WrapTreStringhe> listaTre=null;
+        WrapDueStringhe wrapBandierina;
+        WrapTreStringhe wrapTre;
+        List<WrapDueStringhe> listaDue = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
+
+
+        if (array.isValid(listaDue)) {
+            listaTre = new ArrayList<>();
+            for (WrapDueStringhe wrapDue : listaDue) {
+                wrapBandierina = getTemplateBandierina(wrapDue.getPrima());
+                if (wrapBandierina != null) {
+                    wrapTre = new WrapTreStringhe(wrapBandierina.getPrima(),wrapBandierina.getSeconda(),wrapDue.getSeconda());
+                    listaTre.add(wrapTre);
+                }
+            }
+        }
+
+        return listaTre;
     }
 
 
@@ -599,7 +631,7 @@ public class AWikiService extends AAbstractService {
         if (array.isValid(lista)) {
             colonna = new ArrayList<>();
             for (List<String> riga : lista) {
-                if (riga.size() <= 2) {
+                if (riga.size() == 1 || (riga.size() == 2 && !riga.get(0).startsWith(GRAFFA_END))) {
                     parti = riga.get(0).split(DOPPIO_PIPE_REGEX);
                     if (parti != null && parti.length >= numColonna) {
                         cella = parti[numColonna - 1];
@@ -612,6 +644,7 @@ public class AWikiService extends AAbstractService {
                 if (text.isValid(cella)) {
                     cella = cella.trim();
                     cella = text.setNoGraffe(cella);
+                    cella = fixCode(cella);
                     colonna.add(cella);
                 }
             }
@@ -674,6 +707,8 @@ public class AWikiService extends AAbstractService {
                     seconda = text.setNoGraffe(seconda);
                     prima = text.setNoQuadre(prima);
                     seconda = text.setNoQuadre(seconda);
+                    prima = fixCode(prima);
+                    seconda = fixCode(seconda);
                     if (prima.contains(PIPE)) {
                         if (prima.contains(GRAFFE_INI) && prima.contains(GRAFFE_END)) {
                         } else {
@@ -1069,7 +1104,7 @@ public class AWikiService extends AAbstractService {
     }
 
 
-    public String fixCodice(String testoGrezzo) {
+    public String fixCode(String testoGrezzo) {
         String testoValido = VUOTA;
         String tagIni = "<code>";
         String tagEnd = "</code>";
@@ -1079,13 +1114,16 @@ public class AWikiService extends AAbstractService {
         }
 
         if (!testoGrezzo.contains(tagIni) || !testoGrezzo.contains(tagEnd)) {
-            return VUOTA;
+            return testoGrezzo;
         }
 
         testoValido = testoGrezzo.trim();
-        testoValido = text.levaTesta(testoValido, tagIni);
-        testoValido = text.levaCoda(testoValido, tagEnd);
-        testoValido = testoValido.substring(3);
+        if (testoValido.startsWith(tagIni)) {
+            testoValido = text.levaTesta(testoValido, tagIni);
+            testoValido = text.levaCoda(testoValido, tagEnd);
+        } else {
+            testoValido=text.estrae(testoValido,tagIni,tagEnd);
+        }
 
         return testoValido.trim();
     }
@@ -1210,7 +1248,7 @@ public class AWikiService extends AAbstractService {
             for (WrapDueStringhe wrap : listaWrapGrezzo) {
                 prima = wrap.getPrima();
                 seconda = wrap.getSeconda();
-                prima = fixCodice(prima);
+                prima = fixCode(prima);
                 seconda = fixNome(seconda);
                 wrapValido = new WrapDueStringhe(prima, seconda);
                 listaWrap.add(wrapValido);

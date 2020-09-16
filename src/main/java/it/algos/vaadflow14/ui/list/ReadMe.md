@@ -5,11 +5,11 @@ Grid
 ##Documentazione
 - [Is your Grid too slow?](https://vaadin.com/blog/using-the-right-r)
 
-##Tipo possibili di colonne
+##Tipi possibili di colonne
 In ordine di velocità e difficoltà crescenti:
-1) ComponentRenderers
-2) TemplateRenderers
-3) ValueProvider
+1) ComponentRenderers (Easy to Build, Slow to Render)
+2) TemplateRenderers (Flexible and Fast, if You Can Get Your Hands Dirty with HTML)
+3) ValueProvider (The Fastest, but Usable Only for Simple Values)
 
 
     // ComponentRenderer
@@ -22,17 +22,8 @@ In ordine di velocità e difficoltà crescenti:
     grid.addColumn(ValueProvider.identity()); // same as item -> item
     
 ##Soluzioni
-1) ValueProvider
 
-- Valori elementari (Text ed Integer)
-- Semplicità di realizzazione
-- Velocità di esecuzione
-
-
-    PaginatedGrid grid = new PaginatedGrid<>();
-    grid.addColumn(item -> ((Regione)item).ordine).setHeader("#").setSortable(true);
-
- 2) ComponentRenderer
+ 1) ComponentRenderer
  
  - Massima libertà e flessibilità di composizione
  - Decisamente più lento
@@ -44,9 +35,18 @@ In ordine di velocità e difficoltà crescenti:
     grid.addComponentColumn(item -> new Span(((Regione)item).ordine+"")).setHeader("#");
 
  
- 3) TemplateRenderer
+ 2) TemplateRenderer
  
  - Richiede utilizzo di HTML
  - Inutilmente complesso e farraginoso
  - Non particolarmente veloce
  
+ 3) ValueProvider
+
+- Valori elementari (Text ed Integer)
+- Semplicità di realizzazione
+- Velocità di esecuzione
+
+
+    PaginatedGrid grid = new PaginatedGrid<>();
+    grid.addColumn(item -> ((Regione)item).ordine).setHeader("#").setSortable(true);
