@@ -1139,21 +1139,31 @@ public abstract class ALogic implements AILogic {
      * Filtri (eventuali) dei comboBox. <br>
      */
     public void creaFiltriComboBox() {
-        AFiltro filtro = null;
+        AFiltro filtro;
         ComboBox combo;
+        String comboName;
+        String message = VUOTA;
+        Object value;
         CriteriaDefinition criteria = null;
 
         if (array.isValid(mappaComboBox)) {
             for (Map.Entry<String, ComboBox> entry : mappaComboBox.entrySet()) {
+                filtro = null;
                 combo = entry.getValue();
-                if (combo.getValue() != null) {
-                    filtro = new AFiltro(Criteria.where(entry.getKey()).is(combo.getValue()));
-                    logger.info(combo.getValue().toString(), this.getClass(), "creaFiltriComboBox");
+                comboName = entry.getKey();
+                value = combo.getValue();
+                if (value != null) {
+                    filtro = new AFiltro(Criteria.where(entry.getKey()).is(value));
+
+                    message = text.primaMaiuscola(comboName);
+                    message += FORWARD;
+                    message += value.toString();
+                    logger.info(message, this.getClass(), "creaFiltriComboBox");
+                }
+                if (filtro != null) {
+                    filtri.add(filtro);
                 }
             }
-        }
-        if (filtro != null) {
-            filtri.add(filtro);
         }
     }
 
@@ -1729,12 +1739,12 @@ public abstract class ALogic implements AILogic {
         if (type == AETypeField.combo) {
             comboEnumClazz = annotation.getComboClass(reflectionJavaField);
             sort = annotation.getSort(comboEnumClazz);
-            items = items!=null?items:comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
+            items = items != null ? items : comboEnumClazz != null ? mongo.findAll(comboEnumClazz, sort) : null;
             //            items = mongo.find(comboEnumClazz);
         }
         if (type == AETypeField.enumeration) {
             comboEnumClazz = annotation.getEnumClass(reflectionJavaField);
-            items = items = items!=null?items:fieldService.getEnumerationItems(reflectionJavaField);
+            items = items = items != null ? items : fieldService.getEnumerationItems(reflectionJavaField);
         }
         combo = new ComboBox();
         combo.setWidth(widthEM);
