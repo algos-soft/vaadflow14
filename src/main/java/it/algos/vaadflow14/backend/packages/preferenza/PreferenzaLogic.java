@@ -133,14 +133,14 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AForm getBodyFormLayout(AEntity entityBean) {
-        form = null;
+        currentForm = null;
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            form = appContext.getBean(PreferenzaForm.class, getWrapForm(entityBean));
+            currentForm = appContext.getBean(PreferenzaForm.class, getWrapForm(entityBean));
         }
 
-        return form;
+        return currentForm;
     }
 
 

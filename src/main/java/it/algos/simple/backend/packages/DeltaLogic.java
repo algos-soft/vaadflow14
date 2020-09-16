@@ -137,11 +137,11 @@ public class DeltaLogic extends ALogic {
     @Override
     public boolean saveDaForm() {
         Delta entityBean = null;
-        if (form != null) {
-            entityBean = (Delta) form.getValidBean();
+        if (currentForm != null) {
+            entityBean = (Delta) currentForm.getValidBean();
         }
 
-        AComboField combo = (AComboField) form.fieldsMap.get("via");
+        AComboField combo = (AComboField) currentForm.fieldsMap.get("via");
         ComboBox box = combo.comboBox;
         Object obj = box.getValue();
         if (obj instanceof String) {

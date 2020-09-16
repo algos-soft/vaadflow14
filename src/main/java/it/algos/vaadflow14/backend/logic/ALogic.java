@@ -79,7 +79,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Le sottoclassi concrete vengono create in AView.fixEntityLogic() <br>
  * col metodo logic = (AILogic) appContext.getBean(Class.forName(canonicalName)); <br>
  * sono pertanto SCOPE_PROTOTYPE e ne viene creata un' istanza diversa per ogni view <br>
- * possono quini mantenere delle property senza possibilità che si 'mischino' con altri utenti di altri browser <br>
+ * possono quindi mantenere delle property senza possibilità che si 'mischino' con altri utenti di altri browser <br>
  */
 public abstract class ALogic implements AILogic {
 
@@ -231,9 +231,14 @@ public abstract class ALogic implements AILogic {
     protected AGrid grid;
 
     /**
+     * The Form Class  (obbligatoria per costruire la currentForm)
+     */
+    protected Class<? extends AForm> formClazz;
+
+    /**
      * The Form (obbligatoria nel ViewForm)
      */
-    protected AForm form;
+    protected AForm currentForm;
 
     /**
      * Tipologia di Form in uso <br>
@@ -359,6 +364,7 @@ public abstract class ALogic implements AILogic {
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = false;
         this.usaBottoneEdit = true;
+        this.formClazz = AGenericForm.class;
     }
 
 
@@ -650,14 +656,14 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public AForm getBodyFormLayout(AEntity entityBean) {
-        form = null;
+        currentForm = null;
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            form = appContext.getBean(AGenericForm.class, getWrapForm(entityBean));
+            currentForm = appContext.getBean(formClazz, getWrapForm(entityBean));
         }
 
-        return form;
+        return currentForm;
     }
 
 
@@ -1415,8 +1421,8 @@ public abstract class ALogic implements AILogic {
      */
     public boolean saveDaForm() {
         AEntity entityBean = null;
-        if (form != null) {
-            entityBean = form.getValidBean();
+        if (currentForm != null) {
+            entityBean = currentForm.getValidBean();
         }
 
         return entityBean != null ? save(entityBean) : false;
@@ -1431,8 +1437,8 @@ public abstract class ALogic implements AILogic {
      * @return the saved entity
      */
     public boolean saveDaForm2(AEntity entityBean) {
-        if (form != null) {
-            entityBean = form.getValidBean();
+        if (currentForm != null) {
+            entityBean = currentForm.getValidBean();
         }
 
         if (entityBean == null) {
@@ -1568,7 +1574,7 @@ public abstract class ALogic implements AILogic {
 
     public boolean delete() {
         boolean status = false;
-        AEntity entityBean = (form != null) ? form.getValidBean() : null;
+        AEntity entityBean = (currentForm != null) ? currentForm.getValidBean() : null;
 
         if (mongo.delete(entityBean)) {
             status = true;

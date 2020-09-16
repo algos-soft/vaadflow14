@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,7 +11,6 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -119,13 +117,12 @@ public abstract class AForm extends VerticalLayout {
     @Autowired
     public AMongoService mongo;
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    public RegioneLogic regioneLogic;
+    /**
+     * Mappa di tutti i fields del form <br>
+     * La chiave è la propertyName del field <br>
+     * Serve per recuperarli dal nome per successive elaborazioni <br>
+     */
+    public HashMap<String, AField> fieldsMap;
 
     /**
      * La scheda grafica è composta da due diversi FormLayout sovrapposti <br>
@@ -186,13 +183,6 @@ public abstract class AForm extends VerticalLayout {
      * Serve per presentarli (ordinati) dall' alto in basso nel form <br>
      */
     protected List<AField> fieldsList;
-
-    /**
-     * Mappa di tutti i fields del form <br>
-     * La chiave è la propertyName del field <br>
-     * Serve per recuperarli dal nome per successive elaborazioni <br>
-     */
-    public HashMap<String, AField> fieldsMap;
 
     /**
      * The Entity Logic (obbligatorio per liste e form)

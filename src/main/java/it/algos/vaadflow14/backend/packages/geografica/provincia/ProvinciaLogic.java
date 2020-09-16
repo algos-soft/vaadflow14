@@ -107,6 +107,7 @@ public class ProvinciaLogic extends ALogic {
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
         super.wikiPageTitle = "ISO_3166-2";
+        super.formClazz = ProvinciaForm.class;
     }
 
 
@@ -144,7 +145,7 @@ public class ProvinciaLogic extends ALogic {
         ComboBox comboBox;
 
         List<Regione> items = regioneLogic.findAllItalian();
-        super.creaComboBox("regione", items,14,null);
+        super.creaComboBox("regione", items, 14, null);
 
         comboBox = super.creaComboBox("status", 16);
 
@@ -152,6 +153,31 @@ public class ProvinciaLogic extends ALogic {
         //--rimane come esempio
         comboBox.setRenderer(TemplateRenderer.<AETypeProvincia>of("<div>[[item.tag]]</div>").withProperty("tag", AETypeProvincia::getTag));
     }
+
+
+    //    /**
+    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+    //     * <p>
+    //     * Chiamato da AView.initView() <br>
+    //     * Costruisce un' istanza dedicata <br>
+    //     * Passa all' istanza un wrapper di dati <br>
+    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+    //     *
+    //     * @param entityBean interessata
+    //     *
+    //     * @return componente grafico per il placeHolder
+    //     */
+    //    @Override
+    //    public AForm getBodyFormLayout(AEntity entityBean) {
+    //        currentForm = null;
+    //
+    //        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
+    //        if (entityBean != null) {
+    //            currentForm = appContext.getBean(ProvinciaForm.class, getWrapForm(entityBean));
+    //        }
+    //
+    //        return currentForm;
+    //    }
 
 
     /**
