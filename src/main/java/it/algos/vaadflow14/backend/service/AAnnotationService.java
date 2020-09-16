@@ -705,7 +705,7 @@ public class AAnnotationService extends AAbstractService {
     public String getIndexWith(final Class<? extends AEntity> entityClazz) {
         String widthTxt = VUOTA;
         double widthDouble = 0;
-        String tagIndex =  TAG_EM;
+        String tagIndex = TAG_EM;
         AIEntity annotation = this.getAIEntity(entityClazz);
 
         if (annotation != null) {
@@ -1007,7 +1007,7 @@ public class AAnnotationService extends AAbstractService {
      */
     public String getColumnWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
-        double widthDouble=0;
+        double widthDouble = 0;
         AIColumn annotation = null;
         AETypeField type = null;
 
@@ -1441,7 +1441,7 @@ public class AAnnotationService extends AAbstractService {
      */
     public String getFormWith(final Field reflectionJavaField) {
         String widthTxt = VUOTA;
-        double widthDouble  = 0;
+        double widthDouble = 0;
         AIField annotation = null;
         AETypeField type = null;
 
@@ -1528,6 +1528,44 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return items;
+    }
+
+
+    /**
+     * Get the status of specific method for items.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaComboMethod(final Field reflectionJavaField) {
+        boolean usaComboMethod = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            usaComboMethod = annotation.usaComboMethod();
+        }
+
+        return usaComboMethod;
+    }
+
+
+    /**
+     * Get the method name for reflection.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the method name
+     */
+    public String getMethodName(final Field reflectionJavaField) {
+        String methodName = "";
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            methodName = annotation.methodName();
+        }
+
+        return methodName;
     }
 
 
@@ -2200,26 +2238,6 @@ public class AAnnotationService extends AAbstractService {
     //        }// end of if cycle
     //
     //        return color;
-    //    }// end of method
-
-
-    //    /**
-    //     * Get the method name for reflection.
-    //     *
-    //     * @param entityClazz the entity class
-    //     * @param fieldName   the property name
-    //     *
-    //     * @return the method name
-    //     */
-    //    public String getMethodNameColumn(Class<? extends AEntity> entityClazz, String fieldName) {
-    //        String methodName = "";
-    //        AIColumn annotation = this.getAIColumn(entityClazz, fieldName);
-    //
-    //        if (annotation != null) {
-    //            methodName = annotation.methodName();
-    //        }// end of if cycle
-    //
-    //        return methodName;
     //    }// end of method
 
 

@@ -2,17 +2,14 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.GeneratedVaadinComboBox;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow15
@@ -29,9 +26,6 @@ public class AComboField<T> extends AField<Object> {
 
     public ComboBox comboBox;
 
-    private List items;
-
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -39,6 +33,8 @@ public class AComboField<T> extends AField<Object> {
      */
     @Autowired
     public ViaLogic viaLogic;
+
+    private List items;
 
 
     /**
@@ -66,7 +62,6 @@ public class AComboField<T> extends AField<Object> {
     } // end of SpringBoot constructor
 
 
-
     public void setItems(List items) {
         try {
             this.items = items;
@@ -79,7 +74,7 @@ public class AComboField<T> extends AField<Object> {
 
     @Override
     protected Object generateModelValue() {
-        Object alfa= comboBox.getValue();
+        Object alfa = comboBox.getValue();
         return comboBox.getValue();
     }
 
@@ -98,6 +93,14 @@ public class AComboField<T> extends AField<Object> {
             comboBox.setValue(newValue);
         });
     }
+
+
+    @Override
+    public Registration addValueChangeListener(ValueChangeListener valueChangeListener) {
+        return comboBox.addValueChangeListener(valueChangeListener);
+    }
+
+
     @Override
     public void setWidth(String width) {
         comboBox.setWidth(width);

@@ -342,6 +342,11 @@ public abstract class AForm extends VerticalLayout {
 
         //--Crea una mappa fieldMap, per recuperare i fields dal nome
         this.creaMappaFields();
+
+        //--Eventuali aggiustamenti finali al layout
+        //--Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
+        //--Regola eventuali valori delle property in apertura della scheda
+        this.fixLayoutFinal();
     }
 
 
@@ -483,6 +488,16 @@ public abstract class AForm extends VerticalLayout {
                 fieldsMap.put(field.getKey(), field);
             }
         }
+    }
+
+
+    /**
+     * Eventuali aggiustamenti finali al layout <br>
+     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
+     * Regola eventuali valori delle property in apertura della scheda <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixLayoutFinal() {
     }
 
 

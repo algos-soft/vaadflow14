@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -206,6 +206,15 @@ public @interface AIField {
      * @return the string
      */
     String color() default VUOTA;
+
+    /**
+     * (Optional) Usa un metodo specifico per calcolare gli items di un comboBox.
+     * Meaning sense only for AETypeField.combo.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaComboMethod() default false;
 
     /**
      * (Optional) method name for reflection

@@ -80,12 +80,13 @@ public class AFieldService extends AAbstractService {
         AETypeBoolField typeBool;
         String boolEnum;
         String fieldKey;
-        Class comboClazz = null;
-        Sort sort;
+//        Class comboClazz = null;
+//        Sort sort;
         List items;
         List<String> enumItems;
         boolean isRequired = false;
         boolean isAllowCustomValue = false;
+//        boolean usaComboMethod = false;
         String width = VUOTA;
 
         if (reflectionJavaField == null) {
@@ -130,11 +131,9 @@ public class AFieldService extends AAbstractService {
                     field = appContext.getBean(ATimeField.class);
                     break;
                 case combo:
-                    comboClazz = annotation.getComboClass(reflectionJavaField);
-                    sort = annotation.getSort(comboClazz);
-                    items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
                     isRequired = annotation.isRequired(reflectionJavaField);
                     isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
+                    items = getComboItems(reflectionJavaField);
                     if (items != null) {
                         field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
                     } else {
@@ -374,6 +373,27 @@ public class AFieldService extends AAbstractService {
     //            return null;
     //        }
     //    }
+
+
+    /**
+     *
+     */
+    public List getComboItems(Field reflectionJavaField) {
+        List items = null;
+        Class comboClazz = null;
+        boolean usaComboMethod = false;
+        Sort sort;
+
+        comboClazz = annotation.getComboClass(reflectionJavaField);
+        sort = annotation.getSort(comboClazz);
+        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
+        if (usaComboMethod) {
+        } else {
+            items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
+        }
+
+        return items;
+    }
 
 
     /**

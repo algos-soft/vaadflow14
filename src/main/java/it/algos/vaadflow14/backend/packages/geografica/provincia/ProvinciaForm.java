@@ -1,6 +1,10 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.ui.button.AEAction;
+import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -120,6 +124,34 @@ public class ProvinciaForm extends AForm {
     @Override
     protected void creaMappaFields() {
         super.creaMappaFields();
+    }
+
+
+    /**
+     * Eventuali aggiustamenti finali al layout <br>
+     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
+     * Regola eventuali valori delle property in apertura della scheda <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixLayoutFinal() {
+        super.fixLayoutFinal();
+
+        AComboField fieldRegione = (AComboField) fieldsMap.get(ProvinciaLogic.FIELD_REGIONE);
+        fieldRegione.addValueChangeListener(event -> sincroMaster(event));
+
+        AComboField fieldStato = (AComboField) fieldsMap.get(ProvinciaLogic.FIELD_STATO);
+        fieldStato.addValueChangeListener(event -> sincroSlave(event));
+    }
+
+
+    protected void sincroMaster(AbstractField.ComponentValueChangeEvent event) {
+        Notification.show("sincroMaster", 2000, Notification.Position.MIDDLE);
+    }
+
+
+    protected void sincroSlave(AbstractField.ComponentValueChangeEvent event) {
+        Notification.show("sincroSlave", 2000, Notification.Position.MIDDLE);
     }
 
 

@@ -43,6 +43,10 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProvinciaLogic extends ALogic {
 
+    public static final String FIELD_REGIONE = "regione";
+
+    public static final String FIELD_STATO = "stato";
+
     /**
      * Versione della classe per la serializzazione
      */

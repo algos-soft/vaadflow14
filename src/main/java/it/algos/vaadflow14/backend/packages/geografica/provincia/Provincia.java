@@ -75,7 +75,7 @@ public class Provincia extends AEntity {
     @Size(min = 2)
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, caption = "sigla breve", widthEM = 12)
-    @AIColumn(header = "#",widthEM = 5)
+    @AIColumn(header = "#", widthEM = 5)
     public String sigla;
 
     /**
@@ -84,7 +84,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Regione.class)
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Regione.class, usaComboMethod = true)
     @AIColumn(widthEM = 11)
     public Regione regione;
 
