@@ -558,21 +558,22 @@ public class AWikiService extends AAbstractService {
     }
 
 
-//    /**
-//     * Restituisce una lista di stringhe estratte dai template bandierine <br>
-//     *
-//     * @param wikiTitle             della pagina wiki
-//     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
-//     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
-//     * @param numColonnaBandierine  da cui estrarre il template-bandierine
-//     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
-//     *
-//     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
-//     */
-//    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
-//        List<WrapDueStringhe> lista = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
-//        return null;
-//    }
+    //    /**
+    //     * Restituisce una lista di stringhe estratte dai template bandierine <br>
+    //     *
+    //     * @param wikiTitle             della pagina wiki
+    //     * @param posTabella            della wikitable nella pagina se ce ne sono più di una
+    //     * @param rigaIniziale          da cui estrarre le righe, scartando la testa della table
+    //     * @param numColonnaBandierine  da cui estrarre il template-bandierine
+    //     * @param numColonnaTerzoValore da cui estrarre il valore della terza stringa richiesta
+    //     *
+    //     * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
+    //     */
+    //    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
+    //        List<WrapDueStringhe> lista = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
+    //        return null;
+    //    }
+
 
     /**
      * Restituisce una lista di stringhe estratte dai template bandierine <br>
@@ -586,10 +587,10 @@ public class AWikiService extends AAbstractService {
      * @return lista di tripletta di valori: sigla e nome e divisione amministrativa superiore
      */
     public List<WrapTreStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
-        List<WrapTreStringhe> listaTre=null;
+        List<WrapTreStringhe> listaTre = null;
         WrapDueStringhe wrapBandierina;
         WrapTreStringhe wrapTre;
-        List<WrapDueStringhe> listaDue = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine,numColonnaTerzoValore);
+        List<WrapDueStringhe> listaDue = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
 
 
         if (array.isValid(listaDue)) {
@@ -597,7 +598,7 @@ public class AWikiService extends AAbstractService {
             for (WrapDueStringhe wrapDue : listaDue) {
                 wrapBandierina = getTemplateBandierina(wrapDue.getPrima());
                 if (wrapBandierina != null) {
-                    wrapTre = new WrapTreStringhe(wrapBandierina.getPrima(),wrapBandierina.getSeconda(),wrapDue.getSeconda());
+                    wrapTre = new WrapTreStringhe(wrapBandierina.getPrima(), wrapBandierina.getSeconda(), wrapDue.getSeconda());
                     listaTre.add(wrapTre);
                 }
             }
@@ -687,7 +688,7 @@ public class AWikiService extends AAbstractService {
                 wrap = null;
                 prima = VUOTA;
                 seconda = VUOTA;
-                if (riga.size() <= 2) {
+                if (riga.size() < 2 || (riga.size() == 2 && riga.get(1).startsWith(GRAFFA_END))) {
                     cella = riga.get(0);
                     parti = cella.split(DOPPIO_PIPE_REGEX);
                     if (parti != null && parti.length >= numColonnaDue) {
@@ -710,6 +711,7 @@ public class AWikiService extends AAbstractService {
                     seconda = text.setNoQuadre(seconda);
                     prima = fixCode(prima);
                     seconda = fixCode(seconda);
+                    prima = text.setNoHtmlTag(prima, "kbd");
                     if (prima.contains(PIPE)) {
                         if (prima.contains(GRAFFE_INI) && prima.contains(GRAFFE_END)) {
                         } else {
@@ -1123,7 +1125,7 @@ public class AWikiService extends AAbstractService {
             testoValido = text.levaTesta(testoValido, tagIni);
             testoValido = text.levaCoda(testoValido, tagEnd);
         } else {
-            testoValido=text.estrae(testoValido,tagIni,tagEnd);
+            testoValido = text.estrae(testoValido, tagIni, tagEnd);
         }
 
         return testoValido.trim();

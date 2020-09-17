@@ -1,15 +1,11 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.html.Label;
-import it.algos.vaadflow14.backend.annotation.AIColumn;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import javafx.scene.control.ComboBox;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,7 +192,7 @@ public class ATextService extends AAbstractService {
      * Se tagIniziale è vuoto, restituisce il testo <br>
      * Elimina spazi vuoti iniziali e finali <br>
      *
-     * @param testoIn       ingresso
+     * @param testoIn     ingresso
      * @param tagIniziale da dove inizia il testo da tenere
      *
      * @return testo ridotto in uscita
@@ -207,12 +203,13 @@ public class ATextService extends AAbstractService {
         if (this.isValid(testoOut) && this.isValid(tagIniziale)) {
             tagIniziale = tagIniziale.trim();
             if (testoOut.contains(tagIniziale)) {
-                testoOut = testoOut.substring(testoOut.indexOf(tagIniziale)+tagIniziale.length());
+                testoOut = testoOut.substring(testoOut.indexOf(tagIniziale) + tagIniziale.length());
             }
         }
 
         return testoOut.trim();
     }
+
 
     /**
      * Elimina dal testo il tagFinale, se esiste. <br>
@@ -455,7 +452,7 @@ public class ATextService extends AAbstractService {
         if (isValid(stringaIn)) {
             stringaIn = stringaIn.trim();
 
-            if (stringaIn.startsWith(GRAFFE_INI)&&stringaIn.endsWith(GRAFFE_END)) {
+            if (stringaIn.startsWith(GRAFFE_INI) && stringaIn.endsWith(GRAFFE_END)) {
                 stringaOut = stringaIn;
                 stringaOut = levaCoda(stringaOut, GRAFFE_END);
                 stringaOut = levaTesta(stringaOut, GRAFFE_INI);
@@ -482,10 +479,40 @@ public class ATextService extends AAbstractService {
         if (isValid(stringaIn)) {
             stringaIn = stringaIn.trim();
 
-            if (stringaIn.startsWith(QUADRE_INI)&&stringaIn.endsWith(QUADRE_END)) {
+            if (stringaIn.startsWith(QUADRE_INI) && stringaIn.endsWith(QUADRE_END)) {
                 stringaOut = stringaIn;
                 stringaOut = levaCoda(stringaOut, QUADRE_END);
                 stringaOut = levaTesta(stringaOut, QUADRE_INI);
+            }
+        }
+
+        return stringaOut.trim();
+    }
+
+
+    /**
+     * Elimina un tag HTML in testa e coda della stringa. <br>
+     * Funziona solo se i tags sono esattamente in TESTA ed in CODA alla stringa <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param stringaIn in ingresso
+     * @param tag       html iniziale
+     *
+     * @return stringa con tags eliminati
+     */
+    public String setNoHtmlTag(String stringaIn, String tag) {
+        String stringaOut = stringaIn;
+        String tagIni = "<" + tag + ">";
+        String tagEnd = "</" + tag + ">";
+
+        if (isValid(stringaIn)) {
+            stringaIn = stringaIn.trim();
+
+            if (stringaIn.startsWith(tagIni) && stringaIn.endsWith(tagEnd)) {
+                stringaOut = stringaIn;
+                stringaOut = levaCoda(stringaOut, tagEnd);
+                stringaOut = levaTesta(stringaOut, tagIni);
             }
         }
 
@@ -553,6 +580,7 @@ public class ATextService extends AAbstractService {
         return stringaOut.trim();
     }
 
+
     /**
      * Elimina (eventuali) 'apici'' in testa ed in coda alla stringa. <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>
@@ -563,7 +591,7 @@ public class ATextService extends AAbstractService {
      */
     public String setNoApici(String stringaIn) {
         String stringaOut = stringaIn.trim();
-        String apice="'";
+        String apice = "'";
         int cicli = 4;
 
         if (this.isValid(stringaOut)) {
@@ -575,6 +603,7 @@ public class ATextService extends AAbstractService {
 
         return stringaOut.trim();
     }
+
 
     /**
      * Allunga un testo alla lunghezza desiderata. <br>
@@ -678,6 +707,7 @@ public class ATextService extends AAbstractService {
         return stringaOut;
     }
 
+
     /**
      * Get the width of the property.
      *
@@ -694,6 +724,7 @@ public class ATextService extends AAbstractService {
 
         return widthTxt;
     }
+
 
     public String estrae(String valueIn, String tagIni, String tagEnd) {
         String valueOut = valueIn;

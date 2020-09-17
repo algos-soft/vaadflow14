@@ -120,7 +120,7 @@ public class AWikiServiceTest extends ATest {
         System.out.println(ottenuto);
 
         //--provincia
-        ottenuto = service.leggeTable(sorgente,2);
+        ottenuto = service.leggeTable(sorgente, 2);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         System.out.println(VUOTA);
@@ -242,7 +242,7 @@ public class AWikiServiceTest extends ATest {
 
         //--province
         previstoIntero = 14;
-        listaWrapTre= service.getTemplateList(sorgente, 2, 2, 1, 3);
+        listaWrapTre = service.getTemplateList(sorgente, 2, 2, 1, 3);
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
         System.out.println(VUOTA);
@@ -253,7 +253,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    @Test
     @Order(10)
     @DisplayName("10 - legge le regioni della Francia")
     public void getTableFrancia() {
@@ -284,7 +284,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(11)
     @DisplayName("11 - legge i cantoni della Svizzera")
     public void getTableSvizzera() {
@@ -299,7 +299,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //        @Test
+    @Test
     @Order(12)
     @DisplayName("12 - legge i lander della Austria")
     public void getTableAustria() {
@@ -314,7 +314,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //        @Test
+    @Test
     @Order(13)
     @DisplayName("13 - legge i lander della Germania")
     public void getTableGermania() {
@@ -329,7 +329,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(14)
     @DisplayName("14 - legge le comunità della Spagna")
     public void getTableSpagna() {
@@ -344,7 +344,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(15)
     @DisplayName("15 - legge i distretti del Portogallo")
     public void getTablePortogallo() {
@@ -359,7 +359,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    //        @Test
     @Order(16)
     @DisplayName("16 - legge i comuni della Slovenia")
     public void getTableSlovenia() {
@@ -374,7 +374,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(17)
     @DisplayName("17 - legge i comuni del Belgio")
     public void getTableBelgio() {
@@ -389,7 +389,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(18)
     @DisplayName("18 - legge le province dell'Olanda")
     public void getTableOlanda() {
@@ -404,7 +404,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(19)
     @DisplayName("19 - legge le province della Croazia")
     public void getTableCroazia() {
@@ -418,7 +418,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    @Test
     @Order(20)
     @DisplayName("20 - legge i distretti della Albania")
     public void getTableAlbania() {
@@ -432,13 +433,25 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    @Test
     @Order(21)
     @DisplayName("21 - legge i distretti della Grecia")
     public void getTableGrecia() {
         sorgente = "ISO_3166-2:GR";
-        previstoIntero = 36;
-        listaWrap = service.getDueColonne(sorgente, 1, 1, 1, 2);
+
+        //--periferie
+        previstoIntero = 13;
+        listaWrap = service.getDueColonne(sorgente, 1, 2, 1, 2);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("21 - Grecia: " + listaWrap.size());
+        printWrap(listaWrap);
+
+        //--prefetture
+        previstoIntero = 52;
+        listaWrap = service.getDueColonne(sorgente, 2, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -446,9 +459,10 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
-    @Order(21)
-    @DisplayName("21 - legge le regioni della Cechia")
+
+    @Test
+    @Order(22)
+    @DisplayName("22 - legge le regioni della Cechia")
     public void getTableCechia() {
         sorgente = "ISO_3166-2:CZ";
         previstoIntero = 14;
@@ -456,12 +470,14 @@ public class AWikiServiceTest extends ATest {
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
-        System.out.println("21 - Cechia: " + listaWrap.size());
+        System.out.println("22 - Cechia: " + listaWrap.size());
         printWrap(listaWrap);
     }
+
+
     @Test
-    @Order(22)
-    @DisplayName("22 - legge le regioni della Slovacchia")
+    @Order(1)
+    @DisplayName("23 - legge le regioni della Slovacchia")
     public void getTableSlovacchia() {
         sorgente = "ISO_3166-2:SK";
         previstoIntero = 14;
@@ -469,7 +485,8 @@ public class AWikiServiceTest extends ATest {
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
-        System.out.println("22 - Slovacchia: " + listaWrap.size());
+        System.out.println("23 - Slovacchia: " + listaWrap.size());
+        printWrap(listaWrap);
         printWrap(listaWrap);
     }
 
