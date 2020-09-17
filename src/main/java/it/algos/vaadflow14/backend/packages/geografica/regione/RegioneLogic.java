@@ -224,10 +224,20 @@ public class RegioneLogic extends ALogic {
      * @return the entity with the given id or {@literal null} if none found
      */
     public List<Regione> findAllItalian() {
+        return findAllByStato("italia");
+    }
+
+
+    /**
+     * Retrieves all entities.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     */
+    public List<Regione> findAllByStato(String statoKeyID) {
         List<Regione> items;
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("stato.id").is("italia"));
+        query.addCriteria(Criteria.where("stato.id").is(statoKeyID));
         query.with(Sort.by(Sort.Direction.ASC, "ordine"));
         items = mongo.findAll(entityClazz, query);
 

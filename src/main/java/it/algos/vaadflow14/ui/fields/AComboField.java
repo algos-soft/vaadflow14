@@ -63,11 +63,13 @@ public class AComboField<T> extends AField<Object> {
 
 
     public void setItems(List items) {
-        try {
-            this.items = items;
-            comboBox.setItems(items);
-        } catch (Exception unErrore) {
-            System.out.println("Items nulli in AComboField.setItems()");
+        if (items != null) {
+            try {
+                this.items = items;
+                comboBox.setItems(items);
+            } catch (Exception unErrore) {
+                System.out.println("Items nulli in AComboField.setItems()");
+            }
         }
     }
 

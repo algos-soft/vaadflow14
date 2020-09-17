@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -84,7 +85,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Regione.class, usaComboMethod = true)
+    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneLogic.class, usaComboMethod = true, methodName = "findAllItalian")
     @AIColumn(widthEM = 11)
     public Regione regione;
 

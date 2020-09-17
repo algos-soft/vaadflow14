@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -380,14 +382,28 @@ public class AFieldService extends AAbstractService {
      */
     public List getComboItems(Field reflectionJavaField) {
         List items = null;
-        Class comboClazz = null;
-        boolean usaComboMethod = false;
+        Class comboClazz;
+        Class logicClazz;
+        boolean usaComboMethod;
         Sort sort;
+        String methodName;
+        Method metodo;
+        Object serviceInstance;
 
         comboClazz = annotation.getComboClass(reflectionJavaField);
         sort = annotation.getSort(comboClazz);
         usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
+
         if (usaComboMethod) {
+            logicClazz = annotation.getLogicClass(reflectionJavaField);
+             methodName = annotation.getMethodName(reflectionJavaField);
+            try {
+                metodo = logicClazz.getDeclaredMethod(methodName);
+                serviceInstance = StaticContextAccessor.getBean(logicClazz);
+                items = (List) metodo.invoke(serviceInstance);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
         } else {
             items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
         }

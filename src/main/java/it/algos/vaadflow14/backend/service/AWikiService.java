@@ -694,6 +694,7 @@ public class AWikiService extends AAbstractService {
                         prima = parti[numColonnaUno - 1];
                         seconda = parti[numColonnaDue - 1];
                     }
+
                 } else {
                     if (!riga.get(0).startsWith(ESCLAMATIVO)) {
                         prima = riga.get(numColonnaUno - 1);

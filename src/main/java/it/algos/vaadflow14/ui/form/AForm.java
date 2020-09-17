@@ -1,16 +1,19 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.shared.Registration;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -199,6 +202,14 @@ public abstract class AForm extends VerticalLayout {
     protected boolean usaFieldNote = false;
 
     protected List<String> fieldsNameList;
+
+    protected AComboField fieldMaster;
+
+    protected AComboField fieldSlave;
+
+    protected Registration master;
+
+    protected Registration slave;
 
     private LinkedHashMap<String, List> enumMap;
 
@@ -495,9 +506,51 @@ public abstract class AForm extends VerticalLayout {
      * Eventuali aggiustamenti finali al layout <br>
      * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
      * Regola eventuali valori delle property in apertura della scheda <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto <br>
      */
     protected void fixLayoutFinal() {
+    }
+
+
+    /**
+     * Sincronizza il funzionamento di due AComboField <br>
+     * Il primo è 'master', il secondo 'slave' <br>
+     * Quando si modifica il valore del master, lo slave viene regolato di conseguenza <br>
+     * Quando si modifica il valore dello slave, il master riceve gli items relativi <br>
+     */
+    protected void fixDueCombo(String masterName, String slaveName) {
+        fieldMaster = (AComboField) fieldsMap.get(masterName);
+        master = fieldMaster.addValueChangeListener(event -> sincroMaster(event));
+
+        fieldSlave = (AComboField) fieldsMap.get(slaveName);
+        slave = fieldSlave.addValueChangeListener(event -> sincroSlave(event));
+    }
+
+
+    /**
+     * Evento generato dal AComboField 'master' <br>
+     * DEVE essere sovrascritto <br>
+     */
+    protected void sincroMaster(HasValue.ValueChangeEvent event) {
+    }
+
+
+    /**
+     */
+    protected void sincroDueCombo(AEntity masterValue, AEntity slaveValue) {
+        if (!masterValue.id.equals(slaveValue.id)) {
+            slave.remove();
+            fieldSlave.setValue(masterValue);
+            slave = fieldSlave.addValueChangeListener(eventSlave -> sincroSlave(eventSlave));
+        }
+    }
+
+
+    /**
+     * Evento generato dal AComboField 'slave' <br>
+     * DEVE essere sovrascritto <br>
+     */
+    protected void sincroSlave(HasValue.ValueChangeEvent event) {
     }
 
 

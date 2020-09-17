@@ -1532,6 +1532,26 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the class of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the class
+     */
+    @SuppressWarnings("all")
+    public Class getLogicClass(Field reflectionJavaField) {
+        Class logicClazz = null;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            logicClazz = annotation.logicClazz();
+        }
+
+        return logicClazz == Object.class ? null : logicClazz;
+    }
+
+
+    /**
      * Get the status of specific method for items.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation

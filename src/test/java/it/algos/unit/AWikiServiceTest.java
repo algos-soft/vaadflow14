@@ -240,21 +240,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableProvince() {
         sorgente = "ISO 3166-2:IT";
 
-//        //--province
-//        previstoIntero = 93;
-//        previsto = "<code>IT-AG</code>";
-//        previsto2 = "[[Sicilia]] (<code>82</code>)";
-//        listaGrezza = service.getTable(sorgente, 3);
-//        assertNotNull(listaGrezza);
-//        assertEquals(previstoIntero, listaGrezza.size());
-//        assertEquals(previsto, listaGrezza.get(0).get(0));
-//        assertEquals(previsto2, listaGrezza.get(0).get(2));
-//        System.out.println(VUOTA);
-//        System.out.println("9 - Province (deprecated): " + listaGrezza.size());
-//        System.out.println("********");
-//        print(listaGrezza);
-
-        //--province bis
+        //--province
         previstoIntero = 14;
         listaWrapTre= service.getTemplateList(sorgente, 2, 2, 1, 3);
         assertNotNull(listaWrapTre);
@@ -429,6 +415,61 @@ public class AWikiServiceTest extends ATest {
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
         System.out.println("19 - Croazia: " + listaWrap.size());
+        printWrap(listaWrap);
+    }
+
+//    @Test
+    @Order(20)
+    @DisplayName("20 - legge i distretti della Albania")
+    public void getTableAlbania() {
+        sorgente = "ISO_3166-2:AL";
+        previstoIntero = 36;
+        listaWrap = service.getDueColonne(sorgente, 1, 1, 1, 2);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("20 - Albania: " + listaWrap.size());
+        printWrap(listaWrap);
+    }
+
+//    @Test
+    @Order(21)
+    @DisplayName("21 - legge i distretti della Grecia")
+    public void getTableGrecia() {
+        sorgente = "ISO_3166-2:GR";
+        previstoIntero = 36;
+        listaWrap = service.getDueColonne(sorgente, 1, 1, 1, 2);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("21 - Grecia: " + listaWrap.size());
+        printWrap(listaWrap);
+    }
+
+//    @Test
+    @Order(21)
+    @DisplayName("21 - legge le regioni della Cechia")
+    public void getTableCechia() {
+        sorgente = "ISO_3166-2:CZ";
+        previstoIntero = 14;
+        listaWrap = service.getTemplateList(sorgente, 1, 2, 3);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("21 - Cechia: " + listaWrap.size());
+        printWrap(listaWrap);
+    }
+    @Test
+    @Order(22)
+    @DisplayName("22 - legge le regioni della Slovacchia")
+    public void getTableSlovacchia() {
+        sorgente = "ISO_3166-2:SK";
+        previstoIntero = 14;
+        listaWrap = service.getDueColonne(sorgente, 1, 2, 1, 2);
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("22 - Slovacchia: " + listaWrap.size());
         printWrap(listaWrap);
     }
 

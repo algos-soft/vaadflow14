@@ -1,12 +1,13 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.ui.button.AEAction;
-import it.algos.vaadflow14.ui.fields.AComboField;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,6 +24,14 @@ import java.util.List;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProvinciaForm extends AForm {
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public RegioneLogic regioneLogic;
 
 
     public ProvinciaForm(WrapForm wrap) {
@@ -131,27 +140,37 @@ public class ProvinciaForm extends AForm {
      * Eventuali aggiustamenti finali al layout <br>
      * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
      * Regola eventuali valori delle property in apertura della scheda <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto <br>
      */
     @Override
     protected void fixLayoutFinal() {
-        super.fixLayoutFinal();
-
-        AComboField fieldRegione = (AComboField) fieldsMap.get(ProvinciaLogic.FIELD_REGIONE);
-        fieldRegione.addValueChangeListener(event -> sincroMaster(event));
-
-        AComboField fieldStato = (AComboField) fieldsMap.get(ProvinciaLogic.FIELD_STATO);
-        fieldStato.addValueChangeListener(event -> sincroSlave(event));
+        super.fixDueCombo(ProvinciaLogic.FIELD_REGIONE, ProvinciaLogic.FIELD_STATO);
     }
 
 
-    protected void sincroMaster(AbstractField.ComponentValueChangeEvent event) {
-        Notification.show("sincroMaster", 2000, Notification.Position.MIDDLE);
+    /**
+     * Evento generato dal AComboField 'master' <br>
+     * DEVE essere sovrascritto <br>
+     */
+    protected void sincroMaster(HasValue.ValueChangeEvent event) {
+        Regione value = (Regione) event.getValue();
+        Stato slaveValue = (Stato) fieldSlave.getValue();
+        Stato masterValue = value.stato;
+
+        super.sincroDueCombo(masterValue,slaveValue);
     }
 
 
-    protected void sincroSlave(AbstractField.ComponentValueChangeEvent event) {
-        Notification.show("sincroSlave", 2000, Notification.Position.MIDDLE);
+    /**
+     * Evento generato dal AComboField 'slave' <br>
+     * DEVE essere sovrascritto <br>
+     */
+    protected void sincroSlave(HasValue.ValueChangeEvent event) {
+        Stato value = (Stato) event.getValue();
+
+        List items = regioneLogic.findAllByStato(value.id);
+        fieldMaster.setItems(items);
+        fieldMaster.setItems(items); //@todo Non capisco perché ma se chiamo setItems() solo una volta NON funziona
     }
 
 
