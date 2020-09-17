@@ -91,7 +91,6 @@ public class Regione extends AEntity {
      * sigla (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Sigla obbligatoria")
-    @Size(min = 2)
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, caption = "sigla breve", widthEM = 12)
     @AIColumn(widthEM = 6)

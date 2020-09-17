@@ -273,20 +273,69 @@ public class StatoLogic extends ALogic {
         return findById("portogallo");
     }
 
+
     public Stato getSlovenia() {
         return findById("slovenia");
     }
+
 
     public Stato getBelgio() {
         return findById("belgio");
     }
 
+
     public Stato getOlanda() {
         return findById("paesibassi");
     }
 
+
     public Stato getCroazia() {
         return findById("croazia");
+    }
+
+
+    public Stato getAlbania() {
+        return findById("albania");
+    }
+
+
+    public Stato getGrecia() {
+        return findById("grecia");
+    }
+
+
+    public Stato getCechia() {
+        return findById("repubblicaceca");
+    }
+
+
+    public Stato getSlovacchia() {
+        return findById("slovacchia");
+    }
+
+
+    public Stato getUngheria() {
+        return findById("ungheria");
+    }
+
+
+    public Stato getRomania() {
+        return findById("romania");
+    }
+
+
+    public Stato getBulgaria() {
+        return findById("bulgaria");
+    }
+
+
+    public Stato getPolonia() {
+        return findById("polonia");
+    }
+
+
+    public Stato getDanimarca() {
+        return findById("danimarca");
     }
 
 

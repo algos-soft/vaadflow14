@@ -44,6 +44,28 @@ public enum AEStatuto {
     olanda("Provincia olandese"),
 
     croazia("Regione croata"),
+
+    albania("Distretto albanese"),
+
+    greciaPeriferia("Periferia greca"),
+
+    greciaPrefettura("Prefettura greca"),
+
+    cechia("Regione ceca"),
+
+    slovacchia("Regione slovacca"),
+
+    ungheria("Provincia ungherese"),
+
+    romaniaDistretto("Distretto rumeno"),
+
+    romaniaCapitale("Capitale rumena"),
+
+    bulgaria("Distretto bulgaro"),
+
+    polonia("Voivodato polacco"),
+
+    danimarca("Regione danese"),
     ;
 
     private String nome;
