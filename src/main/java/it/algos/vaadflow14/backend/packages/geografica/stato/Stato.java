@@ -35,7 +35,7 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Stato", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
+@AIEntity(recordName = "Stato", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,ue,numerico,alfadue,alfatre,locale")
 @AIForm(fields = "ordine,nome,ue,numerico,alfadue,alfatre,locale")
@@ -62,7 +62,7 @@ public class Stato extends AEntity {
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 24)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, caption = "stato", widthEM = 24)
     @AIColumn(widthEM = 12)
     public String nome;
 

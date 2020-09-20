@@ -20,34 +20,29 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ATextAreaField extends AField<String> {
 
-    private final TextArea innerField;
+    private  TextArea textAreaField;
 
 
     /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(ATextAreaField.class, fieldKey, caption) <br>
-     *
-     * @param fieldKey nome interno del field
-     * @param caption  label visibile del field
+     * Costruttore senza parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ATextAreaField.class) <br>
      */
-    public ATextAreaField(String fieldKey, String caption) {
-        super.fieldKey = fieldKey;
-        super.caption = caption;
-        innerField = new TextArea(caption);
-        innerField.setAutoselect(true);
-        add(innerField);
+    public ATextAreaField() {
+        textAreaField = new TextArea();
+        textAreaField.setAutoselect(true);
+        add(textAreaField);
     } // end of SpringBoot constructor
 
 
     @Override
     protected String generateModelValue() {
-        return innerField.getValue();
+        return textAreaField.getValue();
     }
 
 
     @Override
     protected void setPresentationValue(String value) {
-        innerField.setValue(value);
+        textAreaField.setValue(value);
     }
 
 
@@ -92,25 +87,15 @@ public class ATextAreaField extends AField<String> {
      *                              from being compared to this object.
      */
     public int compareTo(String o) {
-        return innerField.getValue().compareTo(o);
+        return textAreaField.getValue().compareTo(o);
     }
 
 
     @Override
     public void setWidth(String width) {
-        innerField.setWidth(width);
+        textAreaField.setWidth(width);
     }
 
 
-    @Override
-    public TextArea getBinder() {
-        return innerField;
-    }
-
-
-    @Override
-    public void setAutofocus() {
-        innerField.setAutofocus(true);
-    }
 
 }

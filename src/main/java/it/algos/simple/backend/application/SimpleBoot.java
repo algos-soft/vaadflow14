@@ -2,10 +2,7 @@ package it.algos.simple.backend.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
-import it.algos.simple.backend.packages.Alfa;
-import it.algos.simple.backend.packages.Beta;
-import it.algos.simple.backend.packages.Delta;
-import it.algos.simple.backend.packages.Gamma;
+import it.algos.simple.backend.packages.*;
 import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
@@ -100,13 +97,14 @@ public class SimpleBoot extends FlowBoot {
     protected void addMenuRoutes() {
         super.addMenuRoutes();
 
+        FlowVar.menuRouteList.add(Via.class);
+        FlowVar.menuRouteList.add(Address.class);
         FlowVar.menuRouteList.add(Alfa.class);
         FlowVar.menuRouteList.add(Beta.class);
         FlowVar.menuRouteList.add(Gamma.class);
         FlowVar.menuRouteList.add(Delta.class);
-        FlowVar.menuRouteList.add(OmegaView.class);
-        FlowVar.menuRouteList.add(Via.class);
-        FlowVar.menuRouteList.add(Address.class);
+        FlowVar.menuRouteList.add(Omega.class);
+        FlowVar.menuRouteList.add(Lambda.class);
     }
 
 }

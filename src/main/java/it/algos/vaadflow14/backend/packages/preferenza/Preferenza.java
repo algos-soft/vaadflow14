@@ -5,7 +5,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -36,9 +35,9 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
-@AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
-@AIList(fields = "code,descrizione")
-@AIForm(fields = "ordine,code,descrizione,type")
+@AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "ordine")
+@AIList(fields = "code,descrizione", usaRowIndex = true)
+@AIForm(fields = "ordine,code,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**
@@ -47,13 +46,33 @@ public class Preferenza extends ACEntity {
     private final static long serialVersionUID = 1L;
 
 
+    //    /**
+    //     * ordinamento (obbligatorio, unico) <br>
+    //     */
+    //    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    //    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
+    //    @AIColumn(header = "#")
+    //    public int ordine;
+
+
     /**
-     * ordinamento (obbligatorio, unico) <br>
+     * codice di riferimento (obbligatorio, unico)
      */
+    @NotBlank()
+    @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
-    public int ordine;
+    @AIField(type = AETypeField.text, widthEM = 8, focus = true, caption = "Codice")
+    @AIColumn(header = "Code")
+    public String code;
+
+    /**
+     * descrizione (obbligatoria)
+     */
+    @NotBlank()
+    @Size(min = 5)
+    @AIField(type = AETypeField.text, widthEM = 14)
+    @AIColumn(flexGrow = true)
+    public String descrizione;
 
     /**
      * tipo di dato memorizzato (obbligatorio)
@@ -70,25 +89,6 @@ public class Preferenza extends ACEntity {
     @AIField(type = AETypeField.preferenza, required = true, caption = "Valore", widthEM = 12)
     @AIColumn(widthEM = 10)
     public byte[] value;
-
-    /**
-     * codice di riferimento (obbligatorio, unico)
-     */
-    @NotBlank()
-    @Size(min = 3)
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, widthEM = 8, focus = true, caption = "Codice")
-    @AIColumn(header = "Code")
-    private String code;
-
-    /**
-     * descrizione (obbligatoria)
-     */
-    @NotBlank()
-    @Size(min = 5)
-    @AIField(type = AETypeField.text, widthEM = 14)
-    @AIColumn(flexGrow = true)
-    private String descrizione;
 
 
     /**

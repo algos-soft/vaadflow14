@@ -1,15 +1,10 @@
-package it.algos.vaadflow14.backend.packages.geografica.provincia;
+package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -19,24 +14,18 @@ import java.util.List;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: mer, 16-set-2020
- * Time: 17:48
+ * Date: dom, 20-set-2020
+ * Time: 06:20
  * <p>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ProvinciaForm extends AForm {
+public class LambdaForm extends AForm {
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public RegioneLogic regioneLogic;
+    AField field = null;
+    TextField textField;
 
-
-    public ProvinciaForm(WrapForm wrap) {
+    public LambdaForm(WrapForm wrap) {
         super(wrap);
     }
 
@@ -62,7 +51,18 @@ public class ProvinciaForm extends AForm {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsBinder() {
-        super.creaFieldsBinder();
+//        field = fieldService.crea(entityBean, binder, operationForm, "due");
+
+         textField = new TextField();
+        binder.forField(textField).bind("due");
+
+        //        TextField textField = new TextField();
+        //        binder.forField(textField)
+        //                .withValidator(e -> {
+        //                    textField.removeClassName("warn");
+        //                    return e.length() > 3;
+        //                }, "You must enter more than 3 characters", ErrorLevel.ERROR)
+        //                .bind(Person::getName, Person::setName);
     }
 
 
@@ -80,15 +80,7 @@ public class ProvinciaForm extends AForm {
      */
     @Override
     protected List<String> getPropertyNamesList() {
-        List<String> lista = null;
-
-        if (operationForm == AEOperation.addNew) {
-            lista = super.getPropertyNamesList();
-        } else {
-            lista = array.fromString("ordine,nome,sigla,iso,status");
-        }
-
-        return lista;
+        return null;
     }
 
 
@@ -101,45 +93,6 @@ public class ProvinciaForm extends AForm {
      */
     @Override
     protected void creaFieldsExtra() {
-        super.creaFieldsExtra();
-
-        if (operationForm != AEOperation.addNew) {
-            String fieldKey = "regione";
-            AField field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
-            if (field != null) {
-                fieldsList.add(field);
-            }
-        }
-    }
-
-
-    /**
-     * Riordina (eventualmente) la lista fieldsList <br>
-     * I fieldsExtra vengono necessariamente inseriti DOPO i fields normali mentre potrebbero dover apparire prima <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void reorderFieldList() {
-        super.reorderFieldList();
-    }
-
-
-    /**
-     * Aggiunge ogni singolo field della lista fieldsList al layout <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void addFieldsToLayout() {
-        super.addFieldsToLayout();
-    }
-
-
-    /**
-     * Crea una mappa fieldMap, per recuperare i fields dal nome <br>
-     */
-    @Override
-    protected void creaMappaFields() {
-        super.creaMappaFields();
     }
 
 
@@ -150,7 +103,34 @@ public class ProvinciaForm extends AForm {
      */
     @Override
     protected void readFieldsExtra() {
-        super.readFieldsExtra();
+    }
+
+
+    /**
+     * Riordina (eventualmente) la lista fieldsList <br>
+     * I fieldsExtra vengono necessariamente inseriti DOPO i fields normali mentre potrebbero dover apparire prima <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void reorderFieldList() {
+    }
+
+
+    /**
+     * Aggiunge ogni singolo field della lista fieldsList al layout <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void addFieldsToLayout() {
+        topLayout.add(textField);
+    }
+
+
+    /**
+     * Crea una mappa fieldMap, per recuperare i fields dal nome <br>
+     */
+    @Override
+    protected void creaMappaFields() {
     }
 
 
@@ -158,39 +138,9 @@ public class ProvinciaForm extends AForm {
      * Eventuali aggiustamenti finali al layout <br>
      * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
      * Regola eventuali valori delle property in apertura della scheda <br>
-     * Può essere sovrascritto <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
     protected void fixLayoutFinal() {
-        if (operationForm == AEOperation.addNew) {
-            super.fixDueCombo(ProvinciaLogic.FIELD_REGIONE, ProvinciaLogic.FIELD_STATO);
-        }
-    }
-
-
-    /**
-     * Evento generato dal AComboField 'master' <br>
-     * DEVE essere sovrascritto <br>
-     */
-    protected void sincroMaster(HasValue.ValueChangeEvent event) {
-        Regione value = (Regione) event.getValue();
-        Stato slaveValue = (Stato) fieldSlave.getValue();
-        Stato masterValue = value.stato;
-
-        super.sincroDueCombo(masterValue, slaveValue);
-    }
-
-
-    /**
-     * Evento generato dal AComboField 'slave' <br>
-     * DEVE essere sovrascritto <br>
-     */
-    protected void sincroSlave(HasValue.ValueChangeEvent event) {
-        Stato value = (Stato) event.getValue();
-
-        List items = regioneLogic.findAllByStato(value.id);
-        fieldMaster.setItems(items);
-        fieldMaster.setItems(items); //@todo Non capisco perché ma se chiamo setItems() solo una volta NON funziona
     }
 
 
@@ -201,7 +151,6 @@ public class ProvinciaForm extends AForm {
      */
     @Override
     protected void writeFieldsExtra() {
-        super.writeFieldsExtra();
     }
 
 }

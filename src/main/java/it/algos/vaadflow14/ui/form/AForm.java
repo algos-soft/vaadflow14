@@ -341,9 +341,6 @@ public abstract class AForm extends VerticalLayout {
         //--Li aggiunge alla fieldsList
         this.creaFieldsExtra();
 
-        //--Regola in lettura eventuali fields extra non associati al binder. Dal DB alla UI
-        this.readFieldsExtra();
-
         //--Riordina (eventualmente) la lista fieldsList,
         //--I fieldsExtra vengono necessariamente inseriti DOPO i fields normali mentre, magari, devono apparire prima
         this.reorderFieldList();
@@ -353,6 +350,9 @@ public abstract class AForm extends VerticalLayout {
 
         //--Crea una mappa fieldMap, per recuperare i fields dal nome
         this.creaMappaFields();
+
+        //--Regola in lettura eventuali fields extra non associati al binder. Dal DB alla UI
+        this.readFieldsExtra();
 
         //--Eventuali aggiustamenti finali al layout
         //--Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
@@ -378,16 +378,24 @@ public abstract class AForm extends VerticalLayout {
         if (array.isValid(fieldsNameList)) {
             fieldsList = new ArrayList<>();
             for (String fieldKey : fieldsNameList) {
-                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-                field = fieldService.creaOnly(reflectionJavaField);
+                field = fieldService.crea(entityBean,binder,operationForm, fieldKey);
                 if (field != null) {
-                    fieldService.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
                     fieldsList.add(field);
-                    //                    binder.forField(field).bind(fieldKey);
                 } else {
                     AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
                     logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
                 }
+
+//                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+//                field = fieldService.creaOnly(reflectionJavaField);
+//                if (field != null) {
+//                    fieldService.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
+//                    fieldsList.add(field);
+//                    //                    binder.forField(field).bind(fieldKey);
+//                } else {
+//                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+//                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+//                }
             }
         }
     }
@@ -418,36 +426,17 @@ public abstract class AForm extends VerticalLayout {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsExtra() {
-        CustomField field = null;
+        AField field = null;
 
         if (usaFieldNote) {
-            //            field = fieldService.creaOnly(AEntity.class, FlowCost.FIELD_NOTE, entityBean);
-            //            if (field != null) {
-            //                fieldsList.add(field);
-            //            }
-        }
-    }
-
-
-    /**
-     * Regola in lettura eventuali valori NON associati al binder. <br>
-     * Dal DB alla UI <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void readFieldsExtra() {
-        CustomField field = null;
-
-        if (usaFieldNote) {
-            if (fieldsMap != null) {
-                field = fieldsMap.get(FlowCost.FIELD_NOTE);
-                if (field != null) {
-                    if (text.isValid(entityBean.note)) {
-                        field.setValue(entityBean.note);
-                    }
-                }
+            field = fieldService.crea(entityBean,binder,operationForm, FlowCost.FIELD_NOTE);
+            if (field != null) {
+                fieldsList.add(field);
             }
         }
     }
+
+
 
 
     /**
@@ -501,6 +490,25 @@ public abstract class AForm extends VerticalLayout {
         }
     }
 
+    /**
+     * Regola in lettura eventuali valori NON associati al binder. <br>
+     * Dal DB alla UI <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void readFieldsExtra() {
+        CustomField field = null;
+
+        if (usaFieldNote) {
+            if (fieldsMap != null) {
+                field = fieldsMap.get(FlowCost.FIELD_NOTE);
+                if (field != null) {
+                    if (text.isValid(entityBean.note)) {
+                        field.setValue(entityBean.note);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Eventuali aggiustamenti finali al layout <br>
@@ -536,6 +544,7 @@ public abstract class AForm extends VerticalLayout {
 
 
     /**
+     *
      */
     protected void sincroDueCombo(AEntity masterValue, AEntity slaveValue) {
         if (!masterValue.id.equals(slaveValue.id)) {

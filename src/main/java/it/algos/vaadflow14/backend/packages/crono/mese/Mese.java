@@ -35,7 +35,7 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderMese")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Mese", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
+@AIEntity(recordName = "Mese", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
 @AIList(fields = "ordine,giorni,giorniBisestile,sigla,nome")
 @AIForm(fields = "ordine,giorni,giorniBisestile,sigla,nome")

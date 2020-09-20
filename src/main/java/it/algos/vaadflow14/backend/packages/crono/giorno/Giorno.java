@@ -36,7 +36,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIEntity(recordName = "Giorno", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
+@AIEntity(recordName = "Giorno", keyPropertyName = "nome", usaCompany = false)
 @AIList(fields = "ordine,mese,nome")
 @AIForm(fields = "ordine,mese,nome")
 public class Giorno extends AEntity {

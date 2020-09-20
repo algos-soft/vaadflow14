@@ -1,7 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import org.springframework.security.config.web.server.ServerHttpSecurity.AuthorizeExchangeSpec;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,59 +11,60 @@ import java.util.List;
  * Time: 10:19
  */
 public enum AEStatuto {
-    ordinaria("Regione ordinaria"),
+    svizzera("Cantone svizzero"),
 
-    speciale("Regione speciale"),
-
-    germania("Land tedesco"),
-
-    franciaMetropolitana("Regione metropolitana"),
-
-    franciaOltremare("Regione d'oltremare"),
+    romaniaCapitale("Capitale rumena"),
 
     franciaCollettivita("Collettività d'oltremare"),
 
-    svizzera("Cantone svizzero"),
-
-    austria("Land austriaco"),
+    slovenia("Comune sloveno"),
 
     spagna("Comunità autonoma"),
 
-    spagnaRegione("Regione spagnola"),
+    albania("Distretto albanese"),
+
+    bulgaria("Distretto bulgaro"),
 
     portogalloDistretto("Distretto portoghese"),
 
-    portogalloRegione("Regione autonoma"),
+    romaniaDistretto("Distretto rumeno"),
 
-    slovenia("Comune sloveno"),
+    austria("Land austriaco"),
 
-    belgio("Regione belga"),
-
-    olanda("Provincia olandese"),
-
-    croazia("Regione croata"),
-
-    albania("Distretto albanese"),
+    germania("Land tedesco"),
 
     greciaPeriferia("Periferia greca"),
 
     greciaPrefettura("Prefettura greca"),
 
-    cechia("Regione ceca"),
-
-    slovacchia("Regione slovacca"),
+    olanda("Provincia olandese"),
 
     ungheria("Provincia ungherese"),
 
-    romaniaDistretto("Distretto rumeno"),
+    portogalloRegione("Regione autonoma"),
 
-    romaniaCapitale("Capitale rumena"),
+    belgio("Regione belga"),
 
-    bulgaria("Distretto bulgaro"),
+    cechia("Regione ceca"),
+
+    croazia("Regione croata"),
+
+    danimarca("Regione danese"),
+
+    franciaOltremare("Regione d'oltremare"),
+
+    ordinaria("Regione ordinaria"),
+
+    franciaMetropolitana("Regione metropolitana"),
+
+    spagnaRegione("Regione spagnola"),
+
+    speciale("Regione speciale"),
+
+    slovacchia("Regione slovacca"),
 
     polonia("Voivodato polacco"),
 
-    danimarca("Regione danese"),
     ;
 
     private String nome;

@@ -1,10 +1,11 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow15
@@ -28,7 +29,16 @@ public class ATextField extends AField<String> {
      * L' istanza viene costruita con appContext.getBean(ATextField.class) <br>
      */
     public ATextField() {
-        textField = new TextField();
+        this(VUOTA);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ATextField.class, caption) <br>
+     */
+    public ATextField(String caption) {
+        textField = new TextField(caption);
         textField.setAutoselect(true);
         add(textField);
     } // end of SpringBoot constructor
@@ -64,9 +74,16 @@ public class ATextField extends AField<String> {
         return textField.getValue().compareTo(o);
     }
 
+
     @Override
     public void setWidth(String width) {
         textField.setWidth(width);
+    }
+
+
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        textField.setErrorMessage(errorMessage);
     }
 
 }

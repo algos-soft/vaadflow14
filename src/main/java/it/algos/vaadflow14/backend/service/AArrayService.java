@@ -314,7 +314,7 @@ public class AArrayService extends AAbstractService {
     }
 
 
-    public List<String> getList(String testo) {
+    public List<String> fromString(String testo) {
         List<String> lista = null;
         String tag = VIRGOLA;
         String[] parti = null;

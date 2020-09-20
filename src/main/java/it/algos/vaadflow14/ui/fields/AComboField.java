@@ -76,7 +76,6 @@ public class AComboField<T> extends AField<Object> {
 
     @Override
     protected Object generateModelValue() {
-        Object alfa = comboBox.getValue();
         return comboBox.getValue();
     }
 
@@ -106,6 +105,12 @@ public class AComboField<T> extends AField<Object> {
     @Override
     public void setWidth(String width) {
         comboBox.setWidth(width);
+    }
+
+
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        comboBox.setErrorMessage(errorMessage);
     }
 
 }

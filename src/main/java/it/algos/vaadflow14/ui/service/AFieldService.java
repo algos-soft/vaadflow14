@@ -4,10 +4,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
@@ -52,43 +49,51 @@ public class AFieldService extends AAbstractService {
     private static final long serialVersionUID = 1L;
 
 
-    //    /**
-    //     * Create a single field.
-    //     *
-    //     * @param entityBean di riferimento
-    //     * @param fieldKey   della property
-    //     */
-    //    public AField creaOnly(AEntity entityBean, String fieldKey) {
-    //        Field reflectionJavaField;
-    //
-    //        if (entityBean == null) {
-    //            return null;
-    //        }
-    //
-    //        reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-    //        return creaOnly(reflectionJavaField);
-    //    }
+    /**
+     * Create a single field.
+     *
+     * @param entityBean    di riferimento
+     * @param operationForm tipologia di Form in uso
+     * @param fieldKey      della property
+     */
+    public AField crea(AEntity entityBean, Binder binder, AEOperation operationForm, String fieldKey) {
+        AField field = null;
+        Field reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
+
+        if (field != null) {
+            this.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
+        } else {
+            AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+            logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+        }
+
+        return field;
+    }
 
 
     /**
      * Create a single field.
      *
+     * @param entityBean          di riferimento
      * @param reflectionJavaField di riferimento
+     * @param operationForm       tipologia di Form in uso
      */
-    public AField creaOnly(Field reflectionJavaField) {
+    public AField creaOnly(AEntity entityBean, Field reflectionJavaField, AEOperation operationForm) {
         AField field = null;
         AETypeField type;
         String caption = VUOTA;
         AETypeBoolField typeBool;
+        AETypePref typePref;
         String boolEnum;
         String fieldKey;
-//        Class comboClazz = null;
-//        Sort sort;
+        //        Class comboClazz = null;
+        //        Sort sort;
         List items;
         List<String> enumItems;
         boolean isRequired = false;
         boolean isAllowCustomValue = false;
-//        boolean usaComboMethod = false;
+        //        boolean usaComboMethod = false;
         String width = VUOTA;
 
         if (reflectionJavaField == null) {
@@ -104,6 +109,9 @@ public class AFieldService extends AAbstractService {
                 case phone:
                     field = appContext.getBean(ATextField.class);
                     break;
+                case textArea:
+                    field = appContext.getBean(ATextAreaField.class);
+                    break;
                 case password:
                     field = appContext.getBean(APasswordField.class);
                     break;
@@ -118,9 +126,13 @@ public class AFieldService extends AAbstractService {
                     break;
                 case booleano:
                     typeBool = annotation.getTypeBoolField(reflectionJavaField);
-                    boolEnum = annotation.getBoolEnumField(reflectionJavaField);
-                    caption = annotation.getFormFieldName(reflectionJavaField);
-                    field = appContext.getBean(ABooleanField.class, typeBool, boolEnum, caption);
+                    if (typeBool == AETypeBoolField.checkBox) {
+                        caption = annotation.getFormFieldName(reflectionJavaField);
+                        field = appContext.getBean(ABooleanField.class, typeBool, caption);
+                    } else {
+                        boolEnum = annotation.getBoolEnumField(reflectionJavaField);
+                        field = appContext.getBean(ABooleanField.class, typeBool, boolEnum);
+                    }
                     break;
                 case localDateTime:
                     field = appContext.getBean(ADateTimeField.class);
@@ -150,6 +162,10 @@ public class AFieldService extends AAbstractService {
                         logger.warn("Mancano gli items per l' enumeration di " + fieldKey, this.getClass(), "creaOnly.enumeration");
                     }
                     break;
+                case preferenza:
+                    field = appContext.getBean(APreferenzaField.class, entityBean, operationForm);
+                    caption = "nonUsata";
+                    break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
                     break;
@@ -160,7 +176,7 @@ public class AFieldService extends AAbstractService {
             if (text.isEmpty(caption)) {
                 caption = annotation.getFormFieldName(reflectionJavaField);
                 if (true) {//@todo Funzionalità ancora da implementare con preferenza
-                    caption = caption.toLowerCase();
+                    caption = text.primaMinuscola(caption);
                 } else {
                     caption = text.primaMaiuscola(caption);
                 }
@@ -180,7 +196,7 @@ public class AFieldService extends AAbstractService {
         String fieldName = VUOTA;
         AETypeNum numType = AETypeNum.positiviOnly;
         AStringBlankValidator stringBlankValidator = null;
-        //        ANotNullValidator notNullValidator = null;
+        ANotNullValidator notNullValidator = null;
         StringLengthValidator stringLengthValidator = null;
         AIntegerValidator integerValidator = null;
         AUniqueValidator uniqueValidator = null;
@@ -188,6 +204,7 @@ public class AFieldService extends AAbstractService {
         String messageSize = VUOTA;
         String messageNotBlank = VUOTA;
         String messageNotNull = VUOTA;
+        String messageMail = "Indirizzo eMail non valido";
         int stringMin = 0;
         int stringMax = 0;
         int intMin = 0;
@@ -211,8 +228,8 @@ public class AFieldService extends AAbstractService {
 
         if (isRequired) {
             stringBlankValidator = appContext.getBean(AStringBlankValidator.class, messageNotBlank);
-            //            notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
         }
+        notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
 
         if (stringMin > 0 || stringMax > 0) {
             stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
@@ -272,6 +289,7 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case email:
+                    field.setErrorMessage(messageMail);
                     if (isRequired) {
                         builder.asRequired();
                     }
@@ -301,12 +319,22 @@ public class AFieldService extends AAbstractService {
                 case localTime:
                     break;
                 case combo:
+                    builder.withValidator(notNullValidator);
                     if (isRequired) {
                         builder.asRequired();
                         //                        builder.withValidator(notNullValidator);
                     }
                     break;
                 case enumeration:
+                    builder.withValidator(notNullValidator);
+                    if (isRequired) {
+                        builder.asRequired();
+                    }
+                    break;
+                case preferenza:
+                    if (isRequired) {
+                        builder.asRequired();
+                    }
                     break;
                 case gridShowOnly:
                     break;
@@ -396,7 +424,7 @@ public class AFieldService extends AAbstractService {
 
         if (usaComboMethod) {
             logicClazz = annotation.getLogicClass(reflectionJavaField);
-             methodName = annotation.getMethodName(reflectionJavaField);
+            methodName = annotation.getMethodName(reflectionJavaField);
             try {
                 metodo = logicClazz.getDeclaredMethod(methodName);
                 serviceInstance = StaticContextAccessor.getBean(logicClazz);

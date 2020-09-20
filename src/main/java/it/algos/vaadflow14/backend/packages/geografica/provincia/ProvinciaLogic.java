@@ -104,7 +104,6 @@ public class ProvinciaLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.edit;
         super.usaBottoneDeleteAll = false;
         super.usaBottoneReset = true;
         super.usaBottoneNew = true;

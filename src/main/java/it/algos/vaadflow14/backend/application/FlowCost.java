@@ -27,6 +27,8 @@ import java.util.Locale;
  */
 public abstract class FlowCost {
 
+    public static final String USA_DEBUG = "usaDebug";
+
     public static final int MAX = 2147483647;
 
     public static final String PATH_WIKI = "https://it.wikipedia.org/wiki/";

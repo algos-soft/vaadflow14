@@ -38,7 +38,7 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderProvincia")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaRowIndex = false, usaCompany = false)
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,sigla,regione,iso,status")
 @AIForm(fields = "ordine,nome,sigla,regione,stato,iso,status")
@@ -64,7 +64,7 @@ public class Provincia extends AEntity {
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, caption = "provincia")
     @AIColumn()
     public String nome;
 

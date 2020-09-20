@@ -26,6 +26,32 @@ public @interface AIList {
 
 
     /**
+     * (Optional) Alert sopra la lista
+     * Di default VUOTA
+     *
+     * @return the string
+     */
+    String headerAlert() default VUOTA;
+
+    /**
+     * (Optional) prima colonna indice a sinistra della grid
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaRowIndex() default false;
+
+    /**
+     * (Optional) The width of the index.
+     * Expressed in double, to be converted in String ending with "em"
+     * Defaults to 2.5
+     *
+     * @return the int
+     */
+    double rowIndexWidthEM() default 2.5;
+
+
+    /**
      * (Optional) List of visible fields on Grid
      * Presentati in successione e separati da virgola
      * Vengono poi convertiti in una List

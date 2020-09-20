@@ -59,6 +59,7 @@ public class UtenteLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
+    @Deprecated
     public UtenteLogic() {
         this(AEOperation.edit);
     }

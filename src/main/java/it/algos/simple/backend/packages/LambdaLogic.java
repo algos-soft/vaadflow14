@@ -1,51 +1,45 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
-import it.algos.vaadflow14.ui.fields.AComboField;
-import org.springframework.beans.factory.annotation.Autowired;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.ui.form.AGenericForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.textfield.TextField;
+
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 11-set-2020
- * Time: 07:22
+ * Date: dom, 20-set-2020
+ * Time: 06:21
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private Delta ; <br>
- * 2) StaticContextAccessor.getBean(Delta.class) (senza parametri) <br>
- * 3) appContext.getBean(Delta.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * 1) @Autowired private Lambda ; <br>
+ * 2) StaticContextAccessor.getBean(Lambda.class) (senza parametri) <br>
+ * 3) appContext.getBean(Lambda.class) (preceduto da @Autowired ApplicationContext appContext) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DeltaLogic extends ALogic {
+public class LambdaLogic extends ALogic {
+
 
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public ViaLogic viaLogic;
 
 
     /**
@@ -54,7 +48,7 @@ public class DeltaLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
-    public DeltaLogic() {
+    public LambdaLogic() {
         this(AEOperation.edit);
     }
 
@@ -67,9 +61,9 @@ public class DeltaLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public DeltaLogic(AEOperation operationForm) {
+    public LambdaLogic(AEOperation operationForm) {
         super(operationForm);
-        super.entityClazz = Delta.class;
+        super.entityClazz = Lambda.class;
     }
 
 
@@ -82,6 +76,7 @@ public class DeltaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+        this.formClazz = LambdaForm.class;
     }
 
 
@@ -90,10 +85,10 @@ public class DeltaLogic extends ALogic {
      *
      * @param code obbligatorio
      *
-     * @return true se la nuova entity è stata creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public Delta crea(String code) {
-        return (Delta) checkAndSave(newEntity(code));
+    public Lambda crea(String code) {
+        return (Lambda) checkAndSave(newEntity(code));
     }
 
 
@@ -104,7 +99,7 @@ public class DeltaLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Delta newEntity() {
+    public Lambda newEntity() {
         return newEntity(VUOTA);
     }
 
@@ -116,41 +111,14 @@ public class DeltaLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Delta newEntity(String code) {
-        Delta newEntityBean = Delta.builderDelta()
+    public Lambda newEntity( String uno) {//@TODO: Le properties riportate sono INDICATIVE e debbono essere sostituite
+        Lambda newEntityBean = Lambda.builderLambda()
 
-                .code(text.isValid(code) ? code : null)
+                .uno(text.isValid(uno) ? uno : null)
 
                 .build();
 
-        return (Delta) fixKey(newEntityBean);
+        return (Lambda) fixKey(newEntityBean);
     }
-
-
-    /**
-     * Save proveniente da un click sul bottone 'registra' del Form. <br>
-     * La entityBean viene recuperare dal form <br>
-     *
-     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
-     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
-     */
-    @Override
-    public boolean saveDaForm() {
-        Delta entityBean = null;
-        if (currentForm != null) {
-            entityBean = (Delta) currentForm.getValidBean();
-        }
-
-        AComboField combo = (AComboField) currentForm.fieldsMap.get("via");
-        ComboBox box = combo.comboBox;
-        Object obj = box.getValue();
-        if (obj instanceof String) {
-            Via via = viaLogic.crea((String)obj);
-            entityBean.via = via;
-        }
-
-        return entityBean != null ? save(entityBean) : false;
-    }
-
 
 }

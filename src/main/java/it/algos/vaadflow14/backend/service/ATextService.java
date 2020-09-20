@@ -71,7 +71,7 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Forza il primo carattere della stringa al carattere maiuscolo
+     * Forza il primo carattere della stringa (e solo il primo) al carattere maiuscolo
      * <p>
      * Se la stringa è nulla, ritorna un nullo
      * Se la stringa è vuota, ritorna una stringa vuota
@@ -87,6 +87,29 @@ public class ATextService extends AAbstractService {
 
         if (isValid(testoOut)) {
             primoCarattere = testoOut.substring(0, 1).toUpperCase();
+            testoOut = primoCarattere + testoOut.substring(1);
+        }
+
+        return testoOut.trim();
+    }
+
+    /**
+     * Forza il primo carattere della stringa (e solo il primo) al carattere minuscolo
+     * <p>
+     * Se la stringa è nulla, ritorna un nullo
+     * Se la stringa è vuota, ritorna una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param testoIn ingresso
+     *
+     * @return testo formattato in uscita
+     */
+    public String primaMinuscola(final String testoIn) {
+        String testoOut = isValid(testoIn) ? testoIn.trim() : VUOTA;
+        String primoCarattere;
+
+        if (isValid(testoOut)) {
+            primoCarattere = testoOut.substring(0, 1).toLowerCase();
             testoOut = primoCarattere + testoOut.substring(1);
         }
 

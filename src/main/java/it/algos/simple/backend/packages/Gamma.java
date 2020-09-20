@@ -36,9 +36,9 @@ import java.time.LocalTime;
 @Builder(builderMethodName = "builderGamma")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Gamma", keyPropertyName = "code", usaRowIndex = true)
+@AIEntity(recordName = "Gamma", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette")
+@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette", usaRowIndex = true, headerAlert = "Esempio di date e tempi, rappresentati in diversi modi")
 @AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette")
 public class Gamma extends AEntity {
 

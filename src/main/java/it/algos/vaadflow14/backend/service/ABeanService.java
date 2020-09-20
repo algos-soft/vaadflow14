@@ -4,6 +4,7 @@ import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AIField;
@@ -120,10 +121,8 @@ public class ABeanService extends AAbstractService {
         }
 
         for (String fieldKey : listaNomi) {
-            reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-            field = fieldService.creaOnly( reflectionJavaField);
+            field = fieldService.crea(entityBean,binder,operationForm, fieldKey);
             if (field != null) {
-                fieldService.addToBinder(entityBean,binder, operationForm,reflectionJavaField,field);
                 fieldsList.add(field);
             }
         }

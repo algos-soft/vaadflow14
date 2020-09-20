@@ -2,9 +2,12 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,12 +25,34 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private Preferenza ; <br>
- * 2) StaticContextAccessor.getBean(Preferenza.class) (senza parametri) <br>
- * 3) appContext.getBean(Preferenza.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * 1) @Autowired private PreferenzaLogic ; <br>
+ * 2) StaticContextAccessor.getBean(PreferenzaLogic.class, operationForm) (con parametro) <br>
+ * 3) appContext.getBean(PreferenzaLogic.class, operationForm) (preceduto da @Autowired ApplicationContext appContext) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
+ * <p>
+ * Le preferenze memorizzate nella collezione del mongoDB sono di tre tipi:
+ * A - Standard, inserite all'avvio del programma prendendole dalla enumeration AEPreferenza <br>
+ * B - Specifiche, inserite all'avvio del programma prendendole da una enumeration specifica <br>
+ * C - Aggiuntive, inserite direttamente dall'utente (se permesso) <br>
+ * <p>
+ * Ogni preferenza ha alcuni field chiave: <br>
+ * A - 'code' per individuare e selezionare la preferenza richiesta; se usaCompany = true, DEVE contenere anche la sigla della company <br>
+ * B - 'descrizione' per individuare lo scopo ed il funzionamento della preferenza <br>
+ * C - 'type' per suddividere le preferenze secondo la enumeration AETypePref <br>
+ * D - 'value' per memorizzare il valore nel mongoDB sotto forma di byte[], convertiti secondo il 'type' <br>
+ * <p>
+ * Funzionamento:
+ * 1 - Quando parte il programma la prima volta (quando è vuota la collection 'preferenza' sul mongoDB), vengono create
+ * TUTTE le preferenze 'standard' e 'specifiche' provenienti dalle enumeration
+ * 2 - Quando il programma parte le volte successive (quando la collection 'preferenza' sul mongoDB non è vuota),
+ * vengono create tutte e sole le preferenze ('standard' e 'specifiche').
+ * NON presenti. Quelli presenti NON vengono modificate.
+ * 3 - Premendo il Bottone/menu 'reset' si cancellano e si ricreano tutte e sole le preferenze
+ * ('standard' e 'specifiche') indipendentemente dal fatto che abbiano valori personalizzati o meno.
+ * Le preferenze aggiuntive, create dall'utente, non vengono modificate
+ * 4 - Premendo il Bottone/menu 'delete' si cancellano TUTTE le preferenze
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -46,6 +71,7 @@ public class PreferenzaLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
+    @Deprecated
     public PreferenzaLogic() {
         this(AEOperation.edit);
     }
@@ -74,6 +100,17 @@ public class PreferenzaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        this.searchType = AESearch.editField;
+        this.searchProperty = annotation.getSearchPropertyName(entityClazz);
+        this.usaBottoneDeleteAll = true;
+        this.usaBottoneReset = true;
+        this.usaBottoneNew = true;
+        this.usaBottoneExport = false;
+        this.usaBottonePaginaWiki = false;
+        this.wikiPageTitle = VUOTA;
+        this.usaHeaderWrap = false;
+        this.usaBottoneEdit = true;
     }
 
 
@@ -95,28 +132,28 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-//    /**
-//     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * Costruisce un' istanza dedicata <br>
-//     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-//     *
-//     * @param entityClazz the class of type AEntity
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    @Override
-//    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
-//        form = null;
-//
-//        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
-//        if (entityClazz != null) {
-//            form = appContext.getBean(PreferenzaForm.class, entityClazz);
-//        }
-//
-//        return form;
-//    }
+    //    /**
+    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
+    //     * <p>
+    //     * Chiamato da AView.initView() <br>
+    //     * Costruisce un' istanza dedicata <br>
+    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+    //     *
+    //     * @param entityClazz the class of type AEntity
+    //     *
+    //     * @return componente grafico per il placeHolder
+    //     */
+    //    @Override
+    //    public AForm getBodyFormLayout(Class<? extends AEntity> entityClazz) {
+    //        form = null;
+    //
+    //        //--entityClazz dovrebbe SEMPRE esistere, ma meglio controllare
+    //        if (entityClazz != null) {
+    //            form = appContext.getBean(PreferenzaForm.class, entityClazz);
+    //        }
+    //
+    //        return form;
+    //    }
 
 
     /**
@@ -143,6 +180,16 @@ public class PreferenzaLogic extends ALogic {
         return currentForm;
     }
 
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param aePref: enumeration per la creazione-reset di tutte le entities
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    public Preferenza crea(AEPreferenza aePref) {
+        return crea(aePref.getCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(),aePref.getNote());
+    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -151,11 +198,12 @@ public class PreferenzaLogic extends ALogic {
      * @param descrizione (obbligatoria)
      * @param type        (obbligatorio) per convertire in byte[] i valori
      * @param value       (obbligatorio) memorizza tutto in byte[]
+     * @param note        (facoltativo)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza crea(String code, String descrizione, AETypePref type, Object value) {
-        return (Preferenza)checkAndSave(newEntity(code, descrizione, type, value));
+    public Preferenza crea(String code, String descrizione, AETypePref type, Object value, String note) {
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, value, note));
     }
 
 
@@ -167,7 +215,7 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Preferenza newEntity() {
-        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null);
+        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, VUOTA);
     }
 
 
@@ -182,13 +230,12 @@ public class PreferenzaLogic extends ALogic {
      * @param descrizione (obbligatoria)
      * @param type        (obbligatorio) per convertire in byte[] i valori
      * @param value       (obbligatorio) memorizza tutto in byte[]
+     * @param note        (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object value) {
+    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object value, String note) {
         Preferenza newEntityBean = Preferenza.builderPreferenza()
-
-                .ordine(this.getNewOrdine())
 
                 .code(text.isValid(code) ? code : null)
 
@@ -199,6 +246,10 @@ public class PreferenzaLogic extends ALogic {
                 .value(type != null ? type.objectToBytes(value) : (byte[]) null)
 
                 .build();
+
+        if (text.isValid(note)) {
+            newEntityBean.note = note;
+        }
 
         return (Preferenza) fixKey(newEntityBean);
     }
@@ -291,6 +342,27 @@ public class PreferenzaLogic extends ALogic {
 
     public String getEnumRawValue(String keyID) {
         return getString(keyID);
+    }
+
+
+    /**
+     * Creazione di alcuni dati iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return false se non esiste il metodo sovrascritto
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    @Override
+    public boolean reset() {
+         super.reset();
+
+        for (AEPreferenza aePref : AEPreferenza.values()) {
+            crea(aePref);
+        }
+
+        return true;
     }
 
 }

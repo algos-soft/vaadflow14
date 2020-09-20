@@ -5,6 +5,7 @@ import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.ui.fields.AComboField;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -51,8 +52,8 @@ public class ANotNullValidator implements Validator {
     @Override
     public ValidationResult apply(Object obj, ValueContext valueContext) {
         Optional optional=valueContext.getComponent();
-        ComboBox combo=(ComboBox)optional.get();
-        Object value= combo.getValue();
+        AComboField comboField=(AComboField)optional.get();
+        Object value= comboField.comboBox.getValue();
         if (obj == null) {
             if (message.equals("")) {
                 return ValidationResult.error("Non può essere nullo");

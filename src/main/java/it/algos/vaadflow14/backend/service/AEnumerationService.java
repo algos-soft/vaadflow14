@@ -112,7 +112,7 @@ public class AEnumerationService extends AAbstractService {
         String stringaValori = getStringaValori(rawValue);
 
         if (text.isValid(stringaValori)) {
-            lista = array.getList(stringaValori);
+            lista = array.fromString(stringaValori);
         }
 
         return lista;

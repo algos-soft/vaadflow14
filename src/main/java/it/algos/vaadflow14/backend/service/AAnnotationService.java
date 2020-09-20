@@ -683,6 +683,24 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the alert on top of list (optional).
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the alert
+     */
+    public String getHeaderAlert(final Class<? extends AEntity> entityClazz) {
+        String headerAlert = VUOTA;
+        AIList annotation = this.getAIList(entityClazz);
+
+        if (annotation != null) {
+            headerAlert = annotation.headerAlert();
+        }
+
+        return headerAlert;
+    }
+
+    /**
      * Flag per usare il field della superclasse AEntity. <br>
      *
      * @param entityClazz the class of type AEntity
@@ -690,7 +708,7 @@ public class AAnnotationService extends AAbstractService {
      * @return the status
      */
     public boolean usaRowIndex(final Class<? extends AEntity> entityClazz) {
-        AIEntity annotation = this.getAIEntity(entityClazz);
+        AIList annotation = this.getAIList(entityClazz);
         return annotation != null ? annotation.usaRowIndex() : false;
     }
 
@@ -706,7 +724,7 @@ public class AAnnotationService extends AAbstractService {
         String widthTxt = VUOTA;
         double widthDouble = 0;
         String tagIndex = TAG_EM;
-        AIEntity annotation = this.getAIEntity(entityClazz);
+        AIList annotation = this.getAIList(entityClazz);
 
         if (annotation != null) {
             widthDouble = annotation.rowIndexWidthEM();
@@ -1524,7 +1542,7 @@ public class AAnnotationService extends AAbstractService {
         }
 
         if (text.isValid(value)) {
-            items = array.getList(value);
+            items = array.fromString(value);
         }
 
         return items;

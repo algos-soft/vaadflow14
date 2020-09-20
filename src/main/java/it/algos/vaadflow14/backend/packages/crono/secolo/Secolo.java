@@ -35,9 +35,9 @@ import javax.validation.constraints.NotBlank;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Secolo", keyPropertyName = "nome", usaRowIndex = true, usaCompany = false)
+@AIEntity(recordName = "Secolo", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "anteCristo,inizio,fine,nome")
+@AIList(fields = "anteCristo,inizio,fine,nome", usaRowIndex = true)
 @AIForm(fields = "anteCristo,inizio,fine,nome")
 public class Secolo extends AEntity {
 

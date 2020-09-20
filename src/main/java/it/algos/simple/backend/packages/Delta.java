@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
@@ -38,7 +39,7 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Delta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,secolo,via")
+@AIList(fields = "code,secolo,via", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
 @AIForm(fields = "code,secolo,via")
 public class Delta extends AEntity {
 
@@ -75,7 +76,7 @@ public class Delta extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class)
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class, logicClazz = ViaLogic.class)
     @AIColumn(widthEM = 8)
     public Via via;
 

@@ -365,7 +365,11 @@ public class AReflectionService extends AAbstractService {
      * @return true se esiste
      */
     public boolean isEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
-        return getField(entityClazz, publicFieldName) != null;
+        try {
+            return entityClazz.getField(publicFieldName)!=null;
+        } catch (Exception unErrore) {
+        }
+        return false;
     }
 
     //    /**

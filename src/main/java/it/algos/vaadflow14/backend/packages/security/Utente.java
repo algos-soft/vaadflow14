@@ -9,7 +9,6 @@ import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -42,9 +41,9 @@ import java.util.Collection;
 @Builder(builderMethodName = "builderUtente")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Utente", keyPropertyName = "username", usaRowIndex = true,usaCompany = true, usaCreazioneModifica = true)
+@AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
-@AIList(fields = "username,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
+@AIList(fields = "username,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled", usaRowIndex = true)
 @AIForm(fields = "username,password,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
 public class Utente extends ACEntity implements UserDetails {
 

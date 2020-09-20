@@ -50,10 +50,7 @@ import org.vaadin.haijian.Exporter;
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -436,7 +433,8 @@ public abstract class ALogic implements AILogic {
      * @return wrapper per passaggio dati
      */
     protected List<String> getAlertList(AEVista typeVista) {
-        return new ArrayList<String>();
+        String headerAlert = annotation.getHeaderAlert(entityClazz);
+        return text.isValid(headerAlert)?new ArrayList(Arrays.asList(headerAlert)):new ArrayList<String>();
     }
 
 
@@ -1519,6 +1517,7 @@ public abstract class ALogic implements AILogic {
      */
     public boolean save(AEntity entityToSave) {
         boolean status = false;
+        AEntity oldEntityBean;
         AEntity entityBean = beforeSave(entityToSave, operationForm);
 
         if (entityBean == null) {
@@ -1535,16 +1534,19 @@ public abstract class ALogic implements AILogic {
             return status;
         }
 
-        if (entityBean != null) {
+          if (entityBean != null) {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
                 entityBean = fixKey(entityBean);
             }
+            oldEntityBean = mongo.find(entityBean);
             entityBean = mongo.save(entityBean);
             status = entityBean != null;
-            if (operationForm == AEOperation.addNew) {
-                logger.nuovo(entityBean);
-            } else {
-                logger.modifica(entityBean);
+            if (status) {
+                if (operationForm == AEOperation.addNew) {
+                    logger.nuovo(entityBean);
+                } else {
+                    logger.modifica(entityBean,oldEntityBean);
+                }
             }
         } else {
             logger.error("Object to save must not be null", this.getClass(), "save");

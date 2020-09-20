@@ -50,6 +50,8 @@ public class ABooleanField extends AField<Boolean> {
 
     private String caption = VUOTA;
 
+    private String captionCheckBox = VUOTA;
+
     private String firstItem;
 
     private String secondItem;
@@ -69,15 +71,30 @@ public class ABooleanField extends AField<Boolean> {
 
     /**
      * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(ABooleanField.class, typeBool) <br>
+     *
+     * @param typeBool per la tipologia di visualizzazione
+     */
+    public ABooleanField(AETypeBoolField typeBool) {
+        this(typeBool, VUOTA);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(ABooleanField.class, typeBool, boolEnum) <br>
      *
      * @param typeBool per la tipologia di visualizzazione
-     * @param boolEnum valori custom della scelta booleana
+     * @param mixValue valori custom della scelta booleana oppure testo del checkBox
      */
-    public ABooleanField(AETypeBoolField typeBool, String boolEnum, String caption) {
+    public ABooleanField(AETypeBoolField typeBool, String mixValue) {
         this.typeBool = typeBool;
-        this.boolEnum = boolEnum;
-        this.caption = caption;
+        usaCheckBox = typeBool == AETypeBoolField.checkBox;
+        if (usaCheckBox) {
+            this.captionCheckBox = mixValue;
+        } else {
+            this.boolEnum = mixValue;
+        }
     } // end of SpringBoot constructor
 
 
@@ -92,22 +109,16 @@ public class ABooleanField extends AField<Boolean> {
      */
     @PostConstruct
     protected void postConstruct() {
-        //@todo Funzionalità ancora da implementare
-        //@todo Per adesso funziona solo il checkbox
-        //        typeBool = AETypeBoolField.checkBox;
-        //@todo Funzionalità ancora da implementare
-
         initView();
     }
 
 
     protected void initView() {
-        usaCheckBox = typeBool == AETypeBoolField.checkBox;
         List<Boolean> items = new ArrayList<>();
 
         if (usaCheckBox) {
-            checkBox = new Checkbox("Pippoz");
-            //            checkBox.getElement().setAttribute("style", "align-left: flex-start;");
+            checkBox = new Checkbox();
+            checkBox.getElement().setAttribute("style", "align-left: flex-start;");
         } else {
             radioGroup = new RadioButtonGroup<>();
         }
@@ -123,7 +134,7 @@ public class ABooleanField extends AField<Boolean> {
                     radioGroup.setRenderer(new TextRenderer<>(e -> e ? "vero" : "falso"));
                     break;
                 case checkBox:
-                    checkBox.setLabelAsHtml(caption);
+                    checkBox.setLabelAsHtml(captionCheckBox);
                     break;
                 case radioSiNo:
                     radioGroup.setItems(items);

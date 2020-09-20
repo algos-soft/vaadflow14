@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -53,83 +52,105 @@ public class PreferenzaForm extends AForm {
         Object comp = null;
         ComboBox combo;
 
-        field = fieldsMap.get(FIELD_TYPE);
-        if (field != null) {
-//            if (field != null && field instanceof ComboBox) {
-//                combo = (ComboBox) comp;
-//                combo.addValueChangeListener(e -> sincro((AETypePref) e.getValue()));
+        if (fieldsMap != null) {
+
+            field = fieldsMap.get(FIELD_TYPE);
+            if (field != null) {
+                //            if (field != null && field instanceof ComboBox) {
+                //                combo = (ComboBox) comp;
+                //                combo.addValueChangeListener(e -> sincro((AETypePref) e.getValue()));
             }
-        //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+            //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+        }
     }
 
 
     /**
-     * Cambia il valueField sincronizzandolo col comboBox
-     * Senza valori, perché è attivo SOLO in modalità AddNew (new record)
+     * Eventuali aggiustamenti finali al layout <br>
+     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap) <br>
+     * Regola eventuali valori delle property in apertura della scheda <br>
+     * Può essere sovrascritto <br>
      */
-    protected AField sincro(AETypePref type) {
-        String caption = "Valore ";
-        List<String> items;
-        String enumValue = getString();
+    @Override
+    protected void fixLayoutFinal() {
+        //--recupera il field comboBox type
+        AComboField fieldType = (AComboField) fieldsMap.get("type");
 
-        if (valueField != null) {
-            topLayout.remove(valueField);
-            valueField = null;
-        }
+        //--recupera il field value
+        APreferenzaField fieldValue = (APreferenzaField) fieldsMap.get("value");
 
-        type = type != null ? type : AETypePref.string;
-        switch (type) {
-            case string:
-                caption += "(string)";
-                valueField = appContext.getBean(ATextField.class, caption);
-                break;
-            case email:
-                caption += "(email)";
-                valueField = appContext.getBean(AEmailField.class, caption);
-                String message = "L' indirizzo eMail non è valido";
-                ((AEmailField) valueField).setErrorMessage(message);
-                break;
-            case integer:
-                caption += "(solo interi)";
-                valueField = appContext.getBean(AIntegerField.class, caption);
-                break;
-            case bool:
-                valueField = appContext.getBean(ABooleanField.class, BOOL_FIELD, AETypeBoolField.radioTrueFalse);
-                break;
-            case localdate:
-                valueField = appContext.getBean(ADateField.class);
-                break;
-            case localdatetime:
-                valueField = appContext.getBean(ADateTimeField.class);
-                break;
-            case localtime:
-                valueField = appContext.getBean(ATimeField.class);
-                //                ((ATimePicker) valueField).setStep(Duration.ofMinutes(15));
-                break;
-            case enumeration:
-                if (operationForm == AEOperation.addNew) {
-                    valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
-                } else {
-                    if (enumValue.contains(PUNTO_VIRGOLA)) {
-                        enumValue = text.levaCodaDa(enumValue, PUNTO_VIRGOLA);
-                    }
-                    items = enumerationService.getList(enumValue);
-                    if (array.isValid(items)) {
-                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW, items);
-                    }
-                }
-                break;
-            default:
-                logger.warn("Switch - caso non definito");
-                break;
-        }
-
-        if (valueField != null) {
-            topLayout.add(valueField);
-        }
-
-        return valueField;
+        //--aggiunge un listener per invocare la sincronizzazione del field value
+        fieldType.addValueChangeListener(event -> fieldValue.sincro((AETypePref)event.getValue()));
     }
+
+
+//    /**
+//     * Cambia il valueField sincronizzandolo col comboBox
+//     * Senza valori, perché è attivo SOLO in modalità AddNew (new record)
+//     */
+//    protected AField sincro(AETypePref type) {
+//        String caption = "Valore ";
+//        List<String> items;
+//        String enumValue = getString();
+//
+//        if (valueField != null) {
+//            topLayout.remove(valueField);
+//            valueField = null;
+//        }
+//
+//        type = type != null ? type : AETypePref.string;
+//        switch (type) {
+//            case string:
+//                caption += "(string)";
+//                valueField = appContext.getBean(ATextField.class, caption);
+//                break;
+//            case email:
+//                caption += "(email)";
+//                valueField = appContext.getBean(AEmailField.class, caption);
+//                String message = "L' indirizzo eMail non è valido";
+//                ((AEmailField) valueField).setErrorMessage(message);
+//                break;
+//            case integer:
+//                caption += "(solo interi)";
+//                valueField = appContext.getBean(AIntegerField.class, caption);
+//                break;
+//            case bool:
+//                valueField = appContext.getBean(ABooleanField.class, AETypeBoolField.radioTrueFalse, BOOL_FIELD);
+//                break;
+//            case localdate:
+//                valueField = appContext.getBean(ADateField.class);
+//                break;
+//            case localdatetime:
+//                valueField = appContext.getBean(ADateTimeField.class);
+//                break;
+//            case localtime:
+//                valueField = appContext.getBean(ATimeField.class);
+//                //                ((ATimePicker) valueField).setStep(Duration.ofMinutes(15));
+//                break;
+//            case enumeration:
+//                if (operationForm == AEOperation.addNew) {
+//                    valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
+//                } else {
+//                    if (enumValue.contains(PUNTO_VIRGOLA)) {
+//                        enumValue = text.levaCodaDa(enumValue, PUNTO_VIRGOLA);
+//                    }
+//                    items = enumerationService.getList(enumValue);
+//                    if (array.isValid(items)) {
+//                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW, items);
+//                    }
+//                }
+//                break;
+//            default:
+//                logger.warn("Switch - caso non definito");
+//                break;
+//        }
+//
+//        if (valueField != null) {
+//            topLayout.add(valueField);
+//        }
+//
+//        return valueField;
+//    }
 
 
     /**
@@ -137,8 +158,8 @@ public class PreferenzaForm extends AForm {
      * Dal DB alla UI <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected void readFieldsExtra() {
+    //    @Override
+    protected void readFieldsExtraNo() {
         super.readFieldsExtra();
         fixType();
 
@@ -150,7 +171,7 @@ public class PreferenzaForm extends AForm {
         Object genericValue = getValue();
         String stringValue = getString();
 
-        valueField = sincro(type);
+//        valueField = sincro(type);
         switch (type) {
             case string:
                 valueField.setValue(stringValue);

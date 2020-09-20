@@ -26,9 +26,10 @@ public class AEmailField extends AField<String> {
      * L' istanza viene costruita con appContext.getBean(ATextField.class) <br>
      */
     public AEmailField() {
-        emailField = new EmailField(caption);
+        emailField = new EmailField();
         emailField.setAutoselect(true);
         emailField.setClearButtonVisible(true);
+
         add(emailField);
     } // end of SpringBoot constructor
 
@@ -63,5 +64,9 @@ public class AEmailField extends AField<String> {
         return emailField.getValue().compareTo(o);
     }
 
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        emailField.setErrorMessage(errorMessage);
+    }
 
 }

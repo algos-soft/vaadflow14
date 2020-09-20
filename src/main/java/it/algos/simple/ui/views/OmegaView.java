@@ -23,7 +23,7 @@ import java.util.List;
  * Date: mer, 29-lug-2020
  * Time: 18:46
  */
-@Route(value = "omega", layout = MainLayout.class)
+@Route(value = "omegaView", layout = MainLayout.class)
 public class OmegaView extends VerticalLayout {
 
     /**

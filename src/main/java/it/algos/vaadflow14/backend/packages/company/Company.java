@@ -32,9 +32,9 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Company", keyPropertyName = "code", usaRowIndex = true, usaNote = true, usaCreazioneModifica = true)
+@AIEntity(recordName = "Company", keyPropertyName = "code", usaNote = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.FACTORY)
-@AIList(fields = "code,telefono,email,descrizione")
+@AIList(fields = "code,telefono,email,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,telefono,email,descrizione")
 public class Company extends AEntity {
 
