@@ -109,8 +109,8 @@ public class APreferenzaField extends AField<byte[]> {
                 ((AEmailField) valueField).setErrorMessage(message);
                 break;
             case integer:
-                caption += "(solo interi)";
-                valueField = appContext.getBean(AIntegerField.class, caption);
+                valueField = appContext.getBean(AIntegerField.class);
+                valueField.setLabel(tag + "(solo interi)");
                 break;
             case bool:
                 valueField = appContext.getBean(ABooleanField.class, AETypeBoolField.radioTrueFalse);

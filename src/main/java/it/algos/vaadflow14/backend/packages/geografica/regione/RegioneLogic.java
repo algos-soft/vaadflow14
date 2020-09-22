@@ -1,5 +1,10 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -17,12 +22,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.TRATTINO;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow14
@@ -57,6 +62,8 @@ public class RegioneLogic extends ALogic {
      */
     @Autowired
     public StatoLogic statoLogic;
+
+
 
 
     /**
@@ -130,35 +137,35 @@ public class RegioneLogic extends ALogic {
     }
 
 
-//    /**
-//     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-//     * Informazioni (eventuali) specifiche di ogni modulo <br>
-//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-//     *
-//     * @param typeVista in cui inserire gli avvisi
-//     *
-//     * @return wrapper per passaggio dati
-//     */
-//    @Override
-//    protected List<String> getAlertList(AEVista typeVista) {
-//        List<String> lista = super.getAlertList(typeVista);
-//        String message;
-//
-//        if (typeVista == AEVista.list) {
-//            lista.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2.");
-//            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-//            lista.add("Codice ISO, sigla abituale e 'status' normativo");
-//            lista.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
-//        }
-//
-//        if (typeVista == AEVista.form) {
-//            lista.add("Scheda NON modificabile");
-//            lista.add("Stato codificato ISO 3166-2");
-//        }
-//
-//        return lista;
-//    }
+    //    /**
+    //     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+    //     * Informazioni (eventuali) specifiche di ogni modulo <br>
+    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+    //     *
+    //     * @param typeVista in cui inserire gli avvisi
+    //     *
+    //     * @return wrapper per passaggio dati
+    //     */
+    //    @Override
+    //    protected List<String> getAlertList(AEVista typeVista) {
+    //        List<String> lista = super.getAlertList(typeVista);
+    //        String message;
+    //
+    //        if (typeVista == AEVista.list) {
+    //            lista.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2.");
+    //            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
+    //            lista.add("Codice ISO, sigla abituale e 'status' normativo");
+    //            lista.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
+    //        }
+    //
+    //        if (typeVista == AEVista.form) {
+    //            lista.add("Scheda NON modificabile");
+    //            lista.add("Stato codificato ISO 3166-2");
+    //        }
+    //
+    //        return lista;
+    //    }
 
 
     /**
@@ -167,19 +174,64 @@ public class RegioneLogic extends ALogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox("stato", statoLogic.getItalia());
+        //        super.creaComboBox("stato", statoLogic.getItalia());
+        ComboBox comboStati = this.creaComboStati();
+        mappaComboBox.put("stato", comboStati);
+
         super.creaComboBox("status", 14);
+    }
+
+
+    protected ComboBox creaComboStati() {
+        ComboBox<Stato> combo = new ComboBox();
+        Field reflectionJavaField = null;
+        String tag = TRE_PUNTI;
+        Class comboEnumClazz = null;
+        String widthEM = "12em";
+        Sort sort = Sort.by("ordine");
+        List items;
+
+
+        items = mongo.findAll(Stato.class, sort);
+        combo.setWidth(widthEM);
+        combo.setPreventInvalidInput(true);
+        combo.setAllowCustomValue(false);
+        combo.setPlaceholder(text.primaMaiuscola("Stati") + tag);
+        combo.setClearButtonVisible(true);
+        combo.setRequired(false);
+
+        combo.setItems(items);
+//        if (initialValue != null) {
+//            combo.setValue(initialValue);
+//        }
+
+
+        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
+            Div text = new Div();
+            String sigla=entityStato.getAlfadue().toLowerCase();
+            text.setText(entityStato.getStato());
+
+            Image image = imageService.getBandiera(sigla);
+            image.setWidth("21px");
+            image.setHeight("21px");
+
+            FlexLayout wrapper = new FlexLayout();
+            text.getStyle().set("margin-left", "0.5em");
+            wrapper.add(image, text);
+            return wrapper;
+        }));
+        return combo;
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param regione   (obbligatorio, unico)
-     * @param stato  (obbligatorio)
-     * @param iso    di riferimento (obbligatorio, unico)
-     * @param sigla  (consuetudinaria, obbligatoria)
-     * @param status (obbligatorio)
+     * @param regione (obbligatorio, unico)
+     * @param stato   (obbligatorio)
+     * @param iso     di riferimento (obbligatorio, unico)
+     * @param sigla   (consuetudinaria, obbligatoria)
+     * @param status  (obbligatorio)
      *
      * @return true se la nuova entity è stata creata e salvata
      */
@@ -206,11 +258,11 @@ public class RegioneLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param regione   (obbligatorio, unico)
-     * @param stato  (obbligatorio)
-     * @param iso    di riferimento (obbligatorio, unico)
-     * @param sigla  (consuetudinaria, obbligatoria)
-     * @param status (obbligatorio)
+     * @param regione (obbligatorio, unico)
+     * @param stato   (obbligatorio)
+     * @param iso     di riferimento (obbligatorio, unico)
+     * @param sigla   (consuetudinaria, obbligatoria)
+     * @param status  (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -357,13 +409,13 @@ public class RegioneLogic extends ALogic {
         String isoTag = "FR-";
 
         //--13 regioni metropolitane
-        templateList(stato,AEStatuto.franciaMetropolitana,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.franciaMetropolitana, paginaWiki, isoTag, 1, 2, 2);
 
         //--3 regioni d'oltremare
-        dueColonne(stato,AEStatuto.franciaMetropolitana,paginaWiki,3,2,2,4);
+        dueColonne(stato, AEStatuto.franciaMetropolitana, paginaWiki, 3, 2, 2, 4);
 
         //--9 collettività d'oltremare
-        dueColonne(stato,AEStatuto.franciaCollettivita,paginaWiki,4,2,1,3);
+        dueColonne(stato, AEStatuto.franciaCollettivita, paginaWiki, 4, 2, 1, 3);
     }
 
 
@@ -375,7 +427,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getSvizzera();
         String isoTag = "CH-";
 
-        templateList(stato,AEStatuto.svizzera,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.svizzera, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -387,7 +439,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getAustria();
         String isoTag = "AT-";
 
-        templateList(stato,AEStatuto.austria,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.austria, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -399,7 +451,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getGermania();
         String isoTag = "DE-";
 
-        templateList(stato,AEStatuto.germania,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.germania, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -411,7 +463,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getSpagna();
         String isoTag = "ES-";
 
-        templateList(stato,AEStatuto.spagna,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.spagna, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -423,10 +475,10 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getPortogallo();
 
         //--18 distretti
-        dueColonne(stato,AEStatuto.portogalloDistretto,paginaWiki,1,2,2,3);
+        dueColonne(stato, AEStatuto.portogalloDistretto, paginaWiki, 1, 2, 2, 3);
 
         //--2 regioni autonome
-        dueColonne(stato,AEStatuto.portogalloRegione,paginaWiki,2,2,2,3);
+        dueColonne(stato, AEStatuto.portogalloRegione, paginaWiki, 2, 2, 2, 3);
     }
 
 
@@ -438,7 +490,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getBelgio();
         String isoTag = "BE-";
 
-        templateList(stato,AEStatuto.belgio,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.belgio, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -450,7 +502,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getOlanda();
         String isoTag = "NL-";
 
-        templateList(stato,AEStatuto.olanda,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.olanda, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -461,7 +513,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:HR";
         Stato stato = statoLogic.getCroazia();
 
-        dueColonne(stato,AEStatuto.croazia,paginaWiki,1,2,1,2);
+        dueColonne(stato, AEStatuto.croazia, paginaWiki, 1, 2, 1, 2);
     }
 
 
@@ -472,7 +524,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:AL";
         Stato stato = statoLogic.getAlbania();
 
-        dueColonne(stato,AEStatuto.albania,paginaWiki,1,1,1,2);
+        dueColonne(stato, AEStatuto.albania, paginaWiki, 1, 1, 1, 2);
     }
 
 
@@ -484,10 +536,10 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getGrecia();
 
         //--13 periferie
-        dueColonne(stato,AEStatuto.greciaPeriferia,paginaWiki,1,2,1,2);
+        dueColonne(stato, AEStatuto.greciaPeriferia, paginaWiki, 1, 2, 1, 2);
 
         //--51 prefetture (Attica è doppia)
-        dueColonne(stato,AEStatuto.greciaPrefettura,paginaWiki,2,2,2,3);
+        dueColonne(stato, AEStatuto.greciaPrefettura, paginaWiki, 2, 2, 2, 3);
     }
 
 
@@ -499,7 +551,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getCechia();
         String isoTag = "CZ-";
 
-        templateList(stato,AEStatuto.cechia,paginaWiki,isoTag,1,2,3);
+        templateList(stato, AEStatuto.cechia, paginaWiki, isoTag, 1, 2, 3);
     }
 
 
@@ -510,7 +562,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:SK";
         Stato stato = statoLogic.getSlovacchia();
 
-        dueColonne(stato,AEStatuto.slovacchia,paginaWiki,1,2,1,2);
+        dueColonne(stato, AEStatuto.slovacchia, paginaWiki, 1, 2, 1, 2);
     }
 
 
@@ -522,7 +574,7 @@ public class RegioneLogic extends ALogic {
         Stato stato = statoLogic.getUngheria();
         String isoTag = "CZ-";
 
-        templateList(stato,AEStatuto.ungheria,paginaWiki,isoTag,1,2,2);
+        templateList(stato, AEStatuto.ungheria, paginaWiki, isoTag, 1, 2, 2);
     }
 
 
@@ -533,8 +585,8 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:RO";
         Stato stato = statoLogic.getRomania();
 
-        dueColonne(stato,AEStatuto.romaniaDistretto,paginaWiki,1,2,2,3);
-        dueColonne(stato,AEStatuto.romaniaCapitale,paginaWiki,2,2,2,3);
+        dueColonne(stato, AEStatuto.romaniaDistretto, paginaWiki, 1, 2, 2, 3);
+        dueColonne(stato, AEStatuto.romaniaCapitale, paginaWiki, 2, 2, 2, 3);
     }
 
 
@@ -545,7 +597,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:BG";
         Stato stato = statoLogic.getBulgaria();
 
-        dueColonne(stato,AEStatuto.bulgaria,paginaWiki,1,2,2,3);
+        dueColonne(stato, AEStatuto.bulgaria, paginaWiki, 1, 2, 2, 3);
     }
 
 
@@ -556,7 +608,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:PL";
         Stato stato = statoLogic.getPolonia();
 
-        dueColonne(stato,AEStatuto.polonia,paginaWiki,1,2,2,3);
+        dueColonne(stato, AEStatuto.polonia, paginaWiki, 1, 2, 2, 3);
     }
 
 
@@ -567,7 +619,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:DK";
         Stato stato = statoLogic.getDanimarca();
 
-        dueColonne(stato,AEStatuto.danimarca,paginaWiki,1,2,1,2);
+        dueColonne(stato, AEStatuto.danimarca, paginaWiki, 1, 2, 1, 2);
     }
 
 

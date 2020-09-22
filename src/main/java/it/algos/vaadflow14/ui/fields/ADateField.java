@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -45,5 +46,16 @@ public class ADateField extends AField<LocalDate> {
         datePicker.setValue(value);
     }
 
+    @Override
+    public void setWidth(String width) {
+        datePicker.setWidth(width);
+    }
+
+
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        datePicker.setErrorMessage(errorMessage);
+        ALogService.messageError(errorMessage);//@todo Creare una preferenza e sostituirla qui
+    }
 
 }

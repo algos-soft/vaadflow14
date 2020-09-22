@@ -3,6 +3,10 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -18,6 +22,14 @@ public enum AEPreferenza {
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
     mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it","Email di default a cui spedire i log di posta"),
+
+    paperino("paperino", "Prova numero", AETypePref.integer, 87,"Numero intero"),
+
+    datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now()),
+
+    datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now()),
+
+    timeuno("datatre", "Orario", AETypePref.localtime, LocalTime.now()),
 
     ;
 

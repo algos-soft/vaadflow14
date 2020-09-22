@@ -115,3 +115,7 @@ Notification.show("Alcuni campi non sono adeguati", 3000, Notification.Position.
 
         return lista;
     }// end of static method
+
+
+String base64 = "your_base_64";
+add(new Image(String.format("data:image/png;base64,%s", base64), "My image"));

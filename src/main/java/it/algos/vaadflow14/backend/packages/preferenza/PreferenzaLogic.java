@@ -356,7 +356,7 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public boolean reset() {
-         super.reset();
+        super.deleteAll();
 
         for (AEPreferenza aePref : AEPreferenza.values()) {
             crea(aePref);

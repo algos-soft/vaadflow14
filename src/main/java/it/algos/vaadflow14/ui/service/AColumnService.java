@@ -408,7 +408,7 @@ public class AColumnService extends AAbstractService {
 
     public Grid.Column<AEntity> addPreferenza(Grid grid, Field field) {
         Grid.Column<AEntity> colonna = null;
-        final AETypeData data = annotation.getTypeDataCol(field);
+        final AETypeData typeData = annotation.getTypeDataCol(field);
 
         colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
             AETypePref typePref = (AETypePref) reflection.getPropertyValue((AEntity) entity, "type");
@@ -444,19 +444,29 @@ public class AColumnService extends AAbstractService {
                     message = text.format(value);
                     break;
                 case localdate:
-                case localdatetime:
-                case localtime:
-                    Object obj;
-
-                    try {
-                        obj = field.get(entity);
-                        message = obj!=null?date.get(obj, data).trim():VUOTA;
-                    } catch (Exception unErrore) {
-                        logger.error(unErrore, this.getClass(), "addPreferenza (data)");
-                    }
-
+                    message = value!=null?date.get(value,AETypeData.dateNormal):VUOTA;
                     label.getStyle().set("color", "fuchsia");
                     break;
+                case localdatetime:
+                    message = value!=null?date.get(value,AETypeData.normaleOrario):VUOTA;
+                    label.getStyle().set("color", "fuchsia");
+                    break;
+                case localtime:
+                    message = value!=null?date.get(value,AETypeData.orario):VUOTA;
+                    label.getStyle().set("color", "fuchsia");
+                    break;
+
+                //                    Object obj;
+
+//                    try {
+////                        obj = field.get(entity);
+//                        message = value!=null?date.get(value, data).trim():VUOTA;
+//                    } catch (Exception unErrore) {
+//                        logger.error(unErrore, this.getClass(), "addPreferenza (data)");
+//                    }
+//
+//                    label.getStyle().set("color", "fuchsia");
+//                    break;
                 case email:
                     label.getStyle().set("color", "lime");
                     message = (String) value;

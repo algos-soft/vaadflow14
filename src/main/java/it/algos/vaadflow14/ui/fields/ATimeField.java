@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -48,6 +49,18 @@ public class ATimeField extends AField<LocalTime> {
     @Override
     protected void setPresentationValue(LocalTime newPresentationValue) {
         timePicker.setValue(newPresentationValue);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        timePicker.setWidth(width);
+    }
+
+
+    @Override
+    public void setErrorMessage(String errorMessage) {
+        timePicker.setErrorMessage(errorMessage);
+        ALogService.messageError(errorMessage);//@todo Creare una preferenza e sostituirla qui
     }
 
 }
