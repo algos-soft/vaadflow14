@@ -1,7 +1,12 @@
 package it.algos.vaadflow14.ui.fields;
 
+import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.login.LoginI18n;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.HasValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,10 +23,10 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATextField extends AField<String> {
+public class ATextField extends AField<String>  {
 
 
-    private final TextField textField;
+    public final TextField textField;
 
 
     /**
@@ -84,6 +89,9 @@ public class ATextField extends AField<String> {
     @Override
     public void setErrorMessage(String errorMessage) {
         textField.setErrorMessage(errorMessage);
+        ALogService.messageError(errorMessage);//@todo Creare una preferenza e sostituirla qui
     }
+
+
 
 }

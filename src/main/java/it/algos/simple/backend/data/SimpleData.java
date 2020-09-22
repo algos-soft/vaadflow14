@@ -1,9 +1,7 @@
 package it.algos.simple.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.simple.backend.packages.Beta;
-import it.algos.simple.backend.packages.Gamma;
-import it.algos.simple.backend.packages.GammaLogic;
+import it.algos.simple.backend.packages.*;
 import it.algos.vaadflow14.backend.data.FlowData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,6 +29,15 @@ public class SimpleData extends FlowData {
      */
     @Autowired
     public GammaLogic gammaLogic;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public LambdaLogic lambdaLogic;
 
 
     /**
@@ -88,6 +95,12 @@ public class SimpleData extends FlowData {
 
         gamma.id = "adesso";
         mongo.save(gamma);
+
+        Lambda lambda = lambdaLogic.crea("alfa");
+        lambda.due = "betta";
+        lambda.tre = "potta";
+        mongo.save(lambda);
+
     }
 
 }

@@ -8,16 +8,16 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,15 +34,14 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>
  * L'istanza può essere richiamata con: <br>
- * 1) StaticContextAccessor.getBean(AAnnotationService.class); <br>
- * 3) @Autowired public AArrayService annotation; <br>
+ * 1) StaticContextAccessor.getBean(AColumnService.class); <br>
+ * 3) @Autowired public AColumnService annotation; <br>
  * <p>
  * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
- * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * Annotated with @VaadinSessionScope() (obbligatorio) <br>
  */
 @Service
-//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @VaadinSessionScope()
 public class AColumnService extends AAbstractService {
 
@@ -168,6 +167,9 @@ public class AColumnService extends AAbstractService {
                         Object obj = reflection.getPropertyValue((AEntity) entity, propertyName);
                         return new Label(obj != null ? obj.toString() : VUOTA);
                     }));//end of lambda expressions and anonymous inner class
+                    break;
+                case preferenza:
+                    colonna = addPreferenza(grid, field);
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "add");
@@ -398,6 +400,79 @@ public class AColumnService extends AAbstractService {
             }
 
             return new Label("g");
+        }));//end of lambda expressions and anonymous inner class
+
+        return colonna;
+    }
+
+
+    public Grid.Column<AEntity> addPreferenza(Grid grid, Field field) {
+        Grid.Column<AEntity> colonna = null;
+        final AETypeData data = annotation.getTypeDataCol(field);
+
+        colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+            AETypePref typePref = (AETypePref) reflection.getPropertyValue((AEntity) entity, "type");
+            byte[] bytes = null;
+            Object value = null;
+            Label label = null;
+            String message = VUOTA;
+
+            try {
+                bytes = (byte[]) field.get(entity);
+                value = typePref.bytesToObject(bytes);
+            } catch (Exception unErrore) {
+                logger.error(unErrore.toString());
+            }
+
+            label = new Label();
+            switch (typePref) {
+                case string:
+                    label.getStyle().set("color", "blue");
+                    message = (String) value;
+                    break;
+                case bool:
+                    boolean status = (boolean) value;
+                    message = status ? "si" : "no";
+                    if (status) {
+                        label.getStyle().set("color", "green");
+                    } else {
+                        label.getStyle().set("color", "red");
+                    }// end of if/else cycle
+                    break;
+                case integer:
+                    label.getStyle().set("color", "maroon");
+                    message = text.format(value);
+                    break;
+                case localdate:
+                case localdatetime:
+                case localtime:
+                    Object obj;
+
+                    try {
+                        obj = field.get(entity);
+                        message = obj!=null?date.get(obj, data).trim():VUOTA;
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore, this.getClass(), "addPreferenza (data)");
+                    }
+
+                    label.getStyle().set("color", "fuchsia");
+                    break;
+                case email:
+                    label.getStyle().set("color", "lime");
+                    message = (String) value;
+                    break;
+                case enumeration:
+                    label.getStyle().set("color", "teal");
+                    message = enumService.convertToPresentation((String) value);
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito");
+                    break;
+            }
+            label.setText(message);
+            label.getStyle().set("font-weight", "bold");
+            return label;
+
         }));//end of lambda expressions and anonymous inner class
 
         return colonna;

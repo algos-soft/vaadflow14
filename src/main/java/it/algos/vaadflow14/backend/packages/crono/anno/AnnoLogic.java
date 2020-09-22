@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.crono.anno;
 
 import com.google.gson.Gson;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;

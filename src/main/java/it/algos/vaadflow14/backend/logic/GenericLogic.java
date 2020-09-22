@@ -48,10 +48,11 @@ public class GenericLogic extends ALogic {
      */
     @Override
     protected AlertWrap getAlertWrap(AEVista typeVista) {
-        List<String> admin = new ArrayList<>();
-        List<String> dev = new ArrayList<>();
+        List<String> green = new ArrayList<>();
+        List<String> blu = new ArrayList<>();
+        List<String> red = new ArrayList<>();
 
-        return new AlertWrap(null, admin, dev);
+        return new AlertWrap(green, blu, red,false);
     }
 
     /**

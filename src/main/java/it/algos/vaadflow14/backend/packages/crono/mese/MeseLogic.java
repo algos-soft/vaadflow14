@@ -1,12 +1,15 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -65,24 +68,40 @@ public class MeseLogic extends CronoLogic {
 
 
     /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Preferenze standard <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Può essere sovrascritto <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+    }
+
+
+    /**
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *
      * @param typeVista in cui inserire gli avvisi
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> green = new ArrayList<>();
+        List<String> blu = new ArrayList<>();
+        List<String> red = new ArrayList<>();
 
-        lista.add("<span style=\"color:green\">Mesi dell' anno, coi giorni. Tiene conto degli <span style=\"color:red\">anni bisestili</span> per il mese di febbraio.</span>");
-        lista.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
-        lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
+        blu.add("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");
+        blu.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'New', 'DeleteAll' e 'Reset' (e anche questo avviso) solo in fase di debug. Bottone 'Esporta' sempre presente");
+        }
 
-        return lista;
+        return new AlertWrap(green, blu, red, false);
     }
 
 
@@ -94,22 +113,22 @@ public class MeseLogic extends CronoLogic {
      * @return la nuova entity appena creata e salvata
      */
     public Mese crea(AEMese aeMese) {
-        return crea(aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla(), aeMese.getNome());
+        return crea(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
+     * @param mese            nome completo (obbligatorio, unico)
      * @param giorni          numero di giorni presenti (obbligatorio)
      * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
      * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
-     * @param nome            nome completo (obbligatorio, unico)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Mese crea(int giorni, int giorniBisestile, String sigla, String nome) {
-        return (Mese)checkAndSave(newEntity(giorni, giorniBisestile, sigla, nome));
+    public Mese crea(String mese, int giorni, int giorniBisestile, String sigla) {
+        return (Mese) checkAndSave(newEntity(mese, giorni, giorniBisestile, sigla));
     }
 
 
@@ -121,7 +140,7 @@ public class MeseLogic extends CronoLogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity() {
-        return newEntity(0, 0, VUOTA, VUOTA);
+        return newEntity(VUOTA, 0, 0, VUOTA);
     }
 
 
@@ -135,7 +154,7 @@ public class MeseLogic extends CronoLogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Mese newEntity(AEMese aeMese) {
-        return newEntity(aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla(), aeMese.getNome());
+        return newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
 
 
@@ -145,25 +164,25 @@ public class MeseLogic extends CronoLogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
+     * @param mese            nome completo (obbligatorio, unico)
      * @param giorni          numero di giorni presenti (obbligatorio)
      * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
      * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
-     * @param nome            nome completo (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Mese newEntity(int giorni, int giorniBisestile, String sigla, String nome) {
+    public Mese newEntity(String mese, int giorni, int giorniBisestile, String sigla) {
         Mese newEntityBean = Mese.builderMese()
 
                 .ordine(getNewOrdine())
+
+                .mese(text.isValid(mese) ? mese : null)
 
                 .giorni(giorni)
 
                 .giorniBisestile(giorniBisestile)
 
                 .sigla(text.isValid(sigla) ? sigla : null)
-
-                .nome(text.isValid(nome) ? nome : null)
 
                 .build();
 

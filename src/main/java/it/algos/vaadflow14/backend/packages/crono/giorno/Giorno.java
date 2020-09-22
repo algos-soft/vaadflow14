@@ -36,9 +36,9 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIEntity(recordName = "Giorno", keyPropertyName = "nome", usaCompany = false)
-@AIList(fields = "ordine,mese,nome")
-@AIForm(fields = "ordine,mese,nome")
+@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false)
+@AIList(fields = "ordine,giorno", usaRowIndex = false)
+@AIForm(fields = "ordine,giorno,mese")
 public class Giorno extends AEntity {
 
     /**
@@ -52,8 +52,18 @@ public class Giorno extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#")
+    @AIColumn(header = "#", widthEM = 3)
     public int ordine;
+
+
+    /**
+     * nome completo (obbligatorio, unico) <br>
+     */
+    @NotBlank()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.text, focus = true)
+    @AIColumn()
+    public String giorno;
 
 
     /**
@@ -68,21 +78,11 @@ public class Giorno extends AEntity {
 
 
     /**
-     * nome completo (obbligatorio, unico) <br>
-     */
-    @NotBlank()
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(header = "giorno", flexGrow = true)
-    public String nome;
-
-
-    /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return nome;
+        return giorno;
     }
 
 }

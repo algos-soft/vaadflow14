@@ -1,10 +1,13 @@
 package it.algos.simple.backend.packages;
 
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.ui.fields.AField;
+import it.algos.vaadflow14.ui.fields.ATextField;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
+import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,7 +26,9 @@ import java.util.List;
 public class LambdaForm extends AForm {
 
     AField field = null;
+
     TextField textField;
+
 
     public LambdaForm(WrapForm wrap) {
         super(wrap);
@@ -51,10 +56,31 @@ public class LambdaForm extends AForm {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaFieldsBinder() {
-//        field = fieldService.crea(entityBean, binder, operationForm, "due");
 
-         textField = new TextField();
-        binder.forField(textField).bind("due");
+//        textField = new TextField();
+//        textField.setLabel("textField");
+//        textField.setWidth("10em");
+
+        AStringBlankValidator stringBlankValidator = appContext.getBean(AStringBlankValidator.class);
+
+//        binder.forField(textField)
+//
+//                //                .withValidator(e -> { return ((String)e).length() > 3; }, "You must enter more than 3 characters")
+//                //                .withValidator(stringBlankValidator)
+//                .asRequired("Manca")
+//
+//                .bind("uno");
+
+                field = fieldService.crea(entityBean, binder, operationForm, "due");
+
+        binder.forField(field)
+
+                .withValidator(stringBlankValidator)
+//                .asRequired("Manca pa capa")
+
+                .bind("due");
+        topLayout.add(field);
+
 
         //        TextField textField = new TextField();
         //        binder.forField(textField)
@@ -122,7 +148,7 @@ public class LambdaForm extends AForm {
      */
     @Override
     protected void addFieldsToLayout() {
-        topLayout.add(textField);
+//        topLayout.add(textField);
     }
 
 

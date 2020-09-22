@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -92,6 +93,7 @@ public class ATextService extends AAbstractService {
 
         return testoOut.trim();
     }
+
 
     /**
      * Forza il primo carattere della stringa (e solo il primo) al carattere minuscolo
@@ -286,16 +288,91 @@ public class ATextService extends AAbstractService {
     }
 
 
+    //    /**
+    //     * Label colorata
+    //     *
+    //     * @param message    da visualizzare
+    //     * @param labelColor del messaggio
+    //     *
+    //     * @return etichetta visualizzata
+    //     */
+    //    private Label getLabel(String message, String labelColor) {
+    //        return getLabel(message, labelColor, false);
+    //    }
+
+
     /**
-     * Label colorata
+     * Div colorato
      *
      * @param message    da visualizzare
      * @param labelColor del messaggio
+     * @param smallBold  flag per il tipo di style
      *
      * @return etichetta visualizzata
      */
-    private Label getLabel(String message, String labelColor) {
-        return getLabel(message, labelColor, false);
+    private Div getDiv(String message, String labelColor, boolean smallBold) {
+        Div div = null;
+
+        if (isValid(message)) {
+            div = new Div();
+            div.getElement().getStyle().set("color", labelColor);
+            div.setText(message);
+        }
+
+        if (smallBold) {
+            div.getStyle().set("font-size", "small");
+            div.getStyle().set("font-weight", "bold");
+        }
+
+        return div;
+    }
+
+
+    /**
+     * Div colorato
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Div getDivBlack(String message) {
+        return getDiv(message, "black", false);
+    }
+
+
+    /**
+     * Div colorato
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Div getDivGreen(String message) {
+        return getDiv(message, "green", false);
+    }
+
+
+    /**
+     * Div colorato
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Div getDivBlue(String message) {
+        return getDiv(message, "blue", false);
+    }
+
+
+    /**
+     * Div colorato
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Div getDivRed(String message) {
+        return getDiv(message, "red", false);
     }
 
 
@@ -332,20 +409,8 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
-    public Label getLabelHost(String message) {
-        return getLabel(message, "black");
-    }
-
-
-    /**
-     * Label colorata
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
     public Label getLabelUser(String message) {
-        return getLabel(message, "green");
+        return getLabel(message, "green", false);
     }
 
 
@@ -357,7 +422,7 @@ public class ATextService extends AAbstractService {
      * @return etichetta visualizzata
      */
     public Label getLabelAdmin(String message) {
-        return getLabel(message, "blue");
+        return getLabel(message, "blue", false);
     }
 
 
@@ -369,19 +434,7 @@ public class ATextService extends AAbstractService {
      * @return etichetta visualizzata
      */
     public Label getLabelDev(String message) {
-        return getLabel(message, "red");
-    }
-
-
-    /**
-     * Label colorata
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
-    public Label getLabelHostSmall(String message) {
-        return getLabel(message, "black", true);
+        return getLabel(message, "red", false);
     }
 
 
@@ -713,25 +766,6 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Elimina gli spazi della stringa <br>
-     *
-     * @param stringaIn ingresso
-     *
-     * @return etichetta visualizzata
-     */
-    public String levaSpazi(String stringaIn) {
-        String stringaOut = stringaIn;
-        String tag = SPAZIO;
-
-        if (stringaIn.contains(tag)) {
-            stringaOut = stringaIn.replaceAll(tag, VUOTA);
-        }
-
-        return stringaOut;
-    }
-
-
-    /**
      * Get the width of the property.
      *
      * @param widthInt larghezza espressa come intero
@@ -764,5 +798,208 @@ public class ATextService extends AAbstractService {
 
         return valueOut.trim();
     }
+
+
+    /**
+     * Formattazione di un numero.
+     * <p>
+     * Il numero può arrivare come stringa, intero o double <br>
+     * Se la stringa contiene punti e virgole, viene pulita <br>
+     * Se la stringa non è convertibile in numero, viene restituita uguale <br>
+     * Inserisce il punto separatore ogni 3 cifre <br>
+     * Se arriva un oggetto non previsto, restituisce null <br>
+     *
+     * @param numObj da formattare (stringa, intero, long o double)
+     *
+     * @return stringa formattata
+     */
+    public String format(Object numObj) {
+        String formattato = VUOTA;
+        String numText = VUOTA;
+        String sep = PUNTO;
+        int numTmp = 0;
+        int len;
+        String num3;
+        String num6;
+        String num9;
+        String num12;
+
+        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double || numObj instanceof List || numObj instanceof Object[]) {
+            if (numObj instanceof String) {
+                numText = (String) numObj;
+                numText = levaVirgole(numText);
+                numText = levaPunti(numText);
+                try {
+                    numTmp = Integer.decode(numText);
+                } catch (Exception unErrore) {
+                    return (String) numObj;
+                }
+            } else {
+                if (numObj instanceof Integer) {
+                    numText = Integer.toString((int) numObj);
+                }
+                if (numObj instanceof Long) {
+                    numText = Long.toString((long) numObj);
+                }
+                if (numObj instanceof Double) {
+                    numText = Double.toString((double) numObj);
+                }
+                if (numObj instanceof List) {
+                    numText = Integer.toString((int) ((List) numObj).size());
+                }
+                if (numObj instanceof Object[]) {
+                    numText = Integer.toString(((Object[]) numObj).length);
+                }
+            }
+        } else {
+            return null;
+        }
+
+        formattato = numText;
+        len = numText.length();
+        if (len > 3) {
+            num3 = numText.substring(0, len - 3);
+            num3 += sep;
+            num3 += numText.substring(len - 3);
+            formattato = num3;
+            if (len > 6) {
+                num6 = num3.substring(0, len - 6);
+                num6 += sep;
+                num6 += num3.substring(len - 6);
+                formattato = num6;
+                if (len > 9) {
+                    num9 = num6.substring(0, len - 9);
+                    num9 += sep;
+                    num9 += num6.substring(len - 9);
+                    formattato = num9;
+                    if (len > 12) {
+                        num12 = num9.substring(0, len - 12);
+                        num12 += sep;
+                        num12 += num9.substring(len - 12);
+                        formattato = num12;
+                    }
+                }
+            }
+        }
+
+        //--valore di ritorno
+        return formattato;
+    }
+
+
+    /**
+     * Sostituisce nel testo tutte le occorrenze di oldTag con newTag.
+     * Esegue solo se il testo è valido
+     * Esegue solo se il oldTag è valido
+     * newTag può essere vuoto (per cancellare le occorrenze di oldTag)
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param testoIn ingresso da elaborare
+     * @param oldTag  da sostituire
+     * @param newTag  da inserire
+     *
+     * @return testo modificato
+     */
+    public String sostituisce(final String testoIn, String oldTag, String newTag) {
+        String testoOut = VUOTA;
+        String prima = VUOTA;
+        String rimane = testoIn;
+        int pos = 0;
+        String charVuoto = SPAZIO;
+
+        if (this.isValid(testoIn) && this.isValid(oldTag)) {
+            if (rimane.contains(oldTag)) {
+                pos = rimane.indexOf(oldTag);
+
+                while (pos != -1) {
+                    pos = rimane.indexOf(oldTag);
+                    if (pos != -1) {
+                        prima += rimane.substring(0, pos);
+                        prima += newTag;
+                        pos += oldTag.length();
+                        rimane = rimane.substring(pos);
+                        if (prima.endsWith(charVuoto) && rimane.startsWith(charVuoto)) {
+                            rimane = rimane.substring(1);
+                        }
+                    }
+                }
+
+                testoOut = prima + rimane;
+            }
+        }
+
+        return testoOut.trim();
+    }
+
+
+    /**
+     * Elimina tutti i caratteri contenuti nella stringa.
+     * Esegue solo se il testo è valido
+     *
+     * @param testoIn    in ingresso
+     * @param subStringa da eliminare
+     *
+     * @return testoOut stringa convertita
+     */
+    public String levaTesto(String testoIn, String subStringa) {
+        String testoOut = testoIn;
+
+        if (testoIn != null && subStringa != null) {
+            testoOut = testoIn.trim();
+            if (testoOut.contains(subStringa)) {
+                testoOut = sostituisce(testoOut, subStringa, VUOTA);
+            }
+        }
+
+        return testoOut;
+    }
+
+
+    /**
+     * Elimina tutte le virgole contenute nella stringa.
+     * Esegue solo se la stringa è valida
+     * Se arriva un oggetto non stringa, restituisce l'oggetto
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa convertita
+     */
+    public String levaVirgole(String entrata) {
+        return levaTesto(entrata, VIRGOLA);
+    }
+
+
+    /**
+     * Elimina tutti i punti contenuti nella stringa.
+     * Esegue solo se la stringa è valida
+     * Se arriva un oggetto non stringa, restituisce l'oggetto
+     *
+     * @param entrata stringa in ingresso
+     *
+     * @return uscita stringa convertita
+     */
+    public String levaPunti(String entrata) {
+        return levaTesto(entrata, PUNTO);
+    }
+
+
+    /**
+     * Elimina gli spazi della stringa <br>
+     *
+     * @param stringaIn ingresso
+     *
+     * @return etichetta visualizzata
+     */
+    public String levaSpazi(String stringaIn) {
+        String stringaOut = stringaIn;
+        String tag = SPAZIO;
+
+        if (stringaIn.contains(tag)) {
+            stringaOut = stringaIn.replaceAll(tag, VUOTA);
+        }
+
+        return stringaOut;
+    }
+
 
 }

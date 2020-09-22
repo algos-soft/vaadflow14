@@ -12,6 +12,16 @@ import java.util.List;
  */
 public class AlertWrap {
 
+    private List<String> alertBlack;
+
+    private List<String> alertGreen;
+
+    private List<String> alertBlue;
+
+    private List<String> alertRed;
+
+    private boolean usaSecurity;
+
     private List<String> alertUser;
 
     private List<String> alertAdmin;
@@ -28,11 +38,24 @@ public class AlertWrap {
     }
 
 
-    public AlertWrap(List<String> alertUser, List<String> alertAdmin, List<String> alertDev) {
-        this.alertUser = alertUser;
-        this.alertAdmin = alertAdmin;
-        this.alertDev = alertDev;
+    public AlertWrap(List<String> prima, List<String> seconda, List<String> terza, boolean usaSecurity) {
+        if (usaSecurity) {
+            this.alertUser = prima;
+            this.alertAdmin = seconda;
+            this.alertDev = terza;
+        } else {
+            this.alertGreen = prima;
+            this.alertBlue = seconda;
+            this.alertRed = terza;
+        }
     }
+
+
+    //    public AlertWrap(List<String> alertUser, List<String> alertAdmin, List<String> alertDev) {
+    //        this.alertUser = alertUser;
+    //        this.alertAdmin = alertAdmin;
+    //        this.alertDev = alertDev;
+    //    }
 
 
     public AlertWrap(List<String> alertUser, List<String> alertAdmin, List<String> alertDev, List<String> alertDevAll, List<String> alertParticolare) {
@@ -44,13 +67,28 @@ public class AlertWrap {
     }
 
 
-    public List<String> getAlertUser() {
-        return alertUser;
+    public List<String> getAlertBlack() {
+        return alertBlack;
     }
 
 
-    public void setAlertUser(List<String> alertUser) {
-        this.alertUser = alertUser;
+    public List<String> getAlertGreen() {
+        return alertGreen;
+    }
+
+
+    public List<String> getAlertBlue() {
+        return alertBlue;
+    }
+
+
+    public List<String> getAlertRed() {
+        return alertRed;
+    }
+
+
+    public List<String> getAlertUser() {
+        return alertUser;
     }
 
 
@@ -59,28 +97,13 @@ public class AlertWrap {
     }
 
 
-    public void setAlertAdmin(List<String> alertAdmin) {
-        this.alertAdmin = alertAdmin;
-    }
-
-
     public List<String> getAlertDev() {
         return alertDev;
     }
 
 
-    public void setAlertDev(List<String> alertDev) {
-        this.alertDev = alertDev;
-    }
-
-
     public List<String> getAlertDevAll() {
         return alertDevAll;
-    }
-
-
-    public void setAlertDevAll(List<String> alertDevAll) {
-        this.alertDevAll = alertDevAll;
     }
 
 

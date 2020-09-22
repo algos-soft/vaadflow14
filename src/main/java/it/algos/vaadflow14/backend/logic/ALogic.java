@@ -434,7 +434,7 @@ public abstract class ALogic implements AILogic {
      */
     protected List<String> getAlertList(AEVista typeVista) {
         String headerAlert = annotation.getHeaderAlert(entityClazz);
-        return text.isValid(headerAlert)?new ArrayList(Arrays.asList(headerAlert)):new ArrayList<String>();
+        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
     }
 
 
@@ -936,7 +936,7 @@ public abstract class ALogic implements AILogic {
      */
     protected final void openConfirmDeleteAll() {
         MessageDialog messageDialog;
-        String message = "Vuoi veramente cancellare tutto? L'operazione non è reversibile.";
+        String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
         VaadinIcon icon = VaadinIcon.WARNING;
 
         if (mongo.isValid(entityClazz)) {
@@ -957,7 +957,7 @@ public abstract class ALogic implements AILogic {
      */
     protected final void openConfirmReset() {
         MessageDialog messageDialog;
-        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L'operazione cancellerà tutti i valori successivamente aggiunti o modificati.";
+        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori successivamente aggiunti o modificati.";
         VaadinIcon icon = VaadinIcon.WARNING;
 
         if (mongo.isEmpty(entityClazz)) {
@@ -1534,7 +1534,7 @@ public abstract class ALogic implements AILogic {
             return status;
         }
 
-          if (entityBean != null) {
+        if (entityBean != null) {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
                 entityBean = fixKey(entityBean);
             }
@@ -1543,9 +1543,11 @@ public abstract class ALogic implements AILogic {
             status = entityBean != null;
             if (status) {
                 if (operationForm == AEOperation.addNew) {
+                    ALogService.messageSuccess(entityBean.toString() + " è stato creato"); //@todo Creare una preferenza e sostituirla qui
                     logger.nuovo(entityBean);
                 } else {
-                    logger.modifica(entityBean,oldEntityBean);
+                    ALogService.messageSuccess(entityBean.toString() + " è stato modificato"); //@todo Creare una preferenza e sostituirla qui
+                    logger.modifica(entityBean, oldEntityBean);
                 }
             }
         } else {

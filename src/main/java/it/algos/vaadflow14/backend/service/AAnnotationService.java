@@ -1628,7 +1628,7 @@ public class AAnnotationService extends AAbstractService {
             message = annotation.message();
         }
 
-        if (message.equals("{javax.validation.constraints.NotBlank.message}")) {
+        if (message.equals("{javax.validation.constraints.NotBlank.message}")||text.isEmpty(message)) {
             message = VUOTA;
             type = getFormType(reflectionJavaField);
             if (type == AETypeField.text || type == AETypeField.password || type == AETypeField.phone) {

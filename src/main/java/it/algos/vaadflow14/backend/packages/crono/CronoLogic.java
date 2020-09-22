@@ -37,9 +37,12 @@ public abstract class CronoLogic extends ALogic {
         super.fixPreferenze();
 
         //--Quattro packages cronologici (secolo, anno, mese, giorno)
+
         //--Bottoni DeleteAll e Reset presenti solo se FlowVar.usaDebug=true (debug si abilita solo per il developer)
         //--Bottone New presente solo login.isDeveloper()=true
         //--Entity modificabile e cancellabile solo login.isDeveloper()=true, altrimenti AEOperation.showOnly
+
+        super.usaHeaderWrap = true;
         if (FlowVar.usaSecurity) {
             if (vaadinService.isDeveloper()) {
                 super.usaBottoneDeleteAll = true;

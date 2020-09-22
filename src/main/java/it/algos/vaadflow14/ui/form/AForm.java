@@ -7,6 +7,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
+import it.algos.simple.backend.packages.Lambda;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -594,7 +595,7 @@ public abstract class AForm extends VerticalLayout {
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
         //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
         try {
-            if (binder.writeBeanIfValid(entityBean)) {
+            if (binder.writeBeanIfValid((AEntity)entityBean)) {
                 return entityBean;
             } else {
                 return null;

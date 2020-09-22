@@ -1,16 +1,9 @@
 package it.algos.vaadflow14.ui.header;
 
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +18,14 @@ import java.util.List;
 public abstract class AHeader extends VerticalLayout {
 
     protected AlertWrap alertWrap;
+
+    protected List<String> alertBlack;
+
+    protected List<String> alertGreen;
+
+    protected List<String> alertBlue;
+
+    protected List<String> alertRed;
 
     protected List<String> alertUser;
 
@@ -44,7 +45,16 @@ public abstract class AHeader extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-     protected ATextService text;
+    protected AArrayService array;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ATextService text;
 
 
     protected void initView() {
@@ -52,6 +62,7 @@ public abstract class AHeader extends VerticalLayout {
         this.fixAlertWrap();
         this.fixView();
     }
+
 
     /**
      * Regola alcune properties (grafiche e non grafiche) <br>
@@ -64,13 +75,12 @@ public abstract class AHeader extends VerticalLayout {
     }
 
 
-    /**
-     * Costruisce graficamente la view <br>
-     */
-    protected void fixView() {
-    }
-
     public void fixAlertWrap() {
+        alertBlack = new ArrayList<>();
+        alertGreen = new ArrayList<>();
+        alertBlue = new ArrayList<>();
+        alertRed = new ArrayList<>();
+
         alertUser = new ArrayList<>();
         alertAdmin = new ArrayList<>();
         alertDev = new ArrayList<>();
@@ -78,12 +88,24 @@ public abstract class AHeader extends VerticalLayout {
         alertParticolare = new ArrayList<>();
 
         if (alertWrap != null) {
+            alertBlack = alertWrap.getAlertBlack();
+            alertGreen = alertWrap.getAlertGreen();
+            alertBlue = alertWrap.getAlertBlue();
+            alertRed = alertWrap.getAlertRed();
+
             alertUser = alertWrap.getAlertUser();
             alertAdmin = alertWrap.getAlertAdmin();
             alertDev = alertWrap.getAlertDev();
             alertDevAll = alertWrap.getAlertDevAll();
             alertParticolare = alertWrap.getAlertParticolare();
         }
+    }
+
+
+    /**
+     * Costruisce graficamente la view <br>
+     */
+    protected void fixView() {
     }
 
 }

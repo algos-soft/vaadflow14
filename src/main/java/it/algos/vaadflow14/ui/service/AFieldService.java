@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
@@ -228,8 +229,8 @@ public class AFieldService extends AAbstractService {
 
         if (isRequired) {
             stringBlankValidator = appContext.getBean(AStringBlankValidator.class, messageNotBlank);
+            notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
         }
-        notNullValidator = appContext.getBean(ANotNullValidator.class, messageNotNull);
 
         if (stringMin > 0 || stringMax > 0) {
             stringLengthValidator = new StringLengthValidator(messageSize, stringMin, stringMax);
@@ -319,14 +320,18 @@ public class AFieldService extends AAbstractService {
                 case localTime:
                     break;
                 case combo:
-                    builder.withValidator(notNullValidator);
+                    if (notNullValidator != null) {
+                        builder.withValidator(notNullValidator);
+                    }
                     if (isRequired) {
                         builder.asRequired();
                         //                        builder.withValidator(notNullValidator);
                     }
                     break;
                 case enumeration:
-                    builder.withValidator(notNullValidator);
+                    if (notNullValidator != null) {
+                        builder.withValidator(notNullValidator);
+                    }
                     if (isRequired) {
                         builder.asRequired();
                     }

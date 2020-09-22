@@ -31,6 +31,7 @@ public class AStringBlankValidator implements Validator {
      * Se manca, manda in rosso i parametri del costruttore usato <br>
      */
     public AStringBlankValidator() {
+        this(VUOTA);
     } // end of SpringBoot constructor
 
 

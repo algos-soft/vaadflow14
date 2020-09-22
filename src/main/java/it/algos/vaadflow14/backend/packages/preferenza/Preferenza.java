@@ -35,9 +35,9 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
-@AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "ordine")
-@AIList(fields = "code,descrizione", usaRowIndex = true)
-@AIForm(fields = "ordine,code,descrizione,type,value")
+@AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
+@AIList(fields = "code,type,value,descrizione", usaRowIndex = true)
+@AIForm(fields = "code,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**

@@ -275,10 +275,10 @@ class ATextServiceTest extends ATest {
 
 
     void getLabelHost() {
-        sorgente = "black";
-        Label label = text.getLabelHost(sorgente);
-        assertNotNull(label);
-        System.out.println(label.getText());
+//        sorgente = "black";
+//        Label label = text.getLabelHost(sorgente);
+//        assertNotNull(label);
+//        System.out.println(label.getText());
     }
 
 

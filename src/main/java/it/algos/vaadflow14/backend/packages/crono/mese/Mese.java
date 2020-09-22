@@ -35,10 +35,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderMese")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Mese", keyPropertyName = "nome", usaCompany = false)
+@AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "ordine,giorni,giorniBisestile,sigla,nome")
-@AIForm(fields = "ordine,giorni,giorniBisestile,sigla,nome")
+@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false)
+@AIForm(fields = "ordine,mese,giorni,giorniBisestile,sigla")
 public class Mese extends AEntity {
 
     /**
@@ -52,7 +52,7 @@ public class Mese extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
+    @AIColumn(header = "#", widthEM = 2)
     public int ordine;
 
     /**
@@ -61,8 +61,8 @@ public class Mese extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(header = "mese", flexGrow = true)
-    public String nome;
+    @AIColumn()
+    public String mese;
 
     /**
      * numero di giorni presenti (obbligatorio) <br>
@@ -78,7 +78,7 @@ public class Mese extends AEntity {
      * numero di giorni presenti se anno bisestile (obbligatorio) <br>
      */
     @Range(min = 29, max = 31)
-    @AIField(type = AETypeField.integer, caption = "bisestile", typeNum = AETypeNum.rangeControl)
+    @AIField(type = AETypeField.integer, caption = "anno bisestile", typeNum = AETypeNum.rangeControl)
     @AIColumn(headerIcon = VaadinIcon.CALENDAR, headerIconColor = "red")
     public int giorniBisestile;
 
@@ -90,7 +90,7 @@ public class Mese extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @Size(min = 3, max = 3)
     @AIField(type = AETypeField.text, required = true, widthEM = 4, placeholder = "xxx")
-    @AIColumn()
+    @AIColumn(flexGrow = true)
     public String sigla;
 
 
@@ -99,7 +99,7 @@ public class Mese extends AEntity {
      */
     @Override
     public String toString() {
-        return nome;
+        return mese;
     }
 
 }

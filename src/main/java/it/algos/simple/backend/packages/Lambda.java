@@ -2,6 +2,7 @@ package it.algos.simple.backend.packages;
 
 import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.login.LoginI18n;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -40,8 +41,8 @@ import com.vaadin.flow.component.textfield.TextField;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Lambda", keyPropertyName = "uno", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "uno")
-@AIList(fields = "uno,due,tre", headerAlert = "Validator dei textField")
-@AIForm(fields = "uno,due,tre")
+@AIList(fields = "uno,due,tre,quattro", headerAlert = "Validator dei textField")
+@AIForm(fields = "uno,due,tre,quattro")
 public class Lambda extends AEntity {
 
     /**
@@ -50,19 +51,25 @@ public class Lambda extends AEntity {
     private final static long serialVersionUID = 1L;
 
 
-    @AIField(type = AETypeField.text, required = true,  caption = "Required")
+    @AIField(type = AETypeField.text, required = true,  caption = "Required (uno)")
     @AIColumn()
     public String uno;
 
     @NotBlank()
-    @AIField(type = AETypeField.text, caption = "NotBlank")
+    @AIField(type = AETypeField.text, caption = "NotBlank (due)")
     @AIColumn()
     public String due;
 
-    @Size(min = 3)
-    @AIField(type = AETypeField.text, caption = "Minimo=3")
+    @NotBlank(message = "Testo errore specifico")
+    @AIField(type = AETypeField.text, caption = "NotBlank (tre)")
     @AIColumn()
     public String tre;
+
+    @Size(min = 3)
+    @AIField(type = AETypeField.text, caption = "Minimo=3 (quattro)")
+    @AIColumn()
+    public String quattro;
+
 
     /**
      * @return a string representation of the object.

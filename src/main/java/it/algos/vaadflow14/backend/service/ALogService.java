@@ -1,10 +1,13 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AELogLivello;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AILogType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +87,35 @@ public class ALogService extends AAbstractService {
     private boolean isMultiCompanyAndSecured;
 
 
+    public static void messageError(String message) {
+        Notification notification = new Notification();
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        if (FlowVar.usaDebug) {
+            notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
+        } else {
+            notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui
+        }
+
+        Span label = new Span(message);
+        notification.add(label);
+        notification.open();
+    }
+
+    public static void messageSuccess(String message) {
+        Notification notification = new Notification();
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        if (FlowVar.usaDebug) {
+            notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
+        } else {
+            notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui
+        }
+
+        Span label = new Span(message);
+        notification.add(label);
+        notification.open();
+    }
+
+
     /**
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
      * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
@@ -137,14 +169,15 @@ public class ALogService extends AAbstractService {
         }
     }
 
+
     /**
      * Logger specifico <br>
      * Modifica di una entity esistente <br>
      *
-     * @param entityBean    da modificare
+     * @param entityBean da modificare
      */
     public void modifica(AEntity entityBean) {
-        modifica(entityBean,mongo.find(entityBean));
+        modifica(entityBean, mongo.find(entityBean));
     }
 
 

@@ -76,7 +76,7 @@ public class LambdaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        this.formClazz = LambdaForm.class;
+//        this.formClazz = LambdaForm.class;
     }
 
 
