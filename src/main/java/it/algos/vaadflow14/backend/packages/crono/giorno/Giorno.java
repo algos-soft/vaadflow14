@@ -62,7 +62,7 @@ public class Giorno extends AEntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn()
+    @AIColumn(flexGrow = true)
     public String giorno;
 
 

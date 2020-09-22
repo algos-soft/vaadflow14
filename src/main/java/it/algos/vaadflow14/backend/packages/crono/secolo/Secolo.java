@@ -35,10 +35,10 @@ import javax.validation.constraints.NotBlank;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Secolo", keyPropertyName = "nome", usaCompany = false)
+@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "anteCristo,inizio,fine,nome", usaRowIndex = true)
-@AIForm(fields = "anteCristo,inizio,fine,nome")
+@AIList(fields = "ordine,secolo,anteCristo,inizio,fine")
+@AIForm(fields = "secolo,anteCristo,inizio,fine")
 public class Secolo extends AEntity {
 
     /**
@@ -48,21 +48,27 @@ public class Secolo extends AEntity {
 
 
     /**
+     * ordinamento (obbligatorio, unico) <br>
+     */
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "#", widthEM = 3)
+    public int ordine;
+
+    /**
      * nome completo (obbligatorio, unico) <br>
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true, caption = "secolo")
-    @AIColumn(header = "secolo", flexGrow = true)
-    public String nome;
+    @AIField(type = AETypeField.text, focus = true)
+    @AIColumn()
+    public String secolo;
 
 
     /**
      * flag di separazione (obbligatorio)
      */
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante" + FlowCost.HTLM_SPAZIO + "Cristo", widthEM = 6)
-    //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioTrueFalse, caption = "Ante Cristo", widthEM = 6)
-    //    @AIField(type = AETypeField.booleano, typeBool = AETypeBool.radioCustomHoriz, captionRadio = "Prima di Cristo, Dopo Cristo", widthEM = 6)
     @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "A.C.")
     public boolean anteCristo;
 
@@ -78,7 +84,7 @@ public class Secolo extends AEntity {
      * ultimo anno (obbligatorio, unico) <br>
      */
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno finale")
-    @AIColumn(widthEM = 6)
+    @AIColumn(flexGrow = true)
     public int fine;
 
 
@@ -87,7 +93,7 @@ public class Secolo extends AEntity {
      */
     @Override
     public String toString() {
-        return getNome();
+        return getSecolo();
     }
 
 }

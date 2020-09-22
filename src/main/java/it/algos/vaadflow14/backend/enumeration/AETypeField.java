@@ -4,11 +4,11 @@ public enum AETypeField {
     //    id(),
     text(10, 14),
 
-    phone(11, 11),
+    phone(9, 14),
 
     password(10, 14),
 
-    email(20, 18),
+    email(20, 24),
 
     cap(6, 6),
 

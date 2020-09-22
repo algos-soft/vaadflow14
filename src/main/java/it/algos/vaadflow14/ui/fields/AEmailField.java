@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -65,8 +66,16 @@ public class AEmailField extends AField<String> {
     }
 
     @Override
+    public void setWidth(String width) {
+        emailField.setWidth(width);
+    }
+
+
+    @Override
     public void setErrorMessage(String errorMessage) {
         emailField.setErrorMessage(errorMessage);
+        ALogService.messageError(errorMessage);//@todo Creare una preferenza e sostituirla qui
     }
+
 
 }

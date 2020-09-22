@@ -1,13 +1,16 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -75,45 +78,72 @@ public class StatoLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.edit;
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
-        this.usaBottonePaginaWiki = true;
-        this.searchType = AESearch.editField;
-        this.wikiPageTitle = "ISO_3166-1";
+        super.operationForm = FlowVar.usaDebug ? AEOperation.edit : AEOperation.showOnly;
+        super.usaBottoneDeleteAll = FlowVar.usaDebug;
+        super.usaBottoneReset = FlowVar.usaDebug;
+        super.usaBottoneNew = FlowVar.usaDebug;
+        super.usaBottonePaginaWiki = true;
+        super.searchType = AESearch.editField;
+        super.wikiPageTitle = "ISO_3166-1";
     }
 
 
     /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *
      * @param typeVista in cui inserire gli avvisi
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
-        String message;
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> blue = new ArrayList<>();
+        List<String> red = new ArrayList<>();
 
-        if (typeVista == AEVista.list) {
-            lista.add("Stati del mondo. Codifica secondo ISO 3166-1");
-            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-            lista.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
-            lista.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri ");
+        blue.add("Stati del mondo. Codifica secondo ISO 3166-1");
+        blue.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
+        blue.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
+        blue.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ");
         }
 
-        if (typeVista == AEVista.form) {
-            lista.add("Scheda NON modificabile");
-            lista.add("Stato codificato ISO 3166-1");
-        }
-
-        return lista;
+        return new AlertWrap(null, blue, red, false);
     }
+
+
+    //    /**
+    //     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+    //     * Informazioni (eventuali) specifiche di ogni modulo <br>
+    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+    //     *
+    //     * @param typeVista in cui inserire gli avvisi
+    //     *
+    //     * @return wrapper per passaggio dati
+    //     */
+    //    @Override
+    //    protected List<String> getAlertList(AEVista typeVista) {
+    //        List<String> lista = super.getAlertList(typeVista);
+    //        String message;
+    //
+    //        if (typeVista == AEVista.list) {
+    //            lista.add("Stati del mondo. Codifica secondo ISO 3166-1");
+    //            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
+    //            lista.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
+    //            lista.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri ");
+    //        }
+    //
+    //        if (typeVista == AEVista.form) {
+    //            lista.add("Scheda NON modificabile");
+    //            lista.add("Stato codificato ISO 3166-1");
+    //        }
+    //
+    //        return lista;
+    //    }
 
 
     /**
@@ -135,7 +165,7 @@ public class StatoLogic extends ALogic {
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
-     * @param nome     (obbligatorio, unico)
+     * @param stato    (obbligatorio, unico)
      * @param ue       appartenenza all' unione europea (obbligatorio)
      * @param numerico di riferimento (obbligatorio)
      * @param alfatre  (obbligatorio, unico)
@@ -144,8 +174,8 @@ public class StatoLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Stato crea(int ordine, String nome, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
-        return (Stato) checkAndSave(newEntity(ordine, nome, ue, numerico, alfatre, alfadue, locale));
+    public Stato crea(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
+        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale));
     }
 
 
@@ -168,7 +198,7 @@ public class StatoLogic extends ALogic {
      * All properties <br>
      *
      * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
-     * @param nome     (obbligatorio, unico)
+     * @param stato    (obbligatorio, unico)
      * @param ue       appartenenza all' unione europea (obbligatorio)
      * @param numerico di riferimento (obbligatorio)
      * @param alfatre  (obbligatorio, unico)
@@ -177,12 +207,12 @@ public class StatoLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Stato newEntity(int ordine, String nome, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
+    public Stato newEntity(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
         Stato newEntityBean = Stato.builderStato()
 
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
 
-                .nome(text.isValid(nome) ? nome : null)
+                .stato(text.isValid(stato) ? stato : null)
 
                 .ue(ue)
 

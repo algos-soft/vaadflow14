@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
@@ -8,6 +9,7 @@ import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -91,10 +94,10 @@ public class RegioneLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.edit;
-        super.usaBottoneDeleteAll = false;
-        super.usaBottoneReset = true;
-        super.usaBottoneNew = false;
+        super.operationForm = FlowVar.usaDebug ? AEOperation.edit : AEOperation.showOnly;
+        super.usaBottoneDeleteAll = FlowVar.usaDebug;
+        super.usaBottoneReset = FlowVar.usaDebug;
+        super.usaBottoneNew = FlowVar.usaDebug;
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
         super.wikiPageTitle = "ISO_3166-2";
@@ -102,34 +105,60 @@ public class RegioneLogic extends ALogic {
 
 
     /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *
      * @param typeVista in cui inserire gli avvisi
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
-        String message;
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> blue = new ArrayList<>();
+        List<String> red = new ArrayList<>();
 
-        if (typeVista == AEVista.list) {
-            lista.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2.");
-            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-            lista.add("Codice ISO, sigla abituale e 'status' normativo");
-            lista.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
+        blue.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
+        blue.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
+        blue.add("Codice ISO, sigla abituale e 'status' normativo");
+        blue.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status' ");
         }
-
-        if (typeVista == AEVista.form) {
-            lista.add("Scheda NON modificabile");
-            lista.add("Stato codificato ISO 3166-2");
-        }
-
-        return lista;
+        return new AlertWrap(null, blue, red, false);
     }
+
+
+//    /**
+//     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+//     * Informazioni (eventuali) specifiche di ogni modulo <br>
+//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+//     *
+//     * @param typeVista in cui inserire gli avvisi
+//     *
+//     * @return wrapper per passaggio dati
+//     */
+//    @Override
+//    protected List<String> getAlertList(AEVista typeVista) {
+//        List<String> lista = super.getAlertList(typeVista);
+//        String message;
+//
+//        if (typeVista == AEVista.list) {
+//            lista.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2.");
+//            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
+//            lista.add("Codice ISO, sigla abituale e 'status' normativo");
+//            lista.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
+//        }
+//
+//        if (typeVista == AEVista.form) {
+//            lista.add("Scheda NON modificabile");
+//            lista.add("Stato codificato ISO 3166-2");
+//        }
+//
+//        return lista;
+//    }
 
 
     /**
@@ -146,7 +175,7 @@ public class RegioneLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param nome   (obbligatorio, unico)
+     * @param regione   (obbligatorio, unico)
      * @param stato  (obbligatorio)
      * @param iso    di riferimento (obbligatorio, unico)
      * @param sigla  (consuetudinaria, obbligatoria)
@@ -154,8 +183,8 @@ public class RegioneLogic extends ALogic {
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Regione crea(String nome, Stato stato, String iso, String sigla, AEStatuto status) {
-        return (Regione) checkAndSave(newEntity(nome, stato, iso, sigla, status));
+    public Regione crea(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
+        return (Regione) checkAndSave(newEntity(regione, stato, iso, sigla, status));
     }
 
 
@@ -177,7 +206,7 @@ public class RegioneLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param nome   (obbligatorio, unico)
+     * @param regione   (obbligatorio, unico)
      * @param stato  (obbligatorio)
      * @param iso    di riferimento (obbligatorio, unico)
      * @param sigla  (consuetudinaria, obbligatoria)
@@ -185,12 +214,12 @@ public class RegioneLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Regione newEntity(String nome, Stato stato, String iso, String sigla, AEStatuto status) {
+    public Regione newEntity(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
         Regione newEntityBean = Regione.builderRegione()
 
                 .ordine(this.getNewOrdine())
 
-                .nome(text.isValid(nome) ? nome : null)
+                .regione(text.isValid(regione) ? regione : null)
 
                 .stato(stato)
 

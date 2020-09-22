@@ -57,8 +57,8 @@ import javax.validation.constraints.Size;
  * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
 @QueryEntity
-@Document(collection = "alfaCollection")
-@TypeAlias("Alfa")
+@Document(collection = "alfa")
+@TypeAlias("alfa")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

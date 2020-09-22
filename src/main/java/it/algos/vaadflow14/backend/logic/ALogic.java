@@ -359,7 +359,7 @@ public abstract class ALogic implements AILogic {
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
-        this.usaHeaderWrap = false;
+        this.usaHeaderWrap = true;
         this.usaBottoneEdit = true;
         this.formClazz = AGenericForm.class;
     }

@@ -67,17 +67,6 @@ public class MeseLogic extends CronoLogic {
     }
 
 
-    /**
-     * Preferenze standard <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-    }
-
 
     /**
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
@@ -91,17 +80,16 @@ public class MeseLogic extends CronoLogic {
      */
     @Override
     protected AlertWrap getAlertWrap(AEVista typeVista) {
-        List<String> green = new ArrayList<>();
         List<String> blu = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
         blu.add("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");
         blu.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
         if (FlowVar.usaDebug) {
-            red.add("Bottoni 'New', 'DeleteAll' e 'Reset' (e anche questo avviso) solo in fase di debug. Bottone 'Esporta' sempre presente");
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'");
         }
 
-        return new AlertWrap(green, blu, red, false);
+        return new AlertWrap(null, blu, red, false);
     }
 
 

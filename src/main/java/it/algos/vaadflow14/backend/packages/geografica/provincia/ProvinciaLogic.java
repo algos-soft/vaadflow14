@@ -231,7 +231,7 @@ public class ProvinciaLogic extends ALogic {
     public Provincia newEntity(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
         Provincia newEntityBean = Provincia.builderProvincia()
 
-                .ordine(ordine)
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
 
                 .nome(text.isValid(nome) ? nome : null)
 
@@ -273,8 +273,8 @@ public class ProvinciaLogic extends ALogic {
         if (provincia.regione.stato.id.equals(provincia.stato.id)) {
             return provincia;
         } else {
-            Notification.show("La regione " + provincia.regione.nome + " non appartiene allo stato " + provincia.stato.nome + " e non è stata registrata", 3000, Notification.Position.MIDDLE);
-            logger.error("La regione " + provincia.regione.nome + " non appartiene allo stato " + provincia.stato.nome, this.getClass(), "beforeSave");
+            Notification.show("La regione " + provincia.regione.regione + " non appartiene allo stato " + provincia.stato.stato + " e non è stata registrata", 3000, Notification.Position.MIDDLE);
+            logger.error("La regione " + provincia.regione.regione + " non appartiene allo stato " + provincia.stato.stato, this.getClass(), "beforeSave");
             return null;
         }
     }

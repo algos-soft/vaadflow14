@@ -43,8 +43,8 @@ import java.util.Collection;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
-@AIList(fields = "username,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled", usaRowIndex = true)
-@AIForm(fields = "username,password,role,accountNonExpired,accountNonLocked,credentialsNonExpired,enabled")
+@AIList(fields = "username,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired", usaRowIndex = true)
+@AIForm(fields = "username,password,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired")
 public class Utente extends ACEntity implements UserDetails {
 
     private static final int WIDTH = 5;
@@ -61,21 +61,34 @@ public class Utente extends ACEntity implements UserDetails {
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @Field("user")
-    @AIField(type = AETypeField.text, focus = true, caption = "userName")
-    @AIColumn(header = "username", widthEM = 12)
+    @AIField(type = AETypeField.text, focus = true)
+    @AIColumn( widthEM = 12)
     public String username;
-
 
     /**
      * password in chiaro (obbligatoria, non unica)
      * con inserimento automatico (prima del 'save') se è nulla
      */
     @NotBlank()
-    @Field("pass")
     @AIField(type = AETypeField.password)
     @AIColumn(header = "pass")
     public String password;
+
+    /**
+     * flag abilitato (facoltativo, di default true)
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
+    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = WIDTH)
+    public boolean enabled;
+
+    /**
+     * role authority (obbligatorio se FlowVar.usaCompany=true, di default user)
+     */
+    @AIField(type = AETypeField.enumeration, enumClazz = AERole.class)
+    @AIColumn()
+    public AERole role;
+
+
 
 
     /**
@@ -98,24 +111,12 @@ public class Utente extends ACEntity implements UserDetails {
      * flag credenziali non scadute (facoltativo, di default true)
      */
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
-    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Cexp", widthEM = WIDTH)
+    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Cexp", flexGrow = true)
     public boolean credentialsNonExpired;
 
 
-    /**
-     * flag abilitato (facoltativo, di default true)
-     */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
-    @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "OK", widthEM = WIDTH)
-    public boolean enabled;
 
 
-    /**
-     * role authority (obbligatorio se FlowVar.usaCompany=true, di default user)
-     */
-    @AIField(type = AETypeField.enumeration, enumClazz = AERole.class)
-    @AIColumn()
-    public AERole role;
 
 
     /**

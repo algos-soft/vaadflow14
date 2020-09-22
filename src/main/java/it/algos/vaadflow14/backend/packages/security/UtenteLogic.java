@@ -9,9 +9,14 @@ import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.MONGO_FIELD_USER;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -110,6 +115,27 @@ public class UtenteLogic extends ALogic {
         }
     }
 
+    /**
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> red = new ArrayList<>();
+
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
+            red.add("Di norma utilizzato solo in applicazioni con usaSecurity=true");
+        }
+
+        return new AlertWrap(null, null, red, false);
+    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -119,8 +145,8 @@ public class UtenteLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza crea(String username, String password) {
-        return (Preferenza) checkAndSave(newEntity(username, password, (AERole) null));
+    public Utente crea(String username, String password) {
+        return (Utente) checkAndSave(newEntity(username, password, (AERole) null));
     }
 
 

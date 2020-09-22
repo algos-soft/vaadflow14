@@ -35,10 +35,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Stato", keyPropertyName = "nome", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,ue,numerico,alfadue,alfatre,locale")
-@AIForm(fields = "ordine,nome,ue,numerico,alfadue,alfatre,locale")
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false)
+@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
+@AIList(fields = "ordine,stato,ue,numerico,alfadue,alfatre,locale")
+@AIForm(fields = "ordine,stato,ue,numerico,alfadue,alfatre,locale")
 public class Stato extends AEntity {
 
     /**
@@ -62,9 +62,9 @@ public class Stato extends AEntity {
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, caption = "stato", widthEM = 24)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true,  widthEM = 24)
     @AIColumn(widthEM = 12)
-    public String nome;
+    public String stato;
 
     /**
      * unione europea
@@ -110,7 +110,7 @@ public class Stato extends AEntity {
     @NotBlank(message = "Il codice iso locale è obbligatorio")
     @Indexed()
     @AIField(type = AETypeField.text, widthEM = 10)
-    @AIColumn(header = "ISO locale", widthEM = 10)
+    @AIColumn(header = "ISO locale", flexGrow = true)
     public String locale;
 
 
@@ -119,7 +119,7 @@ public class Stato extends AEntity {
      */
     @Override
     public String toString() {
-        return getNome();
+        return getStato();
     }
 
 }

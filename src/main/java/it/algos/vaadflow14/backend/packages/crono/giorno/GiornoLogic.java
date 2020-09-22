@@ -92,16 +92,15 @@ public class GiornoLogic extends CronoLogic {
      */
     @Override
     protected AlertWrap getAlertWrap(AEVista typeVista) {
-        List<String> green = new ArrayList<>();
         List<String> blu = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
         blu.add("Giorni dell' anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili");
         if (FlowVar.usaDebug) {
-            red.add("Bottoni 'New', 'DeleteAll' e 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
         }
 
-        return new AlertWrap(green, blu, red, false);
+        return new AlertWrap(null, blu, red, false);
     }
 
 

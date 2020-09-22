@@ -2,10 +2,16 @@ package it.algos.vaadflow14.backend.packages.company;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -71,6 +77,60 @@ public class CompanyLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        if (FlowVar.usaCompany) {
+            if (vaadinService.isDeveloper()) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+
+            }
+            if (!vaadinService.isAdminOrDeveloper()) {
+                super.operationForm = AEOperation.showOnly;
+            }
+
+            super.usaBottoneNew = vaadinService.isAdminOrDeveloper();
+            super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
+        } else {
+            if (FlowVar.usaDebug) {
+                super.usaBottoneDeleteAll = true;
+                super.usaBottoneReset = true;
+            }
+            super.usaBottoneNew = true;
+        }
+    }
+
+    /**
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> red = new ArrayList<>();
+
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
+            red.add("Di norma utilizzato solo in applicazioni con usaCompany=true");
+        }
+
+        return new AlertWrap(null, null, red, false);
+    }
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param code        di riferimento
+     * @param descrizione completa
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    public Company crea(String code, String descrizione) {
+        return crea(code, descrizione, VUOTA, VUOTA);
     }
 
 
@@ -82,8 +142,8 @@ public class CompanyLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Company crea(String code, String descrizione) {
-        return (Company)checkAndSave(newEntity(code, VUOTA, VUOTA, descrizione));
+    public Company crea(String code, String descrizione, String telefono, String email) {
+        return (Company) checkAndSave(newEntity(code, descrizione, telefono, email));
     }
 
 
@@ -105,22 +165,22 @@ public class CompanyLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      *
      * @param code        di riferimento
+     * @param descrizione completa
      * @param telefono    fisso o cellulare
      * @param email       di posta elettronica
-     * @param descrizione completa
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Company newEntity(String code, String telefono, String email, String descrizione) {
+    public Company newEntity(String code, String descrizione, String telefono, String email) {
         Company newEntityBean = Company.builderCompany()
 
                 .code(text.isValid(code) ? code : null)
 
+                .descrizione(text.isValid(descrizione) ? descrizione : null)
+
                 .telefono(text.isValid(telefono) ? telefono : null)
 
                 .email(text.isValid(email) ? email : null)
-
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
 
                 .build();
 
@@ -156,9 +216,9 @@ public class CompanyLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea("Algos", "Company Algos di prova");
-        crea("Demo", "Company demo");
-        crea("Test", "Company di test");
+        crea("Algos", "Company Algos di prova",VUOTA,"info@algos.it");
+        crea("Demo", "Company demo","345 994487","demo@algos.it");
+        crea("Test", "Company di test","","presidentePonteTaro@crocerossa.it");
 
         return mongo.isValid(entityClazz);
     }

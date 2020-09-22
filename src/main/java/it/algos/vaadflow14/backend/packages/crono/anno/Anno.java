@@ -37,10 +37,10 @@ import javax.validation.constraints.NotNull;
 @Builder(builderMethodName = "builderAnno")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Anno", keyPropertyName = "nome", usaCompany = false)
+@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR)
-@AIList(fields = "ordine,secolo,bisestile,nome")
-@AIForm(fields = "ordine,secolo,bisestile,nome")
+@AIList(fields = "ordine,anno,bisestile,secolo")
+@AIForm(fields = "anno,bisestile,secolo")
 public class Anno extends AEntity {
 
     /**
@@ -56,25 +56,15 @@ public class Anno extends AEntity {
     @AIColumn(header = "#")
     public int ordine;
 
-    /**
-     * secolo di riferimento (obbligatorio)
-     * riferimento dinamico CON @DBRef
-     */
-    @NotNull
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
-    @AIColumn(widthEM = 8)
-    public Secolo secolo;
-
 
     /**
      * nome completo (obbligatorio, unico) <br>
      */
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true, caption = "anno")
-    @AIColumn(header = "anno", flexGrow = true)
-    public String nome;
+    @AIField(type = AETypeField.text, focus = true)
+    @AIColumn(widthEM = 6)
+    public String anno;
 
     /**
      * flag bisestile (obbligatorio)
@@ -84,13 +74,23 @@ public class Anno extends AEntity {
     @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS")
     public boolean bisestile;
 
+    /**
+     * secolo di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
+    @AIColumn(flexGrow = true)
+    public Secolo secolo;
+
 
     /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return getNome();
+        return getAnno();
     }
 
 }

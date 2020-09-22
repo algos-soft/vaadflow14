@@ -36,10 +36,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderRegione")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Regione", keyPropertyName = "nome", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "nome")
-@AIList(fields = "ordine,nome,stato,iso,sigla,status")
-@AIForm(fields = "ordine,nome,stato,iso,sigla,status")
+@AIEntity(recordName = "Regione", keyPropertyName = "regione", usaCompany = false)
+@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "regione", sortProperty = "ordine")
+@AIList(fields = "ordine,regione,stato,iso,sigla,status")
+@AIForm(fields = "ordine,regione,stato,iso,sigla,status")
 public class Regione extends AEntity {
 
     /**
@@ -62,9 +62,9 @@ public class Regione extends AEntity {
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, caption = "regione", widthEM = 19)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true,  widthEM = 19)
     @AIColumn(widthEM = 18)
-    public String nome;
+    public String regione;
 
 
     /**
@@ -102,7 +102,7 @@ public class Regione extends AEntity {
      */
     @NotNull()
     @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class, widthEM = 19)
-    @AIColumn(widthEM = 13)
+    @AIColumn(flexGrow = true)
     public AEStatuto status;
 
 
@@ -111,7 +111,7 @@ public class Regione extends AEntity {
      */
     @Override
     public String toString() {
-        return getNome();
+        return getRegione();
     }
 
 }

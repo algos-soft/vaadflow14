@@ -38,7 +38,7 @@ import javax.validation.constraints.Size;
 @AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
 @AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false)
-@AIForm(fields = "ordine,mese,giorni,giorniBisestile,sigla")
+@AIForm(fields = "mese,giorni,giorniBisestile,sigla")
 public class Mese extends AEntity {
 
     /**

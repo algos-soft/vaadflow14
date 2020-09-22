@@ -34,8 +34,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Company", keyPropertyName = "code", usaNote = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.FACTORY)
-@AIList(fields = "code,telefono,email,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,telefono,email,descrizione")
+@AIList(fields = "code,descrizione,telefono,email", usaRowIndex = true)
+@AIForm(fields = "code,descrizione,telefono,email")
 public class Company extends AEntity {
 
     /**
@@ -50,10 +50,17 @@ public class Company extends AEntity {
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 8)
+    @AIField(type = AETypeField.text, focus = true, caption = "Codice", widthEM = 6)
     @AIColumn(widthEM = 6)
     public String code;
 
+    /**
+     * descrizione (obbligatoria)
+     */
+    @NotBlank()
+    @AIField(type = AETypeField.text, caption = "Descrizione completa")
+    @AIColumn(widthEM = 14)
+    public String descrizione;
 
     /**
      * telefono (facoltativo)
@@ -66,17 +73,8 @@ public class Company extends AEntity {
      * mail (facoltativa)
      */
     @AIField(type = AETypeField.email, caption = "Posta elettronica")
-    @AIColumn()
+    @AIColumn(flexGrow = true)
     public String email;
-
-
-    /**
-     * descrizione (obbligatoria)
-     */
-    @NotBlank()
-    @AIField(type = AETypeField.text, caption = "Descrizione completa")
-    @AIColumn(header = "Descrizione", flexGrow = true)
-    public String descrizione;
 
 
     /**

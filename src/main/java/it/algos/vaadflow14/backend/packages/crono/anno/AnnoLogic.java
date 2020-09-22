@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.packages.crono.anno;
 
 import com.google.gson.Gson;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.service.ADateService;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -95,24 +96,28 @@ public class AnnoLogic extends CronoLogic {
 
 
     /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *
      * @param typeVista in cui inserire gli avvisi
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> blu = new ArrayList<>();
+        List<String> red = new ArrayList<>();
 
-        lista.add("Pacchetto convenzionale di 3030 anni. 1000 anni ANTE Cristo e 2030 anni DOPO Cristo.");
-        lista.add("Sono indicati gli anni bisestili secondo il calendario Giuliano (fino al 1582) e Gregoriano poi.");
-        lista.add("<span style=\"color:red\">Bottone new provvisorio</span>");
+        blu.add("Pacchetto convenzionale di 3030 anni. 1000 anni ANTE Cristo e 2030 anni DOPO Cristo");
+        blu.add("Sono indicati gli anni bisestili secondo il calendario Giuliano (fino al 1582) e Gregoriano poi");
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Secolo'");
+            red.add("Manca providerData e pagination. Troppi records. Browser lentissimo. Metodo refreshGrid() provvisorio per mostrare solo una trentina di records");
+        }
 
-        return lista;
+        return new AlertWrap(null, blu, red, false);
     }
 
 
@@ -122,7 +127,7 @@ public class AnnoLogic extends CronoLogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox(Secolo.class, 12, true, false);
+        super.creaComboBox("secolo");
     }
 
 
@@ -130,14 +135,14 @@ public class AnnoLogic extends CronoLogic {
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param secolo    di riferimento (obbligatorio)
+     * @param anno      (obbligatorio, unico)
      * @param bisestile (obbligatorio)
-     * @param nome      (obbligatorio, unico)
+     * @param secolo    di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Anno crea(int ordine, Secolo secolo, boolean bisestile, String nome) {
-        return (Anno) checkAndSave(newEntity(ordine, secolo, bisestile, nome));
+    public Anno crea(int ordine, String anno, boolean bisestile, Secolo secolo) {
+        return (Anno) checkAndSave(newEntity(ordine, anno, bisestile, secolo));
     }
 
 
@@ -149,7 +154,7 @@ public class AnnoLogic extends CronoLogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Anno newEntity() {
-        return newEntity(0, (Secolo) null, false, VUOTA);
+        return newEntity(0, VUOTA, false, (Secolo) null);
     }
 
 
@@ -160,22 +165,22 @@ public class AnnoLogic extends CronoLogic {
      * All properties <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param secolo    di riferimento (obbligatorio)
+     * @param anno      (obbligatorio, unico)
      * @param bisestile (obbligatorio)
-     * @param nome      (obbligatorio, unico)
+     * @param secolo    di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(int ordine, Secolo secolo, boolean bisestile, String nome) {
+    public Anno newEntity(int ordine, String anno, boolean bisestile, Secolo secolo) {
         Anno newEntityBean = Anno.builderAnno()
 
-                .ordine(ordine)
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
 
-                .secolo(secolo)
+                .anno(text.isValid(anno) ? anno : null)
 
                 .bisestile(bisestile)
 
-                .nome(text.isValid(nome) ? nome : null)
+                .secolo(secolo)
 
                 .build();
 
@@ -187,7 +192,7 @@ public class AnnoLogic extends CronoLogic {
      * Aggiorna gli items della Grid, utilizzando i filtri. <br>
      * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
      */
-    //@todo provvisorio perchè è troppo lento a visualizzare tutti i records
+    //@todo provvisorio perché è troppo lento a visualizzare tutti i records
     @Override
     public void refreshGrid() {
         List<? extends AEntity> items;
@@ -254,7 +259,7 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                crea(ordine, secolo, bisestile, nome);
+                crea(ordine, nome,bisestile,secolo);
             }
         }
 
@@ -269,7 +274,7 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                crea(ordine, secolo, bisestile, nome);
+                crea(ordine, nome,bisestile,secolo);
             }
         }
 

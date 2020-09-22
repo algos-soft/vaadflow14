@@ -1,12 +1,15 @@
 package it.algos.vaadflow14.backend.packages.crono.secolo;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -66,6 +69,30 @@ public class SecoloLogic extends CronoLogic {
 
 
     /**
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> blu = new ArrayList<>();
+        List<String> red = new ArrayList<>();
+
+        blu.add("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo");
+        blu.add("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari");
+        if (FlowVar.usaDebug) {
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'");
+        }
+
+        return new AlertWrap(null, blu, red, false);
+    }
+
+    /**
      * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
@@ -97,22 +124,22 @@ public class SecoloLogic extends CronoLogic {
      * @return la nuova entity appena creata e salvata
      */
     public Secolo crea(AESecolo aeSecolo) {
-        return crea(aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine(), aeSecolo.getNome());
+        return crea(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
+     * @param secolo     (obbligatorio, unico)
      * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
      * @param inizio     (obbligatorio, unico)
      * @param fine       (obbligatorio, unico)
-     * @param nome       (obbligatorio, unico)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Secolo crea(boolean anteCristo, int inizio, int fine, String nome) {
-        return (Secolo)checkAndSave(newEntity(anteCristo, inizio, fine, nome));
+    public Secolo crea(String secolo, boolean anteCristo, int inizio, int fine) {
+        return (Secolo) checkAndSave(newEntity(secolo, anteCristo, inizio, fine));
     }
 
 
@@ -124,7 +151,7 @@ public class SecoloLogic extends CronoLogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Secolo newEntity() {
-        return newEntity(false, 0, 0, VUOTA);
+        return newEntity(VUOTA, false, 0, 0);
     }
 
 
@@ -138,7 +165,7 @@ public class SecoloLogic extends CronoLogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Secolo newEntity(AESecolo aeSecolo) {
-        return newEntity(aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine(), aeSecolo.getNome());
+        return newEntity(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
     }
 
 
@@ -147,23 +174,25 @@ public class SecoloLogic extends CronoLogic {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
+     * @param secolo     (obbligatorio, unico)
      * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
      * @param inizio     (obbligatorio, unico)
      * @param fine       (obbligatorio, unico)
-     * @param nome       (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Secolo newEntity(boolean anteCristo, int inizio, int fine, String nome) {
+    public Secolo newEntity(String secolo, boolean anteCristo, int inizio, int fine) {
         Secolo newEntityBean = Secolo.builderSecolo()
+
+                .ordine(getNewOrdine())
+
+                .secolo(text.isValid(secolo) ? secolo : null)
 
                 .anteCristo(anteCristo)
 
                 .inizio(inizio)
 
                 .fine(fine)
-
-                .nome(text.isValid(nome) ? nome : null)
 
                 .build();
 
