@@ -6,6 +6,8 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.service.ARouteService;
@@ -98,6 +100,15 @@ public abstract class AViewProperty extends VerticalLayout {
      */
     @Autowired
     public AClassService classService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
+
 
     //    @Autowired
     //    public ABootService boot;
@@ -233,7 +244,7 @@ public abstract class AViewProperty extends VerticalLayout {
         footerPlacehorder.setSpacing(false);
         footerPlacehorder.setPadding(false);
 
-        if (FlowVar.usaDebug) {//@todo Funzionalità ancora da implementare nelle preferenze
+        if (pref.isBool("usaDebug")) {//@todo Funzionalità ancora da implementare nelle preferenze
             this.getElement().getStyle().set("background-color", AEColor.yellow.getEsadecimale());
             alertPlacehorder.getElement().getStyle().set("background-color", AEColor.bisque.getEsadecimale());
             topPlacehorder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());

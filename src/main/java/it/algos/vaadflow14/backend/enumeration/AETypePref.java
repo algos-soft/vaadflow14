@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.enumeration;
 
 
 import com.google.common.primitives.Longs;
+import com.vaadin.flow.component.html.Image;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -244,38 +245,31 @@ public enum AETypePref {
             return obj;
         }// end of method
     },// end of single enumeration
+
+
+    image("image", AETypeField.image) {
+        //@todo RIMETTERE
+//        @Override
+//        public byte[] objectToBytes(Object obj) {
+//            byte[] bytes = new byte[0];
+//            if (obj instanceof Image) {
+//                Image image = (Image) obj;
+//                bytes = image.getBytes(Charset.forName("UTF-8"));
+//            }// end of if cycle
+//            return bytes;
+//        }// end of method
+
+
+        //        @Override
+//        public Object bytesToObject(byte[] bytes) {
+//            Image img = null;
+//            if (bytes.length > 0) {
+//                img = LibImage.getImage(bytes);
+//            }
+//            return img;
+//        }// end of method
+    },// end of single enumeration
     ;
-
-
-    //    decimal("decimale", AFieldType.lungo) {
-    //        @Override
-    //        public byte[] objectToBytes(Object obj) {
-    //            byte[] bytes = new byte[0];
-    //            if (obj instanceof BigDecimal) {
-    //                BigDecimal bd = (BigDecimal) obj;
-    //                bytes = LibByte.bigDecimalToByteArray(bd);
-    //            }// end of if cycle
-    //            return bytes;
-    //        }// end of method
-    //
-    //        @Override
-    //        public Object bytesToObject(byte[] bytes) {
-    //            return LibByte.byteArrayToBigDecimal(bytes);
-    //        }// end of method
-    //    },// end of single enumeration
-
-    //    image("image", EAFieldType.image) {
-    //        //@todo RIMETTERE
-    //
-    //        //        @Override
-    //        public Object bytesToObject(byte[] bytes) {
-    //            Image img = null;
-    //            if (bytes.length > 0) {
-    //                img = LibImage.getImage(bytes);
-    //            }
-    //            return img;
-    //        }// end of method
-    //    },// end of single enumeration
 
     //    resource("resource", EAFieldType.resource) {
     //        @todo RIMETTERE
@@ -291,6 +285,23 @@ public enum AETypePref {
     //                res = img.getSource();
     //            }// end of if cycle
     //            return res;
+    //        }// end of method
+    //    },// end of single enumeration
+
+    //    decimal("decimale", AFieldType.lungo) {
+    //        @Override
+    //        public byte[] objectToBytes(Object obj) {
+    //            byte[] bytes = new byte[0];
+    //            if (obj instanceof BigDecimal) {
+    //                BigDecimal bd = (BigDecimal) obj;
+    //                bytes = LibByte.bigDecimalToByteArray(bd);
+    //            }// end of if cycle
+    //            return bytes;
+    //        }// end of method
+    //
+    //        @Override
+    //        public Object bytesToObject(byte[] bytes) {
+    //            return LibByte.byteArrayToBigDecimal(bytes);
     //        }// end of method
     //    },// end of single enumeration
 

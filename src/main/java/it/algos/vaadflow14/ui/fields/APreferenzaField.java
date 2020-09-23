@@ -25,7 +25,6 @@ public class APreferenzaField extends AField<byte[]> {
 
     private AField valueField;
 
-
     private AETypePref type;
 
     private Preferenza entityBean;
@@ -64,13 +63,13 @@ public class APreferenzaField extends AField<byte[]> {
 
     @Override
     protected byte[] generateModelValue() {
-        //        return entityBean.getType().objectToBytes("mariolino");
-        return null;
+        return type.objectToBytes(valueField.getValue());
     }
 
 
     @Override
-    protected void setPresentationValue(byte[] o) {
+    protected void setPresentationValue(byte[] bytes) {
+        valueField.setValue(type.bytesToObject(bytes));
     }
 
 
@@ -99,13 +98,13 @@ public class APreferenzaField extends AField<byte[]> {
             case string:
                 valueField = appContext.getBean(ATextField.class);
                 valueField.setLabel(tag + "(string)");
-                String message = "L' indirizzo pippoz non è valido";
+                String message = "Valore non valido";
                 ((ATextField) valueField).setErrorMessage(message);
                 break;
             case email:
                 valueField = appContext.getBean(AEmailField.class);
                 valueField.setLabel(tag + "(email)");
-                 message = "L' indirizzo eMail non è valido";
+                message = "L' indirizzo eMail non è valido";
                 ((AEmailField) valueField).setErrorMessage(message);
                 break;
             case integer:
@@ -118,12 +117,15 @@ public class APreferenzaField extends AField<byte[]> {
                 break;
             case localdate:
                 valueField = appContext.getBean(ADateField.class);
+                valueField.setLabel(tag + "(solo data)");
                 break;
             case localdatetime:
                 valueField = appContext.getBean(ADateTimeField.class);
+                valueField.setLabel(tag + "(data e orario)");
                 break;
             case localtime:
                 valueField = appContext.getBean(ATimeField.class);
+                valueField.setLabel(tag + "(solo orario)");
                 //                ((ATimePicker) valueField).setStep(Duration.ofMinutes(15));
                 break;
             case enumeration:
@@ -148,6 +150,7 @@ public class APreferenzaField extends AField<byte[]> {
             this.add(valueField);
         }
 
+        this.type = type;
         return valueField;
     }
 

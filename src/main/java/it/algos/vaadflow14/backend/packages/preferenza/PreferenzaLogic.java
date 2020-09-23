@@ -6,8 +6,6 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -64,6 +62,10 @@ public class PreferenzaLogic extends ALogic {
      */
     private static final long serialVersionUID = 1L;
 
+    {
+        logger.warn("Algos - Preferenze. Non esiste la preferenza: ");
+    }// end of if/else cycle
+
 
     /**
      * Costruttore senza parametri <br>
@@ -114,24 +116,6 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Costruisce un wrapper di dati <br>
-     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
-     * I dati vengono passati alla View che li usa <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     *
-     * @param entityBean interessata
-     *
-     * @return wrapper di dati per il Form
-     */
-    @Override
-    public WrapForm getWrapForm(AEntity entityBean) {
-        WrapForm wrap = super.getWrapForm(entityBean);
-        wrap.setUsaBottomLayout(true);
-        return wrap;
-    }
-
-
     //    /**
     //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
     //     * <p>
@@ -154,6 +138,24 @@ public class PreferenzaLogic extends ALogic {
     //
     //        return form;
     //    }
+
+
+    /**
+     * Costruisce un wrapper di dati <br>
+     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
+     * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBean interessata
+     *
+     * @return wrapper di dati per il Form
+     */
+    @Override
+    public WrapForm getWrapForm(AEntity entityBean) {
+        WrapForm wrap = super.getWrapForm(entityBean);
+        wrap.setUsaBottomLayout(true);
+        return wrap;
+    }
 
 
     /**
@@ -180,6 +182,7 @@ public class PreferenzaLogic extends ALogic {
         return currentForm;
     }
 
+
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
@@ -188,8 +191,9 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza crea(AEPreferenza aePref) {
-        return crea(aePref.getCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(),aePref.getNote());
+        return crea(aePref.getCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
     }
+
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -337,6 +341,20 @@ public class PreferenzaLogic extends ALogic {
         }
 
         return value;
+    }
+
+
+    public Boolean isBool(String keyCode) {
+        boolean status = false;
+        Object objValue = getValue(keyCode);
+
+        if (objValue != null && objValue instanceof Boolean) {
+            status = (boolean) objValue;
+        } else {
+            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+        }
+
+        return status;
     }
 
 

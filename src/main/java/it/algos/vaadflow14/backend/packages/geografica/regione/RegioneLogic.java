@@ -64,8 +64,6 @@ public class RegioneLogic extends ALogic {
     public StatoLogic statoLogic;
 
 
-
-
     /**
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -174,53 +172,14 @@ public class RegioneLogic extends ALogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        //        super.creaComboBox("stato", statoLogic.getItalia());
-        ComboBox comboStati = this.creaComboStati();
-        mappaComboBox.put("stato", comboStati);
+
+        if (true) { //@todo Creare una preferenza e sostituirla qui
+            mappaComboBox.put("stato", statoLogic.creaComboStati());//@todo con bandierine
+        } else {
+             super.creaComboBox("stato", statoLogic.getItalia());//@todo senza bandierine
+        }
 
         super.creaComboBox("status", 14);
-    }
-
-
-    protected ComboBox creaComboStati() {
-        ComboBox<Stato> combo = new ComboBox();
-        Field reflectionJavaField = null;
-        String tag = TRE_PUNTI;
-        Class comboEnumClazz = null;
-        String widthEM = "12em";
-        Sort sort = Sort.by("ordine");
-        List items;
-
-
-        items = mongo.findAll(Stato.class, sort);
-        combo.setWidth(widthEM);
-        combo.setPreventInvalidInput(true);
-        combo.setAllowCustomValue(false);
-        combo.setPlaceholder(text.primaMaiuscola("Stati") + tag);
-        combo.setClearButtonVisible(true);
-        combo.setRequired(false);
-
-        combo.setItems(items);
-//        if (initialValue != null) {
-//            combo.setValue(initialValue);
-//        }
-
-
-        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
-            Div text = new Div();
-            String sigla=entityStato.getAlfadue().toLowerCase();
-            text.setText(entityStato.getStato());
-
-            Image image = imageService.getBandiera(sigla);
-            image.setWidth("21px");
-            image.setHeight("21px");
-
-            FlexLayout wrapper = new FlexLayout();
-            text.getStyle().set("margin-left", "0.5em");
-            wrapper.add(image, text);
-            return wrapper;
-        }));
-        return combo;
     }
 
 

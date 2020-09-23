@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -62,7 +63,7 @@ public class Regione extends AEntity {
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true,  widthEM = 19)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 19)
     @AIColumn(widthEM = 18)
     public String regione;
 
@@ -73,7 +74,7 @@ public class Regione extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class)
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class, usaComboMethod = false, logicClazz = StatoLogic.class, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 

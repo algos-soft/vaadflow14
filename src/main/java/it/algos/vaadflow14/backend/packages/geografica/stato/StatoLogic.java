@@ -1,5 +1,10 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -9,10 +14,13 @@ import it.algos.vaadflow14.ui.enumerastion.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Sort;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.TRE_PUNTI;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -268,6 +276,64 @@ public class StatoLogic extends ALogic {
         return mongo.isValid(entityClazz);
     }
 
+
+    public ComboBox creaComboStati() {
+        ComboBox<Stato> combo = new ComboBox();
+        Field reflectionJavaField = null;
+        String tag = TRE_PUNTI;
+        Class comboEnumClazz = null;
+        String widthEM = "12em";
+        Sort sort = Sort.by("ordine");
+        List items;
+
+
+        items = mongo.findAll(Stato.class, sort);
+        combo.setWidth(widthEM);
+        combo.setPreventInvalidInput(true);
+        combo.setAllowCustomValue(false);
+        combo.setPlaceholder(text.primaMaiuscola("Stati") + tag);
+        combo.setClearButtonVisible(true);
+        combo.setRequired(false);
+
+        combo.setItems(items);
+        combo.setValue(getItalia());
+
+        combo=addBandiere(combo);
+//        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
+//            Div text = new Div();
+//            String sigla = entityStato.getAlfadue().toLowerCase();
+//            text.setText(entityStato.getStato());
+//
+//            Image image = imageService.getBandiera(sigla);
+//            image.setWidth("21px");
+//            image.setHeight("21px");
+//
+//            FlexLayout wrapper = new FlexLayout();
+//            text.getStyle().set("margin-left", "0.5em");
+//            wrapper.add(image, text);
+//            return wrapper;
+//        }));
+        return combo;
+    }
+
+
+    public ComboBox addBandiere(ComboBox combo) {
+        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
+            Div text = new Div();
+            String sigla = ((Stato)entityStato).getAlfadue().toLowerCase();
+            text.setText(((Stato)entityStato).getStato());
+
+            Image image = imageService.getBandiera(sigla);
+            image.setWidth("21px");
+            image.setHeight("21px");
+
+            FlexLayout wrapper = new FlexLayout();
+            text.getStyle().set("margin-left", "0.5em");
+            wrapper.add(image, text);
+            return wrapper;
+        }));
+        return combo;
+    }
 
     public Stato getItalia() {
         return findById("italia");

@@ -26,17 +26,17 @@ public enum AETypeField {
 
     localTime(6, 0),
 
-//    meseShort(6, 0, AETypeData.meseShort),
-//
-//    meseNormal(6, 0, AETypeData.meseNormal),
-//
-//    meseLong(6, 0, AETypeData.meseLong),
-//
-//    weekShort(6, 0, AETypeData.weekShort),
-//
-//    weekShortMese(6, 0, AETypeData.weekShortMese),
-//
-//    weekLong(6, 0, AETypeData.weekShort),
+    //    meseShort(6, 0, AETypeData.meseShort),
+    //
+    //    meseNormal(6, 0, AETypeData.meseNormal),
+    //
+    //    meseLong(6, 0, AETypeData.meseLong),
+    //
+    //    weekShort(6, 0, AETypeData.weekShort),
+    //
+    //    weekShortMese(6, 0, AETypeData.weekShortMese),
+    //
+    //    weekLong(6, 0, AETypeData.weekShort),
 
     preferenza(6, 0),
 
@@ -58,7 +58,7 @@ public enum AETypeField {
     //    dateNotEnabled,
     //    decimal,
     //    link,
-    //    image,
+    image(8, 8),
     //    resource,
     //    vaadinIcon,
     //    json,
