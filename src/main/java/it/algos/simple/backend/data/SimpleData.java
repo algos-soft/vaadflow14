@@ -57,6 +57,8 @@ public class SimpleData extends FlowData {
         LocalTime adessoTime = LocalDateTime.now().toLocalTime();
         Gamma gamma = Gamma.builderGamma()
 
+                .code("adesso")
+
                 .uno(adesso)
 
                 .due(adesso)
@@ -93,14 +95,15 @@ public class SimpleData extends FlowData {
 
                 .build();
 
-        gamma.id = "adesso";
+        gamma.id = gamma.code;
         mongo.save(gamma);
 
-        Lambda lambda = lambdaLogic.crea("alfa");
-        lambda.due = "betta";
-        lambda.tre = "potta";
-        mongo.save(lambda);
-
+        Lambda lambda = lambdaLogic.newEntity("alfa");
+        if (lambda != null) {
+            lambda.due = "betta";
+            lambda.tre = "potta";
+            mongo.save(lambda);
+        }
     }
 
 }

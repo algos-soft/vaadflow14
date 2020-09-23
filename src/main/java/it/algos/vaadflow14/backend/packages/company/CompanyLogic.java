@@ -5,7 +5,8 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -113,7 +114,7 @@ public class CompanyLogic extends ALogic {
     protected AlertWrap getAlertWrap(AEVista typeVista) {
         List<String> red = new ArrayList<>();
 
-        if (FlowVar.usaDebug) {
+        if (AEPreferenza.usaDebug.is()) {
             red.add("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
             red.add("Di norma utilizzato solo in applicazioni con usaCompany=true");
         }

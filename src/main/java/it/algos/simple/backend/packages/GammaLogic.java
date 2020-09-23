@@ -110,7 +110,7 @@ public class GammaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     @Override
-    public Gamma crea(String keyPropertyValue) {
+    public Gamma creaIfNotExist(String keyPropertyValue) {
         return (Gamma) checkAndSave(newEntity(keyPropertyValue));
     }
 

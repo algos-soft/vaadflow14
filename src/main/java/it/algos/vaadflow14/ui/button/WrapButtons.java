@@ -4,7 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.wrapper.WrapSearch;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 
 import java.util.LinkedHashMap;
 import java.util.List;

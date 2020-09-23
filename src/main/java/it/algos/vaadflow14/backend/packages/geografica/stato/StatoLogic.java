@@ -10,7 +10,8 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -115,7 +116,7 @@ public class StatoLogic extends ALogic {
         blue.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
         blue.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
         blue.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
-        if (FlowVar.usaDebug) {
+        if (AEPreferenza.usaDebug.is()) {
             red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ");
         }
 
@@ -298,21 +299,24 @@ public class StatoLogic extends ALogic {
         combo.setItems(items);
         combo.setValue(getItalia());
 
-        combo=addBandiere(combo);
-//        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
-//            Div text = new Div();
-//            String sigla = entityStato.getAlfadue().toLowerCase();
-//            text.setText(entityStato.getStato());
-//
-//            Image image = imageService.getBandiera(sigla);
-//            image.setWidth("21px");
-//            image.setHeight("21px");
-//
-//            FlexLayout wrapper = new FlexLayout();
-//            text.getStyle().set("margin-left", "0.5em");
-//            wrapper.add(image, text);
-//            return wrapper;
-//        }));
+        if (AEPreferenza.usaBandiereStati.is()) {
+            combo = addBandiere(combo);
+        }
+
+        //        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
+        //            Div text = new Div();
+        //            String sigla = entityStato.getAlfadue().toLowerCase();
+        //            text.setText(entityStato.getStato());
+        //
+        //            Image image = imageService.getBandiera(sigla);
+        //            image.setWidth("21px");
+        //            image.setHeight("21px");
+        //
+        //            FlexLayout wrapper = new FlexLayout();
+        //            text.getStyle().set("margin-left", "0.5em");
+        //            wrapper.add(image, text);
+        //            return wrapper;
+        //        }));
         return combo;
     }
 
@@ -320,8 +324,8 @@ public class StatoLogic extends ALogic {
     public ComboBox addBandiere(ComboBox combo) {
         combo.setRenderer(new ComponentRenderer<>(entityStato -> {
             Div text = new Div();
-            String sigla = ((Stato)entityStato).getAlfadue().toLowerCase();
-            text.setText(((Stato)entityStato).getStato());
+            String sigla = ((Stato) entityStato).getAlfadue().toLowerCase();
+            text.setText(((Stato) entityStato).getStato());
 
             Image image = imageService.getBandiera(sigla);
             image.setWidth("21px");
@@ -334,6 +338,7 @@ public class StatoLogic extends ALogic {
         }));
         return combo;
     }
+
 
     public Stato getItalia() {
         return findById("italia");

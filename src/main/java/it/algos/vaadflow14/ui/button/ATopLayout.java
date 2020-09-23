@@ -9,7 +9,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -117,7 +118,7 @@ public class ATopLayout extends AButtonLayout {
         layout.setSpacing(false);
 
         //--bottone piccolo per pulire il campo testo di ricerca
-        if (false) {//@todo Creare una preferenza e sostituirla qui
+        if (AEPreferenza.usaSearchClearButton.is()) {
             //        buttonClearFilter = new Button(new Icon("lumo", "cross"));
             buttonClearFilter = new Button(VaadinIcon.CLOSE_SMALL.create());
             buttonClearFilter.setEnabled(false);

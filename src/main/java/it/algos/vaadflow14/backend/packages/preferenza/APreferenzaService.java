@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
  * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
  * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>
  * L'istanza può essere richiamata con: <br>
- * 1) StaticContextAccessor.getBean(PreferenzaService.class); <br>
- * 3) @Autowired public PreferenzaService annotation; <br>
+ * 1) StaticContextAccessor.getBean(APreferenzaService.class); <br>
+ * 3) @Autowired public APreferenzaService annotation; <br>
  * <p>
  * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class PreferenzaService extends AAbstractService {
+public class APreferenzaService extends AAbstractService {
 
     /**
      * versione della classe per la serializzazione

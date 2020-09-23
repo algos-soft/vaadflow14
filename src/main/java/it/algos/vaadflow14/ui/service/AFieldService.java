@@ -290,7 +290,6 @@ public class AFieldService extends AAbstractService {
                     }
                     break;
                 case email:
-                    field.setErrorMessage(messageMail);
                     if (isRequired) {
                         builder.asRequired();
                     }

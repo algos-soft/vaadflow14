@@ -1,13 +1,12 @@
 package it.algos.vaadflow14.backend.logic;
 
 
-import it.algos.simple.backend.packages.Gamma;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.header.AHeader;
 import it.algos.vaadflow14.ui.list.AGrid;
@@ -225,7 +224,7 @@ public interface AILogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Object crea(String keyPropertyValue);
+    public Object creaIfNotExist(String keyPropertyValue);
 
 
     /**

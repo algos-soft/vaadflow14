@@ -11,7 +11,7 @@ import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;

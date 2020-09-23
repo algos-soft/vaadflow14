@@ -27,8 +27,8 @@ import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.button.WrapButtons;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.AGenericForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
@@ -1215,7 +1215,7 @@ public abstract class ALogic implements AILogic {
      * @return la nuova entity appena creata e salvata
      */
     @Override
-    public Object crea(String keyPropertyValue) {
+    public Object creaIfNotExist(String keyPropertyValue) {
         return null;
     }
 
@@ -1266,6 +1266,18 @@ public abstract class ALogic implements AILogic {
         return mongo.findById(entityClazz, keyID);
     }
 
+
+    /**
+     * Check the existence of a single entity. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return true if exist
+     */
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, String keyId) {
+        return mongo.isEsiste(entityClazz, keyId);
+    }
 
     //    /**
     //     * Registra una entity solo se non esisteva <br>
@@ -1399,8 +1411,14 @@ public abstract class ALogic implements AILogic {
     public AEntity checkAndSave(AEntity newEntityBean) {
         boolean valido = false;
         String message = VUOTA;
-        Binder binder = new Binder(newEntityBean.getClass());
+        Binder binder = null;
 
+        //--controlla che la newEntityBean non esista già
+        if (isEsiste(entityClazz,newEntityBean.id)) {
+            return null;
+        }
+
+        binder = new Binder(newEntityBean.getClass());
         beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
         //--Sincronizza il binder all' apertura della scheda
         //--Trasferisce (binder read) i valori dal DB alla UI

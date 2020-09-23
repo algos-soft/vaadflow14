@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.ui.enumerastion;
+package it.algos.vaadflow14.ui.enumeration;
 
 /**
  * Project vaadflow15

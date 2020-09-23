@@ -83,12 +83,12 @@ public class LambdaLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code obbligatorio
+     * @param keyPropertyValue obbligatorio
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Lambda crea(String code) {
-        return (Lambda) checkAndSave(newEntity(code));
+    public Lambda creaIfNotExist(String keyPropertyValue) {
+        return (Lambda) checkAndSave(newEntity(keyPropertyValue));
     }
 
 

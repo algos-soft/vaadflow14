@@ -3,10 +3,9 @@ package it.algos.vaadflow14.ui.view;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.footer.AFooter;
 import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.service.Parametro;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;

@@ -6,7 +6,8 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -96,7 +97,7 @@ public class GiornoLogic extends CronoLogic {
         List<String> red = new ArrayList<>();
 
         blu.add("Giorni dell' anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili");
-        if (FlowVar.usaDebug) {
+        if (AEPreferenza.usaDebug.is()) {
             red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
         }
 
@@ -190,7 +191,7 @@ public class GiornoLogic extends CronoLogic {
             titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
             titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
             mese = (Mese) mongo.findById(Mese.class, titoloMese);
-            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_NORMALE);
+            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
             crea(ordine, titolo, mese);
         }

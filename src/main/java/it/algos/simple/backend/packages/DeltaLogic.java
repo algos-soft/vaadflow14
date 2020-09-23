@@ -88,12 +88,12 @@ public class DeltaLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code obbligatorio
+     * @param keyPropertyValue obbligatorio
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Delta crea(String code) {
-        return (Delta) checkAndSave(newEntity(code));
+    public Delta creaIfNotExist(String keyPropertyValue) {
+        return (Delta) checkAndSave(newEntity(keyPropertyValue));
     }
 
 
@@ -145,7 +145,7 @@ public class DeltaLogic extends ALogic {
         ComboBox box = combo.comboBox;
         Object obj = box.getValue();
         if (obj instanceof String) {
-            Via via = viaLogic.crea((String)obj);
+            Via via = viaLogic.creaIfNotExist((String)obj);
             entityBean.via = via;
         }
 

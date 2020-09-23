@@ -6,10 +6,16 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
+import it.algos.vaadflow14.ui.header.AlertWrap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -56,15 +62,20 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PreferenzaLogic extends ALogic {
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public APreferenzaService pref;
+
 
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
 
-    {
-        logger.warn("Algos - Preferenze. Non esiste la preferenza: ");
-    }// end of if/else cycle
 
 
     /**
@@ -111,7 +122,6 @@ public class PreferenzaLogic extends ALogic {
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
-        this.usaHeaderWrap = false;
         this.usaBottoneEdit = true;
     }
 
@@ -138,6 +148,34 @@ public class PreferenzaLogic extends ALogic {
     //
     //        return form;
     //    }
+
+
+    /**
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrap(AEVista typeVista) {
+        List<String> green = new ArrayList<>();
+        List<String> blue = new ArrayList<>();
+        List<String> red = new ArrayList<>();
+
+        if (AEPreferenza.usaDebug.is()) {
+            green.add("PreferenzaLogic è SCOPE_PROTOTYPE mentre APreferenzaService è SCOPE_SINGLETON");
+            green.add("PreferenzaLogic è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form");
+            green.add("APreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton");
+            green.add("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()");
+            green.add("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")");
+            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'");
+        }
+        return new AlertWrap(green, blue, red, false);
+    }
 
 
     /**
@@ -191,7 +229,7 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza crea(AEPreferenza aePref) {
-        return crea(aePref.getCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
+        return crea(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
     }
 
 

@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -40,6 +41,8 @@ public class FlowData extends AData {
      * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void initData() {
+        checkSingolaCollection(Preferenza.class);
+
         checkSingolaCollection(Secolo.class);
         checkSingolaCollection(Anno.class);
         checkSingolaCollection(Mese.class);

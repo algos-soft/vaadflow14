@@ -1,15 +1,15 @@
 package it.algos.vaadflow14.ui.view;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
+import it.algos.vaadflow14.backend.logic.AILogic;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.enumerastion.AEVista;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.service.ARouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -107,7 +107,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public PreferenzaService pref;
+    public APreferenzaService pref;
 
 
     //    @Autowired
@@ -244,7 +244,7 @@ public abstract class AViewProperty extends VerticalLayout {
         footerPlacehorder.setSpacing(false);
         footerPlacehorder.setPadding(false);
 
-        if (pref.isBool("usaDebug")) {//@todo Funzionalità ancora da implementare nelle preferenze
+        if (AEPreferenza.usaDebug.is()) {
             this.getElement().getStyle().set("background-color", AEColor.yellow.getEsadecimale());
             alertPlacehorder.getElement().getStyle().set("background-color", AEColor.bisque.getEsadecimale());
             topPlacehorder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());

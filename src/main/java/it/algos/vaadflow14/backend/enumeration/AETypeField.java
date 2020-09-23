@@ -60,7 +60,9 @@ public enum AETypeField {
     //    link,
     image(8, 8),
     //    resource,
-    //    vaadinIcon,
+
+    vaadinIcon(8, 8),
+
     //    json,
 
     ugualeAlForm(0, 0),

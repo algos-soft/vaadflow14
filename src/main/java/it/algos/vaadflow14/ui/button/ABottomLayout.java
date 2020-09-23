@@ -3,7 +3,7 @@ package it.algos.vaadflow14.ui.button;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 

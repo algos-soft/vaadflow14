@@ -15,9 +15,6 @@ import it.algos.vaadflow14.ui.fields.AField;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -416,6 +413,7 @@ public class AColumnService extends AAbstractService {
             Object value = null;
             Label label = null;
             String message = VUOTA;
+            Icon icon = null;
 
             try {
                 bytes = (byte[]) field.get(entity);
@@ -444,29 +442,29 @@ public class AColumnService extends AAbstractService {
                     message = text.format(value);
                     break;
                 case localdate:
-                    message = value!=null?date.get(value,AETypeData.dateNormal):VUOTA;
+                    message = value != null ? date.get(value, AETypeData.dateNormal) : VUOTA;
                     label.getStyle().set("color", "fuchsia");
                     break;
                 case localdatetime:
-                    message = value!=null?date.get(value,AETypeData.normaleOrario):VUOTA;
+                    message = value != null ? date.get(value, AETypeData.normaleOrario) : VUOTA;
                     label.getStyle().set("color", "fuchsia");
                     break;
                 case localtime:
-                    message = value!=null?date.get(value,AETypeData.orario):VUOTA;
+                    message = value != null ? date.get(value, AETypeData.orario) : VUOTA;
                     label.getStyle().set("color", "fuchsia");
                     break;
 
                 //                    Object obj;
 
-//                    try {
-////                        obj = field.get(entity);
-//                        message = value!=null?date.get(value, data).trim():VUOTA;
-//                    } catch (Exception unErrore) {
-//                        logger.error(unErrore, this.getClass(), "addPreferenza (data)");
-//                    }
-//
-//                    label.getStyle().set("color", "fuchsia");
-//                    break;
+                //                    try {
+                ////                        obj = field.get(entity);
+                //                        message = value!=null?date.get(value, data).trim():VUOTA;
+                //                    } catch (Exception unErrore) {
+                //                        logger.error(unErrore, this.getClass(), "addPreferenza (data)");
+                //                    }
+                //
+                //                    label.getStyle().set("color", "fuchsia");
+                //                    break;
                 case email:
                     label.getStyle().set("color", "lime");
                     message = (String) value;
@@ -475,10 +473,27 @@ public class AColumnService extends AAbstractService {
                     label.getStyle().set("color", "teal");
                     message = enumService.convertToPresentation((String) value);
                     break;
+                case icona:
+                    VaadinIcon vaadinIcon;
+
+                    try {
+                        vaadinIcon = (VaadinIcon) value;
+                        icon = vaadinIcon.create();
+                    } catch (Exception unErrore) {
+                        logger.error(unErrore.toString());
+                    }
+                    if (icon != null) {
+                        icon.getElement().setAttribute("style", "color: " + "red");
+                    }
+                    break;
                 default:
                     logger.warn("Switch - caso non definito");
                     break;
             }
+            if (icon != null) {
+                return icon;
+            }
+
             label.setText(message);
             label.getStyle().set("font-weight", "bold");
             return label;

@@ -61,8 +61,8 @@ public class Preferenza extends ACEntity {
     @NotBlank()
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, widthEM = 8, focus = true, caption = "Codice")
-    @AIColumn(header = "Code")
+    @AIField(type = AETypeField.text, widthEM = 13, focus = true, caption = "Codice")
+    @AIColumn(widthEM = 13)
     public String code;
 
     /**
@@ -70,7 +70,7 @@ public class Preferenza extends ACEntity {
      */
     @NotBlank()
     @Size(min = 5)
-    @AIField(type = AETypeField.text, widthEM = 14)
+    @AIField(type = AETypeField.text, widthEM = 18)
     @AIColumn(flexGrow = true)
     public String descrizione;
 

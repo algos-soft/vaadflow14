@@ -2,7 +2,6 @@ package it.algos.vaadflow14.backend.enumeration;
 
 
 import com.google.common.primitives.Longs;
-import com.vaadin.flow.component.html.Image;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -10,6 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Created by gac on 30 lug 2016.
@@ -249,26 +250,49 @@ public enum AETypePref {
 
     image("image", AETypeField.image) {
         //@todo RIMETTERE
-//        @Override
-//        public byte[] objectToBytes(Object obj) {
-//            byte[] bytes = new byte[0];
-//            if (obj instanceof Image) {
-//                Image image = (Image) obj;
-//                bytes = image.getBytes(Charset.forName("UTF-8"));
-//            }// end of if cycle
-//            return bytes;
-//        }// end of method
+        //        @Override
+        //        public byte[] objectToBytes(Object obj) {
+        //            byte[] bytes = new byte[0];
+        //            if (obj instanceof Image) {
+        //                Image image = (Image) obj;
+        //                bytes = image.getBytes(Charset.forName("UTF-8"));
+        //            }// end of if cycle
+        //            return bytes;
+        //        }// end of method
 
 
         //        @Override
-//        public Object bytesToObject(byte[] bytes) {
-//            Image img = null;
-//            if (bytes.length > 0) {
-//                img = LibImage.getImage(bytes);
-//            }
-//            return img;
-//        }// end of method
+        //        public Object bytesToObject(byte[] bytes) {
+        //            Image img = null;
+        //            if (bytes.length > 0) {
+        //                img = LibImage.getImage(bytes);
+        //            }
+        //            return img;
+        //        }// end of method
     },// end of single enumeration
+
+    icona("icona", AETypeField.vaadinIcon) {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof String) {
+                String stringa = (String) obj;
+                bytes = stringa.getBytes(Charset.forName("UTF-8"));
+            }// end of if cycle
+            return bytes;
+        }// end of method
+
+
+        @Override
+        public String bytesToObject(byte[] bytes) {
+            String obj = VUOTA;
+            if (bytes != null) {
+                obj = new String(bytes, Charset.forName("UTF-8"));
+            }// end of if cycle
+            return obj.toUpperCase();
+        }// end of method
+    },// end of single enumeration
+
     ;
 
     //    resource("resource", EAFieldType.resource) {

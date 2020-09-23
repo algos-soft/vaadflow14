@@ -2,7 +2,10 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -17,24 +20,30 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Time: 15:41
  */
 public enum AEPreferenza {
-    usaDebug(FlowCost.USA_DEBUG, "Flag generale di debug", AETypePref.bool, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
+    usaDebug("usaDebug", "Flag generale di debug", AETypePref.bool, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
+
+    usaSearchClearButton("usaSearchClearButton", "Bottone per pulire il filtro di ricerca", AETypePref.bool, true),
+
+    usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true),
+
+//    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
 
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
-    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it","Email di default a cui spedire i log di posta"),
+    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", "Email di default a cui spedire i log di posta"),
 
-    paperino("paperino", "Prova numero", AETypePref.integer, 87,"Numero intero"),
+    paperino("paperino", "Prova numero", AETypePref.integer, 87, "Numero intero"),
 
     datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now()),
 
     datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now()),
 
-    timeuno("datatre", "Orario", AETypePref.localtime, LocalTime.now()),
+    timeuno("datatre", "Solo orario", AETypePref.localtime, LocalTime.now()),
 
     ;
 
     //--codice di riferimento. Se è usaCompany = true, DEVE contenere anche il code della company come prefisso.
-    private String code;
+    private String keyCode;
 
     //--descrizione breve ma comprensibile. Ulteriori (eventuali) informazioni nel campo 'note'
     private String descrizione;
@@ -46,6 +55,9 @@ public enum AEPreferenza {
     //--Valore java da convertire in byte[] a seconda del type
     private Object value;
 
+    //--Link injettato da un metodo static
+    private APreferenzaService preferenzaService;
+
     //    //--chi può vedere la preferenza
     //    private AERole show;
     //
@@ -56,13 +68,13 @@ public enum AEPreferenza {
     private String note;
 
 
-    AEPreferenza(String code, String descrizione, AETypePref type, Object value) {
-        this(code, descrizione, type, value, VUOTA);
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object value) {
+        this(keyCode, descrizione, type, value, VUOTA);
     }// fine del costruttore
 
 
-    AEPreferenza(String code, String descrizione, AETypePref type, Object value, String note) {
-        this.setCode(code);
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object value, String note) {
+        this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
         this.setNote(note);
@@ -72,13 +84,18 @@ public enum AEPreferenza {
     }// fine del costruttore
 
 
-    public String getCode() {
-        return code;
+    public void setPreferenzaService(APreferenzaService preferenzaService) {
+        this.preferenzaService = preferenzaService;
     }
 
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
+    }
+
+
+    public String getKeyCode() {
+        return keyCode;
     }
 
 
@@ -112,6 +129,23 @@ public enum AEPreferenza {
     }
 
 
+    public boolean is() {
+        boolean status = false;
+        Preferenza preferenza = null;
+        Object javaValue;
+
+        if (type != AETypePref.bool) {
+            return false;
+        }
+
+        preferenza = preferenzaService.findByKey(keyCode);
+        javaValue = preferenza != null ? type.bytesToObject(preferenza.getValue()) : null;
+        status = (javaValue != null && javaValue instanceof Boolean) ? (boolean) javaValue : false;
+
+        return status;
+    }
+
+
     public String getNote() {
         return note;
     }
@@ -119,6 +153,23 @@ public enum AEPreferenza {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+
+    @Component
+    public static class MeseServiceInjector {
+
+        @Autowired
+        private APreferenzaService preferenzaService;
+
+
+        @PostConstruct
+        public void postConstruct() {
+            for (AEPreferenza pref : AEPreferenza.values()) {
+                pref.setPreferenzaService(preferenzaService);
+            }
+        }
+
     }
 
 

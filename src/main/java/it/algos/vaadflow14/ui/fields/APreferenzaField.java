@@ -69,7 +69,11 @@ public class APreferenzaField extends AField<byte[]> {
 
     @Override
     protected void setPresentationValue(byte[] bytes) {
-        valueField.setValue(type.bytesToObject(bytes));
+        if (valueField!=null) {
+            valueField.setValue(type.bytesToObject(bytes));
+        } else {
+            logger.warn("Manca valueField", this.getClass(), "setPresentationValue");
+        }
     }
 
 
@@ -141,8 +145,12 @@ public class APreferenzaField extends AField<byte[]> {
                 //                    }
                 //                }
                 break;
+            case icona:
+                valueField = appContext.getBean(ATextField.class);
+                valueField.setLabel(tag + "(vaadin icon)");
+                break;
             default:
-                logger.warn("Switch - caso non definito");
+                logger.warn("Switch - caso non definito",this.getClass(),"sincro");
                 break;
         }
 

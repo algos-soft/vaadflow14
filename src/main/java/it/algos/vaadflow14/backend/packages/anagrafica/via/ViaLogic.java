@@ -87,7 +87,7 @@ public class ViaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     @Override
-    public Via crea(String keyPropertyValue) {
+    public Via creaIfNotExist(String keyPropertyValue) {
         return (Via) checkAndSave(newEntity(keyPropertyValue));
     }
 
@@ -99,8 +99,8 @@ public class ViaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Via crea(AEVia aeVia) {
-        return crea(aeVia.getPos(), aeVia.toString());
+    public Via creaIfNotExist(AEVia aeVia) {
+        return creaIfNotExist(aeVia.getPos(), aeVia.toString());
     }
 
 
@@ -112,7 +112,7 @@ public class ViaLogic extends ALogic {
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Via crea(int ordine, String nome) {
+    public Via creaIfNotExist(int ordine, String nome) {
         return (Via) checkAndSave(newEntity(ordine, nome));
     }
 
@@ -180,7 +180,7 @@ public class ViaLogic extends ALogic {
         super.deleteAll();
 
         for (AEVia aeVia : AEVia.values()) {
-            crea(aeVia);
+            creaIfNotExist(aeVia);
         }
 
         return mongo.isValid(entityClazz);

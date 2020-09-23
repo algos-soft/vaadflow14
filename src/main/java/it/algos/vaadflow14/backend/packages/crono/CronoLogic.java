@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.crono;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 
 /**
  * Project vaadflow14
@@ -54,7 +55,7 @@ public abstract class CronoLogic extends ALogic {
             }
             super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
         } else {
-            if (FlowVar.usaDebug) {
+            if (AEPreferenza.usaDebug.is()) {
                 super.usaBottoneDeleteAll = true;
                 super.usaBottoneReset = true;
                 super.usaBottoneNew = true;

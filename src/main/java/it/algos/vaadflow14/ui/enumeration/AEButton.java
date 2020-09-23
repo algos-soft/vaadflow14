@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.ui.enumerastion;
+package it.algos.vaadflow14.ui.enumeration;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;

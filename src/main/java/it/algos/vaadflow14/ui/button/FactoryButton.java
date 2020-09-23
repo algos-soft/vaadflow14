@@ -6,7 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.ui.enumerastion.AEButton;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
