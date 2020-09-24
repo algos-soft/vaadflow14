@@ -9,6 +9,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
@@ -187,7 +188,12 @@ public class AColumnService extends AAbstractService {
             //            } else {
             //                headerNotNull = headerNotNull.toLowerCase();
             //            }// end of if/else cycle
-            header = text.primaMaiuscola(header);//@todo Funzionalità ancora da implementare
+
+            if (AEPreferenza.usaGridHeaderMaiuscola.is()) {
+                header = text.primaMaiuscola(header);
+            } else {
+                header = text.primaMinuscola(header);
+            }
             colonna.setHeader(header);
 
             //--eventuale aggiunta di una icona e l' header non è una String ma diventa un Component
