@@ -5,6 +5,7 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
@@ -176,10 +177,10 @@ public class AFieldService extends AAbstractService {
         if (field != null) {
             if (text.isEmpty(caption)) {
                 caption = annotation.getFormFieldName(reflectionJavaField);
-                if (true) {//@todo Funzionalità ancora da implementare con preferenza
-                    caption = text.primaMinuscola(caption);
-                } else {
+                if (AEPreferenza.usaFormFieldMaiuscola.is()) {
                     caption = text.primaMaiuscola(caption);
+                } else {
+                    caption = text.primaMinuscola(caption);
                 }
                 field.setLabel(caption);
             }

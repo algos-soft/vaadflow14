@@ -26,7 +26,13 @@ public enum AEPreferenza {
 
     usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true),
 
-//    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
+    usaGridHeaderMaiuscola("usaGridHeaderMaiuscola", "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true),
+
+    usaFormFieldMaiuscola("usaFormFieldMaiuscola", "Prima lettera maiuscola nella label di un field", AETypePref.bool, true),
+
+    usaSearchCaseSensitive("usaSearchCaseSensitive", "Search delle query sensibile alle maiuscole", AETypePref.bool, false),
+
+    //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
 
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
