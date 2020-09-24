@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -74,6 +75,19 @@ public class ViaLogic extends ALogic {
         super.usaBottoneReset = true;
     }
 
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Via findById(String keyID) {
+        return (Via) super.findById(keyID);
+    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>

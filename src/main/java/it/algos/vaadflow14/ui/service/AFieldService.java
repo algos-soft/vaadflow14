@@ -168,6 +168,10 @@ public class AFieldService extends AAbstractService {
                     field = appContext.getBean(APreferenzaField.class, entityBean, operationForm);
                     caption = "nonUsata";
                     break;
+                case image:
+                    field = appContext.getBean(AImageField.class);
+                    caption = "nonUsata";
+                    break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
                     break;

@@ -196,7 +196,7 @@ public class ProvinciaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Provincia crea(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
+    public Provincia creaIfNotExist(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
         return (Provincia) checkAndSave(newEntity(ordine, nome, sigla, regione, stato, iso, status));
     }
 
@@ -337,7 +337,7 @@ public class ProvinciaLogic extends ALogic {
                     status = AETypeProvincia.provincia;
                 }
 
-                crea(ordine, nome, sigla, regione, stato, iso, status);
+                creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
             }
 
         }

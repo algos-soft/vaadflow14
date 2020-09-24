@@ -130,8 +130,8 @@ public class CompanyLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Company crea(String code, String descrizione) {
-        return crea(code, descrizione, VUOTA, VUOTA);
+    public Company creaIfNotExist(String code, String descrizione) {
+        return creaIfNotExist(code, descrizione, VUOTA, VUOTA);
     }
 
 
@@ -143,7 +143,7 @@ public class CompanyLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Company crea(String code, String descrizione, String telefono, String email) {
+    public Company creaIfNotExist(String code, String descrizione, String telefono, String email) {
         return (Company) checkAndSave(newEntity(code, descrizione, telefono, email));
     }
 
@@ -217,9 +217,9 @@ public class CompanyLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea("Algos", "Company Algos di prova",VUOTA,"info@algos.it");
-        crea("Demo", "Company demo","345 994487","demo@algos.it");
-        crea("Test", "Company di test","","presidentePonteTaro@crocerossa.it");
+        creaIfNotExist("Algos", "Company Algos di prova",VUOTA,"info@algos.it");
+        creaIfNotExist("Demo", "Company demo","345 994487","demo@algos.it");
+        creaIfNotExist("Test", "Company di test","","presidentePonteTaro@crocerossa.it");
 
         return mongo.isValid(entityClazz);
     }

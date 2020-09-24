@@ -183,7 +183,7 @@ public class StatoLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Stato crea(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
+    public Stato creaIfNotExist(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
         return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale));
     }
 
@@ -270,7 +270,7 @@ public class StatoLogic extends ALogic {
                     posCorrente = pos;
                     ue = false;
                 }
-                crea(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4));
+                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4));
             }
         }
 

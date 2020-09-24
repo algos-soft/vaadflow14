@@ -101,8 +101,8 @@ public class MeseLogic extends CronoLogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Mese crea(AEMese aeMese) {
-        return crea(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
+    public Mese creaIfNotExist(AEMese aeMese) {
+        return creaIfNotExist(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
 
 
@@ -116,7 +116,7 @@ public class MeseLogic extends CronoLogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Mese crea(String mese, int giorni, int giorniBisestile, String sigla) {
+    public Mese creaIfNotExist(String mese, int giorni, int giorniBisestile, String sigla) {
         return (Mese) checkAndSave(newEntity(mese, giorni, giorniBisestile, sigla));
     }
 
@@ -193,7 +193,7 @@ public class MeseLogic extends CronoLogic {
         super.deleteAll();
 
         for (AEMese aeMese : AEMese.values()) {
-            crea(aeMese);
+            creaIfNotExist(aeMese);
         }
 
         return mongo.isValid(entityClazz);

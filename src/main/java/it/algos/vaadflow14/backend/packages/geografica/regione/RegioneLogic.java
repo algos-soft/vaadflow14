@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
@@ -18,11 +17,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.TRATTINO;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -130,37 +131,6 @@ public class RegioneLogic extends ALogic {
     }
 
 
-    //    /**
-    //     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-    //     * Informazioni (eventuali) specifiche di ogni modulo <br>
-    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-    //     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-    //     *
-    //     * @param typeVista in cui inserire gli avvisi
-    //     *
-    //     * @return wrapper per passaggio dati
-    //     */
-    //    @Override
-    //    protected List<String> getAlertList(AEVista typeVista) {
-    //        List<String> lista = super.getAlertList(typeVista);
-    //        String message;
-    //
-    //        if (typeVista == AEVista.list) {
-    //            lista.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2.");
-    //            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-    //            lista.add("Codice ISO, sigla abituale e 'status' normativo");
-    //            lista.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
-    //        }
-    //
-    //        if (typeVista == AEVista.form) {
-    //            lista.add("Scheda NON modificabile");
-    //            lista.add("Stato codificato ISO 3166-2");
-    //        }
-    //
-    //        return lista;
-    //    }
-
-
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
@@ -171,7 +141,7 @@ public class RegioneLogic extends ALogic {
         if (AEPreferenza.usaBandiereStati.is()) {
             mappaComboBox.put("stato", statoLogic.creaComboStati());//@todo con bandierine
         } else {
-             super.creaComboBox("stato", statoLogic.getItalia());//@todo senza bandierine
+            super.creaComboBox("stato", statoLogic.getItalia());//@todo senza bandierine
         }
 
         super.creaComboBox("status", 14);
@@ -189,7 +159,7 @@ public class RegioneLogic extends ALogic {
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Regione crea(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
+    public Regione creaIfNotExist(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
         return (Regione) checkAndSave(newEntity(regione, stato, iso, sigla, status));
     }
 
@@ -333,7 +303,8 @@ public class RegioneLogic extends ALogic {
      * Regioni italiane <br>
      */
     public void italia() {
-        String path = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/config/regioni";
+        File regioniCSV = new File("config" + File.separator + "regioni");
+        String path = regioniCSV.getAbsolutePath();
         List<LinkedHashMap<String, String>> mappaCSV;
         String nome = VUOTA;
         Stato stato = statoLogic.getItalia();
@@ -349,7 +320,7 @@ public class RegioneLogic extends ALogic {
             sigla = riga.get("sigla");
             statusTxt = riga.get("status");
             status = AEStatuto.valueOf(statusTxt);
-            crea(nome, stato, iso, sigla, status);
+            creaIfNotExist(nome, stato, iso, sigla, status);
         }
     }
 
@@ -595,7 +566,7 @@ public class RegioneLogic extends ALogic {
                 nome = wrap.getSeconda();
                 iso = wrap.getPrima();
                 sigla = text.levaTestaDa(iso, TRATTINO);
-                crea(nome, stato, iso, sigla, AEStatuto.slovenia);
+                creaIfNotExist(nome, stato, iso, sigla, AEStatuto.slovenia);
             }
         }
     }
@@ -616,7 +587,7 @@ public class RegioneLogic extends ALogic {
                 nome = wrap.getSeconda();
                 sigla = wrap.getPrima();
                 iso = isoTag + sigla;
-                crea(nome, stato, iso, sigla, status);
+                creaIfNotExist(nome, stato, iso, sigla, status);
             }
         }
     }
@@ -637,7 +608,7 @@ public class RegioneLogic extends ALogic {
                 nome = wrap.getSeconda();
                 iso = wrap.getPrima();
                 sigla = text.levaTestaDa(iso, TRATTINO);
-                crea(nome, stato, iso, sigla, status);
+                creaIfNotExist(nome, stato, iso, sigla, status);
             }
         }
     }

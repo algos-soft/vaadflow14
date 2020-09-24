@@ -1,15 +1,23 @@
 package it.algos.simple.backend.packages;
 
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.ui.fields.AComboField;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -38,6 +46,14 @@ public class DeltaLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public SecoloLogic secoloLogic;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -82,6 +98,8 @@ public class DeltaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.usaBottoneReset = true;
     }
 
 
@@ -145,12 +163,49 @@ public class DeltaLogic extends ALogic {
         ComboBox box = combo.comboBox;
         Object obj = box.getValue();
         if (obj instanceof String) {
-            Via via = viaLogic.creaIfNotExist((String)obj);
+            Via via = viaLogic.creaIfNotExist((String) obj);
             entityBean.via = via;
         }
 
         return entityBean != null ? save(entityBean) : false;
     }
 
+
+    /**
+     * Creazione di alcuni dati iniziali <br>
+     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return false se non esiste il metodo sovrascritto
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    @Override
+    public boolean reset() {
+        deleteAll();
+        Secolo secolo = secoloLogic.findById("vsecolo");
+        Via via = viaLogic.findById("piazza");
+
+        File bandiera = new File("config" + File.separator + "at.png");
+        StreamResource resource = null;
+        byte[] imageBytes;
+        String imageStr = VUOTA;
+
+        try {
+            imageBytes = FileUtils.readFileToByteArray(bandiera);
+            resource = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(imageBytes));
+            imageStr = Base64.encodeBase64String(imageBytes);
+        } catch (Exception unErrore) {
+        }
+
+
+        Delta deltaUno = newEntity("primo");
+        deltaUno.secolo = secolo;
+        deltaUno.via = via;
+        deltaUno.immagine = imageStr;
+        save(deltaUno);
+
+        return mongo.isValid(entityClazz);
+    }
 
 }

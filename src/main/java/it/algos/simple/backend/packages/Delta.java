@@ -1,6 +1,7 @@
 package it.algos.simple.backend.packages;
 
 import com.mysema.query.annotations.QueryEntity;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -39,8 +40,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Delta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,secolo,via", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
-@AIForm(fields = "code,secolo,via")
+@AIList(fields = "code,secolo,via,immagine", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
+@AIForm(fields = "code,secolo,via,immagine")
 public class Delta extends AEntity {
 
     /**
@@ -79,6 +80,10 @@ public class Delta extends AEntity {
     @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class, logicClazz = ViaLogic.class)
     @AIColumn(widthEM = 8)
     public Via via;
+
+
+    @AIField(type = AETypeField.image)
+    public String immagine;
 
 
     /**

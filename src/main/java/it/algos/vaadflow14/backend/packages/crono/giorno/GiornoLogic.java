@@ -124,7 +124,7 @@ public class GiornoLogic extends CronoLogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Giorno crea(int ordine, String giorno, Mese mese) {
+    public Giorno creaIfNotExist(int ordine, String giorno, Mese mese) {
         return (Giorno) checkAndSave(newEntity(ordine, giorno, mese));
     }
 
@@ -193,7 +193,7 @@ public class GiornoLogic extends CronoLogic {
             mese = (Mese) mongo.findById(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
-            crea(ordine, titolo, mese);
+            creaIfNotExist(ordine, titolo, mese);
         }
 
         return mongo.isValid(entityClazz);

@@ -92,7 +92,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      * Una volta costruita la directory, getPath() e getAbsolutePath() devono essere uguali
@@ -161,7 +161,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * Controlla che getPath() e getAbsolutePath() siano uguali <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
@@ -181,7 +181,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * Controlla che getPath() e getAbsolutePath() siano uguali <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
@@ -209,7 +209,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * Controlla che getPath() e getAbsolutePath() siano uguali <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
@@ -228,7 +228,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -285,7 +285,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * Controlla che getPath() e getAbsolutePath() siano uguali <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
@@ -333,7 +333,7 @@ public class AFileService extends AAbstractService {
      * Il file DEVE essere costruita col path completo, altrimenti assume che sia nella directory in uso corrente
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      * Se manca la directory, viene creata dal System <br>
@@ -353,7 +353,7 @@ public class AFileService extends AAbstractService {
      * Il file DEVE essere costruita col path completo, altrimenti assume che sia nella directory in uso corrente
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      * Se manca la directory, viene creata dal System <br>
@@ -378,7 +378,7 @@ public class AFileService extends AAbstractService {
      * Il file DEVE essere costruita col path completo, altrimenti assume che sia nella directory in uso corrente
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      * Se manca la directory, viene creata dal System <br>
@@ -398,7 +398,7 @@ public class AFileService extends AAbstractService {
      * Il file DEVE essere costruita col path completo, altrimenti assume che sia nella directory in uso corrente
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      * Se manca la directory, viene creata dal System <br>
@@ -439,7 +439,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -457,7 +457,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -479,7 +479,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -497,7 +497,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -537,7 +537,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -555,7 +555,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -577,7 +577,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -595,7 +595,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -639,7 +639,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -657,7 +657,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -679,7 +679,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
@@ -697,7 +697,7 @@ public class AFileService extends AAbstractService {
      * <p>
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
-     * Il path deve essere completo ed inziare con uno 'slash' <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *

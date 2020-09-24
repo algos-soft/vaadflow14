@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -116,6 +117,19 @@ public class SecoloLogic extends CronoLogic {
         return lista;
     }
 
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Secolo findById(String keyID) {
+        return (Secolo) super.findById(keyID);
+    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -124,8 +138,8 @@ public class SecoloLogic extends CronoLogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Secolo crea(AESecolo aeSecolo) {
-        return crea(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
+    public Secolo creaIfNotExist(AESecolo aeSecolo) {
+        return creaIfNotExist(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
     }
 
 
@@ -139,7 +153,7 @@ public class SecoloLogic extends CronoLogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Secolo crea(String secolo, boolean anteCristo, int inizio, int fine) {
+    public Secolo creaIfNotExist(String secolo, boolean anteCristo, int inizio, int fine) {
         return (Secolo) checkAndSave(newEntity(secolo, anteCristo, inizio, fine));
     }
 
@@ -214,7 +228,7 @@ public class SecoloLogic extends CronoLogic {
         super.deleteAll();
 
         for (AESecolo eaSecolo : AESecolo.values()) {
-            crea(eaSecolo);
+            creaIfNotExist(eaSecolo);
         }
 
         return mongo.isValid(entityClazz);

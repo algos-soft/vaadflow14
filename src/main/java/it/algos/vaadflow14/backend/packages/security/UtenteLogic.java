@@ -145,7 +145,7 @@ public class UtenteLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Utente crea(String username, String password) {
+    public Utente creaIfNotExist(String username, String password) {
         return (Utente) checkAndSave(newEntity(username, password, (AERole) null));
     }
 
@@ -161,7 +161,7 @@ public class UtenteLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Utente crea(Company company, String username, String password, AERole role) {
+    public Utente creaIfNotExist(Company company, String username, String password, AERole role) {
         Utente entity = newEntity(username, password, role);
         entity.company = company;
         return (Utente) checkAndSave(entity);
@@ -278,11 +278,11 @@ public class UtenteLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        crea(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer);
-        crea(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin);
-        crea(null, "marco.beretta", "beretta123", AERole.admin);
-        crea(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user);
-        crea(null, "paolo cremona", "cremona123", AERole.guest);
+        creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer);
+        creaIfNotExist(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin);
+        creaIfNotExist(null, "marco.beretta", "beretta123", AERole.admin);
+        creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user);
+        creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest);
 
         return mongo.isValid(entityClazz);
     }
