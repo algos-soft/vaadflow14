@@ -23,6 +23,7 @@ public class PiView extends Div {
     @PostConstruct
     private void postConstruct() {
         setHeight("100%");
+
         Component comp = context.getBean(PiView1.class);
 
         Label label = new Label("Prime");
