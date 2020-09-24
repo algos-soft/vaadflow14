@@ -33,6 +33,7 @@ public class FlowVar {
      * Di default (per sicurezza) uguale a true <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */
+    @Deprecated
     public static boolean usaDebug;
 
     /**

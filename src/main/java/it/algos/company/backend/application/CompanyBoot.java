@@ -61,7 +61,6 @@ public class CompanyBoot extends FlowBoot {
     protected void regolaApplicationProperties() {
         super.regolaApplicationProperties();
 
-        FlowVar.usaDebug = true;
         FlowVar.usaCompany = true;
         FlowVar.usaSecurity = true;
         FlowVar.projectName = "Company";

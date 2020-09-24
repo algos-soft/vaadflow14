@@ -92,7 +92,7 @@ public class CompanyLogic extends ALogic {
             super.usaBottoneNew = vaadinService.isAdminOrDeveloper();
             super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
         } else {
-            if (FlowVar.usaDebug) {
+            if (AEPreferenza.usaDebug.is()) {
                 super.usaBottoneDeleteAll = true;
                 super.usaBottoneReset = true;
             }

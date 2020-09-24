@@ -65,7 +65,6 @@ public class SecurityBoot extends FlowBoot {
     protected void regolaApplicationProperties() {
         super.regolaApplicationProperties();
 
-        FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = true;
         FlowVar.projectName = "Security";

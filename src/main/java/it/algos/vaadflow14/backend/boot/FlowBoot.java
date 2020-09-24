@@ -227,12 +227,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void regolaApplicationProperties() {
 
-        /*
-         * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
-         * Di default (per sicurezza) uguale a true <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
-         */
-        FlowVar.usaDebug = true;
 
         /*
          * Controlla se l' applicazione è multi-company oppure no <br>

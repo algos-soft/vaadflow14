@@ -4,6 +4,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.ADateService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +136,7 @@ public class AFooter extends VerticalLayout {
         message += FlowVar.projectVersion;
         message += " del ";
         message += date.get(versionDate);
-        if (usaDebug && text.isValid(projectNote)) {
+        if (AEPreferenza.usaDebug.is() && text.isValid(projectNote)) {
             message += SPAZIO;
             message += " " + projectNote;
         }

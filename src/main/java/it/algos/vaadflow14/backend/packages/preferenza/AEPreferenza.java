@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,11 +35,9 @@ public enum AEPreferenza {
 
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
-    pippoz2("daCancellare2", "Prova preferenza testo", AETypePref.string, "Alfa"),
-
     mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", "Email di default a cui spedire i log di posta"),
 
-    paperino("paperino", "Prova numero", AETypePref.integer, 87, "Numero intero"),
+    maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
 
     datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now()),
 
@@ -97,13 +94,13 @@ public enum AEPreferenza {
     }
 
 
-    public void setKeyCode(String keyCode) {
-        this.keyCode = keyCode;
+    public String getKeyCode() {
+        return keyCode;
     }
 
 
-    public String getKeyCode() {
-        return keyCode;
+    public void setKeyCode(String keyCode) {
+        this.keyCode = keyCode;
     }
 
 
@@ -143,6 +140,10 @@ public enum AEPreferenza {
         Object javaValue;
 
         if (type != AETypePref.bool) {
+            return false;
+        }
+
+        if (preferenzaService == null) {
             return false;
         }
 

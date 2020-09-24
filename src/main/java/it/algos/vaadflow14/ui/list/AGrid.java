@@ -9,12 +9,12 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -60,6 +60,14 @@ public class AGrid {
     @Autowired
     public ALogService logger;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AReflectionService reflection;
+
     protected AILogic service;
 
     protected List<String> gridPropertyNamesList;
@@ -69,7 +77,6 @@ public class AGrid {
     protected Label headerLabelPlaceHolder;
 
     protected Map<String, Grid.Column<AEntity>> columnsMap;
-
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
@@ -86,15 +93,6 @@ public class AGrid {
      */
     @Autowired
     protected AAnnotationService annotation;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AReflectionService reflection;
-
 
     private Grid grid;
 
@@ -136,7 +134,7 @@ public class AGrid {
     protected void postConstruct() {
         grid.setHeightByRows(true);
 
-        if (FlowVar.usaDebug) {//@todo Funzionalità ancora da implementare nelle preferenze
+        if (AEPreferenza.usaDebug.is()) {
             grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
         }
 

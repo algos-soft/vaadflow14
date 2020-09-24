@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AELogLivello;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AILogType;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,7 @@ public class ALogService extends AAbstractService {
     public static void messageError(String message) {
         Notification notification = new Notification();
         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        if (FlowVar.usaDebug) {
+        if (AEPreferenza.usaDebug.is()) {
             notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
         } else {
             notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui
@@ -104,7 +105,7 @@ public class ALogService extends AAbstractService {
     public static void messageSuccess(String message) {
         Notification notification = new Notification();
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        if (FlowVar.usaDebug) {
+        if (AEPreferenza.usaDebug.is()) {
             notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
         } else {
             notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui

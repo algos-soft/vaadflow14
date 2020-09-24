@@ -87,10 +87,10 @@ public class StatoLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = FlowVar.usaDebug ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = FlowVar.usaDebug;
-        super.usaBottoneReset = FlowVar.usaDebug;
-        super.usaBottoneNew = FlowVar.usaDebug;
+        super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
+        super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
+        super.usaBottoneReset = AEPreferenza.usaDebug.is();
+        super.usaBottoneNew = AEPreferenza.usaDebug.is();
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
         super.wikiPageTitle = "ISO_3166-1";
