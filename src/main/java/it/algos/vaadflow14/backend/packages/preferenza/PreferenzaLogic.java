@@ -228,8 +228,8 @@ public class PreferenzaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza crea(AEPreferenza aePref) {
-        return crea(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
+    public Preferenza creaIfNotExist(AEPreferenza aePref) {
+        return creaIfNotExist (aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
     }
 
 
@@ -244,7 +244,7 @@ public class PreferenzaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza crea(String code, String descrizione, AETypePref type, Object value, String note) {
+    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object value, String note) {
         return (Preferenza) checkAndSave(newEntity(code, descrizione, type, value, note));
     }
 
@@ -412,10 +412,9 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public boolean reset() {
-        super.deleteAll();
 
         for (AEPreferenza aePref : AEPreferenza.values()) {
-            crea(aePref);
+            creaIfNotExist(aePref);
         }
 
         return true;
