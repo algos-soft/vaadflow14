@@ -103,7 +103,7 @@ public class APreferenzaField extends AField<byte[]> {
                 valueField = appContext.getBean(ATextField.class);
                 valueField.setLabel(tag + "(string)");
                 String message = "Valore non valido";
-                ((ATextField) valueField).setErrorMessage(message);
+//                ((ATextField) valueField).setErrorMessage(message);
                 break;
             case email:
                 valueField = appContext.getBean(AEmailField.class);

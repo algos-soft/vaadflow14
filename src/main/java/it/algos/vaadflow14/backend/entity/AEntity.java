@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.annotation.AIField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

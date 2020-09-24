@@ -104,7 +104,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Delta.class);
         FlowVar.menuRouteList.add(Omega.class);
         FlowVar.menuRouteList.add(Lambda.class);
-        FlowVar.menuRouteList.add(AlexView.class);
+        FlowVar.menuRouteList.add(PiView.class);
     }
 
 }
