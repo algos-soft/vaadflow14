@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
 @AIView(menuIcon = VaadinIcon.CALENDAR)
 @AIList(fields = "ordine,anno,bisestile,secolo")
 @AIForm(fields = "anno,bisestile,secolo")
-public class Anno extends AEntity {
+public class Anno extends AEntity  {
 
     /**
      * versione della classe per la serializzazione
