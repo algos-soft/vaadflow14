@@ -54,7 +54,7 @@ public class Regione extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
+    @AIColumn(header = "#", widthEM = 4)
     public int ordine;
 
     /**
@@ -103,7 +103,7 @@ public class Regione extends AEntity {
      */
     @NotNull()
     @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class, widthEM = 19)
-    @AIColumn(flexGrow = true)
+    @AIColumn(widthEM = 18,flexGrow = true)
     public AEStatuto status;
 
 

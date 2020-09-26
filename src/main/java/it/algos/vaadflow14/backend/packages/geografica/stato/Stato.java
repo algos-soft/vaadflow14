@@ -52,7 +52,7 @@ public class Stato extends AEntity {
      */
     //    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly, widthEM = 4)
-    @AIColumn(header = "#", widthEM = 3)
+    @AIColumn(header = "#", widthEM = 4)
     public int ordine;
 
 

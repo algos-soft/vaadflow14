@@ -7,19 +7,15 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
-import it.algos.simple.backend.packages.Delta;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -176,21 +172,9 @@ public class AColumnService extends AAbstractService {
                     break;
                 case image:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-//                        Delta deltaDue=(Delta)mongo.findOneFirst(Delta.class);
-//                        String imageDue= deltaDue.immagine;
-//                        byte[]  bytesDue= Base64.decodeBase64( imageDue);
-//                        StreamResource resourceDue = null;
-//                        try {
-//                            resourceDue = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
-//                        } catch (Exception unErrore) {
-//                        }
-//                        Image imageTre = new Image(resourceDue, "dummy image");
-//                        imageTre.setWidth("21px");
-//                        imageTre.setHeight("21px");
-//
-                        String mongoValue = (String)reflection.getPropertyValue((AEntity) entity, propertyName);
-                        Image image= resourceService.getBandieraFromMongo(mongoValue);
-                        return image!=null?image:new Label("X");
+                        String mongoValue = (String) reflection.getPropertyValue((AEntity) entity, propertyName);
+                        Image image = resourceService.getBandieraFromMongo(mongoValue);
+                        return image != null ? image : new Label("X");
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 default:

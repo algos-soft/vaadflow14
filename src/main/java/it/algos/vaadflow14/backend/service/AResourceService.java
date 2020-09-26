@@ -218,17 +218,19 @@ public class AResourceService extends AAbstractService {
         Image image = getImagePng("bandiere/" + simpleResourceFileName.toLowerCase());
 
         if (image != null) {
-            image.setWidth("21px");
+            image.setWidth("30px");
             image.setHeight("21px");
         }
 
         return image;
     }
-    public Image getBandieraFromMongo( String mongoValue) {
+
+
+    public Image getBandieraFromMongo(String mongoValue) {
         Image image = getImageFromMongo(mongoValue);
 
         if (image != null) {
-            image.setWidth("21px");
+            image.setWidth("30px");
             image.setHeight("21px");
         }
 
