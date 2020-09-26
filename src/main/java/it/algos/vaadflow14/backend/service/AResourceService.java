@@ -1,20 +1,19 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.service.AAbstractService;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.server.StreamResource;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
-
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.A_CAPO;
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow14
@@ -23,24 +22,60 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
  * Date: gio, 24-set-2020
  * Time: 21:06
  * <p>
- * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>
- * L'istanza può essere richiamata con: <br>
- * 1) StaticContextAccessor.getBean(AResourceService.class); <br>
- * 3) @Autowired public AResourceService annotation; <br>
- * <p>
- * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
- * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * Static files: {project directory}/src/main/resources/META-INF/resources/
+ * CSS files e JavaScript: {project directory}/frontend/styles/
+ * Risorse esterne al JAR: {project directory}/config/
+ *
+ * @see(https://vaadin.com/docs/flow/importing-dependencies/tutorial-ways-of-importing.html)
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AResourceService extends AAbstractService {
 
+
     /**
      * versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+
+    /**
+     * Legge un file di risorse da {project directory}/config/ <br>
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     *
+     * @return testo completo grezzo del file
+     */
+    public String leggeConfig(String simpleNameFileToBeRead) {
+        String tag = "config";
+        return fileService.leggeFile(tag + File.separator + simpleNameFileToBeRead);
+    }
+
+
+    /**
+     * Legge un file di risorse da {project directory}/frontend/ <br>
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     *
+     * @return testo completo grezzo del file
+     */
+    public String leggeFrontend(String simpleNameFileToBeRead) {
+        String tag = "frontend";
+        return fileService.leggeFile(tag + File.separator + simpleNameFileToBeRead);
+    }
+
+
+    /**
+     * Legge un file di risorse da {project directory}/src/main/resources/META-INF/resources/ <br>
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     *
+     * @return testo completo grezzo del file
+     */
+    public String leggeMetaInf(String simpleNameFileToBeRead) {
+        String tag = "src/main/resources/META-INF/resources";
+        return fileService.leggeFile(tag + File.separator + simpleNameFileToBeRead);
+    }
 
 
     /**
@@ -50,8 +85,187 @@ public class AResourceService extends AAbstractService {
      *
      * @return testo grezzo del file
      */
-    public  String leggeRisorsa(String nameFileToBeRead) {
-        return fileService.leggeFile(nameFileToBeRead);
+    public String leggeRisorsa(String nameFileToBeRead) {
+        //        File filePath = new File("config" + File.separator + nameFileToBeRead);
+        File filePath = new File("META-INF.resources" + File.separator + nameFileToBeRead);
+        return fileService.leggeFile(filePath.getAbsolutePath());
+    }
+
+
+    /**
+     * Costruisce un file di risorse, partendo dal nome semplice <br>
+     * La risorsa DEVE essere nel path 'src/main/resources/META-INF/resources/' <br>
+     *
+     * @param simpleNameFileToBeRead nome del file all'interno della directory 'resources'
+     *
+     * @return bytes
+     */
+    public File getFile(String simpleNameFileToBeRead) {
+        File resourceFile = null;
+        String pathResourceFileName = VUOTA;
+
+        if (text.isEmpty(simpleNameFileToBeRead)) {
+            return null;
+        }
+
+        if (simpleNameFileToBeRead.startsWith(PATH_RISORSE)) {
+            pathResourceFileName = simpleNameFileToBeRead;
+        } else {
+            pathResourceFileName = PATH_RISORSE + simpleNameFileToBeRead;
+        }
+
+        resourceFile = new File(pathResourceFileName);
+
+        return resourceFile;
+    }
+
+
+    /**
+     * Legge i bytes di un file di risorse <br>
+     * La risorsa DEVE essere nel path 'src/main/resources/META-INF/resources/' <br>
+     *
+     * @param simpleResourceFileName nome del file all'interno della directory 'resources'
+     *
+     * @return bytes
+     */
+    public byte[] getBytes(String simpleResourceFileName) {
+        byte[] bytes = null;
+        File resourceFile = getFile(simpleResourceFileName);
+
+        if (resourceFile.exists() && resourceFile.isFile()) {
+            try {
+                bytes = FileUtils.readFileToByteArray(resourceFile);
+            } catch (Exception unErrore) {
+                logger.warn(unErrore, this.getClass(), "getBytes");
+            }
+        }
+
+        return bytes;
+    }
+
+
+    /**
+     * Costruisce una Image partendo dai bytes <br>
+     *
+     * @param bytes dell'immagine
+     *
+     * @return image
+     */
+    public Image getImageFromBytes(byte[] bytes) {
+        Image image = null;
+        StreamResource resource = null;
+
+        if (bytes != null) {
+            try {
+                resource = new StreamResource("manca.jpg", () -> new ByteArrayInputStream(bytes));
+                image = new Image(resource, "manca");
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+        }
+
+        return image;
+    }
+
+
+    /**
+     * Costruisce una Image partendo da un file di risorse <br>
+     * Legge i bytes di un file di risorse <br>
+     * Legge le risorse di un file <br>
+     *
+     * @param simpleResourceFileName nome del file all'interno della directory 'resources'
+     *
+     * @return image
+     */
+    public Image getImageFromFile(String simpleResourceFileName) {
+        Image image = null;
+        StreamResource resource = null;
+        byte[] bytes = getBytes(simpleResourceFileName);
+
+        if (bytes != null) {
+            try {
+                resource = new StreamResource("manca.jpg", () -> new ByteArrayInputStream(bytes));
+                image = new Image(resource, "manca");
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+        }
+
+        return image;
+    }
+
+
+    /**
+     * Costruisce una Image partendo dal mongoDB <br>
+     * Legge i bytes decodificando il valore memorizzato <br>
+     *
+     * @param mongoValue valore codificato nel mongoDB
+     *
+     * @return image
+     */
+    public Image getImageFromMongo(String mongoValue) {
+        Image image = null;
+        StreamResource resource = null;
+        byte[] bytes = Base64.decodeBase64(mongoValue);
+
+        if (bytes != null) {
+            try {
+                resource = new StreamResource("manca.jpg", () -> new ByteArrayInputStream(bytes));
+                image = new Image(resource, "manca");
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+        }
+
+        return image;
+    }
+
+
+    public Image getImagePng(String simpleResourceFileName) {
+        return getImageFromFile(simpleResourceFileName + PUNTO + "png");
+    }
+
+
+    public Image getBandiera(String simpleResourceFileName) {
+        Image image = getImagePng("bandiere/" + simpleResourceFileName);
+
+        if (image != null) {
+            image.setWidth("21px");
+            image.setHeight("21px");
+        }
+
+        return image;
+    }
+
+
+    /**
+     * Legge una stringa codificata dal file di risorse <br>
+     *
+     * @param simpleResourceFileName nome del file all'interno della directory 'resources'
+     *
+     * @return AbstractStreamResource
+     */
+    public String getSrc(String simpleResourceFileName) {
+        String bytesCodificati = VUOTA;
+        byte[] bytes = getBytes(simpleResourceFileName);
+
+        if (bytes != null) {
+            bytesCodificati = Base64.encodeBase64String(bytes);
+        }
+
+        return bytesCodificati;
+    }
+
+
+    /**
+     * Legge una stringa codificata dal file di risorse <br>
+     *
+     * @param simpleResourceFileNameWithoutSuffix nome del file all'interno della directory 'bandiere'
+     *
+     * @return AbstractStreamResource
+     */
+    public String getSrcBandieraPng(String simpleResourceFileNameWithoutSuffix) {
+        return getSrc("bandiere/" + simpleResourceFileNameWithoutSuffix + PUNTO + "png");
     }
 
 

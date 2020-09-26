@@ -29,6 +29,8 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
+    public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";
+
     public static final String PATH_WIKI = "https://it.wikipedia.org/wiki/";
 
     public static final String DEVELOPER_COMPANY = "Algos® ";

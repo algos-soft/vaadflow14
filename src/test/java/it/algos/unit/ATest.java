@@ -199,6 +199,7 @@ public abstract class ATest {
 
     protected List<String> lista;
 
+    protected byte[] bytes;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -287,6 +288,7 @@ public abstract class ATest {
         listaFiltri = null;
         listaBean = null;
         lista = null;
+        bytes = null;
     }
 
 
