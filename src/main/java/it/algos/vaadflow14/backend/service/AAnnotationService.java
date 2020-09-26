@@ -1484,6 +1484,40 @@ public class AAnnotationService extends AAbstractService {
         return widthTxt;
     }
 
+    /**
+     * Get the width of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the width of the field
+     */
+    public String getFormHeight(final Field reflectionJavaField) {
+        String heightTxt = VUOTA;
+        double heightDouble = 0;
+        AIField annotation = null;
+        AETypeField type = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            heightDouble = annotation.heightEM();
+        }
+
+        if (heightDouble > 0) {
+            heightTxt = heightDouble + TAG_EM;
+        } else {
+            type = getColumnType(reflectionJavaField);
+            if (type != null) {
+                heightTxt = type.getWidthField() > 0 ? type.getWidthField() + TAG_EM : VUOTA;
+            }
+        }
+
+        return heightTxt;
+    }
+
 
     /**
      * Get the class of the property.

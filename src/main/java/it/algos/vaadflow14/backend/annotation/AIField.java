@@ -96,6 +96,15 @@ public @interface AIField {
      */
     double widthEM() default 0;
 
+    /**
+     * (Optional) The height of the field.
+     * Expressed in double, to be converted in String ending with "em"
+     * Defaults to 0.
+     *
+     * @return the int
+     */
+    double heightEM() default 0;
+
 
     /**
      * (Optional) The number of rows of textArea field.

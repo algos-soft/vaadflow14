@@ -96,6 +96,7 @@ public class AFieldService extends AAbstractService {
         boolean isAllowCustomValue = false;
         //        boolean usaComboMethod = false;
         String width = VUOTA;
+        String height = VUOTA;
 
         if (reflectionJavaField == null) {
             return null;
@@ -169,8 +170,9 @@ public class AFieldService extends AAbstractService {
                     caption = "nonUsata";
                     break;
                 case image:
+                    height = annotation.getFormHeight(reflectionJavaField);
                     field = appContext.getBean(AImageField.class);
-//                    caption = "nonUsata";
+                    ((AImageField)field).setHeight(height);
                     break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");

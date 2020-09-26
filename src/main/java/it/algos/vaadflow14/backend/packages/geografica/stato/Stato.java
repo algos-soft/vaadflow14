@@ -62,7 +62,7 @@ public class Stato extends AEntity {
     @NotBlank(message = "Nome obbligatorio")
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true,  widthEM = 24)
+    @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 24)
     @AIColumn(widthEM = 12)
     public String stato;
 
@@ -116,9 +116,10 @@ public class Stato extends AEntity {
     /**
      * bandierina per i popup (facoltativa) <br>
      */
-    @AIField(type = AETypeField.image)
+    @AIField(type = AETypeField.image, heightEM = 6)
     @AIColumn(headerIcon = VaadinIcon.GLOBE)
     public String bandiera;
+
 
     /**
      * @return a string representation of the object.
