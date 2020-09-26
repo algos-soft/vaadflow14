@@ -1414,7 +1414,7 @@ public abstract class ALogic implements AILogic {
         Binder binder = null;
 
         //--controlla che la newEntityBean non esista già
-        if (isEsiste(entityClazz,newEntityBean.id)) {
+        if (isEsiste(entityClazz, newEntityBean.id)) {
             return null;
         }
 
@@ -1509,6 +1509,8 @@ public abstract class ALogic implements AILogic {
      */
     public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
         Company company;
+
+        entityBean = fixKey(entityBean);
 
         if (FlowVar.usaCompany && entityBean instanceof ACEntity) {
             company = ((ACEntity) entityBean).company;

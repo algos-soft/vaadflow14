@@ -241,7 +241,7 @@ public class AResourceService extends AAbstractService {
      *
      * @param simpleResourceFileName nome del file all'interno della directory 'resources'
      *
-     * @return AbstractStreamResource
+     * @return valore codificato
      */
     public String getSrc(String simpleResourceFileName) {
         String bytesCodificati = VUOTA;
@@ -260,7 +260,7 @@ public class AResourceService extends AAbstractService {
      *
      * @param simpleResourceFileNameWithoutSuffix nome del file all'interno della directory 'bandiere'
      *
-     * @return AbstractStreamResource
+     * @return valore codificato
      */
     public String getSrcBandieraPng(String simpleResourceFileNameWithoutSuffix) {
         return getSrc("bandiere/" + simpleResourceFileNameWithoutSuffix.toLowerCase() + PUNTO + "png");

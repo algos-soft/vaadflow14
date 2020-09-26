@@ -172,7 +172,7 @@ public class AFieldService extends AAbstractService {
                 case image:
                     height = annotation.getFormHeight(reflectionJavaField);
                     field = appContext.getBean(AImageField.class);
-                    ((AImageField)field).setHeight(height);
+                    ((AImageField) field).setHeight(height);
                     break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");

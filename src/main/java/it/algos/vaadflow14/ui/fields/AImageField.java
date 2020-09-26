@@ -5,15 +5,18 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.upload.SucceededEvent;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.service.AReflectionService;
+import it.algos.vaadflow14.backend.service.AResourceService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -44,11 +47,29 @@ public class AImageField extends AField<String> {
 
     private final Image imageField;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AResourceService resourceService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AReflectionService reflection;
+
     private HorizontalLayout layout;
 
     private String width;
 
     private String height;
+
+    private String valoreCodificato = VUOTA;
 
 
     /**
@@ -57,54 +78,46 @@ public class AImageField extends AField<String> {
      */
     public AImageField() {
         imageField = new Image();
-        //        layout = new HorizontalLayout();
-        //        //        selezione = new Button();
-        //        //        selezione.setText("Seleziona");
-        //        //        selezione.addClickListener(e -> seleziona());
-        //        add(layout);
-        //        fixUpload();
-        //        Upload upload = new Upload();
-        //        upload.setDropLabel(new Span());
-        //        upload.setUploadButton(new Button("Seleziona..."));
-        //        upload.addAttachListener(e -> seleziona());
-        //        add(imageField);
         fixUpload();
-
     } // end of SpringBoot constructor
 
 
     protected Upload fixUpload() {
-        MemoryBuffer buffer = new MemoryBuffer();
+                MemoryBuffer buffer = new MemoryBuffer();
         HorizontalLayout layer = new HorizontalLayout();
         HorizontalLayout output = new HorizontalLayout();
         Upload upload = new Upload(buffer);
         upload.setDropLabel(new Span());
         upload.setUploadButton(new Button("Seleziona..."));
-        upload.addSucceededListener(event -> {
-            Component component = createComponent(event.getMIMEType(), event.getFileName(), buffer.getInputStream());
-            showOutput(event.getFileName(), component, output);
-        });
-        layer.add(imageField, upload, output);
+        //        upload.addSucceededListener(event -> {
+        //            Component component = createComponent(event.getMIMEType(), event.getFileName(), buffer.getInputStream());
+        //            showOutput(event.getFileName(), component, output);
+        //        });
+        upload.addSucceededListener(event -> seleziona(event));
+        layer.add(imageField, upload);
         add(layer);
 
         return upload;
     }
 
 
-    protected void seleziona() {
-        Notification.show("Not yet. Coming soon.", 3000, Notification.Position.MIDDLE);
+    protected void seleziona(SucceededEvent event) {
+        String fileName = event.getFileName();
+        valoreCodificato = resourceService.getSrc("bandiere/" + fileName);
+        setPresentationValue(valoreCodificato);
+        updateValue();
     }
 
 
     @Override
     protected String generateModelValue() {
-        return VUOTA;
+        return valoreCodificato;
     }
 
 
     @Override
-    protected void setPresentationValue(String value) {
-        byte[] bytesDue = Base64.decodeBase64(value);
+    protected void setPresentationValue(String valoreCodificato) {
+        byte[] bytesDue = Base64.decodeBase64(valoreCodificato);
         StreamResource resource = null;
         try {
             resource = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
@@ -129,6 +142,7 @@ public class AImageField extends AField<String> {
     }
 
 
+    @Deprecated
     private Component createComponent(String mimeType, String fileName, InputStream stream) {
         if (mimeType.startsWith("text")) {
             return createTextComponent(stream);
@@ -167,6 +181,7 @@ public class AImageField extends AField<String> {
     }
 
 
+    @Deprecated
     private Component createTextComponent(InputStream stream) {
         String text;
         try {
@@ -177,12 +192,13 @@ public class AImageField extends AField<String> {
         return new Text(text);
     }
 
-
+@Deprecated
     private void showOutput(String text, Component content, HasComponents outputContainer) {
         HtmlComponent p = new HtmlComponent(Tag.P);
         p.getElement().setText(text);
         outputContainer.add(p);
         outputContainer.add(content);
     }
+
 
 }
