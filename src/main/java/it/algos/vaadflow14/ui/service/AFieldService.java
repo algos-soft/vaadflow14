@@ -170,7 +170,7 @@ public class AFieldService extends AAbstractService {
                     break;
                 case image:
                     field = appContext.getBean(AImageField.class);
-                    caption = "nonUsata";
+//                    caption = "nonUsata";
                     break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
@@ -344,6 +344,8 @@ public class AFieldService extends AAbstractService {
                     if (isRequired) {
                         builder.asRequired();
                     }
+                    break;
+                case image:
                     break;
                 case gridShowOnly:
                     break;

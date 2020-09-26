@@ -176,18 +176,21 @@ public class AColumnService extends AAbstractService {
                     break;
                 case image:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        Delta deltaDue=(Delta)mongo.findOneFirst(Delta.class);
-                        String imageDue= deltaDue.immagine;
-                        byte[]  bytesDue= Base64.decodeBase64( imageDue);
-                        StreamResource resourceDue = null;
-                        try {
-                            resourceDue = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
-                        } catch (Exception unErrore) {
-                        }
-                        Image imageTre = new Image(resourceDue, "dummy image");
-                        imageTre.setWidth("21px");
-                        imageTre.setHeight("21px");
-                        return imageTre;
+//                        Delta deltaDue=(Delta)mongo.findOneFirst(Delta.class);
+//                        String imageDue= deltaDue.immagine;
+//                        byte[]  bytesDue= Base64.decodeBase64( imageDue);
+//                        StreamResource resourceDue = null;
+//                        try {
+//                            resourceDue = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
+//                        } catch (Exception unErrore) {
+//                        }
+//                        Image imageTre = new Image(resourceDue, "dummy image");
+//                        imageTre.setWidth("21px");
+//                        imageTre.setHeight("21px");
+//
+                        String mongoValue = (String)reflection.getPropertyValue((AEntity) entity, propertyName);
+                        Image image= resourceService.getBandieraFromMongo(mongoValue);
+                        return image!=null?image:new Label("X");
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 default:

@@ -37,8 +37,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
-@AIList(fields = "ordine,stato,ue,numerico,alfadue,alfatre,locale")
-@AIForm(fields = "ordine,stato,ue,numerico,alfadue,alfatre,locale")
+@AIList(fields = "ordine,bandiera,stato,ue,numerico,alfadue,alfatre,locale")
+@AIForm(fields = "ordine,stato,bandiera,ue,numerico,alfadue,alfatre,locale")
 public class Stato extends AEntity {
 
     /**
@@ -113,6 +113,12 @@ public class Stato extends AEntity {
     @AIColumn(header = "ISO locale", flexGrow = true)
     public String locale;
 
+    /**
+     * bandierina per i popup (facoltativa) <br>
+     */
+    @AIField(type = AETypeField.image)
+    @AIColumn(headerIcon = VaadinIcon.GLOBE)
+    public String bandiera;
 
     /**
      * @return a string representation of the object.

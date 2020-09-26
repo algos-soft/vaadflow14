@@ -153,7 +153,7 @@ public class AResourceService extends AAbstractService {
      */
     public Image getImageFromBytes(byte[] bytes) {
         Image image = null;
-        StreamResource resource = null;
+        StreamResource resource;
 
         if (bytes != null) {
             try {
@@ -179,16 +179,10 @@ public class AResourceService extends AAbstractService {
      */
     public Image getImageFromFile(String simpleResourceFileName) {
         Image image = null;
-        StreamResource resource = null;
         byte[] bytes = getBytes(simpleResourceFileName);
 
         if (bytes != null) {
-            try {
-                resource = new StreamResource("manca.jpg", () -> new ByteArrayInputStream(bytes));
-                image = new Image(resource, "manca");
-            } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-            }
+            image = getImageFromBytes(bytes);
         }
 
         return image;
@@ -205,16 +199,10 @@ public class AResourceService extends AAbstractService {
      */
     public Image getImageFromMongo(String mongoValue) {
         Image image = null;
-        StreamResource resource = null;
         byte[] bytes = Base64.decodeBase64(mongoValue);
 
         if (bytes != null) {
-            try {
-                resource = new StreamResource("manca.jpg", () -> new ByteArrayInputStream(bytes));
-                image = new Image(resource, "manca");
-            } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-            }
+            image = getImageFromBytes(bytes);
         }
 
         return image;
@@ -226,8 +214,18 @@ public class AResourceService extends AAbstractService {
     }
 
 
-    public Image getBandiera(String simpleResourceFileName) {
-        Image image = getImagePng("bandiere/" + simpleResourceFileName);
+    public Image getBandieraFromFile(String simpleResourceFileName) {
+        Image image = getImagePng("bandiere/" + simpleResourceFileName.toLowerCase());
+
+        if (image != null) {
+            image.setWidth("21px");
+            image.setHeight("21px");
+        }
+
+        return image;
+    }
+    public Image getBandieraFromMongo( String mongoValue) {
+        Image image = getImageFromMongo(mongoValue);
 
         if (image != null) {
             image.setWidth("21px");
@@ -265,7 +263,7 @@ public class AResourceService extends AAbstractService {
      * @return AbstractStreamResource
      */
     public String getSrcBandieraPng(String simpleResourceFileNameWithoutSuffix) {
-        return getSrc("bandiere/" + simpleResourceFileNameWithoutSuffix + PUNTO + "png");
+        return getSrc("bandiere/" + simpleResourceFileNameWithoutSuffix.toLowerCase() + PUNTO + "png");
     }
 
 

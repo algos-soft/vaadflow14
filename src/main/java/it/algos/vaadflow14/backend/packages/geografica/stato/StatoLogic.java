@@ -6,13 +6,14 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
@@ -45,11 +46,18 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StatoLogic extends ALogic {
 
-
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AResourceService resourceService;
 
 
     /**
@@ -180,11 +188,12 @@ public class StatoLogic extends ALogic {
      * @param alfatre  (obbligatorio, unico)
      * @param alfadue  (obbligatorio, unico)
      * @param locale   (obbligatorio, unico)
+     * @param bandiera (facoltativa)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Stato creaIfNotExist(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
-        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale));
+    public Stato creaIfNotExist(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera) {
+        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera));
     }
 
 
@@ -196,7 +205,7 @@ public class StatoLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Stato newEntity() {
-        return newEntity(0, VUOTA, false, VUOTA, VUOTA, VUOTA, VUOTA);
+        return newEntity(0, VUOTA, false, VUOTA, VUOTA, VUOTA, VUOTA, VUOTA);
     }
 
 
@@ -213,10 +222,11 @@ public class StatoLogic extends ALogic {
      * @param alfatre  (obbligatorio, unico)
      * @param alfadue  (obbligatorio, unico)
      * @param locale   (obbligatorio, unico)
+     * @param bandiera (facoltativa)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Stato newEntity(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale) {
+    public Stato newEntity(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera) {
         Stato newEntityBean = Stato.builderStato()
 
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
@@ -232,6 +242,8 @@ public class StatoLogic extends ALogic {
                 .alfadue(text.isValid(alfadue) ? alfadue : null)
 
                 .locale(text.isValid(locale) ? locale : null)
+
+                .bandiera(text.isValid(bandiera) ? bandiera : null)
 
                 .build();
 
@@ -256,6 +268,7 @@ public class StatoLogic extends ALogic {
         int posEuropeo;
         int posCorrente;
         boolean ue;
+        String bandieraTxt = VUOTA;
 
         List<List<String>> listaStati = wiki.getStati();
         if (array.isValid(listaStati)) {
@@ -270,7 +283,11 @@ public class StatoLogic extends ALogic {
                     posCorrente = pos;
                     ue = false;
                 }
-                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4));
+                if (text.isValid(riga.get(3))) {
+                    bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
+                }
+
+                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt);
             }
         }
 

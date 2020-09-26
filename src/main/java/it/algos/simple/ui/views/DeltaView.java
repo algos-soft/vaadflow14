@@ -64,13 +64,13 @@ public class DeltaView extends VerticalLayout {
 
         //--legge dal file
         for (String sigla : Arrays.asList("ad", "ae", "ca", "bb", "mg")) {
-            immagine = resourceService.getBandiera(sigla);
+            immagine = resourceService.getBandieraFromFile(sigla);
             add(immagine);
         }
 
 
         //--registra su mongo
-        String valoreCodificato = resourceService.getSrcBandieraPng("tg");
+        String valoreCodificato = resourceService.getSrcBandieraPng("fo");
         Delta deltaUno = (Delta) mongo.findById(Delta.class, "alfa");
         if (deltaUno != null) {
             deltaUno.immagine = valoreCodificato;
@@ -87,16 +87,7 @@ public class DeltaView extends VerticalLayout {
         //--legge da mongo
         Delta deltaDue = (Delta) mongo.findOneFirst(Delta.class);
         String imageTxt = deltaDue.immagine;
-        Image imageTre= resourceService.getImageFromMongo(imageTxt);
-//        byte[] bytesDue = Base64.decodeBase64(imageDue);
-//        StreamResource resourceDue = null;
-//        try {
-//            resourceDue = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
-//        } catch (Exception unErrore) {
-//        }
-//        Image imageTre = new Image(resourceDue, "manca");
-//        imageTre.setWidth("21px");
-//        imageTre.setHeight("21px");
+        Image imageTre= resourceService.getBandieraFromMongo(imageTxt);
         add(imageTre);
     }
 

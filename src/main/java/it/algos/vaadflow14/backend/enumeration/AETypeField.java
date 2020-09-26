@@ -58,7 +58,7 @@ public enum AETypeField {
     //    dateNotEnabled,
     //    decimal,
     //    link,
-    image(21, 21),
+    image(4, 4),
     //    resource,
 
     vaadinIcon(8, 8),
