@@ -48,7 +48,7 @@ public class CompanyLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public CompanyLogic() {
         this(AEOperation.edit);
@@ -59,7 +59,7 @@ public class CompanyLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -100,6 +100,7 @@ public class CompanyLogic extends ALogic {
         }
     }
 
+
     /**
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
@@ -121,6 +122,7 @@ public class CompanyLogic extends ALogic {
 
         return new AlertWrap(null, null, red, false);
     }
+
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -205,6 +207,21 @@ public class CompanyLogic extends ALogic {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Company findByKey(String keyValue) {
+        return (Company) super.findByKey(keyValue);
+    }
+
+
+    /**
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
      * I dati possono essere presi da una Enumeration o creati direttamente <br>
@@ -217,9 +234,9 @@ public class CompanyLogic extends ALogic {
     public boolean reset() {
         super.deleteAll();
 
-        creaIfNotExist("Algos", "Company Algos di prova",VUOTA,"info@algos.it");
-        creaIfNotExist("Demo", "Company demo","345 994487","demo@algos.it");
-        creaIfNotExist("Test", "Company di test","","presidentePonteTaro@crocerossa.it");
+        creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it");
+        creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it");
+        creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it");
 
         return mongo.isValid(entityClazz);
     }

@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
@@ -73,7 +74,7 @@ public class ProvinciaLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public ProvinciaLogic() {
         this(AEOperation.edit);
@@ -84,7 +85,7 @@ public class ProvinciaLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -157,30 +158,6 @@ public class ProvinciaLogic extends ALogic {
         comboBox.setRenderer(TemplateRenderer.<AETypeProvincia>of("<div>[[item.tag]]</div>").withProperty("tag", AETypeProvincia::getTag));
     }
 
-
-    //    /**
-    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-    //     * <p>
-    //     * Chiamato da AView.initView() <br>
-    //     * Costruisce un' istanza dedicata <br>
-    //     * Passa all' istanza un wrapper di dati <br>
-    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-    //     *
-    //     * @param entityBean interessata
-    //     *
-    //     * @return componente grafico per il placeHolder
-    //     */
-    //    @Override
-    //    public AForm getBodyFormLayout(AEntity entityBean) {
-    //        currentForm = null;
-    //
-    //        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
-    //        if (entityBean != null) {
-    //            currentForm = appContext.getBean(ProvinciaForm.class, getWrapForm(entityBean));
-    //        }
-    //
-    //        return currentForm;
-    //    }
 
 
     /**
@@ -277,6 +254,36 @@ public class ProvinciaLogic extends ALogic {
             logger.error("La regione " + provincia.regione.regione + " non appartiene allo stato " + provincia.stato.stato, this.getClass(), "beforeSave");
             return null;
         }
+    }
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Provincia findById(String keyID) {
+        return (Provincia) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Provincia findByKey(String keyValue) {
+        return (Provincia) super.findByKey(keyValue);
     }
 
 

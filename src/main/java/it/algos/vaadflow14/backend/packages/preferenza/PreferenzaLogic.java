@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
@@ -82,7 +83,7 @@ public class PreferenzaLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     @Deprecated
     public PreferenzaLogic() {
@@ -94,7 +95,7 @@ public class PreferenzaLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -161,6 +162,7 @@ public class PreferenzaLogic extends ALogic {
     protected void fixMappaComboBox() {
         super.creaComboBox("type");
     }
+
 
     /**
      * Costruisce un wrapper di dati <br>
@@ -339,6 +341,20 @@ public class PreferenzaLogic extends ALogic {
     @Override
     public Preferenza findById(String keyID) {
         return (Preferenza) super.findById(keyID);
+    }
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Preferenza findByKey(String keyValue) {
+        return (Preferenza) super.findByKey(keyValue);
     }
 
 

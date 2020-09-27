@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
@@ -64,7 +65,7 @@ public class RegioneLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public RegioneLogic() {
         this(AEOperation.edit);
@@ -75,7 +76,7 @@ public class RegioneLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -210,6 +211,34 @@ public class RegioneLogic extends ALogic {
         return (Regione) fixKey(newEntityBean);
     }
 
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Regione findById(String keyID) {
+        return (Regione) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Regione findByKey(String keyValue) {
+        return (Regione) super.findByKey(keyValue);
+    }
 
     /**
      * Retrieves an entity by its key.

@@ -62,7 +62,7 @@ public class UtenteLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     @Deprecated
     public UtenteLogic() {
@@ -74,7 +74,7 @@ public class UtenteLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -254,6 +254,19 @@ public class UtenteLogic extends ALogic {
         return (Utente) super.findById(keyID);
     }
 
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Utente findByKey(String keyValue) {
+        return (Utente) super.findByKey(keyValue);
+    }
 
     /**
      * Retrieves an entity by userName.

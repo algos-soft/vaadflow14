@@ -1268,6 +1268,25 @@ public abstract class ALogic implements AILogic {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    public AEntity findByKey(String keyValue) {
+        keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        if (text.isValid(keyPropertyName)) {
+            return mongo.findOneUnique(entityClazz, keyPropertyName,keyValue);
+        } else {
+            return findById(keyValue);
+        }
+    }
+
+
+    /**
      * Check the existence of a single entity. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB

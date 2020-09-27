@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -41,7 +42,7 @@ public class ViaLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public ViaLogic() {
         this(AEOperation.edit);
@@ -52,7 +53,7 @@ public class ViaLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -71,23 +72,11 @@ public class ViaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.usaBottoneDeleteAll = true;
         super.usaBottoneReset = true;
     }
 
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Via findById(String keyID) {
-        return (Via) super.findById(keyID);
-    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -177,6 +166,34 @@ public class ViaLogic extends ALogic {
                 .build();
 
         return (Via) fixKey(newEntityBean);
+    }
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Via findById(String keyID) {
+        return (Via) super.findById(keyID);
+    }
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Via findByKey(String keyValue) {
+        return (Via) super.findByKey(keyValue);
     }
 
 

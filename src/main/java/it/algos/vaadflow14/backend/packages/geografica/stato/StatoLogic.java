@@ -9,6 +9,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -64,7 +65,7 @@ public class StatoLogic extends ALogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public StatoLogic() {
         this(AEOperation.edit);
@@ -75,7 +76,7 @@ public class StatoLogic extends ALogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -132,50 +133,7 @@ public class StatoLogic extends ALogic {
     }
 
 
-    //    /**
-    //     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-    //     * Informazioni (eventuali) specifiche di ogni modulo <br>
-    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-    //     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-    //     *
-    //     * @param typeVista in cui inserire gli avvisi
-    //     *
-    //     * @return wrapper per passaggio dati
-    //     */
-    //    @Override
-    //    protected List<String> getAlertList(AEVista typeVista) {
-    //        List<String> lista = super.getAlertList(typeVista);
-    //        String message;
-    //
-    //        if (typeVista == AEVista.list) {
-    //            lista.add("Stati del mondo. Codifica secondo ISO 3166-1");
-    //            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-    //            lista.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
-    //            lista.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri ");
-    //        }
-    //
-    //        if (typeVista == AEVista.form) {
-    //            lista.add("Scheda NON modificabile");
-    //            lista.add("Stato codificato ISO 3166-1");
-    //        }
-    //
-    //        return lista;
-    //    }
 
-
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Stato findById(String keyID) {
-        return (Stato) super.findById(keyID);
-    }
 
 
     /**
@@ -248,6 +206,36 @@ public class StatoLogic extends ALogic {
                 .build();
 
         return (Stato) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Stato findById(String keyID) {
+        return (Stato) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Stato findByKey(String keyValue) {
+        return (Stato) super.findByKey(keyValue);
     }
 
 

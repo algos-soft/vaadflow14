@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
@@ -75,7 +74,7 @@ public class AnnoLogic extends CronoLogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public AnnoLogic() {
         this(AEOperation.edit);
@@ -86,7 +85,7 @@ public class AnnoLogic extends CronoLogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -190,6 +189,36 @@ public class AnnoLogic extends CronoLogic {
 
 
     /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Anno findById(String keyID) {
+        return (Anno) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Anno findByKey(String keyValue) {
+        return (Anno) super.findByKey(keyValue);
+    }
+
+
+    /**
      * Aggiorna gli items della Grid, utilizzando i filtri. <br>
      * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
      */
@@ -260,7 +289,7 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                creaIfNotExist(ordine, nome,bisestile,secolo);
+                creaIfNotExist(ordine, nome, bisestile, secolo);
             }
         }
 
@@ -275,7 +304,7 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                creaIfNotExist(ordine, nome,bisestile,secolo);
+                creaIfNotExist(ordine, nome, bisestile, secolo);
             }
         }
 

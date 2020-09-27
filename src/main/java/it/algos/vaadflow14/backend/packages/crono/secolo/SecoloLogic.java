@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.crono.secolo;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
@@ -49,7 +50,7 @@ public class SecoloLogic extends CronoLogic {
      * Costruttore senza parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public SecoloLogic() {
         this(AEOperation.edit);
@@ -60,7 +61,7 @@ public class SecoloLogic extends CronoLogic {
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
@@ -94,42 +95,7 @@ public class SecoloLogic extends CronoLogic {
         return new AlertWrap(null, blu, red, false);
     }
 
-    /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return wrapper per passaggio dati
-     */
-    @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
-        String message;
 
-        lista.add("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo ");
-        message = "Sono indicati gli anni iniziali e finali di ogni secolo.";
-        message += " L' anno <span style=\"color:black\"><b>0</b></span>";
-        message += " <span style=\"color:red\"><b>NON esiste</b></span> nei calendari.";
-        lista.add(message);
-        return lista;
-    }
-
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Secolo findById(String keyID) {
-        return (Secolo) super.findById(keyID);
-    }
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
@@ -212,6 +178,36 @@ public class SecoloLogic extends CronoLogic {
                 .build();
 
         return (Secolo) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Secolo findById(String keyID) {
+        return (Secolo) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Secolo findByKey(String keyValue) {
+        return (Secolo) super.findByKey(keyValue);
     }
 
 
