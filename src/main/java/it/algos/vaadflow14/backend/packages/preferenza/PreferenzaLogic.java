@@ -213,7 +213,7 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza creaIfNotExist(AEPreferenza aePref) {
-        return creaIfNotExist (aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getValue(), aePref.getNote());
+        return creaIfNotExist (aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.getNote());
     }
 
 
@@ -223,13 +223,13 @@ public class PreferenzaLogic extends ALogic {
      * @param code        codice di riferimento (obbligatorio)
      * @param descrizione (obbligatoria)
      * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param value       (obbligatorio) memorizza tutto in byte[]
+     * @param defaultValue       (obbligatorio) memorizza tutto in byte[]
      * @param note        (facoltativo)
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object value, String note) {
-        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, value, note));
+    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, String note) {
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, note));
     }
 
 
@@ -255,12 +255,12 @@ public class PreferenzaLogic extends ALogic {
      * @param code        codice di riferimento (obbligatorio)
      * @param descrizione (obbligatoria)
      * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param value       (obbligatorio) memorizza tutto in byte[]
+     * @param defaultValue       (obbligatorio) memorizza tutto in byte[]
      * @param note        (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object value, String note) {
+    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, String note) {
         Preferenza newEntityBean = Preferenza.builderPreferenza()
 
                 .code(text.isValid(code) ? code : null)
@@ -269,7 +269,7 @@ public class PreferenzaLogic extends ALogic {
 
                 .type(type != null ? type : AETypePref.string)
 
-                .value(type != null ? type.objectToBytes(value) : (byte[]) null)
+                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
 
                 .build();
 

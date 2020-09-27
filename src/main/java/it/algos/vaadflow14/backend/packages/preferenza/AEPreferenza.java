@@ -1,6 +1,9 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
+import it.algos.vaadflow14.backend.enumeration.AELogLivello;
+import it.algos.vaadflow14.backend.enumeration.AETypeIconaEdit;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.enumeration.AIEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +38,17 @@ public enum AEPreferenza {
 
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
-    enumeration("daCancellare2", "Prova enumeration", AETypePref.enumeration, "Alfa,beta;Alfa"),
+    enumeration2("daCancellare2", "Prova enumeration", AETypePref.enumeration, "Alfa,Beta,Gamma,Delta;Beta"),
+
+    enumeration3("daCancellare3", "Prova enumeration completa", AETypePref.enumeration, AELogLivello.info),
+
+    iconaEdit("iconaEdit", "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit),
 
     mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", "Email di default a cui spedire i log di posta"),
 
     maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
+
+    maxEnumRadio("maxEnumRadio", "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
 
     datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now()),
 
@@ -59,8 +68,8 @@ public enum AEPreferenza {
     //--Serve per convertire (nei due sensi) il valore nel formato byte[] usato dal mongoDb
     private AETypePref type;
 
-    //--Valore java da convertire in byte[] a seconda del type
-    private Object value;
+    //--Valore java iniziale da convertire in byte[] a seconda del type
+    private Object defaultValue;
 
     //--Link injettato da un metodo static
     private APreferenzaService preferenzaService;
@@ -75,19 +84,18 @@ public enum AEPreferenza {
     private String note;
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object value) {
-        this(keyCode, descrizione, type, value, VUOTA);
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue) {
+        this(keyCode, descrizione, type, defaultValue, VUOTA);
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object value, String note) {
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, String note) {
         this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
         this.setNote(note);
-        //        this.setShow(show);
         //        this.setCompanySpecifica(companySpecifica);
-        this.setValue(value);
+        this.setDefaultValue(defaultValue);
     }// fine del costruttore
 
 
@@ -126,34 +134,62 @@ public enum AEPreferenza {
     }
 
 
-    public Object getValue() {
-        return value;
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 
 
-    public void setValue(Object value) {
-        this.value = value;
+    public void setDefaultValue(Object defaultValue) {
+        if (type == AETypePref.enumeration) {
+            if (defaultValue instanceof String) {
+                this.defaultValue = defaultValue;
+            } else {
+                this.defaultValue = ((AIEnum) defaultValue).getPref();
+            }
+        } else {
+            this.defaultValue = defaultValue;
+        }
+    }
+
+
+    public Object getValue() {
+        Object javaValue;
+        Preferenza preferenza = null;
+
+        if (preferenzaService == null) {
+            return null;
+        }
+
+        preferenza = preferenzaService.findByKey(keyCode);
+        javaValue = preferenza != null ? type.bytesToObject(preferenza.getValue()) : null;
+
+        return javaValue;
     }
 
 
     public boolean is() {
         boolean status = false;
-        Preferenza preferenza = null;
         Object javaValue;
 
-        if (type != AETypePref.bool) {
-            return false;
+        if (type == AETypePref.bool) {
+            javaValue = getValue();
+            status = javaValue instanceof Boolean && (boolean) javaValue;
         }
-
-        if (preferenzaService == null) {
-            return false;
-        }
-
-        preferenza = preferenzaService.findByKey(keyCode);
-        javaValue = preferenza != null ? type.bytesToObject(preferenza.getValue()) : null;
-        status = (javaValue != null && javaValue instanceof Boolean) ? (boolean) javaValue : false;
 
         return status;
+    }
+
+
+    public int getInt() {
+        int value = 0;
+        Object javaValue;
+
+        if (type == AETypePref.integer) {
+            javaValue = getValue();
+            value = (javaValue instanceof Integer) ? (Integer) javaValue : 0;
+        }
+
+        return value;
     }
 
 

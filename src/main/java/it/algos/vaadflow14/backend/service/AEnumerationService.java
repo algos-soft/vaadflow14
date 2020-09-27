@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.ui.fields.AComboField;
+import it.algos.vaadflow14.ui.fields.ARadioField;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -138,6 +139,10 @@ public class AEnumerationService extends AAbstractService {
 
         if (valueField instanceof AComboField) {
             selectedNewValue = (String) ((AComboField<?>) valueField).getValue();
+        }
+
+        if (valueField instanceof ARadioField) {
+            selectedNewValue = (String) ((ARadioField) valueField).getValue();
         }
 
         listaValoriAmmissibili = getList(entityBean);

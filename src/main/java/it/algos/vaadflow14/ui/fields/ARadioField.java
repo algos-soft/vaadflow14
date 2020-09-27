@@ -1,21 +1,12 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.service.ATextService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -23,24 +14,12 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * User: gac
  * Date: lun, 31-ago-2020
  * Time: 12:29
- * Layer around boolean value <br>
+ * Simple layer around RadioButtonGroup <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ARadioField extends AField<String> {
 
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public ATextService text;
-
-    private AETypeBoolField typeBool;
-
-    private String boolEnum = VUOTA;
 
     private RadioButtonGroup<String> radioGroup;
 
@@ -49,29 +28,12 @@ public class ARadioField extends AField<String> {
 
     /**
      * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(AEmailField.class, caption) <br>
+     * L' istanza viene costruita con appContext.getBean(ARadioField.class, items) <br>
      *
-     * @param typeBool per la tipologia di visualizzazione
-     * @param caption  label visibile del field
+     * @param items da visualizzare
      */
-    public ARadioField(String caption, AETypeBoolField typeBool) {
-        this(VUOTA, typeBool, caption, VUOTA);
-    } // end of SpringBoot constructor
-
-
-    /**
-     * Costruttore con parametri <br>
-     * L' istanza viene costruita con appContext.getBean(ABooleanField.class, fieldKey, typeBool, caption) <br>
-     *
-     * @param fieldKey nome interno del field
-     * @param typeBool per la tipologia di visualizzazione
-     * @param caption  label visibile del field
-     * @param boolEnum valori custom della scelta booleana
-     */
-    public ARadioField(String fieldKey, AETypeBoolField typeBool, String caption, String boolEnum) {
-        this.typeBool = typeBool;
-        this.caption = caption;
-        this.boolEnum = boolEnum;
+    public ARadioField(List<String> items) {
+        this.items = items;
     } // end of SpringBoot constructor
 
 
@@ -92,67 +54,8 @@ public class ARadioField extends AField<String> {
 
     protected void initView() {
         radioGroup = new RadioButtonGroup<>();
-        items=getItems();
-
-        if (typeBool != null) {
-            switch (typeBool) {
-                case checkBox:
-                    break;
-                case radioTrueFalse:
-                    radioGroup.setItems(Arrays.asList("Vero", "Falso"));
-                    radioGroup.setLabel(caption);
-                    break;
-                case radioSiNo:
-                    radioGroup.setItems(items);
-                    radioGroup.setLabel(caption);
-                    break;
-                case radioCustomHoriz:
-                    radioGroup.setItems(items);
-                    break;
-                case radioCustomVert:
-                    radioGroup.setItems(items);
-                    radioGroup.setLabel(caption);
-                    //                    radioGroup.getElement().setAttribute("style", "spacing:0em; margin:0em; padding:0em;");
-                    radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-                    break;
-                default:
-                    //                    logger.warn("Switch - caso non definito", this.getClass(), "nomeDelMetodo");
-                    break;
-            }
-        }
-
+        radioGroup.setItems(items);
         add(radioGroup);
-    }
-
-
-    protected List<String> getItems() {
-        List<String> items;
-
-        if (text.isValid(boolEnum) && boolEnum.contains(VIRGOLA)) {
-            items = text.getArray(boolEnum);
-        } else {
-            items = Arrays.asList("Si", "No");
-        }
-
-        return items;
-    }
-
-
-    @Override
-    protected void setModelValue(String newModelValue, boolean fromClient) {
-        super.setModelValue(newModelValue, fromClient);
-    }
-
-
-    @Override
-    public String getValue() {
-        return radioGroup.getValue();
-    }
-
-
-    @Override
-    public void setValue(String value) {
-        radioGroup.setValue(value);
     }
 
 
@@ -167,10 +70,5 @@ public class ARadioField extends AField<String> {
         radioGroup.setValue(value);
     }
 
-
-    @Override
-    public RadioButtonGroup getBinder() {
-        return radioGroup;
-    }
 
 }

@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.service.AEnumerationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ public class APreferenzaField extends AField<byte[]> {
 
     private AEOperation operationForm;
 
+    private boolean usaEnumCombo;
+
 
     /**
      * Costruttore con parametri <br>
@@ -77,7 +80,7 @@ public class APreferenzaField extends AField<byte[]> {
     @Override
     protected byte[] generateModelValue() {
         if (type == AETypePref.enumeration) {
-            return enumerationService.generateModelValue(entityBean,valueField);
+            return enumerationService.generateModelValue(entityBean, valueField);
         } else {
             return type.objectToBytes(valueField.getValue());
         }
@@ -158,7 +161,12 @@ public class APreferenzaField extends AField<byte[]> {
                 } else {
                     items = enumerationService.getList(entityBean);
                     if (array.isValid(items)) {
-                        valueField = appContext.getBean(AComboField.class, items);
+                        usaEnumCombo = items.size() <= AEPreferenza.maxEnumRadio.getInt();
+                        if (usaEnumCombo) {
+                            valueField = appContext.getBean(ARadioField.class, items);
+                        } else {
+                            valueField = appContext.getBean(AComboField.class, items);
+                        }
                         valueField.setLabel(ENUM_FIELD_SHOW);
                     }
                 }
