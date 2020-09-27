@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow <br>
@@ -237,22 +237,6 @@ public class AArrayService extends AAbstractService {
     }
 
 
-    /**
-     * Costruisce una lista di un singolo valore <br>
-     *
-     * @param value da inserire
-     *
-     * @return mappa di un solo elemento chiave-valore
-     */
-    public List<String> getLista(String value) {
-        List<String> lista = new ArrayList<>();
-
-        if (text.isValid(value)) {
-            lista.add(value);
-        }
-
-        return lista;
-    }
 
 
     /**
@@ -260,7 +244,7 @@ public class AArrayService extends AAbstractService {
      *
      * @param objArray to convert
      *
-     * @return the corresponding casted ArrayList
+     * @return the corresponding List
      */
     public List<Object> fromObj(Object[] objArray) {
         List<Object> objList = new ArrayList<Object>();
@@ -268,10 +252,107 @@ public class AArrayService extends AAbstractService {
         for (Object obj : objArray) {
             objList.add(obj);
         }
+//        Collections.addAll(objList, objArray);@//@todo Funzionalità ancora da implementare
 
         return objList;
     }
 
+
+    /**
+     * Convert a stringArray to List
+     *
+     * @param strArray to convert
+     *
+     * @return the corresponding string List
+     */
+    public List<String> fromStr(String[] strArray) {
+        List<String> strList = new ArrayList<String>();
+
+        Collections.addAll(strList, strArray);
+
+        return strList;
+    }
+
+
+
+    /**
+     * Costruisce una lista di un singolo valore <br>
+     *
+     * @param singoloValore da inserire
+     *
+     * @return mappa di un solo elemento chiave-valore
+     */
+    public List<String> getLista(String singoloValore) {
+        List<String> lista = new ArrayList<>();
+
+        if (text.isValid(singoloValore)) {//@todo Funzionalità ancora da implementare
+            lista.add(singoloValore);
+        }
+
+        return lista;
+    }
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public String toStringaPipe(List array) {
+        return toStringa(array, PIPE);
+    }
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da una virgola seguita da uno spazio
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public String toStringaSpazio(List array) {
+        return toStringa(array, VIRGOLA_SPAZIO);
+    }
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore virgola
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public String toStringa(List array) {
+        return toStringa(array, VIRGOLA);
+    }
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore
+     *
+     * @param array lista di valori
+     * @param sep   carattere separatore
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    public String toStringa(List array, String sep) {
+        String testo = VUOTA;
+        StringBuilder textBuffer = null;
+
+        if (array != null) {
+            textBuffer = new StringBuilder();
+            for (Object obj : array) {
+                textBuffer.append(obj.toString());
+                textBuffer.append(sep);
+            }
+            testo = textBuffer.toString();
+            testo = text.levaCoda(testo, sep);
+        }
+
+        return testo.trim();
+    }
 
     /**
      * Ordina la lista <br>

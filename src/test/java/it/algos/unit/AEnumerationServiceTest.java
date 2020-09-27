@@ -8,8 +8,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import static com.helger.commons.mock.CommonsAssert.assertEquals;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Project vaadflow14
@@ -24,12 +27,17 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AEnumerationServiceTest extends ATest {
 
-
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
     AEnumerationService service;
+
+    private String rawValues;
+
+    private String singleValue;
+
+    private List<String> listValues;
 
 
     /**
@@ -57,6 +65,10 @@ public class AEnumerationServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        rawValues = VUOTA;
+        singleValue = VUOTA;
+        listValues = null;
     }
 
 
@@ -78,7 +90,115 @@ public class AEnumerationServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("Matrice dei valori e del valore selezionato")
+    @DisplayName("1 - Crea la preferenza da una serie")
+    void fixPreferenzaMongoDB() {
+        previsto = "alfa,beta,gamma;beta";
+
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa,beta,gamma";
+        singleValue = VUOTA;
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = VUOTA;
+        singleValue = "beta";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa,beta,gamma";
+        singleValue = "delta";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa";
+        singleValue = "alfa";
+        previsto2 = "alfa;alfa";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto2, ottenuto);
+
+        rawValues = "alfa,beta;gamma";
+        singleValue = "delta";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa,beta,gamma";
+        singleValue = "beta,gamma";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa,beta,gamma";
+        singleValue = "beta;gamma";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        rawValues = "alfa,beta,gamma";
+        singleValue = "beta";
+        ottenuto = service.fixPreferenzaMongoDB(rawValues, singleValue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Crea la preferenza da una lista")
+    void fixPreferenzaMongoDB2() {
+        previsto = "alfa,beta,gamma;beta";
+
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa,beta,gamma");
+        singleValue = VUOTA;
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = null;
+        singleValue = "beta";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa,beta,gamma");
+        singleValue = "delta";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa");
+        singleValue = "alfa";
+        previsto2 = "alfa;alfa";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto2, ottenuto);
+
+        listValues = array.fromString("alfa,beta;gamma");
+        singleValue = "delta";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa,beta,gamma");
+        singleValue = "beta,gamma";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa,beta,gamma");
+        singleValue = "beta;gamma";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isEmpty(ottenuto));
+
+        listValues = array.fromString("alfa,beta,gamma");
+        singleValue = "beta";
+        ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Matrice dei valori e del valore selezionato")
     void getParti() {
         sorgente = "alfa,beta,gamma;delta";
         previstoMatrice = new String[]{"alfa,beta,gamma", "delta"};
@@ -126,80 +246,8 @@ public class AEnumerationServiceTest extends ATest {
 
 
     @Test
-    @Order(2)
-    @DisplayName("Estrae la parte dopo il punto e virgola")
-    void convertToPresentation() {
-        sorgente = "alfa,beta,gamma;delta";
-        previsto = "delta";
-        ottenuto = service.convertToPresentation(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma";
-        previsto = VUOTA;
-        ottenuto = service.convertToPresentation(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa";
-        previsto = VUOTA;
-        ottenuto = service.convertToPresentation(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma;delta,epsilon";
-        previsto = "delta,epsilon";
-        ottenuto = service.convertToPresentation(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma;delta;epsilon";
-        previsto = "delta;epsilon";
-        ottenuto = service.convertToPresentation(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-    }
-
-
-    @Test
-    @Order(3)
-    @DisplayName("Estrae la parte prima del punto e virgola")
-    void getStringaValori() {
-        sorgente = "alfa,beta,gamma;delta";
-        previsto = "alfa,beta,gamma";
-        ottenuto = service.getStringaValori(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma";
-        previsto = "alfa,beta,gamma";
-        ottenuto = service.getStringaValori(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa";
-        previsto = "alfa";
-        ottenuto = service.getStringaValori(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma;delta,epsilon";
-        previsto = "alfa,beta,gamma";
-        ottenuto = service.getStringaValori(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-
-        sorgente = "alfa,beta,gamma;delta;epsilon";
-        previsto = "alfa,beta,gamma";
-        ottenuto = service.getStringaValori(sorgente);
-        Assertions.assertNotNull(ottenuto);
-        Assert.assertEquals(previsto, ottenuto);
-    }
-
-
-    @Test
     @Order(4)
-    @DisplayName("Estrae la lista dei valori")
+    @DisplayName("4 - Estrae la lista dei valori")
     void getList() {
         previstoArray = new ArrayList<>(Arrays.asList("alfa", "beta", "gamma"));
 
@@ -233,7 +281,43 @@ public class AEnumerationServiceTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("Costruisce la stringa da memorizzare")
+    @DisplayName("5 - Estrae il valore previsto")
+    void convertToPresentation() {
+        sorgente = "alfa,beta,gamma;delta";
+        previsto = "delta";
+        ottenuto = service.convertToPresentation(sorgente);
+        Assertions.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "alfa,beta,gamma";
+        previsto = VUOTA;
+        ottenuto = service.convertToPresentation(sorgente);
+        Assertions.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "alfa";
+        previsto = VUOTA;
+        ottenuto = service.convertToPresentation(sorgente);
+        Assertions.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "alfa,beta,gamma;delta,epsilon";
+        previsto = "delta,epsilon";
+        ottenuto = service.convertToPresentation(sorgente);
+        Assertions.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, ottenuto);
+
+        sorgente = "alfa,beta,gamma;delta;epsilon";
+        previsto = "delta;epsilon";
+        ottenuto = service.convertToPresentation(sorgente);
+        Assertions.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, ottenuto);
+    }
+
+
+        @Test
+    @Order(6)
+    @DisplayName("6 - Modifica la stringa da memorizzare")
     void convertToModel() {
         String rawValue;
         String newSelectedValue;

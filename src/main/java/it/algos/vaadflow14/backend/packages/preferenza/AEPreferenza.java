@@ -35,6 +35,8 @@ public enum AEPreferenza {
 
     pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
 
+    enumeration("daCancellare2", "Prova enumeration", AETypePref.enumeration, "Alfa,beta;Alfa"),
+
     mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", "Email di default a cui spedire i log di posta"),
 
     maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),

@@ -39,10 +39,34 @@ public class AComboField<T> extends AField<Object> {
 
     /**
      * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, items) <br>
+     *
+     * @param items collezione dei valori previsti
+     */
+    public AComboField(List<String> items) {
+        this(items, true);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, items, isRequired) <br>
+     *
+     * @param items      collezione dei valori previsti
+     * @param isRequired true, se NON ammette il valore nullo
+     */
+    public AComboField(List<String> items, boolean isRequired) {
+        this(items, isRequired, false);
+    } // end of SpringBoot constructor
+
+
+    /**
+     * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue) <br>
      *
      * @param items      collezione dei valori previsti
      * @param isRequired true, se NON ammette il valore nullo
+     * @param isRequired true, se si possono aggiungere valori direttamente
      */
     public AComboField(List<String> items, boolean isRequired, boolean isAllowCustomValue) {
         comboBox = new ComboBox();

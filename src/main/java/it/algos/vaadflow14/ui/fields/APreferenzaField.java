@@ -5,11 +5,16 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.backend.service.AEnumerationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.ENUM_FIELD_NEW;
+import static it.algos.vaadflow14.backend.application.FlowCost.ENUM_FIELD_SHOW;
 
 /**
  * Project vaadflow14
@@ -22,6 +27,14 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class APreferenzaField extends AField<byte[]> {
 
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AEnumerationService enumerationService;
 
     private AField valueField;
 
@@ -63,14 +76,22 @@ public class APreferenzaField extends AField<byte[]> {
 
     @Override
     protected byte[] generateModelValue() {
-        return type.objectToBytes(valueField.getValue());
+        if (type == AETypePref.enumeration) {
+            return enumerationService.generateModelValue(entityBean,valueField);
+        } else {
+            return type.objectToBytes(valueField.getValue());
+        }
     }
 
 
     @Override
     protected void setPresentationValue(byte[] bytes) {
-        if (valueField!=null) {
-            valueField.setValue(type.bytesToObject(bytes));
+        if (valueField != null) {
+            if (type == AETypePref.enumeration) {
+                valueField.setValue(enumerationService.setPresentationValue(bytes));
+            } else {
+                valueField.setValue(type.bytesToObject(bytes));
+            }
         } else {
             logger.warn("Manca valueField", this.getClass(), "setPresentationValue");
         }
@@ -79,7 +100,6 @@ public class APreferenzaField extends AField<byte[]> {
 
     @Override
     public void setWidth(String width) {
-
     }
 
 
@@ -103,7 +123,7 @@ public class APreferenzaField extends AField<byte[]> {
                 valueField = appContext.getBean(ATextField.class);
                 valueField.setLabel(tag + "(string)");
                 String message = "Valore non valido";
-//                ((ATextField) valueField).setErrorMessage(message);
+                //                ((ATextField) valueField).setErrorMessage(message);
                 break;
             case email:
                 valueField = appContext.getBean(AEmailField.class);
@@ -133,24 +153,22 @@ public class APreferenzaField extends AField<byte[]> {
                 //                ((ATimePicker) valueField).setStep(Duration.ofMinutes(15));
                 break;
             case enumeration:
-                //                if (operationForm == AEOperation.addNew) {
-                //                    valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
-                //                } else {
-                //                    if (enumValue.contains(PUNTO_VIRGOLA)) {
-                //                        enumValue = text.levaCodaDa(enumValue, PUNTO_VIRGOLA);
-                //                    }
-                //                    items = enumerationService.getList(enumValue);
-                //                    if (array.isValid(items)) {
-                //                        valueField = appContext.getBean(AComboField.class, ENUM_FIELD_SHOW, items);
-                //                    }
-                //                }
+                if (operationForm == AEOperation.addNew) {
+                    valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
+                } else {
+                    items = enumerationService.getList(entityBean);
+                    if (array.isValid(items)) {
+                        valueField = appContext.getBean(AComboField.class, items);
+                        valueField.setLabel(ENUM_FIELD_SHOW);
+                    }
+                }
                 break;
             case icona:
                 valueField = appContext.getBean(ATextField.class);
                 valueField.setLabel(tag + "(vaadin icon)");
                 break;
             default:
-                logger.warn("Switch - caso non definito",this.getClass(),"sincro");
+                logger.warn("Switch - caso non definito", this.getClass(), "sincro");
                 break;
         }
 

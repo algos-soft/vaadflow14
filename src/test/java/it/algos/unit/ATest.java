@@ -106,6 +106,11 @@ public abstract class ATest {
     protected String sorgente;
 
     /**
+     * The Sorgente.
+     */
+    protected String sorgente2;
+
+    /**
      * The Previsto.
      */
     protected String previsto;
@@ -269,6 +274,7 @@ public abstract class ATest {
         previstoBooleano = false;
         ottenutoBooleano = false;
         sorgente = VUOTA;
+        sorgente2 = VUOTA;
         ottenuto = VUOTA;
         previsto = VUOTA;
         previsto2 = VUOTA;
