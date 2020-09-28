@@ -74,7 +74,7 @@ public class Regione extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class, usaComboMethod = false, logicClazz = StatoLogic.class, methodName = "creaComboStati")
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Stato.class, usaComboMethod = true, logicClazz = StatoLogic.class, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 

@@ -408,7 +408,7 @@ public class AFieldService extends AAbstractService {
                 serviceInstance = StaticContextAccessor.getBean(logicClazz);
                 items = (List) metodo.invoke(serviceInstance);
             } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                logger.error(unErrore, this.getClass(), "getComboItems");
             }
         } else {
             items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
