@@ -283,11 +283,16 @@ public class StatoLogic extends ALogic {
     }
 
 
+    /**
+     * Costruisce un ComboBox degli stati uguale per tutti <br>
+     * Viene invocato da RegioneLogic.fixMappaComboBox(): combo di selezione degli stati nella lista delle regioni <br>
+     * Viene invocato da AFieldService.getCombo(), tramite 'metodo.invoke' coi parametri passati da @AIField della AEntity Regione <br>
+     * Può essere invocata anche da altri <br>
+     * Aggiunge o meno le bandierine, secondo il flag AEPreferenza.usaBandiereStati <br>
+     */
     public ComboBox creaComboStati() {
         ComboBox<Stato> combo = new ComboBox();
-        Field reflectionJavaField = null;
         String tag = TRE_PUNTI;
-        Class comboEnumClazz = null;
         String widthEM = "12em";
         Sort sort = Sort.by("ordine");
         List items;
@@ -308,20 +313,6 @@ public class StatoLogic extends ALogic {
             combo = addBandiere(combo);
         }
 
-        //        combo.setRenderer(new ComponentRenderer<>(entityStato -> {
-        //            Div text = new Div();
-        //            String sigla = entityStato.getAlfadue().toLowerCase();
-        //            text.setText(entityStato.getStato());
-        //
-        //            Image image = imageService.getBandiera(sigla);
-        //            image.setWidth("21px");
-        //            image.setHeight("21px");
-        //
-        //            FlexLayout wrapper = new FlexLayout();
-        //            text.getStyle().set("margin-left", "0.5em");
-        //            wrapper.add(image, text);
-        //            return wrapper;
-        //        }));
         return combo;
     }
 

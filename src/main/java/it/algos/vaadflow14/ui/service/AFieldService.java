@@ -1,15 +1,18 @@
 package it.algos.vaadflow14.ui.service;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.*;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
@@ -370,16 +373,54 @@ public class AFieldService extends AAbstractService {
         List items = null;
 
         fieldKey = reflectionJavaField.getName();
-        isRequired = annotation.isRequired(reflectionJavaField);
-        isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
-        items = getComboItems(reflectionJavaField);
-        if (items != null) {
-            field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
-        } else {
-            logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
-        }
+        ComboBox combo = getCombo(reflectionJavaField);
+        field = appContext.getBean(AComboField.class, combo);
+
+        //        isRequired = annotation.isRequired(reflectionJavaField);
+        //        isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
+        //        items = getComboItems(reflectionJavaField);
+        //        if (items != null) {
+        //            field = appContext.getBean(AComboField.class, items, isRequired, isAllowCustomValue);
+        //        } else {
+        //            logger.warn("Mancano gli items per il combobox di " + fieldKey, this.getClass(), "creaOnly.combo");
+        //        }
 
         return field;
+    }
+
+
+    /**
+     *
+     */
+    public ComboBox getCombo(Field reflectionJavaField) {
+        ComboBox<T> combo = new ComboBox();
+        boolean usaComboMethod;
+        Class<AEntity> comboClazz;
+        Class<ALogic> logicClazz;
+        String methodName;
+        Method metodo;
+        ALogic logicInstance;
+        List items = null;
+
+        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
+        comboClazz= annotation.getComboClass(reflectionJavaField);
+        if (usaComboMethod) {
+            logicClazz = annotation.getLogicClass(reflectionJavaField);
+            logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
+            methodName = annotation.getMethodName(reflectionJavaField);
+            try {
+                metodo = logicClazz.getDeclaredMethod(methodName);
+                combo = (ComboBox) metodo.invoke(logicInstance);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "getCombo");
+            }
+        } else {
+            items = mongo.findAll(comboClazz);
+            combo = new ComboBox<>();
+            combo.setItems(items);
+        }
+
+        return combo;
     }
 
 
@@ -394,7 +435,7 @@ public class AFieldService extends AAbstractService {
         Sort sort;
         String methodName;
         Method metodo;
-        Object serviceInstance;
+        ALogic logicInstance;
 
         comboClazz = annotation.getComboClass(reflectionJavaField);
         sort = annotation.getSort(comboClazz);
@@ -405,8 +446,8 @@ public class AFieldService extends AAbstractService {
             methodName = annotation.getMethodName(reflectionJavaField);
             try {
                 metodo = logicClazz.getDeclaredMethod(methodName);
-                serviceInstance = StaticContextAccessor.getBean(logicClazz);
-                items = (List) metodo.invoke(serviceInstance);
+                logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
+                items = (List) metodo.invoke(logicInstance);
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "getComboItems");
             }

@@ -86,6 +86,18 @@ public class AComboField<T> extends AField<Object> {
     } // end of SpringBoot constructor
 
 
+    /**
+     * Costruttore con parametri <br>
+     * L' istanza viene costruita con appContext.getBean(AComboField.class, comboBox) <br>
+     *
+     */
+    public AComboField(ComboBox comboBox) {
+        this.comboBox=comboBox;
+        this.comboBox.setClearButtonVisible(false);
+        add(this.comboBox);
+    } // end of SpringBoot constructor
+
+
     public void setItems(List items) {
         if (items != null) {
             try {
