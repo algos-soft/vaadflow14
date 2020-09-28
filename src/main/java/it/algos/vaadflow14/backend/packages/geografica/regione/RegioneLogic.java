@@ -3,8 +3,8 @@ package it.algos.vaadflow14.backend.packages.geografica.regione;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AEuropa;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
@@ -142,7 +142,7 @@ public class RegioneLogic extends ALogic {
         if (AEPreferenza.usaBandiereStati.is()) {
             mappaComboBox.put("stato", statoLogic.creaComboStati());//@todo con bandierine
         } else {
-            super.creaComboBox("stato", statoLogic.getItalia());//@todo senza bandierine
+            super.creaComboBox("stato", AEuropa.italia.getStato());//@todo senza bandierine
         }
 
         super.creaComboBox("status", 14);
@@ -211,6 +211,7 @@ public class RegioneLogic extends ALogic {
         return (Regione) fixKey(newEntityBean);
     }
 
+
     /**
      * Retrieves an entity by its id.
      *
@@ -239,6 +240,7 @@ public class RegioneLogic extends ALogic {
     public Regione findByKey(String keyValue) {
         return (Regione) super.findByKey(keyValue);
     }
+
 
     /**
      * Retrieves an entity by its key.
@@ -336,7 +338,7 @@ public class RegioneLogic extends ALogic {
         String path = regioniCSV.getAbsolutePath();
         List<LinkedHashMap<String, String>> mappaCSV;
         String nome = VUOTA;
-        Stato stato = statoLogic.getItalia();
+        Stato stato = AEuropa.italia.getStato();;
         String iso = VUOTA;
         String sigla = VUOTA;
         String statusTxt = VUOTA;
@@ -358,18 +360,14 @@ public class RegioneLogic extends ALogic {
      * Regioni francesi (35) <br>
      */
     public void francia() {
-        String paginaWiki = "ISO_3166-2:FR";
-        Stato stato = statoLogic.getFrancia();
-        String isoTag = "FR-";
-
         //--13 regioni metropolitane
-        templateList(stato, AEStatuto.franciaMetropolitana, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.francia, AEStatuto.franciaMetropolitana, 1, 2, 2);
 
         //--3 regioni d'oltremare
-        dueColonne(stato, AEStatuto.franciaMetropolitana, paginaWiki, 3, 2, 2, 4);
+        dueColonne(AEuropa.francia, AEStatuto.franciaOltremare, 3, 2, 2, 4);
 
         //--9 collettività d'oltremare
-        dueColonne(stato, AEStatuto.franciaCollettivita, paginaWiki, 4, 2, 1, 3);
+        dueColonne(AEuropa.francia, AEStatuto.franciaCollettivita, 4, 2, 1, 3);
     }
 
 
@@ -377,11 +375,7 @@ public class RegioneLogic extends ALogic {
      * Cantoni svizzeri (26) <br>
      */
     public void svizzera() {
-        String paginaWiki = "ISO_3166-2:CH";
-        Stato stato = statoLogic.getSvizzera();
-        String isoTag = "CH-";
-
-        templateList(stato, AEStatuto.svizzera, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.svizzera, AEStatuto.svizzera, 1, 2, 2);
     }
 
 
@@ -389,11 +383,7 @@ public class RegioneLogic extends ALogic {
      * Länder austriaci (9) <br>
      */
     public void austria() {
-        String paginaWiki = "ISO_3166-2:AT";
-        Stato stato = statoLogic.getAustria();
-        String isoTag = "AT-";
-
-        templateList(stato, AEStatuto.austria, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.austria, AEStatuto.austria, 1, 2, 2);
     }
 
 
@@ -401,11 +391,7 @@ public class RegioneLogic extends ALogic {
      * Länder tedeschi (16) <br>
      */
     public void germania() {
-        String paginaWiki = "ISO_3166-2:DE";
-        Stato stato = statoLogic.getGermania();
-        String isoTag = "DE-";
-
-        templateList(stato, AEStatuto.germania, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.germania, AEStatuto.germania, 1, 2, 2);
     }
 
 
@@ -413,11 +399,7 @@ public class RegioneLogic extends ALogic {
      * Comunità spagnole <br>
      */
     public void spagna() {
-        String paginaWiki = "ISO_3166-2:ES";
-        Stato stato = statoLogic.getSpagna();
-        String isoTag = "ES-";
-
-        templateList(stato, AEStatuto.spagna, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.spagna, AEStatuto.spagna, 1, 2, 2);
     }
 
 
@@ -425,14 +407,11 @@ public class RegioneLogic extends ALogic {
      * Distretti portoghesi (20) <br>
      */
     public void portogallo() {
-        String paginaWiki = "ISO_3166-2:PT";
-        Stato stato = statoLogic.getPortogallo();
-
         //--18 distretti
-        dueColonne(stato, AEStatuto.portogalloDistretto, paginaWiki, 1, 2, 2, 3);
+        dueColonne(AEuropa.portogallo, AEStatuto.portogalloDistretto, 1, 2, 2, 3);
 
         //--2 regioni autonome
-        dueColonne(stato, AEStatuto.portogalloRegione, paginaWiki, 2, 2, 2, 3);
+        dueColonne(AEuropa.portogallo, AEStatuto.portogalloRegione, 2, 2, 2, 3);
     }
 
 
@@ -440,11 +419,7 @@ public class RegioneLogic extends ALogic {
      * Regioni belghe (3) <br>
      */
     public void belgio() {
-        String paginaWiki = "ISO_3166-2:BE";
-        Stato stato = statoLogic.getBelgio();
-        String isoTag = "BE-";
-
-        templateList(stato, AEStatuto.belgio, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.belgio, AEStatuto.belgio, 1, 2, 2);
     }
 
 
@@ -452,11 +427,7 @@ public class RegioneLogic extends ALogic {
      * Province olandesi (12) <br>
      */
     public void olanda() {
-        String paginaWiki = "ISO_3166-2:NL";
-        Stato stato = statoLogic.getOlanda();
-        String isoTag = "NL-";
-
-        templateList(stato, AEStatuto.olanda, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.olanda, AEStatuto.olanda, 1, 2, 2);
     }
 
 
@@ -464,10 +435,7 @@ public class RegioneLogic extends ALogic {
      * Regioni croate (21) <br>
      */
     public void croazia() {
-        String paginaWiki = "ISO_3166-2:HR";
-        Stato stato = statoLogic.getCroazia();
-
-        dueColonne(stato, AEStatuto.croazia, paginaWiki, 1, 2, 1, 2);
+        dueColonne(AEuropa.croazia, AEStatuto.croazia, 1, 2, 1, 2);
     }
 
 
@@ -475,10 +443,7 @@ public class RegioneLogic extends ALogic {
      * Distretti albanesi (36) <br>
      */
     public void albania() {
-        String paginaWiki = "ISO_3166-2:AL";
-        Stato stato = statoLogic.getAlbania();
-
-        dueColonne(stato, AEStatuto.albania, paginaWiki, 1, 1, 1, 2);
+        dueColonne(AEuropa.albania, AEStatuto.albania, 1, 1, 1, 2);
     }
 
 
@@ -486,14 +451,11 @@ public class RegioneLogic extends ALogic {
      * Distretti greci (64) <br>
      */
     public void grecia() {
-        String paginaWiki = "ISO_3166-2:GR";
-        Stato stato = statoLogic.getGrecia();
-
         //--13 periferie
-        dueColonne(stato, AEStatuto.greciaPeriferia, paginaWiki, 1, 2, 1, 2);
+        dueColonne(AEuropa.grecia, AEStatuto.greciaPeriferia, 1, 2, 1, 2);
 
         //--51 prefetture (Attica è doppia)
-        dueColonne(stato, AEStatuto.greciaPrefettura, paginaWiki, 2, 2, 2, 3);
+        dueColonne(AEuropa.grecia, AEStatuto.greciaPrefettura, 2, 2, 2, 3);
     }
 
 
@@ -501,11 +463,7 @@ public class RegioneLogic extends ALogic {
      * Regioni ceche (14) <br>
      */
     public void cechia() {
-        String paginaWiki = "ISO_3166-2:CZ";
-        Stato stato = statoLogic.getCechia();
-        String isoTag = "CZ-";
-
-        templateList(stato, AEStatuto.cechia, paginaWiki, isoTag, 1, 2, 3);
+        templateList(AEuropa.cechia, AEStatuto.cechia, 1, 2, 3);
     }
 
 
@@ -513,10 +471,7 @@ public class RegioneLogic extends ALogic {
      * Regioni slovacche (8) <br>
      */
     public void slovacchia() {
-        String paginaWiki = "ISO_3166-2:SK";
-        Stato stato = statoLogic.getSlovacchia();
-
-        dueColonne(stato, AEStatuto.slovacchia, paginaWiki, 1, 2, 1, 2);
+        dueColonne(AEuropa.slovacchia, AEStatuto.slovacchia, 1, 2, 1, 2);
     }
 
 
@@ -524,11 +479,7 @@ public class RegioneLogic extends ALogic {
      * Province ungheresi (19) <br>
      */
     public void ungheria() {
-        String paginaWiki = "ISO_3166-2:HU";
-        Stato stato = statoLogic.getUngheria();
-        String isoTag = "CZ-";
-
-        templateList(stato, AEStatuto.ungheria, paginaWiki, isoTag, 1, 2, 2);
+        templateList(AEuropa.ungheria, AEStatuto.ungheria, 1, 2, 2);
     }
 
 
@@ -536,11 +487,8 @@ public class RegioneLogic extends ALogic {
      * Distretti rumeni (42) <br>
      */
     public void romania() {
-        String paginaWiki = "ISO_3166-2:RO";
-        Stato stato = statoLogic.getRomania();
-
-        dueColonne(stato, AEStatuto.romaniaDistretto, paginaWiki, 1, 2, 2, 3);
-        dueColonne(stato, AEStatuto.romaniaCapitale, paginaWiki, 2, 2, 2, 3);
+        dueColonne(AEuropa.romania, AEStatuto.romaniaDistretto, 1, 2, 2, 3);
+        dueColonne(AEuropa.romania, AEStatuto.romaniaCapitale, 2, 2, 2, 3);
     }
 
 
@@ -548,10 +496,7 @@ public class RegioneLogic extends ALogic {
      * Distretti bulgari (28) <br>
      */
     public void bulgaria() {
-        String paginaWiki = "ISO_3166-2:BG";
-        Stato stato = statoLogic.getBulgaria();
-
-        dueColonne(stato, AEStatuto.bulgaria, paginaWiki, 1, 2, 2, 3);
+        dueColonne(AEuropa.bulgaria, AEStatuto.bulgaria, 1, 2, 2, 3);
     }
 
 
@@ -559,10 +504,7 @@ public class RegioneLogic extends ALogic {
      * Voivodati polacchi (16) <br>
      */
     public void polonia() {
-        String paginaWiki = "ISO_3166-2:PL";
-        Stato stato = statoLogic.getPolonia();
-
-        dueColonne(stato, AEStatuto.polonia, paginaWiki, 1, 2, 2, 3);
+        dueColonne(AEuropa.polonia, AEStatuto.polonia, 1, 2, 2, 3);
     }
 
 
@@ -570,10 +512,7 @@ public class RegioneLogic extends ALogic {
      * Regioni danesi (5) <br>
      */
     public void danimarca() {
-        String paginaWiki = "ISO_3166-2:DK";
-        Stato stato = statoLogic.getDanimarca();
-
-        dueColonne(stato, AEStatuto.danimarca, paginaWiki, 1, 2, 1, 2);
+        dueColonne(AEuropa.danimarca, AEStatuto.danimarca, 1, 2, 1, 2);
     }
 
 
@@ -584,7 +523,7 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:SI";
         List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
-        Stato stato = statoLogic.getSlovenia();
+        Stato stato = AEuropa.slovenia.getStato();;
         String iso = VUOTA;
         String sigla = VUOTA;
 
@@ -604,19 +543,19 @@ public class RegioneLogic extends ALogic {
     /**
      * Costruzione utilizzando un template <br>
      */
-    private void templateList(Stato stato, AEStatuto status, String paginaWiki, String isoTag, int posTabella, int rigaIniziale, int numColonna) {
+    private void templateList(AEuropa aEuropa, AEStatuto status, int posTabella, int rigaIniziale, int numColonna) {
         List<WrapDueStringhe> listaWrap;
         String nome;
         String sigla;
         String iso;
 
-        listaWrap = wiki.getTemplateList(paginaWiki, posTabella, rigaIniziale, numColonna);
+        listaWrap = wiki.getTemplateList(aEuropa.getPaginaWiki(), posTabella, rigaIniziale, numColonna);
         if (listaWrap != null && listaWrap.size() > 0) {
             for (WrapDueStringhe wrap : listaWrap) {
                 nome = wrap.getSeconda();
                 sigla = wrap.getPrima();
-                iso = isoTag + sigla;
-                creaIfNotExist(nome, stato, iso, sigla, status);
+                iso = aEuropa.getIsoTag() + sigla;
+                creaIfNotExist(nome, aEuropa.getStato(), iso, sigla, status);
             }
         }
     }
@@ -625,19 +564,19 @@ public class RegioneLogic extends ALogic {
     /**
      * Costruzione utilizzando due colonne <br>
      */
-    private void dueColonne(Stato stato, AEStatuto status, String paginaWiki, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
+    private void dueColonne(AEuropa aEuropa, AEStatuto status, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
         List<WrapDueStringhe> listaWrap;
         String nome;
         String sigla;
         String iso;
 
-        listaWrap = wiki.getDueColonne(paginaWiki, posTabella, rigaIniziale, numColonnaUno, numColonnaDue);
+        listaWrap = wiki.getDueColonne(aEuropa.getPaginaWiki(), posTabella, rigaIniziale, numColonnaUno, numColonnaDue);
         if (listaWrap != null && listaWrap.size() > 0) {
             for (WrapDueStringhe wrap : listaWrap) {
                 nome = wrap.getSeconda();
                 iso = wrap.getPrima();
                 sigla = text.levaTestaDa(iso, TRATTINO);
-                creaIfNotExist(nome, stato, iso, sigla, status);
+                creaIfNotExist(nome, aEuropa.getStato(), iso, sigla, status);
             }
         }
     }

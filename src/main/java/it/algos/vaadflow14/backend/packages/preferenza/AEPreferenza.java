@@ -204,7 +204,7 @@ public enum AEPreferenza {
 
 
     @Component
-    public static class MeseServiceInjector {
+    public static class APreferenzaServiceInjector {
 
         @Autowired
         private APreferenzaService preferenzaService;
@@ -216,7 +216,6 @@ public enum AEPreferenza {
                 pref.setPreferenzaService(preferenzaService);
             }
         }
-
     }
 
 

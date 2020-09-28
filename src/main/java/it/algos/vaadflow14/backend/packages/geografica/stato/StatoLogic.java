@@ -8,6 +8,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AEuropa;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
@@ -307,7 +308,7 @@ public class StatoLogic extends ALogic {
         combo.setRequired(false);
 
         combo.setItems(items);
-        combo.setValue(getItalia());
+        combo.setValue(AEuropa.italia.getStato());
 
         if (AEPreferenza.usaBandiereStati.is()) {
             combo = addBandiere(combo);
@@ -336,104 +337,104 @@ public class StatoLogic extends ALogic {
     }
 
 
-    public Stato getItalia() {
-        return findById("italia");
-    }
-
-
-    public Stato getFrancia() {
-        return findById("francia");
-    }
-
-
-    public Stato getSvizzera() {
-        return findById("svizzera");
-    }
-
-
-    public Stato getAustria() {
-        return findById("austria");
-    }
-
-
-    public Stato getGermania() {
-        return findById("germania");
-    }
-
-
-    public Stato getSpagna() {
-        return findById("spagna");
-    }
-
-
-    public Stato getPortogallo() {
-        return findById("portogallo");
-    }
-
-
-    public Stato getSlovenia() {
-        return findById("slovenia");
-    }
-
-
-    public Stato getBelgio() {
-        return findById("belgio");
-    }
-
-
-    public Stato getOlanda() {
-        return findById("paesibassi");
-    }
-
-
-    public Stato getCroazia() {
-        return findById("croazia");
-    }
-
-
-    public Stato getAlbania() {
-        return findById("albania");
-    }
-
-
-    public Stato getGrecia() {
-        return findById("grecia");
-    }
-
-
-    public Stato getCechia() {
-        return findById("repubblicaceca");
-    }
-
-
-    public Stato getSlovacchia() {
-        return findById("slovacchia");
-    }
-
-
-    public Stato getUngheria() {
-        return findById("ungheria");
-    }
-
-
-    public Stato getRomania() {
-        return findById("romania");
-    }
-
-
-    public Stato getBulgaria() {
-        return findById("bulgaria");
-    }
-
-
-    public Stato getPolonia() {
-        return findById("polonia");
-    }
-
-
-    public Stato getDanimarca() {
-        return findById("danimarca");
-    }
+//    public Stato getItalia() {
+//        return findById("italia");
+//    }
+//
+//
+//    public Stato getFrancia() {
+//        return findById("francia");
+//    }
+//
+//
+//    public Stato getSvizzera() {
+//        return findById("svizzera");
+//    }
+//
+//
+//    public Stato getAustria() {
+//        return findById("austria");
+//    }
+//
+//
+//    public Stato getGermania() {
+//        return findById("germania");
+//    }
+//
+//
+//    public Stato getSpagna() {
+//        return findById("spagna");
+//    }
+//
+//
+//    public Stato getPortogallo() {
+//        return findById("portogallo");
+//    }
+//
+//
+//    public Stato getSlovenia() {
+//        return findById("slovenia");
+//    }
+//
+//
+//    public Stato getBelgio() {
+//        return findById("belgio");
+//    }
+//
+//
+//    public Stato getOlanda() {
+//        return findById("paesibassi");
+//    }
+//
+//
+//    public Stato getCroazia() {
+//        return findById("croazia");
+//    }
+//
+//
+//    public Stato getAlbania() {
+//        return findById("albania");
+//    }
+//
+//
+//    public Stato getGrecia() {
+//        return findById("grecia");
+//    }
+//
+//
+//    public Stato getCechia() {
+//        return findById("repubblicaceca");
+//    }
+//
+//
+//    public Stato getSlovacchia() {
+//        return findById("slovacchia");
+//    }
+//
+//
+//    public Stato getUngheria() {
+//        return findById("ungheria");
+//    }
+//
+//
+//    public Stato getRomania() {
+//        return findById("romania");
+//    }
+//
+//
+//    public Stato getBulgaria() {
+//        return findById("bulgaria");
+//    }
+//
+//
+//    public Stato getPolonia() {
+//        return findById("polonia");
+//    }
+//
+//
+//    public Stato getDanimarca() {
+//        return findById("danimarca");
+//    }
 
 
 }

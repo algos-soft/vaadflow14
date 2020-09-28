@@ -1,5 +1,12 @@
 package it.algos.vaadflow14.backend.enumeration;
 
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.service.AMongoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -60,24 +67,80 @@ public enum AEuropa {
 
     ungheria("ungheria", "HU"),
 
+    svizzera("svizzera", "CH"),
+
+    albania("albania", "AL"),
+
+    slovenia("slovenia", "SI"),
+
     ;
 
     private String nome;
 
-    private String isoTag;
+    private String iso;
 
     private String paginaWiki;
 
+    //--Link injettato da un metodo static
+    private AMongoService mongo;
 
-    AEuropa(String nome, String isoTag) {
-        this(nome, isoTag, "ISO_3166-2:" + isoTag);
+
+    AEuropa(String nome, String iso) {
+        this(nome, iso, "ISO_3166-2:" + iso);
     }
 
 
-    AEuropa(String nome, String isoTag, String paginaWiki) {
+    AEuropa(String nome, String iso, String paginaWiki) {
         this.nome = nome;
-        this.isoTag = isoTag;
+        this.iso = iso;
         this.paginaWiki = paginaWiki;
+    }
+
+
+    public void setMongo(AMongoService mongo) {
+        this.mongo = mongo;
+    }
+
+
+    public String getNome() {
+        return nome;
+    }
+
+
+    public String getIso() {
+        return iso;
+    }
+
+
+    public String getIsoTag() {
+        return iso + "-";
+    }
+
+
+    public String getPaginaWiki() {
+        return paginaWiki;
+    }
+
+
+    public Stato getStato() {
+        return (Stato) mongo.findById(Stato.class, nome);
+    }
+
+
+    @Component
+    public static class AMongoServiceInjector {
+
+        @Autowired
+        private AMongoService mongo;
+
+
+        @PostConstruct
+        public void postConstruct() {
+            for (AEuropa aEuropa : AEuropa.values()) {
+                aEuropa.setMongo(mongo);
+            }
+        }
+
     }
 
 }
