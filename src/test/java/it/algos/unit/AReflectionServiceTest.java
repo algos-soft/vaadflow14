@@ -153,28 +153,28 @@ public class AReflectionServiceTest extends ATest {
     @DisplayName("3 - Nomi dei fields pubblici della entity")
     void getFieldsName() {
         previstoIntero = 7;
-        lista = service.getFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(UTENTE_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getFieldsName(UTENTE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(UTENTE_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 4;
-        lista = service.getFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(COMPANY_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getFieldsName(COMPANY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(COMPANY_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 5;
-        lista = service.getFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(MESE_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getFieldsName(MESE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(MESE_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 4;
-        lista = service.getFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(SECOLO_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getFieldsName(SECOLO_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
     }
 
 
@@ -183,28 +183,28 @@ public class AReflectionServiceTest extends ATest {
     @DisplayName("4 - Nomi dei fields pubblici della entity e delle superclassi")
     void getAllFieldsName() {
         previstoIntero = 9;
-        lista = service.getAllFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(UTENTE_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getAllFieldsName(UTENTE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(UTENTE_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 5;
-        lista = service.getAllFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(COMPANY_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getAllFieldsName(COMPANY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(COMPANY_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 6;
-        lista = service.getAllFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(MESE_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getAllFieldsName(MESE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(MESE_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
 
         previstoIntero = 5;
-        lista = service.getAllFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(lista);
-        printName(SECOLO_CLASS, "getFields", lista);
-        assertEquals(previstoIntero, lista.size());
+        listaStr = service.getAllFieldsName(SECOLO_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getFields", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
     }
 
 

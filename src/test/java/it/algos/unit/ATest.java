@@ -14,10 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -192,7 +192,6 @@ public abstract class ATest {
 
     protected AEntity entityBean;
 
-    protected List<AEntity> listaBean;
 
     protected Query query;
 
@@ -202,9 +201,12 @@ public abstract class ATest {
 
     protected List<AFiltro> listaFiltri;
 
-    protected List<String> lista;
+    protected List<String> listaStr;
+
+    protected List<AEntity> listaBean;
 
     protected byte[] bytes;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -264,6 +266,8 @@ public abstract class ATest {
         file.array = array;
         file.logger = logger;
         date.math = math;
+        sort = null;
+
     }
 
 
@@ -293,7 +297,7 @@ public abstract class ATest {
         filtro = null;
         listaFiltri = null;
         listaBean = null;
-        lista = null;
+        listaStr = null;
         bytes = null;
     }
 

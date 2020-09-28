@@ -153,20 +153,20 @@ public class AWikiServiceTest extends ATest {
     @DisplayName("5 - legge una colonna")
     public void getColonna() {
         sorgente = "ISO_3166-2:ES";
-        lista = service.getColonna(sorgente, 1, 2, 2);
-        assertNotNull(lista);
+        listaStr = service.getColonna(sorgente, 1, 2, 2);
+        assertNotNull(listaStr);
         System.out.println(VUOTA);
-        System.out.println("5 - Template Spagna: " + lista.size());
+        System.out.println("5 - Template Spagna: " + listaStr.size());
         System.out.println(VUOTA);
-        printColonna(lista);
+        printColonna(listaStr);
 
         sorgente = "ISO_3166-2:IT";
-        lista = service.getColonna(sorgente, 2, 2, 2);
-        assertNotNull(lista);
+        listaStr = service.getColonna(sorgente, 2, 2, 2);
+        assertNotNull(listaStr);
         System.out.println(VUOTA);
-        System.out.println("5 - province: " + lista.size());
+        System.out.println("5 - province: " + listaStr.size());
         System.out.println(VUOTA);
-        printColonna(lista);
+        printColonna(listaStr);
     }
 
 
@@ -176,10 +176,10 @@ public class AWikiServiceTest extends ATest {
     public void getTemplateBandierine() {
         sorgente = "ISO_3166-2:ES";
         previstoIntero = 17;
-        lista = service.getColonna(sorgente, 1, 2, 2);
-        assertNotNull(lista);
-        assertEquals(previstoIntero, lista.size());
-        listaWrap = service.getTemplateList(lista);
+        listaStr = service.getColonna(sorgente, 1, 2, 2);
+        assertNotNull(listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+        listaWrap = service.getTemplateList(listaStr);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -587,7 +587,7 @@ public class AWikiServiceTest extends ATest {
 
     private void printColonna(List<String> listaColonna) {
         if (array.isValid(listaColonna)) {
-            for (String stringa : lista) {
+            for (String stringa : listaStr) {
                 System.out.println(stringa);
             }
         }

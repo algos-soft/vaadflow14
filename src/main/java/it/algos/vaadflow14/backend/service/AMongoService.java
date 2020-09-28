@@ -432,6 +432,26 @@ public class AMongoService<capture> extends AAbstractService {
 
 
     /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param entityClazz      corrispondente ad una collection sul database mongoDB
+     * @param keyPropertyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    public AEntity findByKey(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        if (text.isValid(keyPropertyName)) {
+            return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
+        } else {
+            return findById(entityClazz, keyPropertyValue);
+        }
+    }
+
+
+    /**
      * Cerca una singola entity di una collection con un determinato valore di una property. <br>
      * Costruisce una query semplice, di uguaglianza del valore per la property indicata <br>
      * Per altre query, costruirle direttamente <br>

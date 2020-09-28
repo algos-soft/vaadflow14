@@ -1270,18 +1270,18 @@ public abstract class ALogic implements AILogic {
     /**
      * Retrieves an entity by its keyProperty.
      *
-     * @param keyValue must not be {@literal null}.
+     * @param keyPropertyValue must not be {@literal null}.
      *
      * @return the entity with the given id or {@literal null} if none found
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findByKey(String keyValue) {
+    public AEntity findByKey(String keyPropertyValue) {
         keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
-            return mongo.findOneUnique(entityClazz, keyPropertyName,keyValue);
+            return mongo.findOneUnique(entityClazz, keyPropertyName,keyPropertyValue);
         } else {
-            return findById(keyValue);
+            return findById(keyPropertyValue);
         }
     }
 

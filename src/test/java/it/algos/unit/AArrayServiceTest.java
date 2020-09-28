@@ -3,7 +3,6 @@ package it.algos.unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import org.junit.jupiter.api.*;
-import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
@@ -81,7 +80,7 @@ public class AArrayServiceTest extends ATest {
      */
     @Test
     void isValid() {
-        lista = new ArrayList<>();
+        listaStr = new ArrayList<>();
         ottenutoBooleano = array.isValid((List) null);
         Assertions.assertFalse(ottenutoBooleano);
 
@@ -94,19 +93,19 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isValid((new ArrayList()));
         Assertions.assertFalse(ottenutoBooleano);
 
-        lista.add(null);
-        ottenutoBooleano = array.isValid(lista);
+        listaStr.add(null);
+        ottenutoBooleano = array.isValid(listaStr);
         Assertions.assertFalse(ottenutoBooleano);
 
-        lista.add(PIENA);
-        ottenutoBooleano = array.isValid(lista);
+        listaStr.add(PIENA);
+        ottenutoBooleano = array.isValid(listaStr);
         Assertions.assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid((Collection) null);
         Assertions.assertFalse(ottenutoBooleano);
 
-        lista = LIST_STRING;
-        ottenutoBooleano = array.isValid(lista);
+        listaStr = LIST_STRING;
+        ottenutoBooleano = array.isValid(listaStr);
         Assertions.assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid(LIST_OBJECT);
@@ -138,7 +137,7 @@ public class AArrayServiceTest extends ATest {
      */
     @Test
     void isEmpty() {
-        lista = new ArrayList<>();
+        listaStr = new ArrayList<>();
         ottenutoBooleano = array.isEmpty((List) null);
         Assertions.assertTrue(ottenutoBooleano);
 
@@ -151,16 +150,16 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isEmpty((new ArrayList()));
         Assertions.assertTrue(ottenutoBooleano);
 
-        lista.add(null);
-        ottenutoBooleano = array.isEmpty(lista);
+        listaStr.add(null);
+        ottenutoBooleano = array.isEmpty(listaStr);
         Assertions.assertTrue(ottenutoBooleano);
 
-        lista.add(PIENA);
-        ottenutoBooleano = array.isEmpty(lista);
+        listaStr.add(PIENA);
+        ottenutoBooleano = array.isEmpty(listaStr);
         Assertions.assertTrue(ottenutoBooleano);
 
-        lista = LIST_STRING;
-        ottenutoBooleano = array.isEmpty(lista);
+        listaStr = LIST_STRING;
+        ottenutoBooleano = array.isEmpty(listaStr);
         Assertions.assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty(LIST_OBJECT);
