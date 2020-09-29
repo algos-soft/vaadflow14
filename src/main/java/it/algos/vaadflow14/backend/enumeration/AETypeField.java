@@ -46,7 +46,7 @@ public enum AETypeField {
     //    integernotzero,
     //    onedecimal,
 
-    combo(8, 0),
+    combo(8, 10),
 
     //    multicombo,
     //    combolinkato,

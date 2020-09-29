@@ -700,6 +700,7 @@ public class AAnnotationService extends AAbstractService {
         return headerAlert;
     }
 
+
     /**
      * Flag per usare il field della superclasse AEntity. <br>
      *
@@ -1484,6 +1485,7 @@ public class AAnnotationService extends AAbstractService {
         return widthTxt;
     }
 
+
     /**
      * Get the width of the property.
      *
@@ -1604,6 +1606,72 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the class of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the class
+     */
+    @SuppressWarnings("all")
+    public Class getLinkClass(Field reflectionJavaField) {
+        Class linkClazz = null;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            linkClazz = annotation.linkClazz();
+        }
+
+        return linkClazz == Object.class ? null : linkClazz;
+    }
+
+    /**
+     * Get the properties (String) of the linked Grid.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the items
+     */
+    public List<String> getLinkProperties(final Field reflectionJavaField) {
+        List<String> properties = null;
+        String value = VUOTA;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            value = annotation.properties();
+        }
+
+        if (text.isValid(value)) {
+            properties = array.fromString(value);
+        }
+
+        return properties;
+    }
+
+    /**
+     * Get the property for linked classes.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the width of the field
+     */
+    public String getLinkProperty(final Field reflectionJavaField) {
+        String linkProperty = VUOTA;
+        AIField annotation = null;
+
+        if (reflectionJavaField == null) {
+            return null;
+        }
+
+        annotation = this.getAIField(reflectionJavaField);
+        if (annotation != null) {
+            linkProperty = annotation.linkProperty();
+        }
+
+        return linkProperty;
+    }
+
+
+    /**
      * Get the status of specific method for items.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
@@ -1662,7 +1730,7 @@ public class AAnnotationService extends AAbstractService {
             message = annotation.message();
         }
 
-        if (message.equals("{javax.validation.constraints.NotBlank.message}")||text.isEmpty(message)) {
+        if (message.equals("{javax.validation.constraints.NotBlank.message}") || text.isEmpty(message)) {
             message = VUOTA;
             type = getFormType(reflectionJavaField);
             if (type == AETypeField.text || type == AETypeField.password || type == AETypeField.phone) {

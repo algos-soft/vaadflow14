@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
@@ -15,7 +16,6 @@ import it.algos.vaadflow14.ui.validator.*;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -176,6 +176,9 @@ public class AFieldService extends AAbstractService {
                     height = annotation.getFormHeight(reflectionJavaField);
                     field = appContext.getBean(AImageField.class);
                     ((AImageField) field).setHeight(height);
+                    break;
+                case gridShowOnly:
+                    field = creaGridField(entityBean, reflectionJavaField);
                     break;
                 default:
                     logger.warn("Switch - caso non definito per type=" + type, this.getClass(), "creaOnly");
@@ -403,7 +406,7 @@ public class AFieldService extends AAbstractService {
         List items = null;
 
         usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
-        comboClazz= annotation.getComboClass(reflectionJavaField);
+        comboClazz = annotation.getComboClass(reflectionJavaField);
         if (usaComboMethod) {
             logicClazz = annotation.getLogicClass(reflectionJavaField);
             logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
@@ -424,39 +427,39 @@ public class AFieldService extends AAbstractService {
     }
 
 
-    /**
-     *
-     */
-    public List getComboItems(Field reflectionJavaField) {
-        List items = null;
-        Class comboClazz;
-        Class logicClazz;
-        boolean usaComboMethod;
-        Sort sort;
-        String methodName;
-        Method metodo;
-        ALogic logicInstance;
-
-        comboClazz = annotation.getComboClass(reflectionJavaField);
-        sort = annotation.getSort(comboClazz);
-        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
-
-        if (usaComboMethod) {
-            logicClazz = annotation.getLogicClass(reflectionJavaField);
-            methodName = annotation.getMethodName(reflectionJavaField);
-            try {
-                metodo = logicClazz.getDeclaredMethod(methodName);
-                logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
-                items = (List) metodo.invoke(logicInstance);
-            } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "getComboItems");
-            }
-        } else {
-            items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
-        }
-
-        return items;
-    }
+    //    /**
+    //     *
+    //     */
+    //    public List getComboItems(Field reflectionJavaField) {
+    //        List items = null;
+    //        Class comboClazz;
+    //        Class logicClazz;
+    //        boolean usaComboMethod;
+    //        Sort sort;
+    //        String methodName;
+    //        Method metodo;
+    //        ALogic logicInstance;
+    //
+    //        comboClazz = annotation.getComboClass(reflectionJavaField);
+    //        sort = annotation.getSort(comboClazz);
+    //        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
+    //
+    //        if (usaComboMethod) {
+    //            logicClazz = annotation.getLogicClass(reflectionJavaField);
+    //            methodName = annotation.getMethodName(reflectionJavaField);
+    //            try {
+    //                metodo = logicClazz.getDeclaredMethod(methodName);
+    //                logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
+    //                items = (List) metodo.invoke(logicInstance);
+    //            } catch (Exception unErrore) {
+    //                logger.error(unErrore, this.getClass(), "getComboItems");
+    //            }
+    //        } else {
+    //            items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
+    //        }
+    //
+    //        return items;
+    //    }
 
 
     /**
@@ -484,6 +487,28 @@ public class AFieldService extends AAbstractService {
         }
 
         return items;
+    }
+
+
+    /**
+     *
+     */
+    public AGridField creaGridField(AEntity entityBean, Field reflectionJavaField) {
+        List items;
+        Class linkClazz;
+        List<String> gridProperties;
+        String linkProperty;
+
+        if (entityBean == null || reflectionJavaField == null) {
+            return null;
+        }
+
+        linkClazz = annotation.getLinkClass(reflectionJavaField);
+        linkProperty = annotation.getLinkProperty(reflectionJavaField);
+        items = mongo.findAll(linkClazz, linkProperty, entityBean);
+        gridProperties = annotation.getLinkProperties(reflectionJavaField);
+
+        return appContext.getBean(AGridField.class, Regione.class, gridProperties, items);
     }
 
 }

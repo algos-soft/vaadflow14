@@ -8,9 +8,10 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AEuropa;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.company.Company;
+import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
+import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
+import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -20,9 +21,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.TRE_PUNTI;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -60,6 +62,15 @@ public class StatoLogic extends ALogic {
      */
     @Autowired
     public AResourceService resourceService;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ContinenteLogic continenteLogic;
 
 
     /**
@@ -134,7 +145,14 @@ public class StatoLogic extends ALogic {
     }
 
 
-
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+    @Override
+    protected void fixMappaComboBox() {
+        super.creaComboBox("continente");
+    }
 
 
     /**
@@ -151,8 +169,8 @@ public class StatoLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Stato creaIfNotExist(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera) {
-        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera));
+    public Stato creaIfNotExist(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera, Continente continente) {
+        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
     }
 
 
@@ -164,7 +182,7 @@ public class StatoLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Stato newEntity() {
-        return newEntity(0, VUOTA, false, VUOTA, VUOTA, VUOTA, VUOTA, VUOTA);
+        return newEntity(0, VUOTA, false, VUOTA, VUOTA, VUOTA, VUOTA, VUOTA, (Continente) null);
     }
 
 
@@ -185,7 +203,7 @@ public class StatoLogic extends ALogic {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Stato newEntity(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera) {
+    public Stato newEntity(int ordine, String stato, boolean ue, String numerico, String alfatre, String alfadue, String locale, String bandiera, Continente continente) {
         Stato newEntityBean = Stato.builderStato()
 
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
@@ -203,6 +221,8 @@ public class StatoLogic extends ALogic {
                 .locale(text.isValid(locale) ? locale : null)
 
                 .bandiera(text.isValid(bandiera) ? bandiera : null)
+
+                .continente(continente)
 
                 .build();
 
@@ -258,10 +278,15 @@ public class StatoLogic extends ALogic {
         int posCorrente;
         boolean ue;
         String bandieraTxt = VUOTA;
+        Map<String, Continente> mappa = creaMappa();
+        Continente continente = null;
+        Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
+        String alfaTre = VUOTA;
 
         List<List<String>> listaStati = wiki.getStati();
         if (array.isValid(listaStati)) {
             for (List<String> riga : listaStati) {
+                continente = null;
                 nome = riga.get(0);
                 posEuropeo = AEStatoEuropeo.getPosizione(nome);
                 if (posEuropeo > 0) {
@@ -272,16 +297,57 @@ public class StatoLogic extends ALogic {
                     posCorrente = pos;
                     ue = false;
                 }
+                if (text.isValid(riga.get(2))) {
+                    alfaTre = riga.get(2);
+                }
                 if (text.isValid(riga.get(3))) {
                     bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
                 }
+                if (text.isValid(alfaTre)) {
+                    if (mappa.get(alfaTre) != null) {
+                        continente = mappa.get(alfaTre);
+                    }
+                }
+                continente = continente != null ? continente : continenteDefault;
 
-                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt);
+                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
             }
         }
 
         return mongo.isValid(entityClazz);
     }
+
+
+    private Map<String, Continente> creaMappa() {
+        Map<String, Continente> mappa = new HashMap<>();
+        List<String> lista;
+        Continente continente;
+        String keyTag;
+
+        for (AEContinente aeContinente : AEContinente.values()) {
+            keyTag = aeContinente.name();
+            continente = continenteLogic.findById(keyTag);
+            lista = resourceService.leggeListaConfig(keyTag, false);
+            if (array.isValid(lista)) {
+                for (String riga : lista) {
+                    mappa.put(riga, continente);
+                }
+            }
+        }
+
+//        //--africa
+//        keyTag = "africa";
+//        continente = continenteLogic.findById(keyTag);
+//        lista = resourceService.leggeListaConfig(keyTag, false);
+//        if (array.isValid(lista)) {
+//            for (String riga : lista) {
+//                mappa.put(riga, continente);
+//            }
+//        }
+
+        return mappa;
+    }
+
 
 
     /**
@@ -308,7 +374,7 @@ public class StatoLogic extends ALogic {
         combo.setRequired(false);
 
         combo.setItems(items);
-        combo.setValue(AEuropa.italia.getStato());
+        combo.setValue(AEStato.italia.getStato());
 
         if (AEPreferenza.usaBandiereStati.is()) {
             combo = addBandiere(combo);

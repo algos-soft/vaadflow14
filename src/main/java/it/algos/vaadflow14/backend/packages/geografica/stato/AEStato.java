@@ -1,6 +1,5 @@
-package it.algos.vaadflow14.backend.enumeration;
+package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ import javax.annotation.PostConstruct;
  * Date: lun, 28-set-2020
  * Time: 18:35
  */
-public enum AEuropa {
+public enum AEStato {
     italia("italia", "IT"),
 
     austria("austria", "AT"),
@@ -73,6 +72,12 @@ public enum AEuropa {
 
     slovenia("slovenia", "SI"),
 
+    marocco("marocco", "MA"),
+
+    algeria("algeria", "DZ"),
+
+    tunisia("tunisia", "TN"),
+
     ;
 
     private String nome;
@@ -85,12 +90,12 @@ public enum AEuropa {
     private AMongoService mongo;
 
 
-    AEuropa(String nome, String iso) {
+    AEStato(String nome, String iso) {
         this(nome, iso, "ISO_3166-2:" + iso);
     }
 
 
-    AEuropa(String nome, String iso, String paginaWiki) {
+    AEStato(String nome, String iso, String paginaWiki) {
         this.nome = nome;
         this.iso = iso;
         this.paginaWiki = paginaWiki;
@@ -136,7 +141,7 @@ public enum AEuropa {
 
         @PostConstruct
         public void postConstruct() {
-            for (AEuropa aEuropa : AEuropa.values()) {
+            for (AEStato aEuropa : AEStato.values()) {
                 aEuropa.setMongo(mongo);
             }
         }

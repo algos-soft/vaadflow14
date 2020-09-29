@@ -7,9 +7,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AEuropa;
+import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
@@ -327,7 +326,7 @@ public class ProvinciaLogic extends ALogic {
         String nome;
         String sigla;
         Regione regione;
-        Stato stato = AEuropa.italia.getStato();
+        Stato stato = AEStato.italia.getStato();
         String iso;
 
         listaWrapTre = wiki.getTemplateList(wikiTitle, posTabella, 2, 1, 3);

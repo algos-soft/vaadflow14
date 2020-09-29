@@ -83,7 +83,7 @@ public class AImageField extends AField<String> {
 
 
     protected Upload fixUpload() {
-                MemoryBuffer buffer = new MemoryBuffer();
+        MemoryBuffer buffer = new MemoryBuffer();
         HorizontalLayout layer = new HorizontalLayout();
         HorizontalLayout output = new HorizontalLayout();
         Upload upload = new Upload(buffer);
@@ -121,10 +121,9 @@ public class AImageField extends AField<String> {
         StreamResource resource = null;
         try {
             resource = new StreamResource("dummyImageName.jpg", () -> new ByteArrayInputStream(bytesDue));
+            imageField.setSrc(resource);
         } catch (Exception unErrore) {
         }
-
-        imageField.setSrc(resource);
     }
 
 
@@ -192,7 +191,8 @@ public class AImageField extends AField<String> {
         return new Text(text);
     }
 
-@Deprecated
+
+    @Deprecated
     private void showOutput(String text, Component content, HasComponents outputContainer) {
         HtmlComponent p = new HtmlComponent(Tag.P);
         p.getElement().setText(text);

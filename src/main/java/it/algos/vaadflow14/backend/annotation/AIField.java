@@ -68,6 +68,26 @@ public @interface AIField {
     Class<?> comboClazz() default Object.class;
 
     /**
+     * (Optional) property
+     * Utilizzato nei Link.
+     * Defaults to vuota.
+     *
+     * @return the string
+     */
+    String linkProperty() default VUOTA;
+
+    /**
+     * (Optional) valori (properties) delle colonne di una grid linkata
+     * Presentati in successione e separati da virgola
+     * Vengono poi convertiti in una List
+     * Defaults to vuota.
+     *
+     * @return the string
+     */
+    String properties() default VUOTA;
+
+
+    /**
      * (Optional) valori (items) della enumeration
      * Presentati in successione e separati da virgola
      * Vengono poi convertiti in una List
@@ -233,13 +253,6 @@ public @interface AIField {
      */
     String methodName() default "findItems";
 
-    /**
-     * (Optional) property name for reflection
-     * Defaults to vuota.
-     *
-     * @return the string
-     */
-    String propertyLinkata() default VUOTA;
 
     /**
      * (Optional) placeholder for empty field

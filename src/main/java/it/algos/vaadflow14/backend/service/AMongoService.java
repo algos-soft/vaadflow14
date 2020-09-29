@@ -364,6 +364,33 @@ public class AMongoService<capture> extends AAbstractService {
 
 
     /**
+     * Cerca tutte le entities di una collection filtrate con una property. <br>
+     * Selects documents in a collection or view and returns a list of the selected documents. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return lista di entityBeans
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
+     */
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+        if (entityClazz == null) {
+            return null;
+        }
+        if (text.isEmpty(propertyName) || propertyValue == null) {
+            return findAll(entityClazz);
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where(propertyName).is(propertyValue));
+
+        return findAll(entityClazz, query);
+    }
+
+
+    /**
      * Cerca tutte le entities di una collection filtrate con una query. <br>
      * <p>
      * Selects documents in a collection or view and returns a list of the selected documents. <br>

@@ -8,14 +8,19 @@ import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import lombok.*;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Project vaadflow14
@@ -37,8 +42,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
-@AIList(fields = "ordine,bandiera,stato,ue,numerico,alfadue,alfatre,locale")
-@AIForm(fields = "ordine,stato,bandiera,ue,numerico,alfadue,alfatre,locale")
+@AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale")
+@AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale")
 public class Stato extends AEntity {
 
     /**
@@ -65,6 +70,31 @@ public class Stato extends AEntity {
     @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 24)
     @AIColumn(widthEM = 12)
     public String stato;
+
+    /**
+     * bandierina per i popup (facoltativa) <br>
+     */
+    @AIField(type = AETypeField.image, heightEM = 6)
+    @AIColumn(headerIcon = VaadinIcon.GLOBE)
+    public String bandiera;
+
+
+    /**
+     * divisione amministrativa di secondo livello (facoltativa) <br>
+     */
+    @Transient()
+    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "regione,iso,sigla,status")
+    public List<Regione> regioni;
+
+    /**
+     * continente (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    //    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Continente.class, widthEM = 14)
+    @AIColumn(widthEM = 8)
+    public Continente continente;
 
     /**
      * unione europea
@@ -112,13 +142,6 @@ public class Stato extends AEntity {
     @AIField(type = AETypeField.text, widthEM = 10)
     @AIColumn(header = "ISO locale", flexGrow = true)
     public String locale;
-
-    /**
-     * bandierina per i popup (facoltativa) <br>
-     */
-    @AIField(type = AETypeField.image, heightEM = 6)
-    @AIColumn(headerIcon = VaadinIcon.GLOBE)
-    public String bandiera;
 
 
     /**

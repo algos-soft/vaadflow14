@@ -65,6 +65,12 @@ public enum AEStatuto {
 
     polonia("Voivodato polacco"),
 
+    marocco("Regione marocchina"),
+
+    algeria("Provincia algerina"),
+
+    tunisia("Governatorato tunisino"),
+
     ;
 
     private String nome;

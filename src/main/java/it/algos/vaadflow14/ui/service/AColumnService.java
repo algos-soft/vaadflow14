@@ -14,6 +14,8 @@ import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -41,7 +43,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Annotated with @VaadinSessionScope() (obbligatorio) <br>
  */
 @Service
-@VaadinSessionScope()
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AColumnService extends AAbstractService {
 
     /**
@@ -176,6 +178,8 @@ public class AColumnService extends AAbstractService {
                         Image image = resourceService.getBandieraFromMongo(mongoValue);
                         return image != null ? image : new Label("X");
                     }));//end of lambda expressions and anonymous inner class
+                    break;
+                case gridShowOnly:
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "add");

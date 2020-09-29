@@ -1,6 +1,5 @@
 package it.algos.integration;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -17,8 +16,6 @@ import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -108,24 +105,24 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
-    @Order(0)
-    @DisplayName("0 - execute")
-    void execute() {
-        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
-        MongoClient mongoClient = new MongoClient("localhost");
-        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
-        MongoCollection collection = database.getCollection("mese");
-
-        BasicDBObject command = new BasicDBObject("find", "mese");
-        Document alfa = mongoOp.executeCommand(String.valueOf(command));
-//        String gamma = alfa.getString("cursor");
-        ObjectId beta = alfa.getObjectId("cursor");
-        int a = 87;
-        //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
-        //        Object alfga = mongo.mongoOp.executeCommand(jsonCommand);
-
-    }
+    //    @Test
+    //    @Order(0)
+    //    @DisplayName("0 - execute")
+    //    void execute() {
+    //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
+    //        MongoClient mongoClient = new MongoClient("localhost");
+    //        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+    //        MongoCollection collection = database.getCollection("mese");
+    //
+    //        BasicDBObject command = new BasicDBObject("find", "mese");
+    //        Document alfa = mongoOp.executeCommand(String.valueOf(command));
+    ////        String gamma = alfa.getString("cursor");
+    //        ObjectId beta = alfa.getObjectId("cursor");
+    //        int a = 87;
+    //        //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
+    //        //        Object alfga = mongo.mongoOp.executeCommand(jsonCommand);
+    //
+    //    }
 
 
     @Test
@@ -733,7 +730,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(17)
-    @DisplayName("isEsiste")
+    @DisplayName("17 - isEsiste")
     void isEsiste() {
         System.out.println("17 - controlla se esiste");
 
@@ -759,6 +756,37 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(18)
+    @DisplayName("18 - findAll by property")
+    void pertica() {
+        System.out.println("18 - findAll filtrato da una property");
+
+        sorgente = "mese";
+        sorgente2 = "maggio";
+        listaBean = service.findAll((Class) null, VUOTA, VUOTA);
+        Assert.assertNull(listaBean);
+
+        listaBean = service.findAll((Class) null, sorgente, VUOTA);
+        Assert.assertNull(listaBean);
+
+        listaBean = service.findAll((Class) null, sorgente, sorgente2);
+        Assert.assertNull(listaBean);
+
+        previstoIntero = 366;
+        listaBean = service.findAll(Giorno.class, VUOTA, VUOTA);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+
+        previstoIntero = 31;
+        listaBean = service.findAll(Giorno.class, sorgente, sorgente2);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+
+
+    }
+
+
+    @Test
+    @Order(94)
     @DisplayName("insertConKey")
     void insertConKey() {
         //        System.out.println("inserimento di una nuova entity con keyID - controlla le properties uniche");
@@ -781,7 +809,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(20)
+    @Order(95)
     @DisplayName("save")
     void save() {
         //        System.out.println("modifica di una entity esistente");

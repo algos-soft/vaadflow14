@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -49,6 +50,43 @@ public class AResourceService extends AAbstractService {
     public String leggeConfig(String simpleNameFileToBeRead) {
         String tag = "config";
         return fileService.leggeFile(tag + File.separator + simpleNameFileToBeRead);
+    }
+
+
+    /**
+     * Legge una lista di righe di risorse da {project directory}/config/ <br>
+     * La prima riga contiene i titoli
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     * @param compresiTitoli         parte dalla prima riga, altrimenti dalla seconda
+     *
+     * @return lista di righe grezze
+     */
+    public List<String> leggeListaConfig(String simpleNameFileToBeRead, boolean compresiTitoli) {
+        List<String> listaRighe = null;
+        String rawText = leggeConfig(simpleNameFileToBeRead);
+        String[] righe = null;
+
+        if (text.isValid(rawText)) {
+            listaRighe = new ArrayList<>();
+            righe = rawText.split(A_CAPO);
+            if (righe != null && righe.length > 0) {
+                for (String riga : righe) {
+                    riga = text.estrae(riga, GRAFFE_INI, GRAFFE_END);
+                    if (text.isValid(riga)) {
+                        listaRighe.add(riga);
+                    }
+                }
+            }
+        }
+
+        if (listaRighe != null) {
+            if (!compresiTitoli) {
+                listaRighe = listaRighe.subList(1, listaRighe.size());
+            }
+        }
+
+        return listaRighe;
     }
 
 

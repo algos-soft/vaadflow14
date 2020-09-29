@@ -95,6 +95,10 @@ public class AResourceServiceTest extends ATest {
         sorgente = "at.png";
         ottenuto = service.leggeConfig(sorgente);
         assertTrue(text.isValid(ottenuto));
+
+        sorgente = "africa";
+        ottenuto = service.leggeConfig(sorgente);
+        assertTrue(text.isValid(ottenuto));
     }
 
 
@@ -171,7 +175,7 @@ public class AResourceServiceTest extends ATest {
 
         sorgente = "rainbow.png";
         ottenuto = service.getSrc(sorgente);
-        assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         sorgente = "src/main/resources/META-INF/resources/img/"  + sorgente;
         ottenuto = service.getSrc(sorgente);

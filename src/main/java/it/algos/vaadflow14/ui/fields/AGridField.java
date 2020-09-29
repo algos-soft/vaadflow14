@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,14 +33,6 @@ public class AGridField<T> extends AField<Object> {
     @Autowired
     public AColumnService column;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public AArrayService array;
-
 
     private Grid innerField;
 
@@ -52,10 +45,11 @@ public class AGridField<T> extends AField<Object> {
     }
 
 
-    public AGridField(final Class<? extends AEntity> entityClazz, List<String> listaProperties) {
-        innerField = new Grid();
+    public AGridField(final Class<? extends AEntity> entityClazz, List<String> listaProperties, List items) {
+        innerField = new Grid(entityClazz, false);
         this.entityClazz = entityClazz;
         this.listaProperties = listaProperties;
+        this.setItem(items);
         add(innerField);
     }
 
@@ -95,13 +89,12 @@ public class AGridField<T> extends AField<Object> {
 
     @Override
     protected Object generateModelValue() {
-        return innerField;
+        return new ArrayList<>();
     }
 
 
     @Override
     protected void setPresentationValue(Object value) {
-//        innerField.setItems(value);
     }
 
 }

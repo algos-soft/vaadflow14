@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.provincia.Provincia;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
@@ -365,6 +366,7 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList.add(Preferenza.class);
 
         if (FlowVar.usaGeografiaPackages) {
+            FlowVar.menuRouteList.add(Continente.class);
             FlowVar.menuRouteList.add(Stato.class);
             FlowVar.menuRouteList.add(Regione.class);
             FlowVar.menuRouteList.add(Provincia.class);
