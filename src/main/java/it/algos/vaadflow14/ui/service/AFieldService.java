@@ -508,7 +508,7 @@ public class AFieldService extends AAbstractService {
         items = mongo.findAll(linkClazz, linkProperty, entityBean);
         gridProperties = annotation.getLinkProperties(reflectionJavaField);
 
-        return appContext.getBean(AGridField.class, Regione.class, gridProperties, items);
+        return appContext.getBean(AGridField.class, linkClazz, gridProperties, items);
     }
 
 }

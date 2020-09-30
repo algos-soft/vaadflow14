@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_INDEX;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -73,11 +76,15 @@ public class AGridField<T> extends AField<Object> {
      * Aggiunge in automatico le colonne previste in listaProperties <br>
      */
     protected void addColumnsGrid() {
+        innerField.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth("2.5em").setFlexGrow(0);
         if (array.isValid(listaProperties)) {
             for (String propertyName : listaProperties) {
                 column.add(innerField, entityClazz, propertyName);
             }
         }
+        innerField.addAttachListener(event -> {
+            innerField.getColumnByKey(FIELD_INDEX).getElement().executeJs("this.renderer = function(root, column, rowData) {root.textContent = rowData.index + 1}");
+        });
     }
 
 

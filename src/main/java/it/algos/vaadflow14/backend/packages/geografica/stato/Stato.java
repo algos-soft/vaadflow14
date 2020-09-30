@@ -86,6 +86,7 @@ public class Stato extends AEntity {
     @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "regione,iso,sigla,status")
     public List<Regione> regioni;
 
+
     /**
      * continente (obbligatorio)
      * riferimento dinamico CON @DBRef

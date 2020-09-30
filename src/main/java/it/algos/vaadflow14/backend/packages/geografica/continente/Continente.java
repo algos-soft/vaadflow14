@@ -6,7 +6,10 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import lombok.*;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -19,6 +22,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import com.vaadin.flow.component.textfield.TextField;
+
+import java.util.List;
 
 /**
  * Project vaadflow14
@@ -41,7 +46,7 @@ import com.vaadin.flow.component.textfield.TextField;
 @AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, sortProperty = "ordine")
 @AIList(fields = "ordine,nome,abitato", usaRowIndex = false)
-@AIForm(fields = "ordine,nome,abitato")
+@AIForm(fields = "ordine,nome,stati,abitato")
 public class Continente extends AEntity {
 
     /**
@@ -75,6 +80,12 @@ public class Continente extends AEntity {
     @AIColumn(header = "Ab.")
     public boolean abitato;
 
+    /**
+     * divisione amministrativa di secondo livello (facoltativa) <br>
+     */
+    @Transient()
+    @AIField(type = AETypeField.gridShowOnly, caption = "stati presenti", linkClazz = Stato.class, linkProperty = "continente", properties = "stato,alfatre")
+    public List<Stato> stati;
 
     /**
      * @return a string representation of the object.
