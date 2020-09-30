@@ -9,19 +9,19 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
  */
 public enum AEContinente {
 
-    europa("europa", true),
+    europa("Europa", true),
 
-    asia("asia", true),
+    asia("Asia", true),
 
-    africa("africa", true),
+    africa("Africa", true),
 
-    nordamerica("nordamerica", true),
+    nordamerica("Nordamerica", true),
 
-    sudamerica("sudamerica", true),
+    sudamerica("Sudamerica", true),
 
-    oceania("oceania", true),
+    oceania("Oceania", true),
 
-    antartide("antartide", false),
+    antartide("Antartide", false),
 
     ;
 
@@ -46,5 +46,19 @@ public enum AEContinente {
 
     public boolean isAbitato() {
         return abitato;
+    }
+
+
+    /**
+     * Returns the name of this enum constant, as contained in the
+     * declaration.  This method may be overridden, though it typically
+     * isn't necessary or desirable.  An enum type should override this
+     * method when a more "programmer-friendly" string form exists.
+     *
+     * @return the name of this enum constant
+     */
+    @Override
+    public String toString() {
+        return getNome();
     }
 }

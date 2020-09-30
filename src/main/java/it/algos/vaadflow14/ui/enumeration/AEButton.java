@@ -22,7 +22,9 @@ public enum AEButton {
 
     deleteAll("Delete all", VaadinIcon.TRASH, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
 
-    reset("Reset", VaadinIcon.REFRESH, "error", AEAction.reset, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
+    resetList("Reset", VaadinIcon.REFRESH, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
+
+    resetForm("Reset", VaadinIcon.REFRESH, "error", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
     wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre la corrispondente pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
 

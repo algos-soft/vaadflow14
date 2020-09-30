@@ -7,6 +7,7 @@ import com.mongodb.client.result.DeleteResult;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -816,6 +818,44 @@ public class AMongoService<capture> extends AAbstractService {
         }
 
         return status;
+    }
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaEntities di elementi da cancellare
+     * @param clazz         della collezione
+     *
+     * @return lista
+     */
+    public DeleteResult delete(List<? extends AEntity> listaEntities, Class<? extends AEntity> clazz) {
+        ArrayList<String> listaId = new ArrayList<String>();
+
+        for (AEntity entity : listaEntities) {
+            if (entity != null) {
+                listaId.add(entity.id);
+            } else {
+                logger.error("Algos - Manca una entity in AMongoService.delete()");
+            }
+        }
+
+        return deleteBulk(listaId, clazz);
+    }
+
+
+    /**
+     * Delete a list of entities.
+     *
+     * @param listaId di keyID da cancellare
+     * @param clazz   della collezione
+     *
+     * @return lista
+     */
+    public DeleteResult deleteBulk(List<String> listaId, Class<? extends AEntity> clazz) {
+        Bson condition = new Document("$in", listaId);
+        Bson filter = new Document("_id", condition);
+        return getCollection(clazz).deleteMany(filter);
     }
 
 

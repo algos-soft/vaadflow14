@@ -718,6 +718,9 @@ public class AWikiService extends AAbstractService {
                             prima = text.levaTestaDa(prima, PIPE);
                         }
                     }
+                    if (seconda.contains(QUADRE_INI) && seconda.contains(QUADRE_END)) {
+                        seconda = text.estrae(seconda, QUADRE_INI, QUADRE_END);
+                    }
                     if (seconda.contains(PIPE)) {
                         if (seconda.contains(GRAFFE_INI) && seconda.contains(GRAFFE_END)) {
                         } else {

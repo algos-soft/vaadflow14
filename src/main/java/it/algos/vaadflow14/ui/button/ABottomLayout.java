@@ -122,7 +122,21 @@ public class ABottomLayout extends AButtonLayout {
             for (AEButton aeButton : iniziali) {
                 button = FactoryButton.get(aeButton);
                 this.add(button);
-                mappaBottoniStandard.put(aeButton, button);
+                mappaBottoni.put(aeButton, button);
+            }
+        }
+
+        if (specifici != null) {
+            for (Button bottone : specifici) {
+                this.add(bottone);
+            }
+        }
+
+        if (finali != null) {
+            for (AEButton aeButton : finali) {
+                button = FactoryButton.get(aeButton);
+                this.add(button);
+                mappaBottoni.put(aeButton, button);
             }
         }
     }

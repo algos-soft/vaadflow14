@@ -6,14 +6,17 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogic;
+import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AResourceService;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +154,22 @@ public class StatoLogic extends ALogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox("continente");
+        super.creaComboBox("continente","europa");
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per l'istanza di ABottomLayout <br>
+     * Di default non costruisce nulla <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected List<AEButton> getListaFinaliBottom() {
+        List<AEButton> lista = new ArrayList<>();
+
+        lista.add(AEButton.resetForm);
+
+        return lista;
     }
 
 
@@ -260,6 +278,12 @@ public class StatoLogic extends ALogic {
     }
 
 
+    public void resetForm(AEntity entityBean) {
+        RegioneLogic regioneLogic = appContext.getBean(RegioneLogic.class);
+        regioneLogic.creaStato((Stato) entityBean);
+    }
+
+
     /**
      * Creazione di alcuni dati iniziali <br>
      * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
@@ -335,19 +359,8 @@ public class StatoLogic extends ALogic {
             }
         }
 
-//        //--africa
-//        keyTag = "africa";
-//        continente = continenteLogic.findById(keyTag);
-//        lista = resourceService.leggeListaConfig(keyTag, false);
-//        if (array.isValid(lista)) {
-//            for (String riga : lista) {
-//                mappa.put(riga, continente);
-//            }
-//        }
-
         return mappa;
     }
-
 
 
     /**

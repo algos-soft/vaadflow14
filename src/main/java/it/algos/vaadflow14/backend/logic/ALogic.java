@@ -345,6 +345,11 @@ public abstract class ALogic implements AILogic {
     }
 
 
+    public void fixEntityBean(AEntity entityBean) {
+        this.entityBean = entityBean;
+    }
+
+
     /**
      * Costruisce le properties di questa istanza <br>
      */
@@ -512,7 +517,7 @@ public abstract class ALogic implements AILogic {
         }
 
         if (usaBottoneReset) {
-            listaBottoni.add(AEButton.reset);
+            listaBottoni.add(AEButton.resetList);
         }
 
         return listaBottoni;
@@ -719,8 +724,10 @@ public abstract class ALogic implements AILogic {
      * @return wrapper di dati per la view
      */
     public WrapButtons getWrapButtonsBottom() {
-        List<AEButton> listaBottom = this.getListaBottoniBottom();
-        return new WrapButtons(listaBottom, operationForm);
+        List<AEButton> listaInizialiBottom = this.getListaInizialiBottom();
+        List<Button> listaSpecificiBottom = this.getListaSpecificiBottom();
+        List<AEButton> listaFinaliBottom = this.getListaFinaliBottom();
+        return new WrapButtons(listaInizialiBottom, listaSpecificiBottom, listaFinaliBottom, operationForm);
     }
 
 
@@ -729,9 +736,30 @@ public abstract class ALogic implements AILogic {
      * Di default non costruisce nulla <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      * Di default costruisce i bottoni 'Back, Save e Delete' che la sottoclasse può modificare <br>
-     * Se 'listaBottoni' rimane vuota, il layout usa i bottoni di default previsti per il tipo dìi operationForm <br>
+     * Se 'listaBottoni' rimane vuota, il layout usa i bottoni di default previsti per il tipo di operationForm <br>
      */
-    protected List<AEButton> getListaBottoniBottom() {
+    protected List<AEButton> getListaInizialiBottom() {
+        return null;
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per l'istanza di ABottomLayout <br>
+     * Di default non costruisce nulla <br>
+     * Costruisce bottoni specifici che non appartengono alla enumeration AEButton <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<Button> getListaSpecificiBottom() {
+        return null;
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per l'istanza di ABottomLayout <br>
+     * Di default non costruisce nulla <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaFinaliBottom() {
         return null;
     }
 
@@ -850,8 +878,11 @@ public abstract class ALogic implements AILogic {
             case deleteAll:
                 this.openConfirmDeleteAll();
                 break;
-            case reset:
+            case resetList:
                 this.openConfirmReset();
+                break;
+            case resetForm:
+                this.resetForm(entityBean);
                 break;
             case doubleClick:
                 openDialogRoute(entityBean);
@@ -1279,7 +1310,7 @@ public abstract class ALogic implements AILogic {
     public AEntity findByKey(String keyPropertyValue) {
         keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
-            return mongo.findOneUnique(entityClazz, keyPropertyName,keyPropertyValue);
+            return mongo.findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
         } else {
             return findById(keyPropertyValue);
         }
@@ -1694,6 +1725,10 @@ public abstract class ALogic implements AILogic {
     @Override
     public boolean reset() {
         return false;
+    }
+
+
+    public void resetForm(AEntity entityBean) {
     }
 
 

@@ -118,7 +118,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
      * Mappa dei bottoni standard (obbligatoria) <br>
      * La chiave è l'enumeration del bottone che contiene riferimenti per gli eventi <br>
      */
-    protected Map<AEButton, Button> mappaBottoniStandard;
+    protected Map<AEButton, Button> mappaBottoni;
 
     /**
      * Property per selezionare i bottoni standard in base al tipo di Form (usata solo in ABottomLayout)
@@ -164,7 +164,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
         this.setMargin(false);
         this.setSpacing(true);
         this.setPadding(false);
-        mappaBottoniStandard = new HashMap<AEButton, Button>();
+        mappaBottoni = new HashMap<AEButton, Button>();
 
         this.fixProperties();
     }
@@ -289,11 +289,11 @@ public abstract class AButtonLayout extends HorizontalLayout {
     protected void creaBottoni(List<AEButton> listaEnumeration) {
         Button button;
 
-        if (listaEnumeration != null && mappaBottoniStandard != null) {
+        if (listaEnumeration != null && mappaBottoni != null) {
             for (AEButton aeButton : listaEnumeration) {
                 button = FactoryButton.get(aeButton);
                 this.add(button);
-                mappaBottoniStandard.put(aeButton, button);
+                mappaBottoni.put(aeButton, button);
             }
         }
     }
@@ -310,8 +310,8 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public void setAllListener(AILogic service) {
         this.service = service;
 
-        if (array.isValid(mappaBottoniStandard)) {
-            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoniStandard.entrySet()) {
+        if (array.isValid(mappaBottoni)) {
+            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
                 mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action));
             }
         }
@@ -330,8 +330,8 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public void setAllListener(AILogic service, AEntity entityBean) {
         this.service = service;
 
-        if (array.isValid(mappaBottoniStandard)) {
-            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoniStandard.entrySet()) {
+        if (array.isValid(mappaBottoni)) {
+            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
                 mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action, entityBean));
             }
         }
@@ -386,8 +386,8 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public Button getBottone(String key) {
         Button button = null;
 
-        if (array.isValid(mappaBottoniStandard) && mappaBottoniStandard.get(key) != null) {
-            return mappaBottoniStandard.get(key);
+        if (array.isValid(mappaBottoni) && mappaBottoni.get(key) != null) {
+            return mappaBottoni.get(key);
         }
 
         return button;

@@ -92,7 +92,7 @@ public class ATopLayout extends AButtonLayout {
                 break;
             case dialog:
                 button = FactoryButton.get(AEButton.searchDialog);
-                this.mappaBottoniStandard.put(AEButton.searchDialog, button);
+                this.mappaBottoni.put(AEButton.searchDialog, button);
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");

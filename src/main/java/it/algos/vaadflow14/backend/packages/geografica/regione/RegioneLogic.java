@@ -3,11 +3,12 @@ package it.algos.vaadflow14.backend.packages.geografica.regione;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -23,8 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.TRATTINO;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow14
@@ -59,6 +59,15 @@ public class RegioneLogic extends ALogic {
      */
     @Autowired
     public StatoLogic statoLogic;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AWikiService wiki;
 
 
     /**
@@ -269,6 +278,16 @@ public class RegioneLogic extends ALogic {
      *
      * @return the entity with the given id or {@literal null} if none found
      */
+    public List<Regione> findAllByStato(Stato stato) {
+        return findAllByStato(stato.id);
+    }
+
+
+    /**
+     * Retrieves all entities.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     */
     public List<Regione> findAllByStato(String statoKeyID) {
         List<Regione> items;
         Query query = new Query();
@@ -300,11 +319,11 @@ public class RegioneLogic extends ALogic {
 
         super.deleteAll();
 
-        italia();
         //--aggiunge le province
         //        this.addProvince();
 
-        if (true) {
+        if (false) {
+            italia();
             francia();
             svizzera();
             austria();
@@ -328,8 +347,68 @@ public class RegioneLogic extends ALogic {
             algeria();
             tunisia();
         }
+        creaAllStati();
 
         return mongo.isValid(entityClazz);
+    }
+
+
+    /**
+     * Recupera le suddivisioni di secondo livello per tutti gli stati <br>
+     */
+    public void creaAllStati() {
+        List<Stato> listaStati = mongo.findAll(Stato.class);
+        List<WrapDueStringhe> listaWrap = null;
+
+        if (array.isValid(listaStati)) {
+            for (Stato stato : listaStati) {
+                creaStato(stato);
+            }
+        }
+    }
+
+
+    /**
+     * Recupera le suddivisioni di secondo livello per il singolo stato <br>
+     * Le legge (se riesce) dalla pagina wiki 'ISO_3166-2:xx' col codice iso-alfa2 di ogni stato <br>
+     * Cancella eventualmente le regioni esistenti per ricrearle correttamente <br>
+     */
+    public void creaStato(Stato stato) {
+        String tagWiki = "ISO 3166-2:";
+        String alfaDue;
+        String wikiPagina;
+        String nome;
+        String sigla;
+        String iso;
+        List<WrapDueStringhe> listaWrap = null;
+        List<Regione> regioniDaResettare = findAllByStato(stato);
+        mongo.delete(regioniDaResettare, Regione.class);
+
+        alfaDue = stato.alfadue;
+        if (text.isValid(alfaDue)) {
+            wikiPagina = tagWiki + alfaDue;
+            listaWrap = wiki.getDueColonne(wikiPagina, 1, 2, 1, 2);
+        }
+
+        if (listaWrap != null) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                nome = fixNome(wrap.getSeconda());
+                iso = wrap.getPrima();
+                sigla = text.levaTestaDa(iso, TRATTINO);
+                creaIfNotExist(nome, stato, iso, sigla, null);
+            }
+        }
+    }
+
+
+    public String fixNome(String nomeIn) {
+        String nomeOut = nomeIn;
+
+        if (nomeOut.contains(PIPE)) {
+            nomeOut = text.levaTestaDa(nomeOut, PIPE);
+        }
+
+        return nomeOut;
     }
 
 
@@ -341,7 +420,8 @@ public class RegioneLogic extends ALogic {
         String path = regioniCSV.getAbsolutePath();
         List<LinkedHashMap<String, String>> mappaCSV;
         String nome = VUOTA;
-        Stato stato = AEStato.italia.getStato();;
+        Stato stato = AEStato.italia.getStato();
+        ;
         String iso = VUOTA;
         String sigla = VUOTA;
         String statusTxt = VUOTA;
@@ -526,7 +606,8 @@ public class RegioneLogic extends ALogic {
         String paginaWiki = "ISO_3166-2:SI";
         List<WrapDueStringhe> listaWrap = null;
         String nome = VUOTA;
-        Stato stato = AEStato.slovenia.getStato();;
+        Stato stato = AEStato.slovenia.getStato();
+        ;
         String iso = VUOTA;
         String sigla = VUOTA;
 
@@ -542,12 +623,14 @@ public class RegioneLogic extends ALogic {
         }
     }
 
+
     /**
      * Regioni marocchine (16) <br>
      */
     public void marocco() {
         dueColonne(AEStato.marocco, AEStatuto.marocco, 1, 2, 1, 2);
     }
+
 
     /**
      * Province algerine (48) <br>
@@ -556,12 +639,14 @@ public class RegioneLogic extends ALogic {
         dueColonne(AEStato.algeria, AEStatuto.algeria, 1, 2, 1, 2);
     }
 
+
     /**
      * Governatorati tunisini (24) <br>
      */
     public void tunisia() {
         dueColonne(AEStato.tunisia, AEStatuto.tunisia, 1, 2, 1, 2);
     }
+
 
     /**
      * Costruzione utilizzando un template <br>

@@ -67,8 +67,10 @@ public class WrapButtons {
     public WrapButtons(List<AEButton> iniziali) {
         this(iniziali, null, null, null, null, null, null);
     }
-    public WrapButtons(List<AEButton> iniziali,AEOperation operationForm) {
-        this(iniziali, null, null, null, null, null, operationForm);
+
+
+    public WrapButtons(List<AEButton> iniziali, List<Button> specifici,List<AEButton> finali, AEOperation operationForm) {
+        this(iniziali, null, null, specifici, null, finali, operationForm);
     }
 
 

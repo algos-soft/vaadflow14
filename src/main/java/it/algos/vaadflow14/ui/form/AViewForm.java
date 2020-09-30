@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.router.Route;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.view.AView;
@@ -18,24 +19,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 public class AViewForm extends AView {
 
 
-    //    /**
-    //     * Creazione iniziale (business logic) della view DOPO costruttore, init(), postConstruct() e setParameter() <br>
-    //     * <p>
-    //     * Chiamato da com.vaadin.flow.router.Router tramite l'interfaccia BeforeEnterObserver <br>
-    //     * Chiamato DOPO @PostConstruct e DOPO setParameter() <br>
-    //     *
-    //     * @param beforeEnterEvent con la location, ui, navigationTarget, source, ecc
-    //     */
-    //    @Override
-    //    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-    //
-    //        this.add(new Label("Pippoz"));
-    //        if (entityBean!=null) {
-    //            this.add(new Label("E la regione è: "+((Regione)entityBean).getNome()));
-    //        }
-    //    }
-
-
     /**
      *
      */
@@ -48,6 +31,7 @@ public class AViewForm extends AView {
         } else {
             entityBean = entityLogic.findById(keyID);
         }
+        ((ALogic)entityLogic).fixEntityBean(entityBean);
     }
 
 

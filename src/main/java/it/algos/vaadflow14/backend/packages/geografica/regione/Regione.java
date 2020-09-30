@@ -99,9 +99,8 @@ public class Regione extends AEntity {
 
 
     /**
-     * statuto normativo (obbligatorio) <br>
+     * statuto normativo (facoltativo) <br>
      */
-    @NotNull()
     @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class, widthEM = 19)
     @AIColumn(widthEM = 18,flexGrow = true)
     public AEStatuto status;
