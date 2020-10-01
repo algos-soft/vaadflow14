@@ -381,12 +381,25 @@ public class RegioneLogic extends ALogic {
         String sigla;
         String iso;
         List<WrapDueStringhe> listaWrap = null;
+        List<WrapDueStringhe> listaWrap2 = null;
         List<Regione> regioniDaResettare = findAllByStato(stato);
         mongo.delete(regioniDaResettare, Regione.class);
 
         alfaDue = stato.alfadue;
         if (text.isValid(alfaDue)) {
             wikiPagina = tagWiki + alfaDue;
+
+//            List<List<String>> lista;
+//            lista = wiki.getTable(wikiPagina, 1, 2);
+//            wikiPagina="ISO 3166-2:AT";
+//            List<List<String>> lista2;
+//            lista2 = wiki.getTable(wikiPagina, 1, 2);
+//            wikiPagina="ISO 3166-2:AF";
+//            List<List<String>> lista3;
+//            lista3 = wiki.getTable(wikiPagina, 1, 2);
+//
+//            Object alfa= lista3==null?lista.addAll(lista2):null;
+//            listaWrap2 = wiki.getTemplateList(wikiPagina, 1, 2, 2);
             listaWrap = wiki.getDueColonne(wikiPagina, 1, 2, 1, 2);
         }
 

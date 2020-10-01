@@ -875,7 +875,7 @@ public class AWikiService extends AAbstractService {
             }
         }
 
-        return testoTable.trim();
+        return text.isValid(testoTable)?testoTable.trim():VUOTA;
     }
 
 

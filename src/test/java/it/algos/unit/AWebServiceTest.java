@@ -1,12 +1,6 @@
 package it.algos.unit;
 
-import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.backend.service.AWebService;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,9 +26,6 @@ public class AWebServiceTest extends ATest {
     private static String URL_GENERICO = "https://it.wikipedia.org/wiki/ISO_3166-2:IT";
 
     private static String PAGINA = "ISO 3166-2:IT";
-
-
-
 
 
     /**
