@@ -97,7 +97,7 @@ public class AWikiService extends AAbstractService {
      */
     public List<List<String>> getStati() {
         List<List<String>> listaTable = new ArrayList<>();
-        List<List<String>> listaGrezza = getTable(PAGINA_ISO_1);
+        List<List<String>> listaGrezza = null;
         Map<String, String> mappa = getTableStatiNumerico();
         String sep = DOPPIO_PIPE_REGEX;
         String[] parti = null;
@@ -107,6 +107,11 @@ public class AWikiService extends AAbstractService {
         String alfatre = VUOTA;
         String alfadue = VUOTA;
         String locale = VUOTA;
+
+        try {
+            listaGrezza = getTable(PAGINA_ISO_1);
+        } catch (Exception unErrore) {
+        }
 
         if (listaGrezza != null && listaGrezza.size() > 1) {
             for (List<String> rigaGrezza : listaGrezza) {
@@ -142,12 +147,17 @@ public class AWikiService extends AAbstractService {
      */
     public Map<String, String> getTableStatiNumerico() {
         Map<String, String> mappa = new HashMap<>();
-        List<List<String>> listaGrezza = getTable(PAGINA_ISO_1_NUMERICO, 1, 1);
+        List<List<String>> listaGrezza = null;
         List<String> riga;
         String[] partiRiga = null;
         String sep = DOPPIO_PIPE_REGEX;
         String codice;
         String paese;
+
+        try {
+            listaGrezza = getTable(PAGINA_ISO_1_NUMERICO, 1);
+        } catch (Exception unErrore) {
+        }
 
         if (listaGrezza != null && listaGrezza.size() > 1) {
             for (List<String> rigaGrezza : listaGrezza) {
@@ -506,7 +516,7 @@ public class AWikiService extends AAbstractService {
         }
 
         if (text.isValid(testoQuadra)) {
-            nome = text.setNoQuadre(testoQuadra).trim();
+            nome = text.estrae(testoQuadra, QUADRE_INI, QUADRE_END).trim();
             if (nome.contains(PIPE)) {
                 nome = text.levaTestaDa(nome, PIPE);
             }
@@ -527,6 +537,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di coppia di valori: sigla e nome
      */
+    @Deprecated
     public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
         List<String> lista = getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
         return getTemplateList(lista);
@@ -540,6 +551,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di coppia di valori: sigla e nome
      */
+    @Deprecated
     public List<WrapDueStringhe> getTemplateList(List<String> listaTemplate) {
         List<WrapDueStringhe> lista = null;
         WrapDueStringhe wrap;
@@ -620,7 +632,7 @@ public class AWikiService extends AAbstractService {
      */
     public List<String> getColonna(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
         List<String> colonna = null;
-        List<List<String>> lista;
+        List<List<String>> lista = null;
         String cella = VUOTA;
         String[] parti = null;
 
@@ -628,7 +640,11 @@ public class AWikiService extends AAbstractService {
             return null;
         }
 
-        lista = getTable(wikiTitle, posTabella, rigaIniziale);
+        try {
+            lista = getTable(wikiTitle, posTabella);
+        } catch (Exception unErrore) {
+        }
+
         if (array.isValid(lista)) {
             colonna = new ArrayList<>();
             for (List<String> riga : lista) {
@@ -671,7 +687,7 @@ public class AWikiService extends AAbstractService {
         List<WrapDueStringhe> listaWrap = null;
         WrapDueStringhe wrap;
         List<String> colonna = null;
-        List<List<String>> lista;
+        List<List<String>> lista = null;
         String cella = VUOTA;
         String[] parti = null;
         String prima;
@@ -681,7 +697,11 @@ public class AWikiService extends AAbstractService {
             return null;
         }
 
-        lista = getTable(wikiTitle, posTabella, rigaIniziale);
+        try {
+            lista = getTable(wikiTitle, posTabella);
+        } catch (Exception unErrore) {
+        }
+
         if (array.isValid(lista)) {
             listaWrap = new ArrayList<>();
             for (List<String> riga : lista) {
@@ -740,6 +760,97 @@ public class AWikiService extends AAbstractService {
 
 
     /**
+     * Import delle regioni da una pagina di wikipedia <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return lista di wrapper con due stringhe ognuno (sigla, nome)
+     */
+    public List<WrapDueStringhe> getRegioni(String wikiTitle) throws Exception {
+        List<WrapDueStringhe> listaWrap = null;
+        List<List<String>> listaTable = null;
+        WrapDueStringhe wrap;
+
+        listaTable = getTable(wikiTitle);
+        if (listaTable != null) {
+            listaWrap = new ArrayList<>();
+            for (List<String> listaRiga : listaTable) {
+                wrap = getWrapRegione(listaRiga);
+                if (wrap != null) {
+                    listaWrap.add(wrap);
+                }
+            }
+        }
+
+        return listaWrap;
+    }
+
+
+    /**
+     * Estrae una coppia di valori significativi da una lista eterogenea <br>
+     * Se la lista ha un solo valore, qualcosa non funziona <br>
+     * Se la lista ha più di due valori, occorre selezionare i due significativi <br>
+     * Sicuramente uno dei due valori contiene la sigla (deve avere un trattino) <br>
+     * Uno dei valori deve essere un nome oppure il link alle bandierine (deve avere le doppie graffe) <br>
+     * Dalla eventuale bandierina recupero il nome <br>
+     *
+     * @param listaRiga valori di una singola regione
+     *
+     * @return wrapper di due stringhe valid (sigla, nome)
+     */
+    public WrapDueStringhe getWrapRegione(List<String> listaRiga) {
+        String sigla = VUOTA;
+        String nome = VUOTA;
+        WrapDueStringhe wrap = null;
+
+        if (listaRiga.size() < 2) {
+            return null;
+        }
+
+        if (listaRiga.get(0).contains(TRATTINO) || listaRiga.get(0).length() == 1) {
+            sigla = listaRiga.get(0);
+        } else {
+            if (listaRiga.get(1).contains(TRATTINO)) {
+                sigla = listaRiga.get(1);
+            }
+        }
+
+        if (listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(1).contains(QUADRE_END)) {
+            nome = listaRiga.get(1);
+        } else {
+            if (listaRiga.size() > 2 && listaRiga.get(2).contains(QUADRE_INI) && listaRiga.get(2).contains(QUADRE_END)) {
+                nome = listaRiga.get(2);
+            }
+        }
+
+        if (text.isEmpty(nome)) {
+            if (listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
+                wrap = getTemplateBandierina(listaRiga.get(1));
+            } else {
+                if (listaRiga.size() > 2 && listaRiga.get(2).contains(GRAFFE_INI) && listaRiga.get(2).contains(GRAFFE_END)) {
+                    wrap = getTemplateBandierina(listaRiga.get(2));
+                }
+            }
+        }
+
+        sigla = sigla.trim();
+        sigla = text.setNoHtmlTag(sigla, "kbd");
+        sigla = text.setNoHtmlTag(sigla, "code");
+
+        if (text.isValid(nome)) {
+            nome = nome.trim();
+            nome = text.estrae(nome, QUADRE_INI, QUADRE_END);
+            nome = text.levaTestaDa(nome, PIPE);
+            wrap = new WrapDueStringhe(sigla, nome);
+        } else {
+            wrap.setPrima(sigla);
+        }
+
+        return wrap;
+    }
+
+
+    /**
      * Estrae una wikitable da una pagina wiki <br>
      * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
      *
@@ -747,8 +858,8 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
-    public List<List<String>> getTable(String wikiTitle) {
-        return getTable(wikiTitle, 1, 2);
+    public List<List<String>> getTable(String wikiTitle) throws Exception {
+        return getTable(wikiTitle, 1);
     }
 
 
@@ -761,47 +872,47 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
-    public List<List<String>> getTable(String wikiTitle, int posTabella) {
-        return getTable(wikiTitle, posTabella, 2);
-    }
-
-
-    /**
-     * Estrae una wikitable da una pagina wiki <br>
-     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
-     *
-     * @param wikiTitle    della pagina wiki
-     * @param posTabella   della wikitable nella pagina se ce ne sono più di una
-     * @param rigaIniziale da cui estrarre le righe, scartando la testa della table
-     *
-     * @return lista di valori per ogni riga significativa della wikitable
-     */
-    public List<List<String>> getTable(String wikiTitle, int posTabella, int rigaIniziale) {
+    public List<List<String>> getTable(String wikiTitle, int posTabella) throws Exception {
         List<List<String>> listaTable = new ArrayList<>();
         List<String> listaRiga;
         String[] righeTable = null;
         String testoRigaSingola;
         String[] partiRiga = null;
         String tagTable = "\\|-";
-        String tag = A_CAPO;
-        String testoTable = leggeTable(wikiTitle, posTabella);
+        String testoTable = VUOTA;
 
+        testoTable = leggeTable(wikiTitle, posTabella);
+
+        //--elimina la coda del testo per evitare che la suddivisione in righe contenga anche la chiusura della table
         if (text.isValid(testoTable)) {
+            if (testoTable.endsWith(GRAFFA_END)) {
+                testoTable = text.levaCodaDa(testoTable, GRAFFA_END);
+            }
+            testoTable = testoTable.trim();
+            if (testoTable.endsWith(PIPE)) {
+                testoTable = text.levaCodaDa(testoTable, PIPE);
+            }
+            testoTable = testoTable.trim();
             righeTable = testoTable.split(tagTable);
         }
 
         if (righeTable != null && righeTable.length > 2) {
-            for (int k = rigaIniziale; k < righeTable.length; k++) {
-                testoRigaSingola = righeTable[k];
-                partiRiga = testoRigaSingola.split(tag);
+            for (int k = 1; k < righeTable.length; k++) {
+                testoRigaSingola = righeTable[k].trim();
+                if (testoRigaSingola.startsWith(ESCLAMATIVO)) {
+                    continue;
+                }
+                partiRiga = getParti(testoRigaSingola);
                 if (partiRiga != null && partiRiga.length > 0) {
                     listaRiga = new ArrayList<>();
                     for (String value : partiRiga) {
                         if (text.isValid(value)) {
+                            value = value.trim();
                             if (value.startsWith(PIPE)) {
                                 value = text.levaTesta(value, PIPE);
                             }
-                            listaRiga.add(value.trim());
+                            value = value.trim();
+                            listaRiga.add(value);
                         }
                     }
                     if (!listaRiga.get(0).equals(ESCLAMATIVO)) {
@@ -815,6 +926,23 @@ public class AWikiService extends AAbstractService {
     }
 
 
+    private String[] getParti(String testoRigaSingola) {
+        String[] partiRiga = null;
+        String tagUno = A_CAPO;
+        String tagDue = DOPPIO_PIPE_REGEX;
+
+        //--primo tentativo
+        partiRiga = testoRigaSingola.split(tagUno);
+
+        //--secondo tentativo
+        if (partiRiga != null && partiRiga.length == 1) {
+            partiRiga = partiRiga[0].split(tagDue);
+        }
+
+        return partiRiga;
+    }
+
+
     /**
      * Legge una wikitable da una pagina wiki <br>
      *
@@ -823,7 +951,11 @@ public class AWikiService extends AAbstractService {
      * @return testo della wikitable
      */
     public String leggeTable(String wikiTitle) {
-        return leggeTable(wikiTitle, 1);
+        try {
+            return leggeTable(wikiTitle, 1);
+        } catch (Exception unErrore) {
+        }
+        return VUOTA;
     }
 
 
@@ -835,7 +967,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return testo della wikitable
      */
-    public String leggeTable(String wikiTitle, int pos) {
+    public String leggeTable(String wikiTitle, int pos) throws Exception {
         String testoTable = VUOTA;
         String tag1 = "{| class=\"wikitable";
         String tag2 = "{|class=\"wikitable";
@@ -871,11 +1003,12 @@ public class AWikiService extends AAbstractService {
                 posEnd = testoPagina.indexOf(tagEnd, posIni) + tagEnd.length();
                 testoTable = testoPagina.substring(posIni, posEnd);
             } else {
-                logger.warn("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable", this.getClass(), "leggeTable");
+                throw new Exception("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable. AWikiService.leggeTable()");
+                //                logger.warn("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable", this.getClass(), "leggeTable");
             }
         }
 
-        return text.isValid(testoTable)?testoTable.trim():VUOTA;
+        return text.isValid(testoTable) ? testoTable.trim() : VUOTA;
     }
 
 

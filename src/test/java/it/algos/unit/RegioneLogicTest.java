@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Project vaadflow14
@@ -76,6 +77,7 @@ public class RegioneLogicTest extends ATest {
         service.array = array;
         service.web = web;
         service.logger = logger;
+        fileService.text = text;
         resource.fileService = fileService;
         fileService.logger = logger;
 
@@ -117,28 +119,133 @@ public class RegioneLogicTest extends ATest {
     }
 
 
-    @Test
+//    @Test
     @Order(1)
-    @DisplayName("1 - confronto prima riga")
-    void getTable() {
-        int max = 15;
-        int pos = 0;
+    @DisplayName("1 - legge testo completo table")
+    void leggeTable() {
+        int max = 2;
         String alfaDue;
 
-        for (int k = 10; k < max; k++) {
+        for (int k = 0; k < max; k++) {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaGrezza = service.getTable(sorgente, 1, 1);
-                if (array.isValid(listaGrezza)) {
-                    System.out.println(listaGrezza.get(0));
-                    System.out.println(listaGrezza.get(1));
-                    System.out.println(VUOTA);
-                } else {
-                    System.out.println("La pagina wiki " + sorgente + " non contiene nessuna wikitable");
-                }
+                ottenuto = service.leggeTable(sorgente);
             } catch (Exception unErrore) {
-                //                System.out.println("Non ho trovato la pagina "+sorgente);
+                System.out.println(VUOTA);
+                System.out.println(unErrore.getMessage());
+            }
+            assertNotNull(ottenuto);
+            System.out.println(VUOTA);
+            System.out.println("***" + alfaDue + "***");
+            System.out.println(ottenuto.substring(0, 80));
+        }
+    }
+
+
+//    @Test
+    @Order(2)
+    @DisplayName("2 - legge tutte le righe VALIDE di una table")
+    void getTable() {
+        int max = 15;
+        String alfaDue;
+
+        for (int k = 0; k < max; k++) {
+            alfaDue = listaAlfaDue.get(k);
+            sorgente = ISO + alfaDue;
+            try {
+                listaGrezza = service.getTable(sorgente);
+            } catch (Exception unErrore) {
+                System.out.println(VUOTA);
+                System.out.println(unErrore.getMessage());
+                continue;
+            }
+            assertNotNull(listaGrezza);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println("*** " + alfaDue + " ***");
+            System.out.println("Ci sono " + listaGrezza.size() + " elementi");
+            print(listaGrezza);
+        }
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - legge valori VALIDI per le regioni")
+    void getRegioni() {
+        int max = 20;
+        String alfaDue;
+
+        for (int k = 16; k < max; k++) {
+            alfaDue = listaAlfaDue.get(k);
+            sorgente = ISO + alfaDue;
+            try {
+                listaWrap = service.getRegioni(sorgente);
+            } catch (Exception unErrore) {
+                System.out.println(VUOTA);
+                System.out.println(unErrore.getMessage());
+                continue;
+            }
+            assertNotNull(listaWrap);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println("*** " + alfaDue + " ***");
+            System.out.println("Ci sono " + listaWrap.size() + " elementi");
+            printWrap(listaWrap);
+        }
+    }
+
+
+    //@todo Superato
+
+    //    @Test
+    //    @Order(3)
+    //    @DisplayName("3 - confronto prima riga")
+    //    void getTable2() {
+    //        int max = 3;
+    //        String alfaDue;
+    //
+    //        for (int k = 0; k < max; k++) {
+    //            alfaDue = listaAlfaDue.get(k);
+    //            sorgente = ISO + alfaDue;
+    //            try {
+    //                listaGrezza = service.getTable(sorgente, 1);
+    //                if (array.isValid(listaGrezza)) {
+    //                    System.out.println(listaGrezza.get(0));
+    //                    System.out.println(listaGrezza.get(1));
+    //                    System.out.println(VUOTA);
+    //                } else {
+    //                    System.out.println("La pagina wiki " + sorgente + " non contiene nessuna wikitable");
+    //                }
+    //            } catch (Exception unErrore) {
+    //                //                System.out.println("Non ho trovato la pagina "+sorgente);
+    //            }
+    //        }
+    //    }
+
+
+    private void print(List<List<String>> listaTable) {
+        if (array.isValid(listaTable)) {
+            for (List<String> lista : listaTable) {
+                System.out.println(VUOTA);
+                if (array.isValid(lista)) {
+                    for (String stringa : lista) {
+                        System.out.println(stringa);
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void printWrap(List<WrapDueStringhe> listaWrap) {
+        System.out.println("********");
+        if (array.isValid(listaWrap)) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
             }
         }
     }
