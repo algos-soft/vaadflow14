@@ -2,8 +2,6 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.service.AEnumerationService;
 import it.algos.vaadflow14.ui.fields.*;
@@ -16,7 +14,6 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -205,7 +202,7 @@ public class PreferenzaForm extends AForm {
             case enumeration:
                 if (text.isValid(stringValue)) {
                     if (stringValue.contains(PUNTO_VIRGOLA)) {
-                        stringValue = text.levaTestaDa(stringValue, PUNTO_VIRGOLA);
+                        stringValue = text.levaTestoPrimaDi(stringValue, PUNTO_VIRGOLA);
                     } else {
                         stringValue = VUOTA;
                     }

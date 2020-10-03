@@ -32,6 +32,13 @@ public @interface AIList {
      * @return the string
      */
     String headerAlert() default VUOTA;
+    /**
+     * (Optional) Title della lista
+     * Di default VUOTA
+     *
+     * @return the string
+     */
+    String title() default VUOTA;
 
     /**
      * (Optional) prima colonna indice a sinistra della grid

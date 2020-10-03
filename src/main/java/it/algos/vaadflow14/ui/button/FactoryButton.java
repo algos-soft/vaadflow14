@@ -70,9 +70,9 @@ public abstract class FactoryButton {
      */
     private static Button get(AEButton aeButton, boolean vaadinIcon) {
         if (vaadinIcon) {
-            return get(aeButton.testo, aeButton.vaadinIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier);
+            return get(aeButton.testo, aeButton.vaadinIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier,aeButton.iconaAfterText);
         } else {
-            return get(aeButton.testo, aeButton.lumoIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier);
+            return get(aeButton.testo, aeButton.lumoIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier,aeButton.iconaAfterText);
         }
     }
 
@@ -99,7 +99,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button getPrimary(String testo, String lumoIcon) {
-        return get(testo, lumoIcon, "primary", VUOTA, true, (Key) null, (KeyModifier) null);
+        return get(testo, lumoIcon, "primary", VUOTA, true, (Key) null, (KeyModifier) null,false);
     }
 
 
@@ -125,7 +125,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button getSecondary(String testo, String lumoIcon) {
-        return get(testo, lumoIcon, "secondary", VUOTA, true, (Key) null, (KeyModifier) null);
+        return get(testo, lumoIcon, "secondary", VUOTA, true, (Key) null, (KeyModifier) null,false);
     }
 
 
@@ -140,7 +140,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip) {
-        return get(testo, vaadinIcon, theme, toolTip, true, (Key) null, (KeyModifier) null);
+        return get(testo, vaadinIcon, theme, toolTip, true, (Key) null, (KeyModifier) null,false);
     }
 
 
@@ -157,10 +157,11 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier) {
+    public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText) {
         Button bottone;
 
         bottone = new Button(testo, new Icon(vaadinIcon));
+        bottone.setIconAfterText(iconaAfterText);
 
         bottone.getElement().setAttribute("theme", theme);
         bottone.getElement().setAttribute("title", toolTip);
@@ -193,10 +194,11 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(String testo, String iconType, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier) {
+    public static Button get(String testo, String iconType, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier,boolean iconaAfterText) {
         Button bottone;
 
         bottone = new Button(testo, new Icon("lumo", iconType));
+        bottone.setIconAfterText(iconaAfterText);
 
         bottone.getElement().setAttribute("theme", theme);
         bottone.getElement().setAttribute("title", toolTip);

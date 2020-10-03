@@ -33,7 +33,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderGiorno")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
 @AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false)

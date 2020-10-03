@@ -112,7 +112,7 @@ public class RegioneLogicTest extends ATest {
             listaAlfaDue = new ArrayList<>();
             for (String riga : parti) {
                 riga = text.estrae(riga, QUADRE_INI, QUADRE_END);
-                riga = text.levaTestaDa(riga, PIPE);
+                riga = text.levaTestoPrimaDi(riga, PIPE);
                 listaAlfaDue.add(riga);
             }
         }
@@ -171,7 +171,7 @@ public class RegioneLogicTest extends ATest {
     }
 
 
-    @Test
+//    @Test
     @Order(3)
     @DisplayName("3 - legge valori VALIDI per le regioni")
     void getRegioni() {
@@ -198,6 +198,37 @@ public class RegioneLogicTest extends ATest {
         }
     }
 
+    @Test
+    @Order(4)
+    @DisplayName("3 - legge i titoli delle tabelle regioni")
+    void getTitoli() {
+        int max = 30;
+        String alfaDue;
+
+        for (int k = 28; k < max; k++) {
+            alfaDue = listaAlfaDue.get(k);
+            sorgente = ISO + alfaDue;
+            try {
+                listaWrap = service.getRegioni(sorgente);
+            } catch (Exception unErrore) {
+                System.out.println(VUOTA);
+                System.out.println(unErrore.getMessage());
+                continue;
+            }
+            assertNotNull(listaWrap);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            System.out.println("*** titoli " + alfaDue + " ***");
+            System.out.println("Ci sono " + listaWrap.size() + " elementi");
+            if (listaWrap.get(0)!=null) {
+                System.out.println(listaWrap.get(0).getPrima()+SEP+listaWrap.get(0).getSeconda());
+            } else {
+                System.out.println("Mancano i titoli");
+            }
+            System.out.println(listaWrap.get(1).getPrima()+SEP+listaWrap.get(1).getSeconda());
+        }
+    }
 
     //@todo Superato
 

@@ -11,7 +11,9 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.internal.MessageDigestUtil;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AReflectionService;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import org.apache.commons.codec.binary.Base64;
@@ -78,7 +80,12 @@ public class AImageField extends AField<String> {
      */
     public AImageField() {
         imageField = new Image();
-        fixUpload();
+
+        if (VaadinSession.getCurrent() != null && AEPreferenza.usaDebug.is()) {
+            fixUpload();
+        } else {
+            add(imageField);
+        }
     } // end of SpringBoot constructor
 
 

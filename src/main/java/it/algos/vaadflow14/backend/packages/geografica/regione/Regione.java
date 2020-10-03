@@ -35,12 +35,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderRegione")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Regione", keyPropertyName = "regione", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "regione", sortProperty = "ordine")
-@AIList(fields = "ordine,regione,stato,iso,sigla,status")
-@AIForm(fields = "ordine,regione,stato,iso,sigla,status")
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false)
+@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status",title = "divisione")
+@AIForm(fields = "ordine,divisione,stato,iso,sigla,status")
 public class Regione extends AEntity {
 
     /**
@@ -65,7 +65,7 @@ public class Regione extends AEntity {
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 19)
     @AIColumn(widthEM = 18)
-    public String regione;
+    public String divisione;
 
 
     /**
@@ -82,7 +82,7 @@ public class Regione extends AEntity {
      * codice iso di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il codice ISO numerico è obbligatorio")
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+    @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, caption = "Codice ISO 3166-2:IT", widthEM = 12)
     @AIColumn(header = "iso", widthEM = 6)
     public String iso;
@@ -101,9 +101,9 @@ public class Regione extends AEntity {
     /**
      * statuto normativo (facoltativo) <br>
      */
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatuto.class, widthEM = 19)
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, widthEM = 19)
     @AIColumn(widthEM = 18,flexGrow = true)
-    public AEStatuto status;
+    public AEStatus status;
 
 
     /**
@@ -111,7 +111,7 @@ public class Regione extends AEntity {
      */
     @Override
     public String toString() {
-        return getRegione();
+        return getDivisione();
     }
 
 }

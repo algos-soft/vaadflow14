@@ -61,6 +61,8 @@ public abstract class FlowCost {
 
     public static final String ESCLAMATIVO = "!";
 
+    public static final String DOPPIO_ESCLAMATIVO = ESCLAMATIVO+ESCLAMATIVO;
+
     public static final String SEP = " - ";
 
     public static final String FORWARD = " -> ";

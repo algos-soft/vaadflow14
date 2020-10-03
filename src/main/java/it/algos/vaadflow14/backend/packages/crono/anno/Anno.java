@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderAnno")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR)

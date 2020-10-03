@@ -1,9 +1,7 @@
-package it.algos.vaadflow14.backend.packages.preferenza;
+package it.algos.vaadflow14.backend.enumeration;
 
-import it.algos.vaadflow14.backend.enumeration.AELogLivello;
-import it.algos.vaadflow14.backend.enumeration.AETypeIconaEdit;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.enumeration.AIEnum;
+import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

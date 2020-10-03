@@ -1,12 +1,11 @@
 package it.algos.vaadflow14.ui.view;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.AEVista;

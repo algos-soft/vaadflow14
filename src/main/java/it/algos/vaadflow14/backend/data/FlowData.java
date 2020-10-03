@@ -48,12 +48,12 @@ public class FlowData extends AData {
         checkSingolaCollection(Mese.class);
         checkSingolaCollection(Giorno.class);
 
-//        checkSingolaCollection(Stato.class);
+        checkSingolaCollection(Stato.class);
 //        checkSingolaCollection(Regione.class);
-//
-//        checkSingolaCollection(Company.class);
-//        checkSingolaCollection(Utente.class);
-//        checkSingolaCollection(Via.class);
+
+        checkSingolaCollection(Company.class);
+        checkSingolaCollection(Utente.class);
+        checkSingolaCollection(Via.class);
     }
 
 }

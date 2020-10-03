@@ -9,7 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AELogLivello;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AILogType;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,16 +318,27 @@ public class ALogService extends AAbstractService {
     /**
      * Gestisce un log di info <br>
      *
-     * @param descrizione della informazione da gestire
+     * @param message della informazione da gestire
      * @param clazz       di provenienza della richiesta
      * @param methodName  di provenienza della richiesta
      */
-    public void info(String descrizione, Class clazz, String methodName) {
+    public void info(String message, Class clazz, String methodName) {
         //@todo Funzionalità ancora da implementare
-        sendTerminale(AELogLivello.info, descrizione, clazz, methodName);
+//        sendTerminale(AELogLivello.info, descrizione, clazz, methodName);
         //@todo Funzionalità ancora da implementare
+        esegue(AETypeLog.info, message, clazz, methodName);
     }
 
+    /**
+     * Gestisce un log di error <br>
+     *
+     * @param unErrore   da gestire
+     * @param clazz      di provenienza della richiesta
+     * @param methodName di provenienza della richiesta
+     */
+    public void info(Exception unErrore, Class clazz, String methodName) {
+        info(unErrore.toString(), clazz, methodName);
+    }
 
     /**
      * Gestisce un log di error <br>
@@ -447,7 +458,6 @@ public class ALogService extends AAbstractService {
         if (type != null) {
             switch (type) {
                 case info:
-                    break;
                 case modifica:
                     adminLogger.info(message.trim());
                     break;

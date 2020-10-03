@@ -106,7 +106,7 @@ public class ProvinciaLogic extends ALogic {
         super.fixPreferenze();
 
         super.usaBottoneDeleteAll = false;
-        super.usaBottoneReset = true;
+        super.usaBottoneResetList = true;
         super.usaBottoneNew = true;
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
@@ -250,8 +250,8 @@ public class ProvinciaLogic extends ALogic {
         if (provincia.regione.stato.id.equals(provincia.stato.id)) {
             return provincia;
         } else {
-            Notification.show("La regione " + provincia.regione.regione + " non appartiene allo stato " + provincia.stato.stato + " e non è stata registrata", 3000, Notification.Position.MIDDLE);
-            logger.error("La regione " + provincia.regione.regione + " non appartiene allo stato " + provincia.stato.stato, this.getClass(), "beforeSave");
+            Notification.show("La regione " + provincia.regione.divisione + " non appartiene allo stato " + provincia.stato.stato + " e non è stata registrata", 3000, Notification.Position.MIDDLE);
+            logger.error("La regione " + provincia.regione.divisione + " non appartiene allo stato " + provincia.stato.stato, this.getClass(), "beforeSave");
             return null;
         }
     }

@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderVia")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Via", keyPropertyName = "nome")
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")

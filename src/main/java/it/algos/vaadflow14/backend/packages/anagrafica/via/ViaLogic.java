@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.crud.CrudI18n;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -74,7 +74,7 @@ public class ViaLogic extends ALogic {
         super.fixPreferenze();
 
         super.usaBottoneDeleteAll = true;
-        super.usaBottoneReset = true;
+        super.usaBottoneResetList = true;
     }
 
 

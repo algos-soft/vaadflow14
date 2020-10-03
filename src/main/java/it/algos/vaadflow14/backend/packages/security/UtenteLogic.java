@@ -8,7 +8,7 @@ import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +97,7 @@ public class UtenteLogic extends ALogic {
         if (FlowVar.usaSecurity) {
             if (vaadinService.isDeveloper()) {
                 super.usaBottoneDeleteAll = true;
-                super.usaBottoneReset = true;
+                super.usaBottoneResetList = true;
 
             }
             if (!vaadinService.isAdminOrDeveloper()) {
@@ -109,7 +109,7 @@ public class UtenteLogic extends ALogic {
         } else {
             if (AEPreferenza.usaDebug.is()) {
                 super.usaBottoneDeleteAll = true;
-                super.usaBottoneReset = true;
+                super.usaBottoneResetList = true;
             }
             super.usaBottoneNew = true;
         }

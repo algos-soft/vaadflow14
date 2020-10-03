@@ -39,7 +39,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderUtente")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true, usaCreazioneModifica = true)
 @AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")

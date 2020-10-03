@@ -481,6 +481,66 @@ public class AMongoService<capture> extends AAbstractService {
 
 
     /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
+    public AEntity findNext(Class<? extends AEntity> entityClazz, String keyId) {
+        AEntity nextEntity = null;
+        List<AEntity> listaOrdinata = null;
+        Query query = new Query();
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (text.isValid(keyId) ) {
+            query.addCriteria(Criteria.where("_id").gt(keyId));
+            query.limit(1);
+            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
+        }
+
+        if (array.isValid(listaOrdinata) && listaOrdinata.size() == 1) {
+            nextEntity = listaOrdinata.get(0);
+        }
+
+        return nextEntity;
+    }
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
+    public AEntity findPrevious(Class<? extends AEntity> entityClazz, String keyId) {
+        AEntity nextEntity = null;
+        List<AEntity> listaOrdinata = null;
+        Query query = new Query();
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (text.isValid(keyId) ) {
+            query.addCriteria(Criteria.where("_id").lt(keyId));
+            query.with(Sort.by(Sort.Direction.DESC,"_id"));
+            query.limit(1);
+            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
+        }
+
+        if (array.isValid(listaOrdinata) && listaOrdinata.size() == 1) {
+            nextEntity = listaOrdinata.get(0);
+        }
+
+        return nextEntity;
+    }
+
+
+    /**
      * Cerca una singola entity di una collection con un determinato valore di una property. <br>
      * Costruisce una query semplice, di uguaglianza del valore per la property indicata <br>
      * Per altre query, costruirle direttamente <br>

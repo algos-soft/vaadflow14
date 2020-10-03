@@ -8,15 +8,14 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AResourceService;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,15 +108,18 @@ public class StatoLogic extends ALogic {
      */
     @Override
     protected void fixPreferenze() {
+        boolean debug = AEPreferenza.usaDebug.is();
         super.fixPreferenze();
 
-        super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
-        super.usaBottoneReset = AEPreferenza.usaDebug.is();
-        super.usaBottoneNew = AEPreferenza.usaDebug.is();
+        super.operationForm = debug ? AEOperation.edit : AEOperation.showOnly;
+        super.usaBottoneDeleteAll = debug;
+        super.usaBottoneResetList = debug;
+        super.usaBottoneNew = debug;
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
+        super.usaBottoneResetForm = debug;
         super.wikiPageTitle = "ISO_3166-1";
+        super.usaBottoniSpostamentoForm = true;
     }
 
 
@@ -154,22 +156,7 @@ public class StatoLogic extends ALogic {
      */
     @Override
     protected void fixMappaComboBox() {
-        super.creaComboBox("continente","europa");
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per l'istanza di ABottomLayout <br>
-     * Di default non costruisce nulla <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected List<AEButton> getListaFinaliBottom() {
-        List<AEButton> lista = new ArrayList<>();
-
-        lista.add(AEButton.resetForm);
-
-        return lista;
+        super.creaComboBox("continente", "europa");
     }
 
 
@@ -280,7 +267,7 @@ public class StatoLogic extends ALogic {
 
     public void resetForm(AEntity entityBean) {
         RegioneLogic regioneLogic = appContext.getBean(RegioneLogic.class);
-        regioneLogic.creaStato((Stato) entityBean);
+        regioneLogic.creaRegioniDiUnoStato((Stato) entityBean);
     }
 
 

@@ -99,7 +99,7 @@ public class DeltaLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneReset = true;
+        super.usaBottoneResetList = true;
     }
 
 

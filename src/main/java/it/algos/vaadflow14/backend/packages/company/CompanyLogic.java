@@ -5,7 +5,7 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -82,7 +82,7 @@ public class CompanyLogic extends ALogic {
         if (FlowVar.usaCompany) {
             if (vaadinService.isDeveloper()) {
                 super.usaBottoneDeleteAll = true;
-                super.usaBottoneReset = true;
+                super.usaBottoneResetList = true;
 
             }
             if (!vaadinService.isAdminOrDeveloper()) {
@@ -94,7 +94,7 @@ public class CompanyLogic extends ALogic {
         } else {
             if (AEPreferenza.usaDebug.is()) {
                 super.usaBottoneDeleteAll = true;
-                super.usaBottoneReset = true;
+                super.usaBottoneResetList = true;
             }
             super.usaBottoneNew = true;
         }

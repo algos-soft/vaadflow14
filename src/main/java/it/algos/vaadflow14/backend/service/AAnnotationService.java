@@ -702,6 +702,30 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
+     * Get the title of list (optional).
+     * Default to collection name
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the alert
+     */
+    public String getTitleList(final Class<? extends AEntity> entityClazz) {
+        String title = VUOTA;
+        AIList annotation = this.getAIList(entityClazz);
+
+        if (annotation != null) {
+            title = annotation.title();
+        }
+
+        if (text.isEmpty(title)) {
+            title = getCollectionName(entityClazz);
+        }
+
+        return title;
+    }
+
+
+    /**
      * Flag per usare il field della superclasse AEntity. <br>
      *
      * @param entityClazz the class of type AEntity
@@ -1624,6 +1648,7 @@ public class AAnnotationService extends AAbstractService {
         return linkClazz == Object.class ? null : linkClazz;
     }
 
+
     /**
      * Get the properties (String) of the linked Grid.
      *
@@ -1646,6 +1671,7 @@ public class AAnnotationService extends AAbstractService {
 
         return properties;
     }
+
 
     /**
      * Get the property for linked classes.

@@ -24,7 +24,7 @@ public enum AEButton {
 
     resetList("Reset", VaadinIcon.REFRESH, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
-    resetForm("Reset", VaadinIcon.REFRESH, "error", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
+    resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
     wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre la corrispondente pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
@@ -43,6 +43,10 @@ public enum AEButton {
     searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
 
     export("Esporta", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esportazione della lista", "cross", null, null),
+
+    prima("Prima", VaadinIcon.ARROW_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
+
+    dopo("Dopo", VaadinIcon.ARROW_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null,true),
 
     ;
 
@@ -91,6 +95,11 @@ public enum AEButton {
      */
     public KeyModifier keyModifier;
 
+    /**
+     * Flag di preferenza per posizionare a destra l'icona del bottone. <br>
+     */
+    public boolean iconaAfterText;
+
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action) {
         this(testo, vaadinIcon, theme, action, true, VUOTA, VUOTA);
@@ -98,11 +107,16 @@ public enum AEButton {
 
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon) {
-        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, (Key) null, (KeyModifier) null);
+        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, (Key) null, (KeyModifier) null, false);
     }
 
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier) {
+        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, keyShortCut, keyModifier, false);
+    }
+
+
+    AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText) {
         this.testo = testo;
         this.vaadinIcon = vaadinIcon;
         this.theme = theme;
@@ -112,6 +126,7 @@ public enum AEButton {
         this.lumoIcon = lumoIcon;
         this.keyShortCut = keyShortCut;
         this.keyModifier = keyModifier;
+        this.iconaAfterText = iconaAfterText;
     }
 
 }

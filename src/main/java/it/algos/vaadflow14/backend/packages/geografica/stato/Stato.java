@@ -38,7 +38,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderStato")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
@@ -55,7 +55,7 @@ public class Stato extends AEntity {
     /**
      * ordine di presentazione per il popup (obbligatorio, unico) <br>
      */
-    //    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
+    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly, widthEM = 4)
     @AIColumn(header = "#", widthEM = 4)
     public int ordine;
@@ -83,7 +83,8 @@ public class Stato extends AEntity {
      * divisione amministrativa di secondo livello (facoltativa) <br>
      */
     @Transient()
-    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "regione,iso,sigla,status")
+    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "divisione,iso,sigla,status")
+    @AIColumn(header = "Divisione")
     public List<Regione> regioni;
 
 
@@ -97,6 +98,7 @@ public class Stato extends AEntity {
     @AIColumn(widthEM = 8)
     public Continente continente;
 
+
     /**
      * unione europea
      */
@@ -109,14 +111,14 @@ public class Stato extends AEntity {
      * codice iso-numerico di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il codice ISO numerico è obbligatorio")
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.text, widthEM = 4)
     @AIColumn(header = "code", widthEM = 6)
     public String numerico;
 
 
     /**
-     * codice iso-alfa2 di riferimento (obbligatorio, unico) <br>
+     * codice iso-alfa2 di riferimento (obbligatorio) <br>
      */
     @NotBlank(message = "Il codice iso-alfa2 numerico è obbligatorio")
     @Indexed()
@@ -129,7 +131,7 @@ public class Stato extends AEntity {
      * codice iso-alfa3 di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il codice iso-alfa3 numerico è obbligatorio")
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, caption = "alfa-tre", widthEM = 4)
     @AIColumn(header = "tre", widthEM = 5)
     public String alfatre;
@@ -139,10 +141,11 @@ public class Stato extends AEntity {
      * codice iso-locale di riferimento (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Il codice iso locale è obbligatorio")
-    @Indexed()
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, widthEM = 10)
-    @AIColumn(header = "ISO locale", flexGrow = true)
+    @AIColumn(header = "ISO locale")
     public String locale;
+
 
 
     /**

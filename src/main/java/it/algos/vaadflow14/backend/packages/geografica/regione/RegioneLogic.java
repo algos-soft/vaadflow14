@@ -7,7 +7,7 @@ import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -107,7 +107,7 @@ public class RegioneLogic extends ALogic {
 
         super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
         super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
-        super.usaBottoneReset = AEPreferenza.usaDebug.is();
+        super.usaBottoneResetList = AEPreferenza.usaDebug.is();
         super.usaBottoneNew = AEPreferenza.usaDebug.is();
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
@@ -161,16 +161,16 @@ public class RegioneLogic extends ALogic {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param regione (obbligatorio, unico)
-     * @param stato   (obbligatorio)
-     * @param iso     di riferimento (obbligatorio, unico)
-     * @param sigla   (consuetudinaria, obbligatoria)
-     * @param status  (obbligatorio)
+     * @param divisione (obbligatorio, unico)
+     * @param stato     (obbligatorio)
+     * @param iso       di riferimento (obbligatorio, unico)
+     * @param sigla     (consuetudinaria, obbligatoria)
+     * @param status    (obbligatorio)
      *
      * @return true se la nuova entity è stata creata e salvata
      */
-    public Regione creaIfNotExist(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
-        return (Regione) checkAndSave(newEntity(regione, stato, iso, sigla, status));
+    public Regione creaIfNotExist(String divisione, Stato stato, String iso, String sigla, AEStatus status) {
+        return (Regione) checkAndSave(newEntity(divisione, stato, iso, sigla, status));
     }
 
 
@@ -182,7 +182,7 @@ public class RegioneLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Regione newEntity() {
-        return newEntity(VUOTA, (Stato) null, VUOTA, VUOTA, (AEStatuto) null);
+        return newEntity(VUOTA, (Stato) null, VUOTA, VUOTA, (AEStatus) null);
     }
 
 
@@ -192,20 +192,20 @@ public class RegioneLogic extends ALogic {
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      *
-     * @param regione (obbligatorio, unico)
-     * @param stato   (obbligatorio)
-     * @param iso     di riferimento (obbligatorio, unico)
-     * @param sigla   (consuetudinaria, obbligatoria)
-     * @param status  (obbligatorio)
+     * @param divisione (obbligatorio, unico)
+     * @param stato     (obbligatorio)
+     * @param iso       di riferimento (obbligatorio, unico)
+     * @param sigla     (consuetudinaria, obbligatoria)
+     * @param status    (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Regione newEntity(String regione, Stato stato, String iso, String sigla, AEStatuto status) {
+    public Regione newEntity(String divisione, Stato stato, String iso, String sigla, AEStatus status) {
         Regione newEntityBean = Regione.builderRegione()
 
                 .ordine(this.getNewOrdine())
 
-                .regione(text.isValid(regione) ? regione : null)
+                .divisione(text.isValid(divisione) ? divisione : null)
 
                 .stato(stato)
 
@@ -322,32 +322,32 @@ public class RegioneLogic extends ALogic {
         //--aggiunge le province
         //        this.addProvince();
 
-        if (false) {
-            italia();
-            francia();
-            svizzera();
-            austria();
-            germania();
-            spagna();
-            portogallo();
-            belgio();
-            olanda();
-            croazia();
-            albania();
-            grecia();
-            cechia();
-            slovacchia();
-            ungheria();
-            romania();
-            bulgaria();
-            polonia();
-            danimarca();
-            //        slovenia(); // sono troppi
-            marocco();
-            algeria();
-            tunisia();
-        }
-        creaAllStati();
+        //        if (false) {
+        //            italia();
+        //            francia();
+        //            svizzera();
+        //            austria();
+        //            germania();
+        //            spagna();
+        //            portogallo();
+        //            belgio();
+        //            olanda();
+        //            croazia();
+        //            albania();
+        //            grecia();
+        //            cechia();
+        //            slovacchia();
+        //            ungheria();
+        //            romania();
+        //            bulgaria();
+        //            polonia();
+        //            danimarca();
+        //            //        slovenia(); // sono troppi
+        //            marocco();
+        //            algeria();
+        //            tunisia();
+        //        }
+        creaRegioniAllStati();
 
         return mongo.isValid(entityClazz);
     }
@@ -356,13 +356,13 @@ public class RegioneLogic extends ALogic {
     /**
      * Recupera le suddivisioni di secondo livello per tutti gli stati <br>
      */
-    public void creaAllStati() {
+    public void creaRegioniAllStati() {
         List<Stato> listaStati = mongo.findAll(Stato.class);
         List<WrapDueStringhe> listaWrap = null;
 
         if (array.isValid(listaStati)) {
             for (Stato stato : listaStati) {
-                creaStato(stato);
+                creaRegioniDiUnoStato(stato);
             }
         }
     }
@@ -373,15 +373,17 @@ public class RegioneLogic extends ALogic {
      * Le legge (se riesce) dalla pagina wiki 'ISO_3166-2:xx' col codice iso-alfa2 di ogni stato <br>
      * Cancella eventualmente le regioni esistenti per ricrearle correttamente <br>
      */
-    public void creaStato(Stato stato) {
+    public void creaRegioniDiUnoStato(Stato stato) {
         String tagWiki = "ISO 3166-2:";
         String alfaDue;
         String wikiPagina;
         String nome;
         String sigla;
         String iso;
+        String status = VUOTA;
+        AEStatus aeStatus = AEStatus.regione;
         List<WrapDueStringhe> listaWrap = null;
-        List<WrapDueStringhe> listaWrap2 = null;
+        WrapDueStringhe wrapTitoli;
         List<Regione> regioniDaResettare = findAllByStato(stato);
         mongo.delete(regioniDaResettare, Regione.class);
 
@@ -389,28 +391,33 @@ public class RegioneLogic extends ALogic {
         if (text.isValid(alfaDue)) {
             wikiPagina = tagWiki + alfaDue;
 
-//            List<List<String>> lista;
-//            lista = wiki.getTable(wikiPagina, 1, 2);
-//            wikiPagina="ISO 3166-2:AT";
-//            List<List<String>> lista2;
-//            lista2 = wiki.getTable(wikiPagina, 1, 2);
-//            wikiPagina="ISO 3166-2:AF";
-//            List<List<String>> lista3;
-//            lista3 = wiki.getTable(wikiPagina, 1, 2);
-//
-//            Object alfa= lista3==null?lista.addAll(lista2):null;
-//            listaWrap2 = wiki.getTemplateList(wikiPagina, 1, 2, 2);
-            listaWrap = wiki.getDueColonne(wikiPagina, 1, 2, 1, 2);
+            try {
+                listaWrap = wiki.getRegioni(wikiPagina);
+            } catch (Exception unErrore) {
+                logger.info(unErrore, this.getClass(), "creaRegioniDiUnoStato." + stato.stato);
+            }
         }
 
         if (listaWrap != null) {
-            for (WrapDueStringhe wrap : listaWrap) {
+            wrapTitoli = listaWrap.get(0);
+            status = wrapTitoli != null ? wrapTitoli.getSeconda() : VUOTA;
+            aeStatus = getStatus(status);
+            for (WrapDueStringhe wrap : listaWrap.subList(1, listaWrap.size())) {
                 nome = fixNome(wrap.getSeconda());
                 iso = wrap.getPrima();
-                sigla = text.levaTestaDa(iso, TRATTINO);
-                creaIfNotExist(nome, stato, iso, sigla, null);
+                sigla = text.levaTestoPrimaDi(iso, TRATTINO);
+                if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
+                    creaIfNotExist(nome, stato, iso, sigla, aeStatus);
+                } else {
+                    logger.warn("Mancano dati essenziali", this.getClass(), "creaRegioniDiUnoStato." + stato.stato);
+                }
             }
         }
+    }
+
+
+    public AEStatus getStatus(String status) {
+        return AEStatus.get(status);
     }
 
 
@@ -418,7 +425,7 @@ public class RegioneLogic extends ALogic {
         String nomeOut = nomeIn;
 
         if (nomeOut.contains(PIPE)) {
-            nomeOut = text.levaTestaDa(nomeOut, PIPE);
+            nomeOut = text.levaTestoPrimaDi(nomeOut, PIPE);
         }
 
         return nomeOut;
@@ -438,7 +445,7 @@ public class RegioneLogic extends ALogic {
         String iso = VUOTA;
         String sigla = VUOTA;
         String statusTxt = VUOTA;
-        AEStatuto status = null;
+        AEStatus status = null;
 
         mappaCSV = fileService.leggeMappaCSV(path);
         for (LinkedHashMap<String, String> riga : mappaCSV) {
@@ -446,225 +453,226 @@ public class RegioneLogic extends ALogic {
             iso = riga.get("iso");
             sigla = riga.get("sigla");
             statusTxt = riga.get("status");
-            status = AEStatuto.valueOf(statusTxt);
+            status = AEStatus.valueOf(statusTxt);
             creaIfNotExist(nome, stato, iso, sigla, status);
         }
     }
 
 
-    /**
-     * Regioni francesi (35) <br>
-     */
-    public void francia() {
-        //--13 regioni metropolitane
-        templateList(AEStato.francia, AEStatuto.franciaMetropolitana, 1, 2, 2);
-
-        //--3 regioni d'oltremare
-        dueColonne(AEStato.francia, AEStatuto.franciaOltremare, 3, 2, 2, 4);
-
-        //--9 collettività d'oltremare
-        dueColonne(AEStato.francia, AEStatuto.franciaCollettivita, 4, 2, 1, 3);
-    }
-
-
-    /**
-     * Cantoni svizzeri (26) <br>
-     */
-    public void svizzera() {
-        templateList(AEStato.svizzera, AEStatuto.svizzera, 1, 2, 2);
-    }
-
-
-    /**
-     * Länder austriaci (9) <br>
-     */
-    public void austria() {
-        templateList(AEStato.austria, AEStatuto.austria, 1, 2, 2);
-    }
-
-
-    /**
-     * Länder tedeschi (16) <br>
-     */
-    public void germania() {
-        templateList(AEStato.germania, AEStatuto.germania, 1, 2, 2);
-    }
-
-
-    /**
-     * Comunità spagnole <br>
-     */
-    public void spagna() {
-        templateList(AEStato.spagna, AEStatuto.spagna, 1, 2, 2);
-    }
-
-
-    /**
-     * Distretti portoghesi (20) <br>
-     */
-    public void portogallo() {
-        //--18 distretti
-        dueColonne(AEStato.portogallo, AEStatuto.portogalloDistretto, 1, 2, 2, 3);
-
-        //--2 regioni autonome
-        dueColonne(AEStato.portogallo, AEStatuto.portogalloRegione, 2, 2, 2, 3);
-    }
-
-
-    /**
-     * Regioni belghe (3) <br>
-     */
-    public void belgio() {
-        templateList(AEStato.belgio, AEStatuto.belgio, 1, 2, 2);
-    }
-
-
-    /**
-     * Province olandesi (12) <br>
-     */
-    public void olanda() {
-        templateList(AEStato.olanda, AEStatuto.olanda, 1, 2, 2);
-    }
-
-
-    /**
-     * Regioni croate (21) <br>
-     */
-    public void croazia() {
-        dueColonne(AEStato.croazia, AEStatuto.croazia, 1, 2, 1, 2);
-    }
-
-
-    /**
-     * Distretti albanesi (36) <br>
-     */
-    public void albania() {
-        dueColonne(AEStato.albania, AEStatuto.albania, 1, 1, 1, 2);
-    }
-
-
-    /**
-     * Distretti greci (64) <br>
-     */
-    public void grecia() {
-        //--13 periferie
-        dueColonne(AEStato.grecia, AEStatuto.greciaPeriferia, 1, 2, 1, 2);
-
-        //--51 prefetture (Attica è doppia)
-        dueColonne(AEStato.grecia, AEStatuto.greciaPrefettura, 2, 2, 2, 3);
-    }
-
-
-    /**
-     * Regioni ceche (14) <br>
-     */
-    public void cechia() {
-        templateList(AEStato.cechia, AEStatuto.cechia, 1, 2, 3);
-    }
-
-
-    /**
-     * Regioni slovacche (8) <br>
-     */
-    public void slovacchia() {
-        dueColonne(AEStato.slovacchia, AEStatuto.slovacchia, 1, 2, 1, 2);
-    }
-
-
-    /**
-     * Province ungheresi (19) <br>
-     */
-    public void ungheria() {
-        templateList(AEStato.ungheria, AEStatuto.ungheria, 1, 2, 2);
-    }
-
-
-    /**
-     * Distretti rumeni (42) <br>
-     */
-    public void romania() {
-        dueColonne(AEStato.romania, AEStatuto.romaniaDistretto, 1, 2, 2, 3);
-        dueColonne(AEStato.romania, AEStatuto.romaniaCapitale, 2, 2, 2, 3);
-    }
-
-
-    /**
-     * Distretti bulgari (28) <br>
-     */
-    public void bulgaria() {
-        dueColonne(AEStato.bulgaria, AEStatuto.bulgaria, 1, 2, 2, 3);
-    }
-
-
-    /**
-     * Voivodati polacchi (16) <br>
-     */
-    public void polonia() {
-        dueColonne(AEStato.polonia, AEStatuto.polonia, 1, 2, 2, 3);
-    }
-
-
-    /**
-     * Regioni danesi (5) <br>
-     */
-    public void danimarca() {
-        dueColonne(AEStato.danimarca, AEStatuto.danimarca, 1, 2, 1, 2);
-    }
-
-
-    /**
-     * Comuni sloveni <br>
-     */
-    public void slovenia() {
-        String paginaWiki = "ISO_3166-2:SI";
-        List<WrapDueStringhe> listaWrap = null;
-        String nome = VUOTA;
-        Stato stato = AEStato.slovenia.getStato();
-        ;
-        String iso = VUOTA;
-        String sigla = VUOTA;
-
-        //--212 comuni
-        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 1, 2);
-        if (listaWrap != null && listaWrap.size() > 0) {
-            for (WrapDueStringhe wrap : listaWrap) {
-                nome = wrap.getSeconda();
-                iso = wrap.getPrima();
-                sigla = text.levaTestaDa(iso, TRATTINO);
-                creaIfNotExist(nome, stato, iso, sigla, AEStatuto.slovenia);
-            }
-        }
-    }
-
-
-    /**
-     * Regioni marocchine (16) <br>
-     */
-    public void marocco() {
-        dueColonne(AEStato.marocco, AEStatuto.marocco, 1, 2, 1, 2);
-    }
-
-
-    /**
-     * Province algerine (48) <br>
-     */
-    public void algeria() {
-        dueColonne(AEStato.algeria, AEStatuto.algeria, 1, 2, 1, 2);
-    }
-
-
-    /**
-     * Governatorati tunisini (24) <br>
-     */
-    public void tunisia() {
-        dueColonne(AEStato.tunisia, AEStatuto.tunisia, 1, 2, 1, 2);
-    }
+    //    /**
+    //     * Regioni francesi (35) <br>
+    //     */
+    //    public void francia() {
+    //        //--13 regioni metropolitane
+    //        templateList(AEStato.francia, AEStatus.regioneMetropolitana, 1, 2, 2);
+    //
+    //        //--3 regioni d'oltremare
+    //        dueColonne(AEStato.francia, AEStatus.regioneOltremare, 3, 2, 2, 4);
+    //
+    //        //--9 collettività d'oltremare
+    //        dueColonne(AEStato.francia, AEStatus.collettivita, 4, 2, 1, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Cantoni svizzeri (26) <br>
+    //     */
+    //    public void svizzera() {
+    //        templateList(AEStato.svizzera, AEStatus.cantone, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Länder austriaci (9) <br>
+    //     */
+    //    public void austria() {
+    //        templateList(AEStato.austria, AEStatus.land, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Länder tedeschi (16) <br>
+    //     */
+    //    public void germania() {
+    //        templateList(AEStato.germania, AEStatus.land, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Comunità spagnole <br>
+    //     */
+    //    public void spagna() {
+    //        templateList(AEStato.spagna, AEStatus.comunita, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Distretti portoghesi (20) <br>
+    //     */
+    //    public void portogallo() {
+    //        //--18 distretti
+    //        dueColonne(AEStato.portogallo, AEStatus.distretto, 1, 2, 2, 3);
+    //
+    //        //--2 regioni autonome
+    //        dueColonne(AEStato.portogallo, AEStatus.regione, 2, 2, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni belghe (3) <br>
+    //     */
+    //    public void belgio() {
+    //        templateList(AEStato.belgio, AEStatus.regione, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Province olandesi (12) <br>
+    //     */
+    //    public void olanda() {
+    //        templateList(AEStato.olanda, AEStatus.provincia, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni croate (21) <br>
+    //     */
+    //    public void croazia() {
+    //        dueColonne(AEStato.croazia, AEStatus.regione, 1, 2, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Distretti albanesi (36) <br>
+    //     */
+    //    public void albania() {
+    //        dueColonne(AEStato.albania, AEStatus.distretto, 1, 1, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Distretti greci (64) <br>
+    //     */
+    //    public void grecia() {
+    //        //--13 periferie
+    //        dueColonne(AEStato.grecia, AEStatus.periferia, 1, 2, 1, 2);
+    //
+    //        //--51 prefetture (Attica è doppia)
+    //        dueColonne(AEStato.grecia, AEStatus.prefettura, 2, 2, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni ceche (14) <br>
+    //     */
+    //    public void cechia() {
+    //        templateList(AEStato.cechia, AEStatus.regione, 1, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni slovacche (8) <br>
+    //     */
+    //    public void slovacchia() {
+    //        dueColonne(AEStato.slovacchia, AEStatus.regione, 1, 2, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Province ungheresi (19) <br>
+    //     */
+    //    public void ungheria() {
+    //        templateList(AEStato.ungheria, AEStatus.provincia, 1, 2, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Distretti rumeni (42) <br>
+    //     */
+    //    public void romania() {
+    //        dueColonne(AEStato.romania, AEStatus.distretto, 1, 2, 2, 3);
+    //        dueColonne(AEStato.romania, AEStatus.capitale, 2, 2, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Distretti bulgari (28) <br>
+    //     */
+    //    public void bulgaria() {
+    //        dueColonne(AEStato.bulgaria, AEStatus.distretto, 1, 2, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Voivodati polacchi (16) <br>
+    //     */
+    //    public void polonia() {
+    //        dueColonne(AEStato.polonia, AEStatus.voivodato, 1, 2, 2, 3);
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni danesi (5) <br>
+    //     */
+    //    public void danimarca() {
+    //        dueColonne(AEStato.danimarca, AEStatus.regione, 1, 2, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Comuni sloveni <br>
+    //     */
+    //    public void slovenia() {
+    //        String paginaWiki = "ISO_3166-2:SI";
+    //        List<WrapDueStringhe> listaWrap = null;
+    //        String nome = VUOTA;
+    //        Stato stato = AEStato.slovenia.getStato();
+    //        ;
+    //        String iso = VUOTA;
+    //        String sigla = VUOTA;
+    //
+    //        //--212 comuni
+    //        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 1, 2);
+    //        if (listaWrap != null && listaWrap.size() > 0) {
+    //            for (WrapDueStringhe wrap : listaWrap) {
+    //                nome = wrap.getSeconda();
+    //                iso = wrap.getPrima();
+    //                sigla = text.levaTestaDa(iso, TRATTINO);
+    //                creaIfNotExist(nome, stato, iso, sigla, AEStatus.comune);
+    //            }
+    //        }
+    //    }
+    //
+    //
+    //    /**
+    //     * Regioni marocchine (16) <br>
+    //     */
+    //    public void marocco() {
+    //        dueColonne(AEStato.marocco, AEStatus.regione, 1, 2, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Province algerine (48) <br>
+    //     */
+    //    public void algeria() {
+    //        dueColonne(AEStato.algeria, AEStatus.provincia, 1, 2, 1, 2);
+    //    }
+    //
+    //
+    //    /**
+    //     * Governatorati tunisini (24) <br>
+    //     */
+    //    public void tunisia() {
+    //        dueColonne(AEStato.tunisia, AEStatus.governatorato, 1, 2, 1, 2);
+    //    }
 
 
     /**
      * Costruzione utilizzando un template <br>
      */
-    private void templateList(AEStato aEuropa, AEStatuto status, int posTabella, int rigaIniziale, int numColonna) {
+    @Deprecated
+    private void templateList(AEStato aEuropa, AEStatus status, int posTabella, int rigaIniziale, int numColonna) {
         List<WrapDueStringhe> listaWrap;
         String nome;
         String sigla;
@@ -685,7 +693,8 @@ public class RegioneLogic extends ALogic {
     /**
      * Costruzione utilizzando due colonne <br>
      */
-    private void dueColonne(AEStato aEuropa, AEStatuto status, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
+    @Deprecated
+    private void dueColonne(AEStato aEuropa, AEStatus status, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
         List<WrapDueStringhe> listaWrap;
         String nome;
         String sigla;
@@ -696,7 +705,7 @@ public class RegioneLogic extends ALogic {
             for (WrapDueStringhe wrap : listaWrap) {
                 nome = wrap.getSeconda();
                 iso = wrap.getPrima();
-                sigla = text.levaTestaDa(iso, TRATTINO);
+                sigla = text.levaTestoPrimaDi(iso, TRATTINO);
                 creaIfNotExist(nome, aEuropa.getStato(), iso, sigla, status);
             }
         }

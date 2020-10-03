@@ -222,7 +222,7 @@ public class ATextService extends AAbstractService {
      *
      * @return testo ridotto in uscita
      */
-    public String levaTestaDa(final String testoIn, String tagIniziale) {
+    public String levaTestoPrimaDi(final String testoIn, String tagIniziale) {
         String testoOut = testoIn.trim();
 
         if (this.isValid(testoOut) && this.isValid(tagIniziale)) {

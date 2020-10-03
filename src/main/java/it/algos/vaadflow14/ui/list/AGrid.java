@@ -14,7 +14,7 @@ import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.preferenza.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -330,7 +330,7 @@ public class AGrid {
         String message = VUOTA;
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
-            message = beanType.getSimpleName().toUpperCase() + SEP;
+            message = annotation.getTitleList(beanType).toUpperCase() + SEP;
             if (items != null && items.size() > 0) {
                 if (items.size() == 1) {
                     message += "Lista di un solo elemento";

@@ -150,6 +150,17 @@ public class ABeanService extends AAbstractService {
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
 
+    /**
+     * Controlla (prima di salvarla) se la entity indicata è stata modificata <br>
+     * Confronta la versione corrente con quella (se esiste) precedentemente salvata su mongo <br>
+     *
+     * @param entityBeanCurrent in memoria
+     *
+     * @return true se esisteva e non è stata modificata oppure se non esisteva
+     */
+    public boolean isNotModificata(AEntity entityBeanCurrent) {
+        return !isModificata(entityBeanCurrent);
+    }
 
     /**
      * Estrae le differenze delle sole properties modificate <br>

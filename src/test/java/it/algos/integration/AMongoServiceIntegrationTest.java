@@ -34,6 +34,7 @@ import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.SEP;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -757,7 +758,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @Test
     @Order(18)
     @DisplayName("18 - findAll by property")
-    void pertica() {
+    void findAll2() {
         System.out.println("18 - findAll filtrato da una property");
 
         sorgente = "mese";
@@ -782,6 +783,29 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertEquals(previstoIntero, listaBean.size());
 
 
+    }
+
+
+    @Test
+    @Order(19)
+    @DisplayName("19 - find next")
+    void findNext() {
+        sorgente = "aruba";
+        previsto="australia";
+        Stato statoOttenuto = (Stato) service.findNext(Stato.class, sorgente);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.id);
+    }
+
+    @Test
+    @Order(19)
+    @DisplayName("19 - find previous")
+    void findPrevious() {
+        sorgente = "australia";
+        previsto="aruba";
+        Stato statoOttenuto = (Stato) service.findPrevious(Stato.class, sorgente);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.id);
     }
 
 

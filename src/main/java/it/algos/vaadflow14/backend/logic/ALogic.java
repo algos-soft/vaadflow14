@@ -279,7 +279,7 @@ public abstract class ALogic implements AILogic {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
-    protected boolean usaBottoneReset;
+    protected boolean usaBottoneResetList;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
@@ -295,6 +295,16 @@ public abstract class ALogic implements AILogic {
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneExport;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneResetForm;
+
+    /**
+     * Flag di preferenza per l' utilizzo dei bottoni di spostamento. Di default false. <br>
+     */
+    protected boolean usaBottoniSpostamentoForm;
 
     /**
      * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
@@ -369,13 +379,15 @@ public abstract class ALogic implements AILogic {
         this.searchType = AESearch.nonUsata;
         this.searchProperty = annotation.getSearchPropertyName(entityClazz);
         this.usaBottoneDeleteAll = false;
-        this.usaBottoneReset = false;
+        this.usaBottoneResetList = false;
         this.usaBottoneNew = true;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = true;
         this.usaBottoneEdit = true;
+        this.usaBottoneResetForm = false;
+        this.usaBottoniSpostamentoForm = false;
         this.formClazz = AGenericForm.class;
     }
 
@@ -516,7 +528,7 @@ public abstract class ALogic implements AILogic {
             listaBottoni.add(AEButton.deleteAll);
         }
 
-        if (usaBottoneReset) {
+        if (usaBottoneResetList) {
             listaBottoni.add(AEButton.resetList);
         }
 
@@ -760,7 +772,18 @@ public abstract class ALogic implements AILogic {
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected List<AEButton> getListaFinaliBottom() {
-        return null;
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoniSpostamentoForm) {
+            listaBottoni.add(AEButton.prima);
+            listaBottoni.add(AEButton.dopo);
+        }
+
+        if (usaBottoneResetForm) {
+            listaBottoni.add(AEButton.resetForm);
+        }
+
+        return listaBottoni;
     }
 
 
@@ -883,12 +906,13 @@ public abstract class ALogic implements AILogic {
                 break;
             case resetForm:
                 this.resetForm(entityBean);
+                this.reloadForm(entityBean);
                 break;
             case doubleClick:
-                openDialogRoute(entityBean);
+                executeRoute(entityBean);
                 break;
             case nuovo:
-                this.openDialogRoute();
+                this.executeRoute();
                 break;
             case edit:
                 break;
@@ -898,7 +922,7 @@ public abstract class ALogic implements AILogic {
                 break;
             case back:
             case annulla:
-                this.back();
+                this.openConfirmExitForm(entityBean);
                 break;
             case conferma:
             case registra:
@@ -909,6 +933,12 @@ public abstract class ALogic implements AILogic {
             case delete:
                 this.delete();
                 this.back();
+                break;
+            case prima:
+                this.prima(entityBean);
+                break;
+            case dopo:
+                this.dopo(entityBean);
                 break;
             case searchField:
                 this.searchFieldValue = searchFieldValue;
@@ -935,10 +965,46 @@ public abstract class ALogic implements AILogic {
 
 
     /**
+     * Azione proveniente dal click sul bottone Prima <br>
+     * Recupera la lista ORDINATA delle properties <br>
+     * Si sposta alla precedente <br>
+     * Carica il form relativo <br>
+     */
+    protected void prima(AEntity currentEntityBean) {
+        AEntity previousEntityBean;
+
+        previousEntityBean= mongo.findPrevious(entityClazz,currentEntityBean.id);
+        executeRoute(previousEntityBean);
+    }
+
+
+    /**
+     * Azione proveniente dal click sul bottone Dopo <br>
+     * Recupera la lista ORDINATA delle properties <br>
+     * Si sposta alla successiva <br>
+     * Carica il form relativo <br>
+     */
+    protected void dopo(AEntity currentEntityBean) {
+        AEntity nextEntityBean;
+
+        nextEntityBean= mongo.findNext(entityClazz,currentEntityBean.id);
+        executeRoute(nextEntityBean);
+    }
+
+
+    /**
      * Azione proveniente dal click sul bottone Annulla
      */
     protected void back() {
         UI.getCurrent().getPage().getHistory().back();
+    }
+
+
+    /**
+     * Refresh del form
+     */
+    public void reloadForm(AEntity entityBean) {
+        UI.getCurrent().getPage().reload();
     }
 
 
@@ -957,13 +1023,13 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    protected final void openDialogRoute() {
+    protected final void executeRoute() {
         final QueryParameters query = route.getQueryForm(entityClazz);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 
 
-    protected final void openDialogRoute(AEntity entityBean) {
+    protected final void executeRoute(AEntity entityBean) {
         final QueryParameters query = route.getQueryForm(entityClazz, entityBean.id, operationForm);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
@@ -986,7 +1052,6 @@ public abstract class ALogic implements AILogic {
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
             messageDialog.open();
         }
-
     }
 
 
@@ -1008,6 +1073,30 @@ public abstract class ALogic implements AILogic {
             messageDialog.addButton().text("Continua").icon(icon).error().onClick(e -> clickReset()).closeOnClick();
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
             messageDialog.open();
+        }
+    }
+
+
+    /**
+     * Opens the confirmation dialog before exiting form. <br>
+     * <p>
+     * The dialog will display the given title and message(s), then call <br>
+     * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
+     */
+    protected final void openConfirmExitForm(AEntity entityBean) {
+        MessageDialog messageDialog;
+        String message = "La entity è stata modificata. Sei sicuro di voler perdere le modifiche? L' operazione non è reversibile.";
+        VaadinIcon iconBack = VaadinIcon.ARROW_LEFT;
+
+        if (currentForm.isModificato()) {
+            if (mongo.isValid(entityClazz)) {
+                messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
+                messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
+                messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> back()).closeOnClick();
+                messageDialog.open();
+            }
+        } else {
+            back();
         }
     }
 

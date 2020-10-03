@@ -2,13 +2,11 @@ package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import it.algos.simple.backend.packages.Lambda;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
@@ -380,7 +378,7 @@ public abstract class AForm extends VerticalLayout {
         if (array.isValid(fieldsNameList)) {
             fieldsList = new ArrayList<>();
             for (String fieldKey : fieldsNameList) {
-                field = fieldService.crea(entityBean,binder,operationForm, fieldKey);
+                field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
                 if (field != null) {
                     fieldsList.add(field);
                 } else {
@@ -388,16 +386,16 @@ public abstract class AForm extends VerticalLayout {
                     logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
                 }
 
-//                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
-//                field = fieldService.creaOnly(reflectionJavaField);
-//                if (field != null) {
-//                    fieldService.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
-//                    fieldsList.add(field);
-//                    //                    binder.forField(field).bind(fieldKey);
-//                } else {
-//                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
-//                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
-//                }
+                //                reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+                //                field = fieldService.creaOnly(reflectionJavaField);
+                //                if (field != null) {
+                //                    fieldService.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
+                //                    fieldsList.add(field);
+                //                    //                    binder.forField(field).bind(fieldKey);
+                //                } else {
+                //                    AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+                //                    logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+                //                }
             }
         }
     }
@@ -431,14 +429,12 @@ public abstract class AForm extends VerticalLayout {
         AField field = null;
 
         if (usaFieldNote) {
-            field = fieldService.crea(entityBean,binder,operationForm, FlowCost.FIELD_NOTE);
+            field = fieldService.crea(entityBean, binder, operationForm, FlowCost.FIELD_NOTE);
             if (field != null) {
                 fieldsList.add(field);
             }
         }
     }
-
-
 
 
     /**
@@ -492,6 +488,7 @@ public abstract class AForm extends VerticalLayout {
         }
     }
 
+
     /**
      * Regola in lettura eventuali valori NON associati al binder. <br>
      * Dal DB alla UI <br>
@@ -511,6 +508,7 @@ public abstract class AForm extends VerticalLayout {
             }
         }
     }
+
 
     /**
      * Eventuali aggiustamenti finali al layout <br>
@@ -596,7 +594,7 @@ public abstract class AForm extends VerticalLayout {
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
         //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
         try {
-            if (binder.writeBeanIfValid((AEntity)entityBean)) {
+            if (binder.writeBeanIfValid((AEntity) entityBean)) {
                 return entityBean;
             } else {
                 return null;
@@ -622,6 +620,16 @@ public abstract class AForm extends VerticalLayout {
         if (step == 2) {
             formLayout.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1), new FormLayout.ResponsiveStep(minWidthForm, 2));
         }
+    }
+
+
+    public boolean isModificato() {
+        try {
+            binder.writeBean(entityBean);
+        } catch (Exception unErrore) {
+            int a=87;
+        }
+        return beanService.isModificata(entityBean);
     }
 
 }
