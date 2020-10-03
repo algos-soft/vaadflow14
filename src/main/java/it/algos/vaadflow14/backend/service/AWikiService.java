@@ -888,6 +888,11 @@ public class AWikiService extends AAbstractService {
             }
         }
 
+        if (text.isEmpty(nome) && listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
+            nome = text.estrae(listaRiga.get(1), GRAFFE_INI, GRAFFE_END);
+            nome = text.estrae(nome, PIPE, PIPE);
+        }
+
         if (text.isEmpty(nome)) {
             if (listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
                 wrap = getTemplateBandierina(listaRiga.get(1));

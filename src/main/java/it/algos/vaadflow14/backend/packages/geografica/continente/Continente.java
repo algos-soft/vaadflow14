@@ -41,7 +41,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderContinente")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, sortProperty = "ordine")

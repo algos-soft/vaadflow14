@@ -4,10 +4,8 @@ import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
 import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AIField;
 import it.algos.vaadflow14.ui.service.AFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -116,12 +114,12 @@ public class ABeanService extends AAbstractService {
             listaNomi = annotation.getListaPropertiesForm(entityBean.getClass());
         }
 
-        if (FlowVar.usaCompany&&annotation.usaCompany(entityBean.getClass())) {
+        if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {
             listaNomi.add(0, FIELD_COMPANY);
         }
 
         for (String fieldKey : listaNomi) {
-            field = fieldService.crea(entityBean,binder,operationForm, fieldKey);
+            field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
             if (field != null) {
                 fieldsList.add(field);
             }
@@ -150,6 +148,7 @@ public class ABeanService extends AAbstractService {
         return !entityBeanCurrent.equals(entityBeanRegistrataSulDatabaseMongo);
     }
 
+
     /**
      * Controlla (prima di salvarla) se la entity indicata è stata modificata <br>
      * Confronta la versione corrente con quella (se esiste) precedentemente salvata su mongo <br>
@@ -161,6 +160,7 @@ public class ABeanService extends AAbstractService {
     public boolean isNotModificata(AEntity entityBeanCurrent) {
         return !isModificata(entityBeanCurrent);
     }
+
 
     /**
      * Estrae le differenze delle sole properties modificate <br>
