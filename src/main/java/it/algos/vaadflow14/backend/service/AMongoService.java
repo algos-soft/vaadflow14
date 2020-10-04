@@ -168,6 +168,20 @@ public class AMongoService<capture> extends AAbstractService {
 
 
     /**
+     * Check the existence of some entities. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return true if the collection has entities requested
+     */
+    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+        return count(entityClazz, propertyName, propertyValue) > 0;
+    }
+
+
+    /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
      *
      * @param collectionName The name of the collection or view to count
@@ -188,6 +202,29 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public int count(Class<? extends AEntity> entityClazz) {
         return count(entityClazz, (Query) null);
+    }
+
+
+    /**
+     * Conteggio di alcune entities selezionate di una collection. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return numero di entities selezionate
+     */
+    public int count(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+        if (entityClazz == null) {
+            return 0;
+        }
+        if (text.isEmpty(propertyName) || propertyValue == null) {
+            return count(entityClazz);
+        }
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where(propertyName).is(propertyValue));
+        return findAll(entityClazz, query).size();
     }
 
 
@@ -496,7 +533,7 @@ public class AMongoService<capture> extends AAbstractService {
             return null;
         }
 
-        if (text.isValid(keyId) ) {
+        if (text.isValid(keyId)) {
             query.addCriteria(Criteria.where("_id").gt(keyId));
             query.limit(1);
             listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
@@ -508,6 +545,7 @@ public class AMongoService<capture> extends AAbstractService {
 
         return nextEntity;
     }
+
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>
@@ -525,9 +563,9 @@ public class AMongoService<capture> extends AAbstractService {
             return null;
         }
 
-        if (text.isValid(keyId) ) {
+        if (text.isValid(keyId)) {
             query.addCriteria(Criteria.where("_id").lt(keyId));
-            query.with(Sort.by(Sort.Direction.DESC,"_id"));
+            query.with(Sort.by(Sort.Direction.DESC, "_id"));
             query.limit(1);
             listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
         }

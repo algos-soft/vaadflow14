@@ -775,7 +775,7 @@ public class AWikiService extends AAbstractService {
         WrapDueStringhe wrap;
 
         listaTable = getTable(wikiTitle);
-        if (listaTable != null) {
+        if (listaTable != null && listaTable.size() > 0) {
             listaWrap = new ArrayList<>();
             wrap = getWrapTitolo(listaTable.get(0));
             listaWrap.add(wrap);
@@ -880,7 +880,12 @@ public class AWikiService extends AAbstractService {
             }
         }
 
-        if (listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(1).contains(QUADRE_END)) {
+        //--finlandia
+        if (text.isEmpty(nome) && listaRiga.size() == 4 && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
+            nome = listaRiga.get(3);
+        }
+
+        if (text.isEmpty(nome) && listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(1).contains(QUADRE_END)) {
             nome = listaRiga.get(1);
         } else {
             if (listaRiga.size() > 2 && listaRiga.get(2).contains(QUADRE_INI) && listaRiga.get(2).contains(QUADRE_END)) {
@@ -888,11 +893,13 @@ public class AWikiService extends AAbstractService {
             }
         }
 
-        if (text.isEmpty(nome) && listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
+        //--solo per Italia (spero)
+        if (text.isEmpty(nome) && listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(PIPE) && listaRiga.get(1).contains(GRAFFE_END)) {
             nome = text.estrae(listaRiga.get(1), GRAFFE_INI, GRAFFE_END);
             nome = text.estrae(nome, PIPE, PIPE);
         }
 
+        //--template bandierine per recuperare il nome
         if (text.isEmpty(nome)) {
             if (listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
                 wrap = getTemplateBandierina(listaRiga.get(1));

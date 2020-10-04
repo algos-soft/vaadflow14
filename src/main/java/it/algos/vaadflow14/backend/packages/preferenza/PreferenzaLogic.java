@@ -64,19 +64,17 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 public class PreferenzaLogic extends ALogic {
 
     /**
+     * Versione della classe per la serializzazione
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
     public APreferenzaService pref;
-
-
-    /**
-     * Versione della classe per la serializzazione
-     */
-    private static final long serialVersionUID = 1L;
-
 
 
     /**
@@ -154,6 +152,7 @@ public class PreferenzaLogic extends ALogic {
         return new AlertWrap(green, blue, red, false);
     }
 
+
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
@@ -200,7 +199,7 @@ public class PreferenzaLogic extends ALogic {
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            currentForm = appContext.getBean(PreferenzaForm.class, getWrapForm(entityBean));
+            currentForm = appContext.getBean(PreferenzaForm.class, this, getWrapForm(entityBean));
         }
 
         return currentForm;
@@ -215,18 +214,18 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza creaIfNotExist(AEPreferenza aePref) {
-        return creaIfNotExist (aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.getNote());
+        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.getNote());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (obbligatoria)
-     * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue       (obbligatorio) memorizza tutto in byte[]
-     * @param note        (facoltativo)
+     * @param code         codice di riferimento (obbligatorio)
+     * @param descrizione  (obbligatoria)
+     * @param type         (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+     * @param note         (facoltativo)
      *
      * @return la nuova entity appena creata e salvata
      */
@@ -254,11 +253,11 @@ public class PreferenzaLogic extends ALogic {
      * <p>
      * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
      *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (obbligatoria)
-     * @param type        (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue       (obbligatorio) memorizza tutto in byte[]
-     * @param note        (facoltativo)
+     * @param code         codice di riferimento (obbligatorio)
+     * @param descrizione  (obbligatoria)
+     * @param type         (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+     * @param note         (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -342,6 +341,7 @@ public class PreferenzaLogic extends ALogic {
     public Preferenza findById(String keyID) {
         return (Preferenza) super.findById(keyID);
     }
+
 
     /**
      * Retrieves an entity by its keyProperty.

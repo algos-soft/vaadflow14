@@ -1,14 +1,15 @@
 package it.algos.unit;
 
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.server.StreamResource;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
+import java.util.List;
+import java.util.Map;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static org.junit.Assert.*;
 
 /**
@@ -34,6 +35,8 @@ public class AResourceServiceTest extends ATest {
      */
     @InjectMocks
     AResourceService service;
+
+    private Map<String, List<String>> mappa;
 
 
     /**
@@ -62,12 +65,100 @@ public class AResourceServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        mappa = null;
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("1 - Legge nella directory 'config'")
+    @DisplayName("1 - Legge nella directory 'frontend'")
+    void leggeFrontend() {
+        previsto = ".login-information";
+
+        sorgente = "styles.shared-styles.css";
+        ottenuto = service.leggeFrontend(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "styles/shared-styles.css";
+        ottenuto = service.leggeFrontend(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Legge nella directory META-INF")
+    void leggeMetaInf() {
+        sorgente = "rainbow.png";
+        ottenuto = service.leggeMetaInf(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "img.rainbow.png";
+        ottenuto = service.leggeMetaInf(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "img/rainbow.png";
+        ottenuto = service.leggeMetaInf(sorgente);
+        assertTrue(text.isValid(ottenuto));
+
+        sorgente = "bandiere/at.png";
+        ottenuto = service.leggeMetaInf(sorgente);
+        assertTrue(text.isValid(ottenuto));
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Legge i bytes[]")
+    void getBytes() {
+        sorgente = "rainbow.png";
+        bytes = service.getBytes(sorgente);
+        assertNull(bytes);
+
+        sorgente = "img/rainbow.png";
+        bytes = service.getBytes(sorgente);
+        assertNotNull(bytes);
+
+        sorgente = "src/main/resources/META-INF/resources/img/rainbow.png";
+        bytes = service.getBytes(sorgente);
+        assertNotNull(bytes);
+
+        sorgente = "bandiere/ca.png";
+        bytes = service.getBytes(sorgente);
+        assertNotNull(bytes);
+
+        sorgente = "src/main/resources/META-INF/resources/bandiere/ca.png";
+        bytes = service.getBytes(sorgente);
+        assertNotNull(bytes);
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - Legge le risorse")
+    void getSrc() {
+        StreamResource resource;
+
+        sorgente = "rainbow.png";
+        ottenuto = service.getSrc(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "src/main/resources/META-INF/resources/img/" + sorgente;
+        ottenuto = service.getSrc(sorgente);
+        assertNotNull(ottenuto);
+
+        sorgente = "ca.png";
+        sorgente = "src/main/resources/META-INF/resources/bandiere/" + sorgente;
+        ottenuto = service.getSrc(sorgente);
+        assertNotNull(ottenuto);
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - Legge un file nella directory 'config'")
     void leggeConfig() {
         previsto = "gac=aggiungere";
 
@@ -99,114 +190,86 @@ public class AResourceServiceTest extends ATest {
         sorgente = "africa";
         ottenuto = service.leggeConfig(sorgente);
         assertTrue(text.isValid(ottenuto));
-    }
 
-
-    @Test
-    @Order(2)
-    @DisplayName("2 - Legge nella directory 'frontend'")
-    void leggeFrontend() {
-        previsto = ".login-information";
-
-        sorgente = "styles.shared-styles.css";
-        ottenuto = service.leggeFrontend(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
-
-        sorgente = "styles/shared-styles.css";
-        ottenuto = service.leggeFrontend(sorgente);
-        assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.startsWith(previsto));
-    }
-
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - Legge nella directory META-INF")
-    void leggeMetaInf() {
-        sorgente = "rainbow.png";
-        ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
-
-        sorgente = "img.rainbow.png";
-        ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
-
-        sorgente = "img/rainbow.png";
-        ottenuto = service.leggeMetaInf(sorgente);
+        sorgente = "regioni";
+        ottenuto = service.leggeConfig(sorgente);
         assertTrue(text.isValid(ottenuto));
 
-        sorgente = "bandiere/at.png";
-        ottenuto = service.leggeMetaInf(sorgente);
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - Legge una lista dalla directory 'config'")
+    void leggeListaConfig() {
+        sorgente = "regioni";
+        ottenuto = service.leggeConfig(sorgente);
         assertTrue(text.isValid(ottenuto));
+
+        listaStr = service.leggeListaConfig(sorgente, true);
+        assertNotNull(listaStr);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("lista CON titoli");
+        System.out.println(VUOTA);
+        print(listaStr);
+
+        listaStr = service.leggeListaConfig(sorgente, false);
+        assertNotNull(listaStr);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("lista SENZA titoli");
+        System.out.println(VUOTA);
+        print(listaStr);
+
+
+        listaStr = service.leggeListaConfig(sorgente);
+        assertNotNull(listaStr);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("lista default");
+        System.out.println(VUOTA);
+        print(listaStr);
     }
 
 
     @Test
-    @Order(4)
-    @DisplayName("4 - Legge i bytes[]")
-    void getBytes() {
-        sorgente = "rainbow.png";
-        bytes = service.getBytes(sorgente);
-        assertNull(bytes);
+    @Order(7)
+    @DisplayName("7 - Legge una mappa dalla directory 'config'")
+    void leggeMappaConfig() {
+        sorgente = "regioni";
+        ottenuto = service.leggeConfig(sorgente);
+        assertTrue(text.isValid(ottenuto));
 
-        sorgente = "img/rainbow.png" ;
-        bytes = service.getBytes(sorgente);
-        assertNotNull(bytes);
-
-        sorgente = "src/main/resources/META-INF/resources/img/rainbow.png" ;
-        bytes = service.getBytes(sorgente);
-        assertNotNull(bytes);
-
-        sorgente="bandiere/ca.png";
-        bytes = service.getBytes(sorgente);
-        assertNotNull(bytes);
-
-        sorgente = "src/main/resources/META-INF/resources/bandiere/ca.png";
-        bytes = service.getBytes(sorgente);
-        assertNotNull(bytes);
+        mappa = service.leggeMappaConfig(sorgente);
+        assertNotNull(mappa);
+        printMappa(mappa);
     }
 
 
-    @Test
-    @Order(5)
-    @DisplayName("5 - Legge le risorse")
-    void getSrc() {
-        StreamResource resource;
+    //    @Test
+    //    @Order(6)
+    //    @DisplayName("6 - Costruisce una Image da un file")
+    //    void getImage() {
+    //        Image image;
+    //
+    //        sorgente = "rainbow.png";
+    //        image = service.getImage(sorgente);
+    //        assertNull(image);
+    //
+    ////        sorgente = "src/main/resources/META-INF/resources/img/"  + sorgente;
+    ////        image = service.getImage(sorgente);
+    ////        assertNotNull(image);
+    //
+    //        sorgente="ca.png";
+    //        sorgente = "src/main/resources/META-INF/resources/bandiere/"  + sorgente;
+    //        image = service.getImage(sorgente);
+    //        assertNotNull(image);
+    //    }
 
-        sorgente = "rainbow.png";
-        ottenuto = service.getSrc(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
-
-        sorgente = "src/main/resources/META-INF/resources/img/"  + sorgente;
-        ottenuto = service.getSrc(sorgente);
-        assertNotNull(ottenuto);
-
-        sorgente="ca.png";
-        sorgente = "src/main/resources/META-INF/resources/bandiere/"  + sorgente;
-        ottenuto = service.getSrc(sorgente);
-        assertNotNull(ottenuto);
-    }
+    ;
 
 
-//    @Test
-//    @Order(6)
-//    @DisplayName("6 - Costruisce una Image da un file")
-//    void getImage() {
-//        Image image;
-//
-//        sorgente = "rainbow.png";
-//        image = service.getImage(sorgente);
-//        assertNull(image);
-//
-////        sorgente = "src/main/resources/META-INF/resources/img/"  + sorgente;
-////        image = service.getImage(sorgente);
-////        assertNotNull(image);
-//
-//        sorgente="ca.png";
-//        sorgente = "src/main/resources/META-INF/resources/bandiere/"  + sorgente;
-//        image = service.getImage(sorgente);
-//        assertNotNull(image);
-//    }
 
 
     /**

@@ -685,7 +685,7 @@ public abstract class ALogic implements AILogic {
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            currentForm = appContext.getBean(formClazz, getWrapForm(entityBean));
+            currentForm = appContext.getBean(formClazz, this, getWrapForm(entityBean));
         }
 
         return currentForm;
@@ -973,7 +973,7 @@ public abstract class ALogic implements AILogic {
     protected void prima(AEntity currentEntityBean) {
         AEntity previousEntityBean;
 
-        previousEntityBean= mongo.findPrevious(entityClazz,currentEntityBean.id);
+        previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
         executeRoute(previousEntityBean);
     }
 
@@ -987,7 +987,7 @@ public abstract class ALogic implements AILogic {
     protected void dopo(AEntity currentEntityBean) {
         AEntity nextEntityBean;
 
-        nextEntityBean= mongo.findNext(entityClazz,currentEntityBean.id);
+        nextEntityBean = mongo.findNext(entityClazz, currentEntityBean.id);
         executeRoute(nextEntityBean);
     }
 

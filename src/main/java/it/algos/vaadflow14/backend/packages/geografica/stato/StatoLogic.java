@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogic;
+import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -161,6 +162,38 @@ public class StatoLogic extends ALogic {
 
 
     /**
+     * Costruisce una lista ordinata di nomi delle properties del Form. <br>
+     * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIForm della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getFormPropertyNamesList() {
+        String propertyStato = "stato";
+        String tagRegioni = "regioni";
+        boolean esistonoRegioni = false;
+        List<String> lista = super.getFormPropertyNamesList();
+
+        if (AEPreferenza.usaDebug.is()) {
+            return lista;
+        }
+
+        esistonoRegioni = mongo.esistono(Regione.class, propertyStato, entityBean);
+        if (!esistonoRegioni && lista.contains(tagRegioni)) {
+            lista.remove(tagRegioni);
+        }
+
+        return lista;
+    }
+
+
+    /**
      * Crea e registra una entity solo se non esisteva <br>
      *
      * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
@@ -232,6 +265,18 @@ public class StatoLogic extends ALogic {
                 .build();
 
         return (Stato) fixKey(newEntityBean);
+    }
+
+
+    /**
+     * Cerca tutte le entities di questa collection. <br>
+     *
+     * @return lista di entityBeans
+     *
+     * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
+     */
+    public List<Stato> findAllStato() {
+        return mongo.findAll(Stato.class, Sort.by(Sort.Direction.ASC, "ordine"));
     }
 
 

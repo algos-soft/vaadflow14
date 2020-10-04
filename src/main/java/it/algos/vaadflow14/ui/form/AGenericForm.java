@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -16,8 +17,8 @@ import org.springframework.context.annotation.Scope;
 public class AGenericForm extends AForm {
 
 
-    public AGenericForm(WrapForm wrap) {
-        super(wrap);
+    public AGenericForm(ALogic logic, WrapForm wrap) {
+        super(logic, wrap);
     }
 
 }

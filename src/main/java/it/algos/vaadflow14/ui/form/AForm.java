@@ -12,6 +12,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.logic.AILogic;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
@@ -219,7 +220,8 @@ public abstract class AForm extends VerticalLayout {
     }
 
 
-    public AForm(WrapForm wrap) {
+    public AForm(ALogic entityLogic, WrapForm wrap) {
+        this.entityLogic = entityLogic;
         this.wrap = wrap;
     }
 

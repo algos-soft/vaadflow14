@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import java.io.File;
 
-@Route(value = "piView")
+@Route(value = "gac")
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PiView extends Div {

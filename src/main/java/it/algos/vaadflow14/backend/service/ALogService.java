@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.server.VaadinSession;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AELogLivello;
@@ -99,7 +100,9 @@ public class ALogService extends AAbstractService {
 
         Span label = new Span(message);
         notification.add(label);
-        notification.open();
+        if (VaadinSession.getCurrent() != null) {
+            notification.open();
+        }
     }
 
     public static void messageSuccess(String message) {

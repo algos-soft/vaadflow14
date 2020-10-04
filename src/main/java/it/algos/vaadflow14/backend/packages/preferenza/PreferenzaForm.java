@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.service.AEnumerationService;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.form.AForm;
@@ -39,8 +40,8 @@ public class PreferenzaForm extends AForm {
     private AField valueField;
 
 
-    public PreferenzaForm(WrapForm wrap) {
-        super(wrap);
+    public PreferenzaForm(ALogic logic, WrapForm wrap) {
+        super(logic,wrap);
     }
 
 

@@ -119,7 +119,7 @@ public class RegioneLogicTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(1)
     @DisplayName("1 - legge testo completo table")
     void leggeTable() {
@@ -143,7 +143,7 @@ public class RegioneLogicTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(2)
     @DisplayName("2 - legge tutte le righe VALIDE di una table")
     void getTable() {
@@ -166,12 +166,12 @@ public class RegioneLogicTest extends ATest {
             System.out.println(VUOTA);
             System.out.println("*** " + alfaDue + " ***");
             System.out.println("Ci sono " + listaGrezza.size() + " elementi");
-            print(listaGrezza);
+            printList(listaGrezza);
         }
     }
 
 
-//    @Test
+    //    @Test
     @Order(3)
     @DisplayName("3 - legge valori VALIDI per le regioni")
     void getRegioni() {
@@ -198,6 +198,7 @@ public class RegioneLogicTest extends ATest {
         }
     }
 
+
     @Test
     @Order(4)
     @DisplayName("3 - legge i titoli delle tabelle regioni")
@@ -221,12 +222,12 @@ public class RegioneLogicTest extends ATest {
             System.out.println(VUOTA);
             System.out.println("*** titoli " + alfaDue + " ***");
             System.out.println("Ci sono " + listaWrap.size() + " elementi");
-            if (listaWrap.get(0)!=null) {
-                System.out.println(listaWrap.get(0).getPrima()+SEP+listaWrap.get(0).getSeconda());
+            if (listaWrap.get(0) != null) {
+                System.out.println(listaWrap.get(0).getPrima() + SEP + listaWrap.get(0).getSeconda());
             } else {
                 System.out.println("Mancano i titoli");
             }
-            System.out.println(listaWrap.get(1).getPrima()+SEP+listaWrap.get(1).getSeconda());
+            System.out.println(listaWrap.get(1).getPrima() + SEP + listaWrap.get(1).getSeconda());
         }
     }
 
@@ -256,20 +257,6 @@ public class RegioneLogicTest extends ATest {
     //            }
     //        }
     //    }
-
-
-    private void print(List<List<String>> listaTable) {
-        if (array.isValid(listaTable)) {
-            for (List<String> lista : listaTable) {
-                System.out.println(VUOTA);
-                if (array.isValid(lista)) {
-                    for (String stringa : lista) {
-                        System.out.println(stringa);
-                    }
-                }
-            }
-        }
-    }
 
 
     private void printWrap(List<WrapDueStringhe> listaWrap) {

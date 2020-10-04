@@ -2,12 +2,13 @@ package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -68,6 +70,15 @@ public class RegioneLogic extends ALogic {
      */
     @Autowired
     public AWikiService wiki;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AResourceService resource;
 
 
     /**
@@ -357,7 +368,7 @@ public class RegioneLogic extends ALogic {
      * Recupera le suddivisioni di secondo livello per tutti gli stati <br>
      */
     public void creaRegioniAllStati() {
-        List<Stato> listaStati = mongo.findAll(Stato.class);
+        List<Stato> listaStati = statoLogic.findAllStato();
         List<WrapDueStringhe> listaWrap = null;
 
         if (array.isValid(listaStati)) {
@@ -406,6 +417,7 @@ public class RegioneLogic extends ALogic {
                 nome = fixNome(wrap.getSeconda());
                 iso = wrap.getPrima();
                 sigla = text.levaTestoPrimaDi(iso, TRATTINO);
+                aeStatus = stato.id.equals("italia") ? fixStatusItalia(nome) : aeStatus;
                 if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
                     creaIfNotExist(nome, stato, iso, sigla, aeStatus);
                 } else {
@@ -429,6 +441,13 @@ public class RegioneLogic extends ALogic {
         }
 
         return nomeOut;
+    }
+
+
+    public AEStatus fixStatusItalia(String nome) {
+        Map<String, List<String>> mappa = resource.leggeMappaConfig("regioni");
+        String status = mappa.get(nome).get(4);
+        return AEStatus.get(status);
     }
 
 

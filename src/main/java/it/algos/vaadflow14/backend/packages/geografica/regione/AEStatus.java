@@ -68,7 +68,7 @@ public enum AEStatus {
         AEStatus aeStatuto = AEStatus.regione;
 
         for (AEStatus statuto : AEStatus.values()) {
-            if (statuto.name().equals(nome.toLowerCase())) {
+            if (statuto.name().toLowerCase().equals(nome.toLowerCase())) {
                 aeStatuto = statuto;
             }
         }

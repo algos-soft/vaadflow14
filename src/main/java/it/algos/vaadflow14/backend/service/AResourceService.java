@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -55,6 +53,18 @@ public class AResourceService extends AAbstractService {
 
     /**
      * Legge una lista di righe di risorse da {project directory}/config/ <br>
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     *
+     * @return lista di righe grezze
+     */
+    public List<String> leggeListaConfig(String simpleNameFileToBeRead) {
+        return leggeListaConfig(simpleNameFileToBeRead, true);
+    }
+
+
+    /**
+     * Legge una lista di righe di risorse da {project directory}/config/ <br>
      * La prima riga contiene i titoli
      *
      * @param simpleNameFileToBeRead nome del file senza path e senza directory
@@ -87,6 +97,43 @@ public class AResourceService extends AAbstractService {
         }
 
         return listaRighe;
+    }
+
+
+    /**
+     * Legge una mappa di risorse da {project directory}/config/ <br>
+     * La prima riga contiene i titoli
+     *
+     * @param simpleNameFileToBeRead nome del file senza path e senza directory
+     *
+     * @return lista di righe grezze
+     */
+    public Map<String, List<String>> leggeMappaConfig(String simpleNameFileToBeRead) {
+        Map<String, List<String>> mappa = null;
+        List<String> listaParti = null;
+        String rawText = leggeConfig(simpleNameFileToBeRead);
+        String[] righe = null;
+        String[] parti = null;
+
+        if (text.isValid(rawText)) {
+            righe = rawText.split(A_CAPO);
+            if (righe != null && righe.length > 0) {
+                mappa = new LinkedHashMap<>();
+                for (String riga : righe) {
+                    listaParti = new ArrayList<>();
+                    parti = riga.split(VIRGOLA);
+
+                    if (parti != null && parti.length > 1) {
+                        for (int k = 1; k < parti.length; k++) {
+                            listaParti.add(parti[k]);
+                        }
+                    }
+                    mappa.put(parti[0], listaParti);
+                }
+            }
+        }
+
+        return mappa;
     }
 
 

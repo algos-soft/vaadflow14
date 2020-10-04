@@ -215,7 +215,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(8)
     @DisplayName("8 - legge le righe delle regioni italiane")
     public void getTableRegioni() {
@@ -237,11 +237,11 @@ public class AWikiServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("8 - Regioni: " + listaGrezza.size());
         System.out.println("*******");
-        print(listaGrezza);
+        printList(listaGrezza);
     }
 
 
-//    @Test
+    //    @Test
     @Order(9)
     @DisplayName("9 - legge le righe delle province")
     public void getTableProvince() {
@@ -260,7 +260,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(10)
     @DisplayName("10 - legge le regioni della Francia")
     public void getTableFrancia() {
@@ -291,7 +291,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(11)
     @DisplayName("11 - legge i cantoni della Svizzera")
     public void getTableSvizzera() {
@@ -306,7 +306,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(12)
     @DisplayName("12 - legge i lander della Austria")
     public void getTableAustria() {
@@ -321,7 +321,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(13)
     @DisplayName("13 - legge i lander della Germania")
     public void getTableGermania() {
@@ -336,7 +336,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(14)
     @DisplayName("14 - legge le comunità della Spagna")
     public void getTableSpagna() {
@@ -351,7 +351,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(15)
     @DisplayName("15 - legge i distretti del Portogallo")
     public void getTablePortogallo() {
@@ -381,7 +381,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(17)
     @DisplayName("17 - legge i comuni del Belgio")
     public void getTableBelgio() {
@@ -396,7 +396,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(18)
     @DisplayName("18 - legge le province dell'Olanda")
     public void getTableOlanda() {
@@ -411,7 +411,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(19)
     @DisplayName("19 - legge le province della Croazia")
     public void getTableCroazia() {
@@ -426,7 +426,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(20)
     @DisplayName("20 - legge i distretti della Albania")
     public void getTableAlbania() {
@@ -441,7 +441,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(21)
     @DisplayName("21 - legge i distretti della Grecia")
     public void getTableGrecia() {
@@ -467,7 +467,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(22)
     @DisplayName("22 - legge le regioni della Cechia")
     public void getTableCechia() {
@@ -482,7 +482,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(23)
     @DisplayName("23 - legge le regioni della Slovacchia")
     public void getTableSlovacchia() {
@@ -496,7 +496,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(24)
     @DisplayName("24 - legge le province della Ungheria")
     public void getTableUngheria() {
@@ -510,7 +511,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(25)
     @DisplayName("25 - legge i distretti della Romania")
     public void getTableRomania() {
@@ -535,7 +537,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(26)
     @DisplayName("26 - legge i distretti della Bulgaria")
     public void getTableBulgaria() {
@@ -549,7 +552,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(27)
     @DisplayName("27 - legge i voivodati della Polonia")
     public void getTablePolonia() {
@@ -563,7 +567,8 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+
+    //    @Test
     @Order(28)
     @DisplayName("28 - legge le regioni della Danimarca")
     public void getTableDanimarca() {
@@ -575,20 +580,6 @@ public class AWikiServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("28 - Danimarca: " + listaWrap.size());
         printWrap(listaWrap);
-    }
-
-
-    private void print(List<List<String>> listaTable) {
-        if (array.isValid(listaTable)) {
-            for (List<String> lista : listaTable) {
-                System.out.println(VUOTA);
-                if (array.isValid(lista)) {
-                    for (String stringa : lista) {
-                        System.out.println(stringa);
-                    }
-                }
-            }
-        }
     }
 
 

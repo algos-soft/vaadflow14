@@ -302,4 +302,40 @@ public abstract class ATest {
     }
 
 
+    protected void print(List<String> lista) {
+        if (array.isValid(lista)) {
+            for (String stringa : lista) {
+                System.out.println(stringa);
+            }
+        }
+    }
+
+
+    protected void printList(List<List<String>> listaTable) {
+        if (array.isValid(listaTable)) {
+            for (List<String> lista : listaTable) {
+                System.out.println(VUOTA);
+                if (array.isValid(lista)) {
+                    for (String stringa : lista) {
+                        System.out.println(stringa);
+                    }
+                }
+            }
+        }
+    }
+
+
+    protected void printMappa(Map<String, List<String>> mappa) {
+        List<String> lista;
+        if (array.isValid(mappa)) {
+            for (String key : mappa.keySet()) {
+                lista = mappa.get(key);
+                System.out.println(VUOTA);
+                if (array.isValid(lista)) {
+                    print(lista);
+                }
+            }
+        }
+    }
+
 }// end of class

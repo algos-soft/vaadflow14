@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.geografica.provincia;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
@@ -36,8 +37,8 @@ public class ProvinciaForm extends AForm {
     public RegioneLogic regioneLogic;
 
 
-    public ProvinciaForm(WrapForm wrap) {
-        super(wrap);
+    public ProvinciaForm(ALogic logic, WrapForm wrap) {
+        super(logic,wrap);
     }
 
 

@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
@@ -48,6 +49,7 @@ public class FlowData extends AData {
         checkSingolaCollection(Mese.class);
         checkSingolaCollection(Giorno.class);
 
+        checkSingolaCollection(Continente.class);
         checkSingolaCollection(Stato.class);
 //        checkSingolaCollection(Regione.class);
 
