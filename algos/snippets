@@ -121,3 +121,6 @@ Notification.show("Alcuni campi non sono adeguati", 3000, Notification.Position.
 
 String base64 = "your_base_64";
 add(new Image(String.format("data:image/png;base64,%s", base64), "My image"));
+
+
+EnumSet.allOf(AEColor.class)

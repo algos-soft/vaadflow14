@@ -1001,5 +1001,38 @@ public class ATextService extends AAbstractService {
         return stringaOut;
     }
 
+    /**
+     * Controlla che il testo non contenga nessun elemento di una lista di tag
+     *
+     * @param testoIn   ingresso
+     * @param listaTags lista di tag da controllare
+     *
+     * @return vero se ne contiene nessuno
+     */
+    public boolean nonContiene(final String testoIn, ArrayList<String> listaTags) {
+        return !isContiene(testoIn, listaTags);
+    }
+
+    /**
+     * Controlla se il testo contiene uno elemento di una lista di tag
+     *
+     * @param testoIn   ingresso
+     * @param listaTags lista di tag da controllare
+     *
+     * @return vero se ne contiene uno o più di uno
+     */
+    public boolean isContiene(final String testoIn, ArrayList<String> listaTags) {
+        boolean neContieneAlmenoUno = false;
+
+        if (array.isValid(listaTags)) {
+            for (String singleTag : listaTags) {
+                if (testoIn.contains(singleTag)) {
+                    neContieneAlmenoUno = true;
+                }
+            }
+        }
+
+        return neContieneAlmenoUno;
+    }
 
 }

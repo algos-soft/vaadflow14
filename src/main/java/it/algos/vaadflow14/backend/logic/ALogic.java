@@ -966,21 +966,19 @@ public abstract class ALogic implements AILogic {
 
     /**
      * Azione proveniente dal click sul bottone Prima <br>
-     * Recupera la lista ORDINATA delle properties <br>
+     * Recupera la lista FILTRATA e ORDINATA delle properties, ricevuta dalla Grid <br>@todo da realizzare
      * Si sposta alla precedente <br>
      * Carica il form relativo <br>
      */
     protected void prima(AEntity currentEntityBean) {
-        AEntity previousEntityBean;
-
-        previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
+        AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
         executeRoute(previousEntityBean);
     }
 
 
     /**
      * Azione proveniente dal click sul bottone Dopo <br>
-     * Recupera la lista ORDINATA delle properties <br>
+     * Recupera la lista FILTRATA e ORDINATA delle properties, ricevuta dalla Grid <br>@todo da realizzare
      * Si sposta alla successiva <br>
      * Carica il form relativo <br>
      */
@@ -1167,7 +1165,7 @@ public abstract class ALogic implements AILogic {
             updateFiltri();
             items = mongo.findAll(entityClazz, filtri, sortView);
             //            grid.deselectAll();
-            grid.refreshAll();
+//            grid.refreshAll();
             grid.setItems(items);
         }
     }

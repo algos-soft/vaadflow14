@@ -11,14 +11,11 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.service.AAnnotationService;
-import it.algos.vaadflow14.backend.service.AArrayService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.AReflectionService;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +91,9 @@ public class AGrid {
     @Autowired
     protected AAnnotationService annotation;
 
+    @Autowired
+    private ADataProviderService dataProviderService;
+
     private Grid grid;
 
 
@@ -133,6 +133,7 @@ public class AGrid {
     @PostConstruct
     protected void postConstruct() {
         grid.setHeightByRows(true);
+//        this.grid.setDataProvider(dataProviderService.anno());
 
         if (AEPreferenza.usaDebug.is()) {
             grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
@@ -249,10 +250,10 @@ public class AGrid {
 
     public void setItems(Collection items) {
 
-        //        if (array.isValid(items)) {
         grid.deselectAll();
-        grid.setItems(items);
-        //        }
+                grid.setItems(items);
+        grid.setHeight("100%");
+
 
         fixGridHeader(items);
     }

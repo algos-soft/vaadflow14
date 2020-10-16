@@ -27,10 +27,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AFileServiceTest extends ATest {
 
-
     static boolean FLAG_CREAZIONE_INIZIALE = true;
 
     static boolean FLAG_CANCELLAZIONE_FINALE = true;
+
+    private static String DIRECTORY_IDEA = "/Users/gac/Documents/IdeaProjects/";
 
     private static String PATH_DIRECTORY_TEST = "/Users/gac/Desktop/test/";
 
@@ -218,7 +219,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("isEsisteFileZero")
+    @DisplayName("1 - isEsisteFileZero")
     public void isEsisteFileZero() {
         nomeFile = "nonEsiste";
         unFile = new File(nomeFile);
@@ -278,7 +279,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("isEsisteFile")
+    @DisplayName("2 - isEsisteFile")
     public void isEsisteFile() {
         nomeCompletoFile = "null";
         ottenutoDaNome = file.isEsisteFileStr((String) null);
@@ -390,7 +391,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("isEsisteDirectory")
+    @DisplayName("3 - isEsisteDirectory")
     public void isEsisteDirectory() {
         nomeCompletoDirectory = "null";
         ottenutoDaNome = file.isEsisteDirectoryStr((String) null);
@@ -490,7 +491,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("creaFile")
+    @DisplayName("4 - creaFile")
     public void creaFile() {
         nomeCompletoFile = "null";
         ottenutoDaNome = file.creaFileStr((String) null);
@@ -533,7 +534,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("creaDirectory")
+    @DisplayName("5 - creaDirectory")
     public void creaDirectory() {
         nomeCompletoDirectory = "null";
         ottenutoDaNome = file.creaDirectoryStr((String) null);
@@ -587,7 +588,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(6)
-    @DisplayName("deleteFile")
+    @DisplayName("6 - deleteFile")
     public void deleteFile() {
         nomeCompletoFile = "null";
         ottenutoDaNome = file.deleteFileStr((String) null);
@@ -641,7 +642,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(7)
-    @DisplayName("deleteDirectory")
+    @DisplayName("7 - deleteDirectory")
     public void deleteDirectory() {
         nomeCompletoDirectory = "null";
         ottenutoDaNome = file.deleteDirectoryStr((String) null);
@@ -695,7 +696,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(8)
-    @DisplayName("copyFile")
+    @DisplayName("8 - copyFile")
     public void copyFile() {
         String srcPathNonEsistente = PATH_FILE_NON_ESISTENTE;
         String srcPath = PATH_FILE_UNO;
@@ -733,7 +734,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("copyDirectoryDeletingAll")
+    @DisplayName("9 - copyDirectoryDeletingAll")
     public void copyDirectoryDeletingAll() {
         String srcPathValida = PATH_DIRECTORY_TRE;
         String srcPathNonEsistente = PATH_DIRECTORY_NON_ESISTENTE;
@@ -773,7 +774,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(10)
-    @DisplayName("copyDirectoryOnlyNotExisting")
+    @DisplayName("10 - copyDirectoryOnlyNotExisting")
     public void copyDirectoryOnlyNotExisting() {
         String srcPathValida = PATH_DIRECTORY_TRE;
         String srcPathNonEsistente = PATH_DIRECTORY_NON_ESISTENTE;
@@ -814,7 +815,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(11)
-    @DisplayName("copyDirectoryOnlyNotExisting2")
+    @DisplayName("11 - copyDirectoryOnlyNotExisting2")
     public void copyDirectoryOnlyNotExisting2() {
         String sorgente = PATH_DIRECTORY_TEST + "Sorgente/";
         String destinazione = PATH_DIRECTORY_TEST + "Destinazione/";
@@ -838,7 +839,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(12)
-    @DisplayName("copyDirectoryAddingOnly")
+    @DisplayName("12 - copyDirectoryAddingOnly")
     public void copyDirectoryAddingOnly() {
         String srcPathValida = PATH_DIRECTORY_TRE;
         String srcPathNonEsistente = PATH_DIRECTORY_NON_ESISTENTE;
@@ -883,14 +884,14 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(13)
-    @DisplayName("daFare-scriveFile")
+    @DisplayName("13 - daFare-scriveFile")
     public void scriveFile() {
     }
 
 
     @Test
     @Order(14)
-    @DisplayName("leggeFile")
+    @DisplayName("14 - leggeFile")
     public void leggeFile() {
         String result = System.getenv("PATH");
         System.out.println(result);
@@ -905,7 +906,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(15)
-    @DisplayName("levaDirectoryFinale")
+    @DisplayName("15 - levaDirectoryFinale")
     public void levaDirectoryFinale() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow/";
         previsto = "/Users/gac/Documents/IdeaProjects/operativi/";
@@ -916,9 +917,9 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(16)
-    @DisplayName("getSubdiretories")
+    @DisplayName("16 - getSubdiretories")
     public void getSubdiretories() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/";
+        sorgente = DIRECTORY_IDEA;
         listaDirectory = file.getSubDirectories(sorgente);
         if (listaDirectory != null) {
             for (File file : listaDirectory) {
@@ -930,9 +931,9 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(17)
-    @DisplayName("getSubdiretories2")
+    @DisplayName("17 - getSubdiretories2")
     public void getSubdiretories2() {
-        File fileSorgente = new File("/Users/gac/Documents/IdeaProjects/");
+        File fileSorgente = new File(DIRECTORY_IDEA);
         listaDirectory = file.getSubDirectories(fileSorgente);
         if (listaDirectory != null) {
             for (File file : listaDirectory) {
@@ -944,10 +945,23 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(18)
-    @DisplayName("getSubDirectoriesName")
+    @DisplayName("18 - getSubDirectoriesName")
     public void getSubDirectoriesName() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/";
+        sorgente = DIRECTORY_IDEA;
         List<String> ottenuto = file.getSubDirectoriesName(sorgente);
+        System.out.println("Tramite path");
+        System.out.println("************");
+        if (ottenuto != null) {
+            for (String directory : ottenuto) {
+                System.out.println(directory);
+            }
+        }
+
+        File fileSorgente = new File(DIRECTORY_IDEA);
+        ottenuto = file.getSubDirectoriesName(fileSorgente);
+        System.out.println("");
+        System.out.println("Tramite file");
+        System.out.println("************");
         if (ottenuto != null) {
             for (String directory : ottenuto) {
                 System.out.println(directory);
@@ -958,9 +972,9 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(19)
-    @DisplayName("getSubDirectoriesAbsolutePathName")
+    @DisplayName("19 - getSubDirectoriesAbsolutePathName")
     public void getSubDirectoriesAbsolutePathName() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/";
+        sorgente = DIRECTORY_IDEA;
         List<String> ottenuto = file.getSubDirectoriesAbsolutePathName(sorgente);
         if (ottenuto != null) {
             for (String directory : ottenuto) {
@@ -972,7 +986,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(20)
-    @DisplayName("getSubSubDirectories")
+    @DisplayName("20 - getSubSubDirectories")
     public void getSubSubDirectories() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow";
         String dirInterna = "src/main";
@@ -1004,7 +1018,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(21)
-    @DisplayName("isEsisteSubDirectory")
+    @DisplayName("21 - isEsisteSubDirectory")
     public void isEsisteSubDirectory() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow";
         String dirInterna = "src/main";
@@ -1015,7 +1029,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(22)
-    @DisplayName("isVuotaSubDirectory")
+    @DisplayName("22 - isVuotaSubDirectory")
     public void isVuotaSubDirectory() {
         sorgente = "/Users/gac/Documents/IdeaProjects/tutorial";
         String dirInterna = "src/main";
@@ -1026,7 +1040,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(23)
-    @DisplayName("leggeListaCSV")
+    @DisplayName("23 - leggeListaCSV")
     public void leggeListaCSV() {
         List<List<String>> lista;
         String result = System.getenv("PATH");
@@ -1068,7 +1082,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(24)
-    @DisplayName("leggeMappaCSV")
+    @DisplayName("24 - leggeMappaCSV")
     public void leggeMappaCSV() {
         List<LinkedHashMap<String, String>> lista;
         String result = System.getenv("PATH");
@@ -1187,7 +1201,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(26)
-    @DisplayName("copyDirectoryLessFile")
+    @DisplayName("26 - copyDirectoryLessFile")
     public void copyDirectoryLessFile() {
         String sorgente = PATH_DIRECTORY_TEST + "Alfetta/";
         String destinazione = PATH_DIRECTORY_TEST + "Beretta/";
@@ -1199,7 +1213,7 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(27)
-    @DisplayName("leggeFileConfig")
+    @DisplayName("27 - leggeFileConfig")
     public void leggeFileConfig() {
     }
 
@@ -1217,6 +1231,34 @@ public class AFileServiceTest extends ATest {
         System.out.println("pathProgettoGrezzo = " + path);
         System.out.println("aPackage = " + aPackage);
         System.out.println("ClassLoader = " + loader);
+    }
+
+
+    @Test
+    @Order(29)
+    @DisplayName("29 - getProjects")
+    public void getProjects() {
+        sorgente = DIRECTORY_IDEA;
+        listaDirectory = file.getProjects(sorgente);
+        if (listaDirectory != null) {
+            for (File file : listaDirectory) {
+                System.out.println(file.getName());
+            }
+        }
+    }
+
+
+    @Test
+    @Order(30)
+    @DisplayName("30 - getEmptyProjects")
+    public void getEmptyProjects() {
+        sorgente = DIRECTORY_IDEA;
+        listaDirectory = file.getEmptyProjects(sorgente);
+        if (listaDirectory != null) {
+            for (File file : listaDirectory) {
+                System.out.println(file.getName());
+            }
+        }
     }
 
 

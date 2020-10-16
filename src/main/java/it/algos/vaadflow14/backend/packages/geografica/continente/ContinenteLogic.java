@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.ProvinciaForm;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -74,6 +75,7 @@ public class ContinenteLogic extends GeografiaLogic {
 
         super.usaBottonePaginaWiki = true;
         super.wikiPageTitle = "Continente";
+        super.formClazz = ContinenteForm.class;
     }
 
 

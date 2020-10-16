@@ -3,7 +3,6 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -68,14 +67,23 @@ public class AGridField<T> extends AField<Object> {
      */
     @PostConstruct
     protected void postConstruct() {
-        addColumnsGrid();
+        addColumnsGrid(listaProperties);
     }
 
 
     /**
      * Aggiunge in automatico le colonne previste in listaProperties <br>
      */
-    protected void addColumnsGrid() {
+    public void addColumnsGrid(String stringaDiProperties) {
+        addColumnsGrid((array.fromString(stringaDiProperties)));
+    }
+
+
+    /**
+     * Aggiunge in automatico le colonne previste in listaProperties <br>
+     */
+    public void addColumnsGrid(List<String> listaProperties) {
+        innerField.removeAllColumns();
         innerField.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth("2.5em").setFlexGrow(0);
         if (array.isValid(listaProperties)) {
             for (String propertyName : listaProperties) {

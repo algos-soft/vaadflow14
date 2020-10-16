@@ -310,6 +310,18 @@ public class StatoLogic extends ALogic {
     }
 
 
+    /**
+     * Azione proveniente dal click sul bottone Prima <br>
+     * Recupera la lista FILTRATA e ORDINATA delle properties, ricevuta dalla Grid <br>@todo da realizzare
+     * Si sposta alla precedente <br>
+     * Carica il form relativo <br>
+     */
+    protected void prima(AEntity currentEntityBean) {
+        AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
+        executeRoute(previousEntityBean);
+    }
+
+
     public void resetForm(AEntity entityBean) {
         RegioneLogic regioneLogic = appContext.getBean(RegioneLogic.class);
         regioneLogic.creaRegioniDiUnoStato((Stato) entityBean);

@@ -4,16 +4,15 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
 import it.algos.simple.backend.packages.*;
 import it.algos.simple.ui.views.DeltaView;
-import it.algos.simple.ui.views.OmegaView;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
 import java.time.LocalDate;
 
@@ -37,6 +36,8 @@ public class SimpleBoot extends FlowBoot {
     @Autowired
     public SimpleData testData;
 
+    @Autowired
+    private Environment env;
 
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
@@ -72,8 +73,8 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = 0.8;
-        FlowVar.versionDate = LocalDate.of(2020, 9, 24);
+        FlowVar.projectVersion = Double.parseDouble(env.getProperty("algos.framework.version"));
+        FlowVar.versionDate = LocalDate.of(2020, 10, 10);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
@@ -97,6 +98,7 @@ public class SimpleBoot extends FlowBoot {
     protected void addMenuRoutes() {
         super.addMenuRoutes();
 
+        FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Via.class);
         FlowVar.menuRouteList.add(Address.class);
         FlowVar.menuRouteList.add(DeltaView.class);

@@ -29,6 +29,8 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
+    public static final String NAME_VAADFLOW = "vaadflow14";
+
     public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";
 
     public static final String PATH_WIKI = "https://it.wikipedia.org/wiki/";
@@ -61,7 +63,7 @@ public abstract class FlowCost {
 
     public static final String ESCLAMATIVO = "!";
 
-    public static final String DOPPIO_ESCLAMATIVO = ESCLAMATIVO+ESCLAMATIVO;
+    public static final String DOPPIO_ESCLAMATIVO = ESCLAMATIVO + ESCLAMATIVO;
 
     public static final String SEP = " - ";
 
@@ -114,6 +116,7 @@ public abstract class FlowCost {
 
     public static final String TAG_LOGOUT = "logout";
 
+    public static final String TAG_WIZ = "wizard";
 
     public static final String KEY_NULL = "null";
 
@@ -134,6 +137,7 @@ public abstract class FlowCost {
     public static final String KEY_SECURITY_CONTEXT = "SPRING_SECURITY_CONTEXT";
 
     public static final String KEY_SESSION_LOGIN = "SESSION_LOGIN";
+
     public static final String KEY_SESSION_MOBILE = "sessionMobile";
 
     /**

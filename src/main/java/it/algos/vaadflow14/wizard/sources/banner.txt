@@ -1,0 +1,7 @@
+${AnsiColor.RED}
+@PROJECTALLUPPER@
+VaadFlow FrameWork  (c)Algos
+SpringBoot ver: ${spring-boot.formatted-version}
+Vaadin ver: ${AnsiColor.GREEN}14.4.0${AnsiColor.RED}
+VaadFlow ver: ${AnsiColor.GREEN}${algos.framework.version}${AnsiColor.RED}
+${AnsiColor.DEFAULT}

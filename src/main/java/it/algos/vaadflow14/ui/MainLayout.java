@@ -4,6 +4,7 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouteConfiguration;
@@ -30,8 +31,8 @@ import java.util.Optional;
  * The main view is a top-level placeholder for other views.
  */
 @Theme(value = Lumo.class)
-//@CssImport("./styles/shared-styles.css")
-//@CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
+@CssImport("./styles/shared-styles.css")
+@CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
 public class MainLayout extends AppLayout {
 
 

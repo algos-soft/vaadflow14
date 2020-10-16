@@ -1253,6 +1253,25 @@ public class AFileService extends AAbstractService {
      *
      * @param pathDirectoryToBeScanned nome completo della directory
      */
+    public List<String> getSubDirectoriesName(File fileSorgente) {
+        List<String> subDirectoryName = new ArrayList<>();
+        List<File> subDirectory = getSubDirectories(fileSorgente);
+
+        if (subDirectory != null) {
+            for (File file : subDirectory) {
+                subDirectoryName.add(file.getName());
+            }
+        }
+
+        return subDirectoryName;
+    }
+
+
+    /**
+     * Estrae le sub-directories da una directory <br>
+     *
+     * @param pathDirectoryToBeScanned nome completo della directory
+     */
     public List<File> getSubDirectories(String pathDirectoryToBeScanned) {
         return getSubDirectories(new File(pathDirectoryToBeScanned));
     }
@@ -1377,7 +1396,73 @@ public class AFileService extends AAbstractService {
 
 
     /**
-     * Sposta un file da una directoy ad un'altra <br>
+     * Recupera i progetti da una directory <br>
+     * Controlla che la sotto-directory sia di un project e quindi contenga la cartella 'src' <br>
+     *
+     * @param pathDirectoryToBeScanned nome completo della directory
+     */
+    public List<File> getProjects(String pathDirectoryToBeScanned) {
+        List<File> listaProjects = null;
+        String tag = "src";
+        String tagDue = "/src/main/java/it";
+        List<String> lista;
+        List<File> listaDirectory = getSubDirectories(new File(pathDirectoryToBeScanned));
+
+        if (listaDirectory != null) {
+            listaProjects = new ArrayList<>();
+            for (File file : listaDirectory) {
+                if (file.isDirectory()) {
+                    lista = getSubDirectoriesName(file);
+                    if (lista.contains(tag)) {
+                        listaProjects.add(file);
+                    }
+                }
+            }
+        }
+
+        return listaProjects;
+    }
+
+
+    /**
+     * Recupera i progetti vuoti da una directory <br>
+     * Controlla che la sotto-directory sia di un project e quindi contenga la cartella 'src' <br>
+     * Controlla che il progetto sia vuoto e non esista la cartella 'src.main.java.it.algos' <br>
+     *
+     * @param pathDirectoryToBeScanned nome completo della directory
+     */
+    public List<File> getEmptyProjects(String pathDirectoryToBeScanned) {
+        List<File> listaEmptyProjects = null;
+        String path = VUOTA;
+        String pathSub = VUOTA;
+        String tagUno = "src";
+        String tagDue = "/src/main/java/it";
+        List<String> listaNomi;
+        List<File> lista;
+        List<File> listaProjects = getProjects(pathDirectoryToBeScanned);
+
+        if (listaProjects != null) {
+            listaEmptyProjects = new ArrayList<>();
+            for (File file : listaProjects) {
+                path = file.getAbsolutePath();
+                pathSub = path + tagDue;
+                boolean esiste = isEsisteDirectory(pathSub);
+
+                if (file.isDirectory()) {
+                    listaNomi = getSubDirectoriesName(file);
+                    if (listaNomi.contains(tagUno)) {
+                        lista = getSubDirectories(file);
+                    }
+                }
+            }
+        }
+
+        return listaEmptyProjects;
+    }
+
+
+    /**
+     * Sposta un file da una directory ad un'altra <br>
      * Esegue solo se il path sorgente esiste <br>
      * Esegue solo se il path destinazione NON esiste <br>
      * Viene cancellato il file sorgente <br>
