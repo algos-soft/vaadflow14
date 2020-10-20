@@ -233,8 +233,6 @@ public abstract class WizDialog extends Dialog {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaTopLayout() {
-        topLayout = fixSezione("Nuovo progetto","green");
-        this.add(topLayout);
     }// end of method
 
 
@@ -242,7 +240,7 @@ public abstract class WizDialog extends Dialog {
      * Sezione centrale con la scelta del progetto <br>
      * Spazzola la directory 'ideaProjects' <br>
      * Recupera i possibili progetti 'vuoti' <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superClasse <br>
      */
     protected void creaSelezioneLayout() {
     }
@@ -271,7 +269,6 @@ public abstract class WizDialog extends Dialog {
             esceDalDialogo(false);
         });//end of lambda expressions
         cancelButton.setIcon(VaadinIcon.ARROW_LEFT.create());
-        cancelButton.getElement().setAttribute("theme", "secondary");
         cancelButton.addClickShortcut(Key.ARROW_LEFT);
         cancelButton.setWidth(NORMAL_WIDTH);
         cancelButton.setHeight(NORMAL_HEIGHT);
@@ -281,7 +278,6 @@ public abstract class WizDialog extends Dialog {
             esceDalDialogo(true);
         });//end of lambda expressions
         confirmButton.setIcon(VaadinIcon.EDIT.create());
-        confirmButton.getElement().setAttribute("theme", "primary");
         confirmButton.setWidth(NORMAL_WIDTH);
         confirmButton.setHeight(NORMAL_HEIGHT);
         confirmButton.setVisible(true);

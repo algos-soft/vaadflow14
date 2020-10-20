@@ -10,17 +10,21 @@ package it.algos.vaadflow14.wizard.scripts;
 public class WizCost {
 
     //--flag per stampare info di debug
+    public static final String PATH_ROOT = "/Users/gac/Documents/";
+
     public static final boolean FLAG_DEBUG_WIZ = true;
 
     public static final String PROJECT_VAADFLOW = "vaadflow14/";
 
     public static final String NAME_VAADFLOW = "vaadflow14";
 
-    public static final String VAADFLOW_DIR_STANDARD = "IdeaProjects/operativi/vaadflow14/";
+    public static final String VAADFLOW_STANDARD = "IdeaProjects/operativi/vaadflow14";
 
-    public static final String PATH_VAADFLOW_DIR_STANDARD = "/Users/gac/Documents/IdeaProjects/" + VAADFLOW_DIR_STANDARD;
+    public static final String VAADFLOW_DIR_STANDARD = VAADFLOW_STANDARD + "/";
 
-    public static final String PATH_PROJECTS_DIR_STANDARD = "/Users/gac/Documents/IdeaProjects/";
+    public static final String PATH_VAADFLOW_DIR_STANDARD = PATH_ROOT + VAADFLOW_DIR_STANDARD;
+
+    public static final String PATH_PROJECTS_DIR_STANDARD = PATH_ROOT + "IdeaProjects/";
 
     public static final String DIR_VAADFLOW = "vaadflow14/";
 

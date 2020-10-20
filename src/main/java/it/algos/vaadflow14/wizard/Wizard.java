@@ -172,7 +172,6 @@ public class Wizard extends VerticalLayout {
         H3 paragrafo = new H3(TITOLO_MODIFICA_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
-        this.add(new Label("Recuperando i sorgenti da "+VAADFLOW_DIR_STANDARD));
 
         Button bottone = new Button("Update project");
         bottone.getElement().setAttribute("theme", "primary");

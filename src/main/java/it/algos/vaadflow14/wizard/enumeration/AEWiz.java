@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
+
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -32,7 +33,8 @@ public enum AEWiz {
     nameTargetProject(false, "Nome breve new/update project", true, true, false, false, false, VUOTA),
     pathTargetProjet(false, "Path new/update project", true, true, false, false, false, VUOTA),
     ;
-    
+
+
     private boolean checkBox;
 
     private String labelBox;

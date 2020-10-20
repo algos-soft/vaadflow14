@@ -58,7 +58,8 @@ public class WizDialogNewProject extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-        super.creaTopLayout();
+        topLayout = fixSezione("Nuovo progetto","green");
+        this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Creazione di un nuovo project"));
         topLayout.add(text.getLabelGreenBold("Devi prima creare un new project IntelliJIdea"));
@@ -80,7 +81,6 @@ public class WizDialogNewProject extends WizDialog {
         selezioneLayout = fixSezione("Selezione...");
         this.add(selezioneLayout);
 
-        //        List<File> progetti = getProgettiVuoti();
         List<File> progetti = file.getEmptyProjects(pathIdeaProjects);
 
         fieldComboProgetti = new ComboBox<>();
@@ -161,6 +161,12 @@ public class WizDialogNewProject extends WizDialog {
         super.addCheckBoxMap();
     }
 
+    protected void creaBottoni() {
+        super.creaBottoni();
+
+        cancelButton.getElement().setAttribute("theme", "secondary");
+        confirmButton.getElement().setAttribute("theme", "primary");
+    }
 
     private void addListener() {
         fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));
