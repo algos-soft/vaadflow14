@@ -46,8 +46,9 @@ public class WizDialogUpdateProject extends WizDialog {
         topLayout.add(text.getLabelGreenBold("Update del modulo base di questo progetto"));
         topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
         topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
-        topLayout.add(text.getLabelGreenBold("Eventuali errate modifiche locali vengono perse"));
+        topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
         topLayout.add(text.getLabelGreenBold("Il modulo specifico " + nameTargetProject + " di questo progetto NON viene toccato"));
+        topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
     }
 
 
