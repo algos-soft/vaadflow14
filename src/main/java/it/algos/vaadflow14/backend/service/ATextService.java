@@ -381,6 +381,18 @@ public class ATextService extends AAbstractService {
      *
      * @param message    da visualizzare
      * @param labelColor del messaggio
+     *
+     * @return etichetta visualizzata
+     */
+    private Label getLabel(String message, String labelColor) {
+        return getLabel(message,labelColor,false);
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message    da visualizzare
+     * @param labelColor del messaggio
      * @param smallBold  flag per il tipo di style
      *
      * @return etichetta visualizzata
@@ -400,7 +412,6 @@ public class ATextService extends AAbstractService {
 
         return label;
     }
-
 
     /**
      * Label colorata
@@ -473,6 +484,94 @@ public class ATextService extends AAbstractService {
         return getLabel(message, "red", true);
     }
 
+
+    /**
+     * Label colorata
+     *
+     * @param message    da visualizzare
+     * @param labelColor del messaggio
+     *
+     * @return etichetta visualizzata
+     */
+    private Label getLabelBold(String message, String labelColor) {
+        Label label = null;
+
+        if (isValid(message)) {
+            label = new Label(message);
+            label.getElement().getStyle().set("color", labelColor);
+        }
+
+        label.getStyle().set("font-weight", "bold");
+
+        return label;
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelRedBold(String message) {
+        return getLabelBold(message, "red");
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelBlueBold(String message) {
+        return getLabelBold(message, "blue");
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelGreenBold(String message) {
+        return getLabelBold(message, "green");
+    }
+
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelRed(String message) {
+        return getLabel(message, "red");
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelBlue(String message) {
+        return getLabel(message, "blue");
+    }
+
+    /**
+     * Label colorata
+     *
+     * @param message da visualizzare
+     *
+     * @return etichetta visualizzata
+     */
+    public Label getLabelGreen(String message) {
+        return getLabel(message, "green");
+    }
 
     /**
      * Estrae una matrice da singole stringhe separate da virgola. <br>
@@ -1001,6 +1100,7 @@ public class ATextService extends AAbstractService {
         return stringaOut;
     }
 
+
     /**
      * Controlla che il testo non contenga nessun elemento di una lista di tag
      *
@@ -1012,6 +1112,7 @@ public class ATextService extends AAbstractService {
     public boolean nonContiene(final String testoIn, ArrayList<String> listaTags) {
         return !isContiene(testoIn, listaTags);
     }
+
 
     /**
      * Controlla se il testo contiene uno elemento di una lista di tag

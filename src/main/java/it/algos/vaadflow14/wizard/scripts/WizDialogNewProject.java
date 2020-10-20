@@ -4,21 +4,17 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AEWiz;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
 
 
 /**
@@ -60,54 +56,32 @@ public class WizDialogNewProject extends WizDialog {
      * Legenda iniziale <br>
      * Viene sovrascritta nella sottoclasse che deve invocare PRIMA questo metodo <br>
      */
-    protected void creaLegenda() {
-        super.creaLegenda();
-
-        layoutLegenda.add(new Label("Creazione di un nuovo project"));
-        layoutLegenda.add(new Label("Devi prima creare un new project IntelliJIdea"));
-        layoutLegenda.add(new Label("Di tipo 'MAVEN' senza selezionare archetype"));
-        layoutLegenda.add(new Label("Rimane il POM vuoto, ma verrà sovrascritto"));
-        layoutLegenda.add(new Label("Poi seleziona il progetto dalla lista sottostante"));
-    }// end of method
-
-    /**
-     * Crea i checkbox di controllo <br>
-     * Spazzola (nella sottoclasse) la Enumeration per aggiungere solo i checkbox adeguati: <br>
-     * newProject
-     * updateProject
-     * newPackage
-     * updatePackage
-     * Spazzola la Enumeration e regola a 'true' i chekBox secondo il flag 'isAcceso' <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
     @Override
-    protected void creaCheckBoxMap() {
-        Checkbox unCheckbox;
+    protected void creaTopLayout() {
+        super.creaTopLayout();
 
-        //--accende tutti i checkbox escluso flagSecurity
-        if (false) { //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-            for (AEWiz flag : AEWiz.values()) {
-                if (flag.isCheckBox()) {
-                    flag.setAcceso(true);
-                }
-            }
-            AEWiz.flagSecurity.setAcceso(false);
-        }
-
-        for (AEWiz flag : AEWiz.values()) {
-            if (flag.isCheckBox() && flag.isNewProject()) {
-                unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
-                mappaCheckbox.put(flag.name(), unCheckbox);
-            }
-        }
+        topLayout.add(text.getLabelGreenBold("Creazione di un nuovo project"));
+        topLayout.add(text.getLabelGreenBold("Devi prima creare un new project IntelliJIdea"));
+        topLayout.add(text.getLabelGreenBold("Di tipo 'MAVEN' senza selezionare archetype"));
+        topLayout.add(text.getLabelGreenBold("Rimane il POM vuoto, ma verrà sovrascritto"));
+        topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
+        topLayout.add(text.getLabelRedBold("Spunta i checkBox di regolazione che vuoi attivare"));
+        topLayout.add(text.getLabelRedBold("Nel nuovo progetto vai su pom.xml, click destro -> Maven.Reload "));
     }
 
+
     /**
+     * Sezione centrale con la scelta del progetto <br>
      * Spazzola la directory 'ideaProjects' <br>
-     * Inizialmente recupera solo i progetti 'vuoti' <br>
+     * Recupera i possibili progetti 'vuoti' <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void spazzolaDirectory() {
-        List<File> progetti = getProgettiVuoti();
+    protected void creaSelezioneLayout() {
+        selezioneLayout = fixSezione("Selezione...");
+        this.add(selezioneLayout);
+
+        //        List<File> progetti = getProgettiVuoti();
+        List<File> progetti = file.getEmptyProjects(pathIdeaProjects);
 
         fieldComboProgetti = new ComboBox<>();
         // Choose which property from Department is the presentation value
@@ -132,17 +106,17 @@ public class WizDialogNewProject extends WizDialog {
         buttonForzaDirectory.setEnabled(progetti.size() < 1);
 
         addListener();
-        this.add(new VerticalLayout(fieldComboProgetti, buttonForzaDirectory));
+        selezioneLayout.add(fieldComboProgetti, buttonForzaDirectory);
     }
 
 
     /**
      * Spazzola la directory 'ideaProjects' <br>
      * Recupera tutti i progetti esistenti <br>
-     * Esclude le sottodirectories di 'ideaProjects' <br>
+     * Esclude le sottoDirectories di 'ideaProjects' <br>
      */
     protected void forzaProgetti() {
-        List<File> progetti = file.getSubDirectories(pathIdeaProjects);
+        List<File> progetti = file.getProjects(pathIdeaProjects);
         fieldComboProgetti.setItems(progetti);
         fieldComboProgetti.setLabel(LABEL_COMBO_DUE);
         if (progetti.size() == 1) {
@@ -154,38 +128,37 @@ public class WizDialogNewProject extends WizDialog {
 
 
     /**
-     * Mostra i progetti 'vuoti'
-     * Per essere 'vuoti' non devono avere la directory:
-     * src.main.java.it.algos.vaadflow
-     * <p>
-     * Per essere 'vuoti' deve esserci la directory: src/main/java vuota
+     * Sezione centrale con la selezione dei flags <br>
+     * Crea i checkbox di controllo <br>
+     * Spazzola (nella sottoclasse) la Enumeration per aggiungere solo i checkbox adeguati: <br>
+     * newProject
+     * updateProject
+     * newPackage
+     * updatePackage
+     * Spazzola la Enumeration e regola a 'true' i chekBox secondo il flag 'isAcceso' <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected List<File> getProgettiVuoti() {
-        List<File> progettiVuoti = new ArrayList<>();
-        List<File> cartelleProgetti = null;
-        String tagPienoDeveEsserci = SLASH + DIR_MAIN;
-        String tagVuotoNonDeveEsserci = tagPienoDeveEsserci + "/java";
+    @Override
+    protected void creaCheckBoxLayout() {
+        super.creaCheckBoxLayout();
+        Checkbox unCheckbox;
 
-        if (text.isValid(pathIdeaProjects)) {
-            cartelleProgetti = file.getSubDirectories(pathIdeaProjects);
+        //--accende tutti i checkbox escluso flagSecurity
+        for (AEWiz flag : AEWiz.values()) {
+            if (flag.isCheckBox()) {
+                flag.setAcceso(true);
+            }
         }
+        AEWiz.flagSecurity.setAcceso(false);
 
-        //--deve essere valido subMain e vuoto subJava
-        if (array.isValid(cartelleProgetti)) {
-            for (File cartellaProgetto : cartelleProgetti) {
-
-                //se manca la sottodirectory src/main non se ne parla
-                if (file.isEsisteSubDirectory(cartellaProgetto, tagPienoDeveEsserci)) {
-
-                    //se esiste NON deve esserci il percorso src/main/java/it
-                    if (file.isVuotaSubDirectory(cartellaProgetto, tagVuotoNonDeveEsserci)) {
-                        progettiVuoti.add(cartellaProgetto);
-                    }
-                }
+        for (AEWiz flag : AEWiz.values()) {
+            if (flag.isCheckBox() && flag.isNewProject()) {
+                unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
+                mappaCheckbox.put(flag.name(), unCheckbox);
             }
         }
 
-        return progettiVuoti;
+        super.addCheckBoxMap();
     }
 
 

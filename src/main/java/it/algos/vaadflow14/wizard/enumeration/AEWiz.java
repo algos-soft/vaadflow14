@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -15,16 +14,17 @@ public enum AEWiz {
     flagDocumentation(true, "Directory documentazione (VaadFlow)", true, true, false, false, true),
     flagLinks(true, "Directory links a web (VaadFlow)", true, true, false, false, true),
     flagSnippets(true, "Directory snippets di aiuto (VaadFlow)", true, true, false, false, true),
-    flagFlow(true, "Copia la directory VaadFlow", true, true, false, false, false),
+    flagFlow(true, "Copia la directory VaadFlow", true, true, false, false, true),
     flagProject(true, "Crea la directory del nuovo progetto", true, false, false, false, false),
-    flagResources(true, "Directory resources - ATTENZIONE", true, true, false, false, false),
-    flagProperty(true, "File application.properties (VaadFlow)", true, true, false, false, true),
-    flagRead(true, "File READ con note di testo", true, true, false, false, true),
+    flagFrontend(true, "Directory frontend (VaadFlow)", true, true, false, false, true),
+    flagResources(true, "Directory resources (VaadFlow)", true, true, false, false, false),
+    flagProperty(true, "File application.properties (sources)", true, true, false, false, true),
+    flagBanner(true, "File banner di SpringBoot (sources)", true, true, false, false, true),
     flagGit(true, "File GIT di esclusione (sources)", true, true, false, false, true),
-    flagPom(true, "File Maven di POM.xml - ATTENZIONE", true, true, false, false, false),
+    flagPom(true, "File Maven di POM.xml - ATTENZIONE", true, true, false, false, true),
+    flagRead(true, "File READ con note di testo (sources)", true, true, false, false, true),
     flagFile(true, "Sovrascrive il singolo FILE", false, false, false, false, false),
     flagDirectory(true, "Sovrascrive la DIRECTORY", false, false, false, false, false),
-    flagBanner(true, "File banner di SpringBoot (sources)", true, true, false, false, true),
     pathUserDir(false, "Directory recuperata dal System dove gira il programma in uso", true, true, false, false, false, VUOTA),
     pathVaadFlow(false, "Directory che contiene il programma VaadFlow", true, true, false, false, false, VUOTA),
     pathIdeaProjects(false, "Directory che contiene i nuovi programmi appena creati da Idea", true, true, false, false, false, VUOTA),
@@ -32,8 +32,7 @@ public enum AEWiz {
     nameTargetProject(false, "Nome breve new/update project", true, true, false, false, false, VUOTA),
     pathTargetProjet(false, "Path new/update project", true, true, false, false, false, VUOTA),
     ;
-
-
+    
     private boolean checkBox;
 
     private String labelBox;

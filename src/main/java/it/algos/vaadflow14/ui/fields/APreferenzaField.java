@@ -2,9 +2,9 @@ package it.algos.vaadflow14.ui.fields;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.service.AEnumerationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,12 +143,20 @@ public class APreferenzaField extends AField<byte[]> {
                 valueField.setLabel(tag + "(booleano)");
                 break;
             case localdate:
-                valueField = appContext.getBean(ADateField.class);
-                valueField.setLabel(tag + "(solo data)");
+                try {
+                    valueField = appContext.getBean(ADateField.class);
+                    valueField.setLabel(tag + "(solo data)");
+                } catch (Exception unErrore) {
+                    logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                }
                 break;
             case localdatetime:
-                valueField = appContext.getBean(ADateTimeField.class);
-                valueField.setLabel(tag + "(data e orario)");
+                try {
+                    valueField = appContext.getBean(ADateTimeField.class);
+                    valueField.setLabel(tag + "(data e orario)");
+                } catch (Exception unErrore) {
+                    logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                }
                 break;
             case localtime:
                 valueField = appContext.getBean(ATimeField.class);

@@ -20,7 +20,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.4.0</vaadin.version>
+        <vaadin.version>14.4.1</vaadin.version>
     </properties>
 
 
@@ -223,7 +223,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
         <!-- lombok -->
@@ -293,11 +293,11 @@
 
         <!-- pagination -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination -->
-        <dependency>
-            <groupId>org.vaadin.klaudeta</groupId>
-            <artifactId>grid-pagination</artifactId>
-            <version>2.0.7</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.vaadin.klaudeta</groupId>-->
+<!--            <artifactId>grid-pagination</artifactId>-->
+<!--            <version>2.0.7</version>-->
+<!--        </dependency>-->
         <!-- pagination -->
 
         <!-- excel -->
@@ -309,11 +309,11 @@
         </dependency>
 
         <!-- FontAwesome Iron Iconset -->
-        <dependency>
-            <groupId>com.flowingcode.addons</groupId>
-            <artifactId>font-awesome-iron-iconset</artifactId>
-            <version>2.1.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.flowingcode.addons</groupId>-->
+<!--            <artifactId>font-awesome-iron-iconset</artifactId>-->
+<!--            <version>2.1.2</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 

@@ -10,7 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import it.algos.vaadflow.annotation.AIScript;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 
 /**
  * Project @MODULELOWER@
@@ -44,7 +44,7 @@ import it.algos.vaadflow.annotation.AIScript;
 @EnableVaadin({"it.algos"})
 @EntityScan({"it.algos"})
 @EnableMongoRepositories({"it.algos"})
-@AIScript(sovrascrivibile = false)
+@AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Application extends SpringBootServletInitializer {
 
     /**

@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.topbar;
 
-import com.flowingcode.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -46,7 +45,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class TopbarComponent extends HorizontalLayout {
+public class
+TopbarComponent extends HorizontalLayout {
 
 
     //    private Image image;

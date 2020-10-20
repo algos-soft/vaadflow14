@@ -24,25 +24,24 @@ public class WizElaboraNewProject extends WizElabora {
 
     @Override
     public void esegue() {
-        super.isStartThisProgetto = true;
+        super.isNuovoProgetto = true;
         super.esegue();
 
-        super.copiaDirectoryDocumentation();
+        super.copiaDirectoryDoc();
         super.copiaDirectoryLinks();
         super.copiaDirectorySnippets();
 
         this.copiaCartellaVaadFlow();
         this.creaModuloNuovoProgetto();
 
-        //--banner deve essere chiamato PRIMA di copiaMetaInf
-        super.scriveFileBanner();
-
+        super.copiaFrontend();
         super.copiaMetaInf();
         super.scriveFileProperties();
+        super.scriveFileBanner();
 
-        super.scriveFileRead();
-        super.copiaFileGit();
+        super.scriveFileGit();
         super.scriveFilePom();
+        super.scriveFileRead();
     }// end of method
 
 
@@ -55,21 +54,25 @@ public class WizElaboraNewProject extends WizElabora {
             //--classe principale dell'applicazione col metodo 'main'
             creaFileApplicationMainClass();
 
-            //--creaDirectoryApplication (empty)
+            //--creaDirectoryBackend
             file.creaDirectory(pathProjectDirApplication);
 
-            //--creaDirectoryModules (empty)
-            file.creaDirectory(pathProjectDirModules);
+            //--creaDirectoryApplication all'interno di backend
+            file.creaDirectory(pathProjectDirApplication);
+
+            //--creaDirectoryPackages (empty) all'interno di backend
+            file.creaDirectory(pathProjectDirApplication);
+
+            //--creaDirectoryUi (empty)
+            file.creaDirectory(pathProjectDirPackages);
 
             //--crea contenuto della directory Application
             scriveFileCost();
             scriveFileBoot();
-//        scriveFileVers();
-            scriveFileHome();
 
             creaDirectorySecurity();
-        }// end of if cycle
-    }// end of method
+        }
+    }
 
 
     public void creaFileApplicationMainClass() {
@@ -107,7 +110,7 @@ public class WizElaboraNewProject extends WizElabora {
 
 
     public void scriveFileHome() {
-        wizService.scriveNewFileCreatoDaWizSource(FILE_HOME, pathProjectDirApplication);
+//        wizService.scriveNewFileCreatoDaWizSource(FILE_HOME, pathProjectDirApplication);
     }// end of method
 
 

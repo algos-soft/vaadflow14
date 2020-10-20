@@ -232,6 +232,25 @@ public class AFileService extends AAbstractService {
      * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
+     * @param pathDirectoryToBeChecked path completo della directory che DEVE cominciare con '/' SLASH
+     * @param fileName                 da controllare
+     *
+     * @return true se il file esiste, false se non sono rispettate le condizioni della richiesta
+     */
+    public boolean isEsisteFile(String pathDirectoryToBeChecked, String fileName) {
+        return isEsisteFile(pathDirectoryToBeChecked + SLASH + fileName);
+    }
+
+
+    /**
+     * Controlla l'esistenza di un file <br>
+     * <p>
+     * Il path non deve essere nullo <br>
+     * Il path non deve essere vuoto <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
+     * Il path deve essere completo e terminare con un 'suffix' <br>
+     * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
+     *
      * @param absolutePathFileWithSuffixToBeChecked path completo del file che DEVE cominciare con '/' SLASH
      *
      * @return true se il file esiste, false se non sono rispettate le condizioni della richiesta
@@ -640,7 +659,6 @@ public class AFileService extends AAbstractService {
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
      * Il path deve essere completo ed iniziare con uno 'slash' <br>
-     * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
      * @param absolutePathDirectoryToBeDeleted path completo della directory che DEVE cominciare con '/' SLASH
@@ -658,7 +676,6 @@ public class AFileService extends AAbstractService {
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
      * Il path deve essere completo ed iniziare con uno 'slash' <br>
-     * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
      * @param absolutePathDirectoryToBeDeleted path completo della directory che DEVE cominciare con '/' SLASH
@@ -680,7 +697,6 @@ public class AFileService extends AAbstractService {
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
      * Il path deve essere completo ed iniziare con uno 'slash' <br>
-     * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
      * @param directoryToBeDeleted con path completo che DEVE cominciare con '/' SLASH
@@ -698,7 +714,6 @@ public class AFileService extends AAbstractService {
      * Il path non deve essere nullo <br>
      * Il path non deve essere vuoto <br>
      * Il path deve essere completo ed iniziare con uno 'slash' <br>
-     * Il path deve essere completo e terminare con un 'suffix' <br>
      * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
      *
      * @param directoryToBeDeleted con path completo che DEVE cominciare con '/' SLASH
@@ -725,7 +740,13 @@ public class AFileService extends AAbstractService {
         if (directoryToBeDeleted.delete()) {
             return VUOTA;
         } else {
-            return NON_CANCELLATA_DIRECTORY;
+            try {
+                FileUtils.deleteDirectory(directoryToBeDeleted);
+                return VUOTA;
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "deleteDirectoryStr");
+                return NON_CANCELLATA_DIRECTORY;
+            }
         }
     }
 
@@ -874,7 +895,6 @@ public class AFileService extends AAbstractService {
      * @return true se la directory  è stata copiata
      */
     public boolean copyDirectoryDeletingAll(String srcPath, String destPath) {
-        boolean copiata = false;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
 
@@ -899,7 +919,7 @@ public class AFileService extends AAbstractService {
             }
         }
 
-        return copiata;
+        return false;
     }
 
 
@@ -1346,6 +1366,19 @@ public class AFileService extends AAbstractService {
 
 
     /**
+     * Controlla se una sotto-directory esiste <br>
+     *
+     * @param directoryToBeScanned della directory
+     * @param dirInterna           da scandagliare
+     *
+     * @return true se esiste
+     */
+    public boolean isEsisteSubDirectory(File directoryToBeScanned, String dirInterna) {
+        return isEsisteDirectory(directoryToBeScanned.getAbsolutePath() + SLASH + dirInterna);
+    }
+
+
+    /**
      * Controlla se una sotto-directory è piena <br>
      *
      * @param directoryToBeScanned della directory
@@ -1353,7 +1386,7 @@ public class AFileService extends AAbstractService {
      *
      * @return true se è piena
      */
-    public boolean isEsisteSubDirectory(File directoryToBeScanned, String dirInterna) {
+    public boolean isPienaSubDirectory(File directoryToBeScanned, String dirInterna) {
         return array.isValid(getSubSubDirectories(directoryToBeScanned, dirInterna));
     }
 
@@ -1404,14 +1437,13 @@ public class AFileService extends AAbstractService {
     public List<File> getProjects(String pathDirectoryToBeScanned) {
         List<File> listaProjects = null;
         String tag = "/src/main/java";
-        String path;
         List<File> listaDirectory = getSubDirectories(new File(pathDirectoryToBeScanned));
 
         if (listaDirectory != null) {
             listaProjects = new ArrayList<>();
+
             for (File file : listaDirectory) {
-                path = file.getAbsolutePath() + tag;
-                if (isEsisteDirectory(path)) {
+                if (isEsisteSubDirectory(file, tag)) {
                     listaProjects.add(file);
                 }
             }
@@ -1436,7 +1468,7 @@ public class AFileService extends AAbstractService {
         if (listaProjects != null) {
             listaEmptyProjects = new ArrayList<>();
             for (File file : listaProjects) {
-                if (isVuotaSubDirectory(file,tag)) {
+                if (isVuotaSubDirectory(file, tag)) {
                     listaEmptyProjects.add(file);
                 }
             }

@@ -1,7 +1,5 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import org.slf4j.Logger;
-
 /**
  * Project vaadflow
  * Created by Algos
@@ -14,15 +12,19 @@ public class WizCost {
     //--flag per stampare info di debug
     public static final boolean FLAG_DEBUG_WIZ = true;
 
-    public static final String PROJECT_VAADFLOW = "vaadflow/";
+    public static final String PROJECT_VAADFLOW = "vaadflow14/";
 
-    public static final String NAME_VAADFLOW = "vaadflow";
+    public static final String NAME_VAADFLOW = "vaadflow14";
 
-    public static final String PATH_VAADFLOW_DIR_STANDARD = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow/";
+    public static final String VAADFLOW_DIR_STANDARD = "IdeaProjects/operativi/vaadflow14/";
+
+    public static final String PATH_VAADFLOW_DIR_STANDARD = "/Users/gac/Documents/IdeaProjects/" + VAADFLOW_DIR_STANDARD;
 
     public static final String PATH_PROJECTS_DIR_STANDARD = "/Users/gac/Documents/IdeaProjects/";
 
-    public static final String DIR_VAADFLOW = "it/algos/vaadflow/";
+    public static final String DIR_VAADFLOW = "vaadflow14/";
+
+    public static final String DIR_SOURCES = "wizard/sources/";
 
     public static final String SLASH = "/";
 
@@ -32,9 +34,9 @@ public class WizCost {
 
     public static final String TITOLO_START_PROGETTO = "Inizializzazione progetto";
 
-    public static final String TITOLO_NUOVO_PROGETTO = "Creazione nuovo progetto";
+    public static final String TITOLO_NUOVO_PROGETTO = "Creazione di un nuovo progetto";
 
-    public static final String TITOLO_MODIFICA_PROGETTO = "Modifica progetto esistente";
+    public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di questo progetto";
 
     public static final String DIR_DOC = "doc/";
 
@@ -48,7 +50,7 @@ public class WizCost {
 
     public static final String DIR_APPLICATION = "application/";
 
-    public static final String DIR_MODULES = "modules/";
+    public static final String DIR_PACKAGES = "packages/";
 
     public static final String APP_NAME = "application";
 
@@ -97,7 +99,7 @@ public class WizCost {
     //--contiene images/ (di solito)
     //--contiene src/ (di solito)
     //--contiene styles/ (sempre)
-    public static final String DIR_FRONT_END = DIR_RESOURCES + DIR_META_NAME + "resources/frontend/";
+    public static final String DIR_FRONT_END = "frontend/";
 
 
     //--parte dal livello di root del progetto
@@ -108,25 +110,25 @@ public class WizCost {
 
     //--parte dal livello di root del progetto
     //--valida SOLO per progetto vaadFlow
-    public static final String DIR_VAADFLOW_SOURCES = DIR_ALGOS + PROJECT_VAADFLOW + "wiz/sources/";
+    public static final String DIR_VAADFLOW_SOURCES = DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
 
 
-    //--metodo statico invocato da WizDialog.regolazioniIniziali()
-    public static void printInfo(Logger log) {
+    //--metodo statico invocato da Wizard.regolazioniIniziali()
+    public static void printInfo() {
         if (FLAG_DEBUG_WIZ) {
             System.out.println("");
             System.out.println("********************");
             System.out.println("Costanti statiche");
             System.out.println("********************");
-            System.out.println("PATH_VAADFLOW_DIR_STANDARD = " + PATH_VAADFLOW_DIR_STANDARD);
             System.out.println("PATH_PROJECTS_DIR_STANDARD = " + PATH_PROJECTS_DIR_STANDARD);
+            System.out.println("PATH_VAADFLOW_DIR_STANDARD = " + PATH_VAADFLOW_DIR_STANDARD);
             System.out.println("DIR_MAIN = " + DIR_MAIN);
             System.out.println("DIR_ALGOS = " + DIR_ALGOS);
             System.out.println("DIR_RESOURCES = " + DIR_RESOURCES);
             System.out.println("DIR_FRONTEND = " + DIR_FRONT_END);
             System.out.println("DIR_VAADFLOW_SOURCES = " + DIR_VAADFLOW_SOURCES);
             System.out.println("");
-        }// end of if cycle
-    }// end of static method
+        }
+    }
 
-}// end of class
+}

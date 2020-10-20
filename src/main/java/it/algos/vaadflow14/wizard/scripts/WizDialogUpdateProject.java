@@ -36,13 +36,14 @@ public class WizDialogUpdateProject extends WizDialog {
      * Legenda iniziale <br>
      * Viene sovrascritta nella sottoclasse che deve invocare PRIMA questo metodo <br>
      */
-    protected void creaLegenda() {
-        super.creaLegenda();
+    @Override
+    protected void creaTopLayout() {
+        super.creaTopLayout();
 
-        layoutLegenda.add(new Label("Update di un progetto esistente"));
-        layoutLegenda.add(new Label("Il modulo vaadflow viene sovrascritto"));
-        layoutLegenda.add(new Label("Eventuali modifiche locali vengono perse"));
-        layoutLegenda.add(new Label("Il modulo di questo progetto NON viene toccato"));
+        topLayout.add(new Label("Update di un progetto esistente"));
+        topLayout.add(new Label("Il modulo vaadflow viene sovrascritto"));
+        topLayout.add(new Label("Eventuali modifiche locali vengono perse"));
+        topLayout.add(new Label("Il modulo di questo progetto NON viene toccato"));
     }
 
 
@@ -57,7 +58,8 @@ public class WizDialogUpdateProject extends WizDialog {
      * DEVE essere sovrascritto nella sottoclasse <br>
      */
     @Override
-    protected void creaCheckBoxMap() {
+    protected void creaCheckBoxLayout() {
+        super.creaCheckBoxLayout();
         Checkbox unCheckbox;
 
         for (AEWiz flag : AEWiz.values()) {

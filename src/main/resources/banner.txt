@@ -7,7 +7,7 @@ ${AnsiColor.RED}
 
 VaadFlow FrameWork  (c)Algos
 SpringBoot ver: ${spring-boot.formatted-version}
-Vaadin ver: ${AnsiColor.GREEN}14.4.0${AnsiColor.RED}
+Vaadin ver: ${AnsiColor.GREEN}14.4.1${AnsiColor.RED}
 VaadFlow ver: ${AnsiColor.GREEN}${algos.framework.version}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
 

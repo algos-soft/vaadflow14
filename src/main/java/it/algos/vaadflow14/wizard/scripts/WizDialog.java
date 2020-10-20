@@ -81,13 +81,25 @@ public abstract class WizDialog extends Dialog {
 
     protected Button buttonForzaDirectory;
 
-    protected VerticalLayout layoutLegenda;
+    /**
+     * Sezione superiore,coi titoli e le info <br>
+     */
+    protected VerticalLayout topLayout;
 
-    protected VerticalLayout layoutTitolo;
+    /**
+     * Sezione centrale con la scelta del progetto <br>
+     */
+    protected VerticalLayout selezioneLayout;
 
-    protected VerticalLayout layoutCheckBox;
+    /**
+     * Sezione centrale con la selezione dei flags <br>
+     */
+    protected VerticalLayout checkBoxLayout;
 
-    protected VerticalLayout layoutBottoni;
+    /**
+     * Sezione inferiore coi bottoni di uscita e conferma <br>
+     */
+    protected VerticalLayout bottomLayout;
 
     protected H3 titoloCorrente;
 
@@ -143,22 +155,20 @@ public abstract class WizDialog extends Dialog {
         //--regolazione di property varie
         this.regolaVariabili();
 
-        //--info di avvisi
-        this.creaLegenda();
-
-        //--creazione bottoni di comando
+        //--creazione iniziale dei bottoni (chiamati anche da selezioneLayout)
         this.creaBottoni();
 
+        //--info di avvisi iniziali
+        this.creaTopLayout();
+
         //--solo per newProject
-        this.spazzolaDirectory();
+        this.creaSelezioneLayout();
 
         //--checkbox di spunta
-        mappaCheckbox = new LinkedHashMap<>();
-        creaCheckBoxMap();
-        this.addCheckBoxMap();
+        this.creaCheckBoxLayout();
 
-        //--aggiunge bottoni al layout
-        this.addBottoni();
+        //--creazione bottoni di comando
+        this.creaBottomLayout();
 
         //--superClasse
         super.open();
@@ -218,33 +228,42 @@ public abstract class WizDialog extends Dialog {
 
 
     /**
+     * Sezione superiore,coi titoli e le info <br>
      * Legenda iniziale <br>
-     * Viene sovrascritta nella sottoclasse che deve invocare PRIMA questo metodo <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void creaLegenda() {
-        if (isNuovoProgetto) {
-            this.titoloCorrente = new H3("Selezione...");
-        } else {
-            this.titoloCorrente = new H3(text.primaMaiuscola(nameTargetProject));
-        }// end of if/else cycle
-
-        layoutTitolo = new VerticalLayout();
-        layoutTitolo.setMargin(false);
-        layoutTitolo.setSpacing(false);
-        layoutTitolo.setPadding(true);
-        titoloCorrente.getElement().getStyle().set("color", "blue");
-        layoutTitolo.add(titoloCorrente);
-
-        layoutLegenda = new VerticalLayout();
-        layoutLegenda.setMargin(false);
-        layoutLegenda.setSpacing(false);
-        layoutLegenda.setPadding(true);
-        layoutLegenda.getElement().getStyle().set("color", "green");
-        this.setWidth("25em");
-
-        this.add(layoutTitolo);
-        this.add(layoutLegenda);
+    protected void creaTopLayout() {
+        topLayout = fixSezione("Nuovo progetto","green");
+        this.add(topLayout);
     }// end of method
+
+
+    /**
+     * Sezione centrale con la scelta del progetto <br>
+     * Spazzola la directory 'ideaProjects' <br>
+     * Recupera i possibili progetti 'vuoti' <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void creaSelezioneLayout() {
+    }
+
+
+    /**
+     * Sezione centrale con la selezione dei flags <br>
+     * Crea i checkbox di controllo <br>
+     * Spazzola (nella sottoclasse) la Enumeration per aggiungere solo i checkbox adeguati: <br>
+     * newProject
+     * updateProject
+     * newPackage
+     * updatePackage
+     * Spazzola la Enumeration e regola a 'true' i chekBox secondo il flag 'isAcceso' <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void creaCheckBoxLayout() {
+        checkBoxLayout = fixSezione("Flags di regolazione");
+        this.add(checkBoxLayout);
+        mappaCheckbox = new LinkedHashMap<>();
+    }
 
 
     protected void creaBottoni() {
@@ -266,30 +285,18 @@ public abstract class WizDialog extends Dialog {
         confirmButton.setWidth(NORMAL_WIDTH);
         confirmButton.setHeight(NORMAL_HEIGHT);
         confirmButton.setVisible(true);
-        //        confirmButton.setEnabled(!isNuovoProgetto); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
-    }// end of method
-
-
-    /**
-     * Spazzola la directory 'ideaProjects' <br>
-     * Recupera i possibili progetti 'vuoti' <br>
-     * Sovrascritto nella sottoclasse <br>
-     */
-    protected void spazzolaDirectory() {
+        confirmButton.setEnabled(!isNuovoProgetto);
     }
 
+    protected void creaBottomLayout() {
+        bottomLayout = new VerticalLayout();
+        HorizontalLayout layoutFooter = new HorizontalLayout();
+        layoutFooter.setSpacing(true);
+        layoutFooter.setMargin(true);
 
-    /**
-     * Crea i checkbox di controllo <br>
-     * Spazzola (nella sottoclasse) la Enumeration per aggiungere solo i checkbox adeguati: <br>
-     * newProject
-     * updateProject
-     * newPackage
-     * updatePackage
-     * Spazzola la Enumeration e regola a 'true' i chekbox secondo il flag 'isAcceso' <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-    protected void creaCheckBoxMap() {
+        layoutFooter.add(cancelButton, confirmButton);
+        bottomLayout.add(layoutFooter);
+        this.add(bottomLayout);
     }
 
 
@@ -297,28 +304,9 @@ public abstract class WizDialog extends Dialog {
      * Aggiunge al layout i checkbox di controllo <br>
      */
     protected void addCheckBoxMap() {
-        layoutCheckBox = new VerticalLayout();
-        layoutCheckBox.setMargin(false);
-        layoutCheckBox.setSpacing(false);
-        layoutCheckBox.setPadding(true);
-
         for (String key : mappaCheckbox.keySet()) {
-            layoutCheckBox.add(mappaCheckbox.get(key));
-        }// end of for cycle
-
-        this.add(layoutCheckBox);
-    }
-
-
-    protected void addBottoni() {
-        layoutBottoni = new VerticalLayout();
-        HorizontalLayout layoutFooter = new HorizontalLayout();
-        layoutFooter.setSpacing(true);
-        layoutFooter.setMargin(true);
-
-        layoutFooter.add(cancelButton, confirmButton);
-        layoutBottoni.add(layoutFooter);
-        this.add(layoutBottoni);
+            checkBoxLayout.add(mappaCheckbox.get(key));
+        }
     }
 
 
@@ -400,6 +388,25 @@ public abstract class WizDialog extends Dialog {
             }
             System.out.println("");
         }
+    }
+
+
+    protected VerticalLayout fixSezione(String titolo) {
+        return fixSezione(titolo, "black");
+    }
+
+
+    protected VerticalLayout fixSezione(String titolo, String color) {
+        VerticalLayout layoutTitolo = new VerticalLayout();
+        H3 titoloH3 = new H3(text.primaMaiuscola(titolo));
+
+        layoutTitolo.setMargin(false);
+        layoutTitolo.setSpacing(false);
+        layoutTitolo.setPadding(false);
+        titoloH3.getElement().getStyle().set("color", "blue");
+        layoutTitolo.add(titoloH3);
+
+        return layoutTitolo;
     }
 
 

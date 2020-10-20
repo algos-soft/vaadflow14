@@ -5,17 +5,14 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.wizard.scripts.WizDialogNewProject;
-import it.algos.vaadflow14.wizard.scripts.WizDialogUpdateProject;
-import it.algos.vaadflow14.wizard.scripts.WizElaboraNewProject;
-import it.algos.vaadflow14.wizard.scripts.WizElaboraUpdateProject;
+import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -23,9 +20,8 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.PostConstruct;
 import java.io.File;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_MODIFICA_PROGETTO;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
+import static it.algos.vaadflow14.backend.application.FlowCost.TAG_WIZ;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 
 /**
@@ -55,6 +51,13 @@ public class Wizard extends VerticalLayout {
     @Autowired
     public ApplicationContext appContext;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
 
     /**
      * Utilizzato dall'interno di VaadFlow per creare/aggiornare un altro progetto <br>
@@ -110,6 +113,7 @@ public class Wizard extends VerticalLayout {
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
+        WizCost.printInfo();
         this.titolo();
         selezioneProgettoInUso();
         if (isProgettoBase) {
@@ -145,14 +149,15 @@ public class Wizard extends VerticalLayout {
         H3 paragrafo = new H3(TITOLO_NUOVO_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
-        Label label = new Label("Dialogo per selezionare alcuni flags iniziali");
+        Label label = new Label("Dialogo per selezionare il progetto ed alcuni flags iniziali");
 
         Button bottone = new Button("Open dialog");
         bottone.getElement().setAttribute("theme", "primary");
         dialogNewProject = appContext.getBean(WizDialogNewProject.class);
         bottone.addClickListener(event -> dialogNewProject.open(this::elaboraNewProject));
 
-        this.add(new HorizontalLayout(label, bottone));
+        this.add(label);
+        this.add(bottone);
         this.add(new H1());
     }
 
@@ -167,10 +172,10 @@ public class Wizard extends VerticalLayout {
         H3 paragrafo = new H3(TITOLO_MODIFICA_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
-        this.add(new Label("Esistente in qualsiasi directory"));
+        this.add(new Label("Recuperando i sorgenti da "+VAADFLOW_DIR_STANDARD));
 
         Button bottone = new Button("Update project");
-        bottone.getElement().setAttribute("theme", "pimary");
+        bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogUpdateProject.open(this::elaboraUpdateProject));
         this.add(bottone);
         this.add(new H1());

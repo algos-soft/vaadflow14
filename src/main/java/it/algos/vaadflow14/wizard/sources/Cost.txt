@@ -1,9 +1,9 @@
 package it.algos.@MODULELOWER@.application;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import it.algos.vaadflow.annotation.AIScript;
 
 /**
  * Project @MODULELOWER@
@@ -18,6 +18,6 @@ import it.algos.vaadflow.annotation.AIScript;
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovrascrivibile = false)
+@AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Cost {
 }// end of static class

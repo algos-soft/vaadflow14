@@ -1,7 +1,5 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.crud.CrudI18n;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;

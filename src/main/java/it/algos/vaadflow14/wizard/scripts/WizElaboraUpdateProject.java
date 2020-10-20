@@ -20,7 +20,7 @@ public class WizElaboraUpdateProject extends WizElabora {
         super.isNuovoProgetto = false;
         super.esegue();
 
-        super.copiaDirectoryDocumentation();
+        super.copiaDirectoryDoc();
         super.copiaDirectoryLinks();
         super.copiaDirectorySnippets();
 
@@ -29,9 +29,9 @@ public class WizElaboraUpdateProject extends WizElabora {
         super.copiaMetaInf();
         super.scriveFileProperties();
 
-        super.scriveFileRead();
-        super.copiaFileGit();
+        super.scriveFileGit();
         super.scriveFilePom();
+        super.scriveFileRead();
     }// end of method
 
 }// end of class

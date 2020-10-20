@@ -1022,7 +1022,7 @@ public class AFileServiceTest extends ATest {
     public void isEsisteSubDirectory() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow";
         String dirInterna = "src/main";
-        ottenutoBooleano = file.isEsisteSubDirectory(new File(sorgente), dirInterna);
+        ottenutoBooleano = file.isPienaSubDirectory(new File(sorgente), dirInterna);
         assertTrue(ottenutoBooleano);
     }
 

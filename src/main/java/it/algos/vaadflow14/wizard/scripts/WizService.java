@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.JAVA_SUFFIX;
-import static it.algos.vaadflow14.backend.application.FlowCost.TXT_SUFFIX;
+import java.time.LocalDate;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -117,9 +118,31 @@ public class WizService {
         testoFinaleElaborato = AEToken.replace(AEToken.projectNameUpper, testoFinaleElaborato, AEToken.projectNameUpper.getValue());
         testoFinaleElaborato = AEToken.replace(AEToken.moduleNameMinuscolo, testoFinaleElaborato, AEToken.moduleNameMinuscolo.getValue());
         testoFinaleElaborato = AEToken.replace(AEToken.moduleNameMaiuscolo, testoFinaleElaborato, AEToken.moduleNameMaiuscolo.getValue());
+        testoFinaleElaborato = AEToken.replace(AEToken.versionDate, testoFinaleElaborato, fixVersionDate());
 
         return testoFinaleElaborato;
     }// end of method
+
+
+    /**
+     * Prepara la data attuale in forma 'text' per la sostituzione <br>
+     *
+     * @return testo nella forma 'LocalDate.of(2020, 10, 19)'
+     */
+    public String fixVersionDate() {
+        String testoData = VUOTA;
+        LocalDate dataAttuale = LocalDate.now();
+
+        testoData = "LocalDate.of(";
+        testoData += dataAttuale.getYear();
+        testoData += VIRGOLA_SPAZIO;
+        testoData += dataAttuale.getMonthValue();
+        testoData += VIRGOLA_SPAZIO;
+        testoData += dataAttuale.getDayOfMonth();
+        testoData += ")";
+
+        return testoData;
+    }
 
 
     /**

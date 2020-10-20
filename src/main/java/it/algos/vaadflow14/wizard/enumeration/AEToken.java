@@ -63,6 +63,7 @@ public enum AEToken {
     creaFiltri("CREAFILTRI"),
     updateFiltri("UPDATEFILTRI"),
     addListeners("ADDLISTENERS"),
+    versionDate("VERSIONDATE"),
     ;
 
     private static String DELIMITER = "@";
