@@ -215,7 +215,7 @@ public class AReflectionServiceTest extends ATest {
         System.out.println("Singolo field di una classe");
         System.out.println("");
 
-        sorgente = FIELD_CODE;
+        sorgente = FlowCost.FIELD_CODE;
         ottenutoField = service.getField(UTENTE_CLASS, sorgente);
         Assertions.assertNull(ottenutoField);
         System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName()  +PUNTO+ sorgente);
@@ -230,7 +230,7 @@ public class AReflectionServiceTest extends ATest {
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO+ sorgente);
 
-        sorgente = FIELD_ORDINE;
+        sorgente = FlowCost.FIELD_ORDINE;
         ottenutoField = service.getField(MESE_CLASS, sorgente);
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO+ sorgente);

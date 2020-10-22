@@ -1,6 +1,8 @@
 package it.algos.unit;
 
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import org.junit.jupiter.api.Assertions;
@@ -48,6 +50,30 @@ public abstract class ATest {
      */
     protected static final List<String> LIST_SHORT_STRING = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING));
 
+    protected final static String FIELD_NAME_NOTE = "note";
+
+    protected final static String FIELD_NAME_ORDINE = "ordine";
+
+    protected final static String FIELD_NAME_CODE = "code";
+
+    protected final static String HEADER_ORDINE = "#";
+
+    protected final static String HEADER_CODE = "code";
+
+    protected final static String HEADER_NOME = "nome";
+
+    protected final static String NAME_ORDINE = "ordine";
+
+    protected final static String NAME_CODE = "code";
+
+    protected final static String NAME_NOME = "nome";
+
+    protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
+    protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
+
+    protected static Field FIELD_ORDINE;
+
+    protected static Field FIELD_NOME;
 
     /**
      * The App context.
@@ -201,6 +227,8 @@ public abstract class ATest {
 
     protected List<AFiltro> listaFiltri;
 
+    protected List<Field> listaFields;
+
     protected List<String> listaStr;
 
     protected List<AEntity> listaBean;
@@ -255,7 +283,10 @@ public abstract class ATest {
         text.array = array;
         logger.text = text;
         logger.adminLogger = adminLogger;
+        annotation.text = text;
         annotation.array = array;
+        annotation.logger = logger;
+        annotation.reflection = reflection;
         reflection.array = array;
         reflection.text = text;
         reflection.text = text;
@@ -298,7 +329,10 @@ public abstract class ATest {
         listaFiltri = null;
         listaBean = null;
         listaStr = null;
+        listaFields = null;
         bytes = null;
+        FIELD_ORDINE = reflection.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
+        FIELD_NOME = reflection.getField(VIA_ENTITY_CLASS, NAME_NOME);
     }
 
 

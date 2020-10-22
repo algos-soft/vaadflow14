@@ -1,5 +1,7 @@
 package it.algos.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -16,6 +18,7 @@ import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
+import org.bson.Document;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +33,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.SEP;
@@ -791,21 +795,62 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("19 - find next")
     void findNext() {
         sorgente = "aruba";
-        previsto="australia";
+        previsto = "australia";
         Stato statoOttenuto = (Stato) service.findNext(Stato.class, sorgente);
         Assert.assertNotNull(statoOttenuto);
         assertEquals(previsto, statoOttenuto.id);
     }
 
+
     @Test
-    @Order(19)
-    @DisplayName("19 - find previous")
+    @Order(20)
+    @DisplayName("20 - find previous")
     void findPrevious() {
         sorgente = "australia";
-        previsto="aruba";
+        previsto = "aruba";
         Stato statoOttenuto = (Stato) service.findPrevious(Stato.class, sorgente);
         Assert.assertNotNull(statoOttenuto);
         assertEquals(previsto, statoOttenuto.id);
+    }
+
+
+    @Test
+    @Order(21)
+    @DisplayName("21 - getCollection")
+    void pippoz() {
+        Gson gson;
+        String json;
+        ObjectMapper mapper = new ObjectMapper();
+        int offset = 0;
+        int limit = 12;
+        Class<? extends AEntity>  clazz = Mese.class;
+        AEntity entity;
+        String clazzName = clazz.getSimpleName().toLowerCase();
+        List<AEntity> lista = new ArrayList();
+        Collection<Document> documents = mongo.mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
+
+        for (Document doc : documents) {
+            try {
+                gson = new Gson();
+                json = gson.toJson(doc);
+                System.out.println(json);
+                json = json.replace("_id", "id");
+                json = json.replace("_class", "note");
+                System.out.println(json);
+                System.out.println(VUOTA);
+                entity = mapper.readValue(json, clazz);
+                lista.add(entity);
+            } catch (Exception unErrore) {
+                System.out.println(unErrore);
+            }
+        }
+
+        if (lista != null && lista.size() > 0) {
+            for (AEntity bean : lista) {
+                System.out.println(bean.id);
+            }
+        }
+
     }
 
 

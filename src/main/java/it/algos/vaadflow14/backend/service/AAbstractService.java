@@ -178,7 +178,7 @@ public abstract class AAbstractService {
     public AEnumerationService enumService;
 
     @Autowired
-    protected Environment env;
+    public Environment env;
 
 
 }

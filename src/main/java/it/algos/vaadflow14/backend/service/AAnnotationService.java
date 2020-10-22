@@ -14,6 +14,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
- * Project springvaadin
+ * Project vaadflow14
  * Created by Algos
  * User: gac
  * Date: gio, 07-dic-2017
@@ -391,6 +393,56 @@ public class AAnnotationService extends AAbstractService {
      */
     public Range getRange(final Field reflectionJavaField) {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(Range.class) : null;
+    }
+
+
+    /**
+     * Get the annotation DBRef.
+     *
+     * @param reflectionJavaField di riferimento per estrarre l'annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public DBRef getDBRef(final Field reflectionJavaField) {
+        return reflectionJavaField != null ? reflectionJavaField.getAnnotation(DBRef.class) : null;
+    }
+
+
+    /**
+     * Lista dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity, che usano @DBRef <br>
+     * Controlla che il parametro in ingresso non sia nullo <br>
+     * Ricorsivo. Comprende la entity e tutte le sue superclassi (fino a ACEntity e AEntity) <br>
+     * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
+     * Esclusi i fields PRIVATI <br>
+     * Fields NON ordinati <br>
+     * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
+     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
+     *
+     * @param entityClazz da cui estrarre i fields statici
+     *
+     * @return lista di static fields della Entity e di tutte le sue superclassi, che usano @DBRef
+     */
+    public List<Field> getDBRefFields(Class<? extends AEntity> entityClazz) {
+        List<Field> listaFields = null;
+        List<Field> listaGrezza = null;
+
+        //--Controlla che il parametro in ingresso non sia nullo
+        if (entityClazz == null) {
+            return null;
+        }
+
+        listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
+        if (array.isValid(listaGrezza)) {
+            listaFields = new ArrayList<>();
+            for (Field field : listaGrezza) {
+                if (getDBRef(field) != null) {
+                    listaFields.add(field);
+                }
+            }
+        }
+
+        return listaFields;
     }
 
 
