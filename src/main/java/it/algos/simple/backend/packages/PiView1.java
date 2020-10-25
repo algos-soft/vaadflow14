@@ -23,6 +23,7 @@ public class PiView1 extends Div {
     @PostConstruct
     private void postConstruct() {
         setHeight("90%");
+        //            this.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
 
 
         Grid grid = creaGrid();

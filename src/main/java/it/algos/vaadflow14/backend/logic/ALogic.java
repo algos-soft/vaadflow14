@@ -638,6 +638,7 @@ public abstract class ALogic implements AILogic {
         grid = appContext.getBean(AGrid.class, entityClazz, this);
         dataProvider = dataService.creaDataProvider(entityClazz);
         grid.getGrid().setDataProvider(dataProvider);
+        grid.getGrid().setHeight("100%");
 
 //        refreshGrid();
         addGridListeners();

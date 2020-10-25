@@ -70,6 +70,7 @@ public class AViewList extends AView {
         if (bodyPlacehorder != null && grid.getGrid() != null) {
             bodyPlacehorder.add(grid.getGrid());
         }
+        bodyPlacehorder.setHeight("100%");
 
         this.add(bodyPlacehorder);
     }

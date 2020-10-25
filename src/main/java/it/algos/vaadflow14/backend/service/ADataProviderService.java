@@ -56,7 +56,7 @@ public class ADataProviderService extends AAbstractService {
 
                     // The number of items to load
                     int limit = query.getLimit();
-                    limit = 50;//@todo Funzionalità ancora da implementare
+//                    limit = 50;//@todo Funzionalità ancora da implementare
 
                     return mongo.findSet(entityClazz, offset, limit).stream();
                 },
