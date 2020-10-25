@@ -218,27 +218,27 @@ public class AnnoLogic extends CronoLogic {
     }
 
 
-    /**
-     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
-     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
-     */
-    //@todo provvisorio perché è troppo lento a visualizzare tutti i records
-    @Override
-    public void refreshGrid() {
-        List<? extends AEntity> items;
-        Query query = new Query();
-
-        if (grid != null && grid.getGrid() != null) {
-            updateFiltri();
-            //            items = mongo.findAll(entityClazz, filtri, sortView);
-            query.addCriteria(Criteria.where("ordine").gte(1990).lte(2025));
-            query.with(Sort.by(Sort.Direction.ASC, "ordine"));
-            items = mongo.findAll(entityClazz, query);
-            grid.deselectAll();
-            grid.refreshAll();
-            grid.setItems(items);
-        }
-    }
+//    /**
+//     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+//     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+//     */
+//    //@todo provvisorio perché è troppo lento a visualizzare tutti i records
+//    @Override
+//    public void refreshGrid() {
+//        List<? extends AEntity> items;
+//        Query query = new Query();
+//
+//        if (grid != null && grid.getGrid() != null) {
+//            updateFiltri();
+//            //            items = mongo.findAll(entityClazz, filtri, sortView);
+//            query.addCriteria(Criteria.where("ordine").gte(1990).lte(2025));
+//            query.with(Sort.by(Sort.Direction.ASC, "ordine"));
+//            items = mongo.findAll(entityClazz, query);
+//            grid.deselectAll();
+//            grid.refreshAll();
+//            grid.setItems(items);
+//        }
+//    }
 
 
     public List<Anno> fetchAnni(int offset, int limit) {

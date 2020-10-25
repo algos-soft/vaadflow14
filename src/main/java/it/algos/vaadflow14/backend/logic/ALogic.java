@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
@@ -216,6 +217,14 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public AImageService imageService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ADataProviderService dataService;
+
 
     /**
      * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true. <br>
@@ -320,6 +329,7 @@ public abstract class ALogic implements AILogic {
      */
     protected boolean usaHeaderWrap;
 
+    protected DataProvider dataProvider;
 
     protected String searchFieldValue = VUOTA;
 
@@ -613,18 +623,23 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Costruisce un layout per la Grid in bodyPlacehorder della view <br>
+     * Costruisce un layout per la Grid posizionata nel bodyPlacehorder della view <br>
      * <p>
      * Chiamato da AView.initView() <br>
      * Costruisce un' istanza dedicata <br>
-     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+     * Crea il DataProvider <br>
+     * Aggiunge i listener <br>
+     * Restituisce l' istanza (grafica) alla view <br>
      *
      * @return componente grafico per il placeHolder
      */
     @Override
     public AGrid getBodyGridLayout() {
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-        refreshGrid();
+        dataProvider = dataService.creaDataProvider(entityClazz);
+        grid.getGrid().setDataProvider(dataProvider);
+
+//        refreshGrid();
         addGridListeners();
         return grid;
     }
@@ -1155,7 +1170,8 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+     * Aggiorna gli items della Grid, utilizzando (anche) i filtri. <br>
+     * Chiamato inizialmente alla creazione della Grid <br>
      * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
      */
     public void refreshGrid() {
@@ -1165,7 +1181,7 @@ public abstract class ALogic implements AILogic {
             updateFiltri();
             items = mongo.findAll(entityClazz, filtri, sortView);
             //            grid.deselectAll();
-//            grid.refreshAll();
+            //            grid.refreshAll();
             grid.setItems(items);
         }
     }

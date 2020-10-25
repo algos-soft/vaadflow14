@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.data.provider.DataProvider;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import org.bson.Document;
@@ -42,6 +43,30 @@ public class ADataProviderService extends AAbstractService {
 
     @Autowired
     private AMongoService mongo;
+
+
+    public DataProvider creaDataProvider(Class<? extends AEntity> entityClazz) {
+
+        DataProvider<Anno, Void> dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                query -> {
+                    // The index of the first item to load
+                    int offset = query.getOffset();
+
+                    // The number of items to load
+                    int limit = query.getLimit();
+                    limit = 50;//@todo Funzionalità ancora da implementare
+
+                    return mongo.findSet(entityClazz, offset, limit).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                query -> mongo.count(entityClazz));
+
+        return dataProvider;
+    }
 
 
     public DataProvider mese() {
