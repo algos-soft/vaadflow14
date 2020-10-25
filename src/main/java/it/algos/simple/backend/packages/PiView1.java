@@ -39,7 +39,7 @@ public class PiView1 extends Div {
         grid.addColumn(Anno::getAnno).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
-        DataProvider dataProvider = service.createDataProvider();
+        DataProvider dataProvider = service.createDataProvider(Anno.class);
         grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 
