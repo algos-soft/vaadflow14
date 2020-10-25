@@ -385,8 +385,9 @@ public class ATextService extends AAbstractService {
      * @return etichetta visualizzata
      */
     private Label getLabel(String message, String labelColor) {
-        return getLabel(message,labelColor,false);
+        return getLabel(message, labelColor, false);
     }
+
 
     /**
      * Label colorata
@@ -412,6 +413,7 @@ public class ATextService extends AAbstractService {
 
         return label;
     }
+
 
     /**
      * Label colorata
@@ -506,6 +508,7 @@ public class ATextService extends AAbstractService {
         return label;
     }
 
+
     /**
      * Label colorata
      *
@@ -517,6 +520,7 @@ public class ATextService extends AAbstractService {
         return getLabelBold(message, "red");
     }
 
+
     /**
      * Label colorata
      *
@@ -527,6 +531,7 @@ public class ATextService extends AAbstractService {
     public Label getLabelBlueBold(String message) {
         return getLabelBold(message, "blue");
     }
+
 
     /**
      * Label colorata
@@ -551,6 +556,7 @@ public class ATextService extends AAbstractService {
         return getLabel(message, "red");
     }
 
+
     /**
      * Label colorata
      *
@@ -562,6 +568,7 @@ public class ATextService extends AAbstractService {
         return getLabel(message, "blue");
     }
 
+
     /**
      * Label colorata
      *
@@ -572,6 +579,7 @@ public class ATextService extends AAbstractService {
     public Label getLabelGreen(String message) {
         return getLabel(message, "green");
     }
+
 
     /**
      * Estrae una matrice da singole stringhe separate da virgola. <br>
@@ -627,10 +635,10 @@ public class ATextService extends AAbstractService {
         if (isValid(stringaIn)) {
             stringaIn = stringaIn.trim();
 
-            if (stringaIn.startsWith(GRAFFE_INI) && stringaIn.endsWith(GRAFFE_END)) {
+            if (stringaIn.startsWith(DOPPIE_GRAFFE_INI) && stringaIn.endsWith(DOPPIE_GRAFFE_END)) {
                 stringaOut = stringaIn;
-                stringaOut = levaCoda(stringaOut, GRAFFE_END);
-                stringaOut = levaTesta(stringaOut, GRAFFE_INI);
+                stringaOut = levaCoda(stringaOut, DOPPIE_GRAFFE_END);
+                stringaOut = levaTesta(stringaOut, DOPPIE_GRAFFE_INI);
             }
         }
 
@@ -896,6 +904,11 @@ public class ATextService extends AAbstractService {
         }
 
         return valueOut.trim();
+    }
+
+
+    public String estraeGraffaSingola(String valueIn) {
+        return estrae(valueIn, GRAFFA_INI, GRAFFA_END).trim();
     }
 
 

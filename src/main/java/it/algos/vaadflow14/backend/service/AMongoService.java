@@ -1,5 +1,8 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -22,6 +25,7 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -459,6 +463,77 @@ public class AMongoService<capture> extends AAbstractService {
                 return (List<AEntity>) mongoOp.find(query, entityClazz, projection);
             }
         }
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. <br>
+     * Utilizzato da DataProvider <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
+        List<AEntity> items = null;
+        Gson gSon = new Gson();
+        String jsonString;
+        String clazzName = entityClazz.getSimpleName().toLowerCase();
+        AEntity entityBean;
+        List<Field> listaRef = annotation.getDBRefFields(entityClazz);
+
+        Collection<Document> documents = mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
+        if (documents != null && documents.size() > 0) {
+            items = new ArrayList<>();
+            for (Document doc : documents) {
+                jsonString = gSon.toJson(doc);
+                jsonString = jsonString.replaceAll("_id", "id");
+                entityBean = gSon.fromJson(jsonString, entityClazz);
+                if (listaRef != null && listaRef.size() > 0) {
+                    entityBean = fixDbRef(doc, gSon, entityBean, listaRef);
+                }
+                if (entityBean != null) {
+                    items.add(entityBean);
+                }
+            }
+        }
+
+        return items;
+    }
+
+
+    /**
+     * Aggiunge i valori corretti di eventuali campi dbRef. <br>
+     *
+     * @return entityBean regolato
+     */
+    private AEntity fixDbRef(Document doc, Gson gSon, AEntity entityBean, List<Field> listaRef) {
+        JsonElement element = gSon.toJsonTree(doc);
+        JsonObject objDoc = element.getAsJsonObject();
+        String key = VUOTA;
+        JsonElement elementRef = null;
+        JsonObject objRef = null;
+        JsonElement objID = null;
+        String valueID = VUOTA;
+        Class clazzRef = null;
+        AEntity entityRef = null;
+
+        for (Field field : listaRef) {
+            clazzRef = field.getType();
+            key = field.getName();
+            elementRef = objDoc.get(key);
+            objRef = elementRef.getAsJsonObject();
+            objID = objRef.get("id");
+            valueID = objID.getAsString();
+            entityRef = findById(clazzRef, valueID);
+            try {
+                field.set(entityBean, entityRef);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
+        }
+
+        return entityBean;
     }
 
 

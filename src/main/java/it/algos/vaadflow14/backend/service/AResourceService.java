@@ -82,7 +82,7 @@ public class AResourceService extends AAbstractService {
             righe = rawText.split(A_CAPO);
             if (righe != null && righe.length > 0) {
                 for (String riga : righe) {
-                    riga = text.estrae(riga, GRAFFE_INI, GRAFFE_END);
+                    riga = text.estrae(riga, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
                     if (text.isValid(riga)) {
                         listaRighe.add(riga);
                     }

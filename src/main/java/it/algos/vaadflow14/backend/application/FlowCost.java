@@ -192,13 +192,46 @@ public abstract class FlowCost {
 
     public static final String QUADRE_END = QUADRA_END + QUADRA_END;
 
+
+    /**
+     * tag per la singola graffa di apertura
+     */
     public static final String GRAFFA_INI = "{";
 
-    public static final String GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
+    /**
+     * tag per le doppie graffe di apertura
+     */
+    public static final String DOPPIE_GRAFFE_INI = GRAFFA_INI + GRAFFA_INI;
 
+    /**
+     * tag per la singola graffa di apertura
+     */
     public static final String GRAFFA_END = "}";
 
-    public static final String GRAFFE_END = GRAFFA_END + GRAFFA_END;
+    /**
+     * tag per le doppie graffe di chiusura
+     */
+    public static final String DOPPIE_GRAFFE_END = GRAFFA_END + GRAFFA_END;
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_INI_REGEX = "\\{";
+
+    /**
+     * tag per le doppie graffe di apertura
+     */
+    public static final String DOPPIE_GRAFFE_INI_REGEX = GRAFFA_INI_REGEX + GRAFFA_INI_REGEX;
+
+    /**
+     * tag per la singola graffa di apertura
+     */
+    public static final String GRAFFA_END_REGEX = "\\}";
+
+    /**
+     * tag per le doppie graffe di chiusura
+     */
+    public static final String DOPPIE_GRAFFE_END_REGEX = GRAFFA_END_REGEX + GRAFFA_END_REGEX;
 
     //--chiavi mappa costruzione giorni
     public static final String PRIMO_GIORNO_MESE = "1º";

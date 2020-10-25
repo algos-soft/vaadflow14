@@ -452,7 +452,7 @@ public class AWikiService extends AAbstractService {
 
         testoGrezzo = legge(tag + wikiTitle);
 
-        if (testoGrezzo.startsWith(GRAFFE_INI)) {
+        if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
             wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
         } else {
             wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
@@ -736,7 +736,7 @@ public class AWikiService extends AAbstractService {
                     seconda = fixCode(seconda);
                     prima = text.setNoHtmlTag(prima, "kbd");
                     if (prima.contains(PIPE)) {
-                        if (prima.contains(GRAFFE_INI) && prima.contains(GRAFFE_END)) {
+                        if (prima.contains(DOPPIE_GRAFFE_INI) && prima.contains(DOPPIE_GRAFFE_END)) {
                         } else {
                             prima = text.levaTestoPrimaDi(prima, PIPE);
                         }
@@ -745,7 +745,7 @@ public class AWikiService extends AAbstractService {
                         seconda = text.estrae(seconda, QUADRE_INI, QUADRE_END);
                     }
                     if (seconda.contains(PIPE)) {
-                        if (seconda.contains(GRAFFE_INI) && seconda.contains(GRAFFE_END)) {
+                        if (seconda.contains(DOPPIE_GRAFFE_INI) && seconda.contains(DOPPIE_GRAFFE_END)) {
                         } else {
                             seconda = text.levaTestoPrimaDi(seconda, PIPE);
                         }
@@ -894,17 +894,17 @@ public class AWikiService extends AAbstractService {
         }
 
         //--solo per Italia (spero)
-        if (text.isEmpty(nome) && listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(PIPE) && listaRiga.get(1).contains(GRAFFE_END)) {
-            nome = text.estrae(listaRiga.get(1), GRAFFE_INI, GRAFFE_END);
+        if (text.isEmpty(nome) && listaRiga.get(1).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(1).contains(PIPE) && listaRiga.get(1).contains(DOPPIE_GRAFFE_END)) {
+            nome = text.estrae(listaRiga.get(1), DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
             nome = text.estrae(nome, PIPE, PIPE);
         }
 
         //--template bandierine per recuperare il nome
         if (text.isEmpty(nome)) {
-            if (listaRiga.get(1).contains(GRAFFE_INI) && listaRiga.get(1).contains(GRAFFE_END)) {
+            if (listaRiga.get(1).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(1).contains(DOPPIE_GRAFFE_END)) {
                 wrap = getTemplateBandierina(listaRiga.get(1));
             } else {
-                if (listaRiga.size() > 2 && listaRiga.get(2).contains(GRAFFE_INI) && listaRiga.get(2).contains(GRAFFE_END)) {
+                if (listaRiga.size() > 2 && listaRiga.get(2).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(2).contains(DOPPIE_GRAFFE_END)) {
                     wrap = getTemplateBandierina(listaRiga.get(2));
                 }
             }
@@ -1536,9 +1536,9 @@ public class AWikiService extends AAbstractService {
         int posIni;
         int posEnd;
 
-        if (testoCompleto.contains(GRAFFE_INI) && testoCompleto.contains(GRAFFE_END)) {
+        if (testoCompleto.contains(DOPPIE_GRAFFE_INI) && testoCompleto.contains(DOPPIE_GRAFFE_END)) {
             posIni = testoCompleto.indexOf(GRAFFA_INI);
-            posEnd = testoCompleto.indexOf(GRAFFE_END) + GRAFFE_END.length();
+            posEnd = testoCompleto.indexOf(DOPPIE_GRAFFE_END) + DOPPIE_GRAFFE_END.length();
             if (posIni >= 0 && posEnd > posIni) {
                 testoValido = testoCompleto.substring(posIni, posEnd);
             }

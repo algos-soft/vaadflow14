@@ -413,7 +413,45 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(11)
-    @DisplayName("11 - findId")
+    @DisplayName("11 - findSet")
+    void findSet() {
+        int offset = 0;
+        int limit = 0;
+        Class<? extends AEntity> clazz;
+
+        clazz = Mese.class;
+        offset = 0;
+        limit = 12;
+        previstoIntero = 12;
+        listaBean = mongo.findSet(clazz, offset, limit);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+        printLista(listaBean, "Set di entities");
+
+        offset = 4;
+        limit = 5;
+        previstoIntero = 5;
+        listaBean = mongo.findSet(clazz, offset, limit);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+        printLista(listaBean, "Set di entities");
+
+        clazz = Anno.class;
+        offset = 2850;
+        limit = 4;
+        previstoIntero = 4;
+        listaBean = mongo.findSet(clazz, offset, limit);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+        Assert.assertNotNull(((Anno) listaBean.get(0)).secolo.secolo);
+        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
+        printLista(listaBean, "Set di entities");
+    }
+
+
+    @Test
+    @Order(12)
+    @DisplayName("12 - findId")
     void findId() {
         System.out.println("find rimanda a findById");
         System.out.println(VUOTA);
@@ -430,8 +468,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(12)
-    @DisplayName("12 - findById")
+    @Order(13)
+    @DisplayName("13 - findById")
     void findById() {
         System.out.println("singola entity recuperata da keyID");
         System.out.println(VUOTA);
@@ -448,8 +486,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(13)
-    @DisplayName("13 - findByKey")
+    @Order(14)
+    @DisplayName("14 - findByKey")
     void findByKey() {
         System.out.println("singola entity recuperata da keyID");
         System.out.println(VUOTA);
@@ -466,8 +504,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(14)
-    @DisplayName("14 - findOneFirst")
+    @Order(15)
+    @DisplayName("15 - findOneFirst")
     void findOneFirst() {
         System.out.println("singola entity - se ce n'è più di una restituisce solo la prima");
 
@@ -587,8 +625,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(15)
-    @DisplayName("15 - findOneUnique")
+    @Order(16)
+    @DisplayName("16 - findOneUnique")
     void findOneUnique() {
         System.out.println("singola entity - se ce n'è più di una NON restituisce nulla");
         query = new Query();
@@ -720,8 +758,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(16)
-    @DisplayName("16 - getNewOrder")
+    @Order(17)
+    @DisplayName("17 - getNewOrder")
     void getNewOrder() {
         System.out.println("recupera ordinamento progressivo");
 
@@ -734,8 +772,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(17)
-    @DisplayName("17 - isEsiste")
+    @Order(18)
+    @DisplayName("18 - isEsiste")
     void isEsiste() {
         System.out.println("17 - controlla se esiste");
 
@@ -760,8 +798,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(18)
-    @DisplayName("18 - findAll by property")
+    @Order(19)
+    @DisplayName("19 - findAll by property")
     void findAll2() {
         System.out.println("18 - findAll filtrato da una property");
 
@@ -791,8 +829,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(19)
-    @DisplayName("19 - find next")
+    @Order(20)
+    @DisplayName("20 - find next")
     void findNext() {
         sorgente = "aruba";
         previsto = "australia";
@@ -803,8 +841,8 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(20)
-    @DisplayName("20 - find previous")
+    @Order(21)
+    @DisplayName("21 - find previous")
     void findPrevious() {
         sorgente = "australia";
         previsto = "aruba";
@@ -815,15 +853,15 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
-    @Order(21)
-    @DisplayName("21 - getCollection")
+    @Order(22)
+    @DisplayName("22 - getCollection")
     void pippoz() {
         Gson gson;
         String json;
         ObjectMapper mapper = new ObjectMapper();
         int offset = 0;
         int limit = 12;
-        Class<? extends AEntity>  clazz = Mese.class;
+        Class<? extends AEntity> clazz = Mese.class;
         AEntity entity;
         String clazzName = clazz.getSimpleName().toLowerCase();
         List<AEntity> lista = new ArrayList();

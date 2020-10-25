@@ -114,6 +114,9 @@ public abstract class ATest {
     @InjectMocks
     protected AMathService math;
 
+    @InjectMocks
+    protected AGSonService gSonService;
+
     protected Logger adminLogger;
 
     /**
@@ -279,6 +282,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(math);
         Assertions.assertNotNull(math);
 
+        MockitoAnnotations.initMocks(gSonService);
+        Assertions.assertNotNull(gSonService);
+
         array.text = text;
         text.array = array;
         logger.text = text;
@@ -289,9 +295,11 @@ public abstract class ATest {
         annotation.reflection = reflection;
         reflection.array = array;
         reflection.text = text;
-        reflection.text = text;
+        gSonService.text = text;
+        gSonService.array = array;
         bean.mongo = mongo;
         mongo.text = text;
+        mongo.annotation = annotation;
         web.text = text;
         file.text = text;
         file.array = array;

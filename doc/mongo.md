@@ -39,6 +39,7 @@ Google Gson is an open source, Java-based library developed by Google. It facili
 
 ##Link
 - [JSON and BSON](https://www.mongodb.com/json-and-bson/)
+- [JSON e BSON](http://university.mongodbitalia.it/json-e-bson)
 - [Advantages of MongoDB](https://www.mongodb.com/advantages-of-mongodb/)
 - [Google Gson Tutorial](https://www.tutorialspoint.com/gson/index.htm)
 - [Gson - Object Data Binding](https://www.tutorialspoint.com/gson/gson_object_data_binding.htm)
