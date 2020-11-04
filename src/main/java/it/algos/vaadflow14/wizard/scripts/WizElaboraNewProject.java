@@ -95,17 +95,17 @@ public class WizElaboraNewProject extends WizElabora {
 
 
     protected void scriveFileCost() {
-        wizService.scriveNewFileCreatoDaWizSource(FILE_COST, pathProjectDirApplication);
+        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
     }// end of method
 
 
     public void scriveFileBoot() {
-        wizService.scriveNewFileCreatoDaWizSource(FILE_BOOT, pathProjectDirApplication);
+        wizService.scriveNewFileCreatoDaSource(FILE_BOOT, pathProjectDirApplication);
     }// end of method
 
 
     public void scriveFileVers() {
-        wizService.scriveNewFileCreatoDaWizSource(FILE_VERS, pathProjectDirApplication);
+        wizService.scriveNewFileCreatoDaSource(FILE_VERS, pathProjectDirApplication);
     }// end of method
 
 

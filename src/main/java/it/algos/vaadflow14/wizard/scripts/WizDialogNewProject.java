@@ -58,7 +58,7 @@ public class WizDialogNewProject extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione("Nuovo progetto","green");
+        topLayout = fixSezione("Nuovo progetto", "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Creazione di un nuovo project"));
@@ -144,22 +144,19 @@ public class WizDialogNewProject extends WizDialog {
         Checkbox unCheckbox;
 
         //--accende tutti i checkbox escluso flagSecurity
-        for (AEWiz flag : AEWiz.values()) {
-            if (flag.isCheckBox()) {
-                flag.setAcceso(true);
-            }
+        for (AEWiz flag : AEWiz.getFlagsNewProject()) {
+            flag.setAcceso(true);
         }
         AEWiz.flagSecurity.setAcceso(false);
 
-        for (AEWiz flag : AEWiz.values()) {
-            if (flag.isCheckBox() && flag.isNewProject()) {
-                unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
-                mappaCheckbox.put(flag.name(), unCheckbox);
-            }
+        for (AEWiz flag : AEWiz.getFlagsNewProject()) {
+            unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
+            mappaCheckbox.put(flag.name(), unCheckbox);
         }
 
         super.addCheckBoxMap();
     }
+
 
     protected void creaBottoni() {
         super.creaBottoni();
@@ -167,6 +164,7 @@ public class WizDialogNewProject extends WizDialog {
         cancelButton.getElement().setAttribute("theme", "secondary");
         confirmButton.getElement().setAttribute("theme", "primary");
     }
+
 
     private void addListener() {
         fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));

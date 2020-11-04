@@ -28,6 +28,10 @@ public class WizCost {
 
     public static final String DIR_VAADFLOW = "vaadflow14/";
 
+    public static final String DIR_WIZARD = "wizard/";
+
+    public static final String FILE_WIZARD = "Wizard";
+
     public static final String DIR_SOURCES = "wizard/sources/";
 
     public static final String SLASH = "/";
@@ -41,6 +45,10 @@ public class WizCost {
     public static final String TITOLO_NUOVO_PROGETTO = "Creazione di un nuovo progetto";
 
     public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di questo progetto";
+
+    public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
+
+    public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
 
     public static final String DIR_DOC = "doc/";
 

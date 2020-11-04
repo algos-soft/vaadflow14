@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import it.algos.vaadflow14.backend.service.AFileService;
+import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import it.algos.vaadflow14.wizard.enumeration.AEWiz;
@@ -44,6 +45,15 @@ public abstract class WizElabora implements WizRecipient {
      */
     @Autowired
     protected WizService wizService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ALogService logger;
+
 
     //--flag di controllo regolato nella sottoclasse concreta
     protected boolean isNuovoProgetto;
@@ -187,7 +197,7 @@ public abstract class WizElabora implements WizRecipient {
 
         this.newProjectName = AEWiz.nameTargetProject.getValue();
         this.newProjectNameUpper = text.primaMaiuscola(newProjectName);
-        this.pathProject = AEWiz.pathTargetProjet.getValue();
+        this.pathProject = AEWiz.pathTargetProject.getValue();
 
         this.pathProjectMain = pathProject + DIR_MAIN;
         this.pathProjectAlgos = pathProject + DIR_ALGOS;
@@ -322,7 +332,7 @@ public abstract class WizElabora implements WizRecipient {
     protected void scriveFileProperties() {
         if (AEWiz.flagProperty.isAbilitato()) {
             if (checkFileCanBeModified(pathProjectResources, FILE_PROPERTIES_DEST)) {
-                wizService.scriveNewFileCreatoDaWizSource(FILE_PROPERTIES, pathProjectResources, FILE_PROPERTIES_DEST, VUOTA);
+                wizService.scriveNewFileCreatoDaSource(FILE_PROPERTIES, pathProjectResources, FILE_PROPERTIES_DEST, VUOTA);
             }
         }
     }
@@ -334,7 +344,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void scriveFileBanner() {
         if (AEWiz.flagBanner.isAbilitato()) {
-            wizService.scriveNewFileCreatoDaWizSource(FILE_BANNER, pathProjectResources, TXT_SUFFIX);
+            wizService.scriveNewFileCreatoDaSource(FILE_BANNER, pathProjectResources, TXT_SUFFIX);
         }
     }
 
@@ -346,7 +356,7 @@ public abstract class WizElabora implements WizRecipient {
     protected void scriveFileGit() {
         if (AEWiz.flagGit.isAbilitato()) {
             if (checkFileCanBeModified(pathProject, FILE_GIT)) {
-                wizService.scriveNewFileCreatoDaWizSource(FILE_GIT, pathProject, VUOTA);
+                wizService.scriveNewFileCreatoDaSource(FILE_GIT, pathProject, VUOTA);
             }
         }
     }
@@ -358,7 +368,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void scriveFilePom() {
         if (AEWiz.flagPom.isAbilitato()) {
-            wizService.scriveNewFileCreatoDaWizSource(FILE_POM, pathProject, XML_SUFFIX);
+            wizService.scriveNewFileCreatoDaSource(FILE_POM, pathProject, XML_SUFFIX);
         }
     }
 
@@ -369,7 +379,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void scriveFileRead() {
         if (AEWiz.flagRead.isAbilitato()) {
-            wizService.scriveNewFileCreatoDaWizSource(FILE_READ, pathProject, TXT_SUFFIX);
+            wizService.scriveNewFileCreatoDaSource(FILE_READ, pathProject, TXT_SUFFIX);
         }
     }
 

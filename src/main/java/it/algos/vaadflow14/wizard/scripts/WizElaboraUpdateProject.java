@@ -32,6 +32,6 @@ public class WizElaboraUpdateProject extends WizElabora {
         super.scriveFileGit();
         super.scriveFilePom();
         super.scriveFileRead();
-    }// end of method
+    }
 
-}// end of class
+}

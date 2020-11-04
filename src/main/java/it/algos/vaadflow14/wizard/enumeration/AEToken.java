@@ -16,53 +16,102 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 public enum AEToken {
 
     nameTargetProject("PROJECT", true),
-    pathTargetProjet(VUOTA, true),
+
+    pathTargetProject(VUOTA, true),
+
     projectNameUpper("PROJECTALLUPPER", true),
+
     moduleNameMinuscolo("MODULELOWER", true),
+
     moduleNameMaiuscolo("MODULEUPPER", true),
+
     first("FIRSTCHARPROJECT", true),
+
     pathVaadFlowWizTxtSources(VUOTA, true),
-    packageName("PACKAGE"),
+
+    packageName("PACKAGE", true),
+
     projectCost("COST"),
+
     user("USER"),
+
     today("TODAY"),
+
     qualifier("QUALIFIER"),
+
     tagView("TAG_VIEW"),
+
     entity("ENTITY"),
+
     estendeEntity("ESTENDEENTITY"),
+
     superClassEntity("SUPERCLASSENTITY"),
+
     parametersFind("PARAMETERSFIND"),
+
     parameters("PARAMETERS"),
+
     parametersDoc("PARAMETERSDOC"),
+
     parametersNewEntity("PARAMETERSNEWENTITY"),
+
     methodFind("FIND"),
+
     methodNewOrdine("NEWORDINE"),
+
     methodIdKeySpecifica("IDKEYSPECIFICA"),
+
     keyUnica("KEYUNICA"),
+
     builder("BUILDER"),
+
     query("QUERY"),
+
     findAll("FINDALL"),
+
     properties("PROPERTIES"),
+
     propertyOrdine("ORDINE"),
+
     propertyCode("CODE"),
+
     propertyDescrizione("DESCRIZIONE"),
+
     toString("TOSTRING"),
+
     usaCompany("USACOMPANY"),
+
     usaSecurity("USASECURITY"),
+
+
     readCompany("READCOMPANY"),
+
     grid("GRID"),
+
     creaGrid("CREAGRID"),
+
     postConstruct("POSTCONSTRUCT"),
+
     setParameter("SETPARAMETER"),
+
     beforeEnter("BEFOREENTER"),
+
     fixPreferenze("FIXPREFERENZE"),
+
     fixLayout("FIXLAYOUT"),
+
     creaAlertLayout("CREAALERTLAYOUT"),
+
     creaTopLayout("CREATOPLAYOUT"),
+
     creaPopupFiltro("CREAPOPUPFILTRO"),
+
     creaFiltri("CREAFILTRI"),
+
     updateFiltri("UPDATEFILTRI"),
+
     addListeners("ADDLISTENERS"),
+
     versionDate("VERSIONDATE"),
     ;
 
@@ -100,7 +149,11 @@ public enum AEToken {
 
 
     public static String replace(AEToken EAToken, String textReplacing, String value) {
-        return textReplacing.replaceAll(DELIMITER + EAToken.tokenTag + DELIMITER, value);
+        if (value != null && value.length() > 0) {
+            return textReplacing.replaceAll(DELIMITER + EAToken.tokenTag + DELIMITER, value);
+        } else {
+            return textReplacing;
+        }
     }
 
 
@@ -109,7 +162,7 @@ public enum AEToken {
         for (AEToken aeToken : values()) {
             if (valueMap.containsKey(aeToken)) {
                 textReplacing = replace(aeToken, textReplacing, valueMap.get(aeToken));
-//                textReplacing = textReplacing.replaceAll(DELIMITER + token.tokenTag + DELIMITER, valueMap.get(token));
+                //                textReplacing = textReplacing.replaceAll(DELIMITER + token.tokenTag + DELIMITER, valueMap.get(token));
             }
         }
 

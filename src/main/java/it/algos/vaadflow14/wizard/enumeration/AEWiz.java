@@ -1,6 +1,9 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -12,26 +15,61 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public enum AEWiz {
     flagSecurity(true, "Utilizza Spring Security", true, false, false, false, false),
+
     flagDocumentation(true, "Directory documentazione (VaadFlow)", true, true, false, false, true),
+
     flagLinks(true, "Directory links a web (VaadFlow)", true, true, false, false, true),
+
     flagSnippets(true, "Directory snippets di aiuto (VaadFlow)", true, true, false, false, true),
-    flagFlow(true, "Copia la directory VaadFlow", true, true, false, false, true),
+
+    flagFlow(true, "Copia la directory VaadFlow (Wizard compreso)", true, true, false, false, true),
+
     flagProject(true, "Crea la directory del nuovo progetto", true, false, false, false, false),
+
     flagFrontend(true, "Directory frontend (VaadFlow)", true, true, false, false, true),
+
     flagResources(true, "Directory resources (VaadFlow)", true, true, false, false, false),
+
     flagProperty(true, "File application.properties (sources)", true, true, false, false, true),
+
     flagBanner(true, "File banner di SpringBoot (sources)", true, true, false, false, true),
+
     flagGit(true, "File GIT di esclusione (sources)", true, true, false, false, true),
+
     flagPom(true, "File Maven di POM.xml - ATTENZIONE", true, true, false, false, true),
+
     flagRead(true, "File READ con note di testo (sources)", true, true, false, false, true),
+
     flagFile(true, "Sovrascrive il singolo FILE", false, false, false, false, false),
+
     flagDirectory(true, "Sovrascrive la DIRECTORY", false, false, false, false, false),
+
     pathUserDir(false, "Directory recuperata dal System dove gira il programma in uso", true, true, false, false, false, VUOTA),
+
     pathVaadFlow(false, "Directory che contiene il programma VaadFlow", true, true, false, false, false, VUOTA),
-    pathIdeaProjects(false, "Directory che contiene i nuovi programmi appena creati da Idea", true, true, false, false, false, VUOTA),
-    //    pathVaadFlowSources(false, "Directory dei sorgenti testuali di VaadFlow da elaborare", true, true, false, false, false, VUOTA),
+
+    pathIdeaProjects(false, "Directory che contiene i nuovi programmi appena creati da Idea", true, true, false, false, false, VUOTA), //    pathVaadFlowSources(false, "Directory dei sorgenti testuali di VaadFlow da elaborare", true, true, false, false, false, VUOTA),
+
     nameTargetProject(false, "Nome breve new/update project", true, true, false, false, false, VUOTA),
-    pathTargetProjet(false, "Path new/update project", true, true, false, false, false, VUOTA),
+
+    pathTargetProject(false, "Path new/update project", true, true, false, false, false, VUOTA),
+
+    flagEntity(true, "Entity base del package", false, false, true, true, true),
+
+    flagLogic(true, "Business logic del package", false, false, true, true, false),
+
+    flagForm(true, "Form specifico del package", false, false, true, true, false),
+
+    flagList(true, "List specifico del package", false, false, true, true, false),
+
+    flagService(true, "Service specifico del package", false, false, true, true, false),
+
+    flagCompany(true, "Entity subclass di Company", false, false, true, true, false),
+
+    flagRowIndex(true, "Entity usa rowIndex", false, false, true, true, false),
+
+    flagSovrascrivePackage(true, "Sovrascrive un package esistente", false, false, true,true,false),
+
     ;
 
 
@@ -104,6 +142,56 @@ public enum AEWiz {
             aeWiz.setAcceso(aeWiz.defaultAcceso);
             aeWiz.setValue(aeWiz.defaultValue);
         }
+    }
+
+
+    public static List<AEWiz> getFlagsNewProject() {
+        List<AEWiz> listaWizs = new ArrayList<>();
+
+        for (AEWiz aeWiz : AEWiz.values()) {
+            if (aeWiz.isCheckBox() && aeWiz.isNewProject()) {
+                listaWizs.add(aeWiz);
+            }
+        }
+
+        return listaWizs;
+    }
+
+
+    public static List<AEWiz> getFlags() {
+        List<AEWiz> listaWizs = new ArrayList<>();
+
+        for (AEWiz aeWiz : AEWiz.values()) {
+            if (aeWiz.isCheckBox()) {
+                listaWizs.add(aeWiz);
+            }
+        }
+
+        return listaWizs;
+    }
+
+
+    public static List<AEWiz> getFlagsUpdateProject() {
+        List<AEWiz> listaWizs = new ArrayList<>();
+
+        for (AEWiz aeWiz : AEWiz.values()) {
+            if (aeWiz.isCheckBox() && aeWiz.isUpdateProject()) {
+                listaWizs.add(aeWiz);
+            }
+        }
+
+        return listaWizs;
+    }
+    public static List<AEWiz> getFlagsNewPackage() {
+        List<AEWiz> listaWizs = new ArrayList<>();
+
+        for (AEWiz aeWiz : AEWiz.values()) {
+            if (aeWiz.isCheckBox() && aeWiz.isNewPackage()) {
+                listaWizs.add(aeWiz);
+            }
+        }
+
+        return listaWizs;
     }
 
 

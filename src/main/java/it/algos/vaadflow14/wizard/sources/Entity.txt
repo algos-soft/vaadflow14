@@ -1,24 +1,13 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.@MODULELOWER@.packages.@PACKAGE@;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow.annotation.*;
-import it.algos.vaadflow.backend.entity.AEntity;
-import it.algos.vaadflow.enumeration.EACompanyRequired;
-import it.algos.vaadflow.enumeration.EAFieldType;
+import com.mysema.query.annotations.QueryEntity;
+import it.algos.vaadflow14.backend.annotation.AIEntity;
+import it.algos.vaadflow14.backend.annotation.AIForm;
+import it.algos.vaadflow14.backend.annotation.AIList;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import lombok.*;
-import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
 
 /**
  * Project @MODULELOWER@ <br>
@@ -63,18 +52,18 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
  *      (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
  * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
-@Entity
+@QueryEntity
 @Document(collection = "@PACKAGE@")
 @TypeAlias("@PACKAGE@")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @Builder(builderMethodName = "builder@ENTITY@")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovrascrivibile = false)
-@AIEntity(recordName = "@PACKAGE@", company = @USACOMPANY@)
-@AIList(fields = {@PROPERTIES@})
-@AIForm(fields = {@PROPERTIES@})
+@AIScript(sovraScrivibile = false)
+@AIEntity(recordName = "@PACKAGE@", usaCompany = @USACOMPANY@)
+//@AIList(fields = {@PROPERTIES@})
+//@AIForm(fields = {@PROPERTIES@})
 public class @ENTITY@ extends @SUPERCLASSENTITY@ {
 
 
@@ -83,17 +72,17 @@ public class @ENTITY@ extends @SUPERCLASSENTITY@ {
      */
     private final static long serialVersionUID = 1L;
 
-    @ORDINE@
-    @CODE@
-    @DESCRIZIONE@
+//    @ORDINE@
+//    @CODE@
+//    @DESCRIZIONE@
 
     /**
      * @return a string representation of the object.
      */
-    @Override
-    public String toString() {
-        @TOSTRING@
-    }// end of method
+ //  @Override
+ //   public String toString() {
+ //       @TOSTRING@
+ //   }// end of method
 
 
 }// end of entity class

@@ -40,7 +40,7 @@ public class WizDialogUpdateProject extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione("Modifica progetto", "green");
+        topLayout = fixSezione("Aggiornamento progetto", "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Update del modulo base di questo progetto"));

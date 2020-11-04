@@ -1288,7 +1288,7 @@ public class AFileServiceTest extends ATest {
         assertTrue(file.isEsisteFile(nomeCompletoFile));
 
         //--se è stato creato il file che qui viene cancellato,
-        //--devo aggiungere allla lista la directory parent per poterla cancellare alla fine del test
+        //--devo aggiungere alla lista la directory parent per poterla cancellare alla fine del test
         if (file.isEsisteFile(nomeCompletoFile)) {
             listaDirectory.add(new File(unFile.getParent()));
         }
@@ -1397,6 +1397,7 @@ public class AFileServiceTest extends ATest {
         String fileConTesto = "FileConTesto.txt";
         String dirCopiata = "VieneCopiata";
         String dirRimane = "Rimane";
+        String fileJava = "Entity.java";
 
         String emptyDirCopiata = srcPath + dirCopiata;
         String srcDirectoryUno = srcPath + dirUno;
@@ -1439,6 +1440,7 @@ public class AFileServiceTest extends ATest {
         file.sovraScriveFile(srcPath + dirUno + fileConTesto, "Questo testo verrà copiato");
         assertTrue(file.creaFile(destPath + dirUno + fileConTesto));
         file.sovraScriveFile(destPath + dirUno + fileConTesto, "Questo testo verrà cancellato");
+
     }
 
 

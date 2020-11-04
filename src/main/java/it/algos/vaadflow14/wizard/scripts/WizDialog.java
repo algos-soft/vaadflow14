@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ATextService;
@@ -73,6 +74,8 @@ public abstract class WizDialog extends Dialog {
 
     protected boolean isNuovoProgetto;
 
+    protected boolean isNuovoPackage;
+
     protected boolean isStartThisProgetto;
 
     protected Button confirmButton;
@@ -80,6 +83,8 @@ public abstract class WizDialog extends Dialog {
     protected Button cancelButton;
 
     protected Button buttonForzaDirectory;
+
+    protected TextField fieldPackageName;
 
     /**
      * Sezione superiore,coi titoli e le info <br>
@@ -284,6 +289,7 @@ public abstract class WizDialog extends Dialog {
         confirmButton.setEnabled(!isNuovoProgetto);
     }
 
+
     protected void creaBottomLayout() {
         bottomLayout = new VerticalLayout();
         HorizontalLayout layoutFooter = new HorizontalLayout();
@@ -319,8 +325,10 @@ public abstract class WizDialog extends Dialog {
             }
         }
 
-        regolaEAWiz();
-        regolaEAToken();
+        regolaAEWiz();
+        regolaAEToken();
+        visualizzaAEWiz();
+        visualizzaAEToken();
     }
 
 
@@ -328,29 +336,34 @@ public abstract class WizDialog extends Dialog {
      * Chiamato alla dismissione del dialogo <br>
      * Regola tutti i valori della Enumeration EAWiz che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
-    protected void regolaEAWiz() {
+    protected void regolaAEWiz() {
         AEWiz.pathUserDir.setValue(pathUserDir);
         AEWiz.pathVaadFlow.setValue(pathVaadFlow);
         AEWiz.pathIdeaProjects.setValue(pathIdeaProjects);
         AEWiz.nameTargetProject.setValue(nameTargetProject);
-        AEWiz.pathTargetProjet.setValue(pathTargetProject);
+        AEWiz.pathTargetProject.setValue(pathTargetProject);
 
-        for (AEWiz flag : AEWiz.values()) {
-            if (mappaCheckbox.get(flag.name()) != null) {
+        for (AEWiz flag : AEWiz.getFlags()) {
+            if (mappaCheckbox != null && mappaCheckbox.get(flag.name()) != null) {
                 flag.setAcceso(mappaCheckbox.get(flag.name()).getValue());
             }
         }
+    }
 
-        //--visualizzazione di controllo
+
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    protected void visualizzaAEWiz() {
         if (FLAG_DEBUG_WIZ) {
             System.out.println("********************");
-            System.out.println("Uscita dal dialogo - EAWiz");
+            System.out.println("Uscita dal dialogo - AEWiz");
             System.out.println("********************");
             for (AEWiz flag : AEWiz.values()) {
                 if (flag.isCheckBox()) {
-                    System.out.println("EAWiz." + flag.name() + " \"" + flag.getLabelBox() + "\" = " + flag.isAbilitato());
+                    System.out.println("AEWiz." + flag.name() + " \"" + flag.getLabelBox() + "\" = " + flag.isAbilitato());
                 } else {
-                    System.out.println("EAWiz." + flag.name() + " \"" + flag.getDescrizione() + "\" = " + flag.getValue());
+                    System.out.println("AEWiz." + flag.name() + " \"" + flag.getDescrizione() + "\" = " + flag.getValue());
                 }
             }
             System.out.println("");
@@ -362,24 +375,34 @@ public abstract class WizDialog extends Dialog {
      * Chiamato alla dismissione del dialogo <br>
      * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
-    protected void regolaEAToken() {
+    protected void regolaAEToken() {
         AEToken.reset();
         AEToken.nameTargetProject.setValue(nameTargetProject);
-        AEToken.pathTargetProjet.setValue(pathTargetProject);
+        AEToken.pathTargetProject.setValue(pathTargetProject);
 
         AEToken.projectNameUpper.setValue(nameTargetProject.toUpperCase());
         AEToken.moduleNameMinuscolo.setValue(nameTargetProject.toLowerCase());
         AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProject));
         AEToken.first.setValue(text.isValid(nameTargetProject) ? nameTargetProject.substring(0, 1).toUpperCase() : VUOTA);
+        Object a = isNuovoPackage;
+        Object b = fieldPackageName;
+        if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
+        }
+    }
 
-        //--visualizzazione di controllo
+
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    protected void visualizzaAEToken() {
         if (FLAG_DEBUG_WIZ) {
             System.out.println("********************");
-            System.out.println("Uscita dal dialogo - EAToken");
+            System.out.println("Uscita dal dialogo - AEToken");
             System.out.println("********************");
             for (AEToken token : AEToken.values()) {
                 if (token.isUsaValue()) {
-                    System.out.println("EAToken." + token.name() + "  - " + token.getTokenTag() + " = " + token.getValue());
+                    System.out.println("AEToken." + token.name() + " - " + token.getTokenTag() + " = " + token.getValue());
                 }
             }
             System.out.println("");

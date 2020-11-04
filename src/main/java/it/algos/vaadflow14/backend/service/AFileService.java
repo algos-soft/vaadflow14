@@ -196,7 +196,7 @@ public class AFileService extends AAbstractService {
             return PATH_NULLO;
         }
 
-        if (this.isNotSlasch(absolutePathDirectoryToBeChecked)) {
+        if (this.isNotSlash(absolutePathDirectoryToBeChecked)) {
             return PATH_NOT_ABSOLUTE;
         }
 
@@ -280,7 +280,7 @@ public class AFileService extends AAbstractService {
             return PATH_NULLO;
         }
 
-        if (this.isNotSlasch(absolutePathFileWithSuffixToBeChecked)) {
+        if (this.isNotSlash(absolutePathFileWithSuffixToBeChecked)) {
             return PATH_NOT_ABSOLUTE;
         }
 
@@ -1024,31 +1024,33 @@ public class AFileService extends AAbstractService {
      * @param text                contenuto del file
      * @param sovrascrive         anche se esiste già
      */
-    public boolean scriveFile(String pathFileToBeWritten, String text, boolean sovrascrive) {
-        boolean status = false;
+    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
+        String message=VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
-                status = sovraScriveFile(pathFileToBeWritten, text);
+                sovraScriveFile(pathFileToBeWritten, testo);
                 System.out.println("Il file " + pathFileToBeWritten + " esisteva già ed è stato aggiornato");
+                return true;
             } else {
                 System.out.println("Il file " + pathFileToBeWritten + " esisteva già e non è stato modificato");
                 return false;
             }
         } else {
-            status = creaFile(pathFileToBeWritten);
-            if (status) {
-                status = sovraScriveFile(pathFileToBeWritten, text);
+            message= creaFileStr(pathFileToBeWritten);
+            if (text.isEmpty(message)) {
+                sovraScriveFile(pathFileToBeWritten, testo);
                 System.out.println("Il file " + pathFileToBeWritten + " non esisteva ed è stato creato");
+                return true;
             } else {
-                System.out.println("Il file " + pathFileToBeWritten + " non esisteva e non è stato creato");
+                System.out.println("Il file " + pathFileToBeWritten + " non è stato scritto perché "+message);
                 return false;
             }
         }
 
-        return status;
+        //        return status;
     }
 
 
@@ -1204,7 +1206,6 @@ public class AFileService extends AAbstractService {
         String[] colonne;
 
         String testo = leggeFile(pathFileToBeRead);
-
         if (text.isValid(testo)) {
             righe = testo.split(sepRiga);
             titoli = righe[0].split(sepColonna);
@@ -1216,7 +1217,9 @@ public class AFileService extends AAbstractService {
                     if (colonne != null && colonne.length > 0) {
                         mappa = new LinkedHashMap<>();
                         for (int j = 0; j < colonne.length; j++) {
-                            mappa.put(titoli[j], colonne[j]);
+                            if (j < colonne.length) {
+                                mappa.put(titoli[j], colonne[j]);
+                            }
                         }
                     }
                     if (mappa != null) {
@@ -1552,7 +1555,7 @@ public class AFileService extends AAbstractService {
      *
      * @return true se NON è uno 'slash'
      */
-    public boolean isNotSlasch(String testoIngresso) {
+    public boolean isNotSlash(String testoIngresso) {
         return isNotCarattere(testoIngresso, SLASH);
     }
 

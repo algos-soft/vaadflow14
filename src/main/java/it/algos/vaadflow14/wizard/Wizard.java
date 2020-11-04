@@ -72,6 +72,18 @@ public class Wizard extends VerticalLayout {
     private WizDialogUpdateProject dialogUpdateProject;
 
     /**
+     * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
+     */
+    @Autowired
+    private WizDialogNewPackage dialogNewPackage;
+
+    /**
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la directory wizard di VaadFlow14 <br>
+     */
+    @Autowired
+    private WizDialogFeedbackWizard dialogFeedbackWizard;
+
+    /**
      * Utilizzato dall'interno di VaadFlow per creare/aggiornare un altro progetto <br>
      */
     @Autowired
@@ -82,6 +94,21 @@ public class Wizard extends VerticalLayout {
      */
     @Autowired
     private WizElaboraUpdateProject elaboraUpdateProject;
+
+    /**
+     * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
+     */
+    @Autowired
+    private WizElaboraNewPackage elaboraNewPackage;
+
+    /**
+     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     */
+    @Autowired
+    private WizElaboraFeedbackWizard elaboraFeedbackWizard;
+
+    @Autowired
+    private WizService wizService;
 
     private boolean isProgettoBase = false;
 
@@ -114,12 +141,17 @@ public class Wizard extends VerticalLayout {
      */
     protected void initView() {
         WizCost.printInfo();
+
         this.titolo();
         selezioneProgettoInUso();
+        wizService.regolaVariabili(!isProgettoBase);
+
         if (isProgettoBase) {
             paragrafoNewProject();
         } else {
             paragrafoUpdateProject();
+            paragrafoNewPackage();
+            paragrafoFeedBackWizard();
         }
     }
 
@@ -184,6 +216,46 @@ public class Wizard extends VerticalLayout {
     private void elaboraUpdateProject() {
         elaboraUpdateProject.esegue();
         dialogUpdateProject.close();
+    }
+
+
+    public void paragrafoNewPackage() {
+        H3 paragrafo = new H3(TITOLO_NEW_PACKAGE);
+        paragrafo.getElement().getStyle().set("color", "blue");
+        this.add(paragrafo);
+
+        Button bottone = new Button("New package");
+        bottone.getElement().setAttribute("theme", "primary");
+        bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
+        this.add(bottone);
+        this.add(new H1());
+    }
+
+
+    private void elaboraNewPackage() {
+        elaboraNewPackage.esegue();
+        dialogNewPackage.close();
+    }
+
+
+    public void paragrafoFeedBackWizard() {
+        H3 paragrafo = new H3(TITOLO_FEEDBACK_PROGETTO);
+        paragrafo.getElement().getStyle().set("color", "blue");
+        this.add(paragrafo);
+
+
+        Button bottone = new Button("Send back");
+        bottone.getElement().setAttribute("theme", "primary");
+        bottone.addClickListener(event -> dialogFeedbackWizard.open(this::elaboraFeedbackWizard));
+
+        this.add(bottone);
+        this.add(new H1());
+    }
+
+
+    private void elaboraFeedbackWizard() {
+        elaboraFeedbackWizard.esegue();
+        dialogFeedbackWizard.close();
     }
 
 }
