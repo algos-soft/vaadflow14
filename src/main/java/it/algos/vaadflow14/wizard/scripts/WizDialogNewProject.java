@@ -68,6 +68,7 @@ public class WizDialogNewProject extends WizDialog {
         topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
         topLayout.add(text.getLabelRedBold("Spunta i checkBox di regolazione che vuoi attivare"));
         topLayout.add(text.getLabelRedBold("Nel nuovo progetto vai su pom.xml, click destro -> Maven.Reload "));
+        topLayout.add(text.getLabelRedBold("Aggiungi il nuovo progetto alla enumeration AEProgetto per poterlo modificare"));
     }
 
 
