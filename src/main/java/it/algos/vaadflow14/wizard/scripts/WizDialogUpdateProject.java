@@ -3,7 +3,7 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -47,7 +47,7 @@ public class WizDialogUpdateProject extends WizDialog {
         topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
         topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
         topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
-        topLayout.add(text.getLabelGreenBold("Il modulo specifico " + nameTargetProject + " di questo progetto NON viene toccato"));
+//        topLayout.add(text.getLabelGreenBold("Il modulo specifico " + nameTargetProject + " di questo progetto NON viene toccato"));
         topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
     }
 
@@ -68,18 +68,14 @@ public class WizDialogUpdateProject extends WizDialog {
         Checkbox unCheckbox;
 
         //--spenge tutti i checkbox escluso flagFlow
-        for (AEWiz flag : AEWiz.values()) {
-            if (flag.isCheckBox()) {
-                flag.setAcceso(false);
-            }
+        for (AECheck check : AECheck.getUpdateProject()) {
+            check.setAcceso(false);
         }
-        AEWiz.flagFlow.setAcceso(true);
+        AECheck.flow.setAcceso(true);
 
-        for (AEWiz flag : AEWiz.values()) {
-            if (flag.isCheckBox() && flag.isUpdateProject()) {
-                unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
-                mappaCheckbox.put(flag.name(), unCheckbox);
-            }
+        for (AECheck check : AECheck.getUpdateProject()) {
+            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            mappaCheckbox.put(check.name(), unCheckbox);
         }
 
         super.addCheckBoxMap();

@@ -4,6 +4,7 @@ package it.algos.vaadflow14.wizard.enumeration;
 import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
 
 
 /**
@@ -27,7 +28,7 @@ public enum AEToken {
 
     first("FIRSTCHARPROJECT", true),
 
-    pathVaadFlowWizTxtSources(VUOTA, true),
+//    pathVaadFlowWizTxtSources(VUOTA, true),
 
     packageName("PACKAGE", true),
 
@@ -82,7 +83,6 @@ public enum AEToken {
     usaCompany("USACOMPANY"),
 
     usaSecurity("USASECURITY"),
-
 
     readCompany("READCOMPANY"),
 
@@ -202,6 +202,21 @@ public enum AEToken {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    public static void printInfo(String posizione) {
+        if (FLAG_DEBUG_WIZ) {
+            System.out.println("********************");
+            System.out.println("AEToken  - " + posizione);
+            System.out.println("********************");
+            for (AEToken token : AEToken.values()) {
+                System.out.println("AEToken." + token.name() + " \"" + token.getTokenTag() + "\" = " + token.getValue());
+            }
+            System.out.println("");
+        }
     }
 
 }

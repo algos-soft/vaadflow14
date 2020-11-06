@@ -1,7 +1,8 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -38,12 +39,12 @@ public class WizElaboraFeedbackWizard extends WizElabora {
     protected void copiaFileWizard() {
         String dirWizard = DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + FILE_WIZARD + JAVA_SUFFIX;
 
-        String srcPath = AEWiz.pathUserDir.getValue() + dirWizard;
+        String srcPath = AEDir.pathCurrent.get() + dirWizard;
         if (!file.isEsisteFile(srcPath)) {
             logger.warn("Errato il path per il file Wizard locale da ricopiare", this.getClass(), "copiaFileWizard");
         }
 
-        String destPath = AEWiz.pathVaadFlow.getValue() + dirWizard;
+        String destPath = AEDir.pathVaadFlow.get() + dirWizard;
         if (!file.isEsisteFile(destPath)) {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
@@ -61,12 +62,12 @@ public class WizElaboraFeedbackWizard extends WizElabora {
     protected void copiaDirectoryEnumeration() {
         String dirEnum = DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + "enumeration/";
 
-        String srcPath = AEWiz.pathUserDir.getValue() + dirEnum;
+        String srcPath = AEDir.pathCurrent.get() + dirEnum;
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory enum locale da ricopiare", this.getClass(), "copiaDirectoryEnumeration");
         }
 
-        String destPath = AEWiz.pathVaadFlow.getValue() + dirEnum;
+        String destPath = AEDir.pathVaadFlow.get() + dirEnum;
         if (!file.isEsisteDirectory(destPath)) {
             logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
         }
@@ -84,12 +85,12 @@ public class WizElaboraFeedbackWizard extends WizElabora {
     protected void copiaDirectoryScripts() {
         String dirScripts = DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + "scripts/";
 
-        String srcPath = AEWiz.pathUserDir.getValue() + dirScripts;
+        String srcPath = AEDir.pathCurrent.get() + dirScripts;
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory scripts locale da ricopiare", this.getClass(), "copiaDirectoryScripts");
         }
 
-        String destPath = AEWiz.pathVaadFlow.getValue() + dirScripts;
+        String destPath = AEDir.pathVaadFlow.get() + dirScripts;
         if (!file.isEsisteDirectory(destPath)) {
             logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
         }

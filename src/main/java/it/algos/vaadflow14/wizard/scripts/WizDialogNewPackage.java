@@ -1,14 +1,12 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.InputEvent;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.ui.fields.ATextField;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -65,7 +63,7 @@ public class WizDialogNewPackage extends WizDialog {
         fieldPackageName.setAutofocus(true);
         selezioneLayout.add(fieldPackageName);
 
-//        addListener();//@todo Funzionalità ancora da implementare
+        //        addListener();//@todo Funzionalità ancora da implementare
     }
 
 
@@ -86,11 +84,12 @@ public class WizDialogNewPackage extends WizDialog {
         Checkbox unCheckbox;
 
         //--spenge tutti i checkbox escluso flagEntity
-        AEWiz.reset();
+        AECheck.reset();
+        AECheck.entity.setAcceso(true);
 
-        for (AEWiz flag : AEWiz.getFlagsNewPackage()) {
-            unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
-            mappaCheckbox.put(flag.name(), unCheckbox);
+        for (AECheck check : AECheck.getNewPackage()) {
+            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            mappaCheckbox.put(check.name(), unCheckbox);
         }
 
         super.addCheckBoxMap();
@@ -110,6 +109,7 @@ public class WizDialogNewPackage extends WizDialog {
         fieldPackageName.addKeyUpListener(event -> sincroPackageName((TextField) event.getSource()));
     }
 
+
     private void sincroPackageName(TextField source) {
         String value = source.getValue();
 
@@ -123,27 +123,7 @@ public class WizDialogNewPackage extends WizDialog {
     }
 
 
-    /**
-     * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration EAWiz che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
-     */
-    @Override
-    protected void regolaAEWiz() {
-        super.regolaAEWiz();
-    }
 
 
-    /**
-     * Chiamato alla dismissione del dialogo <br>
-     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
-     */
-    @Override
-    protected void regolaAEToken() {
-        super.regolaAEToken();
-
-        AEToken.moduleNameMinuscolo.setValue( AEToken.nameTargetProject.getValue());
-        AEToken.moduleNameMaiuscolo.setValue(AEToken.projectNameUpper.getValue());
-        AEToken.entity.setValue(text.primaMaiuscola(AEToken.packageName.getValue()));
-    }
 
 }

@@ -12,13 +12,13 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.ui.MainLayout;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
 import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.TAG_WIZ;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -32,8 +32,7 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
  * Time: 17:56
  * Utilizzato da VaadFlow14 direttamente, per creare/aggiornare un nuovo progetto esterno <br>
  * Utilizzato dal progetto corrente, per importare/aggiornare il codice da VaadFlow14 <br>
- * Utilizzato da VaadFlow14 direttamente, per creare nuovi packages <br>
- * Utilizzato dal progetto corrente, per creare nuovi packages <br>
+ * Utilizzato dal progetto corrente, per creare/aggiornare nuovi packages <br>
  */
 @Route(value = TAG_WIZ, layout = MainLayout.class)
 @SpringComponent
@@ -59,13 +58,15 @@ public class Wizard extends VerticalLayout {
     @Autowired
     public ALogService logger;
 
+
     /**
-     * Utilizzato dall'interno di VaadFlow per creare/aggiornare un altro progetto <br>
+     * Utilizzato dall'interno di VaadFlow14 per creare un nuovo progetto <br>
      */
     @Autowired
     private WizDialogNewProject dialogNewProject;
 
     /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
      * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
      */
     @Autowired
@@ -78,18 +79,25 @@ public class Wizard extends VerticalLayout {
     private WizDialogNewPackage dialogNewPackage;
 
     /**
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages <br>
+     */
+    @Autowired
+    private WizDialogUpdatePackage dialogUpdatePackage;
+
+    /**
      * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la directory wizard di VaadFlow14 <br>
      */
     @Autowired
     private WizDialogFeedbackWizard dialogFeedbackWizard;
 
     /**
-     * Utilizzato dall'interno di VaadFlow per creare/aggiornare un altro progetto <br>
+     * Utilizzato dall'interno di VaadFlow14 per creare un nuovo progetto <br>
      */
     @Autowired
     private WizElaboraNewProject elaboraNewProject;
 
     /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
      * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
      */
     @Autowired
@@ -102,15 +110,28 @@ public class Wizard extends VerticalLayout {
     private WizElaboraNewPackage elaboraNewPackage;
 
     /**
-     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages <br>
+     */
+    @Autowired
+    private WizElaboraUpdatePackage elaboraUpdatePackage;
+
+    /**
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la directory wizard di VaadFlow14 <br>
      */
     @Autowired
     private WizElaboraFeedbackWizard elaboraFeedbackWizard;
 
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
     @Autowired
     private WizService wizService;
 
-    private boolean isProgettoBase = false;
+
+    //    private boolean isProgettoBase = false;
 
 
     /**
@@ -140,17 +161,18 @@ public class Wizard extends VerticalLayout {
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
-        WizCost.printInfo();
-
         this.titolo();
-        selezioneProgettoInUso();
-        wizService.regolaVariabili(!isProgettoBase);
 
-        if (isProgettoBase) {
+        wizService.printStart();
+        wizService.regolaVariabiliIniziali(true);
+        wizService.printInfo("Apertura iniziale della view Wizard");
+
+        if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
-        } else {
             paragrafoUpdateProject();
+        } else {
             paragrafoNewPackage();
+            paragrafoUpdatePackage();
             paragrafoFeedBackWizard();
         }
     }
@@ -163,32 +185,27 @@ public class Wizard extends VerticalLayout {
     }
 
 
-    /**
-     * Seleziona se parte da VaadFlow o da un altro progetto <br>
-     * Comportamento diverso:
-     * 1) da VaadFlow può creare nuovi progetti
-     * 2) da un progetto derivato può 'aggiornare' la propria cartella VaadFlow
-     */
-    public void selezioneProgettoInUso() {
-        String pathUserDir = System.getProperty("user.dir") + SLASH;
-        File unaDirectory = new File(pathUserDir);
-        String nomeDirectory = unaDirectory.getName();
-        isProgettoBase = nomeDirectory.equals(NAME_VAADFLOW);
-    }
-
-
     public void paragrafoNewProject() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
         H3 paragrafo = new H3(TITOLO_NUOVO_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
-        Label label = new Label("Dialogo per selezionare il progetto ed alcuni flags iniziali");
 
-        Button bottone = new Button("Open dialog");
+        layout.add(new Label("Crea un nuovo project IntelliJIdea, nella directory 'IdeaProjects'"));
+        layout.add(new Label("Seleziona un progetto vuoto tra quelli esistenti"));
+        layout.add(new Label("Regola alcuni flags iniziali"));
+        layout.add(new Label("Il progetto va poi spostato nella directory 'operativi'"));
+        layout.add(new Label("Il progetto va poi aggiunto alla enumeration AEProgetto"));
+
+        Button bottone = new Button("Crea project");
         bottone.getElement().setAttribute("theme", "primary");
         dialogNewProject = appContext.getBean(WizDialogNewProject.class);
         bottone.addClickListener(event -> dialogNewProject.open(this::elaboraNewProject));
 
-        this.add(label);
+        this.add(layout);
         this.add(bottone);
         this.add(new H1());
     }
@@ -201,13 +218,22 @@ public class Wizard extends VerticalLayout {
 
 
     public void paragrafoUpdateProject() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
         H3 paragrafo = new H3(TITOLO_MODIFICA_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
+        layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
+        layout.add(new Label("Regola alcuni flags per le modifiche"));
+
         Button bottone = new Button("Update project");
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogUpdateProject.open(this::elaboraUpdateProject));
+
+        this.add(layout);
         this.add(bottone);
         this.add(new H1());
     }
@@ -237,6 +263,15 @@ public class Wizard extends VerticalLayout {
         dialogNewPackage.close();
     }
 
+
+    public void paragrafoUpdatePackage() {
+    }
+
+
+    private void elaboraUpdatePackage() {
+        elaboraUpdatePackage.esegue();
+        dialogUpdatePackage.close();
+    }
 
     public void paragrafoFeedBackWizard() {
         H3 paragrafo = new H3(TITOLO_FEEDBACK_PROGETTO);

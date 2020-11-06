@@ -2,8 +2,8 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -59,7 +59,7 @@ public class WizElaboraNewPackage extends WizElabora {
         this.packageName = AEToken.packageName.getValue();
         this.pathPackage = pathProjectDirPackages + packageName + SLASH;
         this.fileName = text.primaMaiuscola(packageName);
-        this.sovrascrive = AEWiz.flagSovrascrivePackage.isAbilitato();
+        this.sovrascrive = AECheck.sovrascrivePackage.isAbilitato();
 
         if (creaDirectory()) {
             this.creaFileEntity();
@@ -109,7 +109,7 @@ public class WizElaboraNewPackage extends WizElabora {
     protected void creaFileEntity() {
         String tag = "Entity";
         String nomeFileDest = text.primaMaiuscola(packageName);
-        if (AEWiz.flagEntity.isAcceso()) {
+        if (AECheck.entity.isAcceso()) {
             wizService.scriveFileCreatoDaSource(tag, pathPackage, nomeFileDest);
         }
     }

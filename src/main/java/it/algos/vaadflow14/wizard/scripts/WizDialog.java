@@ -12,17 +12,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.AFileService;
+import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_WIDTH;
 
 
 /**
@@ -35,6 +38,22 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
  * Classe astratta per alcuni dialoghi di regolazione dei parametri per il Wizard <br>
  */
 public abstract class WizDialog extends Dialog {
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public WizService wizService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -59,14 +78,6 @@ public abstract class WizDialog extends Dialog {
      */
     @Autowired
     protected AFileService file;
-
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    protected LogService logger;
 
     protected WizRecipient wizRecipient;
 
@@ -110,44 +121,6 @@ public abstract class WizDialog extends Dialog {
 
     protected ComboBox<File> fieldComboProgetti;
 
-    //--regolata iniziale indipendentemente dai risultati del dialogo
-    //--tutte le property il cui nome inizia con 'path' finiscono con SLASH
-    //--directory recuperata dal System dove gira il programma in uso
-    protected String pathUserDir;
-
-    //--regolata iniziale indipendentemente dai risultati del dialogo
-    //--tutte le property il cui nome inizia con 'path' finiscono con SLASH
-    //--dipende solo da dove si trova attualmente il progetto base VaadFlow
-    //--posso spostarlo (è successo) senza che cambi nulla
-    //--directory che contiene il programma VaadFlow
-    //--dovrebbe essere PATH_VAAD_FLOW_DIR_STANDARD
-    //--posso spostarlo (è successo) senza che cambi nulla
-    protected String pathVaadFlow;
-
-    //--regolata iniziale indipendentemente dai risultati del dialogo
-    //--tutte le property il cui nome inizia con 'path' finiscono con SLASH
-    //--directory che contiene i nuovi programmi appena creati da Idea
-    //--dovrebbe essere PATH_PROJECTS_DIR_STANDARD
-    //--posso spostarla (è successo) senza che cambi nulla
-    protected String pathIdeaProjects;
-
-    //--regolata iniziale indipendentemente dai risultati del dialogo
-    //--tutte le property il cui nome inizia con 'path' finiscono con SLASH
-    //--dipende solo da dove si trova attualmente il progetto base VaadFlow
-    //--posso spostarlo (è successo) senza che cambi nulla
-    //--directory dei sorgenti testuali di VaadFlow (da elaborare)
-    //--pathVaadFlow più DIR_SOURCES
-    protected String pathSources;
-
-    //--regolata da questo dialogo
-    //--può essere un new project oppure un update di un progetto esistente
-    protected String nameTargetProject = VUOTA;
-
-    //--regolata da questo dialogo
-    //--può essere il path completo di un new project oppure di un update esistente
-    //--tutte le property il cui nome inizia con 'path' finiscono con SLASH
-    protected String pathTargetProject = VUOTA;
-
 
     /**
      * Regolazioni grafiche
@@ -181,55 +154,85 @@ public abstract class WizDialog extends Dialog {
 
 
     /**
-     * Regolazioni iniziali indipendenti dal dialogo di input
+     * Regolazioni iniziali in base al dialogo che viene aperto <br>
      */
     protected void regolaVariabili() {
-        AEWiz.reset();
+        //        AECheck.reset();
+        //
+        //        stampaIngresso();
+        //
+        //        //        if (FLAG_DEBUG_WIZ) {
+        //        //            WizCost.printInfo(log);
+        //        //        }// end of if cycle
+        //
+        //        this.pathUserDir = System.getProperty("user.dir") + SLASH;
+        //        this.pathVaadFlow = PATH_VAADFLOW_DIR_STANDARD;
+        //        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
+        //            //                        logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
+        //        }// end of if/else cycle
+        //
+        //        //valido SOLO per new project
+        //        if (isNuovoProgetto) {
+        //            this.pathIdeaProjects = file.levaDirectoryFinale(pathVaadFlow);
+        //            this.pathIdeaProjects = file.levaDirectoryFinale(pathIdeaProjects);
+        //            if (!pathIdeaProjects.equals(PATH_PROJECTS_DIR_STANDARD)) {
+        //                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
+        //            }// end of if cycle
+        //        } else {
+        //            File unaDirectory = new File(pathUserDir);
+        //            this.nameTargetProject = unaDirectory.getName();
+        //            this.pathTargetProject = pathUserDir;
+        //        }// end of if/else cycle
+        //
+        //        if (isStartThisProgetto) {
+        //            File unaDirectory = new File(pathUserDir);
+        //            this.nameTargetProject = unaDirectory.getName();
+        //            this.pathTargetProject = pathUserDir;
+        //        }
+        //
+        //        this.pathSources = pathVaadFlow + DIR_VAADFLOW_SOURCES;
+        //
+        //        //        if (FLAG_DEBUG_WIZ) {
+        //        //            System.out.println("********************");
+        //        //            System.out.println("Ingresso del dialogo");
+        //        //            System.out.println("********************");
+        //        //            System.out.println("Directory di esecuzione: pathUserDir=" + pathUserDir);
+        //        //            System.out.println("Directory VaadFlow: pathVaadFlow=" + pathVaadFlow);
+        //        //            if (isNuovoProgetto) {
+        //        //                System.out.println("Directory dei nuovi progetti: pathIdeaProjects=" + pathIdeaProjects);
+        //        //            }// end of if cycle
+        //        //            System.out.println("Sorgenti VaadFlow: pathSources=" + pathSources);
+        //        //            System.out.println("");
+        //        //        }// end of if cycle
+    }// end of method
 
-        //        if (FLAG_DEBUG_WIZ) {
-        //            WizCost.printInfo(log);
-        //        }// end of if cycle
 
-        this.pathUserDir = System.getProperty("user.dir") + SLASH;
-        this.pathVaadFlow = PATH_VAADFLOW_DIR_STANDARD;
-        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
-            //                        logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
-        }// end of if/else cycle
+    /**
+     * Controlla che il dialogo possa usare alcuni flag compatibili (tra di loro) <br>
+     */
+    protected boolean check() {
+        boolean valido = true;
 
-        //valido SOLO per new project
-        if (isNuovoProgetto) {
-            this.pathIdeaProjects = file.levaDirectoryFinale(pathVaadFlow);
-            this.pathIdeaProjects = file.levaDirectoryFinale(pathIdeaProjects);
-            if (!pathIdeaProjects.equals(PATH_PROJECTS_DIR_STANDARD)) {
-                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
-            }// end of if cycle
-        } else {
-            File unaDirectory = new File(pathUserDir);
-            this.nameTargetProject = unaDirectory.getName();
-            this.pathTargetProject = pathUserDir;
-        }// end of if/else cycle
+        //--Deve essere o un progetto o un package
+        valido = valido && (AEFlag.isProject.is() || AEFlag.isPackage.is());
 
-        if (isStartThisProgetto) {
-            File unaDirectory = new File(pathUserDir);
-            this.nameTargetProject = unaDirectory.getName();
-            this.pathTargetProject = pathUserDir;
+        //--Se è un progetto, deve essere nuovo o update
+        if (AEFlag.isProject.is()) {
+            valido = valido && (AEFlag.isNewProject.is() != AEFlag.isUpdateProject.is());
         }
 
-        this.pathSources = pathVaadFlow + DIR_VAADFLOW_SOURCES;
+        //--Se è un package, deve essere nuovo o update
+        if (AEFlag.isPackage.is()) {
+            valido = valido && (AEFlag.isNewPackage.is() != AEFlag.isUpdatePackage.is());
+        }
 
-        if (FLAG_DEBUG_WIZ) {
-            System.out.println("********************");
-            System.out.println("Ingresso del dialogo");
-            System.out.println("********************");
-            System.out.println("Directory di esecuzione: pathUserDir=" + pathUserDir);
-            System.out.println("Directory VaadFlow: pathVaadFlow=" + pathVaadFlow);
-            if (isNuovoProgetto) {
-                System.out.println("Directory dei nuovi progetti: pathIdeaProjects=" + pathIdeaProjects);
-            }// end of if cycle
-            System.out.println("Sorgenti VaadFlow: pathSources=" + pathSources);
-            System.out.println("");
-        }// end of if cycle
-    }// end of method
+        if (!valido) {
+            wizService.printInfo("Blocco entrata dialogo");
+            logger.warn("Il dialogo non è stato aperto perché alcuni flags non sono validi per operare correttamente");
+        }
+
+        return valido;
+    }
 
 
     /**
@@ -314,59 +317,35 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration EAWiz che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
     protected void regolazioniFinali() {
-        if (isNuovoProgetto) {
-            if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-                nameTargetProject = fieldComboProgetti.getValue().getName();
-                pathTargetProject = fieldComboProgetti.getValue().getAbsolutePath() + SLASH;
-            }
-        }
+        this.regolaAEDir();
+        this.regolaAEToken();
+        this.regolaAECheck();
 
-        regolaAEWiz();
-        regolaAEToken();
-        visualizzaAEWiz();
-        visualizzaAEToken();
+        wizService.printInfo("Uscita del dialogo");
     }
 
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration EAWiz che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
-    protected void regolaAEWiz() {
-        AEWiz.pathUserDir.setValue(pathUserDir);
-        AEWiz.pathVaadFlow.setValue(pathVaadFlow);
-        AEWiz.pathIdeaProjects.setValue(pathIdeaProjects);
-        AEWiz.nameTargetProject.setValue(nameTargetProject);
-        AEWiz.pathTargetProject.setValue(pathTargetProject);
-
-        for (AEWiz flag : AEWiz.getFlags()) {
-            if (mappaCheckbox != null && mappaCheckbox.get(flag.name()) != null) {
-                flag.setAcceso(mappaCheckbox.get(flag.name()).getValue());
-            }
-        }
+    protected void regolaAEDir() {
     }
 
 
     /**
-     * Visualizzazione di controllo <br>
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola tutti i valori della Enumeration AECheck che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
-    protected void visualizzaAEWiz() {
-        if (FLAG_DEBUG_WIZ) {
-            System.out.println("********************");
-            System.out.println("Uscita dal dialogo - AEWiz");
-            System.out.println("********************");
-            for (AEWiz flag : AEWiz.values()) {
-                if (flag.isCheckBox()) {
-                    System.out.println("AEWiz." + flag.name() + " \"" + flag.getLabelBox() + "\" = " + flag.isAbilitato());
-                } else {
-                    System.out.println("AEWiz." + flag.name() + " \"" + flag.getDescrizione() + "\" = " + flag.getValue());
-                }
+    protected void regolaAECheck() {
+        for (AECheck check : AECheck.values()) {
+            if (mappaCheckbox != null && mappaCheckbox.get(check.name()) != null) {
+                check.setAcceso(mappaCheckbox.get(check.name()).getValue());
             }
-            System.out.println("");
         }
     }
 
@@ -377,35 +356,24 @@ public abstract class WizDialog extends Dialog {
      */
     protected void regolaAEToken() {
         AEToken.reset();
-        AEToken.nameTargetProject.setValue(nameTargetProject);
-        AEToken.pathTargetProject.setValue(pathTargetProject);
+        //        AEToken.nameTargetProject.setValue(nameTargetProject);
+        //        AEToken.pathTargetProject.setValue(pathTargetProject);
+        //
+        //        AEToken.projectNameUpper.setValue(nameTargetProject.toUpperCase());
+        //        AEToken.moduleNameMinuscolo.setValue(nameTargetProject.toLowerCase());
+        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProject));
+        //        AEToken.first.setValue(text.isValid(nameTargetProject) ? nameTargetProject.substring(0, 1).toUpperCase() : VUOTA);
 
-        AEToken.projectNameUpper.setValue(nameTargetProject.toUpperCase());
-        AEToken.moduleNameMinuscolo.setValue(nameTargetProject.toLowerCase());
-        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProject));
-        AEToken.first.setValue(text.isValid(nameTargetProject) ? nameTargetProject.substring(0, 1).toUpperCase() : VUOTA);
+//        String project = VUOTA;
+//        project = AEDir.nameTargetProject.get();
+//        AEToken.moduleNameMinuscolo.setValue(project);
+//        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
+
+
         Object a = isNuovoPackage;
         Object b = fieldPackageName;
         if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
-        }
-    }
-
-
-    /**
-     * Visualizzazione di controllo <br>
-     */
-    protected void visualizzaAEToken() {
-        if (FLAG_DEBUG_WIZ) {
-            System.out.println("********************");
-            System.out.println("Uscita dal dialogo - AEToken");
-            System.out.println("********************");
-            for (AEToken token : AEToken.values()) {
-                if (token.isUsaValue()) {
-                    System.out.println("AEToken." + token.name() + " - " + token.getTokenTag() + " = " + token.getValue());
-                }
-            }
-            System.out.println("");
+            //            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
         }
     }
 
@@ -434,7 +402,7 @@ public abstract class WizDialog extends Dialog {
      * 1) annulla
      * 2) esegue
      */
-    private void esceDalDialogo(boolean esegue) {
+    protected void esceDalDialogo(boolean esegue) {
         regolazioniFinali();
         this.close();
         if (esegue) {

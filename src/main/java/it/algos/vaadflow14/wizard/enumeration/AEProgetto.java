@@ -3,6 +3,9 @@ package it.algos.vaadflow14.wizard.enumeration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -12,19 +15,23 @@ import java.util.List;
  */
 public enum AEProgetto {
 
-    bio("vaadwiki", "Wiki"),
+    bio("vaadwiki", "Wiki",VUOTA),
 
-    wam("vaadwam", "Wam"),
+    wam("vaadwam", "Wam",VUOTA),
     ;
 
     private String nameProject;
 
     private String nameShort;
 
+    //--path completo se diverso da /Users/gac/Documents/IdeaProjects/operativi/...
+    private String pathCompleto;
 
-    AEProgetto(String nameProject, String nameShort) {
+
+    AEProgetto(String nameProject, String nameShort,String pathCompleto) {
         this.setNameProject(nameProject);
         this.setNameShort(nameShort);
+        this.setPathCompleto(pathCompleto);
     }
 
 
@@ -50,6 +57,22 @@ public enum AEProgetto {
     }
 
 
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    public static void printInfo() {
+        if (FLAG_DEBUG_WIZ) {
+            System.out.println("********************");
+            System.out.println("Progetti della enumeration AEProgetto");
+            System.out.println("********************");
+            for (AEProgetto progetto : AEProgetto.values()) {
+                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getNameProject() + " - " + progetto.getNameShort());
+            }
+            System.out.println("");
+        }
+    }
+
+
     public String getNameProject() {
         return nameProject;
     }
@@ -69,4 +92,13 @@ public enum AEProgetto {
         this.nameShort = nameShort;
     }
 
+
+    public String getPathCompleto() {
+        return pathCompleto;
+    }
+
+
+    public void setPathCompleto(String pathCompleto) {
+        this.pathCompleto = pathCompleto;
+    }
 }// end of enumeration class

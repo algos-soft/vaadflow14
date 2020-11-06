@@ -26,12 +26,12 @@ public class WizElaboraUpdateProject extends WizElabora {
 
         super.copiaCartellaVaadFlow();
 
-        super.copiaMetaInf();
+        super.copiaDirectoryMetaInf();
         super.scriveFileProperties();
 
-        super.scriveFileGit();
-        super.scriveFilePom();
-        super.scriveFileRead();
+        super.sovraScriveFileGit();
+        super.sovraScriveFilePom();
+        super.sovraScriveFileRead();
     }
 
 }

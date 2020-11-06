@@ -67,6 +67,8 @@ public abstract class FlowCost {
 
     public static final String SEP = " - ";
 
+    public static final String UGUALE = " = ";
+
     public static final String FORWARD = " -> ";
 
     public static final String PUNTO = ".";

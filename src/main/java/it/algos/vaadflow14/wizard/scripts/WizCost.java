@@ -10,9 +10,9 @@ package it.algos.vaadflow14.wizard.scripts;
 public class WizCost {
 
     //--flag per stampare info di debug
-    public static final String PATH_ROOT = "/Users/gac/Documents/";
-
     public static final boolean FLAG_DEBUG_WIZ = true;
+
+    public static final String PATH_ROOT = "/Users/gac/Documents/";
 
     public static final String PROJECT_VAADFLOW = "vaadflow14/";
 
@@ -44,7 +44,7 @@ public class WizCost {
 
     public static final String TITOLO_NUOVO_PROGETTO = "Creazione di un nuovo progetto";
 
-    public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di questo progetto";
+    public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di un progetto esistente";
 
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
 
@@ -92,6 +92,8 @@ public class WizCost {
 
     public static final String JAVA_SUFFIX = ".java";
 
+    public static final String MD_SUFFIX = ".md";
+
     //--parte dal livello di root del progetto
     //--contiene java e resources di ogni progetto
     public static final String DIR_MAIN = "src/main/";
@@ -125,7 +127,7 @@ public class WizCost {
     public static final String DIR_VAADFLOW_SOURCES = DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
 
 
-    //--metodo statico invocato da Wizard.regolazioniIniziali()
+    //--metodo statico invocato da Wizard.initView()
     public static void printInfo() {
         if (FLAG_DEBUG_WIZ) {
             System.out.println("");

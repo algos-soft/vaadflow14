@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -24,29 +24,28 @@ public class WizElaboraNewProject extends WizElabora {
 
     @Override
     public void esegue() {
-        super.isNuovoProgetto = true;
-        super.esegue();
+//        super.esegue();//@todo Controllare, non sembra necessario
 
         super.copiaDirectoryDoc();
+        super.copiaDirectoryFrontend();
         super.copiaDirectoryLinks();
         super.copiaDirectorySnippets();
 
-        this.copiaCartellaVaadFlow();
-        this.creaModuloNuovoProgetto();
+//        this.copiaCartellaVaadFlow();
+//        this.creaModuloNuovoProgetto();
 
-        super.copiaFrontend();
-        super.copiaMetaInf();
+        super.copiaDirectoryMetaInf();
         super.scriveFileProperties();
-        super.scriveFileBanner();
+        super.sovraScriveFileBanner();
 
-        super.scriveFileGit();
-        super.scriveFilePom();
-        super.scriveFileRead();
+        super.sovraScriveFileGit();
+        super.sovraScriveFilePom();
+        super.sovraScriveFileRead();
     }// end of method
 
 
     public void creaModuloNuovoProgetto() {
-        if (AEWiz.flagProject.isAbilitato()) {
+        if (AECheck.project.isAbilitato()) {
 
             //--creaDirectoryProjectModulo
             file.creaDirectory(pathProjectModulo);
@@ -84,7 +83,7 @@ public class WizElaboraNewProject extends WizElabora {
         testoApp = AEToken.replace(AEToken.moduleNameMinuscolo, testoApp, newProjectName);
         testoApp = AEToken.replace(AEToken.moduleNameMaiuscolo, testoApp, text.primaMaiuscola(newProjectName));
 
-        if (AEWiz.flagSecurity.isAbilitato()) {
+        if (AECheck.security.isAbilitato()) {
             testoApp = AEToken.replace(AEToken.usaSecurity, testoApp, VUOTA);
         } else {
             testoApp = AEToken.replace(AEToken.usaSecurity, testoApp, ", exclude = {SecurityAutoConfiguration.class}");
@@ -95,17 +94,17 @@ public class WizElaboraNewProject extends WizElabora {
 
 
     protected void scriveFileCost() {
-        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
+//        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
     }// end of method
 
 
     public void scriveFileBoot() {
-        wizService.scriveNewFileCreatoDaSource(FILE_BOOT, pathProjectDirApplication);
+//        wizService.scriveNewFileCreatoDaSource(FILE_BOOT, pathProjectDirApplication);
     }// end of method
 
 
     public void scriveFileVers() {
-        wizService.scriveNewFileCreatoDaSource(FILE_VERS, pathProjectDirApplication);
+//        wizService.scriveNewFileCreatoDaSource(FILE_VERS, pathProjectDirApplication);
     }// end of method
 
 

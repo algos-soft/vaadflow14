@@ -6,13 +6,18 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEWiz;
+import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.io.File;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
 
@@ -47,8 +52,14 @@ public class WizDialogNewProject extends WizDialog {
         super.isNuovoProgetto = true;
         super.isStartThisProgetto = false;
         super.titoloCorrente = new H3(TITOLO_NUOVO_PROGETTO);
+        AEFlag.isProject.set(true);
+        AEFlag.isNewProject.set(true);
 
-        this.inizia();
+        if (check()) {
+            this.inizia();
+        } else {
+            super.esceDalDialogo(false);
+        }
     }
 
 
@@ -67,8 +78,8 @@ public class WizDialogNewProject extends WizDialog {
         topLayout.add(text.getLabelGreenBold("Rimane il POM vuoto, ma verrà sovrascritto"));
         topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
         topLayout.add(text.getLabelRedBold("Spunta i checkBox di regolazione che vuoi attivare"));
-        topLayout.add(text.getLabelRedBold("Nel nuovo progetto vai su pom.xml, click destro -> Maven.Reload "));
-        topLayout.add(text.getLabelRedBold("Aggiungi il nuovo progetto alla enumeration AEProgetto per poterlo modificare"));
+        topLayout.add(text.getLabelRedBold("Nel progetto vai su pom.xml, click destro -> Maven.Reload "));
+        topLayout.add(text.getLabelRedBold("Aggiungi il nuovo progetto alla enumeration AEProgetto"));
     }
 
 
@@ -82,7 +93,7 @@ public class WizDialogNewProject extends WizDialog {
         selezioneLayout = fixSezione("Selezione...");
         this.add(selezioneLayout);
 
-        List<File> progetti = file.getEmptyProjects(pathIdeaProjects);
+        List<File> progetti = file.getEmptyProjects(AEDir.pathIdeaProjects.get());
 
         fieldComboProgetti = new ComboBox<>();
         // Choose which property from Department is the presentation value
@@ -117,7 +128,7 @@ public class WizDialogNewProject extends WizDialog {
      * Esclude le sottoDirectories di 'ideaProjects' <br>
      */
     protected void forzaProgetti() {
-        List<File> progetti = file.getProjects(pathIdeaProjects);
+        List<File> progetti = file.getProjects(AEDir.pathIdeaProjects.get());
         fieldComboProgetti.setItems(progetti);
         fieldComboProgetti.setLabel(LABEL_COMBO_DUE);
         if (progetti.size() == 1) {
@@ -145,14 +156,14 @@ public class WizDialogNewProject extends WizDialog {
         Checkbox unCheckbox;
 
         //--accende tutti i checkbox escluso flagSecurity
-        for (AEWiz flag : AEWiz.getFlagsNewProject()) {
-            flag.setAcceso(true);
+        for (AECheck check : AECheck.getNewProject()) {
+            check.setAcceso(true);
         }
-        AEWiz.flagSecurity.setAcceso(false);
+        AECheck.security.setAcceso(false);
 
-        for (AEWiz flag : AEWiz.getFlagsNewProject()) {
-            unCheckbox = new Checkbox(flag.getLabelBox(), flag.isAcceso());
-            mappaCheckbox.put(flag.name(), unCheckbox);
+        for (AECheck check : AECheck.getNewProject()) {
+            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            mappaCheckbox.put(check.name(), unCheckbox);
         }
 
         super.addCheckBoxMap();
@@ -174,6 +185,39 @@ public class WizDialogNewProject extends WizDialog {
 
     private void sincroProject(File valueFromProject) {
         confirmButton.setEnabled(valueFromProject != null);
+    }
+
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     */
+    protected void regolaAEDir() {
+        String projectName;
+        super.regolaAEDir();
+
+        if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
+            projectName = fieldComboProgetti.getValue().getName();
+            AEDir.nameTargetProject.setValue(projectName);
+            AEDir.pathTargetProject.setValue(AEDir.pathIdeaProjects.get() + projectName + FlowCost.SLASH);
+        }
+    }
+
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     */
+    @Override
+    protected void regolaAEToken() {
+        String project = VUOTA;
+        super.regolaAEToken();
+
+        project = AEDir.nameTargetProject.get();
+        AEToken.nameTargetProject.setValue(project);
+        //        AEToken.moduleNameMinuscolo.setValue(AEToken.nameTargetProject.getValue());
+        //        AEToken.moduleNameMaiuscolo.setValue(AEToken.projectNameUpper.getValue());
+        //        AEToken.entity.setValue(text.primaMaiuscola(AEToken.packageName.getValue()));
     }
 
 }
