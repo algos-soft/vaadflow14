@@ -1187,7 +1187,7 @@ public class ATextService extends AAbstractService {
      * Aggiunge un prefisso indicativo -> '../' <br>
      *
      * @param testoIn    ingresso
-     * @param numLivelli iniziali da eliminare
+     * @param numLivelli iniziali da eliminare nel path
      *
      * @return path semplificato
      */

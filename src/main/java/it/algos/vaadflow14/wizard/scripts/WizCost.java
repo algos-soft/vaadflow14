@@ -10,7 +10,7 @@ package it.algos.vaadflow14.wizard.scripts;
 public class WizCost {
 
     //--flag per stampare info di debug
-    public static final boolean FLAG_DEBUG_WIZ = true;
+    public static final boolean FLAG_DEBUG_WIZ = false;
 
     public static final String PATH_ROOT = "/Users/gac/Documents/";
 

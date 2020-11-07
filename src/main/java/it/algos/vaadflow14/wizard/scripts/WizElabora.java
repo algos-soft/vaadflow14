@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.wizard.scripts;
 
+import it.algos.vaadflow14.backend.enumeration.AECopyFile;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
@@ -257,8 +258,6 @@ public abstract class WizElabora implements WizRecipient {
     }
 
 
-
-
     /**
      * Sovrascrive la cartella CONFIG di risorse (in formati vari) <br>
      * Posizionata a livello di root <br>
@@ -365,31 +364,33 @@ public abstract class WizElabora implements WizRecipient {
 
 
     /**
-     * File application.properties
-     * Controlla se esiste la directory e nel caso la crea
-     * Elabora il file dai sorgenti di VaadFlow
-     * Sovrascrive dopo aver controllato se non c'è lo stop nel testo
+     * Crea il file application.properties (in formato txt) <br>
+     * Legge il testo da wizard.sources di VaadFlow14 <br>
+     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      */
-    protected void scriveFileProperties() {
+    protected void creaFileProperties() {
+        String nameSourceText = FILE_PROPERTIES;
         String destPathSuffix = AEDir.pathTargetProject.get() + DIR_RESOURCES + FILE_PROPERTIES_DEST;
         if (AECheck.property.isAbilitato()) {
-            wizService.sovraScriveNewFileCreatoDaSource(FILE_PROPERTIES, destPathSuffix);
-            if (checkFileCanBeModified(AEDir.pathTargetProject.get() + DIR_RESOURCES, FILE_PROPERTIES_DEST)) {
-                wizService.sovraScriveNewFileCreatoDaSource(FILE_PROPERTIES, destPathSuffix);
-            }
+            wizService.creaFile(AECopyFile.checkFlagSeEsiste, nameSourceText, destPathSuffix);
+//            wizService.sovraScriveNewFileCreatoDaSource(FILE_PROPERTIES, destPathSuffix);
+//            if (checkFileCanBeModified(AEDir.pathTargetProject.get() + DIR_RESOURCES, FILE_PROPERTIES_DEST)) {
+//                wizService.sovraScriveNewFileCreatoDaSource(FILE_PROPERTIES, destPathSuffix);
+//            }
         }
     }
 
 
     /**
-     * Sovrascrive il file BANNER (in formato txt) <br>
-     * Elabora il file dai sorgenti di VaadFlow <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Crea il file BANNER (in formato txt) <br>
+     * Legge il testo da wizard.sources di VaadFlow14 <br>
+     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      */
-    protected void sovraScriveFileBanner() {
+    protected void creaFileBanner() {
+        String nameSourceText = FILE_BANNER;
         String destPathSuffix = AEDir.pathTargetProject.get() + DIR_RESOURCES + FILE_BANNER + TXT_SUFFIX;
         if (AECheck.banner.isAbilitato()) {
-            wizService.sovraScriveNewFileCreatoDaSource(FILE_BANNER, destPathSuffix);
+            wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -447,34 +448,5 @@ public abstract class WizElabora implements WizRecipient {
     }// end of method
 
 
-    private boolean checkFileCanBeModified(String pathDirectory, String nameFile) {
-        String path = pathDirectory + nameFile;
-        String oldText = file.leggeFile(path);
-
-        if (!file.isEsisteFile(pathDirectory, nameFile)) {
-            return true;
-        }
-
-        if (text.isValid(oldText) && checkFile(oldText)) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    private boolean checkFile(String oldFileText) {
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("@AIScript(sovrascrivibile = false)");
-        tags.add("@AIScript(sovrascrivibile=false)");
-        tags.add("@AIScript(sovrascrivibile= false)");
-        tags.add("@AIScript(sovrascrivibile =false)");
-        tags.add("@AIScript(sovraScrivibile = false)");
-        tags.add("@AIScript(sovraScrivibile=false)");
-        tags.add("@AIScript(sovraScrivibile= false)");
-        tags.add("@AIScript(sovraScrivibile =false)");
-
-        return text.nonContiene(oldFileText, tags);
-    }
 
 }

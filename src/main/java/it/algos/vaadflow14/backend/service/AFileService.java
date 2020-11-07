@@ -863,7 +863,32 @@ public class AFileService extends AAbstractService {
      * @return true se la directory  è stata copiata
      */
     public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath) {
+        return copyDirectory(typeCopy, srcPath, destPath, 3);
+    }
+
+
+    /**
+     * Copia una directory <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista la directory sorgente da copiare <br>
+     * Se manca la directory sorgente, non fa nulla <br>
+     * Se non esiste la directory di destinazione, la crea <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i primi 3 livelli (/Users/gac/Documents) <br>
+     *
+     * @param typeCopy   modalità di comportamento se esiste la directory di destinazione
+     * @param srcPath    nome completo della directory sorgente
+     * @param destPath   nome completo della directory destinazione
+     * @param numLivelli iniziali da eliminare nel path
+     *
+     * @return true se la directory  è stata copiata
+     */
+    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath, int numLivelli) {
         boolean copiata = false;
+        boolean esisteDest = false;
         String message = VUOTA;
         String tag = VUOTA;
         String path;
@@ -872,33 +897,42 @@ public class AFileService extends AAbstractService {
             tag = text.isEmpty(srcPath) ? "srcPath" : "destPath";
             message = "Manca il " + tag + " della directory da copiare.";
         } else {
-//            path=destPath.substring(destPath.i)
+            path = text.pathBreve(destPath, numLivelli);
             if (isEsisteDirectory(srcPath)) {
                 switch (typeCopy) {
                     case soloSeNonEsiste:
                         copiata = copyDirectoryOnlyNotExisting(srcPath, destPath);
                         if (copiata) {
-                            message = "La directory: " + destPath + " non esisteva ed è stata copiata.";
+                            message = "La directory: " + path + " non esisteva ed è stata copiata.";
                         } else {
-                            message = "La directory: " + destPath + " esisteva già e non è stata toccata.";
+                            message = "La directory: " + path + " esisteva già e non è stata toccata.";
                         }
                         logger.info(message, this.getClass(), "copyDirectory");
                         message = VUOTA;
                         break;
                     case deletingAll:
+                        esisteDest = isEsisteDirectory(destPath);
                         copiata = copyDirectoryDeletingAll(srcPath, destPath);
                         if (copiata) {
-                            message = "La directory: " + destPath + " è stata creata/sostituita.";
+                            if (esisteDest) {
+                                message = "La directory: " + path + " esisteva già ma è stata sostituita.";
+                            } else {
+                                message = "La directory: " + path + " non esisteva ed è stata creata.";
+                            }
                             logger.info(message, this.getClass(), "copyDirectory");
                             message = VUOTA;
                         } else {
-                            message = "Non sono riuscito a sostituire " + destPath;
+                            if (esisteDest) {
+                                message = "Non sono riuscito a sostituire " + path;
+                            } else {
+                                message = "Non sono riuscito a creare " + path;
+                            }
                         }
                         break;
                     case addingOnly:
                         copiata = copyDirectoryAddingOnly(srcPath, destPath);
                         if (!copiata) {
-                            message = "Non sono riuscito ad integrare la directory: " + destPath;
+                            message = "Non sono riuscito ad integrare la directory: " + path;
                         }
                         break;
                     default:
@@ -1096,36 +1130,52 @@ public class AFileService extends AAbstractService {
      * Se non esiste, lo crea
      *
      * @param pathFileToBeWritten nome completo del file
-     * @param text                contenuto del file
+     * @param testo               contenuto del file
      * @param sovrascrive         anche se esiste già
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
+        return scriveFile(pathFileToBeWritten, testo, sovrascrive, 3);
+    }
+
+
+    /**
+     * Scrive un file
+     * Se non esiste, lo crea
+     *
+     * @param pathFileToBeWritten nome completo del file
+     * @param testo               contenuto del file
+     * @param sovrascrive         anche se esiste già
+     */
+    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, int numLivelli) {
         String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
+        String path = text.pathBreve(pathFileToBeWritten, numLivelli);
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
                 sovraScriveFile(pathFileToBeWritten, testo);
-                System.out.println("Il file " + pathFileToBeWritten + " esisteva già ed è stato aggiornato");
+                message = "Il file: " + path + " esisteva già ed è stato aggiornato";
+                logger.info(message, this.getClass(), "scriveFile");
                 return true;
             } else {
-                System.out.println("Il file " + pathFileToBeWritten + " esisteva già e non è stato modificato");
+                message = "Il file: " + path + " esisteva già e non è stato modificato";
+                logger.info(message, this.getClass(), "scriveFile");
                 return false;
             }
         } else {
             message = creaFileStr(pathFileToBeWritten);
             if (text.isEmpty(message)) {
                 sovraScriveFile(pathFileToBeWritten, testo);
-                System.out.println("Il file " + pathFileToBeWritten + " non esisteva ed è stato creato");
+                message = "Il file: " + path + " non esisteva ed è stato creato";
+                logger.info(message, this.getClass(), "scriveFile");
                 return true;
             } else {
-                System.out.println("Il file " + pathFileToBeWritten + " non è stato scritto perché " + message);
+                logger.warn("Il file: " + path + " non è stato scritto perché " + message, this.getClass(), "scriveFile");
                 return false;
             }
         }
 
-        //        return status;
     }
 
 

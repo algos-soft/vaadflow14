@@ -27,7 +27,7 @@ public class WizElaboraUpdateProject extends WizElabora {
         super.copiaCartellaVaadFlow();
 
         super.copiaDirectoryMetaInf();
-        super.scriveFileProperties();
+        super.creaFileProperties();
 
         super.sovraScriveFileGit();
         super.sovraScriveFilePom();
