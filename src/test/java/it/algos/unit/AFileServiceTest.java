@@ -1,6 +1,7 @@
 package it.algos.unit;
 
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.*;
 
@@ -834,6 +835,11 @@ public class AFileServiceTest extends ATest {
 
         assertTrue(file.isEsisteFile(destinazione + dirDue + "TerzoFileVariabile.txx"));
         assertTrue(file.isEsisteFile(destinazione + dirDue + "QuartoIncerto.txx"));
+
+        try {
+            FileUtils.forceDelete(new File(destinazione));
+        } catch (Exception unErrore) {
+        }
     }
 
 
@@ -884,8 +890,77 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(13)
-    @DisplayName("13 - daFare-scriveFile")
-    public void scriveFile() {
+    @DisplayName("13 - copyDirectory")
+    public void copyDirectory() {
+        String srcPathValida = PATH_DIRECTORY_TRE;
+        String srcPathNonEsistente = PATH_DIRECTORY_NON_ESISTENTE;
+        String destPathDaSovrascrivere = PATH_DIRECTORY_MANCANTE;
+        String destFileAggiunto = PATH_FILE_AGGIUNTO;
+
+        //--esegue con sorgente NON esistente
+        //--messaggio di errore
+        assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.addingOnly, srcPathNonEsistente, destPathDaSovrascrivere);
+        assertFalse(ottenutoBooleano);
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con sorgente NON esistente
+        //--messaggio di errore
+        assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.deletingAll, srcPathNonEsistente, destPathDaSovrascrivere);
+        assertFalse(ottenutoBooleano);
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con sorgente NON esistente
+        //--messaggio di errore
+        assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathNonEsistente, destPathDaSovrascrivere);
+        assertFalse(ottenutoBooleano);
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con sorgente NON esistente
+        //--messaggio di errore
+        assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory((AECopyDir)null, srcPathNonEsistente, destPathDaSovrascrivere);
+        assertFalse(ottenutoBooleano);
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con destinazione NON esistente
+        assertTrue(file.isEsisteDirectory(srcPathValida));
+        assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
+        assertTrue(ottenutoBooleano);
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con destinazione esistente
+        assertTrue(file.isEsisteDirectory(srcPathValida));
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.deletingAll, srcPathValida, destPathDaSovrascrivere);
+        assertTrue(ottenutoBooleano);
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con destinazione esistente
+        assertTrue(file.isEsisteDirectory(srcPathValida));
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.addingOnly, srcPathValida, destPathDaSovrascrivere);
+        assertTrue(ottenutoBooleano);
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        //--esegue con destinazione esistente
+        assertTrue(file.isEsisteDirectory(srcPathValida));
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
+        assertFalse(ottenutoBooleano);
+        assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
+
+        try {
+            FileUtils.forceDelete(new File(destPathDaSovrascrivere));
+        } catch (Exception unErrore) {
+        }
     }
 
 
@@ -1259,6 +1334,13 @@ public class AFileServiceTest extends ATest {
                 System.out.println(file.getName());
             }
         }
+    }
+
+
+    @Test
+    @Order(31)
+    @DisplayName("31 - daFare-scriveFile")
+    public void scriveFile() {
     }
 
 

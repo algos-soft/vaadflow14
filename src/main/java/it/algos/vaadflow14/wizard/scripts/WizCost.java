@@ -50,6 +50,8 @@ public class WizCost {
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
 
+    public static final String DIR_CONFIG = "config/";
+
     public static final String DIR_DOC = "doc/";
 
     public static final String DIR_LINKS = "links/";

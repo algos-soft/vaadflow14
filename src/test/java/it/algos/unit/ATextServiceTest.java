@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SPAZIO;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -25,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Unit test per elaborazione stringhe")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ATextServiceTest extends ATest {
-
 
 
     /**
@@ -52,7 +50,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("Controlla testo vuoto")
+    @DisplayName("1 - Controlla testo vuoto")
     void testIsEmpty() {
         ottenutoBooleano = text.isEmpty(null);
         Assertions.assertTrue(ottenutoBooleano);
@@ -67,7 +65,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("Controlla testo valido")
+    @DisplayName("2 - Controlla testo valido")
     void testIsValid() {
         ottenutoBooleano = text.isValid(null);
         Assertions.assertFalse(ottenutoBooleano);
@@ -82,7 +80,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("Controlla testo valido 2")
+    @DisplayName("3 - Controlla testo valido")
     void testIsValid2() {
         ottenutoBooleano = text.isValid((List) null);
         Assertions.assertFalse(ottenutoBooleano);
@@ -94,7 +92,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("Prima maiuscola")
+    @DisplayName("4 - Prima maiuscola")
     void primaMaiuscola() {
         sorgente = null;
         previsto = VUOTA;
@@ -135,7 +133,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("Restituisce una lista di stringhe")
+    @DisplayName("5 - Restituisce una lista di stringhe")
     void getArray() {
         ottenutoArray = text.getArray(null);
         assertNull(ottenutoArray);
@@ -169,7 +167,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(6)
-    @DisplayName("Restituisce una lista di interi")
+    @DisplayName("6 - Restituisce una lista di interi")
     void getArrayInt() {
         ottenutoInteroArray = text.getArrayInt(null);
         assertNull(ottenutoInteroArray);
@@ -203,7 +201,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(7)
-    @DisplayName("Leva un testo iniziale")
+    @DisplayName("7 - Leva un testo iniziale")
     void levaTesta() {
         sorgente = "Non Levare questo inizio ";
         tag = "Non";
@@ -227,7 +225,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(8)
-    @DisplayName("Leva un testo finale")
+    @DisplayName("8 - Leva un testo finale")
     void levaCoda() {
         sorgente = " Levare questa fine Non ";
         tag = "Non";
@@ -252,7 +250,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("Leva un testo finale a partire da")
+    @DisplayName("9 - Leva un testo finale a partire da")
     void levaCodaDa() {
         sorgente = " Levare questa fine Non ";
         tag = "N";
@@ -275,16 +273,16 @@ class ATextServiceTest extends ATest {
 
 
     void getLabelHost() {
-//        sorgente = "black";
-//        Label label = text.getLabelHost(sorgente);
-//        assertNotNull(label);
-//        System.out.println(label.getText());
+        //        sorgente = "black";
+        //        Label label = text.getLabelHost(sorgente);
+        //        assertNotNull(label);
+        //        System.out.println(label.getText());
     }
 
 
     @Test
     @Order(10)
-    @DisplayName("Label user verde")
+    @DisplayName("10 - Label user verde")
     void getLabelUser() {
         sorgente = "green";
         Label label = text.getLabelUser(sorgente);
@@ -295,7 +293,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(11)
-    @DisplayName("Label admin blue")
+    @DisplayName("11 - Label admin blue")
     void getLabelAdmin() {
         sorgente = "blue";
         Label label = text.getLabelAdmin(sorgente);
@@ -306,7 +304,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(12)
-    @DisplayName("Label developer rossa")
+    @DisplayName("12 - Label developer rossa")
     void getLabelDev() {
         sorgente = "red";
         Label label = text.getLabelDev(sorgente);
@@ -317,7 +315,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(13)
-    @DisplayName("Restituisce una matrice di stringhe")
+    @DisplayName("13 - Restituisce una matrice di stringhe")
     public void getMatrice() {
         sorgente = VUOTA;
         ottenutoMatrice = text.getMatrice(sorgente);
@@ -344,7 +342,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(14)
-    @DisplayName("Restituisce una matrice di interi")
+    @DisplayName("14 - Restituisce una matrice di interi")
     public void getMatriceInt() {
         sorgente = VUOTA;
         ottenutoInteroMatrice = text.getMatriceInt(sorgente);
@@ -371,7 +369,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(15)
-    @DisplayName("Elimina parentesi quadre in testa e coda della stringa")
+    @DisplayName("15 - Elimina parentesi quadre in testa e coda della stringa")
     public void setNoQuadre() {
         System.out.println(VUOTA);
         System.out.println("Elimina parentesi quadre in testa e coda della stringa");
@@ -382,22 +380,9 @@ class ATextServiceTest extends ATest {
         assertNotNull(ottenuto);
         assertEquals(sorgente, ottenuto);
 
-        sorgente = "m[ario";
-        previsto = "m[ario";
-        ottenuto = text.setNoQuadre(sorgente);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-        print(sorgente, ottenuto);
-
-        sorgente = " m[ario";
-        previsto = "m[ario";
-        ottenuto = text.setNoQuadre(sorgente);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-        print(sorgente, ottenuto);
+        previsto = "mario";
 
         sorgente = " mario  ";
-        previsto = "mario";
         ottenuto = text.setNoQuadre(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
@@ -427,12 +412,37 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
 
+        sorgente = "[[mario]]";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "[[[[mario]]]]";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        previsto = "m[ario";
+
+        sorgente = "m[ario";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = " m[ario";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
     }
 
 
     @Test
     @Order(16)
-    @DisplayName("Aggiunge parentesi quadre in testa e coda alla stringa")
+    @DisplayName("16 - Aggiunge parentesi quadre in testa e coda alla stringa")
     public void setQuadre() {
         System.out.println(VUOTA);
         System.out.println("Aggiunge parentesi quadre in testa e coda alla stringa");
@@ -503,7 +513,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(17)
-    @DisplayName("Aggiunge doppie parentesi quadre in testa e coda alla stringa")
+    @DisplayName("17 - Aggiunge doppie parentesi quadre in testa e coda alla stringa")
     public void setDoppieQuadre() {
         System.out.println(VUOTA);
         System.out.println("Aggiunge doppie parentesi quadre in testa e coda alla stringa");
@@ -574,7 +584,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(18)
-    @DisplayName("Allunga un testo alla lunghezza desiderata")
+    @DisplayName("18 - Allunga un testo alla lunghezza desiderata")
     public void rightPad() {
         sorgenteIntero = 7;
 
@@ -610,7 +620,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(19)
-    @DisplayName("Forza un testo alla lunghezza desiderata")
+    @DisplayName("19 - Forza un testo alla lunghezza desiderata")
     public void fixSize() {
         sorgenteIntero = 7;
 
@@ -667,7 +677,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(20)
-    @DisplayName("Forza un testo alla lunghezza desiderata ed aggiunge parentesi quadre")
+    @DisplayName("20 - Forza un testo alla lunghezza desiderata ed aggiunge parentesi quadre")
     public void fixSizeQuadre() {
         sorgenteIntero = 4;
 
@@ -716,7 +726,7 @@ class ATextServiceTest extends ATest {
 
     @Test
     @Order(21)
-    @DisplayName("Elimina gli spazi interni della stringa")
+    @DisplayName("21 - Elimina gli spazi interni della stringa")
     public void levaSpaziInterni() {
         sorgente = "Mariolino Birichino";
         previsto = "MariolinoBirichino";
@@ -763,6 +773,87 @@ class ATextServiceTest extends ATest {
         sorgente = " Corea del Nord ";
         previsto = "CoreadelNord";
         ottenuto = text.levaSpazi(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(22)
+    @DisplayName("22 - levaTestoPrimaDiEnneRipetizioni")
+    public void levaTestoPrimaDiEnneRipetizioni() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
+        sorgente2 = SLASH;
+
+        ottenuto = text.testoDopoTagRipetuto(VUOTA, VUOTA, 0);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(VUOTA, VUOTA, 1);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(VUOTA, sorgente2, 0);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(sorgente, VUOTA, 0);
+        assertNotNull(ottenuto);
+        assertEquals(sorgente, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(VUOTA, sorgente2, 2);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(sorgente, VUOTA, 2);
+        assertNotNull(ottenuto);
+        assertEquals(sorgente, ottenuto);
+
+        ottenuto = text.testoDopoTagRipetuto(sorgente, sorgente2, 0);
+        assertNotNull(ottenuto);
+        assertEquals(sorgente, ottenuto);
+
+        sorgenteIntero = 1;
+        previsto = "gac/Documents/IdeaProjects/operativi/vaadflow14";
+        ottenuto = text.testoDopoTagRipetuto(sorgente, sorgente2, 1);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(23)
+    @DisplayName("23 - pathBreve")
+    public void pathBreve() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
+
+        ottenuto = text.pathBreve(VUOTA, 0);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.pathBreve(VUOTA, 1);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = text.pathBreve(sorgente, 0);
+        assertNotNull(ottenuto);
+        assertEquals(sorgente, ottenuto);
+
+        sorgenteIntero = 1;
+        previsto = "../gac/Documents/IdeaProjects/operativi/vaadflow14";
+        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 2;
+        previsto = "../Documents/IdeaProjects/operativi/vaadflow14";
+        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 3;
+        previsto = "../IdeaProjects/operativi/vaadflow14";
+        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
     }

@@ -2,6 +2,7 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
+import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
@@ -346,22 +347,29 @@ public class WizService {
 
     /**
      * Copia una cartella a livello di root da VaadFlow al progetto <br>
-     * Se è isNewProject()=true, sovrascrive sempre <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+     *
+     * @param dirName della cartella da copiare che DEVE essere presente, come srcPath, a livello di ROOT
+     *
+     * @return true se la directory  è stata copiata
      */
-    public void copyCartellaRootProject(String dirName) {
+    public boolean copyCartellaRootProject(String dirName) {
+        boolean copiata = false;
         String srcPath = AEDir.pathVaadFlow.get() + dirName;
         String destPath = AEDir.pathTargetProject.get() + dirName;
 
         if (AEFlag.isNewProject.is()) {
-            file.copyDirectoryDeletingAll(srcPath, destPath);
+            file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath);
         } else {
             if (AECheck.directory.isAbilitato()) {
-                file.copyDirectoryDeletingAll(srcPath, destPath);
+                file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath);
             } else {
-                file.copyDirectoryAddingOnly(srcPath, destPath);
+                file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath);
             }
         }
+
+        return copiata;
     }
 
 

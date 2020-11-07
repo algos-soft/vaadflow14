@@ -257,11 +257,30 @@ public abstract class WizElabora implements WizRecipient {
     }
 
 
+
+
+    /**
+     * Sovrascrive la cartella CONFIG di risorse (in formati vari) <br>
+     * Posizionata a livello di root <br>
+     * Copia la directory omonima di VaadFlow <br>
+     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+     */
+    protected void copiaDirectoryConfig() {
+        if (AECheck.config.isAbilitato()) {
+            wizService.copyCartellaRootProject(DIR_CONFIG);
+        }
+    }
+
+
     /**
      * Sovrascrive la cartella DOC di documentazione (in formati vari) <br>
      * Posizionata a livello di root <br>
      * Copia la directory omonima di VaadFlow <br>
      * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryDoc() {
         if (AECheck.documentation.isAbilitato()) {
@@ -276,6 +295,8 @@ public abstract class WizElabora implements WizRecipient {
      * Posizionata a livello di root <br>
      * Copia la directory omonima di VaadFlow <br>
      * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryFrontend() {
         if (AECheck.frontend.isAbilitato()) {
@@ -289,6 +310,8 @@ public abstract class WizElabora implements WizRecipient {
      * Posizionata a livello di root <br>
      * Copia la directory omonima di VaadFlow <br>
      * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryLinks() {
         if (AECheck.links.isAbilitato()) {
@@ -302,6 +325,8 @@ public abstract class WizElabora implements WizRecipient {
      * Posizionata a livello di root <br>
      * Copia la directory omonima di VaadFlow <br>
      * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectorySnippets() {
         if (AECheck.snippets.isAbilitato()) {

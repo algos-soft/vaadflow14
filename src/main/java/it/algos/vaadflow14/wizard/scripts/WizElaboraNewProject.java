@@ -26,6 +26,7 @@ public class WizElaboraNewProject extends WizElabora {
     public void esegue() {
 //        super.esegue();//@todo Controllare, non sembra necessario
 
+        super.copiaDirectoryConfig();
         super.copiaDirectoryDoc();
         super.copiaDirectoryFrontend();
         super.copiaDirectoryLinks();

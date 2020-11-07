@@ -651,21 +651,24 @@ public class ATextService extends AAbstractService {
      * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>
      * Elimina spazi vuoti iniziali e finali <br>
+     * Esegue anche se le quadre in testa ed in coda alla stringa sono presenti in numero diverso <br>
+     * Esegue anche se le quadre in testa ed in coda alla stringa sono singole o doppie o triple o quadruple <br>
      *
      * @param stringaIn in ingresso
      *
-     * @return stringa con doppie quadre eliminate
+     * @return stringa con quadre iniziali e finali eliminate
      */
     public String setNoQuadre(String stringaIn) {
         String stringaOut = stringaIn;
 
         if (isValid(stringaIn)) {
-            stringaIn = stringaIn.trim();
+            stringaOut = stringaIn.trim();
 
-            if (stringaIn.startsWith(QUADRE_INI) && stringaIn.endsWith(QUADRE_END)) {
-                stringaOut = stringaIn;
-                stringaOut = levaCoda(stringaOut, QUADRE_END);
-                stringaOut = levaTesta(stringaOut, QUADRE_INI);
+            while (stringaOut.startsWith(QUADRA_INI)) {
+                stringaOut = stringaOut.substring(1);
+            }
+            while (stringaOut.endsWith(QUADRA_END)) {
+                stringaOut = stringaOut.substring(0, stringaOut.length() - 1);
             }
         }
 
@@ -1147,6 +1150,56 @@ public class ATextService extends AAbstractService {
         }
 
         return neContieneAlmenoUno;
+    }
+
+
+    /**
+     * Elabora un testo eliminando la parte precedente alla n° ripetizione di un tag. <br>
+     * <p>
+     * Esegue solo se il testo è valido <br>
+     * Se tag è vuoto, restituisce il testo <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param testoIn ingresso
+     * @param tag     di cui contare le ripetizioni
+     * @param numTag  numero di ripetizioni del tag da eliminare
+     *
+     * @return testo ridotto in uscita
+     */
+    public String testoDopoTagRipetuto(final String testoIn, String tag, int numTag) {
+        String testoOut = testoIn.trim();
+
+        if (this.isValid(testoOut) && this.isValid(tag) && numTag > 0) {
+            for (int k = 0; k <= numTag; k++) {
+                testoOut = testoOut.substring(testoOut.indexOf(tag) + 1);
+            }
+        }
+
+        return testoOut.trim();
+    }
+
+
+    /**
+     * Elabora un path eliminando i livelli iniziali indicati. <br>
+     * <p>
+     * Esegue solo se il testo è valido <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     * Aggiunge un prefisso indicativo -> '../' <br>
+     *
+     * @param testoIn    ingresso
+     * @param numLivelli iniziali da eliminare
+     *
+     * @return path semplificato
+     */
+    public String pathBreve(final String testoIn, int numLivelli) {
+        String path = testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
+        String prefix = "../";
+
+        if (!path.equals(testoIn)) {
+            path = this.isValid(path) ? prefix + path : path;
+        }
+
+        return path;
     }
 
 }

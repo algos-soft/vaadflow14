@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -845,6 +846,80 @@ public class AFileService extends AAbstractService {
 
 
     /**
+     * Copia una directory <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista la directory sorgente da copiare <br>
+     * Se manca la directory sorgente, non fa nulla <br>
+     * Se non esiste la directory di destinazione, la crea <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i primi 3 livelli (/Users/gac/Documents) <br>
+     *
+     * @param srcPath  nome completo della directory sorgente
+     * @param destPath nome completo della directory destinazione
+     *
+     * @return true se la directory  è stata copiata
+     */
+    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath) {
+        boolean copiata = false;
+        String message = VUOTA;
+        String tag = VUOTA;
+        String path;
+
+        if (text.isEmpty(srcPath) || text.isEmpty(destPath)) {
+            tag = text.isEmpty(srcPath) ? "srcPath" : "destPath";
+            message = "Manca il " + tag + " della directory da copiare.";
+        } else {
+//            path=destPath.substring(destPath.i)
+            if (isEsisteDirectory(srcPath)) {
+                switch (typeCopy) {
+                    case soloSeNonEsiste:
+                        copiata = copyDirectoryOnlyNotExisting(srcPath, destPath);
+                        if (copiata) {
+                            message = "La directory: " + destPath + " non esisteva ed è stata copiata.";
+                        } else {
+                            message = "La directory: " + destPath + " esisteva già e non è stata toccata.";
+                        }
+                        logger.info(message, this.getClass(), "copyDirectory");
+                        message = VUOTA;
+                        break;
+                    case deletingAll:
+                        copiata = copyDirectoryDeletingAll(srcPath, destPath);
+                        if (copiata) {
+                            message = "La directory: " + destPath + " è stata creata/sostituita.";
+                            logger.info(message, this.getClass(), "copyDirectory");
+                            message = VUOTA;
+                        } else {
+                            message = "Non sono riuscito a sostituire " + destPath;
+                        }
+                        break;
+                    case addingOnly:
+                        copiata = copyDirectoryAddingOnly(srcPath, destPath);
+                        if (!copiata) {
+                            message = "Non sono riuscito ad integrare la directory: " + destPath;
+                        }
+                        break;
+                    default:
+                        copiata = copyDirectoryAddingOnly(srcPath, destPath);
+                        logger.warn("Switch - caso non definito", this.getClass(), "copyDirectory");
+                        break;
+                }
+            } else {
+                message = "Manca la directory " + srcPath + " da copiare";
+            }
+        }
+
+        if (!copiata && text.isValid(message)) {
+            logger.error(message, this.getClass(), "copyDirectory");
+        }
+
+        return copiata;
+    }
+
+
+    /**
      * Copia una directory
      * <p>
      * Se manca la directory sorgente, non fa nulla <br>
@@ -1025,7 +1100,7 @@ public class AFileService extends AAbstractService {
      * @param sovrascrive         anche se esiste già
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
-        String message=VUOTA;
+        String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
 
@@ -1039,13 +1114,13 @@ public class AFileService extends AAbstractService {
                 return false;
             }
         } else {
-            message= creaFileStr(pathFileToBeWritten);
+            message = creaFileStr(pathFileToBeWritten);
             if (text.isEmpty(message)) {
                 sovraScriveFile(pathFileToBeWritten, testo);
                 System.out.println("Il file " + pathFileToBeWritten + " non esisteva ed è stato creato");
                 return true;
             } else {
-                System.out.println("Il file " + pathFileToBeWritten + " non è stato scritto perché "+message);
+                System.out.println("Il file " + pathFileToBeWritten + " non è stato scritto perché " + message);
                 return false;
             }
         }

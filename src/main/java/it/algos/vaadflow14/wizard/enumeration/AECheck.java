@@ -15,6 +15,8 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
 public enum AECheck {
     security("Utilizza Spring Security", true, false, false, false, false),
 
+    config("Directory di risorse on-line esterne al JAR (VaadFlow)", true, true, false, false, true),
+
     documentation("Directory documentazione (VaadFlow)", true, true, false, false, true),
 
     links("Directory links a web (VaadFlow)", true, true, false, false, true),
