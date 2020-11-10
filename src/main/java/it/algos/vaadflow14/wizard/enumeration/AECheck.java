@@ -23,9 +23,9 @@ public enum AECheck {
 
     snippets("Directory snippets di aiuto (VaadFlow)", true, true, false, false, true),
 
-    flow("Copia la directory VaadFlow (Wizard compreso)", true, true, false, false, true),
+    flow("Directory framework VaadFlow (Wizard compreso)", true, true, false, false, true),
 
-   project("Crea la directory del nuovo progetto", true, false, false, false, false),
+   project("Directory modulo del nuovo progetto (...)", true, false, false, false, false),
 
     frontend("Directory frontend (VaadFlow)", true, true, false, false, true),
 
@@ -37,7 +37,7 @@ public enum AECheck {
 
     git("File GIT di esclusione (sources)", true, true, false, false, true),
 
-    pom("File Maven di POM.xml - ATTENZIONE", true, true, false, false, true),
+    pom("File Maven di POM.xml (sources)", true, true, false, false, true),
 
    read("File READ con note di testo (sources)", true, true, false, false, true),
 

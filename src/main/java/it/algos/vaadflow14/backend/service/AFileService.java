@@ -930,9 +930,21 @@ public class AFileService extends AAbstractService {
                         }
                         break;
                     case addingOnly:
+                        esisteDest = isEsisteDirectory(destPath);
                         copiata = copyDirectoryAddingOnly(srcPath, destPath);
-                        if (!copiata) {
-                            message = "Non sono riuscito ad integrare la directory: " + path;
+                        if (copiata) {
+                            if (esisteDest) {
+                                message = "La directory: " + path + " esisteva già ma è stata integrata.";
+                            } else {
+                                message = "La directory: " + path + " non esisteva ed è stata creata.";
+                            }
+                            logger.info(message, this.getClass(), "copyDirectory");
+                        } else {
+                            if (esisteDest) {
+                                message = "Non sono riuscito ad integrare la directory: " + path;
+                            } else {
+                                message = "Non sono riuscito a creare " + path;
+                            }
                         }
                         break;
                     default:
@@ -1549,6 +1561,35 @@ public class AFileService extends AAbstractService {
             if (pathOut.contains(SLASH)) {
                 pathOut = text.levaCoda(pathOut, SLASH);
                 pathOut = text.levaCodaDa(pathOut, SLASH) + SLASH;
+            }
+        }
+
+        return pathOut.trim();
+    }
+
+
+    /**
+     * Estrae il path fino alla directory indicata <br>
+     * <p>
+     * Esegue solo se il path è valido
+     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param pathIn    in ingresso
+     * @param directory di cui ricercare il path
+     *
+     * @return path completo fino alla directory selezionata
+     */
+    public String findPathDirectory(String pathIn, String directory) {
+        String pathOut = pathIn.trim();
+
+        if (text.isEmpty(pathIn)) {
+            return pathOut;
+        }
+
+        if (text.isValid(directory)) {
+            if (pathOut.contains(directory)) {
+                pathOut = pathOut.substring(0, pathOut.indexOf(directory));
             }
         }
 

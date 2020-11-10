@@ -17,21 +17,21 @@ public class WizElaboraUpdateProject extends WizElabora {
 
     @Override
     public void esegue() {
-        super.isNuovoProgetto = false;
-        super.esegue();
-
+        super.copiaDirectoryConfig();
         super.copiaDirectoryDoc();
+        super.copiaDirectoryFrontend();
         super.copiaDirectoryLinks();
         super.copiaDirectorySnippets();
 
-        super.copiaCartellaVaadFlow();
+        this.copiaDirectoryVaadFlow();
 
         super.copiaDirectoryMetaInf();
         super.creaFileProperties();
+        super.creaFileBanner();
 
-        super.sovraScriveFileGit();
-        super.sovraScriveFilePom();
-        super.sovraScriveFileRead();
+        super.creaFileGit();
+        super.creaFilePom();
+        super.creaFileRead();
     }
 
 }

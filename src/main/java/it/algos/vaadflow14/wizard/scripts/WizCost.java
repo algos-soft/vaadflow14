@@ -10,9 +10,77 @@ package it.algos.vaadflow14.wizard.scripts;
 public class WizCost {
 
     //--flag per stampare info di debug
-    public static final boolean FLAG_DEBUG_WIZ = false;
+    public static final boolean FLAG_DEBUG_WIZ = true;
 
+    //--valore standard che verrà controllato in funzione di AEDIR.pathCurrent effettivo
+    //--potrebbe essere diverso
     public static final String PATH_ROOT = "/Users/gac/Documents/";
+
+    //--regolata inizialmente da WizCost, indipendentemente dall' apertura dei dialoghi, con un valore fisso codificato
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    //--directory che contiene i nuovi programmi appena creati da Idea
+    //--dovrebbe essere PATH_PROJECTS_DIR_STANDARD
+    //--posso spostarla (è successo) senza che cambi nulla
+    public static final String PATH_PROJECTS_DIR_STANDARD = PATH_ROOT + "IdeaProjects/";
+
+
+    public static final String DIR_PROJECTS = "IdeaProjects/";
+
+    public static final String DIR_OPERATIVI = "operativi/";
+
+    public static final String DIR_RESOURCES = "resources/";
+
+    public static final String DIR_META = "META-INF/";
+
+    public static final String DIR_ALGOS = "java/it/algos/";
+
+    public static final String DIR_VAADFLOW = "vaadflow14/";
+
+    public static final String DIR_WIZARD = "wizard/";
+
+    public static final String DIR_SOURCES = "sources/";
+
+
+    //--parte dal livello di root del progetto
+    public static final String ROOT_DIR_CONFIG = "config/";
+
+    //--parte dal livello di root del progetto
+    public static final String ROOT_DIR_DOC = "doc/";
+
+    //--parte dal livello di root del progetto
+    public static final String ROOT_DIR_LINKS = "links/";
+
+    //--parte dal livello di root del progetto
+    public static final String ROOT_DIR_SNIPPETS = "snippets/";
+
+    //--parte dal livello di root del progetto
+    //--contiene images/ (di solito)
+    //--contiene src/ (di solito)
+    //--contiene styles/ (sempre)
+    public static final String ROOT_DIR_FRONTEND = "frontend/";
+
+    //--parte dal livello di root del progetto
+    //--contiene java e resources di ogni progetto
+    public static final String ROOT_DIR_MAIN = "src/main/";
+
+    //--parte dal livello di root del progetto
+    //--contiene i moduli, di solito due (vaadFlow e vaadTest)
+    public static final String ROOT_DIR_ALGOS = ROOT_DIR_MAIN + "java/it/algos/";
+
+    //--parte dal livello di root del progetto
+    //--contiene META_INF
+    //--contiene application.properties
+    //--contiene banner.txt (di solito)
+    public static final String ROOT_DIR_RESOURCES = ROOT_DIR_MAIN + "resources/";
+
+    //    //--parte dal livello di root del progetto
+    //    //--contiene META_INF
+    //    //--contiene application.properties
+    //    //--contiene banner.txt (di solito)
+    //    public static final String DIR_RESOURCES = ROOT_DIR_MAIN + ROOT_DIR_RESOURCES;
+
+    public static final String DIR_IDEAPROJECTS = "IdeaProjects/";
+
 
     public static final String PROJECT_VAADFLOW = "vaadflow14/";
 
@@ -24,15 +92,12 @@ public class WizCost {
 
     public static final String PATH_VAADFLOW_DIR_STANDARD = PATH_ROOT + VAADFLOW_DIR_STANDARD;
 
-    public static final String PATH_PROJECTS_DIR_STANDARD = PATH_ROOT + "IdeaProjects/";
 
-    public static final String DIR_VAADFLOW = "vaadflow14/";
+    public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
 
-    public static final String DIR_WIZARD = "wizard/";
 
     public static final String FILE_WIZARD = "Wizard";
 
-    public static final String DIR_SOURCES = "wizard/sources/";
 
     public static final String SLASH = "/";
 
@@ -50,17 +115,6 @@ public class WizCost {
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
 
-    public static final String DIR_CONFIG = "config/";
-
-    public static final String DIR_DOC = "doc/";
-
-    public static final String DIR_LINKS = "links/";
-
-    public static final String DIR_SNIPPETS = "snippets/";
-
-    public static final String DIR_META_NAME = "META-INF/";
-
-    public static final String DIR_RESOURCES_NAME = "resources/";
 
     public static final String DIR_APPLICATION = "application/";
 
@@ -96,37 +150,16 @@ public class WizCost {
 
     public static final String MD_SUFFIX = ".md";
 
-    //--parte dal livello di root del progetto
-    //--contiene java e resources di ogni progetto
-    public static final String DIR_MAIN = "src/main/";
-
-    //--parte dal livello di root del progetto
-    //--contiene i moduli, di solito due (vaadFlow e vaadTest)
-    public static final String DIR_ALGOS = DIR_MAIN + "java/it/algos/";
-
-    //--parte dal livello di root del progetto
-    //--contiene META_INF
-    //--contiene application.properties
-    //--contiene banner.txt (di solito)
-    public static final String DIR_RESOURCES = DIR_MAIN + DIR_RESOURCES_NAME;
-
-
-    //--parte dal livello di root del progetto
-    //--contiene images/ (di solito)
-    //--contiene src/ (di solito)
-    //--contiene styles/ (sempre)
-    public static final String DIR_FRONT_END = "frontend/";
-
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)
     //--contiene resources/ (sempre)
-    public static final String DIR_META = DIR_RESOURCES + DIR_META_NAME;
+    //    public static final String DIR_META = DIR_RESOURCES + DIR_META_NAME;
 
 
     //--parte dal livello di root del progetto
     //--valida SOLO per progetto vaadFlow
-    public static final String DIR_VAADFLOW_SOURCES = DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
+    public static final String DIR_VAADFLOW_SOURCES = ROOT_DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
 
 
     //--metodo statico invocato da Wizard.initView()
@@ -138,10 +171,10 @@ public class WizCost {
             System.out.println("********************");
             System.out.println("PATH_PROJECTS_DIR_STANDARD = " + PATH_PROJECTS_DIR_STANDARD);
             System.out.println("PATH_VAADFLOW_DIR_STANDARD = " + PATH_VAADFLOW_DIR_STANDARD);
-            System.out.println("DIR_MAIN = " + DIR_MAIN);
-            System.out.println("DIR_ALGOS = " + DIR_ALGOS);
-            System.out.println("DIR_RESOURCES = " + DIR_RESOURCES);
-            System.out.println("DIR_FRONTEND = " + DIR_FRONT_END);
+            System.out.println("DIR_MAIN = " + ROOT_DIR_MAIN);
+            System.out.println("DIR_ALGOS = " + ROOT_DIR_ALGOS);
+            //            System.out.println("DIR_RESOURCES = " + DIR_RESOURCES);
+            System.out.println("DIR_FRONTEND = " + ROOT_DIR_FRONTEND);
             System.out.println("DIR_VAADFLOW_SOURCES = " + DIR_VAADFLOW_SOURCES);
             System.out.println("");
         }

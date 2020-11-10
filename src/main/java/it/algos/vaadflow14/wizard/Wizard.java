@@ -131,9 +131,6 @@ public class Wizard extends VerticalLayout {
     private WizService wizService;
 
 
-    //    private boolean isProgettoBase = false;
-
-
     /**
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */

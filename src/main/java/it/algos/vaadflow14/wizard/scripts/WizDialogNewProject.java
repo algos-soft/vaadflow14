@@ -95,16 +95,21 @@ public class WizDialogNewProject extends WizDialog {
 
         List<File> progetti = file.getEmptyProjects(AEDir.pathIdeaProjects.get());
 
-        fieldComboProgetti = new ComboBox<>();
-        // Choose which property from Department is the presentation value
-        fieldComboProgetti.setItemLabelGenerator(File::getName);
-        fieldComboProgetti.setWidth("22em");
-        fieldComboProgetti.setAllowCustomValue(false);
-        fieldComboProgetti.setLabel(LABEL_COMBO_UNO);
+        //@todo PROVVISORIO
+        File demoFileProvvisorio= new File("/Users/gac/Documents/IdeaProjects/beta");
+        progetti.add(demoFileProvvisorio);
+        //@todo PROVVISORIO
 
-        fieldComboProgetti.setItems(progetti);
+        fieldComboProgettiNuovi = new ComboBox<>();
+        // Choose which property from Department is the presentation value
+        fieldComboProgettiNuovi.setItemLabelGenerator(File::getName);
+        fieldComboProgettiNuovi.setWidth("22em");
+        fieldComboProgettiNuovi.setAllowCustomValue(false);
+        fieldComboProgettiNuovi.setLabel(LABEL_COMBO_UNO);
+
+        fieldComboProgettiNuovi.setItems(progetti);
         if (progetti.size() == 1) {
-            fieldComboProgetti.setValue(progetti.get(0));
+            fieldComboProgettiNuovi.setValue(progetti.get(0));
             confirmButton.setEnabled(true);
         }
 
@@ -118,7 +123,7 @@ public class WizDialogNewProject extends WizDialog {
         buttonForzaDirectory.setEnabled(progetti.size() < 1);
 
         addListener();
-        selezioneLayout.add(fieldComboProgetti, buttonForzaDirectory);
+        selezioneLayout.add(fieldComboProgettiNuovi, buttonForzaDirectory);
     }
 
 
@@ -129,10 +134,10 @@ public class WizDialogNewProject extends WizDialog {
      */
     protected void forzaProgetti() {
         List<File> progetti = file.getProjects(AEDir.pathIdeaProjects.get());
-        fieldComboProgetti.setItems(progetti);
-        fieldComboProgetti.setLabel(LABEL_COMBO_DUE);
+        fieldComboProgettiNuovi.setItems(progetti);
+        fieldComboProgettiNuovi.setLabel(LABEL_COMBO_DUE);
         if (progetti.size() == 1) {
-            fieldComboProgetti.setValue(progetti.get(0));
+            fieldComboProgettiNuovi.setValue(progetti.get(0));
             confirmButton.setVisible(true);
         }
         buttonForzaDirectory.setEnabled(false);
@@ -179,7 +184,7 @@ public class WizDialogNewProject extends WizDialog {
 
 
     private void addListener() {
-        fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));
+        fieldComboProgettiNuovi.addValueChangeListener(event -> sincroProject(event.getValue()));
     }
 
 
@@ -190,16 +195,21 @@ public class WizDialogNewProject extends WizDialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Resetta i valori regolabili della Enumeration AEDir <br>
+     * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
+     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void regolaAEDir() {
         String projectName;
         super.regolaAEDir();
 
-        if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-            projectName = fieldComboProgetti.getValue().getName();
-            AEDir.nameTargetProject.setValue(projectName);
-            AEDir.pathTargetProject.setValue(AEDir.pathIdeaProjects.get() + projectName + FlowCost.SLASH);
+        if (fieldComboProgettiNuovi != null && fieldComboProgettiNuovi.getValue() != null) {
+            projectName = fieldComboProgettiNuovi.getValue().getName();
+            AEDir.modificaAll(projectName);
+
+//            AEDir.nameTargetProject.setValue(projectName);
+//            AEDir.pathTargetProject.setValue(AEDir.pathIdeaProjects.get() + projectName + FlowCost.SLASH);
         }
     }
 

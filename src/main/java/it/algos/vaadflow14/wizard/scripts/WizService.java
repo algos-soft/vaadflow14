@@ -65,6 +65,7 @@ public class WizService {
         String sepA = SEP;
         String sepB = UGUALE;
         String pathRoot;
+        String pathCurrent;
         String pathFlow;
         String path;
         boolean status;
@@ -72,67 +73,71 @@ public class WizService {
         //--reset di tutte le enumeration
         reset();
 
+
+        //--regola i valori elaborabili di AEDir
+        pathCurrent = System.getProperty("user.dir") + SLASH;
+        AEDir.elaboraAll(pathCurrent);
+
         //--pathCurrent
-        AEDir.pathCurrent.setValue(System.getProperty("user.dir") + SLASH);
+        //        AEDir.pathCurrent.setValue(System.getProperty("user.dir") + SLASH);
 
         //--pathRoot
         pathRoot = AEDir.pathCurrent.get();
         pathRoot = file.levaDirectoryFinale(pathRoot);
         pathRoot = file.levaDirectoryFinale(pathRoot);
         pathRoot = file.levaDirectoryFinale(pathRoot);
-        AEDir.pathRoot.setValue(pathRoot);
+        //        AEDir.pathRoot.setValue(pathRoot);
 
         //--pathVaadFlow
         pathFlow = AEDir.pathRoot.get();
         pathFlow += VAADFLOW_DIR_STANDARD;
-        AEDir.pathVaadFlow.setValue(pathFlow);
+        //        AEDir.pathVaadFlow.setValue(pathFlow);
 
         //--pathIdeaProjects
         path = PATH_VAADFLOW_DIR_STANDARD;
         path = file.levaDirectoryFinale(path);
         path = file.levaDirectoryFinale(path);
-        AEDir.pathIdeaProjects.setValue(path);
+        //        AEDir.pathIdeaProjects.setValue(path);
 
         //--pathVaadFlowSources
-        path = AEDir.pathVaadFlow.get();
+        //        path = AEDir.pathVaadFlow.get();
         path += DIR_VAADFLOW_SOURCES;
-        AEDir.pathVaadFlowSources.setValue(path);
+        //        AEDir.pathVaadFlowSources.setValue(path);
 
         //--modifica di un path standard
-        if (AEDir.pathVaadFlow.isNotStandard()) {
-            logger.warn("Modificato il path di VaadFlow14");
-        }
+        //        if (AEDir.pathVaadFlow.isNotStandard()) {
+        logger.warn("Modificato il path di VaadFlow14");
 
         //--modifica di un path standard
-        if (AEDir.pathIdeaProjects.isNotStandard()) {
-            logger.warn("Modificato il path dei nuovi programmi");
-        }
+        //        if (AEDir.pathIdeaProjects.isNotStandard()) {
+        //            logger.warn("Modificato il path dei nuovi programmi");
+        //        }
 
         //--isBaseFlow
         status = AEDir.pathCurrent.get().equals(pathFlow);
         AEFlag.isBaseFlow.set(status);
-        //        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
-        //                        logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
-        //        }// end of if/else cycle
+//        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
+//            logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
+//        }// end of if/else cycle
 
         //valido SOLO per new project
-        if (isNuovoProgetto) {
-            //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathVaadFlow.getValue()));
-            //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathIdeaProjects.getValue()));
-            //            if (!AEWiz.pathIdeaProjects.getValue().equals(PATH_PROJECTS_DIR_STANDARD)) {
-            //                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
-            //            }
-        } else {
-            //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
-            //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
-            //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
-        }
+        //        if (isNuovoProgetto) {
+        //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathVaadFlow.getValue()));
+        //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathIdeaProjects.getValue()));
+        //            if (!AEWiz.pathIdeaProjects.getValue().equals(PATH_PROJECTS_DIR_STANDARD)) {
+        //                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
+        //            }
+        //        } else {
+        //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
+        //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
+        //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
+        //        }
 
-        if (false) {
-            //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
-            //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
-            //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
-        }
+        //        if (false) {
+        //            //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
+        //            //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
+        //            //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
+        //        }
 
         //        if (FLAG_DEBUG_WIZ) {
         //            System.out.println("********************");
@@ -152,6 +157,7 @@ public class WizService {
         //                System.out.println(flag.name() + sepB + flag.is());
         //            }
         //        }
+        //    }
     }
 
 
@@ -159,7 +165,6 @@ public class WizService {
      * Reset delle enumeration <br>
      */
     public void reset() {
-        AEDir.reset();
         AEToken.reset();
         AEFlag.reset();
         AECheck.reset();
@@ -195,7 +200,7 @@ public class WizService {
      * Se non esiste la directory di destinazione, la crea <br>
      * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
      * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
-     * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
+     * Se esiste la directory di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
      * Nei messaggi di avviso, accorcia il pathFileToBeWritten eliminando i primi 4 livelli (/Users/gac/Documents/IdeaProjects) <br>
      * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      * Scrive il file col path e suffisso indicati <br>
@@ -419,28 +424,61 @@ public class WizService {
 
     /**
      * Copia una cartella a livello di root da VaadFlow al progetto <br>
-     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+     * //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      *
-     * @param dirName della cartella da copiare che DEVE essere presente, come srcPath, a livello di ROOT
+     * @param typeCopy modalità di comportamento se esiste la directory di destinazione
+     * @param dirName  della cartella da copiare che DEVE essere presente, come srcPath, a livello di ROOT
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyCartellaRootProject(String dirName) {
+    public boolean copyDirectoryProjectRoot(AECopyDir typeCopy, String dirName) {
+        String srcPath = AEDir.pathVaadFlowRoot.get()+dirName;
+        String destPath = AEDir.pathTargetRoot.get() + dirName;
+
+        return copyDirectoryProject(typeCopy, srcPath, destPath);
+    }
+
+
+    /**
+     * Copia una cartella da VaadFlow al progetto <br>
+     * //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+     * //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+     *
+     * @param typeCopy modalità di comportamento se esiste la directory di destinazione
+     * @param srcPath  nome completo della directory sorgente
+     * @param destPath nome completo della directory destinazione
+     *
+     * @return true se la directory  è stata copiata
+     */
+    public boolean copyDirectoryProject(AECopyDir typeCopy, String srcPath, String destPath) {
         boolean copiata = false;
         int numLivelli = 4;
-        String srcPath = AEDir.pathVaadFlow.get() + dirName;
-        String destPath = AEDir.pathTargetProject.get() + dirName;
 
-        if (AEFlag.isNewProject.is()) {
-            file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
-        } else {
-            if (AECheck.directory.isAbilitato()) {
-                file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
-            } else {
-                file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath, numLivelli);
-            }
+        switch (typeCopy) {//@todo Funzionalità ancora da implementare
+            case soloSeNonEsiste:
+                copiata = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPath, destPath, numLivelli);
+                break;
+            case deletingAll:
+                copiata = file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
+                break;
+            case addingOnly:
+                copiata = file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath, numLivelli);
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "copyDirectoryProject");
+                break;
         }
+
+        //        if (AEFlag.isNewProject.is()) {
+        //            file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
+        //        } else {
+        //            if (AECheck.directory.isAbilitato()) {
+        //                file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
+        //            } else {
+        //                file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath, numLivelli);
+        //            }
+        //        }
 
         return copiata;
     }
@@ -450,8 +488,9 @@ public class WizService {
      * Crea o modifica a seconda del flag 'flagSovrascriveFile' <br>
      */
     public void copyFileRootProject(String fileName) {
-        String srcPath = AEDir.pathVaadFlow.get() + fileName;
-        String destPath = AEDir.pathTargetProject.get() + fileName;
+        //        String srcPath = AEDir.pathVaadFlow.get() + fileName;
+        String srcPath = VUOTA;
+        String destPath = AEDir.pathTargetRoot.get() + fileName;
 
         file.copyFileDeletingAll(srcPath, destPath);
     }

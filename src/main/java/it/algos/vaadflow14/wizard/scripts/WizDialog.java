@@ -14,10 +14,7 @@ import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -119,7 +116,9 @@ public abstract class WizDialog extends Dialog {
 
     protected H3 titoloCorrente;
 
-    protected ComboBox<File> fieldComboProgetti;
+    protected ComboBox<File> fieldComboProgettiNuovi;
+
+    protected ComboBox<AEProgetto> fieldComboProgetti;
 
 
     /**
@@ -129,9 +128,6 @@ public abstract class WizDialog extends Dialog {
         this.setCloseOnEsc(true);
         this.setCloseOnOutsideClick(true);
         this.removeAll();
-
-        //--regolazione di property varie
-        this.regolaVariabili();
 
         //--creazione iniziale dei bottoni (chiamati anche da selezioneLayout)
         this.creaBottoni();
@@ -150,60 +146,6 @@ public abstract class WizDialog extends Dialog {
 
         //--superClasse
         super.open();
-    }// end of method
-
-
-    /**
-     * Regolazioni iniziali in base al dialogo che viene aperto <br>
-     */
-    protected void regolaVariabili() {
-        //        AECheck.reset();
-        //
-        //        stampaIngresso();
-        //
-        //        //        if (FLAG_DEBUG_WIZ) {
-        //        //            WizCost.printInfo(log);
-        //        //        }// end of if cycle
-        //
-        //        this.pathUserDir = System.getProperty("user.dir") + SLASH;
-        //        this.pathVaadFlow = PATH_VAADFLOW_DIR_STANDARD;
-        //        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
-        //            //                        logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
-        //        }// end of if/else cycle
-        //
-        //        //valido SOLO per new project
-        //        if (isNuovoProgetto) {
-        //            this.pathIdeaProjects = file.levaDirectoryFinale(pathVaadFlow);
-        //            this.pathIdeaProjects = file.levaDirectoryFinale(pathIdeaProjects);
-        //            if (!pathIdeaProjects.equals(PATH_PROJECTS_DIR_STANDARD)) {
-        //                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
-        //            }// end of if cycle
-        //        } else {
-        //            File unaDirectory = new File(pathUserDir);
-        //            this.nameTargetProject = unaDirectory.getName();
-        //            this.pathTargetProject = pathUserDir;
-        //        }// end of if/else cycle
-        //
-        //        if (isStartThisProgetto) {
-        //            File unaDirectory = new File(pathUserDir);
-        //            this.nameTargetProject = unaDirectory.getName();
-        //            this.pathTargetProject = pathUserDir;
-        //        }
-        //
-        //        this.pathSources = pathVaadFlow + DIR_VAADFLOW_SOURCES;
-        //
-        //        //        if (FLAG_DEBUG_WIZ) {
-        //        //            System.out.println("********************");
-        //        //            System.out.println("Ingresso del dialogo");
-        //        //            System.out.println("********************");
-        //        //            System.out.println("Directory di esecuzione: pathUserDir=" + pathUserDir);
-        //        //            System.out.println("Directory VaadFlow: pathVaadFlow=" + pathVaadFlow);
-        //        //            if (isNuovoProgetto) {
-        //        //                System.out.println("Directory dei nuovi progetti: pathIdeaProjects=" + pathIdeaProjects);
-        //        //            }// end of if cycle
-        //        //            System.out.println("Sorgenti VaadFlow: pathSources=" + pathSources);
-        //        //            System.out.println("");
-        //        //        }// end of if cycle
     }// end of method
 
 
@@ -331,7 +273,10 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Resetta i valori regolabili della Enumeration AEDir <br>
+     * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
+     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void regolaAEDir() {
     }

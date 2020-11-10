@@ -26,7 +26,7 @@ public enum AETypePref {
                 bytes = stringa.getBytes(Charset.forName("UTF-8"));
             }// end of if cycle
             return bytes;
-        }// end of method
+        }
 
 
         @Override

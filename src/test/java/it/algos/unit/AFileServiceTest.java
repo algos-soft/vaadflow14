@@ -925,7 +925,7 @@ public class AFileServiceTest extends ATest {
         //--messaggio di errore
         assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory((AECopyDir)null, srcPathNonEsistente, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory((AECopyDir) null, srcPathNonEsistente, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
 
@@ -1341,6 +1341,42 @@ public class AFileServiceTest extends ATest {
     @Order(31)
     @DisplayName("31 - daFare-scriveFile")
     public void scriveFile() {
+    }
+
+
+    @Test
+    @Order(32)
+    @DisplayName("32 - findPath")
+    public void findPath() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
+
+        previsto = VUOTA;
+        ottenuto = file.findPathDirectory(VUOTA, VUOTA);
+        assertEquals(previsto, ottenuto);
+
+        previsto = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
+        ottenuto = file.findPathDirectory(sorgente, VUOTA);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "Documents";
+        previsto = VUOTA;
+        ottenuto = file.findPathDirectory(VUOTA, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "IdeaProjects";
+        previsto = "/Users/gac/Documents/";
+        ottenuto = file.findPathDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "operativi";
+        previsto = "/Users/gac/Documents/IdeaProjects/";
+        ottenuto = file.findPathDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "vaadflow14";
+        previsto = "/Users/gac/Documents/IdeaProjects/operativi/";
+        ottenuto = file.findPathDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
     }
 
 

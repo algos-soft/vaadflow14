@@ -1,14 +1,19 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.AEProgetto;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.wizard.scripts.WizCost.NAME_VAADFLOW;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.VAADFLOW_STANDARD;
+import java.util.List;
+
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 /**
  * Project vaadflow
@@ -40,15 +45,63 @@ public class WizDialogUpdateProject extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione("Aggiornamento progetto", "green");
+        if (AEFlag.isBaseFlow.is()) {
+            topLayout = fixSezione("Aggiornamento di un progetto", "green");
+        } else {
+            topLayout = fixSezione("Aggiornamento di questo progetto", "green");
+        }
         this.add(topLayout);
 
-        topLayout.add(text.getLabelGreenBold("Update del modulo base di questo progetto"));
-        topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
-        topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
-        topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
-//        topLayout.add(text.getLabelGreenBold("Il modulo specifico " + nameTargetProject + " di questo progetto NON viene toccato"));
-        topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+        if (AEFlag.isBaseFlow.is()) {
+            topLayout.add(text.getLabelGreenBold("Update del progetto selezionato"));
+            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
+            topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
+            topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
+            topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
+            topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+        } else {
+            topLayout.add(text.getLabelGreenBold("Update di questo progetto"));
+            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
+            topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
+            topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
+            topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+        }
+    }
+
+
+    /**
+     * Sezione centrale con la scelta del progetto <br>
+     * Se NON siamo in AEFlag.isBaseFlow.is(), non fa nulla <br>
+     * Spazzola la enumeration AEProgetto <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void creaSelezioneLayout() {
+        if (!AEFlag.isBaseFlow.is()) {
+            return;
+        }
+
+        selezioneLayout = fixSezione("Selezione...");
+        this.add(selezioneLayout);
+
+        List<AEProgetto> progetti = AEProgetto.get();
+        String label = "Progetti esistenti (nella directory ../operativi)";
+
+        fieldComboProgetti = new ComboBox<>();
+        // Choose which property from Department is the presentation value
+        //        fieldComboProgetti.setItemLabelGenerator(AEProgetto::nameProject);
+        fieldComboProgetti.setWidth("22em");
+        fieldComboProgetti.setAllowCustomValue(false);
+        fieldComboProgetti.setLabel(label);
+
+        fieldComboProgetti.setItems(progetti);
+        confirmButton.setEnabled(false);
+        if (progetti.size() == 1) {
+            fieldComboProgetti.setValue(progetti.get(0));
+            confirmButton.setEnabled(true);
+        }
+
+        addListener();
+        selezioneLayout.add(fieldComboProgetti);
     }
 
 
@@ -87,6 +140,38 @@ public class WizDialogUpdateProject extends WizDialog {
 
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
+    }
+
+
+    private void addListener() {
+        fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));
+    }
+
+
+    private void sincroProject(AEProgetto valueFromProject) {
+        confirmButton.setEnabled(valueFromProject != null);
+    }
+
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Resetta i valori regolabili della Enumeration AEDir <br>
+     * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
+     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void regolaAEDir() {
+        String nameTargetProject;
+        String pathTargetProject;
+        super.regolaAEDir();
+
+        if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
+            nameTargetProject = fieldComboProgetti.getValue().getNameProject();
+            AEDir.nameTargetProject.setValue(nameTargetProject);
+
+            pathTargetProject = AEDir.pathRoot.get() + "IdeaProjects/operativi/" + nameTargetProject + SLASH;
+            AEDir.pathTargetRoot.setValue(pathTargetProject);
+        }
     }
 
 }

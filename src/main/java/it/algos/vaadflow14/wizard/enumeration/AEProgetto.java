@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
+import it.algos.vaadflow14.backend.enumeration.AEColor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public enum AEProgetto {
     bio("vaadwiki", "Wiki",VUOTA),
 
     wam("vaadwam", "Wam",VUOTA),
+
+    untitled1("untitled1", "untitled1",VUOTA),
+
     ;
 
     private String nameProject;
@@ -34,6 +39,15 @@ public enum AEProgetto {
         this.setPathCompleto(pathCompleto);
     }
 
+    public static List<AEProgetto> get() {
+        List<AEProgetto> lista = new ArrayList<>();
+
+        for (AEProgetto project : AEProgetto.values()) {
+            lista.add(project);
+        }
+
+        return lista;
+    }
 
     public static List<String> getNames() {
         List<String> nomi = new ArrayList<>();

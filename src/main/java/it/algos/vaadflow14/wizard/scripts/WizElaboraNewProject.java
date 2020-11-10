@@ -24,24 +24,22 @@ public class WizElaboraNewProject extends WizElabora {
 
     @Override
     public void esegue() {
-//        super.esegue();//@todo Controllare, non sembra necessario
-
 //        super.copiaDirectoryConfig();
 //        super.copiaDirectoryDoc();
 //        super.copiaDirectoryFrontend();
 //        super.copiaDirectoryLinks();
 //        super.copiaDirectorySnippets();
 
-//        this.copiaCartellaVaadFlow();
+        this.copiaDirectoryVaadFlow();
 //        this.creaModuloNuovoProgetto();
-
+//
 //        super.copiaDirectoryMetaInf();
-        super.creaFileProperties();
+//        super.creaFileProperties();
 //        super.creaFileBanner();
 
-//        super.sovraScriveFileGit();
-//        super.sovraScriveFilePom();
-//        super.sovraScriveFileRead();
+//        super.creaFileGit();
+//        super.creaFilePom();
+//        super.creaFileRead();
     }// end of method
 
 
