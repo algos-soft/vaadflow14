@@ -18,6 +18,7 @@ import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContextListener;
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ public abstract class FlowBoot implements ServletContextListener {
     @Autowired
     public ALogService logService;
 
+
+    @Autowired
+    protected Environment env;
 
     //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
     protected AData aData;

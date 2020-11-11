@@ -10,17 +10,16 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import it.algos.vaadflow14.backend.service.AArrayService;
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.AEProgetto;
+import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.util.LinkedHashMap;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_WIDTH;
 
@@ -51,6 +50,15 @@ public abstract class WizDialog extends Dialog {
      */
     @Autowired
     public ALogService logger;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+
+    public ADateService date;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -264,8 +272,8 @@ public abstract class WizDialog extends Dialog {
      */
     protected void regolazioniFinali() {
         this.regolaAEDir();
-        this.regolaAEToken();
         this.regolaAECheck();
+        this.regolaAEToken();
 
         wizService.printInfo("Uscita del dialogo");
     }
@@ -309,17 +317,17 @@ public abstract class WizDialog extends Dialog {
         //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProject));
         //        AEToken.first.setValue(text.isValid(nameTargetProject) ? nameTargetProject.substring(0, 1).toUpperCase() : VUOTA);
 
-//        String project = VUOTA;
-//        project = AEDir.nameTargetProject.get();
-//        AEToken.moduleNameMinuscolo.setValue(project);
-//        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
+        //        String project = VUOTA;
+        //        project = AEDir.nameTargetProject.get();
+        //        AEToken.moduleNameMinuscolo.setValue(project);
+        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
 
 
-        Object a = isNuovoPackage;
-        Object b = fieldPackageName;
-        if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            //            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
-        }
+        //        Object a = isNuovoPackage;
+        //        Object b = fieldPackageName;
+        //        if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+        //            //            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
+        //        }
     }
 
 

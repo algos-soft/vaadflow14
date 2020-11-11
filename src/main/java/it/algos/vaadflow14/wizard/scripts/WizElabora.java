@@ -450,15 +450,15 @@ public abstract class WizElabora implements WizRecipient {
     }
 
 
-    protected String leggeFile(String nomeFileTextSorgente) {
-        String nomeFileTxt = nomeFileTextSorgente;
-
-        if (!nomeFileTxt.endsWith(TXT_SUFFIX)) {
-            nomeFileTxt += TXT_SUFFIX;
-        }// end of if cycle
-
-        return file.leggeFile(pathVaadFlowWizTxtSources + nomeFileTxt);
-    }// end of method
+//    protected String leggeFile(String nomeFileTextSorgente) {
+//        String nomeFileTxt = nomeFileTextSorgente;
+//
+//        if (!nomeFileTxt.endsWith(TXT_SUFFIX)) {
+//            nomeFileTxt += TXT_SUFFIX;
+//        }// end of if cycle
+//
+//        return file.leggeFile(pathVaadFlowWizTxtSources + nomeFileTxt);
+//    }// end of method
 
 
 }

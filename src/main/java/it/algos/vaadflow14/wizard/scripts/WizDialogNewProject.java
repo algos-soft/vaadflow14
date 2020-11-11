@@ -207,9 +207,6 @@ public class WizDialogNewProject extends WizDialog {
         if (fieldComboProgettiNuovi != null && fieldComboProgettiNuovi.getValue() != null) {
             projectName = fieldComboProgettiNuovi.getValue().getName();
             AEDir.modificaAll(projectName);
-
-//            AEDir.nameTargetProject.setValue(projectName);
-//            AEDir.pathTargetProject.setValue(AEDir.pathIdeaProjects.get() + projectName + FlowCost.SLASH);
         }
     }
 
@@ -220,14 +217,22 @@ public class WizDialogNewProject extends WizDialog {
      */
     @Override
     protected void regolaAEToken() {
-        String project = VUOTA;
+        String project;
         super.regolaAEToken();
 
         project = AEDir.nameTargetProject.get();
+
         AEToken.nameTargetProject.setValue(project);
-        //        AEToken.moduleNameMinuscolo.setValue(AEToken.nameTargetProject.getValue());
-        //        AEToken.moduleNameMaiuscolo.setValue(AEToken.projectNameUpper.getValue());
-        //        AEToken.entity.setValue(text.primaMaiuscola(AEToken.packageName.getValue()));
+        AEToken.projectNameUpper.setValue(project.toUpperCase());
+        AEToken.moduleNameMinuscolo.setValue(project.toLowerCase());
+        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
+        AEToken.first.setValue(project.substring(0,1).toUpperCase());
+        AEToken.packageName.setValue(project.toLowerCase());
+        AEToken.user.setValue(AEDir.nameUser.get());
+        AEToken.today.setValue(date.get());
+        AEToken.entity.setValue(text.primaMaiuscola(project));
+        AEToken.usaSecurity.setValue(AECheck.security.isAbilitato()?")":", exclude = {SecurityAutoConfiguration.class}");
+
     }
 
 }

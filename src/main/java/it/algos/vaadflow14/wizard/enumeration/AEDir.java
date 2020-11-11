@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
 import it.algos.vaadflow14.backend.service.AFileService;
+import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,19 @@ public enum AEDir {
         @Override
         public void elabora(String pathCurrent) {
             this.setValue(pathCurrent);
+        }
+    },// end of single enumeration
+
+    //--regolata inizialmente dal system, indipendentemente dall' apertura dei dialoghi
+    //--tutte le property il cui nome NON inizia con 'path' sono nomi
+    nameUser(true, false, "Programmatore. Ricavato dal path della cartella corrente.") {
+        @Override
+        public void elabora(String pathCurrent) {
+            String user = pathCurrent;
+            user = user.substring(1);
+            user = text.levaTestoPrimaDi(user, SLASH);
+            user = user.substring(0, user.indexOf(SLASH));
+            this.setValue(user);
         }
     },// end of single enumeration
 
@@ -114,9 +128,9 @@ public enum AEDir {
 
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
-    //--tutte le property il cui nome NON inizia con 'path' sono nomi parziali di files/directories
     //--può essere un new project oppure un update di un progetto esistente
     //--se siamo in un altro progetto, il nome del progetto stesso
+    //--tutte le property il cui nome NON inizia con 'path' sono nomi parziali di files/directories
     nameTargetProject(false, true, "Nome breve new/update project") {
         @Override
         public void modifica(String projectName) {
@@ -125,9 +139,20 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
-    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    //--può essere un new project oppure un update di un progetto esistente
+    //--se siamo in un altro progetto, il nome del progetto stesso
+    //--tutte le property il cui nome NON inizia con 'path' sono nomi parziali di files/directories
+    nameTargetProjectUpper(false, true, "Nome breve new/update project") {
+        @Override
+        public void modifica(String projectName) {
+            this.setValue(text.primaMaiuscola(projectName));
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--può essere un new project oppure un update di un progetto esistente
     //--se siamo in un altro progetto, il path del progetto stesso
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     pathTargetRoot(false, true, "Path completo new/update project") {
         @Override
         public void modifica(String projectName) {
@@ -137,7 +162,7 @@ public enum AEDir {
     },// end of single enumeration
 
 
-    //--elaborata inizialmente partendo dal pathTargetRoot
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     pathTargetResources(false, true, "Directory delle risorse del progetto target") {
         @Override
@@ -148,7 +173,7 @@ public enum AEDir {
         }
     },// end of single enumeration
 
-    //--elaborata inizialmente partendo dal pathTargetResources
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     pathTargetMetaInf(false, true, "Directory della cartella META-INF del progetto target") {
         @Override
@@ -160,9 +185,9 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
-    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     ////parte dal livello di root del progetto
     //--contiene i moduli, di solito due (vaadFlow14 e xxx)
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     pathTargetAlgos(false, true, "Directory che contiene sia il modulo vaadFlow14 sia modulo progetto target") {
         @Override
         public void modifica(String projectName) {
@@ -172,7 +197,7 @@ public enum AEDir {
         }
     },// end of single enumeration
 
-    //--elaborata inizialmente partendo dal pathTargetAlgos
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
     pathTargetSources(false, true, "Directory che contiene i sorgenti wizard di vaadFlow14 da cancellare nel progetto target") {
         @Override
@@ -183,13 +208,29 @@ public enum AEDir {
         }
     },// end of single enumeration
 
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //parte dal livello di root del progetto
+    //--contiene i moduli, di solito due (vaadFlow14 e xxx)
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    pathTargetModulo(false, true, "Directory che il modulo del progetto target") {
+        @Override
+        public void modifica(String projectName) {
+            String path = pathTargetRoot.get();
+            path += ROOT_DIR_ALGOS + nameTargetProject.get() + SLASH;
+            this.setValue(path);
+        }
+    },// end of single enumeration
+
     //    String destPath = AEDir.pathTargetProject.get() + ROOT_DIR_ALGOS + DIR_VAADFLOW;
     //    String sourcesPath = AEDir.pathTargetProject.get() + ROOT_DIR_ALGOS + DIR_VAADFLOW + DIR_SOURCES;
 
     ;
 
-    //--riferimento iniettato nella classe statico FileServiceServiceInjector
+    //--riferimento iniettato nella classe statico ServiceInjector
     protected AFileService file;
+
+    //--riferimento iniettato nella classe statico ServiceInjector
+    protected ATextService text;
 
     //--elaborazione SOLO all'apertura della view Wizard. Poi i valori restano statici (non modificabili)
     private boolean elaborabile;
@@ -339,6 +380,11 @@ public enum AEDir {
     }
 
 
+    public void setText(ATextService text) {
+        this.text = text;
+    }
+
+
     public boolean isElaborabile() {
         return elaborabile;
     }
@@ -380,16 +426,20 @@ public enum AEDir {
 
 
     @Component
-    public static class FileServiceServiceInjector {
+    public static class ServiceInjector {
 
         @Autowired
         private AFileService file;
+
+        @Autowired
+        private ATextService text;
 
 
         @PostConstruct
         public void postConstruct() {
             for (AEDir aeDir : AEDir.values()) {
                 aeDir.setFile(file);
+                aeDir.setText(text);
             }
         }
 

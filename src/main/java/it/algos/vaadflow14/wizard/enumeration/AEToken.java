@@ -149,7 +149,7 @@ public enum AEToken {
 
 
     public static String replace(AEToken EAToken, String textReplacing, String value) {
-        if (value != null && value.length() > 0) {
+        if (value != null ) {
             return textReplacing.replaceAll(DELIMITER + EAToken.tokenTag + DELIMITER, value);
         } else {
             return textReplacing;

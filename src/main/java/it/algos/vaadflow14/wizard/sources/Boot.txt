@@ -1,6 +1,5 @@
-package it.algos.@MODULELOWER@.application;
+package it.algos.@MODULELOWER@.backend.boot;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
@@ -10,21 +9,15 @@ import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import javax.servlet.ServletContextEvent;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
-import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Project @MODULELOWER@
- * Created by Algos flowbase
- * User: gac
- * Date: ven, 8-mag-2018
+ * Created by Algos
+ * User: @USER@
+ * Date: @TODAY@
  * <p>
  * Estende la classe ABoot per le regolazioni iniziali di questa applicazione <br>
  * Running logic after the Spring context has been initialized
@@ -37,7 +30,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Slf4j
 @AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Boot extends FlowBoot {
 
@@ -49,8 +41,6 @@ public class @MODULEUPPER@Boot extends FlowBoot {
 //    @Autowired
 //    public SimpleData testData;
 
-    @Autowired
-    private Environment env;
 
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>

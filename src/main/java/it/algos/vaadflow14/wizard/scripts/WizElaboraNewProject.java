@@ -1,12 +1,12 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AECopyFile;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 
@@ -24,95 +24,104 @@ public class WizElaboraNewProject extends WizElabora {
 
     @Override
     public void esegue() {
-//        super.copiaDirectoryConfig();
-//        super.copiaDirectoryDoc();
-//        super.copiaDirectoryFrontend();
-//        super.copiaDirectoryLinks();
-//        super.copiaDirectorySnippets();
+        super.copiaDirectoryConfig();
+        super.copiaDirectoryDoc();
+        super.copiaDirectoryFrontend();
+        super.copiaDirectoryLinks();
+        super.copiaDirectorySnippets();
 
         this.copiaDirectoryVaadFlow();
-//        this.creaModuloNuovoProgetto();
-//
-//        super.copiaDirectoryMetaInf();
-//        super.creaFileProperties();
-//        super.creaFileBanner();
+        this.creaModuloNuovoProgetto();
 
-//        super.creaFileGit();
-//        super.creaFilePom();
-//        super.creaFileRead();
-    }// end of method
+        super.copiaDirectoryMetaInf();
+        super.creaFileProperties();
+        super.creaFileBanner();
+
+        super.creaFileGit();
+        super.creaFilePom();
+        super.creaFileRead();
+    }
 
 
     public void creaModuloNuovoProgetto() {
         if (AECheck.project.isAbilitato()) {
 
-            //--creaDirectoryProjectModulo
-            file.creaDirectory(pathProjectModulo);
+            //--crea directory principale del modulo target (empty)
+            file.creaDirectory(AEDir.pathTargetModulo.get());
 
             //--classe principale dell'applicazione col metodo 'main'
             creaFileApplicationMainClass();
 
-            //--creaDirectoryBackend
-            file.creaDirectory(pathProjectDirApplication);
+            //--crea subDirectory backend (empty)
+            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND);
 
-            //--creaDirectoryApplication all'interno di backend
-            file.creaDirectory(pathProjectDirApplication);
+            //--crea subDirectory application (empty) in backend
+            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_APPLICATION);
 
-            //--creaDirectoryPackages (empty) all'interno di backend
-            file.creaDirectory(pathProjectDirApplication);
+            //--crea subDirectory boot (empty) in backend
+            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_BOOT);
 
-            //--creaDirectoryUi (empty)
-            file.creaDirectory(pathProjectDirPackages);
+            //--crea subDirectory packages (empty) in backend
+            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_PACKAGES);
+
+            //--crea subDirectory ui (empty)
+            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_UI);
 
             //--crea contenuto della directory Application
             scriveFileCost();
+
+            //--crea contenuto della directory boot
             scriveFileBoot();
 
-            creaDirectorySecurity();
+            //            creaDirectorySecurity();
         }
     }
 
 
+    /**
+     * Crea il file principale con la MainClass <br>
+     */
     public void creaFileApplicationMainClass() {
-        String mainApp = newProjectName + text.primaMaiuscola(APP_NAME);
-        mainApp = text.primaMaiuscola(mainApp);
-        String destPath = pathProjectModulo + mainApp + JAVA_SUFFIX;
-        String testoApp = leggeFile(APP_NAME + TXT_SUFFIX);
+        String nameSourceText = APP_NAME;
+        String destPathSuffix = AEDir.pathTargetModulo.get();
+        destPathSuffix += AEDir.nameTargetProjectUpper.get();
+        destPathSuffix += "Application";
+        destPathSuffix += JAVA_SUFFIX;
 
-        testoApp = AEToken.replace(AEToken.moduleNameMinuscolo, testoApp, newProjectName);
-        testoApp = AEToken.replace(AEToken.moduleNameMaiuscolo, testoApp, text.primaMaiuscola(newProjectName));
-
-        if (AECheck.security.isAbilitato()) {
-            testoApp = AEToken.replace(AEToken.usaSecurity, testoApp, VUOTA);
-        } else {
-            testoApp = AEToken.replace(AEToken.usaSecurity, testoApp, ", exclude = {SecurityAutoConfiguration.class}");
-        }// end of if/else cycle
-
-        file.scriveFile(destPath, testoApp, true);
-    }// end of method
+        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    }
 
 
     protected void scriveFileCost() {
-//        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
-    }// end of method
+        //        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
+    }
 
 
     public void scriveFileBoot() {
-//        wizService.scriveNewFileCreatoDaSource(FILE_BOOT, pathProjectDirApplication);
-    }// end of method
+        String nameSourceText = FILE_BOOT;
+
+        String destPathSuffix = AEDir.pathTargetModulo.get();
+        destPathSuffix += DIR_BACKEND;
+        destPathSuffix += DIR_BOOT;
+        destPathSuffix += AEDir.nameTargetProjectUpper.get();
+        destPathSuffix += "Boot";
+        destPathSuffix += JAVA_SUFFIX;
+
+        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    }
 
 
     public void scriveFileVers() {
-//        wizService.scriveNewFileCreatoDaSource(FILE_VERS, pathProjectDirApplication);
-    }// end of method
+        //        wizService.scriveNewFileCreatoDaSource(FILE_VERS, pathProjectDirApplication);
+    }
 
 
     public void scriveFileHome() {
-//        wizService.scriveNewFileCreatoDaWizSource(FILE_HOME, pathProjectDirApplication);
-    }// end of method
+        //        wizService.scriveNewFileCreatoDaWizSource(FILE_HOME, pathProjectDirApplication);
+    }
 
 
     public void creaDirectorySecurity() {
-    }// end of method
+    }
 
-}// end of class
+}

@@ -36,8 +36,6 @@ public class SimpleBoot extends FlowBoot {
     @Autowired
     public SimpleData testData;
 
-    @Autowired
-    private Environment env;
 
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>

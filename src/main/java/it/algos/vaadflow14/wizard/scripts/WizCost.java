@@ -40,6 +40,9 @@ public class WizCost {
 
     public static final String DIR_SOURCES = "sources/";
 
+    public static final String DIR_BACKEND = "backend/";
+
+    public static final String DIR_UI = "ui/";
 
     //--parte dal livello di root del progetto
     public static final String ROOT_DIR_CONFIG = "config/";
@@ -119,6 +122,8 @@ public class WizCost {
     public static final String DIR_APPLICATION = "application/";
 
     public static final String DIR_PACKAGES = "packages/";
+
+    public static final String DIR_BOOT = "boot/";
 
     public static final String APP_NAME = "application";
 
