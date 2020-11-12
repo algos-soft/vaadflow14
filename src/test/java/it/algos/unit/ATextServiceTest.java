@@ -821,42 +821,6 @@ class ATextServiceTest extends ATest {
     }
 
 
-    @Test
-    @Order(23)
-    @DisplayName("23 - pathBreve")
-    public void pathBreve() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
-
-        ottenuto = text.pathBreve(VUOTA, 0);
-        assertNotNull(ottenuto);
-        assertEquals(VUOTA, ottenuto);
-
-        ottenuto = text.pathBreve(VUOTA, 1);
-        assertNotNull(ottenuto);
-        assertEquals(VUOTA, ottenuto);
-
-        ottenuto = text.pathBreve(sorgente, 0);
-        assertNotNull(ottenuto);
-        assertEquals(sorgente, ottenuto);
-
-        sorgenteIntero = 1;
-        previsto = "../gac/Documents/IdeaProjects/operativi/vaadflow14";
-        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-
-        sorgenteIntero = 2;
-        previsto = "../Documents/IdeaProjects/operativi/vaadflow14";
-        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-
-        sorgenteIntero = 3;
-        previsto = "../IdeaProjects/operativi/vaadflow14";
-        ottenuto = text.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-    }
 
 
     private void print(String sorgente, String ottenuto) {

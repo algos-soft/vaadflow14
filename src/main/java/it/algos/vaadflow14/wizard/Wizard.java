@@ -79,7 +79,7 @@ public class Wizard extends VerticalLayout {
     private WizDialogNewPackage dialogNewPackage;
 
     /**
-     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages esistenti <br>
      */
     @Autowired
     private WizDialogUpdatePackage dialogUpdatePackage;
@@ -110,7 +110,7 @@ public class Wizard extends VerticalLayout {
     private WizElaboraNewPackage elaboraNewPackage;
 
     /**
-     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare i packages esistenti <br>
      */
     @Autowired
     private WizElaboraUpdatePackage elaboraUpdatePackage;
@@ -161,13 +161,14 @@ public class Wizard extends VerticalLayout {
         this.titolo();
 
         wizService.printStart();
-        wizService.regolaVariabiliIniziali(true);
+        wizService.fixVariabiliIniziali();
         wizService.printInfo("Apertura iniziale della view Wizard");
 
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
             paragrafoUpdateProject();
         } else {
+            paragrafoUpdateProject();
             paragrafoNewPackage();
             paragrafoUpdatePackage();
             paragrafoFeedBackWizard();
@@ -219,11 +220,16 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(TITOLO_MODIFICA_PROGETTO);
+        H3 paragrafo = new H3();
+        paragrafo.setText(AEFlag.isBaseFlow.is() ? TITOLO_MODIFICA_PROGETTO : TITOLO_MODIFICA_QUESTO_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
-        layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
+        if (AEFlag.isBaseFlow.is()) {
+            layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
+        } else {
+            layout.add(new Label("Update di questo progetto"));
+        }
         layout.add(new Label("Regola alcuni flags per le modifiche"));
 
         Button bottone = new Button("Update project");
@@ -250,6 +256,7 @@ public class Wizard extends VerticalLayout {
         Button bottone = new Button("New package");
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
+
         this.add(bottone);
         this.add(new H1());
     }
@@ -270,16 +277,23 @@ public class Wizard extends VerticalLayout {
         dialogUpdatePackage.close();
     }
 
+
     public void paragrafoFeedBackWizard() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
         H3 paragrafo = new H3(TITOLO_FEEDBACK_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
+        layout.add(new Label("Ricopia su vaadflow14 la directory wizard di questo progetto"));
 
         Button bottone = new Button("Send back");
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogFeedbackWizard.open(this::elaboraFeedbackWizard));
 
+        this.add(layout);
         this.add(bottone);
         this.add(new H1());
     }

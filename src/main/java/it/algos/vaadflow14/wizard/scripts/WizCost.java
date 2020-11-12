@@ -114,6 +114,8 @@ public class WizCost {
 
     public static final String TITOLO_MODIFICA_PROGETTO = "Modifica di un progetto esistente";
 
+    public static final String TITOLO_MODIFICA_QUESTO_PROGETTO = "Modifica di questo progetto";
+
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";

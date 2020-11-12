@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,19 +37,19 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaFileWizard() {
-        String dirWizard = ROOT_DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + FILE_WIZARD + JAVA_SUFFIX;
+        String  dirWizard =  DIR_VAADFLOW + DIR_WIZARD + FILE_WIZARD + JAVA_SUFFIX;
 
-        String srcPath = AEDir.pathCurrent.get() + dirWizard;
+        String srcPath = AEDir.pathTargetAlgos.get() + dirWizard;
         if (!file.isEsisteFile(srcPath)) {
             logger.warn("Errato il path per il file Wizard locale da ricopiare", this.getClass(), "copiaFileWizard");
         }
 
-//        String destPath = AEDir.pathVaadFlow.get() + dirWizard;
-//        if (!file.isEsisteFile(destPath)) {
-//            logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
-//        }
-//
-//        file.copyFileDeletingAll(srcPath, destPath);
+        String destPath = AEDir.pathVaadFlowAlgos.get() + dirWizard;
+        if (!file.isEsisteFile(destPath)) {
+            logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
+        }
+
+        file.copyFileDeletingAll(srcPath, destPath);
     }
 
 
@@ -59,19 +60,19 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaDirectoryEnumeration() {
-        String dirEnum = ROOT_DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + "enumeration/";
+        String dirEnum =   DIR_VAADFLOW + DIR_WIZARD + "enumeration/";
 
-        String srcPath = AEDir.pathCurrent.get() + dirEnum;
+        String srcPath = AEDir.pathTargetAlgos.get() + dirEnum;
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory enum locale da ricopiare", this.getClass(), "copiaDirectoryEnumeration");
         }
 
-//        String destPath = AEDir.pathVaadFlow.get() + dirEnum;
-//        if (!file.isEsisteDirectory(destPath)) {
-//            logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
-//        }
-//
-//        file.copyDirectoryDeletingAll(srcPath, destPath);
+        String destPath = AEDir.pathVaadFlowAlgos.get() + dirEnum;
+        if (!file.isEsisteDirectory(destPath)) {
+            logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
+        }
+
+        file.copyDirectory(AECopyDir.deletingAll,srcPath, destPath);
     }
 
 
@@ -82,19 +83,19 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaDirectoryScripts() {
-        String dirScripts = ROOT_DIR_ALGOS + DIR_VAADFLOW + DIR_WIZARD + "scripts/";
+        String dirScripts =  DIR_VAADFLOW + DIR_WIZARD + "scripts/";
 
-        String srcPath = AEDir.pathCurrent.get() + dirScripts;
+        String srcPath = AEDir.pathTargetAlgos.get() + dirScripts;
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory scripts locale da ricopiare", this.getClass(), "copiaDirectoryScripts");
         }
 
-//        String destPath = AEDir.pathVaadFlow.get() + dirScripts;
-//        if (!file.isEsisteDirectory(destPath)) {
-//            logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
-//        }
-//
-//        file.copyDirectoryDeletingAll(srcPath, destPath);
+        String destPath = AEDir.pathVaadFlowAlgos.get() + dirScripts;
+        if (!file.isEsisteDirectory(destPath)) {
+            logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
+        }
+
+        file.copyDirectory(AECopyDir.deletingAll,srcPath, destPath);
     }
 
 }

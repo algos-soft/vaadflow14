@@ -7,6 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -267,15 +268,17 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration AEDir che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
-     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Regola tutti i valori delle enumeration AEDir, AECheck e EAToken che saranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      */
-    protected void regolazioniFinali() {
-        this.regolaAEDir();
-        this.regolaAECheck();
-        this.regolaAEToken();
+    protected boolean regolazioniFinali() {
+        boolean status = true;
 
-        wizService.printInfo("Uscita del dialogo");
+        status = status && this.regolaAEDir();
+        status = status && this.regolaAECheck();
+        status = status && this.regolaAEToken();
+
+        return status;
     }
 
 
@@ -283,31 +286,39 @@ public abstract class WizDialog extends Dialog {
      * Chiamato alla dismissione del dialogo <br>
      * Resetta i valori regolabili della Enumeration AEDir <br>
      * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
-     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void regolaAEDir() {
+    protected boolean regolaAEDir() {
+        return true;
     }
 
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola tutti i valori della Enumeration AECheck che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Elabora tutti i valori della Enumeration AECheck dipendenti dal nome del progetto <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      */
-    protected void regolaAECheck() {
+    protected boolean regolaAECheck() {
         for (AECheck check : AECheck.values()) {
             if (mappaCheckbox != null && mappaCheckbox.get(check.name()) != null) {
                 check.setAcceso(mappaCheckbox.get(check.name()).getValue());
             }
         }
+
+        return true;
     }
 
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Elabora tutti i valori della Enumeration AEToken dipendenti dal nome del progetto <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      */
-    protected void regolaAEToken() {
+    protected boolean regolaAEToken() {
         AEToken.reset();
         //        AEToken.nameTargetProject.setValue(nameTargetProject);
         //        AEToken.pathTargetProject.setValue(pathTargetProject);
@@ -328,6 +339,8 @@ public abstract class WizDialog extends Dialog {
         //        if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
         //            //            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
         //        }
+
+        return true;
     }
 
 
@@ -351,15 +364,23 @@ public abstract class WizDialog extends Dialog {
 
 
     /**
-     * Esce dal dialogo con due possibilità (a seconda del flag)
-     * 1) annulla
-     * 2) esegue
+     * Esce dal dialogo con due possibilità (a seconda del flag) <br>
+     * 1) annulla <br>
+     * 2) esegue <br>
      */
     protected void esceDalDialogo(boolean esegue) {
-        regolazioniFinali();
-        this.close();
         if (esegue) {
+            if (!regolazioniFinali()) {
+                logger.error("Mancano alcuni dati essenziali per l'elaborazione richiesta", this.getClass(), "esceDalDialogo");
+                this.close();
+                return;
+            }
+            wizService.printInfo("Uscita del dialogo");
+            this.close();
             wizRecipient.esegue();
+        } else {
+            this.close();
+            Notification.show("Dialogo annullato", 2000, Notification.Position.MIDDLE);
         }
     }
 

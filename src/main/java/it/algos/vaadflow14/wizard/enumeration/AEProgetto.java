@@ -21,7 +21,9 @@ public enum AEProgetto {
 
     wam("vaadwam", "Wam",VUOTA),
 
-    untitled1("untitled1", "untitled1",VUOTA),
+    beta("beta", "beta","/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
+
+    alfa("alfa", "Alfa",VUOTA),
 
     ;
 

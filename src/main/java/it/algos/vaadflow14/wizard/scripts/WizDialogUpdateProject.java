@@ -34,6 +34,8 @@ public class WizDialogUpdateProject extends WizDialog {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
         super.titoloCorrente = new H3();
+        AEFlag.isProject.set(true);
+        AEFlag.isUpdateProject.set(true);
 
         super.inizia();
     }
@@ -160,18 +162,18 @@ public class WizDialogUpdateProject extends WizDialog {
      * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void regolaAEDir() {
-        String nameTargetProject;
-        String pathTargetProject;
+    protected boolean regolaAEDir() {
+        boolean status = true;
+        String projectName;
         super.regolaAEDir();
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-            nameTargetProject = fieldComboProgetti.getValue().getNameProject();
-            AEDir.nameTargetProject.setValue(nameTargetProject);
-
-            pathTargetProject = AEDir.pathRoot.get() + "IdeaProjects/operativi/" + nameTargetProject + SLASH;
-            AEDir.pathTargetRoot.setValue(pathTargetProject);
+            projectName = fieldComboProgetti.getValue().getNameProject();
+            status = status && AEDir.modificaAll(projectName);
         }
+
+        return status;
     }
+
 
 }

@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.PROJECT_VAADFLOW;
 
 
 /**
@@ -60,104 +60,55 @@ public class WizService {
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
      * Chiamato da Wizard.initView() <br>
+     * Esegue un reset di ogni enumeration <br>
+     * Elabora le varie enumeration nell'ordine (obbligatorio) <br>
      */
-    public void regolaVariabiliIniziali(boolean isNuovoProgetto) {
-        String sepA = SEP;
-        String sepB = UGUALE;
-        String pathRoot;
-        String pathCurrent;
-        String pathFlow;
-        String path;
-        boolean status;
-
+    public void fixVariabiliIniziali() {
         //--reset di tutte le enumeration
         reset();
 
+        fixAEFlag();
+        fixAEDir();
+    }
+
+
+    /**
+     * Regolazioni iniziali indipendenti dal dialogo di input <br>
+     * Chiamato da Wizard.initView() <br>
+     */
+    public void fixAEFlag() {
+        String pathCurrent;
+        String path;
+
+        //--isBaseFlow
+        pathCurrent = System.getProperty("user.dir") + SLASH;
+        path = file.estraeDirectoryFinale(pathCurrent);
+        AEFlag.isBaseFlow.set(path.equals(PROJECT_VAADFLOW));
+    }
+
+
+    /**
+     * Regolazioni iniziali indipendenti dal dialogo di input <br>
+     * Chiamato da Wizard.initView() <br>
+     */
+    public void fixAEDir() {
+        String pathCurrent;
+        String projectName;
 
         //--regola i valori elaborabili di AEDir
         pathCurrent = System.getProperty("user.dir") + SLASH;
         AEDir.elaboraAll(pathCurrent);
 
-        //--pathCurrent
-        //        AEDir.pathCurrent.setValue(System.getProperty("user.dir") + SLASH);
+        //--se è un progetto specifico, ne conosco il nome e lo inserisco nelle enumeration AEDir modificabili
+        if (!AEFlag.isBaseFlow.is()) {
+            projectName = file.estraeDirectoryFinale(pathCurrent);
+            if (projectName.endsWith(SLASH)) {
+                projectName = text.levaCoda(projectName, SLASH);
+            }
 
-        //--pathRoot
-        pathRoot = AEDir.pathCurrent.get();
-        pathRoot = file.levaDirectoryFinale(pathRoot);
-        pathRoot = file.levaDirectoryFinale(pathRoot);
-        pathRoot = file.levaDirectoryFinale(pathRoot);
-        //        AEDir.pathRoot.setValue(pathRoot);
+            AEDir.modificaAll(projectName);
+        }
 
-        //--pathVaadFlow
-        pathFlow = AEDir.pathRoot.get();
-        pathFlow += VAADFLOW_DIR_STANDARD;
-        //        AEDir.pathVaadFlow.setValue(pathFlow);
-
-        //--pathIdeaProjects
-        path = PATH_VAADFLOW_DIR_STANDARD;
-        path = file.levaDirectoryFinale(path);
-        path = file.levaDirectoryFinale(path);
-        //        AEDir.pathIdeaProjects.setValue(path);
-
-        //--pathVaadFlowSources
-        //        path = AEDir.pathVaadFlow.get();
-        path += DIR_VAADFLOW_SOURCES;
-        //        AEDir.pathVaadFlowSources.setValue(path);
-
-        //--modifica di un path standard
-        //        if (AEDir.pathVaadFlow.isNotStandard()) {
-        logger.warn("Modificato il path di VaadFlow14");
-
-        //--modifica di un path standard
-        //        if (AEDir.pathIdeaProjects.isNotStandard()) {
-        //            logger.warn("Modificato il path dei nuovi programmi");
-        //        }
-
-        //--isBaseFlow
-        status = AEDir.pathCurrent.get().equals(pathFlow);
-        AEFlag.isBaseFlow.set(status);
-//        if (isNuovoProgetto && !pathVaadFlow.equals(pathUserDir)) {
-//            logger.error("Attenzione. La directory di VaadFlow è cambiata", WizDialog.class, "regolaVariabili");
-//        }// end of if/else cycle
-
-        //valido SOLO per new project
-        //        if (isNuovoProgetto) {
-        //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathVaadFlow.getValue()));
-        //            AEWiz.pathIdeaProjects.setValue(file.levaDirectoryFinale(AEWiz.pathIdeaProjects.getValue()));
-        //            if (!AEWiz.pathIdeaProjects.getValue().equals(PATH_PROJECTS_DIR_STANDARD)) {
-        //                //                logger.error("Attenzione. La directory dei Projects è cambiata", WizDialog.class, "regolaVariabili");
-        //            }
-        //        } else {
-        //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
-        //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
-        //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
-        //        }
-
-        //        if (false) {
-        //            //            File unaDirectory = new File(AEWiz.pathCurrent.getValue());
-        //            //            AEWiz.nameTargetProject.setValue(unaDirectory.getName());
-        //            //            AEWiz.pathTargetProject.setValue(AEWiz.pathCurrent.getValue());
-        //        }
-
-        //        if (FLAG_DEBUG_WIZ) {
-        //            System.out.println("********************");
-        //            System.out.println("Creazione della view");
-        //            System.out.println("********************");
-        //
-        //            System.out.println("AEWiz");
-        //            System.out.println("********************");
-        //            for (AEDir aeDir : AEDir.values()) {
-        //                System.out.println(aeDir.name() + sepA + aeDir.getDescrizione() + sepB + aeDir.getValue());
-        //            }
-        //
-        //            System.out.println(VUOTA);
-        //            System.out.println("AEFlag");
-        //            System.out.println("********************");
-        //            for (AEFlag flag : AEFlag.values()) {
-        //                System.out.println(flag.name() + sepB + flag.is());
-        //            }
-        //        }
-        //    }
     }
 
 
@@ -185,8 +136,8 @@ public class WizService {
      */
     public void printInfo(String message) {
         AEDir.printInfo(message);
-        AEToken.printInfo(message);
         AEFlag.printInfo(message);
+        //        AEToken.printInfo(message);
         AECheck.printInfo(message);
     }
 
@@ -213,7 +164,7 @@ public class WizService {
         boolean esisteFileDest = false;
         String message = VUOTA;
         String sourceText = leggeFile(nameSourceText);
-        String path = text.pathBreve(pathFileToBeWritten, 4);
+        String path = file.pathBreve(pathFileToBeWritten, 4);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
@@ -433,7 +384,7 @@ public class WizService {
      * @return true se la directory  è stata copiata
      */
     public boolean copyDirectoryProjectRoot(AECopyDir typeCopy, String dirName) {
-        String srcPath = AEDir.pathVaadFlowRoot.get()+dirName;
+        String srcPath = AEDir.pathVaadFlowRoot.get() + dirName;
         String destPath = AEDir.pathTargetRoot.get() + dirName;
 
         return copyDirectoryProject(typeCopy, srcPath, destPath);
@@ -457,13 +408,13 @@ public class WizService {
 
         switch (typeCopy) {//@todo Funzionalità ancora da implementare
             case soloSeNonEsiste:
-                copiata = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPath, destPath, numLivelli);
+                copiata = copyDirectory(AECopyDir.soloSeNonEsiste, srcPath, destPath);
                 break;
             case deletingAll:
-                copiata = file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
+                copiata = copyDirectory(AECopyDir.deletingAll, srcPath, destPath);
                 break;
             case addingOnly:
-                copiata = file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath, numLivelli);
+                copiata = copyDirectory(AECopyDir.addingOnly, srcPath, destPath);
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "copyDirectoryProject");
@@ -481,6 +432,11 @@ public class WizService {
         //        }
 
         return copiata;
+    }
+
+
+    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath) {
+        return file.copyDirectory(typeCopy, srcPath, destPath, DIR_PROJECTS);
     }
 
 

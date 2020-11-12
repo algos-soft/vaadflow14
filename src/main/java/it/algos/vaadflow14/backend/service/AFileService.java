@@ -855,15 +855,16 @@ public class AFileService extends AAbstractService {
      * Se esiste la directory di destinazione ed è AECopyDir.soloSeNonEsiste, non fa nulla <br>
      * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
      * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
-     * Nei messaggi di avviso, accorcia il destPath eliminando i primi 3 livelli (/Users/gac/Documents) <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
      *
-     * @param srcPath  nome completo della directory sorgente
-     * @param destPath nome completo della directory destinazione
+     * @param typeCopy   modalità di comportamento se esiste la directory di destinazione
+     * @param srcPath    nome completo della directory sorgente
+     * @param destPath   nome completo della directory destinazione
      *
      * @return true se la directory  è stata copiata
      */
     public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath) {
-        return copyDirectory(typeCopy, srcPath, destPath, 3);
+        return copyDirectory(typeCopy,srcPath,destPath,VUOTA);
     }
 
 
@@ -877,16 +878,16 @@ public class AFileService extends AAbstractService {
      * Se esiste la directory di destinazione ed è AECopyDir.soloSeNonEsiste, non fa nulla <br>
      * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
      * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
-     * Nei messaggi di avviso, accorcia il destPath eliminando i primi 3 livelli (/Users/gac/Documents) <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
      *
      * @param typeCopy   modalità di comportamento se esiste la directory di destinazione
      * @param srcPath    nome completo della directory sorgente
      * @param destPath   nome completo della directory destinazione
-     * @param numLivelli iniziali da eliminare nel path
+     * @param firstDirectory da cui iniziare il path per il messaggio di avviso
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath, int numLivelli) {
+    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath, String firstDirectory) {
         boolean copiata = false;
         boolean esisteDest = false;
         String message = VUOTA;
@@ -897,7 +898,7 @@ public class AFileService extends AAbstractService {
             tag = text.isEmpty(srcPath) ? "srcPath" : "destPath";
             message = "Manca il " + tag + " della directory da copiare.";
         } else {
-            path = text.pathBreve(destPath, numLivelli);
+            path = this.findPathDopoDirectory(destPath, firstDirectory);
             if (isEsisteDirectory(srcPath)) {
                 switch (typeCopy) {
                     case soloSeNonEsiste:
@@ -1162,7 +1163,7 @@ public class AFileService extends AAbstractService {
         String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
-        String path = text.pathBreve(pathFileToBeWritten, numLivelli);
+        String path = this.pathBreve(pathFileToBeWritten, numLivelli);
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
@@ -1547,8 +1548,8 @@ public class AFileService extends AAbstractService {
     /**
      * Elimina l'ultima directory da un path <br>
      * <p>
-     * Esegue solo se il path è valido
-     * Elimina spazi vuoti iniziali e finali
+     * Esegue solo se il path è valido <br>
+     * Elimina spazi vuoti iniziali e finali <br>
      *
      * @param pathIn in ingresso
      *
@@ -1557,11 +1558,9 @@ public class AFileService extends AAbstractService {
     public String levaDirectoryFinale(final String pathIn) {
         String pathOut = pathIn.trim();
 
-        if (text.isValid(pathOut)) {
-            if (pathOut.contains(SLASH)) {
-                pathOut = text.levaCoda(pathOut, SLASH);
-                pathOut = text.levaCodaDa(pathOut, SLASH) + SLASH;
-            }
+        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
+            pathOut = text.levaCoda(pathOut, SLASH);
+            pathOut = text.levaCodaDa(pathOut, SLASH) + SLASH;
         }
 
         return pathOut.trim();
@@ -1569,7 +1568,29 @@ public class AFileService extends AAbstractService {
 
 
     /**
-     * Estrae il path fino alla directory indicata <br>
+     * Recupera l'ultima directory da un path <br>
+     * <p>
+     * Esegue solo se il path è valido <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param pathIn in ingresso
+     *
+     * @return directory finale del path
+     */
+    public String estraeDirectoryFinale(final String pathIn) {
+        String pathOut = pathIn.trim();
+
+        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
+            pathOut = text.levaCoda(pathOut, SLASH);
+            pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + 1) + SLASH;
+        }
+
+        return pathOut.trim();
+    }
+
+
+    /**
+     * Estrae il path da root fino alla directory indicata <br>
      * <p>
      * Esegue solo se il path è valido
      * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
@@ -1594,6 +1615,62 @@ public class AFileService extends AAbstractService {
         }
 
         return pathOut.trim();
+    }
+
+
+    /**
+     * Estrae il path parziale da una directory indicata, escludendo il percorso iniziale <br>
+     * <p>
+     * Esegue solo se il path è valido
+     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param pathIn    in ingresso
+     * @param directory da cui iniziare il path
+     *
+     * @return path parziale da una directory
+     */
+    public String findPathDopoDirectory(String pathIn, String directory) {
+        String path = VUOTA;
+        String prefix = "../";
+
+        if (text.isEmpty(pathIn) || text.isEmpty(directory)) {
+            return pathIn;
+        }
+
+        if (pathIn.contains(directory)) {
+            path = pathIn.substring(pathIn.indexOf(directory));
+            if (path.startsWith(SLASH)) {
+                path = path.substring(1);
+            }
+            path = prefix + path;
+        }
+
+        return path;
+    }
+
+
+    /**
+     * Elabora un path eliminando i livelli iniziali indicati. <br>
+     * <p>
+     * Esegue solo se il testo è valido <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     * Aggiunge un prefisso indicativo -> '../' <br>
+     *
+     * @param testoIn    ingresso
+     * @param numLivelli iniziali da eliminare nel path
+     *
+     * @return path semplificato
+     */
+    public String pathBreve(final String testoIn, int numLivelli) {
+        String path = text.testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
+        String prefix = "../";
+
+        if (!path.equals(testoIn)) {
+            path = text.isValid(path) ? prefix + path : path;
+        }
+
+        return path;
     }
 
 
@@ -1764,5 +1841,6 @@ public class AFileService extends AAbstractService {
 
         return status;
     }
+
 
 }

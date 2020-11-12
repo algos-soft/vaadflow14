@@ -1379,6 +1379,102 @@ public class AFileServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+    @Test
+    @Order(33)
+    @DisplayName("33 - findPathDopoDirectory")
+    public void findPathDopoDirectory() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
+
+        previsto = VUOTA;
+        ottenuto = file.findPathDopoDirectory(VUOTA, VUOTA);
+        assertEquals(previsto, ottenuto);
+
+        previsto = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, VUOTA);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "Documents";
+        previsto = VUOTA;
+        ottenuto = file.findPathDopoDirectory(VUOTA, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "tutorial";
+        previsto = VUOTA;
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "IdeaProjects";
+        previsto = "../IdeaProjects/operativi/vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "IdeaProjects/";
+        previsto = "../IdeaProjects/operativi/vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "/IdeaProjects";
+        previsto = "../IdeaProjects/operativi/vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "operativi";
+        previsto = "../operativi/vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+
+        sorgente2 = "vaadflow14";
+        previsto = "../vaadflow14/";
+        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(34)
+    @DisplayName("34 - estraeDirectoryFinale")
+    public void estraeDirectoryFinale() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow/";
+        previsto = "vaadflow/";
+        ottenuto = file.estraeDirectoryFinale(sorgente);
+        assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(35)
+    @DisplayName("35 - pathBreve")
+    public void pathBreve() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
+
+        ottenuto = file.pathBreve(VUOTA, 0);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = file.pathBreve(VUOTA, 1);
+        assertNotNull(ottenuto);
+        assertEquals(VUOTA, ottenuto);
+
+        ottenuto = file.pathBreve(sorgente, 0);
+        assertNotNull(ottenuto);
+        assertEquals(sorgente, ottenuto);
+
+        sorgenteIntero = 1;
+        previsto = "../gac/Documents/IdeaProjects/operativi/vaadflow14";
+        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 2;
+        previsto = "../Documents/IdeaProjects/operativi/vaadflow14";
+        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 3;
+        previsto = "../IdeaProjects/operativi/vaadflow14";
+        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }
 
     /**
      * Creo un file e lo cancello subito dopo

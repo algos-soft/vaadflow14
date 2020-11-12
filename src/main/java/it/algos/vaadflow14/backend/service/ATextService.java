@@ -1179,27 +1179,5 @@ public class ATextService extends AAbstractService {
     }
 
 
-    /**
-     * Elabora un path eliminando i livelli iniziali indicati. <br>
-     * <p>
-     * Esegue solo se il testo è valido <br>
-     * Elimina spazi vuoti iniziali e finali <br>
-     * Aggiunge un prefisso indicativo -> '../' <br>
-     *
-     * @param testoIn    ingresso
-     * @param numLivelli iniziali da eliminare nel path
-     *
-     * @return path semplificato
-     */
-    public String pathBreve(final String testoIn, int numLivelli) {
-        String path = testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
-        String prefix = "../";
-
-        if (!path.equals(testoIn)) {
-            path = this.isValid(path) ? prefix + path : path;
-        }
-
-        return path;
-    }
 
 }

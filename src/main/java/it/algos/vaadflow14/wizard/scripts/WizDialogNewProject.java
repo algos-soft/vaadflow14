@@ -6,7 +6,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEFlag;
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import java.io.File;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
 
@@ -95,10 +93,10 @@ public class WizDialogNewProject extends WizDialog {
 
         List<File> progetti = file.getEmptyProjects(AEDir.pathIdeaProjects.get());
 
-        //@todo PROVVISORIO
-        File demoFileProvvisorio= new File("/Users/gac/Documents/IdeaProjects/beta");
-        progetti.add(demoFileProvvisorio);
-        //@todo PROVVISORIO
+        //        //@todo PROVVISORIO
+        //        File demoFileProvvisorio= new File("/Users/gac/Documents/IdeaProjects/beta");
+        //        progetti.add(demoFileProvvisorio);
+        //        //@todo PROVVISORIO
 
         fieldComboProgettiNuovi = new ComboBox<>();
         // Choose which property from Department is the presentation value
@@ -200,14 +198,17 @@ public class WizDialogNewProject extends WizDialog {
      * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void regolaAEDir() {
+    protected boolean regolaAEDir() {
+        boolean status = true;
         String projectName;
         super.regolaAEDir();
 
         if (fieldComboProgettiNuovi != null && fieldComboProgettiNuovi.getValue() != null) {
             projectName = fieldComboProgettiNuovi.getValue().getName();
-            AEDir.modificaAll(projectName);
+            status = status && AEDir.modificaAll(projectName);
         }
+
+        return status;
     }
 
 
@@ -216,23 +217,27 @@ public class WizDialogNewProject extends WizDialog {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
     @Override
-    protected void regolaAEToken() {
-        String project;
+    protected boolean regolaAEToken() {
+        boolean status = true;
+        String projectName;
         super.regolaAEToken();
 
-        project = AEDir.nameTargetProject.get();
+        projectName = AEDir.nameTargetProject.get();
 
-        AEToken.nameTargetProject.setValue(project);
-        AEToken.projectNameUpper.setValue(project.toUpperCase());
-        AEToken.moduleNameMinuscolo.setValue(project.toLowerCase());
-        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
-        AEToken.first.setValue(project.substring(0,1).toUpperCase());
-        AEToken.packageName.setValue(project.toLowerCase());
-        AEToken.user.setValue(AEDir.nameUser.get());
-        AEToken.today.setValue(date.get());
-        AEToken.entity.setValue(text.primaMaiuscola(project));
-        AEToken.usaSecurity.setValue(AECheck.security.isAbilitato()?")":", exclude = {SecurityAutoConfiguration.class}");
+        if (text.isValid(projectName)) {
+            AEToken.nameTargetProject.setValue(projectName);
+            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
+            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
+            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+            AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(projectName.toLowerCase());
+            AEToken.user.setValue(AEDir.nameUser.get());
+            AEToken.today.setValue(date.get());
+            AEToken.entity.setValue(text.primaMaiuscola(projectName));
+            AEToken.usaSecurity.setValue(AECheck.security.isAbilitato() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+        }
 
+        return status;
     }
 
 }

@@ -39,7 +39,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
         topLayout = fixSezione(TITOLO_FEEDBACK_PROGETTO, "green");
         this.add(topLayout);
 
-        topLayout.add(text.getLabelGreenBold("Ricopia su vaadflow la directory wizard di questo progetto"));
+        topLayout.add(text.getLabelGreenBold("Ricopia su vaadflow14 la directory wizard di questo progetto"));
         topLayout.add(text.getLabelGreenBold("La sub-directory sources di wizard, viene mantenuta"));
         topLayout.add(text.getLabelGreenBold("Le altre sub-directory di wizard su vaadflow, vengono perse"));
         topLayout.add(text.getLabelRedBold("Le modifiche sono irreversibili"));
