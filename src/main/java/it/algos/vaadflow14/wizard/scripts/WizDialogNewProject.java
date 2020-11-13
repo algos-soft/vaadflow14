@@ -93,11 +93,6 @@ public class WizDialogNewProject extends WizDialog {
 
         List<File> progetti = file.getEmptyProjects(AEDir.pathIdeaProjects.get());
 
-        //        //@todo PROVVISORIO
-        //        File demoFileProvvisorio= new File("/Users/gac/Documents/IdeaProjects/beta");
-        //        progetti.add(demoFileProvvisorio);
-        //        //@todo PROVVISORIO
-
         fieldComboProgettiNuovi = new ComboBox<>();
         // Choose which property from Department is the presentation value
         fieldComboProgettiNuovi.setItemLabelGenerator(File::getName);

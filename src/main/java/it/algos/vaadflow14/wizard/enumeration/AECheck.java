@@ -13,53 +13,53 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
  * Time: 18:56
  */
 public enum AECheck {
-    security("Utilizza Spring Security", true, false, false, false, false),
+    security("Utilizza Spring Security", true, false, false, false),
 
-    config("Directory di risorse on-line esterne al JAR (VaadFlow)", true, true, false, false, true),
+    config("Directory CONFIG di risorse on-line esterne al JAR (VaadFlow)", true, true, false, false),
 
-    documentation("Directory documentazione (VaadFlow)", true, true, false, false, true),
+    documentation("Directory DOC di documentazione (VaadFlow)", true, true, false, false),
 
-    links("Directory links a web (VaadFlow)", true, true, false, false, true),
+    frontend("Directory FRONTEND del Client (VaadFlow)", true, true, false, false),
 
-    snippets("Directory snippets di aiuto (VaadFlow)", true, true, false, false, true),
+    links("Directory LINKS a siti web utili (VaadFlow)", true, true, false, false),
 
-    flow("Directory framework VaadFlow (Wizard compreso)", true, true, false, false, true),
+    snippets("Directory SNIPPETS di codice suggerito (VaadFlow)", true, true, false, false),
 
-   project("Directory modulo del nuovo progetto (...)", true, false, false, false, false),
+    flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false),
 
-    frontend("Directory frontend (VaadFlow)", true, true, false, false, true),
+    project("Directory modulo del nuovo progetto (...)", true, false, false, false),
 
-    resources("Directory resources (VaadFlow)", true, true, false, false, false),
+    resources("Directory RESOURCES (VaadFlow)", true, true, false, false),
 
-    property("File application.properties (sources)", true, true, false, false, true),
+    property("File application.PROPERTIES (sources)", true, true, false, false),
 
-    banner("File banner di SpringBoot (sources)", true, true, false, false, true),
+    banner("File BANNER di SpringBoot (sources)", true, true, false, false),
 
-    git("File GIT di esclusione (sources)", true, true, false, false, true),
+    git("File GIT di esclusione (sources)", true, true, false, false),
 
-    pom("File Maven di POM.xml (sources)", true, true, false, false, true),
+    pom("File POM.xml di Maven (sources)", true, true, false, false),
 
-   read("File READ con note di testo (sources)", true, true, false, false, true),
+    read("File README con note di testo (sources)", true, true, false, false),
 
-    file("Sovrascrive il singolo FILE", false, false, false, false, false),
+    file("Sovrascrive il singolo FILE", false, false, false, false),
 
-    directory("Sovrascrive la DIRECTORY", false, false, false, false, false),
+    directory("Sovrascrive la DIRECTORY", false, false, false, false),
 
-    entity("Entity base del package", false, false, true, true, true),
+    entity("Entity base del package", false, false, true, true),
 
-    logic("Business logic del package", false, false, true, true, false),
+    logic("Business logic del package", false, false, true, true),
 
-    form("Form specifico del package", false, false, true, true, false),
+    form("Form specifico del package", false, false, true, true),
 
-    list("List specifico del package", false, false, true, true, false),
+    list("List specifico del package", false, false, true, true),
 
-    service("Service specifico del package", false, false, true, true, false),
+    service("Service specifico del package", false, false, true, true),
 
-    company("Entity subclass di Company", false, false, true, true, false),
+    company("Entity subclass di Company", false, false, true, true),
 
-    crowIndex("Entity usa rowIndex", false, false, true, true, false),
+    crowIndex("Entity usa rowIndex", false, false, true, true),
 
-    sovrascrivePackage("Sovrascrive un package esistente", false, false, true, true, false),
+    sovrascrivePackage("Sovrascrive un package esistente", false, false, true, true),
 
     ;
 
@@ -74,23 +74,18 @@ public enum AECheck {
 
     private boolean updatePackage;
 
-    private boolean defaultAcceso;
-
     private boolean acceso;
 
 
     /**
      * Costruttore completo <br>
      */
-    AECheck(String caption, boolean newProject, boolean updateProject, boolean newPackage, boolean updatePackage, boolean defaultAcceso) {
+    AECheck(String caption, boolean newProject, boolean updateProject, boolean newPackage, boolean updatePackage) {
         this.caption = caption;
         this.newProject = newProject;
         this.updateProject = updateProject;
         this.newPackage = newPackage;
         this.updatePackage = updatePackage;
-
-        this.defaultAcceso = defaultAcceso;
-        this.acceso = defaultAcceso;
     }
 
 
@@ -99,7 +94,7 @@ public enum AECheck {
      */
     public static void reset() {
         for (AECheck aeCheck : AECheck.values()) {
-            aeCheck.setAcceso(aeCheck.defaultAcceso);
+            aeCheck.setAcceso(false);
         }
     }
 
@@ -115,7 +110,6 @@ public enum AECheck {
 
         return listaChecks;
     }
-
 
 
     public static List<AECheck> getUpdateProject() {
@@ -135,7 +129,7 @@ public enum AECheck {
         List<AECheck> listaChecks = new ArrayList<>();
 
         for (AECheck aeWiz : AECheck.values()) {
-            if ( aeWiz.isNewPackage()) {
+            if (aeWiz.isNewPackage()) {
                 listaChecks.add(aeWiz);
             }
         }
@@ -143,11 +137,12 @@ public enum AECheck {
         return listaChecks;
     }
 
+
     public static List<AECheck> getUpdatePackage() {
         List<AECheck> listaChecks = new ArrayList<>();
 
         for (AECheck aeWiz : AECheck.values()) {
-            if ( aeWiz.isUpdatePackage()) {
+            if (aeWiz.isUpdatePackage()) {
                 listaChecks.add(aeWiz);
             }
         }

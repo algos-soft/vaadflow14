@@ -108,7 +108,6 @@ public class WizService {
 
             AEDir.modificaAll(projectName);
         }
-
     }
 
 
@@ -137,7 +136,6 @@ public class WizService {
     public void printInfo(String message) {
         AEDir.printInfo(message);
         AEFlag.printInfo(message);
-        //        AEToken.printInfo(message);
         AECheck.printInfo(message);
     }
 
@@ -164,7 +162,7 @@ public class WizService {
         boolean esisteFileDest = false;
         String message = VUOTA;
         String sourceText = leggeFile(nameSourceText);
-        String path = file.pathBreve(pathFileToBeWritten, 4);
+        String path = file.findPathDopoDirectory(pathFileToBeWritten, DIR_PROJECTS);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
@@ -180,14 +178,14 @@ public class WizService {
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
         switch (typeCopy) {
             case sovrascriveSempreAncheSeEsiste:
-                file.scriveFile(pathFileToBeWritten, sourceText, true, 4);
+                file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                 break;
             case soloSeNonEsiste:
                 if (esisteFileDest) {
                     message = "Il file: " + path + " esiste già e non è stato modificato.";
                     logger.info(message, this.getClass(), "creaFile");
                 } else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, 4);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                     message = "Il file: " + path + " non esisteva ed è stato creato da source.";
                     logger.info(message, this.getClass(), "creaFile");
                 }
@@ -195,17 +193,65 @@ public class WizService {
             case checkFlagSeEsiste:
                 if (esisteFileDest) {
                     if (checkFileCanBeModified(pathFileToBeWritten)) {
-                        file.scriveFile(pathFileToBeWritten, sourceText, true, 4);
+                        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                     } else {
                         message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
                         logger.info(message, this.getClass(), "creaFile");
                     }
                 } else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, 4);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                 }
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "creaFile");
+                break;
+        }
+    }
+
+
+    /**
+     * Copia un file <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista il path del file sorgente  <br>
+     * Se manca il file sorgente, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyDir.sovrascriveSempreAncheSeEsiste, lo sovrascrive <br>
+     * Se esiste il file di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
+     *
+     * @param typeCopy modalità di comportamento se esiste il file di destinazione
+     * @param srcPath  nome completo di suffisso del file sorgente
+     * @param destPath nome completo di suffisso del file da creare
+     */
+    public void copyFile(AECopyFile typeCopy, String srcPath, String destPath) {
+        boolean esisteFileDest;
+        String message;
+        String path;
+
+        switch (typeCopy) {
+            case sovrascriveSempreAncheSeEsiste:
+            case soloSeNonEsiste:
+                file.copyFile(typeCopy, srcPath,destPath,DIR_PROJECTS);
+                break;
+            case checkFlagSeEsiste:
+                path = file.findPathDopoDirectory(destPath, DIR_PROJECTS);
+                esisteFileDest = file.isEsisteFile(destPath);
+                if (esisteFileDest) {
+                    if (checkFileCanBeModified(destPath)) {
+                        file.copyFileDeletingAll(srcPath, destPath);
+                        message = "Il file: " + path + " esisteva già ma è stato sovrascritto.";
+                    } else {
+                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
+                    }
+                } else {
+                    file.copyFileDeletingAll(srcPath, destPath);
+                    message = "Il file: " + path + " non esisteva ed è stato copiato.";
+                }
+                logger.info(message, this.getClass(), "copyFile");
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "copyFile");
                 break;
         }
     }
@@ -236,7 +282,7 @@ public class WizService {
             return;
         }
 
-        file.scriveFile(pathFileToBeWritten, sourceText, true, 4);
+        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
     }// end of method
 
 
@@ -253,6 +299,7 @@ public class WizService {
      * @param destPath    directory in cui costruire il file
      * @param suffix      nome del file destinazione che potrebbe essere diverso da .java o .text
      */
+    @Deprecated
     public void scriveNewFileCreatoDaSource(String nomeFileSrc, String destPath, String suffix) {
         scriveNewFileCreatoDaSource(nomeFileSrc, destPath, nomeFileSrc, suffix);
     }// end of method
@@ -306,6 +353,7 @@ public class WizService {
      * @param destPath     directory in cui costruire il file
      * @param nomeFileDest nome del file destinazione che potrebbe essere diverso da nomeFileSrc
      */
+    @Deprecated
     public void scriveFileCreatoDaSource(String nomeFileSrc, String destPath, String nomeFileDest) {
         String suffix = ".java";
         String sourceText = leggeFile(nomeFileSrc);

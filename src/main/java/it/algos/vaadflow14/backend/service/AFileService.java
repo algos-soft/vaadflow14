@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.enumeration.AECopyDir;
+import it.algos.vaadflow14.backend.enumeration.AECopyFile;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
 
 
 /**
@@ -869,6 +871,60 @@ public class AFileService extends AAbstractService {
 
 
     /**
+     * Copia un file <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista il path del file sorgente  <br>
+     * Se manca il file sorgente, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyDir.sovrascriveSempreAncheSeEsiste, lo sovrascrive <br>
+     * Se esiste il file di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
+     *
+     * @param typeCopy modalità di comportamento se esiste il file di destinazione
+     * @param srcPath  nome completo di suffisso del file sorgente
+     * @param destPath nome completo di suffisso del file da creare
+     * @param firstDirectory da cui iniziare il path per il messaggio di avviso
+     */
+    public void copyFile(AECopyFile typeCopy, String srcPath, String destPath,String firstDirectory) {
+        boolean esisteFileDest;
+        String message;
+        String path = this.findPathDopoDirectory(destPath, DIR_PROJECTS);
+
+        if (!this.isEsisteFile(srcPath)) {
+            logger.warn("Non sono riuscito a trovare il file " + srcPath + " nella directory indicata", this.getClass(), "copyFile");
+            return;
+        }
+
+        esisteFileDest = this.isEsisteFile(destPath);
+        switch (typeCopy) {
+            case sovrascriveSempreAncheSeEsiste:
+                if (esisteFileDest) {
+                    message = "Il file: " + path + " esiste già e ma è stato modificato.";
+                    logger.info(message, this.getClass(), "copyFile");
+                } else {
+                    message = "Il file: " + path + " non esisteva ed è stato copiato.";
+                    logger.info(message, this.getClass(), "copyFile");
+                }
+                this.copyFileDeletingAll(srcPath, destPath);
+                break;
+            case soloSeNonEsiste:
+                if (esisteFileDest) {
+                    message = "Il file: " + path + " esiste già e non è stato modificato.";
+                    logger.info(message, this.getClass(), "copyFile");
+                } else {
+                    this.copyFileDeletingAll(srcPath, destPath);
+                    message = "Il file: " + path + " non esisteva ed è stato copiato.";
+                    logger.info(message, this.getClass(), "copyFile");
+                }
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "copyFile");
+                break;
+        }
+    }
+
+    /**
      * Copia una directory <br>
      * <p>
      * Controlla che siano validi i path di riferimento <br>
@@ -889,9 +945,9 @@ public class AFileService extends AAbstractService {
      */
     public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath, String firstDirectory) {
         boolean copiata = false;
-        boolean esisteDest = false;
+        boolean esisteDest;
         String message = VUOTA;
-        String tag = VUOTA;
+        String tag;
         String path;
 
         if (text.isEmpty(srcPath) || text.isEmpty(destPath)) {
@@ -1147,7 +1203,7 @@ public class AFileService extends AAbstractService {
      * @param sovrascrive         anche se esiste già
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
-        return scriveFile(pathFileToBeWritten, testo, sovrascrive, 3);
+        return scriveFile(pathFileToBeWritten, testo, sovrascrive, VUOTA);
     }
 
 
@@ -1158,12 +1214,13 @@ public class AFileService extends AAbstractService {
      * @param pathFileToBeWritten nome completo del file
      * @param testo               contenuto del file
      * @param sovrascrive         anche se esiste già
+     * @param firstDirectory da cui iniziare il path per il messaggio di avviso
      */
-    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, int numLivelli) {
+    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String firstDirectory) {
         String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
-        String path = this.pathBreve(pathFileToBeWritten, numLivelli);
+        String path = this.findPathDopoDirectory(pathFileToBeWritten, firstDirectory);
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {

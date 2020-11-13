@@ -76,19 +76,19 @@ public class WizElaboraNewPackage extends WizElabora {
         //        AEToken.nameTargetProject.setValue("Pippo");
         //        AEToken.pathTargetProject.setValue("");
         //        AEToken.projectNameUpper.setValue(newProjectNameUpper);
-//        AEToken.moduleNameMinuscolo.setValue(packageName);
-//        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(packageName));
-//        //        AEToken.first.setValue("");
-//        //        AEToken.pathVaadFlowWizTxtSources.setValue("");
-//
-//        AEToken.packageName.setValue(packageName);
+        //        AEToken.moduleNameMinuscolo.setValue(packageName);
+        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(packageName));
+        //        //        AEToken.first.setValue("");
+        //        //        AEToken.pathVaadFlowWizTxtSources.setValue("");
+        //
+        //        AEToken.packageName.setValue(packageName);
 
         AEToken.projectCost.setValue("");
         AEToken.user.setValue("Gac");
         AEToken.today.setValue("oggi");
         AEToken.qualifier.setValue("Pippo");
         //        AEToken.tagView.setValue("");
-//        AEToken.entity.setValue("Bolla");
+        //        AEToken.entity.setValue("Bolla");
         AEToken.estendeEntity.setValue("AEntity");
         AEToken.superClassEntity.setValue("");
     }
@@ -106,6 +106,7 @@ public class WizElaboraNewPackage extends WizElabora {
     }
 
 
+    @Deprecated
     protected void creaFileEntity() {
         String tag = "Entity";
         String nomeFileDest = text.primaMaiuscola(packageName);

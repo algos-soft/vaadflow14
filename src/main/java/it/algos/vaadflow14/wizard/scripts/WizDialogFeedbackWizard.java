@@ -46,9 +46,6 @@ public class WizDialogFeedbackWizard extends WizDialog {
     }
 
 
-    protected void creaCheckBoxLayout() {
-    }
-
 
     protected void creaBottoni() {
         super.creaBottoni();
