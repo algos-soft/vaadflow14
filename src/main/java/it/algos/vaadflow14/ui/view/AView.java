@@ -249,9 +249,9 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
             header = entityLogic.getAlertHeaderLayout(typeVista);
         }
 
-        if (alertPlacehorder != null && header != null) {
-            alertPlacehorder.add(header);
-            this.add(alertPlacehorder);
+        if (alertPlaceholder != null && header != null) {
+            alertPlaceholder.add(header);
+            this.add(alertPlaceholder);
         }
 
     }
@@ -297,8 +297,8 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
 
     protected void fixFooterLayout() {
-        footerPlacehorder.add(appContext.getBean(AFooter.class));
-        this.add(footerPlacehorder);
+        footerPlaceholder.add(appContext.getBean(AFooter.class));
+        this.add(footerPlaceholder);
     }
 
 }

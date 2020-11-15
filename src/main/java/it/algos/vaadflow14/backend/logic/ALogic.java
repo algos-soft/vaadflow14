@@ -636,11 +636,11 @@ public abstract class ALogic implements AILogic {
     @Override
     public AGrid getBodyGridLayout() {
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-        dataProvider = dataService.creaDataProvider(entityClazz);
-        grid.getGrid().setDataProvider(dataProvider);
-        grid.getGrid().setHeight("100%");
+//        dataProvider = dataService.creaDataProvider(entityClazz);
+//        grid.getGrid().setDataProvider(dataProvider);
+//        grid.getGrid().setHeight("100%");
 
-//        refreshGrid();
+        refreshGrid();
         addGridListeners();
         return grid;
     }

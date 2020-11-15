@@ -138,13 +138,13 @@ public abstract class AViewProperty extends VerticalLayout {
      * Contenuto eventuale, non presente di default <br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      */
-    protected VerticalLayout alertPlacehorder;
+    protected VerticalLayout alertPlaceholder;
 
     /**
      * Placeholder per bottoni di menu/comando PRIMA del body (solo list) <br>
      * Contenuto obbligatorio <br>
      */
-    protected VerticalLayout topPlacehorder;
+    protected VerticalLayout topPlaceholder;
 
     /**
      * Contenuto obbligatorio di uno dei due tipi: (list e form) <br>
@@ -152,14 +152,14 @@ public abstract class AViewProperty extends VerticalLayout {
      * Placeholder per il Form <br>
      * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio) <br>
      */
-    protected VerticalLayout bodyPlacehorder;
+    protected VerticalLayout bodyPlaceholder;
 
     /**
      * Placeholder per bottoni di menu/comando DOPO il body (list e form) <br>
      * Contenuto facoltativo, assente di default (list) <br>
      * Contenuto obbligatorio (form) <br>
      */
-    protected VerticalLayout bottomPlacehorder;
+    protected VerticalLayout bottomPlaceholder;
 
     /**
      * Placeholder finale per messaggi (list e form) <br>
@@ -167,7 +167,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Contenuto facoltativo, assente di default (form) <br>
      * Barra inferiore di messaggi per l'utilizzattore <br>
      */
-    protected VerticalLayout footerPlacehorder;
+    protected VerticalLayout footerPlaceholder;
 
     /**
      * The Entity Logic (obbligatorio per liste e form)
@@ -211,45 +211,45 @@ public abstract class AViewProperty extends VerticalLayout {
         this.setPadding(true);
 
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
-        this.alertPlacehorder = new VerticalLayout();
-        this.alertPlacehorder.removeAll();
-        this.alertPlacehorder.setMargin(false);
-        this.alertPlacehorder.setSpacing(false);
-        this.alertPlacehorder.setPadding(false);
+        this.alertPlaceholder = new VerticalLayout();
+        this.alertPlaceholder.removeAll();
+        this.alertPlaceholder.setMargin(false);
+        this.alertPlaceholder.setSpacing(false);
+        this.alertPlaceholder.setPadding(false);
 
         //--Costruisce un layout (obbligatorio) per i menu ed i bottoni di comando della view <br>
-        this.topPlacehorder = new VerticalLayout();
-        this.topPlacehorder.removeAll();
-        this.topPlacehorder.addClassName("view-toolbar");
-        this.topPlacehorder.setMargin(false);
-        this.topPlacehorder.setSpacing(false);
-        this.topPlacehorder.setPadding(false);
+        this.topPlaceholder = new VerticalLayout();
+        this.topPlaceholder.removeAll();
+        this.topPlaceholder.addClassName("view-toolbar");
+        this.topPlaceholder.setMargin(false);
+        this.topPlaceholder.setSpacing(false);
+        this.topPlaceholder.setPadding(false);
 
-        this.bodyPlacehorder = new VerticalLayout();
-        this.bodyPlacehorder.removeAll();
-        bodyPlacehorder.setMargin(false);
-        bodyPlacehorder.setSpacing(false);
-        bodyPlacehorder.setPadding(false);
+        this.bodyPlaceholder = new VerticalLayout();
+        this.bodyPlaceholder.removeAll();
+        bodyPlaceholder.setMargin(false);
+        bodyPlaceholder.setSpacing(false);
+        bodyPlaceholder.setPadding(false);
 
-        this.bottomPlacehorder = new VerticalLayout();
-        this.bottomPlacehorder.removeAll();
-        bottomPlacehorder.setMargin(false);
-        bottomPlacehorder.setSpacing(false);
-        bottomPlacehorder.setPadding(false);
+        this.bottomPlaceholder = new VerticalLayout();
+        this.bottomPlaceholder.removeAll();
+        bottomPlaceholder.setMargin(false);
+        bottomPlaceholder.setSpacing(false);
+        bottomPlaceholder.setPadding(false);
 
-        this.footerPlacehorder = new VerticalLayout();
-        this.footerPlacehorder.removeAll();
-        footerPlacehorder.setMargin(false);
-        footerPlacehorder.setSpacing(false);
-        footerPlacehorder.setPadding(false);
+        this.footerPlaceholder = new VerticalLayout();
+        this.footerPlaceholder.removeAll();
+        footerPlaceholder.setMargin(false);
+        footerPlaceholder.setSpacing(false);
+        footerPlaceholder.setPadding(false);
 
         if (AEPreferenza.usaDebug.is()) {
             this.getElement().getStyle().set("background-color", AEColor.yellow.getEsadecimale());
-            alertPlacehorder.getElement().getStyle().set("background-color", AEColor.bisque.getEsadecimale());
-            topPlacehorder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());
-            bodyPlacehorder.getElement().getStyle().set("background-color", AEColor.lightgreen.getEsadecimale());
-            bottomPlacehorder.getElement().getStyle().set("background-color", AEColor.gainsboro.getEsadecimale());
-            footerPlacehorder.getElement().getStyle().set("background-color", AEColor.silver.getEsadecimale());
+            alertPlaceholder.getElement().getStyle().set("background-color", AEColor.bisque.getEsadecimale());
+            topPlaceholder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());
+            bodyPlaceholder.getElement().getStyle().set("background-color", AEColor.lightgreen.getEsadecimale());
+            bottomPlaceholder.getElement().getStyle().set("background-color", AEColor.gainsboro.getEsadecimale());
+            footerPlaceholder.getElement().getStyle().set("background-color", AEColor.silver.getEsadecimale());
         }
     }
 

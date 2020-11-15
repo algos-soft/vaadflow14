@@ -48,9 +48,9 @@ public class AViewList extends AView {
             topLayout = entityLogic.getTopLayout();
         }
 
-        if (topPlacehorder != null && topLayout != null) {
-            topPlacehorder.add(topLayout);
-            this.add(topPlacehorder);
+        if (topPlaceholder != null && topLayout != null) {
+            topPlaceholder.add(topLayout);
+            this.add(topPlaceholder);
         }
 
     }
@@ -67,12 +67,12 @@ public class AViewList extends AView {
     protected void fixBody() {
         AGrid grid = entityLogic.getBodyGridLayout();
 
-        if (bodyPlacehorder != null && grid.getGrid() != null) {
-            bodyPlacehorder.add(grid.getGrid());
+        if (bodyPlaceholder != null && grid.getGrid() != null) {
+            bodyPlaceholder.add(grid.getGrid());
         }
-        bodyPlacehorder.setHeight("100%");
+        bodyPlaceholder.setHeight("100%");
 
-        this.add(bodyPlacehorder);
+        this.add(bodyPlaceholder);
     }
 
 

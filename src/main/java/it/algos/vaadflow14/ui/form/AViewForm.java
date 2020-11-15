@@ -76,11 +76,11 @@ public class AViewForm extends AView {
             form = entityLogic.getBodyFormLayout(entityLogic.newEntity());
         }
 
-        if (bodyPlacehorder != null && form != null) {
-            bodyPlacehorder.add(form);
+        if (bodyPlaceholder != null && form != null) {
+            bodyPlaceholder.add(form);
         }
 
-        this.add(bodyPlacehorder);
+        this.add(bodyPlaceholder);
     }
 
 
@@ -102,11 +102,11 @@ public class AViewForm extends AView {
             bottomLayout = entityLogic.getBottomLayout(operationForm);
         }
 
-        if (bottomPlacehorder != null && bottomLayout != null) {
-            bottomPlacehorder.add(bottomLayout);
+        if (bottomPlaceholder != null && bottomLayout != null) {
+            bottomPlaceholder.add(bottomLayout);
         }
 
-        this.add(bottomPlacehorder);
+        this.add(bottomPlaceholder);
     }
 
 }
