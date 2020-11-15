@@ -9,6 +9,10 @@ import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.JAVA_SUFFIX;
+import static it.algos.vaadflow14.backend.application.FlowCost.TXT_SUFFIX;
+import static it.algos.vaadflow14.backend.application.FlowCost.XML_SUFFIX;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 
@@ -465,8 +469,69 @@ public abstract class WizElabora implements WizRecipient {
 
     /**
      * Creazione del menu nel file xxxBoot <br>
+     * Aggiunta import necessario in testa al file <br>
      */
     protected void fixBoot() {
+        this.fixBootMenu();
+        this.fixBootImport();
+    }
+
+
+    /**
+     * Creazione del menu nel file xxxBoot <br>
+     */
+    protected void fixBootMenu() {
+        String testo = VUOTA;
+        String tagOld = "super.addMenuRoutes();";
+        String pack = AEDir.nameTargetPackageUpper.get();
+        String tagNew = "FlowVar.menuRouteList.add(" + pack + ".class);";
+        String pathError;
+
+        String pathFileBoot = AEDir.fileTargetBoot.get();
+        testo = file.leggeFile(pathFileBoot);
+        pathError = file.findPathDopoDirectory(pathFileBoot, DIR_BACKEND);
+
+        if (testo.contains(tagOld)) {
+            if (!testo.contains(tagNew)) {
+                tagNew = tagOld + A_CAPO + TAB + TAB + tagNew;
+                testo = testo.replace(tagOld, tagNew);
+                file.sovraScriveFile(pathFileBoot, testo);
+                logger.info("Aggiunto menuRoutes nel file " + pathError, this.getClass(), "fixBootMenu");
+            }
+        } else {
+            logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootMenu");
+        }
+
+
+    }
+
+
+    /**
+     * Aggiunta import necessario in testa al file <br>
+     */
+    protected void fixBootImport() {
+        String testo = VUOTA;
+        String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
+        String project = AEDir.nameTargetProject.get();
+        String pack = AEDir.nameTargetPackage.get();
+        String clazz = AEDir.nameTargetPackageUpper.get();
+        String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
+        String pathError = VUOTA;
+
+        String pathFileBoot = AEDir.fileTargetBoot.get();
+        testo = file.leggeFile(pathFileBoot);
+        pathError = file.findPathDopoDirectory(pathFileBoot, DIR_BACKEND);
+
+        if (testo.contains(tagOld)) {
+            if (!testo.contains(tagNew)) {
+                tagNew = tagOld + A_CAPO + tagNew;
+                testo = testo.replace(tagOld, tagNew);
+                file.sovraScriveFile(pathFileBoot, testo);
+                logger.info("Aggiunto import della Entity nel file " + pathError, this.getClass(), "fixBootImport");
+            }
+        } else {
+            logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootImport");
+        }
     }
 
 
