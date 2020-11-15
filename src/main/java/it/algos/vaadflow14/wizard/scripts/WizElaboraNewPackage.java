@@ -1,13 +1,9 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
+import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 
 /**
  * Project vaadflow
@@ -53,75 +49,36 @@ public class WizElaboraNewPackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        super.isNuovoProgetto = false;
-        super.esegue();
-
-        this.packageName = AEToken.packageName.getValue();
-        this.pathPackage = pathProjectDirPackages + packageName + SLASH;
-        this.fileName = text.primaMaiuscola(packageName);
-        this.sovrascrive = AECheck.sovrascrivePackage.isAbilitato();
+        this.regolazioniIniziali();
 
         if (creaDirectory()) {
             this.creaFileEntity();
+            this.fixBoot();
         }
     }
 
 
-    /**
-     * Regolazioni iniziali <br>
-     */
-    protected void regolazioniIniziali() {
-        super.regolazioniIniziali();
-
-        //        AEToken.nameTargetProject.setValue("Pippo");
-        //        AEToken.pathTargetProject.setValue("");
-        //        AEToken.projectNameUpper.setValue(newProjectNameUpper);
-        //        AEToken.moduleNameMinuscolo.setValue(packageName);
-        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(packageName));
-        //        //        AEToken.first.setValue("");
-        //        //        AEToken.pathVaadFlowWizTxtSources.setValue("");
-        //
-        //        AEToken.packageName.setValue(packageName);
-
-        AEToken.projectCost.setValue("");
-        AEToken.user.setValue("Gac");
-        AEToken.today.setValue("oggi");
-        AEToken.qualifier.setValue("Pippo");
-        //        AEToken.tagView.setValue("");
-        //        AEToken.entity.setValue("Bolla");
-        AEToken.estendeEntity.setValue("AEntity");
-        AEToken.superClassEntity.setValue("");
-    }
 
 
     protected boolean creaDirectory() {
-        if (file.isEsisteDirectory(pathPackage) && !sovrascrive) {
-            System.out.println("Il package " + packageName + " esiste già e non può essere sovrascritto");
-            Notification.show("Il package " + packageName + " esiste già e non può essere sovrascritto", 3000, Notification.Position.MIDDLE);
+        if (file.isEsisteDirectory(AEDir.pathTargetPackages.get()) ) {
+            logger.info("La directory " + AEDir.nameTargetPackage.get() + " esiste già e non può essere sovrascritta",this.getClass(),"creaDirectory");
             return false;
         } else {
-            file.creaDirectory(pathPackage);
+            file.creaDirectory(AEDir.pathTargetPackages.get());
+            logger.info("La directory per il package " + AEDir.nameTargetPackageUpper.get() + " è stato creata",this.getClass(),"creaDirectory");
             return true;
         }
     }
 
 
-    @Deprecated
-    protected void creaFileEntity() {
-        String tag = "Entity";
-        String nomeFileDest = text.primaMaiuscola(packageName);
-        if (AECheck.entity.isAcceso()) {
-            wizService.scriveFileCreatoDaSource(tag, pathPackage, nomeFileDest);
-        }
-    }
-
 
     protected void creaFileBase(String pathDest, String testo) {
-        if (!file.scriveNewFile(pathDest, testo)) {
-            if (sovrascrive) {
-                file.sovraScriveFile(pathDest, testo);
-            }
-        }
+//        if (!file.scriveNewFile(pathDest, testo)) {
+//            if (sovrascrive) {
+//                file.sovraScriveFile(pathDest, testo);
+//            }
+//        }
     }
 
 }

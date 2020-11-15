@@ -820,6 +820,28 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+    @Test
+    @Order(23)
+    @DisplayName("23 - setApici")
+    public void setApici() {
+        previsto = "\\\"mario\\\"";
+
+        sorgente = "mario";
+        ottenuto = text.setApici(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "\\\"mario";
+        ottenuto = text.setApici(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = " mario";
+        ottenuto = text.setApici(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = " \\\"mario";
+        ottenuto = text.setApici(sorgente);
+        assertEquals(previsto, ottenuto);
+    }
 
 
 

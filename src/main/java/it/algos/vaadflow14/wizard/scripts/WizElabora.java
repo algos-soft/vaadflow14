@@ -179,7 +179,7 @@ public abstract class WizElabora implements WizRecipient {
     @Override
     public void esegue() {
         this.regolazioniIniziali();
-    }// end of method
+    }
 
 
     /**
@@ -266,7 +266,7 @@ public abstract class WizElabora implements WizRecipient {
      * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryConfig() {
-        if (AECheck.config.isAbilitato()) {
+        if (AECheck.config.is()) {
             wizService.copyDirectoryProjectRoot(AECopyDir.addingOnly, ROOT_DIR_CONFIG);
         }
     }
@@ -281,7 +281,7 @@ public abstract class WizElabora implements WizRecipient {
      * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryDoc() {
-        if (AECheck.documentation.isAbilitato()) {
+        if (AECheck.documentation.is()) {
             wizService.copyDirectoryProjectRoot(AECopyDir.deletingAll, ROOT_DIR_DOC);
         }
     }
@@ -296,7 +296,7 @@ public abstract class WizElabora implements WizRecipient {
      * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryFrontend() {
-        if (AECheck.frontend.isAbilitato()) {
+        if (AECheck.frontend.is()) {
             wizService.copyDirectoryProjectRoot(AECopyDir.addingOnly, ROOT_DIR_FRONTEND);
         }
     }
@@ -311,7 +311,7 @@ public abstract class WizElabora implements WizRecipient {
      * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectoryLinks() {
-        if (AECheck.links.isAbilitato()) {
+        if (AECheck.links.is()) {
             wizService.copyDirectoryProjectRoot(AECopyDir.deletingAll, ROOT_DIR_LINKS);
         }
     }
@@ -326,7 +326,7 @@ public abstract class WizElabora implements WizRecipient {
      * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
      */
     protected void copiaDirectorySnippets() {
-        if (AECheck.snippets.isAbilitato()) {
+        if (AECheck.snippets.is()) {
             wizService.copyDirectoryProjectRoot(AECopyDir.deletingAll, ROOT_DIR_SNIPPETS);
         }
     }
@@ -343,7 +343,7 @@ public abstract class WizElabora implements WizRecipient {
         String srcPath = AEDir.pathVaadFlowAlgos.get() + DIR_VAADFLOW;
         String destPath = AEDir.pathTargetAlgos.get() + DIR_VAADFLOW;
 
-        if (AECheck.flow.isAbilitato()) {
+        if (AECheck.flow.is()) {
             wizService.copyDirectoryProject(AECopyDir.deletingAll, srcPath, destPath);
         }
         file.deleteDirectory(AEDir.pathTargetSources.get());
@@ -361,7 +361,7 @@ public abstract class WizElabora implements WizRecipient {
         String srcPath = AEDir.pathVaadFlowResources.get() + DIR_META;
         String destPath = AEDir.pathTargetResources.get() + DIR_META;
 
-        if (AECheck.resources.isAbilitato()) {
+        if (AECheck.resources.is()) {
             wizService.copyDirectoryProject(AECopyDir.addingOnly, srcPath, destPath);
         }
     }
@@ -377,7 +377,7 @@ public abstract class WizElabora implements WizRecipient {
         String nameSourceText = FILE_PROPERTIES;
         String destPathSuffix = AEDir.pathTargetResources.get() + FILE_PROPERTIES_DEST;
 
-        if (AECheck.property.isAbilitato()) {
+        if (AECheck.property.is()) {
             wizService.creaFile(AECopyFile.checkFlagSeEsiste, nameSourceText, destPathSuffix);
         }
     }
@@ -393,7 +393,7 @@ public abstract class WizElabora implements WizRecipient {
         String nameSourceText = FILE_BANNER;
         String destPathSuffix = AEDir.pathTargetResources.get() + FILE_BANNER + TXT_SUFFIX;
 
-        if (AECheck.banner.isAbilitato()) {
+        if (AECheck.banner.is()) {
             wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
@@ -410,7 +410,7 @@ public abstract class WizElabora implements WizRecipient {
         String nameSourceText = FILE_GIT;
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_GIT;
 
-        if (AECheck.git.isAbilitato()) {
+        if (AECheck.git.is()) {
             wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
@@ -427,7 +427,7 @@ public abstract class WizElabora implements WizRecipient {
         String nameSourceText = FILE_POM;
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_POM + XML_SUFFIX;
 
-        if (AECheck.pom.isAbilitato()) {
+        if (AECheck.pom.is()) {
             wizService.creaFile(AECopyFile.checkFlagSeEsiste, nameSourceText, destPathSuffix);
         }
     }
@@ -444,21 +444,41 @@ public abstract class WizElabora implements WizRecipient {
         String nameSourceText = FILE_READ;
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_READ + TXT_SUFFIX;
 
-        if (AECheck.read.isAbilitato()) {
+        if (AECheck.read.is()) {
             wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
 
-//    protected String leggeFile(String nomeFileTextSorgente) {
-//        String nomeFileTxt = nomeFileTextSorgente;
-//
-//        if (!nomeFileTxt.endsWith(TXT_SUFFIX)) {
-//            nomeFileTxt += TXT_SUFFIX;
-//        }// end of if cycle
-//
-//        return file.leggeFile(pathVaadFlowWizTxtSources + nomeFileTxt);
-//    }// end of method
+    /**
+     * Creazione del file nella directory dei packages <br>
+     */
+    protected void creaFileEntity() {
+        String tag = "Entity";
+        String nomeFileDest = AEDir.nameTargetPackageUpper.get();
+        String pathFileToBeWritten = AEDir.pathTargetPackages.get() + nomeFileDest + JAVA_SUFFIX;
+        if (AECheck.entity.is()) {
+            wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, tag, pathFileToBeWritten);
+        }
+    }
+
+
+    /**
+     * Creazione del menu nel file xxxBoot <br>
+     */
+    protected void fixBoot() {
+    }
+
+
+    //    protected String leggeFile(String nomeFileTextSorgente) {
+    //        String nomeFileTxt = nomeFileTextSorgente;
+    //
+    //        if (!nomeFileTxt.endsWith(TXT_SUFFIX)) {
+    //            nomeFileTxt += TXT_SUFFIX;
+    //        }// end of if cycle
+    //
+    //        return file.leggeFile(pathVaadFlowWizTxtSources + nomeFileTxt);
+    //    }// end of method
 
 
 }

@@ -5,6 +5,6 @@
     @Indexed()
     @Size(min = 2)
     @Field("cod")
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 8)
+    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = 8)
     @AIColumn(widthEM = 8)
     public String code;

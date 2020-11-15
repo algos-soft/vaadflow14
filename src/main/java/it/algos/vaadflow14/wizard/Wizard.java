@@ -3,6 +3,7 @@ package it.algos.vaadflow14.wizard;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -158,6 +159,9 @@ public class Wizard extends VerticalLayout {
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
+        this.setMargin(true);
+        this.setPadding(false);
+        this.setSpacing(false);
         this.titolo();
 
         wizService.printStart();
@@ -203,9 +207,9 @@ public class Wizard extends VerticalLayout {
         dialogNewProject = appContext.getBean(WizDialogNewProject.class);
         bottone.addClickListener(event -> dialogNewProject.open(this::elaboraNewProject));
 
+        layout.add(bottone);
         this.add(layout);
-        this.add(bottone);
-        this.add(new H1());
+        this.add(new H2());
     }
 
 
@@ -228,7 +232,7 @@ public class Wizard extends VerticalLayout {
         if (AEFlag.isBaseFlow.is()) {
             layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
         } else {
-            layout.add(new Label("Update di questo progetto"));
+            layout.add(new Label("Update del modulo vaadflow14 di questo progetto"));
         }
         layout.add(new Label("Regola alcuni flags per le modifiche"));
 
@@ -236,9 +240,9 @@ public class Wizard extends VerticalLayout {
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogUpdateProject.open(this::elaboraUpdateProject));
 
+        layout.add(bottone);
         this.add(layout);
-        this.add(bottone);
-        this.add(new H1());
+        this.add(new H2());
     }
 
 
@@ -249,16 +253,24 @@ public class Wizard extends VerticalLayout {
 
 
     public void paragrafoNewPackage() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
         H3 paragrafo = new H3(TITOLO_NEW_PACKAGE);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
+
+        layout.add(new Label("Creazione di un nuovo package"));
+        layout.add(new Label("Regola alcuni flags di possibili opzioni"));
 
         Button bottone = new Button("New package");
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraNewPackage));
 
-        this.add(bottone);
-        this.add(new H1());
+        layout.add(bottone);
+        this.add(layout);
+        this.add(new H2());
     }
 
 
@@ -269,6 +281,26 @@ public class Wizard extends VerticalLayout {
 
 
     public void paragrafoUpdatePackage() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        H3 paragrafo = new H3(TITOLO_UPDATE_PACKAGE);
+        paragrafo.getElement().getStyle().set("color", "blue");
+
+        this.add(paragrafo);
+
+        layout.add(new Label("Update di un package esistente"));
+        layout.add(new Label("Seleziona il package dalla lista di quelli esistenti"));
+        layout.add(new Label("Regola alcuni flags di possibili opzioni"));
+
+        Button bottone = new Button("Update package");
+        bottone.getElement().setAttribute("theme", "primary");
+        bottone.addClickListener(event -> dialogUpdatePackage.open(this::elaboraUpdatePackage));
+
+        layout.add(bottone);
+        this.add(layout);
+        this.add(new H2());
     }
 
 
@@ -293,9 +325,9 @@ public class Wizard extends VerticalLayout {
         bottone.getElement().setAttribute("theme", "primary");
         bottone.addClickListener(event -> dialogFeedbackWizard.open(this::elaboraFeedbackWizard));
 
+        layout.add(bottone);
         this.add(layout);
-        this.add(bottone);
-        this.add(new H1());
+        this.add(new H2());
     }
 
 

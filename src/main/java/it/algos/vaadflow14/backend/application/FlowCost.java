@@ -83,6 +83,8 @@ public abstract class FlowCost {
 
     public static final String A_CAPO = "\n";
 
+    public static final String APICE = "\\\"";
+
     public static final String A_CAPO_REGEX = "\\\\n";
 
     public static final String PIPE_REGEX = "\\|";

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
 import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,8 +32,9 @@ public class WizDialogNewPackage extends WizDialog {
     public void open(WizRecipient wizRecipient) {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
-        super.isNuovoPackage = true;
         super.titoloCorrente = new H3();
+        AEFlag.isPackage.set(true);
+        AEFlag.isNewPackage.set(true);
 
         super.inizia();
     }
@@ -88,7 +90,7 @@ public class WizDialogNewPackage extends WizDialog {
         AECheck.entity.setAcceso(true);
 
         for (AECheck check : AECheck.getNewPackage()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            unCheckbox = new Checkbox(check.getCaption(), check.is());
             mappaCheckbox.put(check.name(), unCheckbox);
         }
 
@@ -123,7 +125,66 @@ public class WizDialogNewPackage extends WizDialog {
     }
 
 
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Resetta i valori regolabili della Enumeration AEDir <br>
+     * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
+     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected boolean regolaAEDir() {
+        boolean status = true;
+        String packageName;
+        super.regolaAEDir();
 
+        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+            packageName = fieldPackageName.getValue();
+            status = AEDir.modificaPackageAll(packageName);
+        } else {
+            status = false;
+        }
 
+        return status;
+    }
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewPackage e WizElaboraUpdatePackage <br>
+     */
+    @Override
+    protected boolean regolaAEToken() {
+        boolean status = true;
+        boolean usaCompany = AECheck.company.is();
+        String tagEntity = "AEntity";
+        String tagCompany = "AECompany";
+        String projectName;
+        String packageName;
+        super.regolaAEToken();
+
+        projectName = AEDir.nameTargetProject.get();
+        packageName = AEDir.nameTargetPackage.get();
+
+        if (text.isValid(projectName) && text.isValid(packageName)) {
+            AEToken.nameTargetProject.setValue(projectName);
+            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
+            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
+            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(packageName.toLowerCase());
+            AEToken.user.setValue(AEDir.nameUser.get());
+            AEToken.today.setValue(date.get());
+            AEToken.entity.setValue(text.primaMaiuscola(packageName));
+            AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
+            AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
+            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+            AEToken.properties.setValue(fixProperties());
+            AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
+            AEToken.propertyCode.setValue(fixProperty(AECheck.code));
+            AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
+            AEToken.toString.setValue(fixString());
+        }
+
+        return status;
+    }
 
 }

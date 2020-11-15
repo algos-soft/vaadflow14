@@ -95,12 +95,10 @@ public class WizCost {
 
     public static final String PATH_VAADFLOW_DIR_STANDARD = PATH_ROOT + VAADFLOW_DIR_STANDARD;
 
-
     public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
 
 
     public static final String FILE_WIZARD = "Wizard";
-
 
     public static final String SLASH = "/";
 
@@ -117,6 +115,8 @@ public class WizCost {
     public static final String TITOLO_MODIFICA_QUESTO_PROGETTO = "Modifica di questo progetto";
 
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
+
+    public static final String TITOLO_UPDATE_PACKAGE = "Update packages";
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
 

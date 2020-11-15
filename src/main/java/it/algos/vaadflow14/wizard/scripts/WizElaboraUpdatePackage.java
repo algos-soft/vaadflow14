@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 /**
  * Project vaadflow14
@@ -14,5 +14,15 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class WizElaboraUpdatePackage extends WizElabora {
+
+    /**
+     * Evento lanciato alla chiusura del dialogo
+     */
+    @Override
+    public void esegue() {
+        this.regolazioniIniziali();
+        this.creaFileEntity();
+        this.fixBoot();
+    }
 
 }

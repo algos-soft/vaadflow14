@@ -70,6 +70,12 @@ public enum AEToken {
 
     findAll("FINDALL"),
 
+    keyProperty("KEYPROPERTY"),
+
+    searchProperty("SEARCHPROPERTY"),
+
+    sortProperty("SORTPROPERTY"),
+
     properties("PROPERTIES"),
 
     propertyOrdine("ORDINE"),
@@ -148,9 +154,9 @@ public enum AEToken {
     }
 
 
-    public static String replace(AEToken EAToken, String textReplacing, String value) {
+    public static String replace(AEToken aeToken, String textReplacing, String value) {
         if (value != null ) {
-            return textReplacing.replaceAll(DELIMITER + EAToken.tokenTag + DELIMITER, value);
+            return textReplacing.replaceAll(DELIMITER + aeToken.tokenTag + DELIMITER, value);
         } else {
             return textReplacing;
         }

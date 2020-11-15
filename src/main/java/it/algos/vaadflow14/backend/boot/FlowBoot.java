@@ -15,6 +15,7 @@ import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.ALogService;
+import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -365,9 +366,13 @@ public abstract class FlowBoot implements ServletContextListener {
             FlowVar.menuRouteList.add(Giorno.class);
         }
 
-        FlowVar.menuRouteList.add(Utente.class);
-        FlowVar.menuRouteList.add(Company.class);
+        if (FlowVar.usaCompany) {
+            FlowVar.menuRouteList.add(Utente.class);
+            FlowVar.menuRouteList.add(Company.class);
+        }
+
         FlowVar.menuRouteList.add(Preferenza.class);
+        FlowVar.menuRouteList.add(Wizard.class);
 
         if (FlowVar.usaGeografiaPackages) {
             FlowVar.menuRouteList.add(Continente.class);

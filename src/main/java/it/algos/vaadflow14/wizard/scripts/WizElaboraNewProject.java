@@ -44,7 +44,7 @@ public class WizElaboraNewProject extends WizElabora {
 
 
     public void creaModuloNuovoProgetto() {
-        if (AECheck.project.isAbilitato()) {
+        if (AECheck.project.is()) {
 
             //--crea directory principale del modulo target (empty)
             file.creaDirectory(AEDir.pathTargetModulo.get());
@@ -56,10 +56,10 @@ public class WizElaboraNewProject extends WizElabora {
             file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND);
 
             //--crea subDirectory application (empty) in backend
-            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_APPLICATION);
+            file.creaDirectory(AEDir.pathTargetApplication.get());
 
             //--crea subDirectory boot (empty) in backend
-            file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_BOOT);
+            file.creaDirectory(AEDir.pathTargetBoot.get());
 
             //--crea subDirectory packages (empty) in backend
             file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_PACKAGES);
@@ -68,10 +68,10 @@ public class WizElaboraNewProject extends WizElabora {
             file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_UI);
 
             //--crea contenuto della directory Application
-            scriveFileCost();
+            creaFileCost();
 
             //--crea contenuto della directory boot
-            scriveFileBoot();
+            creaFileBoot();
 
             //            creaDirectorySecurity();
         }
@@ -92,23 +92,15 @@ public class WizElaboraNewProject extends WizElabora {
     }
 
 
-    protected void scriveFileCost() {
-        //        wizService.scriveNewFileCreatoDaSource(FILE_COST, pathProjectDirApplication);
+    protected void creaFileCost() {
+        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, FILE_COST, AEDir.fileTargetCost.get());
+    }
+
+    public void creaFileBoot() {
+        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, FILE_BOOT, AEDir.fileTargetBoot.get());
     }
 
 
-    public void scriveFileBoot() {
-        String nameSourceText = FILE_BOOT;
-
-        String destPathSuffix = AEDir.pathTargetModulo.get();
-        destPathSuffix += DIR_BACKEND;
-        destPathSuffix += DIR_BOOT;
-        destPathSuffix += AEDir.nameTargetProjectUpper.get();
-        destPathSuffix += "Boot";
-        destPathSuffix += JAVA_SUFFIX;
-
-        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
-    }
 
 
     public void scriveFileVers() {

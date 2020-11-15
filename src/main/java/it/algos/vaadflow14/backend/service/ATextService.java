@@ -719,7 +719,6 @@ public class ATextService extends AAbstractService {
      */
     public String setQuadre(String stringaIn) {
         String stringaOut = stringaIn;
-        int cicli = 3;
 
         if (this.isValid(stringaOut)) {
             stringaOut = this.setNoQuadre(stringaIn);
@@ -733,6 +732,33 @@ public class ATextService extends AAbstractService {
             }
         }
 
+        return stringaOut.trim();
+    }
+
+
+    /**
+     * Aggiunge apici in testa e coda alla stringa. <br>
+     * Aggiunge SOLO se gia non esistono <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con apici aggiunti
+     */
+    public String setApici(String stringaIn) {
+        String stringaOut = stringaIn.trim();
+
+        if (this.isValid(stringaOut)) {
+            if (stringaOut.startsWith(APICE)) {
+                stringaOut = levaTesta(stringaOut, APICE);
+            }
+            if (stringaOut.endsWith(APICE)) {
+                stringaOut = levaTesta(stringaOut, APICE);
+            }
+        }
+
+        stringaOut = APICE + stringaOut + APICE;
         return stringaOut.trim();
     }
 
@@ -1177,7 +1203,6 @@ public class ATextService extends AAbstractService {
 
         return testoOut.trim();
     }
-
 
 
 }

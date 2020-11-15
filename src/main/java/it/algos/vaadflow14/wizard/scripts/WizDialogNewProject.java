@@ -52,6 +52,8 @@ public class WizDialogNewProject extends WizDialog {
         super.titoloCorrente = new H3(TITOLO_NUOVO_PROGETTO);
         AEFlag.isProject.set(true);
         AEFlag.isNewProject.set(true);
+        AEFlag.isUpdateProject.set(false);
+        AEFlag.isPackage.set(false);
 
         if (check()) {
             this.inizia();
@@ -160,7 +162,7 @@ public class WizDialogNewProject extends WizDialog {
         AECheck.security.setAcceso(false);
 
         for (AECheck check : AECheck.getNewProject()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            unCheckbox = new Checkbox(check.getCaption(), check.is());
             mappaCheckbox.put(check.name(), unCheckbox);
         }
 
@@ -200,7 +202,7 @@ public class WizDialogNewProject extends WizDialog {
 
         if (fieldComboProgettiNuovi != null && fieldComboProgettiNuovi.getValue() != null) {
             projectName = fieldComboProgettiNuovi.getValue().getName();
-            status = status && AEDir.modificaAll(projectName);
+            status = status && AEDir.modificaProjectAll(projectName);
         }
 
         return status;
@@ -228,8 +230,9 @@ public class WizDialogNewProject extends WizDialog {
             AEToken.packageName.setValue(projectName.toLowerCase());
             AEToken.user.setValue(AEDir.nameUser.get());
             AEToken.today.setValue(date.get());
+            AEToken.versionDate.setValue(fixVersion());
             AEToken.entity.setValue(text.primaMaiuscola(projectName));
-            AEToken.usaSecurity.setValue(AECheck.security.isAbilitato() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
         }
 
         return status;

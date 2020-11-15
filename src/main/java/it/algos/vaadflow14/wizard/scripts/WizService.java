@@ -106,7 +106,7 @@ public class WizService {
                 projectName = text.levaCoda(projectName, SLASH);
             }
 
-            AEDir.modificaAll(projectName);
+            AEDir.modificaProjectAll(projectName);
         }
     }
 
@@ -137,6 +137,13 @@ public class WizService {
         AEDir.printInfo(message);
         AEFlag.printInfo(message);
         AECheck.printInfo(message);
+    }
+    /**
+     * Visualizzazione finale di controllo <br>
+     */
+    public void printInfoCompleto(String message) {
+        printInfo(message);
+        AEToken.printInfo(message);
     }
 
 

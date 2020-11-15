@@ -5,6 +5,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.LinkedHashMap;
+
 import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_FEEDBACK_PROGETTO;
 
 /**
@@ -45,6 +47,8 @@ public class WizDialogFeedbackWizard extends WizDialog {
         topLayout.add(text.getLabelRedBold("Le modifiche sono irreversibili"));
     }
 
+    protected void creaCheckBoxLayout() {
+    }
 
 
     protected void creaBottoni() {

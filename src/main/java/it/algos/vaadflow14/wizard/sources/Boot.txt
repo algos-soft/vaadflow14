@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 
 /**
  * Project @MODULELOWER@
@@ -100,10 +101,6 @@ public class @MODULEUPPER@Boot extends FlowBoot {
     @Override
     protected void addMenuRoutes() {
         super.addMenuRoutes();
-
-        FlowVar.menuRouteList.add(Wizard.class);
-        FlowVar.menuRouteList.add(Via.class);
-        FlowVar.menuRouteList.add(Address.class);
     }
 
 }// end of boot class

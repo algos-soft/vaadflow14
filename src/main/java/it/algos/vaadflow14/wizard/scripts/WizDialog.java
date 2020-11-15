@@ -19,8 +19,11 @@ import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_WIDTH;
 
@@ -128,6 +131,8 @@ public abstract class WizDialog extends Dialog {
     protected ComboBox<File> fieldComboProgettiNuovi;
 
     protected ComboBox<AEProgetto> fieldComboProgetti;
+
+    protected ComboBox<String> fieldComboPackages;
 
 
     /**
@@ -344,6 +349,72 @@ public abstract class WizDialog extends Dialog {
     }
 
 
+    protected String fixVersion() {
+        String versione = VUOTA;
+        String tag = "LocalDate.of(";
+        String anno;
+        String mese;
+        String giorno;
+        LocalDate localDate = LocalDate.now();
+
+        anno = localDate.getYear() + VUOTA;
+        mese = localDate.getMonth().getValue() + VUOTA;
+        giorno = localDate.getDayOfMonth() + VUOTA;
+        versione = tag + anno + VIRGOLA + mese + VIRGOLA + giorno + ")";
+
+        return versione;
+    }
+
+
+    protected String fixProperties() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += AECheck.ordine.getField() + VIRGOLA;
+        }
+
+        if (AECheck.code.is()) {
+            testo += AECheck.code.getField() + VIRGOLA;
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += AECheck.descrizione.getField() + VIRGOLA;
+        }
+
+        testo = text.levaCoda(testo, VIRGOLA);
+        return text.setApici(testo).trim();
+    }
+
+
+    protected String fixProperty(AECheck check) {
+        String testo = VUOTA;
+        String sourceText = VUOTA;
+        String tagSources = check.getSourcesTag();
+
+        if (check.is()) {
+            sourceText = wizService.leggeFile(tagSources);
+            testo = wizService.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+
+    protected String fixString() {
+        String toString = "VUOTA";
+
+        if (AECheck.code.is()) {
+            toString = "code";
+        } else {
+            if (AECheck.descrizione.is()) {
+                toString = "descrizione";
+            }
+        }
+
+        return toString;
+    }
+
+
     protected VerticalLayout fixSezione(String titolo) {
         return fixSezione(titolo, "black");
     }
@@ -371,11 +442,16 @@ public abstract class WizDialog extends Dialog {
     protected void esceDalDialogo(boolean esegue) {
         if (esegue) {
             if (!regolazioniFinali()) {
-                logger.error("Mancano alcuni dati essenziali per l'elaborazione richiesta", this.getClass(), "esceDalDialogo");
+                if (AEFlag.isNewPackage.is()) {
+                    logger.info("Manca il nome del nuovo package che non può quindi essere creato ", this.getClass(), "esceDalDialogo");
+                } else {
+                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
+                }
                 this.close();
                 return;
             }
-            wizService.printInfo("Uscita del dialogo");
+            wizService.printInfoCompleto("Uscita del dialogo");
+
             this.close();
             wizRecipient.esegue();
         } else {

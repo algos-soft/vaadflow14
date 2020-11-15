@@ -129,7 +129,7 @@ public class WizDialogUpdateProject extends WizDialog {
         AECheck.flow.setAcceso(true);
 
         for (AECheck check : AECheck.getUpdateProject()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.isAcceso());
+            unCheckbox = new Checkbox(check.getCaption(), check.is());
             mappaCheckbox.put(check.name(), unCheckbox);
         }
 
@@ -169,7 +169,7 @@ public class WizDialogUpdateProject extends WizDialog {
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
             projectName = fieldComboProgetti.getValue().getNameProject();
-            status = status && AEDir.modificaAll(projectName);
+            status = status && AEDir.modificaProjectAll(projectName);
         }
 
         return status;
