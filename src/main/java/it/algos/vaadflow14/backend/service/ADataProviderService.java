@@ -45,9 +45,9 @@ public class ADataProviderService extends AAbstractService {
     private AMongoService mongo;
 
 
-    public DataProvider creaDataProvider(Class<? extends AEntity> entityClazz) {
+    public DataProvider creaDataProvider(Class entityClazz) {
 
-        DataProvider<Anno, Void> dataProvider = DataProvider.fromCallbacks(
+        DataProvider dataProvider = DataProvider.fromCallbacks(
 
                 // First callback fetches items based on a query
                 query -> {

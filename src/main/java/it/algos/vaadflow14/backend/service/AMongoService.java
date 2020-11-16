@@ -3,11 +3,13 @@ package it.algos.vaadflow14.backend.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -479,19 +481,52 @@ public class AMongoService<capture> extends AAbstractService {
         Gson gSon = new Gson();
         String jsonString;
         String clazzName = entityClazz.getSimpleName().toLowerCase();
-        AEntity entityBean;
+        AEntity entityBean = null;
         List<Field> listaRef = annotation.getDBRefFields(entityClazz);
+        boolean esisteTagValue;
+        String tag = "\"value\":{\"";
+        String tag2;
+        String tagEnd = "},";
+        int ini = 0;
+        int end = 0;
 
         Collection<Document> documents = mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
         if (documents != null && documents.size() > 0) {
             items = new ArrayList<>();
             for (Document doc : documents) {
+                esisteTagValue = false;
+                tag2 = VUOTA;
                 jsonString = gSon.toJson(doc);
                 jsonString = jsonString.replaceAll("_id", "id");
-                entityBean = gSon.fromJson(jsonString, entityClazz);
+                try {
+                    entityBean = gSon.fromJson(jsonString, entityClazz);
+                } catch (JsonSyntaxException unErrore) {
+                    esisteTagValue = jsonString.contains(tag);
+                    if (jsonString.contains(tag)) {
+                        ini = jsonString.indexOf(tag);
+                        end = jsonString.indexOf(tagEnd, ini) + tagEnd.length();
+                        tag2 = jsonString.substring(ini, end);
+                        jsonString = jsonString.replace(tag2, VUOTA);
+                        try {
+                            entityBean = gSon.fromJson(jsonString, entityClazz);
+                        } catch (Exception unErrore2) {
+                            logger.error(unErrore, this.getClass(), "findSet");
+                        }
+                    } else {
+                        logger.error(unErrore, this.getClass(), "findSet");
+                    }
+                }
+
                 if (listaRef != null && listaRef.size() > 0) {
                     entityBean = fixDbRef(doc, gSon, entityBean, listaRef);
                 }
+                if (esisteTagValue && entityBean.getClass().getSimpleName().equals(Preferenza.class.getSimpleName())) {
+                    entityBean = fixPrefValue(doc, gSon, entityBean, tag2);
+                    if (((Preferenza) entityBean).value == null) {
+                        logger.warn("Valore nullo della preferenza " + ((Preferenza) entityBean).code, this.getClass(), "findSet");
+                    }
+                }
+
                 if (entityBean != null) {
                     items.add(entityBean);
                 }
@@ -499,6 +534,34 @@ public class AMongoService<capture> extends AAbstractService {
         }
 
         return items;
+    }
+
+
+    /**
+     * Aggiunge il valore del campo 'value' di una preferenza. <br>
+     *
+     * @return entityBean regolato
+     */
+    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity entityBean, String value) {
+        int number;
+        char c;
+        byte[] bytes;
+        String riga = text.estraeGraffaSingola(value);
+        String valore = riga.substring(riga.lastIndexOf(DUE_PUNTI) + DUE_PUNTI.length());
+        valore = valore.trim();
+        valore = text.levaCoda(valore, "]");
+        valore = text.levaTesta(valore, "[");
+        String[] car = valore.split(VIRGOLA);
+        String stringa = VUOTA;
+        for (String i : car) {
+            number = Integer.parseInt(i);
+            c = (char) number;
+            stringa += Character.toString((char) c);
+        }
+        bytes = stringa.getBytes();
+        ((Preferenza) entityBean).value = bytes;
+
+        return entityBean;
     }
 
 
@@ -522,6 +585,9 @@ public class AMongoService<capture> extends AAbstractService {
             clazzRef = field.getType();
             key = field.getName();
             elementRef = objDoc.get(key);
+            if (elementRef == null) {
+                break;
+            }
             objRef = elementRef.getAsJsonObject();
             objID = objRef.get("id");
             valueID = objID.getAsString();

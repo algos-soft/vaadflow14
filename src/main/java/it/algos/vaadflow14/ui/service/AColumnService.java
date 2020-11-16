@@ -9,7 +9,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.fields.AField;
@@ -428,18 +428,23 @@ public class AColumnService extends AAbstractService {
             AETypePref typePref = (AETypePref) reflection.getPropertyValue((AEntity) entity, "type");
             byte[] bytes = null;
             Object value = null;
-            Label label = null;
+            Label label = new Label();
             String message = VUOTA;
             Icon icon = null;
 
             try {
                 bytes = (byte[]) field.get(entity);
+                if (bytes == null) {
+                    label.setText("?");
+                    label.getStyle().set("font-weight", "bold");
+                    logger.warn("Non ci sono bytes come valore della preferenza " + ((Preferenza) entity).code);
+                    return label;
+                }
                 value = typePref.bytesToObject(bytes);
             } catch (Exception unErrore) {
                 logger.error(unErrore.toString());
             }
 
-            label = new Label();
             switch (typePref) {
                 case string:
                     label.getStyle().set("color", "blue");

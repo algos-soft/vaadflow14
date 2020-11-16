@@ -133,7 +133,8 @@ public class AGrid {
     @PostConstruct
     protected void postConstruct() {
         grid.setHeightByRows(true);
-        //        this.grid.setDataProvider(dataProviderService.anno());
+        this.grid.setDataProvider(dataProviderService.creaDataProvider(beanType));
+        grid.setHeight("100%");
 
         if (AEPreferenza.usaDebug.is()) {
             grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
@@ -250,8 +251,8 @@ public class AGrid {
 
     public void setItems(Collection items) {
 
-        grid.deselectAll();
-        grid.setItems(items);
+//        grid.deselectAll();
+//        grid.setItems(items);
         grid.setHeight("100%");
 
 

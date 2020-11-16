@@ -1,9 +1,13 @@
 package it.algos.vaadflow14.ui.list;
 
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
+import it.algos.vaadflow14.backend.service.ADataProviderService;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.view.AView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_GENERIC_LIST;
 
@@ -18,6 +22,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_GENERI
 @Route(value = ROUTE_NAME_GENERIC_LIST, layout = MainLayout.class)
 public class AViewList extends AView {
 
+    @Autowired
+    private ADataProviderService dataService;
 
     /**
      * Costruttore @Autowired <br>
@@ -65,16 +71,25 @@ public class AViewList extends AView {
      */
     @Override
     protected void fixBody() {
-        AGrid grid = entityLogic.getBodyGridLayout();
+//        AGrid grid = entityLogic.getBodyGridLayout();
 
-        if (bodyPlaceholder != null && grid.getGrid() != null) {
-            bodyPlaceholder.add(grid.getGrid());
+        if (bodyPlaceholder != null) {
+            bodyPlaceholder.add(creaGrid());
         }
         bodyPlaceholder.setHeight("100%");
 
         this.add(bodyPlaceholder);
+        setHeight("100%");
+//        creaGrid();
     }
 
+    private Grid creaGrid() {
+        AGrid grid = entityLogic.getBodyGridLayout();
+        DataProvider dataProvider = dataService.creaDataProvider(entityClazz);
+        grid.getGrid().setDataProvider(dataProvider);
+        grid.getGrid().setHeight("100%");
+        return grid.getGrid();
+    }
 
     /**
      * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>

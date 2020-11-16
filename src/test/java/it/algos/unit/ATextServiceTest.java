@@ -820,6 +820,7 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+
     @Test
     @Order(23)
     @DisplayName("23 - setApici")
@@ -843,6 +844,30 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+
+    @Test
+    @Order(24)
+    @DisplayName("24 - valueTextReplace")
+    public void replaceValue() {
+        tag = "\" value \":{\"";
+        String tagEnd = "},";
+        int ini = 0;
+        int end = 0;
+        previstoBooleano = true;
+        sorgente = "{\" id \":\" usadebug \",\" code \":\" usaDebug \",\" descrizione \":\" Flag generale di debug \",\" type \":\" bool \",\" value \":{\" type \":0,\" data \":[0]},\" note \":\" Ce ne possono essere di specifici, validi solo se questo è vero \",\" _class \":\" preferenza \"}";
+
+        if (sorgente.contains(tag)) {
+            ottenutoBooleano = true;
+        }
+        assertTrue(ottenutoBooleano);
+
+        previsto = "{\" id \":\" usadebug \",\" code \":\" usaDebug \",\" descrizione \":\" Flag generale di debug \",\" type \":\" bool \",\" note \":\" Ce ne possono essere di specifici, validi solo se questo è vero \",\" _class \":\" preferenza \"}";
+        ini = sorgente.indexOf(tag);
+        end = sorgente.indexOf(tagEnd, ini) + tagEnd.length();
+        tag = sorgente.substring(ini, end);
+        ottenuto = sorgente.replace(tag, VUOTA);
+        assertEquals(previsto, ottenuto);
+    }
 
 
     private void print(String sorgente, String ottenuto) {
