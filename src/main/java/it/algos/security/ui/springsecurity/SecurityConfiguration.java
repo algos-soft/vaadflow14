@@ -28,7 +28,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN_
  * <li>Bypass security checks for static resources,</li>
  * <li>Restrict access to the application, allowing only logged in users,</li>
  * <li>Set up the login form,</li>
- * <li>Configures the {@link AUserDetailsService}.</li>
+ * <li>Configures the {@link SecurityUserDetailsService}.</li>
  */
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @PostConstruct
     protected void inizia() {
-        ((AUserDetailsService) userDetailsService).passwordEncoder = passwordEncoder();
+        ((SecurityUserDetailsService) userDetailsService).passwordEncoder = passwordEncoder();
     }
 
     /**

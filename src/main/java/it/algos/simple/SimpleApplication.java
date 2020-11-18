@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * Project vaadflow14
@@ -16,13 +14,15 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * User: gac
  * Date: lun, 27-lug-2020
  * Time: 17:04
- * The entry point of the Spring Boot application.
+ * The entry point of the Spring Boot application. <br>
+ * <p>
+ * Spring Boot introduces the @SpringBootApplication annotation. <br>
+ * This single annotation is equivalent to using @Configuration, @EnableAutoConfiguration, and @ComponentScan. <br>
+ * Se l'applicazione NON usa la security, aggiungere exclude = {SecurityAutoConfiguration.class} a @SpringBootApplication <br>
  */
 @SpringBootApplication(scanBasePackages = {"it.algos.vaadflow14","it.algos.simple"}, exclude = {SecurityAutoConfiguration.class})
 @EnableVaadin({"it.algos.vaadflow14","it.algos.simple"})
-@ComponentScan({"it.algos.vaadflow14","it.algos.simple"})
 @EntityScan({"it.algos.vaadflow14","it.algos.simple"})
-@EnableMongoRepositories({"it.algos.vaadflow14","it.algos.simple"})
 public class SimpleApplication extends SpringBootServletInitializer {
 
     /**
@@ -33,6 +33,6 @@ public class SimpleApplication extends SpringBootServletInitializer {
      */
     public static void main(String[] args) {
         SpringApplication.run(SimpleApplication.class, args);
-    }
+    }// end of SpringBoot constructor
 
 }

@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.wizard.Wizard;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -28,13 +29,15 @@ import java.time.LocalDate;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class SimpleBoot extends FlowBoot {
 
+
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public SimpleData testData;
+    public SimpleData  testData;
 
 
     /**

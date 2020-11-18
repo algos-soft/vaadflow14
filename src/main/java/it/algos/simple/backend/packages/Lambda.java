@@ -1,6 +1,6 @@
 package it.algos.simple.backend.packages;
 
-import com.mysema.query.annotations.QueryEntity;
+import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.LoginI18n;
 import it.algos.vaadflow14.backend.annotation.*;

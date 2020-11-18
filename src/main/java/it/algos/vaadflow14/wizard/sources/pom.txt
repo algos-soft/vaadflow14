@@ -210,12 +210,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.mysema.querydsl/querydsl-sql-codegen -->
+        <!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-sql-codegen -->
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
+            <groupId>com.querydsl</groupId>
             <artifactId>querydsl-sql-codegen</artifactId>
-            <version>3.7.4</version>
-            <scope>provided</scope>
+            <version>4.4.0</version>
         </dependency>
         <!-- MongoDB -->
 

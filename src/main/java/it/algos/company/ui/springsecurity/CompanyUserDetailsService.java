@@ -1,4 +1,4 @@
-package it.algos.security.ui.springsecurity;
+package it.algos.company.ui.springsecurity;
 
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.application.FlowCost;
@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.backend.application.FlowVar.projectName;
 
 /**
@@ -28,12 +29,12 @@ import static it.algos.vaadflow14.backend.application.FlowVar.projectName;
  */
 @Service
 @Primary
-public class AUserDetailsService implements UserDetailsService {
+public class CompanyUserDetailsService implements UserDetailsService {
 
     public PasswordEncoder passwordEncoder;
 
 
-    public AUserDetailsService() {
+    public CompanyUserDetailsService() {
     }// end of Spring constructor
 
 
@@ -52,9 +53,8 @@ public class AUserDetailsService implements UserDetailsService {
         Collection<? extends GrantedAuthority> authorities;
         AMongoService mongo = StaticContextAccessor.getBean(AMongoService.class);
 
-        uniqueUserName = uniqueUserName.toLowerCase();
-        utente = (Utente) mongo.findById(Utente.class, uniqueUserName);
-//        utente = (Utente) mongo.findOneUnique(Utente.class, FlowCost.FIELD_USER, uniqueUserName);
+//        uniqueUserName = uniqueUserName.toLowerCase();
+        utente = (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, uniqueUserName);
 
         if (utente != null) {
             passwordHash = passwordEncoder.encode(utente.getPassword());

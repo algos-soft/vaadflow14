@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.ui.security.CustomRequestCache;
 import it.algos.vaadflow14.ui.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -28,10 +29,10 @@ import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN_
  * <li>Bypass security checks for static resources,</li>
  * <li>Restrict access to the application, allowing only logged in users,</li>
  * <li>Set up the login form,</li>
- * <li>Configures the {@link AUserDetailsService}.</li>
+ * <li>Configures the {@link CompanyUserDetailsService}.</li>
  */
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class CompanySecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_PROCESSING_URL = "/" + ROUTE_NAME_LOGIN;
     private static final String LOGIN_FAILURE_URL = "/"+ ROUTE_NAME_LOGIN_ERROR;
@@ -50,13 +51,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public CompanySecurityConfiguration(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     @PostConstruct
     protected void inizia() {
-        ((AUserDetailsService) userDetailsService).passwordEncoder = passwordEncoder();
+        ((CompanyUserDetailsService) userDetailsService).passwordEncoder = passwordEncoder();
     }
 
     /**

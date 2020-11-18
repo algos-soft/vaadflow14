@@ -55,9 +55,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public abstract class FlowBoot implements ServletContextListener {
 
-    //    @Autowired
-    //    ALogService logService;
-    //@todo Funzionalità ancora da implementare
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>

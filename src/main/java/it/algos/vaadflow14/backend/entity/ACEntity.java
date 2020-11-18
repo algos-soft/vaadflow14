@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.entity;
 
-import com.mysema.query.sql.Column;
 import it.algos.vaadflow14.backend.annotation.AIColumn;
 import it.algos.vaadflow14.backend.annotation.AIField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
