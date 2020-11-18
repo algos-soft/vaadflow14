@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -30,6 +31,9 @@ public class CompanyBoot extends FlowBoot {
 //    @Autowired
 //    public CompanyData companyData;
 
+//    public CompanyBoot() {
+//        super(null,null,null);
+//    }
 
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
@@ -58,8 +62,8 @@ public class CompanyBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void regolaApplicationProperties() {
-        super.regolaApplicationProperties();
+    protected void fixApplicationVar() {
+        super.fixApplicationVar();
 
         FlowVar.usaCompany = true;
         FlowVar.usaSecurity = true;

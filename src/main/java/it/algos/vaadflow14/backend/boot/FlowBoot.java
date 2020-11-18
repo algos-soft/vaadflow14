@@ -58,26 +58,40 @@ public abstract class FlowBoot implements ServletContextListener {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
-    @Autowired
     public FlowData flowData;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
-    @Autowired
     public ALogService logService;
 
 
-    @Autowired
-    protected Environment env;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    public Environment environment;
+
 
     //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
     protected AData aData;
+
+
+    /**
+     * Instantiates a new Flow boot. <br>
+     * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
+     * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
+     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore nullo. <br>
+     * Al termine del ciclo init() del costruttore il framework SpringBoot/Vaadin, inietterà la relativa istanza <br>
+     */
+    public FlowBoot() {
+        this.setFlowData(null);
+        this.setLogService(null);
+        this.setEnvironment(null);
+    }
 
 
     /**
@@ -121,9 +135,9 @@ public abstract class FlowBoot implements ServletContextListener {
         this.regolaRiferimenti();
         this.iniziaDataPreliminari();
         this.creaPreferenze();
-        this.fixPreferenze();
+        this.fixApplicationVar();
         this.inizializzaData();
-        this.regolaApplicationProperties();
+        this.fixPreferenze();
         this.addMenuRoutes();
         logService.startup();
     }
@@ -228,95 +242,95 @@ public abstract class FlowBoot implements ServletContextListener {
      * Le variabili (static) sono uniche per tutta l' applicazione ma il loro valore può essere modificato <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected void regolaApplicationProperties() {
+    protected void fixApplicationVar() {
 
 
-        /*
+        /**
          * Controlla se l' applicazione è multi-company oppure no <br>
          * Di default (per sicurezza) uguale a true <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          */
         FlowVar.usaCompany = true;
 
 
-        /*
+        /**
          * Controlla se l' applicazione usa il login oppure no <br>
          * Se si usa il login, occorre la classe SecurityConfiguration <br>
          * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
          * Di default (per sicurezza) uguale a true <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          * Può essere true anche se usaCompany=false <br>
          */
         FlowVar.usaSecurity = true;
 
 
-        /*
+        /**
          * Nome identificativo dell' applicazione <br>
          * Usato (eventualmente) nella barra di menu in testa pagina <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.projectName = VUOTA;
 
 
-        /*
+        /**
          * Descrizione completa dell' applicazione <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.projectDescrizione = VUOTA;
 
 
-        /*
+        /**
          * Versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.projectVersion = 0.1;
 
-        /*
-         *
+        /**
          * Data della versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.versionDate = START_DATE;
 
-        /*
+        /**
          * Eventuali informazioni aggiuntive da utilizzare nelle informazioni <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.projectNote = VUOTA;
 
-        /*
+        /**
          * Flag per usare le icone VaadinIcon <br>
          * In alternativa usa le icone 'lumo' <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.usaVaadinIcon = true;
 
 
-        /*
+        /**
          * Eventuali titolo della pagina <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.layoutTitle = VUOTA;
 
 
-        /*
+        /**
          * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
          * Eventuale casting a carico del chiamante <br>
-         * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.companyClazzName = "company";
 
 
-        /*
+        /**
          * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
          * Ogni applicazione può modificarla <br>
-         * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.pathLogo = "img/medal.ico";
 
@@ -328,17 +342,18 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.menuRouteList = new ArrayList<>();
 
+
         /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.usaCronoPackages = false;
 
         /**
          * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.usaGeografiaPackages = false;
     }
@@ -380,5 +395,46 @@ public abstract class FlowBoot implements ServletContextListener {
 
     }
 
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     *
+     * @param flowData the flow data
+     */
+    @Autowired
+    public void setFlowData(FlowData flowData) {
+        this.flowData = flowData;
+    }
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     *
+     * @param logService the log service
+     */
+    @Autowired
+    public void setLogService(ALogService logService) {
+        this.logService = logService;
+    }
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     *
+     * @param environment the environment service
+     */
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
 }

@@ -34,7 +34,9 @@ public class SecurityBoot extends FlowBoot {
 //    @Autowired
 //    public SimpleData testData;
 
-
+//    public SecurityBoot() {
+//        super(null,null,null);
+//    }
     /**
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
      * DEVE essere sovrascritto <br>
@@ -62,8 +64,8 @@ public class SecurityBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void regolaApplicationProperties() {
-        super.regolaApplicationProperties();
+    protected void fixApplicationVar() {
+        super.fixApplicationVar();
 
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = true;

@@ -1,4 +1,4 @@
-package it.algos.simple.backend.application;
+package it.algos.simple.backend.boot;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
@@ -9,12 +9,11 @@ import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.wizard.Wizard;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 
@@ -30,14 +29,35 @@ import java.time.LocalDate;
 public class SimpleBoot extends FlowBoot {
 
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
+    //    @Autowired
+    public SimpleData testData;
+
+
     @Autowired
-    public SimpleData  testData;
+    public SimpleBoot(SimpleData testData) {
+        super();
+        this.testData = testData;
+    }
+
+
+    /**
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
+     * del costruttore e PRIMA di qualsiasi altro metodo <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     */
+    @PostConstruct
+    protected void postConstruct() {
+        int a=87;
+    }
 
 
     /**
@@ -67,14 +87,14 @@ public class SimpleBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void regolaApplicationProperties() {
-        super.regolaApplicationProperties();
+    protected void fixApplicationVar() {
+        super.fixApplicationVar();
 
         FlowVar.usaSecurity = false;
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = Double.parseDouble(env.getProperty("algos.framework.version"));
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
         FlowVar.versionDate = LocalDate.of(2020, 11, 7);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";

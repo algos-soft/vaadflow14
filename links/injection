@@ -46,3 +46,21 @@ Conclusion
 We’ve seen that field-based injection should be avoided whenever possible due to its many drawbacks however elegant it may seem. The recommended approach is then to use constructor-based and setter-based dependency injection. Constructor-based injection is recommended for required dependencies allowing them to be immutable and preventing them to be null. Setter-based injection is recommended for optional dependencies.
 
 ==========================================================================
+==========================================================================
+https://www.programmersought.com/article/30381245087/
+
+Comparison:
+
+Advantages: The variable mode injection is very simple, without any extra code, which effectively improves the simplicity of java. Even if you have a few more dependencies, you can solve this problem.
+
+Disadvantages: Cannot effectively indicate dependencies. I believe that many people have encountered a bug, the object of the dependency injection is null. The problem encountered when starting the dependency container is that the dependency injection of the configuration is less than an annotation. However, this method relies too much on the injection container. This class will not work when the entire dependency container is not started, and the dependencies required by this class cannot be provided during reflection.
+When using set mode, this is a kind of choice injection, which is optional. Even if this dependency is not injected, it will not affect the operation of the whole class.
+When using the constructor mode, you must explicitly indicate that you must force the injection. This class is guaranteed to run by forcing a dependency injection.
+
+on the other hand:
+One of the core ideas of dependency injection is that classes managed by the container should not rely on dependencies managed by the container. In the vernacular, if the class uses a dependency injection class, then this Classes that get rid of these dependencies must also work. However, the use of variable injection is not guaranteed.
+Since the dependency injection method is used, it means that the class is no longer responsible for these dependencies. These are managed by the container. How do you know exactly which dependencies the class needs? It will use the set method to inject or constructor injection.
+
+Summary:
+Variable mode injection should be avoided as much as possible, using set method injection or constructor injection. The choice of these two methods depends on the constructor method if the class is mandatory. If you choose dependencies, Just use the set method to inject.
+==========================================================================
