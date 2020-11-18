@@ -7,9 +7,11 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import org.bson.Document;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
@@ -19,9 +21,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
-import static org.junit.Assert.assertNull;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -67,6 +70,8 @@ public class GSonTest extends ATest {
 
         mongoClient = new MongoClient("localhost");
         database = mongoClient.getDatabase("vaadflow14");
+        System.out.println("Fine del setup di mongo");
+        System.out.println(VUOTA);
     }
 
 
@@ -90,6 +95,7 @@ public class GSonTest extends ATest {
     @Order(1)
     @DisplayName("1 - Student instance")
     void studentInstance() {
+
         //Create a studente instance
         Student student = new Student();
         student.setAge(10);
@@ -97,10 +103,14 @@ public class GSonTest extends ATest {
 
         //map Student object to JSON content
         String jsonString = gSonService.toStringa(student);
+        System.out.println(VUOTA);
+        System.out.println("Student object to JSON content");
         System.out.println(jsonString);
 
         //map JSON content to Student object
         Student student1 = gSon.fromJson(jsonString, Student.class);
+        System.out.println(VUOTA);
+        System.out.println("JSON content to Student object");
         System.out.println(student1);
     }
 
@@ -113,15 +123,21 @@ public class GSonTest extends ATest {
         String clazzName = clazz.getSimpleName().toLowerCase();
 
         //Create an instance
-        Mese mese = Mese.builderMese().mese("marzo").giorni(30).giorniBisestile(30).sigla("mar").build();
+        Mese mesePre = Mese.builderMese().mese("marzo").giorni(30).giorniBisestile(30).sigla("mar").build();
 
         //map Mese object to JSON content
-        String jsonString = gSonService.toStringa(mese);
+        String jsonString = gSonService.toStringa(mesePre);
+        System.out.println(VUOTA);
+        System.out.println("Mese object to JSON content");
         System.out.println(jsonString);
 
         //map JSON content to Mese object
-        AEntity mese1 = gSon.fromJson(jsonString, clazz);
-        System.out.println(mese1);
+        AEntity mesePost = gSon.fromJson(jsonString, clazz);
+        System.out.println(VUOTA);
+        System.out.println("JSON content to Mese object");
+        System.out.println(mesePost);
+
+        Assert.assertEquals(mesePre, mesePost);
     }
 
 
@@ -146,6 +162,7 @@ public class GSonTest extends ATest {
         System.out.println("Last Name: " + student.getName().lastName);
 
         String nameString = gSonService.toStringa(name);
+        System.out.println(VUOTA);
         System.out.println(nameString);
 
         name = gSon.fromJson(nameString, Student.Name.class);
@@ -168,14 +185,21 @@ public class GSonTest extends ATest {
         Anno annoPre = Anno.builderAnno().ordine(3).anno("1874").bisestile(false).secolo(secolo).build();
         annoPre.id = "francesco";
 
-        //map Mese object to JSON content
+        //map Anno object to JSON content
         String jsonString = gSonService.toStringa(annoPre);
+        System.out.println(VUOTA);
+        System.out.println("Anno object to JSON content");
         System.out.println(jsonString);
+
         gSonService.toMap(annoPre);
 
-        //map JSON content to Mese object
+        //map JSON content to Anno object
         AEntity annoPost = gSon.fromJson(jsonString, clazz);
+        System.out.println(VUOTA);
+        System.out.println("JSON content to Anno object");
         System.out.println(annoPost);
+
+        Assert.assertEquals(annoPre, annoPost);
     }
 
 
@@ -194,6 +218,7 @@ public class GSonTest extends ATest {
         collection = database.getCollection(clazzName);
         propertiesNumber = collection.countDocuments();
         assertNotNull(propertiesNumber);
+        System.out.println(VUOTA);
         System.out.println("Nella collezione 'Via' ci sono " + propertiesNumber + " elementi");
 
         Document doc = (Document) collection.find().first();
@@ -206,24 +231,14 @@ public class GSonTest extends ATest {
         collection = database.getCollection(clazzName2);
         propertiesNumber = collection.countDocuments();
         assertNotNull(propertiesNumber);
+        System.out.println(VUOTA);
         System.out.println("Nella collezione 'Anno' ci sono " + propertiesNumber + " elementi");
-
-//        doc = (Document) collection.find().first();
-//        jsonString = gSonService.toStringa(doc);
-//        listaStr = gSonService.estraeGraffe(jsonString);
-//        assertNotNull(listaStr);
-//        Assert.assertEquals(previstoIntero, listaStr.size());
-//        System.out.println(listaStr.get(0));
-//
-//        dbRefString = listaStr.get(0);
-//        entity = (AEntity) gSon.fromJson(dbRefString, clazz);
-//        assertNotNull(entity);
     }
 
 
     @Test
     @Order(6)
-    @DisplayName("6 - from real database")
+    @DisplayName("6 - Anno from real database")
     void execute() {
         offset = 2970;
         limit = 1;
@@ -263,20 +278,120 @@ public class GSonTest extends ATest {
             }
 
             Assert.assertEquals("1971", anno.anno);
+            System.out.println(VUOTA);
+            System.out.println("JSON content to Anno object");
             System.out.println(anno.anno);
             //            Assert.assertEquals("XX secolo", anno.secolo.secolo);
             //            System.out.println(anno.secolo.secolo);
         }
+    }
 
 
-        //        BasicDBObject command = new BasicDBObject("find", "mese");
-        //        Document alfa = mongoOp.executeCommand(String.valueOf(command));
-        //        //        String gamma = alfa.getString("cursor");
-        //        ObjectId beta = alfa.getObjectId("cursor");
-        //        int a = 87;
-        //        //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
-        //        //        Object alfga = mongo.mongoOp.executeCommand(jsonCommand);
+    @Test
+    @Order(7)
+    @DisplayName("7 - Preferenza instance string")
+    void preferenzaInstance() {
+        Class<? extends AEntity> clazz = Preferenza.class;
 
+        //Create an instance
+        Preferenza prefAnte = Preferenza.builderPreferenza()
+
+                .code("alfa")
+
+                .descrizione("Controllo entrate")
+
+                .type(AETypePref.string)
+
+                .value(AETypePref.string.objectToBytes("Mario"))
+
+                .build();
+
+        //map Preferenza object to JSON content
+        String jsonString = gSonService.toStringa(prefAnte);
+        System.out.println(VUOTA);
+        System.out.println("Preferenza object to JSON content");
+        System.out.println(jsonString);
+
+        //map JSON content to Preferenza object
+        Preferenza prefPost = (Preferenza) gSon.fromJson(jsonString, clazz);
+        System.out.println(VUOTA);
+        System.out.println("JSON content to Preferenza object");
+        System.out.println("code: " + prefPost.code);
+        System.out.println("descrizione: " + prefPost.descrizione);
+        System.out.println("type: " + prefPost.type);
+        System.out.println("value: " + AETypePref.string.bytesToObject(prefPost.value));
+
+        Assert.assertEquals(prefAnte, prefPost);
+    }
+
+
+    @Test
+    @Order(8)
+    @DisplayName("8 - Preferenza instance int")
+    void preferenzaInstance2() {
+        Class<? extends AEntity> clazz = Preferenza.class;
+
+        //Create an instance
+        Preferenza prefAnte = Preferenza.builderPreferenza()
+
+                .code("alfa")
+
+                .descrizione("Controllo entrate")
+
+                .type(AETypePref.integer)
+
+                .value(AETypePref.integer.objectToBytes(24))
+
+                .build();
+
+        //map Preferenza object to JSON content
+        String jsonString = gSonService.toStringa(prefAnte);
+        System.out.println(VUOTA);
+        System.out.println("Preferenza object to JSON content");
+        System.out.println(jsonString);
+
+        //map JSON content to Preferenza object
+        Preferenza prefPost = (Preferenza) gSon.fromJson(jsonString, clazz);
+        System.out.println(VUOTA);
+        System.out.println("JSON content to Preferenza object");
+        System.out.println("code: " + prefPost.code);
+        System.out.println("descrizione: " + prefPost.descrizione);
+        System.out.println("type: " + prefPost.type);
+        System.out.println("value: " + AETypePref.integer.bytesToObject(prefPost.value));
+
+        Assert.assertEquals(prefAnte, prefPost);
+    }
+
+
+    @Test
+    @Order(9)
+    @DisplayName("6 - Preferenza from real database")
+    void executes() {
+        offset = 6;
+        limit = 1;
+        String jsonString;
+        Class clazz = Preferenza.class;
+        AEntity entity;
+        String clazzName = "preferenza";
+        String[] parti = null;
+        Object[] documents;
+        Document doc = null;
+        Preferenza pref = null;
+
+        collection = database.getCollection(clazzName);
+        //        documents = collection.find().skip(offset).limit(limit).into(new ArrayList()).toArray();
+        //        doc = (Document) documents[0];
+        doc = (Document) collection.find().first();
+        Assert.assertNotNull(doc);
+
+        Map mappa = gSonService.toMap(doc);
+
+        pref = (Preferenza) gSon.fromJson(doc.toJson(), clazz);
+        Assert.assertNotNull(pref);
+
+        //        Gson gson = new Gson();
+        //        Preferenza mongoObj = gson.fromJson(doc.toJson(), Preferenza.class);
+        //        Assert.assertNotNull(mongoObj);
     }
 
 

@@ -13,8 +13,10 @@ import java.time.ZoneOffset;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
- * Created by gac on 30 lug 2016.
- * Enum dei tipi di preferenza supportati
+ * Created by gac on 30 lug 2016. <br>
+ * Enum dei tipi di preferenza supportati. <br>
+ * Codifica e decodifica specifiche per ogni tipologia. <br>
+ * Usato sempre il charset di caratteri UTF-8 <br>
  */
 public enum AETypePref {
     string("string", AETypeField.text) {

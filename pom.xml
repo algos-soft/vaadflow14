@@ -244,10 +244,11 @@
         <!-- json -->
 
         <!-- gson -->
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.5</version>
+            <version>2.8.6</version>
         </dependency>
         <!-- gson -->
 
@@ -293,11 +294,11 @@
 
         <!-- pagination -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination -->
-<!--        <dependency>-->
-<!--            <groupId>org.vaadin.klaudeta</groupId>-->
-<!--            <artifactId>grid-pagination</artifactId>-->
-<!--            <version>2.0.7</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.vaadin.klaudeta</groupId>-->
+        <!--            <artifactId>grid-pagination</artifactId>-->
+        <!--            <version>2.0.7</version>-->
+        <!--        </dependency>-->
         <!-- pagination -->
 
         <!-- excel -->
@@ -309,11 +310,11 @@
         </dependency>
 
         <!-- FontAwesome Iron Iconset -->
-<!--        <dependency>-->
-<!--            <groupId>com.flowingcode.addons</groupId>-->
-<!--            <artifactId>font-awesome-iron-iconset</artifactId>-->
-<!--            <version>2.1.2</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.flowingcode.addons</groupId>-->
+        <!--            <artifactId>font-awesome-iron-iconset</artifactId>-->
+        <!--            <version>2.1.2</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
 

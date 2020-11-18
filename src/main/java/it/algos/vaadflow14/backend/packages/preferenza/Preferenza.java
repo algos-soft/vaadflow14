@@ -4,6 +4,7 @@ import com.mysema.query.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import lombok.*;
@@ -32,12 +33,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderPreferenza")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
 @AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code,type,value,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,descrizione,type,value")
+@AIList(fields = "code,type,value,usaCompany,descrizione", usaRowIndex = true)
+@AIForm(fields = "code,usaCompany,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**
@@ -65,14 +66,6 @@ public class Preferenza extends ACEntity {
     @AIColumn(widthEM = 14)
     public String code;
 
-    /**
-     * descrizione (obbligatoria)
-     */
-    @NotBlank()
-    @Size(min = 5)
-    @AIField(type = AETypeField.text, widthEM = 24)
-    @AIColumn(widthEM = 24, flexGrow = true)
-    public String descrizione;
 
     /**
      * tipo di dato memorizzato (obbligatorio)
@@ -89,6 +82,22 @@ public class Preferenza extends ACEntity {
     @AIField(type = AETypeField.preferenza, required = true, caption = "Valore", widthEM = 12)
     @AIColumn(widthEM = 10)
     public byte[] value;
+
+    /**
+     * usaCompany (facoltativo) usa un prefisso col codice della company
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
+    @AIColumn(headerIcon = VaadinIcon.FACTORY)
+    public boolean usaCompany;
+
+    /**
+     * descrizione (obbligatoria)
+     */
+    @NotBlank()
+    @Size(min = 5)
+    @AIField(type = AETypeField.text, widthEM = 24)
+    @AIColumn(widthEM = 24, flexGrow = true)
+    public String descrizione;
 
 
     /**
