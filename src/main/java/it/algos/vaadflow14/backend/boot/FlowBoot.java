@@ -15,6 +15,7 @@ import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.ALogService;
+import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -55,6 +56,17 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public abstract class FlowBoot implements ServletContextListener {
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    public Environment environment;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    public AMongoService mongo;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -66,32 +78,25 @@ public abstract class FlowBoot implements ServletContextListener {
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
-    public ALogService logService;
-
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public Environment environment;
-
+    public ALogService logger;
 
     //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
     protected AData aData;
 
 
     /**
-     * Instantiates a new Flow boot. <br>
+     * Constructor with @Autowired on setter. <br>
      * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
      * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
-     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore nullo. <br>
+     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore (ancora) nullo. <br>
      * Al termine del ciclo init() del costruttore il framework SpringBoot/Vaadin, inietterà la relativa istanza <br>
      */
     public FlowBoot() {
-        this.setFlowData(null);
-        this.setLogService(null);
-        this.setEnvironment(null);
-    }
+        this.setEnvironment(environment);
+        this.setMongo(mongo);
+        this.setFlowData(flowData);
+        this.setLogService(logger);
+    }// end of constructor with @Autowired on setter
 
 
     /**
@@ -130,7 +135,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        this.iniziaDBMongo();
+        this.fixDBMongo();
         this.iniziaVersioni();
         this.regolaRiferimenti();
         this.iniziaDataPreliminari();
@@ -139,17 +144,19 @@ public abstract class FlowBoot implements ServletContextListener {
         this.inizializzaData();
         this.fixPreferenze();
         this.addMenuRoutes();
-        logService.startup();
+
+        logger.startup();
     }
 
 
     /**
      * Inizializzazione di alcuni parametri del database mongoDB <br>
      */
-    protected void iniziaDBMongo() {
-        //        mongo.getMaxBlockingSortBytes();
-        //        mongo.fixMaxBytes();
-        //        mongo.getMaxBlockingSortBytes();
+    protected void fixDBMongo() {
+
+        //                      mongo.getMaxBlockingSortBytes();
+        //                mongo.fixMaxBytes();
+        //                mongo.getMaxBlockingSortBytes();
     }
 
 
@@ -182,7 +189,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
 
     /**
-     * Crea le preferenze standard <br>
+     * Crea le preferenze standard, se non esistono <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
      * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaService <br>
@@ -219,7 +226,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
 
     /**
-     * Eventuali regolazioni delle preferenze standard effettuata nella sottoclasse specifica <br>
+     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
      * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
      * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
@@ -239,7 +246,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
     /**
      * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
-     * Le variabili (static) sono uniche per tutta l' applicazione ma il loro valore può essere modificato <br>
+     * Le variabili (static) sono uniche per tutta l' applicazione, ma il loro valore può essere modificato <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixApplicationVar() {
@@ -248,7 +255,7 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Controlla se l' applicazione è multi-company oppure no <br>
          * Di default (per sicurezza) uguale a true <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          */
         FlowVar.usaCompany = true;
@@ -259,7 +266,7 @@ public abstract class FlowBoot implements ServletContextListener {
          * Se si usa il login, occorre la classe SecurityConfiguration <br>
          * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
          * Di default (per sicurezza) uguale a true <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          * Può essere true anche se usaCompany=false <br>
          */
@@ -285,9 +292,10 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
-        FlowVar.projectVersion = 0.1;
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
+        ;
 
         /**
          * Data della versione dell' applicazione <br>
@@ -322,7 +330,7 @@ public abstract class FlowBoot implements ServletContextListener {
          * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
          * Eventuale casting a carico del chiamante <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.companyClazzName = "company";
 
@@ -330,7 +338,7 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
          * Ogni applicazione può modificarla <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.pathLogo = "img/medal.ico";
 
@@ -346,14 +354,14 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.usaCronoPackages = false;
 
         /**
          * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.usaGeografiaPackages = false;
     }
@@ -362,7 +370,7 @@ public abstract class FlowBoot implements ServletContextListener {
     /**
      * Questa classe viene invocata PRIMA della chiamata del browser
      * Se NON usa la security, le @Route vengono create solo qui
-     * Se USA la security, le @Route vengono sovrascritte all' apertura del brose nella classe AUserDetailsService
+     * Se USA la security, le @Route vengono sovrascritte all' apertura del browser nella classe AUserDetailsService
      * <p>
      * Aggiunge le @Route (view) standard
      * Nella sottoclasse concreta che invoca questo metodo, aggiunge le @Route (view) specifiche dell' applicazione
@@ -401,6 +409,30 @@ public abstract class FlowBoot implements ServletContextListener {
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Chiamata dal costruttore di questa classe con valore nullo <br>
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public void setMongo(AMongoService mongo) {
+        this.mongo = mongo;
+    }
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      *
      * @param flowData the flow data
      */
@@ -416,25 +448,12 @@ public abstract class FlowBoot implements ServletContextListener {
      * Chiamata dal costruttore di questa classe con valore nullo <br>
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      *
-     * @param logService the log service
+     * @param logger the log service
      */
     @Autowired
-    public void setLogService(ALogService logService) {
-        this.logService = logService;
+    public void setLogService(ALogService logger) {
+        this.logger = logger;
     }
 
-
-    /**
-     * Set con @Autowired di una property chiamata dal costruttore <br>
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Chiamata dal costruttore di questa classe con valore nullo <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     *
-     * @param environment the environment service
-     */
-    @Autowired
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
 
 }

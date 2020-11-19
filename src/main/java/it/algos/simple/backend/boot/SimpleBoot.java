@@ -56,7 +56,6 @@ public class SimpleBoot extends FlowBoot {
      */
     @PostConstruct
     protected void postConstruct() {
-        int a=87;
     }
 
 
@@ -83,7 +82,7 @@ public class SimpleBoot extends FlowBoot {
 
     /**
      * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
-     * Le variabili (static) sono uniche per tutta l' applicazione ma il loro valore può essere modificato <br>
+     * Le variabili (static) sono uniche per tutta l' applicazione, ma il loro valore può essere modificato <br>
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
@@ -94,7 +93,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
+//        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
         FlowVar.versionDate = LocalDate.of(2020, 11, 7);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
