@@ -49,8 +49,6 @@ public class WizElaboraNewPackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        this.regolazioniIniziali();
-
         if (creaDirectory()) {
             this.creaFileEntity();
             this.fixBoot();

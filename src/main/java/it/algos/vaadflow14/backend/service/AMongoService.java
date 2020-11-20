@@ -26,9 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -1118,6 +1116,109 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public boolean drop(Class<? extends AEntity> entityClazz) {
         return drop(annotation.getCollectionName(entityClazz));
+    }
+
+
+    /**
+     * Restituisce un generico database
+     */
+    public MongoDatabase getDB(String databaseName) {
+        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        return mongoClient.getDatabase(databaseName);
+    }
+
+    /**
+     * Restituisce il database 'admin' di servizio, sempre presente in MongoDB
+     */
+    public MongoDatabase getDBAdmin() {
+        return getDB("admin");
+    }
+
+
+    /**
+     * Recupera il valore di un parametro
+     *
+     * @param parameterName
+     *
+     * @return value of parameter
+     */
+    public Object getParameter(String parameterName) {
+        Map<String, Object> mappa;
+        MongoDatabase dbAdmin = getDBAdmin();
+        Document param;
+
+        mappa = new LinkedHashMap<>();
+        mappa.put("getParameter", 1);
+        mappa.put(parameterName, 1);
+
+        param = dbAdmin.runCommand(new Document(mappa));
+
+        return param.get(parameterName);
+    }
+
+    /**
+     * Regola il valore di un parametro
+     *
+     * @param parameterName
+     * @param valueToSet    valore da regolare
+     *
+     * @return true se il valore è stato acquisito dal database
+     */
+    public boolean setParameter(String parameterName, Object valueToSet) {
+        Map<String, Object> mappa;
+        MongoDatabase dbAdmin = getDBAdmin();
+        Document param;
+
+        mappa = new LinkedHashMap<>();
+        mappa.put("setParameter", 1);
+        mappa.put(parameterName, valueToSet);
+
+        param = dbAdmin.runCommand(new Document(mappa));
+        return (double) param.get("ok") == 1;
+    }
+
+
+    /**
+     * Regola il valore del parametro internalQueryExecMaxBlockingSortBytes
+     *
+     * @param maxBytes da regolare
+     *
+     * @return true se il valore è stato acquisito dal database
+     */
+    public boolean setMaxBlockingSortBytes(int maxBytes) {
+        return setParameter("internalQueryExecMaxBlockingSortBytes", maxBytes);
+    }
+
+    /**
+     * Recupera il valore del parametro internalQueryExecMaxBlockingSortBytes
+     *
+     * @return value of parameter
+     */
+    public int getMaxBlockingSortBytes() {
+        int numBytes;
+        String value = "";
+
+        numBytes = (int) getParameter("internalQueryExecMaxBlockingSortBytes");
+        value = text.format(numBytes);
+
+        if (numBytes == AMongoService.STANDARD_MONGO_MAX_BYTES) {
+            logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
+        } else {
+            if (numBytes == AMongoService.EXPECTED_ALGOS_MAX_BYTES) {
+                logger.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
+            } else {
+                logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata a cazzo: " + value);
+            }
+        }
+
+        return numBytes;
+    }
+
+    /**
+     * Regola il valore iniziale del parametro internalQueryExecMaxBlockingSortBytes
+     */
+    public void fixMaxBytes() {
+        this.setMaxBlockingSortBytes(EXPECTED_ALGOS_MAX_BYTES);
     }
 
 }

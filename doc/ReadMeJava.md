@@ -16,6 +16,45 @@ JAVA
 ##Interfaces
 - Staring from 8
 
+     
+     Function(T,R): Takes one parameter type (T), produces one result (R).
+     Consumer(T): Takes one parameter type (T), produces nothing (void).
+     Supplier(R): Takes no parameter type (void), produces one result (R).
+     Predicate(T): Takes one parameter type (T), produces boolean value.
+     Runnable: Takes no parameter type (void), produces nothing (void).
+     BiConsumer(T,U): Takes two parameters type (T,U), produces nothing (void).
+     BiFunction(T,U,R): Takes two parameters type (T,U), produces one result (R).
+     UnaryOperator(T): Takes one parameter type (T), produces one result (T).
+     BiaryOperator(T): Takes two parameters of type (T), produces one result (T).
+####Supplier      
+    @FunctionalInterface
+    public interface Supplier<T> {
+        T get();
+    }
+The Supplier Interface is a part of the java.util.function package which has been introduced since Java 8, to implement functional programming in Java. It represents a function which does not take in any argument but produces a value of type T. Hence this functional interface takes in only one generic namely:-
+
+    T: denotes the type of the result
+
+The lambda expression assigned to an object of Supplier type is used to define its get() which eventually produces a value. Suppliers are useful when we don’t need to supply any value and obtain a result at the same time. The Supplier interface consists of only one function:
+    
+    T get()
+    
+    // This function returns a random value. 
+    Supplier<Double> randomValue = () -> Math.random(); 
+  
+    // Print the random value using get() 
+    System.out.println(randomValue.get());     
+    
+
+This method does not take in any argument but produces a value of type T.
+
+In all scenarios where there is no input to an operation and it is expected to return an output, the in-built functional interface Supplier<T> can be used without the need to define a new functional interface every time.
+
+There are primitive specializations of the Supplier interface:
+- IntSupplier having one abstract method getAsInt()
+- LongSupplier having one abstract method getAsLong()
+- DoubleSupplier having one abstract method getAsDouble()
+- BooleanSupplier having one abstract method getAsBoolean()
 ##Collection
 - Staring from 8/9
 
@@ -44,7 +83,15 @@ JAVA
       x ==> 10
       
 ##Modules
-      
+##Deprecated enhancement
+- Staring from 9
+
+      @Deprecated(since = "4.5", forRemoval = true)
+          public int calculate(Machine machine) {
+    	      return machine.exportVersions().size() * 10;
+    	  }
+    	  
+
 ##var keyword
 - Staring from 10
 

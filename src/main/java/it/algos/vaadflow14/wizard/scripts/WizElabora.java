@@ -13,6 +13,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.JAVA_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.TXT_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.XML_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PACKAGES;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 
@@ -182,82 +183,21 @@ public abstract class WizElabora implements WizRecipient {
      */
     @Override
     public void esegue() {
-        this.regolazioniIniziali();
-    }
+        this.copiaDirectoryConfig();
+        this.copiaDirectoryDoc();
+        this.copiaDirectoryFrontend();
+        this.copiaDirectoryLinks();
+        this.copiaDirectorySnippets();
 
+        this.copiaDirectoryVaadFlow();
 
-    /**
-     * Regolazioni iniziali indipendenti (in parte) dal dialogo di input <br>
-     */
-    protected void regolazioniIniziali() {
-        //        this.pathUserDir = AEWiz.pathCurrent.getValue();
-        //        this.pathVaadFlow = AEWiz.pathVaadFlow.getValue();
-        //        this.pathVaadFlowMain = pathVaadFlow + DIR_MAIN;
-        //        this.pathVaadFlowAlgos = pathVaadFlow + DIR_ALGOS;
-        //        this.pathVaadFlowWizTxtSources = pathVaadFlow + DIR_VAADFLOW_SOURCES;
-        //        this.pathVaadFlowResources = pathVaadFlow + DIR_RESOURCES;
-        //        this.pathVaadFlowFrontend = pathVaadFlow + DIR_FRONT_END;
-        //
-        //        this.newProjectName = AEWiz.nameTargetProject.getValue();
-        //        this.newProjectNameUpper = text.primaMaiuscola(newProjectName);
-        //        this.pathProject = AEWiz.pathTargetProject.getValue();
-        //
-        //        this.pathProjectMain = pathProject + DIR_MAIN;
-        //        this.pathProjectAlgos = pathProject + DIR_ALGOS;
-        //        this.pathProjectModulo = pathProjectAlgos + newProjectName + SLASH;
-        //        this.pathProjectDirApplication = pathProjectModulo + DIR_APPLICATION;
-        //        this.pathProjectDirPackages = pathProjectModulo + DIR_PACKAGES;
-        //        this.pathProjectMeta = pathProject + DIR_META;
-        //        this.pathProjectResources = pathProject + DIR_RESOURCES;
-        //        this.pathProjectFrontend = pathProject + DIR_FRONT_END;
-        //        this.pathProjectVaadFlowModulo = pathProjectAlgos + DIR_VAADFLOW;
-        //        this.pathProjectSourcesDeleting = pathProjectVaadFlowModulo + DIR_SOURCES;
-        //
-        //        AEToken.pathVaadFlowWizTxtSources.setValue(pathVaadFlowWizTxtSources);
-        //
-        //        //--visualizzazione di controllo
-        //        if (FLAG_DEBUG_WIZ) {
-        //            System.out.println("");
-        //            System.out.println("********************");
-        //            if (isNuovoProgetto) {
-        //                System.out.println("Ingresso in WizElaboraNewProject");
-        //            } else {
-        //                System.out.println("Ingresso in WizElaboraUpdateProject");
-        //            }// end of if/else cycle
-        //            System.out.println("********************");
-        //            System.out.println("Progetto corrente: pathUserDir=" + pathUserDir);
-        //            System.out.println("Directory VaadFlow: pathVaadFlow=" + pathVaadFlow);
-        //            System.out.println("Nome target progetto: newProjectName=" + newProjectName);
-        //            System.out.println("Nome target progetto maiuscolo: newProjectNameUpper=" + newProjectNameUpper);
-        //            System.out.println("Path target progetto: pathProject=" + pathProject);
-        //
-        //            System.out.println("");
-        //            System.out.println("Cartella 'root'' di VaadFlow: pathVaadFlow=" + pathVaadFlow);
-        //            System.out.println("Cartella 'main' di VaadFlow: pathVaadFlowMain=" + pathVaadFlowMain);
-        //            System.out.println("Cartella 'algos' di VaadFlow: pathVaadFlowAlgos=" + pathVaadFlowAlgos);
-        //            System.out.println("Sorgenti di testo di VaadFlow: pathVaadFlowWizTxtSources=" + pathVaadFlowWizTxtSources);
-        //            System.out.println("Cartella 'resources' di VaadFlow: pathVaadFlowResources=" + pathVaadFlowResources);
-        //            System.out.println("Cartella 'frontend' di VaadFlow': pathVaadFlowFrontend=" + pathVaadFlowFrontend);
-        //
-        //            System.out.println("");
-        //            System.out.println("Nome minuscolo del project': newProjectName=" + newProjectName);
-        //            System.out.println("Nome maiuscolo del project': newProjectNameUpper=" + newProjectNameUpper);
-        //            System.out.println("Cartella 'root' del target project': pathProject=" + pathProject);
-        //
-        //            System.out.println("");
-        //            System.out.println("Cartella 'nomeDelProjectMinuscolo' del target project: pathProjectModulo=" + pathProjectModulo);
-        //            System.out.println("Cartella 'main' del target project: pathProjectMain=" + pathProjectMain);
-        //            System.out.println("Cartella 'algos' del target project': pathProjectAlgos=" + pathProjectAlgos);
-        //            System.out.println("Cartella 'application' del target project: pathProjectDirApplication=" + pathProjectDirApplication);
-        //            System.out.println("Cartella 'packages' del target project: pathProjectDirModules=" + pathProjectDirPackages);
-        //            System.out.println("Cartella 'resources' del target project: pathProjectResources=" + pathProjectResources);
-        //            System.out.println("Cartella 'frontend' del target project: pathProjectFrontend=" + pathProjectFrontend);
-        //            System.out.println("Cartella 'vaadflow14' del target project: pathProjectVaadFlowModulo=" + pathProjectVaadFlowModulo);
-        //            System.out.println("Cartella 'sourcesToBeDeleted' del target project: pathProjectVaadFlowModulo=" + pathProjectSourcesDeleting);
-        //
-        //            System.out.println("");
-        //        }// end of if cycle
-        //
+        this.copiaDirectoryMetaInf();
+        this.creaFileProperties();
+        this.creaFileBanner();
+
+        this.creaFileGit();
+        this.creaFilePom();
+        this.creaFileRead();
     }
 
 
@@ -498,7 +438,8 @@ public abstract class WizElabora implements WizRecipient {
                 file.sovraScriveFile(pathFileBoot, testo);
                 logger.info("Aggiunto menuRoutes nel file " + pathError, this.getClass(), "fixBootMenu");
             }
-        } else {
+        }
+        else {
             logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootMenu");
         }
 
@@ -529,21 +470,76 @@ public abstract class WizElabora implements WizRecipient {
                 file.sovraScriveFile(pathFileBoot, testo);
                 logger.info("Aggiunto import della Entity nel file " + pathError, this.getClass(), "fixBootImport");
             }
-        } else {
+        }
+        else {
             logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootImport");
         }
     }
 
 
-    //    protected String leggeFile(String nomeFileTextSorgente) {
-    //        String nomeFileTxt = nomeFileTextSorgente;
-    //
-    //        if (!nomeFileTxt.endsWith(TXT_SUFFIX)) {
-    //            nomeFileTxt += TXT_SUFFIX;
-    //        }// end of if cycle
-    //
-    //        return file.leggeFile(pathVaadFlowWizTxtSources + nomeFileTxt);
-    //    }// end of method
+    public void creaModuloProgetto() {
+        //--crea directory principale del modulo target (empty)
+        file.creaDirectory(AEDir.pathTargetModulo.get());
+
+        //--classe principale dell'applicazione col metodo 'main'
+        creaFileApplicationMainClass();
+
+        //--crea subDirectory backend (empty)
+        file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND);
+
+        //--crea subDirectory application (empty) in backend
+        file.creaDirectory(AEDir.pathTargetApplication.get());
+
+        //--crea subDirectory boot (empty) in backend
+        file.creaDirectory(AEDir.pathTargetBoot.get());
+
+        //--crea subDirectory data (empty) in backend
+        file.creaDirectory(AEDir.pathTargetData.get());
+
+        //--crea subDirectory packages (empty) in backend
+        file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_PACKAGES);
+
+        //--crea subDirectory ui (empty)
+        file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_UI);
+
+        //--crea contenuto della directory Application
+        creaFileCost();
+
+        //--crea contenuto della directory boot
+        creaFileBoot();
+
+        //--crea contenuto della directory data
+        creaFileData();
+
+        //            creaDirectorySecurity();
+    }
+
+
+    /**
+     * Crea il file principale con la MainClass <br>
+     */
+    public void creaFileApplicationMainClass() {
+        String nameSourceText = APP_NAME;
+        String destPathSuffix = AEDir.pathTargetModulo.get();
+        destPathSuffix += AEDir.nameTargetProjectUpper.get();
+        destPathSuffix += "Application";
+        destPathSuffix += WizCost.JAVA_SUFFIX;
+
+        wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    }
+
+
+    protected void creaFileCost() {
+        wizService.creaFile(AECopyFile.checkFlagSeEsiste, FILE_COST, AEDir.fileTargetCost.get());
+    }
+
+    public void creaFileBoot() {
+        wizService.creaFile(AECopyFile.checkFlagSeEsiste, FILE_BOOT, AEDir.fileTargetBoot.get());
+    }
+
+    public void creaFileData() {
+        wizService.creaFile(AECopyFile.checkFlagSeEsiste, FILE_DATA, AEDir.fileTargetData.get());
+    }
 
 
 }

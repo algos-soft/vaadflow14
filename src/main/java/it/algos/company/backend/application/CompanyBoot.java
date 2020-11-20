@@ -3,9 +3,6 @@ package it.algos.company.backend.application;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.security.Utente;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -49,8 +46,8 @@ public class CompanyBoot extends FlowBoot {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void inizializzaData() {
-        super.inizializzaData();
+    protected void initData() {
+        super.initData();
 
 //        companyData.initData();
     }

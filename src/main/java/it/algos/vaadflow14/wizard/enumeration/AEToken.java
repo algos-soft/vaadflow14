@@ -28,7 +28,7 @@ public enum AEToken {
 
     first("FIRSTCHARPROJECT", true),
 
-//    pathVaadFlowWizTxtSources(VUOTA, true),
+    //    pathVaadFlowWizTxtSources(VUOTA, true),
 
     packageName("PACKAGE", true),
 
@@ -37,6 +37,8 @@ public enum AEToken {
     user("USER"),
 
     today("TODAY"),
+
+    time("TIME"),
 
     qualifier("QUALIFIER"),
 
@@ -155,9 +157,10 @@ public enum AEToken {
 
 
     public static String replace(AEToken aeToken, String textReplacing, String value) {
-        if (value != null ) {
+        if (value != null) {
             return textReplacing.replaceAll(DELIMITER + aeToken.tokenTag + DELIMITER, value);
-        } else {
+        }
+        else {
             return textReplacing;
         }
     }
@@ -175,41 +178,6 @@ public enum AEToken {
         return textReplacing;
     }
 
-
-    public String replace(String textReplacing, String currentTag) {
-        return textReplacing.replaceAll(tokenTag, currentTag);
-    }
-
-
-    public String getTokenTag() {
-        return tokenTag;
-    }
-
-
-    public void setTokenTag(String tokenTag) {
-        this.tokenTag = tokenTag;
-    }
-
-
-    public boolean isUsaValue() {
-        return usaValue;
-    }
-
-
-    public void setUsaValue(boolean usaValue) {
-        this.usaValue = usaValue;
-    }
-
-
-    public String getValue() {
-        return value;
-    }
-
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     /**
      * Visualizzazione di controllo <br>
      */
@@ -223,6 +191,34 @@ public enum AEToken {
             }
             System.out.println("");
         }
+    }
+
+    public String replace(String textReplacing, String currentTag) {
+        return textReplacing.replaceAll(tokenTag, currentTag);
+    }
+
+    public String getTokenTag() {
+        return tokenTag;
+    }
+
+    public void setTokenTag(String tokenTag) {
+        this.tokenTag = tokenTag;
+    }
+
+    public boolean isUsaValue() {
+        return usaValue;
+    }
+
+    public void setUsaValue(boolean usaValue) {
+        this.usaValue = usaValue;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

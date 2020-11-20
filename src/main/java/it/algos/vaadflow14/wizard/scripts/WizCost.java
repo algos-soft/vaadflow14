@@ -7,7 +7,7 @@ package it.algos.vaadflow14.wizard.scripts;
  * Date: lun, 13-apr-2020
  * Time: 05:09
  */
-public class WizCost {
+public abstract class WizCost {
 
     //--flag per stampare info di debug
     public static final boolean FLAG_DEBUG_WIZ = true;
@@ -127,6 +127,8 @@ public class WizCost {
 
     public static final String DIR_BOOT = "boot/";
 
+    public static final String DIR_DATA = "data/";
+
     public static final String APP_NAME = "application";
 
     public static final String FILE_READ = "README";
@@ -134,6 +136,8 @@ public class WizCost {
     public static final String FILE_COST = "Cost";
 
     public static final String FILE_BOOT = "Boot";
+
+    public static final String FILE_DATA = "Data";
 
     public static final String FILE_VERS = "Vers";
 

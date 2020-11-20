@@ -9,7 +9,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -31,9 +30,9 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WizDialogNewProject extends WizDialog {
 
-    private static String LABEL_COMBO_UNO = "Progetti vuoti esistenti (nella directory IdeaProjects)";
+    private static final String LABEL_COMBO_UNO = "Progetti vuoti esistenti (nella directory IdeaProjects)";
 
-    private static String LABEL_COMBO_DUE = "Tutti i progetti esistenti (nella directory IdeaProjects)";
+    private static final String LABEL_COMBO_DUE = "Tutti i progetti esistenti (nella directory IdeaProjects)";
 
 
     public WizDialogNewProject() {
@@ -208,34 +207,5 @@ public class WizDialogNewProject extends WizDialog {
         return status;
     }
 
-
-    /**
-     * Chiamato alla dismissione del dialogo <br>
-     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
-     */
-    @Override
-    protected boolean regolaAEToken() {
-        boolean status = true;
-        String projectName;
-        super.regolaAEToken();
-
-        projectName = AEDir.nameTargetProject.get();
-
-        if (text.isValid(projectName)) {
-            AEToken.nameTargetProject.setValue(projectName);
-            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
-            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
-            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
-            AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(projectName.toLowerCase());
-            AEToken.user.setValue(AEDir.nameUser.get());
-            AEToken.today.setValue(date.get());
-            AEToken.versionDate.setValue(fixVersion());
-            AEToken.entity.setValue(text.primaMaiuscola(projectName));
-            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-        }
-
-        return status;
-    }
 
 }

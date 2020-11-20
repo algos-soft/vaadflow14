@@ -272,6 +272,18 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    pathTargetData(false, true, false, "Directory di data") {
+        @Override
+        public boolean modificaProject(String projectName) {
+            String path = pathTargetModulo.get();
+            path += DIR_BACKEND + DIR_DATA;
+            this.setValue(path);
+            return text.isValid(path);
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
     fileTargetBoot(false, true, false, "File di boot") {
         @Override
@@ -286,6 +298,23 @@ public enum AEDir {
             return text.isValid(filePath);
         }
     },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
+    fileTargetData(false, true, false, "File di data") {
+        @Override
+        public boolean modificaProject(String projectName) {
+            String filePath = pathTargetData.get();
+
+            filePath += AEDir.nameTargetProjectUpper.get();
+            filePath += FILE_DATA;
+            filePath += JAVA_SUFFIX;
+
+            this.setValue(filePath);
+            return text.isValid(filePath);
+        }
+    },// end of single enumeration
+
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH

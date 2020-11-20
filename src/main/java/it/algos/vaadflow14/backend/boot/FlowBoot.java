@@ -62,6 +62,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public Environment environment;
 
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
@@ -85,7 +86,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
 
     /**
-     * Constructor with @Autowired on setter. <br>
+     * Constructor with @Autowired on setter.<br>
      * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
      * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
      * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore (ancora) nullo. <br>
@@ -136,12 +137,12 @@ public abstract class FlowBoot implements ServletContextListener {
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         this.fixDBMongo();
-        this.iniziaVersioni();
-        this.regolaRiferimenti();
+        this.fixVersioni();
+        this.fixRiferimenti();
         this.iniziaDataPreliminari();
         this.creaPreferenze();
         this.fixApplicationVar();
-        this.inizializzaData();
+        this.initData();
         this.fixPreferenze();
         this.addMenuRoutes();
 
@@ -151,22 +152,20 @@ public abstract class FlowBoot implements ServletContextListener {
 
     /**
      * Inizializzazione di alcuni parametri del database mongoDB <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixDBMongo() {
-
-        //                      mongo.getMaxBlockingSortBytes();
-        //                mongo.fixMaxBytes();
-        //                mongo.getMaxBlockingSortBytes();
+        mongo.getMaxBlockingSortBytes();
+        mongo.fixMaxBytes();
     }
 
 
     /**
-     * //@todo Forse non serve
      * Inizializzazione delle versioni standard di vaadinFlow <br>
      * Inizializzazione delle versioni del programma specifico <br>
      */
-    @Deprecated
-    protected void iniziaVersioni() {
+    @Deprecated()
+    protected void fixVersioni() {
     }
 
 
@@ -174,8 +173,8 @@ public abstract class FlowBoot implements ServletContextListener {
      * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
      * DEVE essere sovrascritto <br>
      */
-    protected void regolaRiferimenti() {
-        // Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze()
+    @Deprecated()
+    protected void fixRiferimenti() {
         //        preferenzaService.applicationBoot = this;
     }
 
@@ -184,6 +183,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Inizializzazione dei dati di alcune collections essenziali per la partenza <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Deprecated()
     protected void iniziaDataPreliminari() {
     }
 
@@ -225,23 +225,6 @@ public abstract class FlowBoot implements ServletContextListener {
     }
 
 
-    /**
-     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
-     * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
-     * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixPreferenze() {
-    }
-
-
-    /**
-     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void inizializzaData() {
-        flowData.initData();
-    }
 
 
     /**
@@ -251,7 +234,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixApplicationVar() {
 
-
         /**
          * Controlla se l' applicazione è multi-company oppure no <br>
          * Di default (per sicurezza) uguale a true <br>
@@ -259,7 +241,6 @@ public abstract class FlowBoot implements ServletContextListener {
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          */
         FlowVar.usaCompany = true;
-
 
         /**
          * Controlla se l' applicazione usa il login oppure no <br>
@@ -272,7 +253,6 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.usaSecurity = true;
 
-
         /**
          * Nome identificativo dell' applicazione <br>
          * Usato (eventualmente) nella barra di menu in testa pagina <br>
@@ -281,13 +261,11 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.projectName = VUOTA;
 
-
         /**
          * Descrizione completa dell' applicazione <br>
          * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.projectDescrizione = VUOTA;
-
 
         /**
          * Versione dell' applicazione <br>
@@ -318,13 +296,11 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.usaVaadinIcon = true;
 
-
         /**
          * Eventuali titolo della pagina <br>
          * Deve essere regolato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
         FlowVar.layoutTitle = VUOTA;
-
 
         /**
          * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
@@ -334,7 +310,6 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.companyClazzName = "company";
 
-
         /**
          * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
          * Ogni applicazione può modificarla <br>
@@ -342,14 +317,12 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.pathLogo = "img/medal.ico";
 
-
         /**
          * Lista dei moduli di menu da inserire nel Drawer del MainLayout per le gestione delle @Routes. <br>
          * Regolata dall'applicazione durante l'esecuzione del 'container startup' (non-UI logic) <br>
          * Usata da ALayoutService per conto di MainLayout allo start della UI-logic <br>
          */
         FlowVar.menuRouteList = new ArrayList<>();
-
 
         /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
@@ -365,6 +338,27 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.usaGeografiaPackages = false;
     }
+
+
+    /**
+     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void initData() {
+        flowData.initData();
+    }
+
+
+    /**
+     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
+     * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
+     * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+    }
+
+
 
 
     /**

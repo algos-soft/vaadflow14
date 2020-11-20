@@ -20,7 +20,6 @@ public class WizElaboraUpdatePackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        this.regolazioniIniziali();
         this.creaFileEntity();
         this.fixBoot();
     }

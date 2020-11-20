@@ -17,6 +17,11 @@ import java.time.LocalTime;
  * User: gac
  * Date: sab, 01-ago-2020
  * Time: 06:36
+ * <p>
+ * Check iniziale di alcune collections <br>
+ * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
+ * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
+ * L' ordine con cui vengono create le collections è significativo <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

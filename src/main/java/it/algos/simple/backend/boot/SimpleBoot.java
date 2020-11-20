@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 
@@ -23,6 +22,15 @@ import java.time.LocalDate;
  * User: gac
  * Date: ven, 01-mag-2020
  * Time: 11:01
+ * <p>
+ * Running logic after the Spring context has been initialized <br>
+ * Executed on container startup, before any browse command <br>
+ * <p>
+ * Sottoclasse concreta per l' applicazione specifica: <br>
+ * - per sovrascrivere alcune variabili in fixApplicationVar() <br>
+ * - lanciare gli schedulers in background <br>
+ * - costruire e regolare una versione demo <br>
+ * - controllare l' esistenza di utenti abilitati all' accesso <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -31,54 +39,40 @@ public class SimpleBoot extends FlowBoot {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
-    //    @Autowired
-    public SimpleData testData;
+    public SimpleData simpleData;
 
 
+    /**
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
     @Autowired
-    public SimpleBoot(SimpleData testData) {
+    public SimpleBoot(SimpleData simpleData) {
         super();
-        this.testData = testData;
+        this.setSimpleData(simpleData);
     }
 
 
     /**
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
-     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
-     * del costruttore e PRIMA di qualsiasi altro metodo <br>
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     */
-    @PostConstruct
-    protected void postConstruct() {
-    }
-
-
-    /**
-     * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
-     * DEVE essere sovrascritto <br>
-     */
-    protected void regolaRiferimenti() {
-        //--riferimento alla sottoclasse di AData da usare per inizializzare i dati, col metodo loadAllData()
-    }
-
-
-    /**
-     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
+     * Inizializzazione di alcuni parametri del database mongoDB <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected void inizializzaData() {
-        super.inizializzaData();
-
-        testData.initData();
+    protected void fixDBMongo() {
+        super.fixDBMongo();
     }
 
+
+    /**
+     * Crea le preferenze standard, se non esistono <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaService <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected int creaPreferenze() {
+        return super.creaPreferenze();
+    }
 
     /**
      * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
@@ -93,13 +87,34 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-//        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
         FlowVar.versionDate = LocalDate.of(2020, 11, 7);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.usaCronoPackages = true;
         FlowVar.usaGeografiaPackages = true;
+    }
+
+
+    /**
+     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void initData() {
+        super.initData();
+        //        simpleData.initData();
+    }
+
+    /**
+     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
+     * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
+     * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        super.fixPreferenze();
     }
 
 
@@ -129,6 +144,10 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Omega.class);
         FlowVar.menuRouteList.add(Lambda.class);
         FlowVar.menuRouteList.add(PiView.class);
+    }
+
+    public void setSimpleData(SimpleData simpleData) {
+        this.simpleData = simpleData;
     }
 
 }

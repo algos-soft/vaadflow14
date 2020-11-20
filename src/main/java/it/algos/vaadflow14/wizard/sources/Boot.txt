@@ -3,15 +3,10 @@ package it.algos.@MODULELOWER@.backend.boot;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
-import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.wizard.Wizard;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 /**
@@ -19,36 +14,86 @@ import java.time.LocalDate;
  * Created by Algos
  * User: @USER@
  * Date: @TODAY@
+ * Time: @TIME@
  * <p>
- * Estende la classe ABoot per le regolazioni iniziali di questa applicazione <br>
- * Running logic after the Spring context has been initialized
- * The method onApplicationEvent() will be executed before the application is up and <br>
- * Aggiunge tutte le @Route (views) standard e specifiche di questa applicazione <br>
+ * Running logic after the Spring context has been initialized <br>
+ * Executed on container startup, before any browse command <br>
  * <p>
- * Annotated with @SpringComponent (obbligatorio) <br>
- * Annotated with @Scope (obbligatorio) <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
+ * Sottoclasse concreta per l' applicazione specifica: <br>
+ * - sovrascrive alcune variabili in fixApplicationVar() <br>
+ * - costruisce eventuali preferenze specifiche di questa applicazione <br>
+ * - lancia gli eventuali schedulers in background <br>
+ * - costruisce e regola una eventuale versione demo <br>
+ * - controlla l' esistenza di utenti abilitati all' accesso, se usaCompany=true <br>
+ * - aggiunge al menu i packages da aprire <br>
  */
-@Service
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Boot extends FlowBoot {
 
+
 //    /**
 //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+//     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
 //     */
-//    @Autowired
-//    public SimpleData testData;
+//    public @MODULEUPPER@Data @MODULELOWER@Data;
 
 
     /**
-     * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
-     * DEVE essere sovrascritto <br>
+     * Constructor with @Autowired on setter.<br>
+     * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
+     * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
+     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore (ancora) nullo. <br>
+     * Al termine del ciclo init() del costruttore il framework SpringBoot/Vaadin, inietterà la relativa istanza <br>
      */
-    protected void regolaRiferimenti() {
-        //--riferimento alla sottoclasse di AData da usare per inizializzare i dati, col metodo loadAllData()
+    public @MODULEUPPER@Boot() {
+        super();
+//        this.set@MODULEUPPER@Data(@MODULELOWER@Data);
+    }
+
+
+    /**
+     * Inizializzazione di alcuni parametri del database mongoDB <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixDBMongo() {
+        super.fixDBMongo();
+    }
+
+
+    /**
+     * Crea le preferenze standard, se non esistono <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaService <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected int creaPreferenze() {
+        return super.creaPreferenze();
+    }
+
+
+    /**
+     * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
+     * Le variabili (static) sono uniche per tutta l' applicazione, ma il loro valore può essere modificato <br>
+     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixApplicationVar() {
+        super.fixApplicationVar();
+
+        FlowVar.usaSecurity = false;
+        FlowVar.usaCompany = false;
+        FlowVar.projectName = "@MODULEUPPER@";
+        FlowVar.projectDescrizione = "Cambia questa descrizione nel file @MODULEUPPER@Boot";
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
+        FlowVar.versionDate = @VERSIONDATE@;
+        FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
+        FlowVar.layoutTitle = "Simple test";
+        FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
+        FlowVar.usaCronoPackages = false;
+        FlowVar.usaGeografiaPackages = false;
     }
 
 
@@ -57,34 +102,21 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void inizializzaData() {
-        super.inizializzaData();
-
-        // testData.initData();
+    protected void initData() {
+        super.initData();
+        //        simpleData.initData();
     }
 
 
     /**
-     * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
-     * Le variabili (static) sono uniche per tutta l' applicazione ma il loro valore può essere modificato <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
+     * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
+     * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected void regolaApplicationProperties() {
-        super.regolaApplicationProperties();
-
-        FlowVar.usaSecurity = false;
-        FlowVar.usaCompany = false;
-        FlowVar.projectName = "@MODULEUPPER@";
-        FlowVar.projectDescrizione = "Cambia questa descrizione nel file @MODULEUPPER@Boot";
-        FlowVar.projectVersion = Double.parseDouble(env.getProperty("algos.framework.version"));
-        FlowVar.versionDate = @VERSIONDATE@;
-        FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
-        FlowVar.layoutTitle = "Simple test";
-        FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
-        FlowVar.usaCronoPackages = false;
-        FlowVar.usaGeografiaPackages = false;
-    }
+    protected void fixPreferenze() {
+         super.fixPreferenze();
+   }
 
 
     /**
@@ -102,5 +134,9 @@ public class @MODULEUPPER@Boot extends FlowBoot {
     protected void addMenuRoutes() {
         super.addMenuRoutes();
     }
+
+//    public void set@MODULEUPPER@Data(@MODULEUPPER@Data @MODULELOWER@Data) {
+//        this.@MODULELOWER@Data = @MODULELOWER@Data;
+//    }
 
 }// end of boot class

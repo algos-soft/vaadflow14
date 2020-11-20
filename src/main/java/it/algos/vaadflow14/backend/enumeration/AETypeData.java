@@ -91,6 +91,12 @@ public enum AETypeData {
     dataCompleta("data completa", "EEEE, d-MMMM-yyy", "domenica, 5-ottobre-2014", 16),
 
     /**
+     * Pattern: EEEE, d-MMMM-yyy <br>
+     * Esempio: dom, 5-ott-2014 <br>
+     */
+    dataCompletaShort("data completa short", "EEE, d-MMM-yyy", "dom, 5-ott-2014", 14),
+
+    /**
      * Pattern: EEEE, d-MMMM-yyy 'alle' H:mm <br>
      * Esempio: domenica, 5-ottobre-2014 alle 13:45 <br>
      */
@@ -109,7 +115,6 @@ public enum AETypeData {
      * Esempio: 2017-02-16T21:00:00.000+01:00 <br>
      */
     iso8601("data e orario iso8601", "yyyy-MM-dd'T'HH:mm:ss", "2017-02-16T21:00:00", 13, false),
-
 
 
     /**

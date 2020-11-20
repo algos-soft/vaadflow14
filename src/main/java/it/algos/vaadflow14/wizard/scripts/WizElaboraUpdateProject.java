@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -17,21 +18,11 @@ public class WizElaboraUpdateProject extends WizElabora {
 
     @Override
     public void esegue() {
-        super.copiaDirectoryConfig();
-        super.copiaDirectoryDoc();
-        super.copiaDirectoryFrontend();
-        super.copiaDirectoryLinks();
-        super.copiaDirectorySnippets();
-
-        this.copiaDirectoryVaadFlow();
-
-        super.copiaDirectoryMetaInf();
-        super.creaFileProperties();
-        super.creaFileBanner();
-
-        super.creaFileGit();
-        super.creaFilePom();
-        super.creaFileRead();
+        super.esegue();
+        if (AECheck.projectUpdate.is()) {
+            super.creaModuloProgetto();
+        }
     }
+
 
 }

@@ -28,7 +28,9 @@ public enum AECheck {
 
     flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false, VUOTA, VUOTA),
 
-    project("Directory modulo del nuovo progetto (...)", true, false, false, false, VUOTA, VUOTA),
+    projectNew("Directory modulo del nuovo progetto (...)", true, false, false, false, VUOTA, VUOTA),
+
+    projectUpdate("Directory modulo del progetto selezionato (...)", false, true, false, false, VUOTA, VUOTA),
 
     resources("Directory RESOURCES (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
 

@@ -1,0 +1,51 @@
+package it.algos.@MODULELOWER@.backend.data;
+
+import it.algos.vaadflow14.backend.annotation.AIScript;
+import it.algos.vaadflow14.backend.data.FlowData;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+
+/**
+ * Project @MODULELOWER@
+ * Created by Algos
+ * User: @USER@
+ * Date: @TODAY@
+ * Time: @TIME@
+ * <p>
+ * Check iniziale di alcune collections <br>
+ * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
+ * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
+ * L' ordine con cui vengono create le collections è significativo <br>
+ */
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
+public class @MODULEUPPER@Data extends FlowData {
+
+
+    /**
+     * Constructor with @Autowired on setter.<br>
+     * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
+     * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
+     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore (ancora) nullo. <br>
+     * Al termine del ciclo init() del costruttore il framework SpringBoot/Vaadin, inietterà la relativa istanza <br>
+     */
+    public @MODULEUPPER@Data() {
+        super();
+    }
+
+
+    /**
+     * Check iniziale di alcune collections <br>
+     * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
+     * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
+     * L' ordine con cui vengono create le collections è significativo <br>
+     * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
+     */
+    public void initData() {
+        super.initData();
+    }
+
+
+}// end of data class

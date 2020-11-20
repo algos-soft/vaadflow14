@@ -12,10 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEProgetto;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -319,33 +316,31 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Elabora tutti i valori della Enumeration AEToken dipendenti dal nome del progetto <br>
-     * Verranno usati da: <br>
-     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
     protected boolean regolaAEToken() {
+        boolean status = true;
+        String projectName;
         AEToken.reset();
-        //        AEToken.nameTargetProject.setValue(nameTargetProject);
-        //        AEToken.pathTargetProject.setValue(pathTargetProject);
-        //
-        //        AEToken.projectNameUpper.setValue(nameTargetProject.toUpperCase());
-        //        AEToken.moduleNameMinuscolo.setValue(nameTargetProject.toLowerCase());
-        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProject));
-        //        AEToken.first.setValue(text.isValid(nameTargetProject) ? nameTargetProject.substring(0, 1).toUpperCase() : VUOTA);
 
-        //        String project = VUOTA;
-        //        project = AEDir.nameTargetProject.get();
-        //        AEToken.moduleNameMinuscolo.setValue(project);
-        //        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(project));
+        projectName = AEDir.nameTargetProject.get();
 
+        if (text.isValid(projectName)) {
+            AEToken.nameTargetProject.setValue(projectName);
+            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
+            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
+            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+            AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(projectName.toLowerCase());
+            AEToken.user.setValue(AEDir.nameUser.get());
+            AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
+            AEToken.time.setValue(date.getOrario());
+            AEToken.versionDate.setValue(fixVersion());
+            AEToken.entity.setValue(text.primaMaiuscola(projectName));
+            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+        }
 
-        //        Object a = isNuovoPackage;
-        //        Object b = fieldPackageName;
-        //        if (isNuovoPackage && fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-        //            //            AEToken.packageName.setValue(fieldPackageName.getValue().toLowerCase());
-        //        }
-
-        return true;
+        return status;
     }
 
 
@@ -405,7 +400,8 @@ public abstract class WizDialog extends Dialog {
 
         if (AECheck.code.is()) {
             toString = "code";
-        } else {
+        }
+        else {
             if (AECheck.descrizione.is()) {
                 toString = "descrizione";
             }
@@ -444,7 +440,8 @@ public abstract class WizDialog extends Dialog {
             if (!regolazioniFinali()) {
                 if (AEFlag.isNewPackage.is()) {
                     logger.info("Manca il nome del nuovo package che non può quindi essere creato ", this.getClass(), "esceDalDialogo");
-                } else {
+                }
+                else {
                     logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
                 }
                 this.close();
@@ -454,7 +451,8 @@ public abstract class WizDialog extends Dialog {
 
             this.close();
             wizRecipient.esegue();
-        } else {
+        }
+        else {
             this.close();
             Notification.show("Dialogo annullato", 2000, Notification.Position.MIDDLE);
         }
