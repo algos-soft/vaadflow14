@@ -49,7 +49,8 @@ public class WizDialogUpdateProject extends WizDialog {
     protected void creaTopLayout() {
         if (AEFlag.isBaseFlow.is()) {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
-        } else {
+        }
+        else {
             topLayout = fixSezione("Aggiornamento di questo progetto", "green");
         }
         this.add(topLayout);
@@ -61,7 +62,8 @@ public class WizDialogUpdateProject extends WizDialog {
             topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
             topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
             topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
-        } else {
+        }
+        else {
             topLayout.add(text.getLabelGreenBold("Update di questo progetto"));
             topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
             topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + VAADFLOW_STANDARD));
@@ -122,11 +124,10 @@ public class WizDialogUpdateProject extends WizDialog {
         super.creaCheckBoxLayout();
         Checkbox unCheckbox;
 
-        //--spenge tutti i checkbox escluso flagFlow
+        //--spenge tutti i checkbox
         for (AECheck check : AECheck.getUpdateProject()) {
             check.setAcceso(false);
         }
-        AECheck.flow.setAcceso(true);
 
         for (AECheck check : AECheck.getUpdateProject()) {
             unCheckbox = new Checkbox(check.getCaption(), check.is());
@@ -169,11 +170,34 @@ public class WizDialogUpdateProject extends WizDialog {
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
             projectName = fieldComboProgetti.getValue().getNameProject();
+            status = status && checkProject(projectName);
             status = status && AEDir.modificaProjectAll(projectName);
         }
 
         return status;
     }
 
+    /**
+     * Controlla che il progetto selezionato esista nella directory deputata <br>
+     */
+    protected boolean checkProject(String projectName) {
+        String pathOperativa = PATH_OPERATIVI_DIR_STANDARD + projectName;
+        String pathProgetti = PATH_PROJECTS_DIR_STANDARD + projectName;
+
+        //--posizione standard corretta
+        if (file.isEsisteDirectory(pathOperativa)) {
+            return true;
+        }
+
+        //--prova a vedere se per caso è rimasto nella directory di creazione
+        if (file.isEsisteDirectory(pathProgetti)) {
+            logger.warn("Il progetto " + projectName + " è rimasto nella directory IdeaProjects. Devi spostarlo in /operativi/", this.getClass(), "checkProject");
+        }
+        else {
+            logger.warn("Il progetto " + projectName + " non è rintracciabile", this.getClass(), "checkProject");
+        }
+
+        return false;
+    }
 
 }

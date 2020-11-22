@@ -156,6 +156,13 @@ public class WizService {
         AEToken.printInfo(message);
     }
 
+    public void creaFileProject(AECopyFile typeCopy, String nameSourceText, String pathFileToBeWritten) {
+        creaFile(typeCopy, nameSourceText, pathFileToBeWritten, DIR_PROJECTS);
+    }
+
+    public void creaFilePackage(AECopyFile typeCopy, String nameSourceText, String pathFileToBeWritten) {
+        creaFile(typeCopy, nameSourceText, pathFileToBeWritten, DIR_PACKAGES);
+    }
 
     /**
      * Crea un nuovo file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
@@ -174,12 +181,13 @@ public class WizService {
      * @param typeCopy            modalità di comportamento se esiste il file di destinazione
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
+     * @param directory           da cui iniziare il path
      */
-    public void creaFile(AECopyFile typeCopy, String nameSourceText, String pathFileToBeWritten) {
+    public void creaFile(AECopyFile typeCopy, String nameSourceText, String pathFileToBeWritten, String directory) {
         boolean esisteFileDest = false;
         String message = VUOTA;
         String sourceText = leggeFile(nameSourceText);
-        String path = file.findPathBreve(pathFileToBeWritten, DIR_PACKAGES);
+        String path = file.findPathBreve(pathFileToBeWritten, directory);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
@@ -195,7 +203,7 @@ public class WizService {
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
         switch (typeCopy) {
             case sovrascriveSempreAncheSeEsiste:
-                file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
+                file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
                 break;
             case soloSeNonEsiste:
                 if (esisteFileDest) {
@@ -203,7 +211,7 @@ public class WizService {
                     logger.info(message, this.getClass(), "creaFile");
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
                     message = "Il file: " + path + " non esisteva ed è stato creato da source.";
                     logger.info(message, this.getClass(), "creaFile");
                 }
@@ -211,7 +219,7 @@ public class WizService {
             case checkFlagSeEsiste:
                 if (esisteFileDest) {
                     if (checkFileCanBeModified(pathFileToBeWritten)) {
-                        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
+                        file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
                     }
                     else {
                         message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
@@ -219,7 +227,7 @@ public class WizService {
                     }
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
                 }
                 break;
             default:
@@ -651,6 +659,7 @@ public class WizService {
         boolean usaCompany = AECheck.company.is();
         String tagEntity = "AEntity";
         String tagCompany = "AECompany";
+        AEToken.reset();
 
         if (!AEFlag.isPackage.is() && !AEFlag.isProject.is()) {
             logger.warn("Manca sia projectName che packageName.", this.getClass(), "regolaAEToken");
@@ -665,30 +674,31 @@ public class WizService {
             return false;
         }
 
-        if (text.isValid(projectName) && text.isValid(packageName)) {
-            AEToken.nameTargetProject.setValue(projectName);
-            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
-            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
-            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+        AEToken.nameTargetProject.setValue(projectName);
+        AEToken.projectNameUpper.setValue(projectName.toUpperCase());
+        AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
+        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+        AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+        AEToken.user.setValue(AEDir.nameUser.get());
+        AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
+        AEToken.time.setValue(date.getOrario());
+        AEToken.versionDate.setValue(fixVersion());
+        AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
+        AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
+        AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+        AEToken.keyProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
+        AEToken.searchProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
+        AEToken.sortProperty.setValue(AECheck.ordine.is() ? AECheck.ordine.getField() : VUOTA);
+        AEToken.rowIndex.setValue(AECheck.rowIndex.is() ? "true" : "false");
+        AEToken.properties.setValue(fixProperties());
+        AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
+        AEToken.propertyCode.setValue(fixProperty(AECheck.code));
+        AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
+        AEToken.toString.setValue(fixString());
+        if (text.isValid(packageName)) {
             AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
             AEToken.packageName.setValue(packageName.toLowerCase());
-            AEToken.user.setValue(AEDir.nameUser.get());
-            AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
-            AEToken.time.setValue(date.getOrario());
-            AEToken.versionDate.setValue(fixVersion());
             AEToken.entity.setValue(text.primaMaiuscola(packageName));
-            AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
-            AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
-            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-            AEToken.keyProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
-            AEToken.searchProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
-            AEToken.sortProperty.setValue(AECheck.ordine.is() ? AECheck.ordine.getField() : VUOTA);
-            AEToken.rowIndex.setValue(AECheck.rowIndex.is() ? "true" : "false");
-            AEToken.properties.setValue(fixProperties());
-            AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
-            AEToken.propertyCode.setValue(fixProperty(AECheck.code));
-            AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
-            AEToken.toString.setValue(fixString());
         }
 
         return status;

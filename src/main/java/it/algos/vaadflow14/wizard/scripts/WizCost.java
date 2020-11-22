@@ -12,6 +12,11 @@ public abstract class WizCost {
     //--flag per stampare info di debug
     public static final boolean FLAG_DEBUG_WIZ = true;
 
+    public static final String DIR_PROJECTS = "IdeaProjects/";
+
+    public static final String DIR_OPERATIVI = "operativi/";
+
+
     //--valore standard che verrà controllato in funzione di AEDIR.pathCurrent effettivo
     //--potrebbe essere diverso
     public static final String PATH_ROOT = "/Users/gac/Documents/";
@@ -21,12 +26,16 @@ public abstract class WizCost {
     //--directory che contiene i nuovi programmi appena creati da Idea
     //--dovrebbe essere PATH_PROJECTS_DIR_STANDARD
     //--posso spostarla (è successo) senza che cambi nulla
-    public static final String PATH_PROJECTS_DIR_STANDARD = PATH_ROOT + "IdeaProjects/";
+    public static final String PATH_PROJECTS_DIR_STANDARD = PATH_ROOT + DIR_PROJECTS;
+
+    //--regolata inizialmente da WizCost, indipendentemente dall' apertura dei dialoghi, con un valore fisso codificato
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    //--directory che contiene i programmi operativi in uso
+    //--dovrebbe essere PATH_PROJECTS_DIR_STANDARD
+    //--posso spostarla (è successo) senza che cambi nulla
+    public static final String PATH_OPERATIVI_DIR_STANDARD = PATH_PROJECTS_DIR_STANDARD + DIR_OPERATIVI;
 
 
-    public static final String DIR_PROJECTS = "IdeaProjects/";
-
-    public static final String DIR_OPERATIVI = "operativi/";
 
     public static final String DIR_RESOURCES = "resources/";
 
@@ -95,7 +104,7 @@ public abstract class WizCost {
 
     public static final String PATH_VAADFLOW_DIR_STANDARD = PATH_ROOT + VAADFLOW_DIR_STANDARD;
 
-    public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
+//    public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
 
 
     public static final String FILE_WIZARD = "Wizard";
@@ -182,6 +191,7 @@ public abstract class WizCost {
             System.out.println("Costanti statiche");
             System.out.println("********************");
             System.out.println("PATH_PROJECTS_DIR_STANDARD = " + PATH_PROJECTS_DIR_STANDARD);
+            System.out.println("PATH_OPERATIVI_DIR_STANDARD = " + PATH_OPERATIVI_DIR_STANDARD);
             System.out.println("PATH_VAADFLOW_DIR_STANDARD = " + PATH_VAADFLOW_DIR_STANDARD);
             System.out.println("DIR_MAIN = " + ROOT_DIR_MAIN);
             System.out.println("DIR_ALGOS = " + ROOT_DIR_ALGOS);

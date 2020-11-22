@@ -172,7 +172,16 @@ public enum AEDir {
             String path = VUOTA;
 
             if (AEFlag.isBaseFlow.is()) {
-                path = pathIdeaProjects.get() + nameTargetProject.get() + SLASH;
+                if (AEFlag.isNewProject.is()) {
+                    path = pathIdeaProjects.get() + nameTargetProject.get() + SLASH;
+                }
+                if (AEFlag.isUpdateProject.is()) {
+                    path = pathIdeaProjects.get() + DIR_OPERATIVI + nameTargetProject.get() + SLASH;
+                }
+                if (text.isEmpty(path)) {
+                    return false;
+                }
+
                 if (!file.isEsisteDirectory(path)) {
                     path = AEProgetto.getProgetto(projectName).getPathCompleto();
                     if (text.isValid(path)) {

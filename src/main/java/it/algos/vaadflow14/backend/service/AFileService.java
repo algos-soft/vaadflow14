@@ -1235,13 +1235,13 @@ public class AFileService extends AAbstractService {
      * @param pathFileToBeWritten nome completo del file
      * @param testo               contenuto del file
      * @param sovrascrive         anche se esiste già
-     * @param firstDirectory      da cui iniziare il path per il messaggio di avviso
+     * @param directory      da cui iniziare il path per il messaggio di avviso
      */
-    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String firstDirectory) {
+    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
         String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
-        String path = this.findPathBreve(pathFileToBeWritten, firstDirectory);
+        String path = this.findPathBreve(pathFileToBeWritten, directory);
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
@@ -1773,7 +1773,7 @@ public class AFileService extends AAbstractService {
      *
      * @param pathDirectoryToBeScanned nome completo della directory
      */
-    public List<File> getProjects(String pathDirectoryToBeScanned) {
+    public List<File> getAllProjects(String pathDirectoryToBeScanned) {
         List<File> listaProjects = null;
         List<File> listaDirectory = getSubDirectories(new File(pathDirectoryToBeScanned));
 
@@ -1800,7 +1800,7 @@ public class AFileService extends AAbstractService {
      */
     public List<File> getEmptyProjects(String pathDirectoryToBeScanned) {
         List<File> listaEmptyProjects = null;
-        List<File> listaProjects = getProjects(pathDirectoryToBeScanned);
+        List<File> listaProjects = getAllProjects(pathDirectoryToBeScanned);
 
         if (listaProjects != null) {
             listaEmptyProjects = new ArrayList<>();

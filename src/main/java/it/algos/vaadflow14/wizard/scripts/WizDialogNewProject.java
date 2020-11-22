@@ -127,7 +127,7 @@ public class WizDialogNewProject extends WizDialog {
      * Esclude le sottoDirectories di 'ideaProjects' <br>
      */
     protected void forzaProgetti() {
-        List<File> progetti = file.getProjects(AEDir.pathIdeaProjects.get());
+        List<File> progetti = file.getAllProjects(AEDir.pathIdeaProjects.get());
         fieldComboProgettiNuovi.setItems(progetti);
         fieldComboProgettiNuovi.setLabel(LABEL_COMBO_DUE);
         if (progetti.size() == 1) {

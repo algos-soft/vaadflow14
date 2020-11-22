@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Date: gio, 07-mag-2020
  * Time: 07:56
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("web")
-@DisplayName("Unit test per i collegamenti web")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@Tag("web")
+//@DisplayName("Unit test per i collegamenti web")
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AWebServiceTest extends ATest {
 
 

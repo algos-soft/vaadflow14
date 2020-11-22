@@ -1313,8 +1313,11 @@ public class AFileServiceTest extends ATest {
     @Order(29)
     @DisplayName("29 - getProjects")
     public void getProjects() {
+        System.out.println("Recupera i progetti dalla directory IdeaProjects");
+        System.out.println(" ");
+
         sorgente = DIRECTORY_IDEA;
-        listaDirectory = file.getProjects(sorgente);
+        listaDirectory = file.getAllProjects(sorgente);
         if (listaDirectory != null) {
             for (File file : listaDirectory) {
                 System.out.println(file.getName());
@@ -1327,6 +1330,9 @@ public class AFileServiceTest extends ATest {
     @Order(30)
     @DisplayName("30 - getEmptyProjects")
     public void getEmptyProjects() {
+        System.out.println("Recupera i progetti vuoti dalla directory IdeaProjects");
+        System.out.println(" ");
+
         sorgente = DIRECTORY_IDEA;
         listaDirectory = file.getEmptyProjects(sorgente);
         if (listaDirectory != null) {
