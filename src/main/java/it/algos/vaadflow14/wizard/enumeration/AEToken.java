@@ -78,6 +78,8 @@ public enum AEToken {
 
     sortProperty("SORTPROPERTY"),
 
+    rowIndex("ROWINDEX"),
+
     properties("PROPERTIES"),
 
     propertyOrdine("ORDINE"),

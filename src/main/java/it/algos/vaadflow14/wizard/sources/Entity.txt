@@ -1,34 +1,29 @@
 package it.algos.@MODULELOWER@.backend.packages.@PACKAGE@;
 
-import com.mysema.query.annotations.QueryEntity;
+import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.annotation.AIForm;
-import it.algos.vaadflow14.backend.annotation.AIList;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.annotation.AIColumn;
-import it.algos.vaadflow14.backend.annotation.AIField;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Field;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * Project @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
+ * Fix time: @TIME@ <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @QueryEntity
 @Document(collection = "@PACKAGE@")
@@ -40,8 +35,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "@PACKAGE@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
-@AIList(fields = @PROPERTIES@)
+@AIView(menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
+@AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
 @AIForm(fields = @PROPERTIES@)
 public class @ENTITY@ extends @SUPERCLASSENTITY@ {
 

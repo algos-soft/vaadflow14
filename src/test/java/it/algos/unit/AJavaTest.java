@@ -31,6 +31,10 @@ import java.util.stream.Stream;
 public class AJavaTest extends ATest {
 
 
+    private static void printNamesConsumer(String consumer) {
+        System.out.println(consumer);
+    }
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
@@ -162,13 +166,21 @@ public class AJavaTest extends ATest {
         consumer.accept("Ruby On Rails");
     }
 
+    @Test
+    @Order(10)
+    @DisplayName("Var keyword")
+    void keyword() {
+        System.out.println("Java10 \n");
+
+//        var str = "a test string";
+//        var aVariable = "Marco";
+//        System.out.println(aVariable);
+//        var anotherVariable = 182;
+//        System.out.println(anotherVariable);
+    }
 
     private void printNamesSupplier(Supplier<String> supplier) {
         System.out.println(supplier.get());
-    }
-
-    private static void printNamesConsumer(String consumer) {
-        System.out.println(consumer);
     }
 
     /**

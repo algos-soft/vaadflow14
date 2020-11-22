@@ -1,7 +1,10 @@
 ${AnsiColor.RED}
-@PROJECTALLUPPER@
+${AnsiColor.GREEN}@PROJECTALLUPPER@${AnsiColor.RED}
 VaadFlow FrameWork  (c)Algos
-SpringBoot ver: ${spring-boot.formatted-version}
-Vaadin ver: ${AnsiColor.GREEN}14.4.1${AnsiColor.RED}
-VaadFlow ver: ${AnsiColor.GREEN}${algos.framework.version}${AnsiColor.RED}
+Java ver: ${AnsiColor.GREEN}${java.version}${AnsiColor.RED}
+SpringBoot ver: ${AnsiColor.GREEN}${spring-boot.formatted-version}${AnsiColor.RED}
+Vaadin ver: ${AnsiColor.GREEN}14.4.2${AnsiColor.RED}
+@MODULEUPPER@ ver: ${AnsiColor.GREEN}${algos.@PROJECT@.version}${AnsiColor.RED} di ${AnsiColor.GREEN}${algos.@PROJECT@.version.date}${AnsiColor.RED}
+Tomcat port: ${AnsiColor.GREEN}${server.port}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
+

@@ -7,9 +7,9 @@ import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
+import it.algos.vaadflow14.wizard.enumeration.AEPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.JAVA_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.TXT_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.XML_SUFFIX;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -395,14 +395,31 @@ public abstract class WizElabora implements WizRecipient {
 
 
     /**
+     * Creazione o modifica dei files previsti per il package <br>
+     */
+    protected void fixPackage() {
+        if (AEPackage.entity.isAttivo()) {
+            this.fixEntity();
+        }
+    }
+
+    /**
+     * Creazione del file nella directory dei packages <br>
+     * Creazione del menu nel file xxxBoot <br>
+     */
+    protected void fixEntity() {
+        this.fixFileEntity();
+        this.fixBoot();
+    }
+
+    /**
      * Creazione del file nella directory dei packages <br>
      */
-    protected void creaFileEntity() {
+    protected void fixFileEntity() {
         String tag = "Entity";
-        String nomeFileDest = AEDir.nameTargetPackageUpper.get();
-        String pathFileToBeWritten = AEDir.pathTargetPackages.get() + nomeFileDest + JAVA_SUFFIX;
+        String pathFileToBeWritten = AEDir.fileTargetEntity.get();
         if (AECheck.entity.is()) {
-            wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, tag, pathFileToBeWritten);
+            wizService.creaFile(AECopyFile.checkFlagSeEsiste, tag, pathFileToBeWritten);
         }
     }
 
@@ -429,7 +446,7 @@ public abstract class WizElabora implements WizRecipient {
 
         String pathFileBoot = AEDir.fileTargetBoot.get();
         testo = file.leggeFile(pathFileBoot);
-        pathError = file.findPathDopoDirectory(pathFileBoot, DIR_BACKEND);
+        pathError = file.findPathBreve(pathFileBoot, DIR_BACKEND);
 
         if (testo.contains(tagOld)) {
             if (!testo.contains(tagNew)) {
@@ -442,8 +459,6 @@ public abstract class WizElabora implements WizRecipient {
         else {
             logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootMenu");
         }
-
-
     }
 
 
@@ -461,7 +476,7 @@ public abstract class WizElabora implements WizRecipient {
 
         String pathFileBoot = AEDir.fileTargetBoot.get();
         testo = file.leggeFile(pathFileBoot);
-        pathError = file.findPathDopoDirectory(pathFileBoot, DIR_BACKEND);
+        pathError = file.findPathBreve(pathFileBoot, DIR_BACKEND);
 
         if (testo.contains(tagOld)) {
             if (!testo.contains(tagNew)) {
@@ -476,6 +491,31 @@ public abstract class WizElabora implements WizRecipient {
         }
     }
 
+    /**
+     * Modifica della documentazione dei files di un package <br>
+     */
+    protected void fixDocPackage() {
+        boolean status = true;
+        String projectName = AEDir.nameTargetProject.get();
+        String oldPackageName = AEDir.nameTargetPackage.get();
+
+        for (String packageName : wizService.getPackages()) {
+            status = status && AEDir.modificaPackageAll(packageName);
+            status = status && wizService.regolaAEToken(projectName, packageName);
+            if (status && AEPackage.entity.isAttivo()) {
+                this.fixDocEntity();
+            }
+        }
+        AEDir.modificaPackageAll(oldPackageName);
+        wizService.regolaAEToken(projectName, oldPackageName);
+    }
+
+    protected void fixDocEntity() {
+        String tag = "Entity";
+        String pathFileToBeWritten = AEDir.fileTargetEntity.get();
+
+        wizService.fixDocFile(tag, pathFileToBeWritten);
+    }
 
     public void creaModuloProgetto() {
         //--crea directory principale del modulo target (empty)

@@ -81,7 +81,8 @@ public enum AEDir {
                 String path = pathIdeaProjects.get();
                 path += DIR_OPERATIVI + DIR_VAADFLOW;
                 this.setValue(path);
-            } else {//@todo Funzionalità ancora da implementare
+            }
+            else {//@todo Funzionalità ancora da implementare
                 String path = pathIdeaProjects.get();
                 path += DIR_OPERATIVI + DIR_VAADFLOW;
                 this.setValue(path);
@@ -134,7 +135,6 @@ public enum AEDir {
         }
     },// end of single enumeration
 
-
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--può essere un new project oppure un update di un progetto esistente
     //--se non siamo in AEFlag.isBaseFlow(), il nome del progetto corrente
@@ -180,12 +180,14 @@ public enum AEDir {
                             logger.error("Errato il path del progetto selezionato: " + projectName);
                             status = false;
                         }
-                    } else {
+                    }
+                    else {
                         logger.error("Manca il path del progetto selezionato: " + projectName);
                         status = false;
                     }
                 }
-            } else {
+            }
+            else {
                 path += pathCurrent.get();
             }
 
@@ -193,7 +195,6 @@ public enum AEDir {
             return status;
         }
     },// end of single enumeration
-
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
@@ -260,12 +261,14 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //parte dal livello di root del progetto
+    //--contiene i moduli, di solito due (vaadFlow14 e xxx)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
-    pathTargetBoot(false, true, false, "Directory di boot") {
+    pathTargetAllPackages(false, true, false, "Directory dei packages del progetto target") {
         @Override
         public boolean modificaProject(String projectName) {
             String path = pathTargetModulo.get();
-            path += DIR_BACKEND + DIR_BOOT;
+            path += DIR_BACKEND + DIR_PACKAGES;
             this.setValue(path);
             return text.isValid(path);
         }
@@ -273,11 +276,11 @@ public enum AEDir {
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
-    pathTargetData(false, true, false, "Directory di data") {
+    pathTargetBoot(false, true, false, "Directory di boot") {
         @Override
         public boolean modificaProject(String projectName) {
             String path = pathTargetModulo.get();
-            path += DIR_BACKEND + DIR_DATA;
+            path += DIR_BACKEND + DIR_BOOT;
             this.setValue(path);
             return text.isValid(path);
         }
@@ -300,6 +303,18 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    pathTargetData(false, true, false, "Directory di data") {
+        @Override
+        public boolean modificaProject(String projectName) {
+            String path = pathTargetModulo.get();
+            path += DIR_BACKEND + DIR_DATA;
+            this.setValue(path);
+            return text.isValid(path);
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
     fileTargetData(false, true, false, "File di data") {
         @Override
@@ -314,7 +329,6 @@ public enum AEDir {
             return text.isValid(filePath);
         }
     },// end of single enumeration
-
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
@@ -345,6 +359,33 @@ public enum AEDir {
     },// end of single enumeration
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
+    pathTargetPackage(false, false, true, "Directory del package corrente") {
+        @Override
+        public boolean modificaPackage(String packageName) {
+            String path = pathTargetAllPackages.get();
+            path += packageName + SLASH;
+            this.setValue(path);
+            return text.isValid(path);
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
+    fileTargetEntity(false, false, true, "File di Entity") {
+        @Override
+        public boolean modificaPackage(String packageName) {
+            String filePath = pathTargetPackage.get();
+
+            filePath += text.primaMaiuscola(packageName);
+            filePath += JAVA_SUFFIX;
+
+            this.setValue(filePath);
+            return text.isValid(filePath);
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--può essere un new package oppure un update di un package esistente
     //--tutte le property il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi
     nameTargetPackage(false, false, true, "Nome del package") {
@@ -366,19 +407,6 @@ public enum AEDir {
         }
     },// end of single enumeration
 
-
-
-    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
-    //--tutte le property il cui nome inizia con 'path' iniziano e finiscono con uno SLASH
-    pathTargetPackages(false, false, true, "Directory del package corrente") {
-        @Override
-        public boolean modificaPackage(String packageName) {
-            String path = pathTargetModulo.get();
-            path += DIR_BACKEND + DIR_PACKAGES + packageName + SLASH;
-            this.setValue(path);
-            return text.isValid(path);
-        }
-    },// end of single enumeration
     ;// end of all ENUMERATIONS
 
     //--riferimento iniettato nella classe statico ServiceInjector

@@ -319,95 +319,13 @@ public abstract class WizDialog extends Dialog {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
     protected boolean regolaAEToken() {
-        boolean status = true;
         String projectName;
+        String packageName;
         AEToken.reset();
 
         projectName = AEDir.nameTargetProject.get();
-
-        if (text.isValid(projectName)) {
-            AEToken.nameTargetProject.setValue(projectName);
-            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
-            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
-            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
-            AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(projectName.toLowerCase());
-            AEToken.user.setValue(AEDir.nameUser.get());
-            AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
-            AEToken.time.setValue(date.getOrario());
-            AEToken.versionDate.setValue(fixVersion());
-            AEToken.entity.setValue(text.primaMaiuscola(projectName));
-            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-        }
-
-        return status;
-    }
-
-
-    protected String fixVersion() {
-        String versione = VUOTA;
-        String tag = "LocalDate.of(";
-        String anno;
-        String mese;
-        String giorno;
-        LocalDate localDate = LocalDate.now();
-
-        anno = localDate.getYear() + VUOTA;
-        mese = localDate.getMonth().getValue() + VUOTA;
-        giorno = localDate.getDayOfMonth() + VUOTA;
-        versione = tag + anno + VIRGOLA + mese + VIRGOLA + giorno + ")";
-
-        return versione;
-    }
-
-
-    protected String fixProperties() {
-        String testo = VUOTA;
-
-        if (AECheck.ordine.is()) {
-            testo += AECheck.ordine.getField() + VIRGOLA;
-        }
-
-        if (AECheck.code.is()) {
-            testo += AECheck.code.getField() + VIRGOLA;
-        }
-
-        if (AECheck.descrizione.is()) {
-            testo += AECheck.descrizione.getField() + VIRGOLA;
-        }
-
-        testo = text.levaCoda(testo, VIRGOLA);
-        return text.setApici(testo).trim();
-    }
-
-
-    protected String fixProperty(AECheck check) {
-        String testo = VUOTA;
-        String sourceText = VUOTA;
-        String tagSources = check.getSourcesTag();
-
-        if (check.is()) {
-            sourceText = wizService.leggeFile(tagSources);
-            testo = wizService.elaboraFileCreatoDaSource(sourceText);
-        }
-
-        return testo;
-    }
-
-
-    protected String fixString() {
-        String toString = "VUOTA";
-
-        if (AECheck.code.is()) {
-            toString = "code";
-        }
-        else {
-            if (AECheck.descrizione.is()) {
-                toString = "descrizione";
-            }
-        }
-
-        return toString;
+        packageName = AEDir.nameTargetPackage.get();
+        return  wizService.regolaAEToken(projectName,packageName);
     }
 
 

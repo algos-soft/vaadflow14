@@ -2,6 +2,7 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -27,6 +28,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
         super.titoloCorrente = new H3();
+        AEFlag.isProject.set(true);
 
         super.inizia();
     }

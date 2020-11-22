@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.backend.enumeration.AECopyFile;
+import it.algos.vaadflow14.backend.service.ADateService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
@@ -49,13 +51,20 @@ public class WizService {
     public ALogService logger;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ADateService date;
+
+    /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
     protected AFileService file;
-
 
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
@@ -138,6 +147,7 @@ public class WizService {
         AEFlag.printInfo(message);
         AECheck.printInfo(message);
     }
+
     /**
      * Visualizzazione finale di controllo <br>
      */
@@ -169,7 +179,7 @@ public class WizService {
         boolean esisteFileDest = false;
         String message = VUOTA;
         String sourceText = leggeFile(nameSourceText);
-        String path = file.findPathDopoDirectory(pathFileToBeWritten, DIR_PROJECTS);
+        String path = file.findPathBreve(pathFileToBeWritten, DIR_PROJECTS);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
@@ -191,7 +201,8 @@ public class WizService {
                 if (esisteFileDest) {
                     message = "Il file: " + path + " esiste già e non è stato modificato.";
                     logger.info(message, this.getClass(), "creaFile");
-                } else {
+                }
+                else {
                     file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                     message = "Il file: " + path + " non esisteva ed è stato creato da source.";
                     logger.info(message, this.getClass(), "creaFile");
@@ -201,11 +212,13 @@ public class WizService {
                 if (esisteFileDest) {
                     if (checkFileCanBeModified(pathFileToBeWritten)) {
                         file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
-                    } else {
+                    }
+                    else {
                         message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
                         logger.info(message, this.getClass(), "creaFile");
                     }
-                } else {
+                }
+                else {
                     file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
                 }
                 break;
@@ -215,6 +228,53 @@ public class WizService {
         }
     }
 
+
+    /**
+     * Sostituisce l'header di un file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
+     * <p>
+     * Modifica il testo esistenza dall'inizio fino al tag @AIScript(... <br>
+     * Controlla che esista il file destinazione da modificare <br>
+     * Controlla che nella directory wizard.sources di VaadFlow14 esista il file sorgente da copiare <br>
+     * Nei messaggi di avviso, accorcia il pathFileToBeWritten eliminando i primi 4 livelli (/Users/gac/Documents/IdeaProjects) <br>
+     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+     * Modifica il file col path e suffisso indicati <br>
+     *
+     * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
+     * @param pathFileToBeWritten nome completo di suffisso del file da creare
+     */
+    public void fixDocFile(String nameSourceText, String pathFileToBeWritten) {
+        String tag = "@AIScript(";
+        String oldHeader;
+        String newHeader;
+        String realText = file.leggeFile(pathFileToBeWritten);
+        String sourceText = leggeFile(nameSourceText);
+        String path = file.findPathBreve(pathFileToBeWritten, DIR_PACKAGES);
+
+        if (text.isEmpty(sourceText)) {
+            logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
+            return;
+        }
+
+        sourceText = elaboraFileCreatoDaSource(sourceText);
+        if (text.isEmpty(sourceText)) {
+            logger.warn("Non sono riuscito a elaborare i tokens del file " + path, this.getClass(), "fixDocFile");
+            return;
+        }
+
+        if (!file.isEsisteFile(pathFileToBeWritten)) {
+            logger.warn("Non esiste il file " + path, this.getClass(), "fixDocFile");
+            return;
+        }
+
+        if (realText.contains(tag)) {
+            oldHeader = realText.substring(0, realText.indexOf(tag));
+            newHeader = sourceText.substring(0, sourceText.indexOf(tag));
+            if (text.isValid(oldHeader) && text.isValid(newHeader)) {
+                realText = text.sostituisce(realText, oldHeader, newHeader);
+            }
+            file.scriveFile(pathFileToBeWritten, realText, true, DIR_PACKAGES);
+        }
+    }
 
     /**
      * Copia un file <br>
@@ -232,6 +292,26 @@ public class WizService {
      * @param destPath nome completo di suffisso del file da creare
      */
     public void copyFile(AECopyFile typeCopy, String srcPath, String destPath) {
+        copyFile(typeCopy, srcPath, destPath, DIR_PROJECTS);
+    }
+
+    /**
+     * Copia un file <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista il path del file sorgente  <br>
+     * Se manca il file sorgente, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste il file di destinazione ed è AECopyDir.sovrascriveSempreAncheSeEsiste, lo sovrascrive <br>
+     * Se esiste il file di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
+     *
+     * @param typeCopy modalità di comportamento se esiste il file di destinazione
+     * @param srcPath  nome completo di suffisso del file sorgente
+     * @param destPath nome completo di suffisso del file da creare
+     * @param firstDir prima directory per troncare il path nel messaggio di avviso
+     */
+    public void copyFile(AECopyFile typeCopy, String srcPath, String destPath, String firstDir) {
         boolean esisteFileDest;
         String message;
         String path;
@@ -239,19 +319,21 @@ public class WizService {
         switch (typeCopy) {
             case sovrascriveSempreAncheSeEsiste:
             case soloSeNonEsiste:
-                file.copyFile(typeCopy, srcPath,destPath,DIR_PROJECTS);
+                file.copyFile(typeCopy, srcPath, destPath, firstDir);
                 break;
             case checkFlagSeEsiste:
-                path = file.findPathDopoDirectory(destPath, DIR_PROJECTS);
+                path = file.findPathBreve(destPath, firstDir);
                 esisteFileDest = file.isEsisteFile(destPath);
                 if (esisteFileDest) {
                     if (checkFileCanBeModified(destPath)) {
                         file.copyFileDeletingAll(srcPath, destPath);
                         message = "Il file: " + path + " esisteva già ma è stato sovrascritto.";
-                    } else {
+                    }
+                    else {
                         message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
                     }
-                } else {
+                }
+                else {
                     file.copyFileDeletingAll(srcPath, destPath);
                     message = "Il file: " + path + " non esisteva ed è stato copiato.";
                 }
@@ -544,6 +626,136 @@ public class WizService {
         tags.add("@AIScript(sovraScrivibile =false)");
 
         return text.nonContiene(oldFileText, tags);
+    }
+
+
+    /**
+     * Lista dei packages esistenti nel target project <br>
+     */
+    public List<String> getPackages() {
+        List<String> packages = new ArrayList<>();
+        String path = AEDir.pathTargetAllPackages.get();
+        if (text.isValid(path)) {
+            packages = file.getSubDirectoriesName(path);
+        }
+
+        return packages;
+    }
+
+    /**
+     * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
+     * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
+     */
+    public boolean regolaAEToken(String projectName, String packageName) {
+        boolean status = true;
+        boolean usaCompany = AECheck.company.is();
+        String tagEntity = "AEntity";
+        String tagCompany = "AECompany";
+
+        if (!AEFlag.isPackage.is() && !AEFlag.isProject.is()) {
+            logger.warn("Manca sia projectName che packageName.", this.getClass(), "regolaAEToken");
+            return false;
+        }
+        if (AEFlag.isProject.is() && text.isEmpty(projectName)) {
+            logger.warn("Stiamo modificando il progetto e manca projectName.", this.getClass(), "regolaAEToken");
+            return false;
+        }
+        if (AEFlag.isPackage.is() && !AECheck.docFile.is() && text.isEmpty(packageName)) {
+            logger.warn("Stiamo modificando un package e manca packageName.", this.getClass(), "regolaAEToken");
+            return false;
+        }
+
+        if (text.isValid(projectName) && text.isValid(packageName)) {
+            AEToken.nameTargetProject.setValue(projectName);
+            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
+            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
+            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
+            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(packageName.toLowerCase());
+            AEToken.user.setValue(AEDir.nameUser.get());
+            AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
+            AEToken.time.setValue(date.getOrario());
+            AEToken.versionDate.setValue(fixVersion());
+            AEToken.entity.setValue(text.primaMaiuscola(packageName));
+            AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
+            AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
+            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
+            AEToken.keyProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
+            AEToken.searchProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
+            AEToken.sortProperty.setValue(AECheck.ordine.is() ? AECheck.ordine.getField() : VUOTA);
+            AEToken.rowIndex.setValue(AECheck.rowIndex.is() ? "true" : "false");
+            AEToken.properties.setValue(fixProperties());
+            AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
+            AEToken.propertyCode.setValue(fixProperty(AECheck.code));
+            AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
+            AEToken.toString.setValue(fixString());
+        }
+
+        return status;
+    }
+
+    protected String fixProperty(AECheck check) {
+        String testo = VUOTA;
+        String sourceText = VUOTA;
+        String tagSources = check.getSourcesTag();
+
+        if (check.is()) {
+            sourceText = this.leggeFile(tagSources);
+            testo = this.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+
+    protected String fixProperties() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += AECheck.ordine.getField() + VIRGOLA;
+        }
+
+        if (AECheck.code.is()) {
+            testo += AECheck.code.getField() + VIRGOLA;
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += AECheck.descrizione.getField() + VIRGOLA;
+        }
+
+        testo = text.levaCoda(testo, VIRGOLA);
+        return text.setApici(testo).trim();
+    }
+
+    protected String fixString() {
+        String toString = "VUOTA";
+
+        if (AECheck.code.is()) {
+            toString = "code";
+        }
+        else {
+            if (AECheck.descrizione.is()) {
+                toString = "descrizione";
+            }
+        }
+
+        return toString;
+    }
+
+    protected String fixVersion() {
+        String versione = VUOTA;
+        String tag = "LocalDate.of(";
+        String anno;
+        String mese;
+        String giorno;
+        LocalDate localDate = LocalDate.now();
+
+        anno = localDate.getYear() + VUOTA;
+        mese = localDate.getMonth().getValue() + VUOTA;
+        giorno = localDate.getDayOfMonth() + VUOTA;
+        versione = tag + anno + VIRGOLA + mese + VIRGOLA + giorno + ")";
+
+        return versione;
     }
 
 }

@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
 
 
 /**
@@ -899,7 +898,7 @@ public class AFileService extends AAbstractService {
     public void copyFile(AECopyFile typeCopy, String srcPath, String destPath, String firstDirectory) {
         boolean esisteFileDest;
         String message;
-        String path = this.findPathDopoDirectory(destPath, DIR_PROJECTS);
+        String path = this.findPathBreve(destPath, firstDirectory);
 
         if (!this.isEsisteFile(srcPath)) {
             logger.warn("Non sono riuscito a trovare il file " + srcPath + " nella directory indicata", this.getClass(), "copyFile");
@@ -967,7 +966,7 @@ public class AFileService extends AAbstractService {
             message = "Manca il " + tag + " della directory da copiare.";
         }
         else {
-            path = this.findPathDopoDirectory(destPath, firstDirectory);
+            path = this.findPathBreve(destPath, firstDirectory);
             if (isEsisteDirectory(srcPath)) {
                 switch (typeCopy) {
                     case soloSeNonEsiste:
@@ -1242,7 +1241,7 @@ public class AFileService extends AAbstractService {
         String message = VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
-        String path = this.findPathDopoDirectory(pathFileToBeWritten, firstDirectory);
+        String path = this.findPathBreve(pathFileToBeWritten, firstDirectory);
 
         if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
@@ -1673,28 +1672,37 @@ public class AFileService extends AAbstractService {
 
 
     /**
-     * Estrae il path da root fino alla directory indicata <br>
+     * Estrae il path che contiene la directory indicata <br>
      * <p>
      * Esegue solo se il path è valido
-     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Se la directory indicata è vuota, restituisce il path completo <br>
+     * Se la directory indicata non esiste nel path, restituisce una stringa vuota <br>
      * Elimina spazi vuoti iniziali e finali
      *
-     * @param pathIn    in ingresso
-     * @param directory di cui ricercare il path
+     * @param pathIn            in ingresso
+     * @param directoryFindPath di cui ricercare il path che la contiene
      *
      * @return path completo fino alla directory selezionata
      */
-    public String findPathDirectory(String pathIn, String directory) {
+    public String findPathDirectory(String pathIn, String directoryFindPath) {
         String pathOut = pathIn.trim();
 
         if (text.isEmpty(pathIn)) {
+            logger.warn("Nullo il path in ingresso", this.getClass(), "findPathDirectory");
             return pathOut;
         }
 
-        if (text.isValid(directory)) {
-            if (pathOut.contains(directory)) {
-                pathOut = pathOut.substring(0, pathOut.indexOf(directory));
-            }
+        if (text.isEmpty(directoryFindPath)) {
+            logger.info("Nulla la directory in ingresso", this.getClass(), "findPathDirectory");
+            return pathOut;
+        }
+
+        if (pathOut.contains(directoryFindPath)) {
+            pathOut = pathOut.substring(0, pathOut.indexOf(directoryFindPath));
+        }
+        else {
+            pathOut = VUOTA;
+            logger.warn("Non esiste la directory indicata nel path indicato", this.getClass(), "findPathDirectory");
         }
 
         return pathOut.trim();
@@ -1704,6 +1712,7 @@ public class AFileService extends AAbstractService {
     /**
      * Estrae il path parziale da una directory indicata, escludendo il percorso iniziale <br>
      * <p>
+     * La directory indicata è l'ultima con quel nome <br>
      * Esegue solo se il path è valido
      * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
      * Elimina spazi vuoti iniziali e finali
@@ -1713,7 +1722,7 @@ public class AFileService extends AAbstractService {
      *
      * @return path parziale da una directory
      */
-    public String findPathDopoDirectory(String pathIn, String directory) {
+    public String findPathBreve(String pathIn, String directory) {
         String path = VUOTA;
         String prefix = "../";
 
@@ -1722,7 +1731,7 @@ public class AFileService extends AAbstractService {
         }
 
         if (pathIn.contains(directory)) {
-            path = pathIn.substring(pathIn.indexOf(directory));
+            path = pathIn.substring(pathIn.lastIndexOf(directory));
             if (path.startsWith(SLASH)) {
                 path = path.substring(1);
             }
@@ -1733,28 +1742,29 @@ public class AFileService extends AAbstractService {
     }
 
 
-    /**
-     * Elabora un path eliminando i livelli iniziali indicati. <br>
-     * <p>
-     * Esegue solo se il testo è valido <br>
-     * Elimina spazi vuoti iniziali e finali <br>
-     * Aggiunge un prefisso indicativo -> '../' <br>
-     *
-     * @param testoIn    ingresso
-     * @param numLivelli iniziali da eliminare nel path
-     *
-     * @return path semplificato
-     */
-    public String pathBreve(final String testoIn, int numLivelli) {
-        String path = text.testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
-        String prefix = "../";
-
-        if (!path.equals(testoIn)) {
-            path = text.isValid(path) ? prefix + path : path;
-        }
-
-        return path;
-    }
+//    /**
+//     * Elabora un path eliminando i livelli iniziali indicati. <br>
+//     * <p>
+//     * Esegue solo se il testo è valido <br>
+//     * Elimina spazi vuoti iniziali e finali <br>
+//     * Aggiunge un prefisso indicativo -> '../' <br>
+//     *
+//     * @param testoIn    ingresso
+//     * @param numLivelli iniziali da eliminare nel path
+//     *
+//     * @return path semplificato
+//     */
+//    @Deprecated
+//    public String pathBreve(final String testoIn, int numLivelli) {
+//        String path = text.testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
+//        String prefix = "../";
+//
+//        if (!path.equals(testoIn)) {
+//            path = text.isValid(path) ? prefix + path : path;
+//        }
+//
+//        return path;
+//    }
 
 
     /**

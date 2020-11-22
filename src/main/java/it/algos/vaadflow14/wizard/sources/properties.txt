@@ -3,7 +3,12 @@
 server.port=${PORT:8080}
 
 # versione del framework
-algos.framework.version=0.1
+algos.vaadflow.version=0.28
+algos.vaadflow.version.date=@TODAY@
+
+# versione del progetto
+algos.@PROJECT@.version=0.1
+algos.@PROJECT@.version.date=@TODAY@
 
 server.compression.enabled=true
 server.compression.mime-types=application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css

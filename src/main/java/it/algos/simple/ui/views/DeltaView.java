@@ -11,11 +11,9 @@ import it.algos.simple.backend.packages.Delta;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.service.AResourceService;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Arrays;
 

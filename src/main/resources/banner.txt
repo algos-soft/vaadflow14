@@ -6,8 +6,9 @@ ${AnsiColor.RED}
    \_/    \__,_|  \__,_|  \__,_| |_|   |_|  \___/    \_/\_/
 
 VaadFlow FrameWork  (c)Algos
-SpringBoot ver: ${spring-boot.formatted-version}
+Java ver: ${AnsiColor.GREEN}${java.version}${AnsiColor.RED}
+SpringBoot ver: ${AnsiColor.GREEN}${spring-boot.formatted-version}${AnsiColor.RED}
 Vaadin ver: ${AnsiColor.GREEN}14.4.2${AnsiColor.RED}
-VaadFlow ver: ${AnsiColor.GREEN}${algos.framework.version}${AnsiColor.RED}
+VaadFlow ver: ${AnsiColor.GREEN}${algos.vaadflow.version}${AnsiColor.RED} di ${AnsiColor.GREEN}${algos.vaadflow.version.date}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
 

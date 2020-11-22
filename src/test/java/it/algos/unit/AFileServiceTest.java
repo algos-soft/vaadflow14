@@ -1346,87 +1346,106 @@ public class AFileServiceTest extends ATest {
 
     @Test
     @Order(32)
-    @DisplayName("32 - findPath")
+    @DisplayName("32 - findPath che contiene una directory")
     public void findPath() {
+        System.out.println("findPath che contiene una directory");
+        System.out.println("");
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
 
         previsto = VUOTA;
         ottenuto = file.findPathDirectory(VUOTA, VUOTA);
         assertEquals(previsto, ottenuto);
+        printPath(VUOTA, VUOTA, ottenuto);
 
         previsto = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
         ottenuto = file.findPathDirectory(sorgente, VUOTA);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
+
+        sorgente2 = "sconosciuta";
+        previsto = VUOTA;
+        ottenuto = file.findPathDirectory(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "Documents";
-        previsto = VUOTA;
-        ottenuto = file.findPathDirectory(VUOTA, sorgente2);
+        previsto = "/Users/gac/";
+        ottenuto = file.findPathDirectory(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "IdeaProjects";
         previsto = "/Users/gac/Documents/";
         ottenuto = file.findPathDirectory(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "operativi";
         previsto = "/Users/gac/Documents/IdeaProjects/";
         ottenuto = file.findPathDirectory(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "vaadflow14";
         previsto = "/Users/gac/Documents/IdeaProjects/operativi/";
         ottenuto = file.findPathDirectory(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
     }
 
     @Test
     @Order(33)
-    @DisplayName("33 - findPathDopoDirectory")
+    @DisplayName("33 - findPathBreve che inizia da una directory")
     public void findPathDopoDirectory() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
+        System.out.println("pathBreve che inizia da ../ e una directory");
+        System.out.println("");
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno/";
 
         previsto = VUOTA;
-        ottenuto = file.findPathDopoDirectory(VUOTA, VUOTA);
+        ottenuto = file.findPathBreve(VUOTA, VUOTA);
         assertEquals(previsto, ottenuto);
+        printPath(VUOTA, VUOTA, ottenuto);
 
-        previsto = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, VUOTA);
+        previsto = sorgente;
+        ottenuto = file.findPathBreve(sorgente, VUOTA);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, VUOTA, ottenuto);
 
         sorgente2 = "Documents";
         previsto = VUOTA;
-        ottenuto = file.findPathDopoDirectory(VUOTA, sorgente2);
+        ottenuto = file.findPathBreve(VUOTA, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(VUOTA, sorgente2, ottenuto);
 
         sorgente2 = "tutorial";
         previsto = VUOTA;
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "IdeaProjects";
-        previsto = "../IdeaProjects/operativi/vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        previsto = "../IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno/";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
-
-        sorgente2 = "IdeaProjects/";
-        previsto = "../IdeaProjects/operativi/vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
-        assertEquals(previsto, ottenuto);
-
-        sorgente2 = "/IdeaProjects";
-        previsto = "../IdeaProjects/operativi/vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
-        assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "operativi";
-        previsto = "../operativi/vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        previsto = "../operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno/";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "vaadflow14";
-        previsto = "../vaadflow14/";
-        ottenuto = file.findPathDopoDirectory(sorgente, sorgente2);
+        previsto = "../vaadflow14/backend/packages/crono/giorno/";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
+
+        sorgente2 = "packages";
+        previsto = "../packages/crono/giorno/";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
+        assertEquals(previsto, ottenuto);
+        printPath(sorgente, sorgente2, ottenuto);
     }
 
     @Test
@@ -1439,41 +1458,12 @@ public class AFileServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
-    @Test
-    @Order(35)
-    @DisplayName("35 - pathBreve")
-    public void pathBreve() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
 
-        ottenuto = file.pathBreve(VUOTA, 0);
-        assertNotNull(ottenuto);
-        assertEquals(VUOTA, ottenuto);
-
-        ottenuto = file.pathBreve(VUOTA, 1);
-        assertNotNull(ottenuto);
-        assertEquals(VUOTA, ottenuto);
-
-        ottenuto = file.pathBreve(sorgente, 0);
-        assertNotNull(ottenuto);
-        assertEquals(sorgente, ottenuto);
-
-        sorgenteIntero = 1;
-        previsto = "../gac/Documents/IdeaProjects/operativi/vaadflow14";
-        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-
-        sorgenteIntero = 2;
-        previsto = "../Documents/IdeaProjects/operativi/vaadflow14";
-        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
-
-        sorgenteIntero = 3;
-        previsto = "../IdeaProjects/operativi/vaadflow14";
-        ottenuto = file.pathBreve(sorgente, sorgenteIntero);
-        assertNotNull(ottenuto);
-        assertEquals(previsto, ottenuto);
+    private void printPath(String path, String dir, String pathOttenuto) {
+        System.out.println("Path completo: " + path);
+        System.out.println("Directory interessata: " + dir);
+        System.out.println("Path che la contiene:  " + pathOttenuto);
+        System.out.println("");
     }
 
     /**

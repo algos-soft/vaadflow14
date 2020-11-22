@@ -50,7 +50,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
 
-        wizService.copyFile(AECopyFile.sovrascriveSempreAncheSeEsiste, srcPath, destPath);
+        wizService.copyFile(AECopyFile.sovrascriveSempreAncheSeEsiste, srcPath, destPath,DIR_VAADFLOW);
     }
 
 
@@ -73,7 +73,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
         }
 
-        wizService.copyDirectory(AECopyDir.deletingAll, srcPath, destPath);
+         file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 
@@ -96,7 +96,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
         }
 
-        wizService.copyDirectory(AECopyDir.deletingAll, srcPath, destPath);
+        file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 }

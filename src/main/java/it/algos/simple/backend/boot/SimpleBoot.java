@@ -87,7 +87,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza companies";
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
         FlowVar.versionDate = LocalDate.of(2020, 11, 7);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";

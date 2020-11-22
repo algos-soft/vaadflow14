@@ -272,8 +272,7 @@ public abstract class FlowBoot implements ServletContextListener {
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
          */
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.framework.version"));
-        ;
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
 
         /**
          * Data della versione dell' applicazione <br>

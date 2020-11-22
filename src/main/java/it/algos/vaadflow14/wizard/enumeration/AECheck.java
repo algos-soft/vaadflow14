@@ -14,61 +14,63 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
  * Time: 18:56
  */
 public enum AECheck {
-    security("Utilizza Spring Security", true, false, false, false, VUOTA, VUOTA),
+    security("Utilizza Spring Security", true, false, false, false, VUOTA, VUOTA, false),
 
-    config("Directory CONFIG di risorse on-line esterne al JAR (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    config("Directory CONFIG di risorse on-line esterne al JAR (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    documentation("Directory DOC di documentazione (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    documentation("Directory DOC di documentazione (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    frontend("Directory FRONTEND del Client (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    frontend("Directory FRONTEND del Client (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    links("Directory LINKS a siti web utili (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    links("Directory LINKS a siti web utili (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    snippets("Directory SNIPPETS di codice suggerito (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    snippets("Directory SNIPPETS di codice suggerito (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false, VUOTA, VUOTA),
+    flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false, VUOTA, VUOTA, false),
 
-    projectNew("Directory modulo del nuovo progetto (...)", true, false, false, false, VUOTA, VUOTA),
+    projectNew("Directory modulo del nuovo progetto (...)", true, false, false, false, VUOTA, VUOTA, false),
 
-    projectUpdate("Directory modulo del progetto selezionato (...)", false, true, false, false, VUOTA, VUOTA),
+    projectUpdate("Directory modulo del progetto selezionato (...)", false, true, false, false, VUOTA, VUOTA, false),
 
-    resources("Directory RESOURCES (VaadFlow)", true, true, false, false, VUOTA, VUOTA),
+    resources("Directory RESOURCES (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    property("File application.PROPERTIES (sources)", true, true, false, false, VUOTA, VUOTA),
+    property("File application.PROPERTIES (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
-    banner("File BANNER di SpringBoot (sources)", true, true, false, false, VUOTA, VUOTA),
+    banner("File BANNER di SpringBoot (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
-    git("File GIT di esclusione (sources)", true, true, false, false, VUOTA, VUOTA),
+    git("File GIT di esclusione (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
-    pom("File POM.xml di Maven (sources)", true, true, false, false, VUOTA, VUOTA),
+    pom("File POM.xml di Maven (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
-    read("File README con note di testo (sources)", true, true, false, false, VUOTA, VUOTA),
+    read("File README con note di testo (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
-    file("Sovrascrive il singolo FILE", false, false, false, false, VUOTA, VUOTA),
+    file("Sovrascrive il singolo FILE", false, false, false, false, VUOTA, VUOTA, false),
 
-    directory("Sovrascrive la DIRECTORY", false, false, false, false, VUOTA, VUOTA),
+    directory("Sovrascrive la DIRECTORY", false, false, false, false, VUOTA, VUOTA, false),
 
-    entity("Entity base del package", false, false, true, true, VUOTA, VUOTA),
+    entity("Entity base del package", false, false, true, true, VUOTA, VUOTA, true),
 
-    logic("Business logic del package", false, false, true, true, VUOTA, VUOTA),
+    logic("Business logic del package", false, false, true, true, VUOTA, VUOTA, false),
 
-    form("Form specifico del package", false, false, true, true, VUOTA, VUOTA),
+    form("Form specifico del package", false, false, true, true, VUOTA, VUOTA, false),
 
-    list("List specifico del package", false, false, true, true, VUOTA, VUOTA),
+    list("List specifico del package", false, false, true, true, VUOTA, VUOTA, false),
 
-    service("Service specifico del package", false, false, true, true, VUOTA, VUOTA),
+    service("Service specifico del package", false, false, true, true, VUOTA, VUOTA, false),
 
-    company("Entity subclass di Company", false, false, true, true, VUOTA, VUOTA),
+    company("Entity subclass di Company", false, false, true, true, VUOTA, VUOTA, false),
 
-    crowIndex("Entity usa rowIndex", false, false, true, true, VUOTA, VUOTA),
+    rowIndex("Entity usa rowIndex", false, false, true, true, VUOTA, VUOTA, false),
 
-    ordine("Entity usa property Ordine", false, false, true, true, "ordine", "PropertyOrdine"),
+    ordine("Entity usa property Ordine", false, false, true, true, "ordine", "PropertyOrdine", true),
 
-    code("Entity usa property Code", false, false, true, true, "code", "PropertyCode"),
+    code("Entity usa property Code", false, false, true, true, "code", "PropertyCode", true),
 
-    descrizione("Entity usa property Descrizione", false, false, true, true, "descrizione", "PropertyDescrizione"),
+    descrizione("Entity usa property Descrizione", false, false, true, true, "descrizione", "PropertyDescrizione", true),
 
-    sovrascrivePackage("Sovrascrive un package esistente", false, false, true, true, VUOTA, VUOTA),
+    docFile("Update doc of all packages", false, false, false, true, VUOTA, VUOTA, false),
+
+    sovrascrivePackage("Sovrascrive un package esistente", false, false, false, false, VUOTA, VUOTA, false),
 
     ;
 
@@ -89,11 +91,13 @@ public enum AECheck {
 
     private boolean acceso;
 
+    private boolean accesoInizialmente;
+
 
     /**
      * Costruttore completo <br>
      */
-    AECheck(String caption, boolean newProject, boolean updateProject, boolean newPackage, boolean updatePackage, String field, String sourcesTag) {
+    AECheck(String caption, boolean newProject, boolean updateProject, boolean newPackage, boolean updatePackage, String field, String sourcesTag, boolean accesoInizialmente) {
         this.caption = caption;
         this.newProject = newProject;
         this.updateProject = updateProject;
@@ -101,6 +105,7 @@ public enum AECheck {
         this.updatePackage = updatePackage;
         this.field = field;
         this.sourcesTag = sourcesTag;
+        this.accesoInizialmente = accesoInizialmente;
     }
 
 
@@ -224,6 +229,10 @@ public enum AECheck {
 
     public String getSourcesTag() {
         return sourcesTag;
+    }
+
+    public boolean isAccesoInizialmente() {
+        return accesoInizialmente;
     }
 }
 

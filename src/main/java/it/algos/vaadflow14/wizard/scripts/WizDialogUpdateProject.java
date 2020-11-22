@@ -97,8 +97,8 @@ public class WizDialogUpdateProject extends WizDialog {
 
         fieldComboProgetti.setItems(progetti);
         confirmButton.setEnabled(false);
-        if (progetti.size() == 1) {
-            fieldComboProgetti.setValue(progetti.get(0));
+        if (progetti.contains(AEProgetto.alfa)) {
+            fieldComboProgetti.setValue(AEProgetto.alfa);
             confirmButton.setEnabled(true);
         }
 

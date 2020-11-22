@@ -117,4 +117,5 @@ public enum AEProgetto {
     public void setPathCompleto(String pathCompleto) {
         this.pathCompleto = pathCompleto;
     }
+
 }// end of enumeration class

@@ -49,34 +49,22 @@ public class WizElaboraNewPackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        if (creaDirectory()) {
-            this.creaFileEntity();
-            this.fixBoot();
+        if (this.creaDirectory()) {
+            super.fixPackage();
         }
     }
-
-
 
 
     protected boolean creaDirectory() {
-        if (file.isEsisteDirectory(AEDir.pathTargetPackages.get()) ) {
-            logger.info("La directory " + AEDir.nameTargetPackage.get() + " esiste già e non può essere sovrascritta",this.getClass(),"creaDirectory");
+        if (file.isEsisteDirectory(AEDir.pathTargetPackage.get())) {
+            logger.info("La directory " + AEDir.nameTargetPackage.get() + " esiste già e non può essere sovrascritta", this.getClass(), "creaDirectory");
             return false;
-        } else {
-            file.creaDirectory(AEDir.pathTargetPackages.get());
-            logger.info("La directory per il package " + AEDir.nameTargetPackageUpper.get() + " è stato creata",this.getClass(),"creaDirectory");
+        }
+        else {
+            file.creaDirectory(AEDir.pathTargetPackage.get());
+            logger.info("La directory per il package " + AEDir.nameTargetPackageUpper.get() + " è stato creata", this.getClass(), "creaDirectory");
             return true;
         }
-    }
-
-
-
-    protected void creaFileBase(String pathDest, String testo) {
-//        if (!file.scriveNewFile(pathDest, testo)) {
-//            if (sovrascrive) {
-//                file.sovraScriveFile(pathDest, testo);
-//            }
-//        }
     }
 
 }

@@ -10,11 +10,10 @@ import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_BACKEND;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PACKAGES;
 
 /**
  * Project vaadflow14
@@ -47,7 +46,8 @@ public class WizDialogUpdatePackage extends WizDialog {
     protected void creaTopLayout() {
         if (AEFlag.isBaseFlow.is()) {
             logger.error("Non dovrebbe arrivare qui", this.getClass(), "creaTopLayout");
-        } else {
+        }
+        else {
             topLayout = fixSezione("Modifica di un package", "green");
         }
         this.add(topLayout);
@@ -66,11 +66,7 @@ public class WizDialogUpdatePackage extends WizDialog {
         selezioneLayout = fixSezione("Selezione...");
         this.add(selezioneLayout);
 
-        String path = AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_PACKAGES;
-        List<String> packages = null;
-        if (text.isValid(path)) {
-            packages = file.getSubDirectoriesName(path);
-        }
+        List<String> packages = wizService.getPackages();
 
         String label = "Packages esistenti nella directory di questo progetto";
 
@@ -111,18 +107,59 @@ public class WizDialogUpdatePackage extends WizDialog {
         super.creaCheckBoxLayout();
         Checkbox unCheckbox;
 
-        //--spenge tutti i checkbox
+        //--regola tutti i checkbox
+        AECheck.reset();
         for (AECheck check : AECheck.getUpdatePackage()) {
-            check.setAcceso(false);
+            check.setAcceso(check.isAccesoInizialmente());
         }
-        AECheck.entity.setAcceso(true);
 
         for (AECheck check : AECheck.getUpdatePackage()) {
             unCheckbox = new Checkbox(check.getCaption(), check.is());
             mappaCheckbox.put(check.name(), unCheckbox);
         }
 
+        unCheckbox = mappaCheckbox.get(AECheck.rowIndex.name());
+        unCheckbox.addValueChangeListener(e -> { sincroRow(); });
+        unCheckbox = mappaCheckbox.get(AECheck.ordine.name());
+        unCheckbox.addValueChangeListener(e -> { sincroOrdine(); });
+        unCheckbox = mappaCheckbox.get(AECheck.docFile.name());
+        unCheckbox.addValueChangeListener(e -> { sincroDocPackage(); });
+
         super.addCheckBoxMap();
+    }
+
+    protected void sincroRow() {
+        Checkbox checkRow = mappaCheckbox.get(AECheck.rowIndex.name());
+        Checkbox checkOrdine = mappaCheckbox.get(AECheck.ordine.name());
+
+        if (checkRow.getValue()) {
+            checkOrdine.setValue(false);
+        }
+    }
+
+    protected void sincroOrdine() {
+        Checkbox checkRow = mappaCheckbox.get(AECheck.rowIndex.name());
+        Checkbox checkOrdine = mappaCheckbox.get(AECheck.ordine.name());
+
+        if (checkOrdine.getValue()) {
+            checkRow.setValue(false);
+        }
+    }
+
+    protected void sincroDocPackage() {
+        Checkbox checkDocPackage = mappaCheckbox.get(AECheck.docFile.name());
+
+        if (checkDocPackage.getValue()) {
+            for (String key : mappaCheckbox.keySet()) {
+                if (!key.equals(AECheck.docFile.name())) {
+                    mappaCheckbox.get(key).setValue(false);
+                }
+            }
+            confirmButton.setEnabled(true);
+        }
+        else {
+            confirmButton.setEnabled(false);
+        }
     }
 
 
@@ -153,103 +190,21 @@ public class WizDialogUpdatePackage extends WizDialog {
      */
     protected boolean regolaAEDir() {
         boolean status = true;
-        String packageName;
+        String packageName = VUOTA;
         super.regolaAEDir();
 
         if (fieldComboPackages != null && fieldComboPackages.getValue() != null) {
             packageName = fieldComboPackages.getValue();
+        }
+
+        if (mappaCheckbox != null && mappaCheckbox.get(AECheck.docFile.name()) != null && mappaCheckbox.get(AECheck.docFile.name()).getValue()) {
+            AEDir.modificaPackageAll(VUOTA);
+        }
+        else {
             status = status && AEDir.modificaPackageAll(packageName);
         }
 
         return status;
     }
-
-
-    /**
-     * Chiamato alla dismissione del dialogo <br>
-     * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewPackage e WizElaboraUpdatePackage <br>
-     */
-    @Override
-    protected boolean regolaAEToken() {
-        boolean status = true;
-        boolean usaCompany = AECheck.company.is();
-        String tagEntity = "AEntity";
-        String tagCompany = "AECompany";
-        String projectName;
-        String packageName;
-        super.regolaAEToken();
-
-        projectName = AEDir.nameTargetProject.get();
-        packageName = AEDir.nameTargetPackage.get();
-
-        if (text.isValid(projectName) && text.isValid(packageName)) {
-            AEToken.nameTargetProject.setValue(projectName);
-            AEToken.projectNameUpper.setValue(projectName.toUpperCase());
-            AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
-            AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
-            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(packageName.toLowerCase());
-            AEToken.user.setValue(AEDir.nameUser.get());
-            AEToken.today.setValue(date.get());
-            AEToken.entity.setValue(text.primaMaiuscola(packageName));
-            AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
-            AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
-            AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-            AEToken.keyProperty.setValue(AECheck.code.is()?AECheck.code.getField():VUOTA);
-            AEToken.searchProperty.setValue(AECheck.code.is()?AECheck.code.getField():VUOTA);
-            AEToken.sortProperty.setValue(AECheck.ordine.is()?AECheck.ordine.getField():VUOTA);
-            AEToken.properties.setValue(fixProperties());
-            AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
-            AEToken.propertyCode.setValue(fixProperty(AECheck.code));
-            AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
-            AEToken.toString.setValue(fixString());
-        }
-
-        return status;
-    }
-
-
-
-
-//    protected String fixOrdine() {
-//        String testo = VUOTA;
-//        String tagSources = "PropertyOrdine";
-//        String sourceText = VUOTA;
-//
-//        if (AECheck.ordine.is()) {
-//            sourceText = wizService.leggeFile(tagSources);
-//            testo = wizService.elaboraFileCreatoDaSource(sourceText);
-//        }
-//
-//        return testo;
-//    }
-//
-//
-//    protected String fixCode() {
-//        String testo = VUOTA;
-//        String tagSources = "PropertyCode";
-//        String sourceText = VUOTA;
-//
-//        if (AECheck.code.is()) {
-//            sourceText = wizService.leggeFile(tagSources);
-//            testo = wizService.elaboraFileCreatoDaSource(sourceText);
-//        }
-//
-//        return testo;
-//    }
-//
-//
-//    protected String fixDescrizione() {
-//        String testo = VUOTA;
-//        String tagSources = "PropertyDescrizione";
-//        String sourceText = VUOTA;
-//
-//        if (AECheck.descrizione.is()) {
-//            sourceText = wizService.leggeFile(tagSources);
-//            testo = wizService.elaboraFileCreatoDaSource(sourceText);
-//        }
-//
-//        return testo;
-//    }
 
 }
