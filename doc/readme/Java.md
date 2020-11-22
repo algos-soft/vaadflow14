@@ -1,7 +1,7 @@
 JAVA
 ======================
 ##Versioni
-![](/Users/gac/Documents/IdeaProjects/Operativi/Vaadflow14/doc/Oracle.png)
+![](/Users/gac/Documents/IdeaProjects/Operativi/Vaadflow14/doc/oracle.png)
 
 
 - Java version history [wikipedia](https://en.wikipedia.org/wiki/Java_version_history)
