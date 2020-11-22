@@ -161,6 +161,7 @@ public abstract class WizCost {
 
     public static final String MD_SUFFIX = ".md";
 
+    public static final String LOGIC_SUFFIX = "Logic";
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)

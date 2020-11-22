@@ -179,7 +179,7 @@ public class WizService {
         boolean esisteFileDest = false;
         String message = VUOTA;
         String sourceText = leggeFile(nameSourceText);
-        String path = file.findPathBreve(pathFileToBeWritten, DIR_PROJECTS);
+        String path = file.findPathBreve(pathFileToBeWritten, DIR_PACKAGES);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
@@ -195,7 +195,7 @@ public class WizService {
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
         switch (typeCopy) {
             case sovrascriveSempreAncheSeEsiste:
-                file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
+                file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
                 break;
             case soloSeNonEsiste:
                 if (esisteFileDest) {
@@ -203,7 +203,7 @@ public class WizService {
                     logger.info(message, this.getClass(), "creaFile");
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
                     message = "Il file: " + path + " non esisteva ed è stato creato da source.";
                     logger.info(message, this.getClass(), "creaFile");
                 }
@@ -211,7 +211,7 @@ public class WizService {
             case checkFlagSeEsiste:
                 if (esisteFileDest) {
                     if (checkFileCanBeModified(pathFileToBeWritten)) {
-                        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
+                        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
                     }
                     else {
                         message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
@@ -219,7 +219,7 @@ public class WizService {
                     }
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PACKAGES);
                 }
                 break;
             default:

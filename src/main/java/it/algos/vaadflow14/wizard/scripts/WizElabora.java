@@ -401,6 +401,9 @@ public abstract class WizElabora implements WizRecipient {
         if (AEPackage.entity.isAttivo()) {
             this.fixEntity();
         }
+        if (AEPackage.logic.isAttivo()) {
+            this.fixFileLogic();
+        }
     }
 
     /**
@@ -412,13 +415,25 @@ public abstract class WizElabora implements WizRecipient {
         this.fixBoot();
     }
 
+
     /**
-     * Creazione del file nella directory dei packages <br>
+     * Creazione del file nella directory del package <br>
      */
     protected void fixFileEntity() {
         String tag = "Entity";
         String pathFileToBeWritten = AEDir.fileTargetEntity.get();
         if (AECheck.entity.is()) {
+            wizService.creaFile(AECopyFile.checkFlagSeEsiste, tag, pathFileToBeWritten);
+        }
+    }
+
+    /**
+     * Creazione del file nella directory del package <br>
+     */
+    protected void fixFileLogic() {
+        String tag = "Logic";
+        String pathFileToBeWritten = AEDir.fileTargetLogic.get();
+        if (AECheck.logic.is()) {
             wizService.creaFile(AECopyFile.checkFlagSeEsiste, tag, pathFileToBeWritten);
         }
     }
@@ -502,10 +517,16 @@ public abstract class WizElabora implements WizRecipient {
         for (String packageName : wizService.getPackages()) {
             status = status && AEDir.modificaPackageAll(packageName);
             status = status && wizService.regolaAEToken(projectName, packageName);
-            if (status && AEPackage.entity.isAttivo()) {
-                this.fixDocEntity();
+            if (status) {
+                if (AEPackage.entity.isAttivo()) {
+                    this.fixDocEntity();
+                }
+                if (AEPackage.logic.isAttivo()) {
+                    this.fixDocLogic();
+                }
             }
         }
+
         AEDir.modificaPackageAll(oldPackageName);
         wizService.regolaAEToken(projectName, oldPackageName);
     }
@@ -513,6 +534,13 @@ public abstract class WizElabora implements WizRecipient {
     protected void fixDocEntity() {
         String tag = "Entity";
         String pathFileToBeWritten = AEDir.fileTargetEntity.get();
+
+        wizService.fixDocFile(tag, pathFileToBeWritten);
+    }
+
+    protected void fixDocLogic() {
+        String tag = "Logic";
+        String pathFileToBeWritten = AEDir.fileTargetLogic.get();
 
         wizService.fixDocFile(tag, pathFileToBeWritten);
     }
