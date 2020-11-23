@@ -13,8 +13,19 @@ JAVA
 
 ##Lambdas
 - Staring from 8
+    
+    
+    (parameter) -> body
+In its simple form, a lambda could be represented as a comma-separated list of parameters, the –> symbol and the body. 
+- List<Integer> numbers = Arrays.asList(11, 22, 33, 44, 99, 100); 
+- numbers.forEach (number -> System.out.print(number + " ")); 
+- numbers.forEach (System.out::println);
 ##Interfaces
 - Staring from 8
+But with higher-order functions, we can perform the following operations:
+- We can pass a function to a function.
+- We can create a function within function.
+- We can return a function from a function.
 
      
      Function(T,R): Takes one parameter type (T), produces one result (R).

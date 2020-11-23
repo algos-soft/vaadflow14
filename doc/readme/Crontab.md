@@ -41,10 +41,11 @@ Crontab
     
     6 * * * * /Users/gac/Desktop/wiki/shutdown.sh
 - Uscita da editor nano
-    
-    
-    CTRL.O per salvare
-    CTRL.X per uscire
+
+![](/Users/gac/Documents/IdeaProjects/Operativi/Vaadflow14/doc/shortcuts.png)
+
+    CTRL+O per salvare
+    CTRL+X per uscire
 ###Mac osx
 - Alternativa per Mac
 - Creating MacOS startup jobs with launchd [alvinalexander](https://alvinalexander.com/mac-os-x/mac-osx-startup-crontab-launchd-jobs/)    

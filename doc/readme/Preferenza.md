@@ -37,3 +37,5 @@ Diversi i tipi di dati gestiti:
 - In questo caso la property `ID` coincide con la property `code`.
 - La preferenza viene trovata indifferentemente tramite _findById(String keyID)_ oppure _findByKey(String keyValue)_ ricordando che keyID è uguale a keyValue.
 
+
+
