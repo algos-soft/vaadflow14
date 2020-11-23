@@ -123,30 +123,82 @@ public abstract class FlowBoot implements ServletContextListener {
      * Deve essere sovrascritto dalla sottoclasse concreta che invocherà questo metodo()
      */
 
+//    @EventListener(ContextRefreshedEvent.class)
+//    public void contextRefreshedEventExecute() {
+//        //        System.out.println("");
+//        //        System.out.println("Context Refreshed Event is getting executed");
+//        //        System.out.println("");
+////        logger.info("Context Refreshed Event is getting executed", this.getClass(), "contextRefreshedEventExecute");
+//    }
+//
+//    @EventListener(ContextStartedEvent.class)
+//    public void contextStartedEventExecute() {
+//        System.out.println("");
+//        System.out.println("Context Started Event is getting executed");
+//        System.out.println("");
+//    }
+//
+//    @EventListener(ContextStoppedEvent.class)
+//    public void contextStoppedEventExecute() {
+//        System.out.println("");
+//        System.out.println("Context Stopped Event is getting executed");
+//        System.out.println("");
+//    }
+//
+//    @EventListener(ContextClosedEvent.class)
+//    public void contextClosedEventExecute() {
+//        System.out.println("");
+//        System.out.println("Context Closed Event is getting executed");
+//        System.out.println("");
+//    }
+//
+//    @EventListener(ApplicationStartedEvent.class)
+//    public void applicationStartedEventExecute() {
+//        //        System.out.println("");
+//        //        System.out.println("Application Started Event is getting executed");
+//        //        System.out.println("");
+////        logger.info("Application Started Event is getting executed", this.getClass(), "applicationStartedEventExecute");
+//    }
+//
+//    @EventListener(ApplicationEnvironmentPreparedEvent.class)
+//    public void applicationEnvironmentPreparedEventExecute() {
+//        System.out.println("");
+//        System.out.println("Application EnvironmentPrepared Event is getting executed");
+//        System.out.println("");
+//    }
+//
+//    @EventListener(ApplicationPreparedEvent.class)
+//    public void applicationPreparedEventExecute() {
+//        System.out.println("");
+//        System.out.println("Application Prepared Event is getting executed");
+//        System.out.println("");
+//    }
+
 
     /**
+     * Primo ingresso nel programma
      * Utilizzato per:
      * - registrare nella xxxApp, il servlet context non appena è disponibile
      * - regolare alcuni flag dell' applicazione, uguali e validi per tutte le sessioni e tutte le request <br>
      * - lanciare gli schedulers in background <br>
      * - costruire e regolare una versione demo <br>
      * - controllare l' esistenza di utenti abilitati all' accesso <br>
-     *
-     * @param event the event
+     * <p>
+     * //     * @param event the event
      */
-    @EventListener
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    @EventListener(ContextRefreshedEvent.class)
+    public void onApplicationEvent() {
+        logger.startupIni();
         this.fixDBMongo();
-        this.fixVersioni();
-        this.fixRiferimenti();
-        this.iniziaDataPreliminari();
+//        this.fixVersioni();
+//        this.fixRiferimenti();
+//        this.iniziaDataPreliminari();
         this.creaPreferenze();
         this.fixApplicationVar();
         this.initData();
         this.fixPreferenze();
         this.addMenuRoutes();
-
-        logger.startup();
+        logger.startupEnd();
     }
 
 
@@ -225,14 +277,19 @@ public abstract class FlowBoot implements ServletContextListener {
     }
 
 
-
-
     /**
      * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
      * Le variabili (static) sono uniche per tutta l' applicazione, ma il loro valore può essere modificato <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixApplicationVar() {
+
+        /**
+         * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
+         * Di default (per sicurezza) uguale a true <br>
+         * Può essere modificato in xxxBoot.fixApplicationVar() sempre presente nella directory 'backend.boot' <br>
+         */
+        FlowVar.usaDebug = true;
 
         /**
          * Controlla se l' applicazione è multi-company oppure no <br>
@@ -356,8 +413,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixPreferenze() {
     }
-
-
 
 
     /**

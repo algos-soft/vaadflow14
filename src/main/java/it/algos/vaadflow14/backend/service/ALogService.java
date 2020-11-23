@@ -6,11 +6,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AELogLivello;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AILogType;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +90,8 @@ public class ALogService extends AAbstractService {
         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         if (AEPreferenza.usaDebug.is()) {
             notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
-        } else {
+        }
+        else {
             notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui
         }
 
@@ -110,7 +107,8 @@ public class ALogService extends AAbstractService {
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         if (AEPreferenza.usaDebug.is()) {
             notification.setDuration(4000); //@todo Creare una preferenza e sostituirla qui
-        } else {
+        }
+        else {
             notification.setDuration(2000); //@todo Creare una preferenza e sostituirla qui
         }
 
@@ -141,7 +139,16 @@ public class ALogService extends AAbstractService {
      * Logger specifico <br>
      * Gestisce un messaggio alla partenza del programma <br>
      */
-    public void startup() {
+    public void startupIni() {
+        String message = "Inizio regolazioni di FlowBoot";
+        warn(AETypeLog.startup, message);
+    }
+
+    /**
+     * Logger specifico <br>
+     * Gestisce un messaggio alla partenza del programma <br>
+     */
+    public void startupEnd() {
         String message = VUOTA;
         message += FlowVar.projectName;
         message += SEP;
@@ -152,7 +159,7 @@ public class ALogService extends AAbstractService {
         message += " del ";
         message += date.get(FlowVar.versionDate, AETypeData.dateNormal.getPattern());
 
-        info(AETypeLog.startup, message);
+        warn(AETypeLog.startup, message);
     }
 
 
@@ -168,7 +175,8 @@ public class ALogService extends AAbstractService {
         if (entityBean != null) {
             message = beanService.getModifiche(entityBean, null);
             info(AETypeLog.nuovo, message);
-        } else {
+        }
+        else {
             error("Non sono riuscito a creare la entity");
         }
     }
@@ -228,7 +236,8 @@ public class ALogService extends AAbstractService {
             message += SEP;
             message += entityBean.toString();
             info(AETypeLog.delete, message);
-        } else {
+        }
+        else {
             error("Non sono riuscito a cancellare la entity");
         }
     }
@@ -248,7 +257,8 @@ public class ALogService extends AAbstractService {
             message += SEP;
             message += "Ricreati i dati originari della collection";
             info(AETypeLog.reset, message);
-        } else {
+        }
+        else {
             error("Non trovo la entityClazz", this.getClass(), "reset");
         }
     }
@@ -268,7 +278,8 @@ public class ALogService extends AAbstractService {
             message += SEP;
             message += "Cancellata completamente la collection";
             info(AETypeLog.deleteAll, message);
-        } else {
+        }
+        else {
             error("Non trovo la entityClazz", this.getClass(), "reset");
         }
     }
@@ -321,13 +332,13 @@ public class ALogService extends AAbstractService {
     /**
      * Gestisce un log di info <br>
      *
-     * @param message della informazione da gestire
-     * @param clazz       di provenienza della richiesta
-     * @param methodName  di provenienza della richiesta
+     * @param message    della informazione da gestire
+     * @param clazz      di provenienza della richiesta
+     * @param methodName di provenienza della richiesta
      */
     public void info(String message, Class clazz, String methodName) {
         //@todo Funzionalità ancora da implementare
-//        sendTerminale(AELogLivello.info, descrizione, clazz, methodName);
+        //        sendTerminale(AELogLivello.info, descrizione, clazz, methodName);
         //@todo Funzionalità ancora da implementare
         esegue(AETypeLog.info, message, clazz, methodName);
     }
@@ -420,6 +431,15 @@ public class ALogService extends AAbstractService {
         esegue(AETypeLog.warn, message, clazz, methodName);
     }
 
+    public void warn(AILogType type, String message) {
+        String typeTxt;
+
+        typeTxt = type != null ? type.getTag() : AETypeLog.system.getTag();
+        typeTxt = text.fixSizeQuadre(typeTxt, 10);
+
+        message = typeTxt + DOPPIO_SPAZIO + message;
+        adminLogger.warn(message.trim());
+    }
 
     /**
      * Gestisce un log di warning <br>
@@ -447,7 +467,6 @@ public class ALogService extends AAbstractService {
         String typeTxt = type.getTag();
         typeTxt = text.fixSizeQuadre(typeTxt, 10);
         message = typeTxt + DOPPIO_SPAZIO + message;
-
 
         if (clazz != null) {
             clazzTxt = clazz.getSimpleName();
@@ -496,7 +515,8 @@ public class ALogService extends AAbstractService {
 
         if (logLevel == null) {
             return;
-        } else {
+        }
+        else {
             message += logLevel.color + logLevel.name().toUpperCase() + RESET;
         }
 

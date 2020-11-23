@@ -7,8 +7,8 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -28,6 +28,13 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class FlowData extends AData {
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public PreferenzeData preferenzaData;
 
     /**
      * Check iniziale di alcune collections <br>
@@ -37,7 +44,8 @@ public class FlowData extends AData {
      * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void initData() {
-        checkSingolaCollection(Preferenza.class);
+        preferenzaData.creaPreferenze();
+//        checkSingolaCollection(Preferenza.class);
 
         checkSingolaCollection(Secolo.class);
         checkSingolaCollection(Anno.class);

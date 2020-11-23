@@ -6,8 +6,12 @@ Flusso degli eventi nelle classi controllate dal programma:
 - Spring context
 - Application 
 - All @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+- A ContextRefreshEvent occurs
+  
+      when an ApplicationContext gets initialized or refreshed.
+
 - @EventListener
-- FlowBoot
+- FlowBoot.onApplicationEvent(ContextRefreshedEvent event)
 
 ###Browser call
 
@@ -34,3 +38,6 @@ Flusso degli eventi nelle classi controllate dal programma:
 Nell'architettura di SpringBoot, occorre la classe di partenza col metodo `main`.
 
 - La prima classe intercettabile nel flusso è
+
+##Link
+- running-code-on-spring-boot-startup [guru](https://springframework.guru/running-code-on-spring-boot-startup/)

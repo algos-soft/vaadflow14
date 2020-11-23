@@ -12,4 +12,3 @@ Vaadin ver: ${AnsiColor.GREEN}14.4.2${AnsiColor.RED}
 VaadFlow ver: ${AnsiColor.GREEN}${algos.vaadflow.version}${AnsiColor.RED} di ${AnsiColor.GREEN}${algos.vaadflow.version.date}${AnsiColor.RED}
 Tomcat port: ${AnsiColor.GREEN}${server.port}${AnsiColor.RED}
 ${AnsiColor.DEFAULT}
-

@@ -6,7 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.context.event.ApplicationFailedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
 /**
  * Project vaadflow14
@@ -35,4 +39,26 @@ public class SimpleApplication extends SpringBootServletInitializer {
         SpringApplication.run(SimpleApplication.class, args);
     }// end of SpringBoot constructor
 
+
+    @EventListener(ContextRefreshedEvent.class)
+    public void ContextRefreshedEventExecute(){
+//        System.out.println("");
+//        System.out.println("Context Event Listener is getting executed from main class");
+//        System.out.println("");
+    }
+
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void EventListenerExecute(){
+//        System.out.println("");
+//        System.out.println("Application Ready Event is successfully Started from main class");
+//        System.out.println("");
+    }
+
+    @EventListener(ApplicationFailedEvent.class)
+    public void EventListenerExecuteFailed(){
+//        System.out.println("");
+//        System.out.println("Application Event Listener is Failed from main class");
+//        System.out.println("");
+    }
 }

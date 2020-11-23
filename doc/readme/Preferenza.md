@@ -37,5 +37,25 @@ Diversi i tipi di dati gestiti:
 - In questo caso la property `ID` coincide con la property `code`.
 - La preferenza viene trovata indifferentemente tramite _findById(String keyID)_ oppure _findByKey(String keyValue)_ ricordando che keyID è uguale a keyValue.
 
+##Collezione
+Le preferenze memorizzate nella collezione del mongoDB sono di tre tipi:
+* A - _Standard_, inserite all'avvio del programma prendendole dalla enumeration AEPreferenza <br>
+* B - _Specifiche_, inserite all'avvio del programma prendendole da una enumeration specifica <br>
+* C - _Aggiuntive_, inserite direttamente dall'utente (se permesso) <br>
 
+##Fields
+Ogni preferenza ha alcuni field chiave obbligatori:
+* A - `id`; se usaCompany = false, id è uguale a `code` altrimenti se usaCompany = true, `id` DEVE contenere anche la sigla della company.
+* B - `code` per individuare e selezionare la preferenza richiesta;  <br>
+* C - `descrizione` per individuare lo scopo e il funzionamento della preferenza <br>
+* D - `type` per suddividere le preferenze secondo la enumeration AETypePref <br>
+* E - `value` per memorizzare il valore nel mongoDB sotto forma di byte[], convertiti secondo il `type` <br>
+
+##Creazione
+Funzionamento:
+* 1 - Quando parte il programma la prima volta (quando è vuota la collection `preferenza` sul mongoDB), vengono create `TUTTE` le preferenze _standard_ e _specifiche_ provenienti dalle enumeration
+* 2 - Quando il programma parte le volte successive (quando la collection preferenza sul mongoDB non è vuota), vengono create tutte e sole le preferenze (_standard_ e _specifiche_) NON presenti. Quelle presenti NON vengono modificate.
+* 3 - Premendo il Bottone/menu `reset` si cancellano e si ricreano tutte e sole le preferenze (_standard_ e _specifiche_) indipendentemente dal fatto che abbiano valori personalizzati o meno.
+* Le preferenze aggiuntive, create dall'utente, non vengono modificate
+* 4 - Premendo il Bottone/menu `delete` si cancellano `TUTTE` le preferenze
 

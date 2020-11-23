@@ -29,9 +29,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AArrayService extends AAbstractService {
 
-    static{
-        int a=87;
-    }
 
     /**
      * Controlla la validità di un array (lista). <br>

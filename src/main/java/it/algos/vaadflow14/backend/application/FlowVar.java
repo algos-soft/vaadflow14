@@ -14,7 +14,7 @@ import java.util.List;
  * User: gac
  * Date: mar, 13-ago-2019
  * Time: 10:50
- *
+ * <p>
  * Classe statica (astratta) per le variabili generali dell'applicazione <br>
  * Le variabili (static) sono uniche per tutta l'applicazione <br>
  * Il valore delle variabili è unico per tutta l'applicazione, ma può essere modificato <br>
@@ -33,7 +33,6 @@ public class FlowVar {
      * Di default (per sicurezza) uguale a true <br>
      * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
      */
-    @Deprecated
     public static boolean usaDebug;
 
     /**
@@ -55,8 +54,6 @@ public class FlowVar {
      * Se usaCompany=true anche usaSecurity deve essere true <br>
      */
     public static boolean usaCompany;
-
-
 
 
     /**
@@ -111,7 +108,6 @@ public class FlowVar {
      * Eventuali titolo della pagina <br>
      */
     public static String layoutTitle;
-
 
     //    /**
     //     * Service da usare per recuperare dal mongoDB l'utenza loggata tramite 'username' che è unico <br>

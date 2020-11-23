@@ -19,40 +19,34 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: ven, 18-set-2020
  * Time: 15:41
  */
-public enum AEPreferenza {
-    usaDebug("usaDebug", "Flag generale di debug", AETypePref.bool, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
+public enum AEPreferenza implements AIPreferenza {
+    usaDebug("usaDebug", "Flag generale di debug", AETypePref.bool, false, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
 
-    usaSearchClearButton("usaSearchClearButton", "Bottone per pulire il filtro di ricerca", AETypePref.bool, true),
+    usaSearchClearButton("usaSearchClearButton", "Bottone per pulire il filtro di ricerca", AETypePref.bool, true, false),
 
-    usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true),
+    usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true, true),
 
-    usaGridHeaderMaiuscola("usaGridHeaderMaiuscola", "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true),
+    usaGridHeaderMaiuscola("usaGridHeaderMaiuscola", "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true, true),
 
-    usaFormFieldMaiuscola("usaFormFieldMaiuscola", "Prima lettera maiuscola nella label di un field", AETypePref.bool, true),
+    usaFormFieldMaiuscola("usaFormFieldMaiuscola", "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
 
-    usaSearchCaseSensitive("usaSearchCaseSensitive", "Search delle query sensibile alle maiuscole", AETypePref.bool, false),
+    usaSearchCaseSensitive("usaSearchCaseSensitive", "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
 
     //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
 
-    pippoz("daCancellare", "Prova preferenza testo", AETypePref.string, "Alfa"),
+    iconaEdit("iconaEdit", "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
 
-    enumeration2("daCancellare2", "Prova enumeration", AETypePref.enumeration, "Alfa,Beta,Gamma,Delta;Beta"),
+    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
 
-    enumeration3("daCancellare3", "Prova enumeration completa", AETypePref.enumeration, AELogLivello.info),
+    maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, false, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
 
-    iconaEdit("iconaEdit", "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit),
+    maxEnumRadio("maxEnumRadio", "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, false, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
 
-    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", "Email di default a cui spedire i log di posta"),
+    datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now(), false),
 
-    maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
+    datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now(), false),
 
-    maxEnumRadio("maxEnumRadio", "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
-
-    datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now()),
-
-    datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now()),
-
-    timeuno("datatre", "Solo orario", AETypePref.localtime, LocalTime.now()),
+    timeuno("datatre", "Solo orario", AETypePref.localtime, LocalTime.now(), false),
 
     ;
 
@@ -74,25 +68,25 @@ public enum AEPreferenza {
 
     //    //--chi può vedere la preferenza
     //    private AERole show;
-    //
-    //    //--usa un prefisso col codice della company
-    //    private boolean companySpecifica;
+
+    //--usa un prefisso col codice della company
+    private boolean companySpecifica;
 
     //--descrizione aggiuntiva
     private String note;
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue) {
-        this(keyCode, descrizione, type, defaultValue, VUOTA);
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica) {
+        this(keyCode, descrizione, type, defaultValue, false, VUOTA);
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, String note) {
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
         this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
         this.setNote(note);
-        //        this.setCompanySpecifica(companySpecifica);
+        this.setCompanySpecifica(companySpecifica);
         this.setDefaultValue(defaultValue);
     }// fine del costruttore
 
@@ -131,6 +125,14 @@ public enum AEPreferenza {
         this.type = type;
     }
 
+    @Override
+    public boolean isCompanySpecifica() {
+        return companySpecifica;
+    }
+
+    public void setCompanySpecifica(boolean companySpecifica) {
+        this.companySpecifica = companySpecifica;
+    }
 
     public Object getDefaultValue() {
         return defaultValue;
@@ -141,10 +143,12 @@ public enum AEPreferenza {
         if (type == AETypePref.enumeration) {
             if (defaultValue instanceof String) {
                 this.defaultValue = defaultValue;
-            } else {
+            }
+            else {
                 this.defaultValue = ((AIEnum) defaultValue).getPref();
             }
-        } else {
+        }
+        else {
             this.defaultValue = defaultValue;
         }
     }
@@ -214,6 +218,7 @@ public enum AEPreferenza {
                 pref.setPreferenzaService(preferenzaService);
             }
         }
+
     }
 
 
