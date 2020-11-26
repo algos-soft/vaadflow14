@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Size;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "preferenza")
 @TypeAlias("preferenza")

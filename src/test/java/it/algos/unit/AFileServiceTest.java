@@ -6,6 +6,8 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1462,6 +1464,108 @@ public class AFileServiceTest extends ATest {
         previsto = "vaadflow/";
         ottenuto = file.estraeDirectoryFinale(sorgente);
         assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(35)
+    @DisplayName("35 - recursionSubPathNames")
+    public void recursionSubPathNames() {
+        List<String> lista = null;
+        String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
+        File unaDirectory = new File(tag);
+        String pathName = unaDirectory.getAbsolutePath();
+        Path path = Paths.get(unaDirectory.getAbsolutePath());
+
+        try {
+            lista = file.recursionSubPathNames(path);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "recursionSubPathNames");
+        }
+
+        assertTrue(array.isValid(lista));
+        System.out.println(VUOTA);
+        System.out.println("recursionSubPathNames");
+        System.out.println("Ci sono "+lista.size()+" elementi misti files/directories");
+        System.out.println(VUOTA);
+        for (String name : lista) {
+            System.out.println(name);
+        }
+    }
+
+    @Test
+    @Order(36)
+    @DisplayName("36 - getAllSubPathFiles")
+    public void getAllSubPathFiles() {
+        List<String> lista = null;
+        String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
+        File unaDirectory = new File(tag);
+        String pathName = unaDirectory.getAbsolutePath();
+
+        lista = file.getAllSubPathFiles(pathName);
+
+        assertTrue(array.isValid(lista));
+        System.out.println(VUOTA);
+        System.out.println("getAllSubPathFiles");
+        System.out.println("Ci sono "+lista.size()+" files di vario tipo");
+        System.out.println(VUOTA);
+        for (String name : lista) {
+            System.out.println(name);
+        }
+    }
+
+    @Test
+    @Order(37)
+    @DisplayName("37 - getAllSubFilesJava")
+    public void getAllSubFilesJava() {
+        List<String> lista = null;
+        String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
+        File unaDirectory = new File(tag);
+        String pathName = unaDirectory.getAbsolutePath();
+
+        lista = file.getAllSubFilesJava(pathName);
+
+        assertTrue(array.isValid(lista));
+        System.out.println(VUOTA);
+        System.out.println("getAllSubFilesJava");
+        System.out.println("Ci sono "+lista.size()+" files di tipo Java");
+        System.out.println(VUOTA);
+        for (String name : lista) {
+            System.out.println(name);
+        }
+    }
+
+    @Test
+    @Order(38)
+    @DisplayName("38 - getAllSubFilesEntity")
+    public void getAllSubFilesEntity() {
+        List<String> lista = null;
+        String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
+        File unaDirectory = new File(tag);
+        String pathName = unaDirectory.getAbsolutePath();
+        lista = file.getAllSubFilesEntity(pathName);
+
+        assertTrue(array.isValid(lista));
+        System.out.println(VUOTA);
+        System.out.println("getAllSubFilesEntity");
+        System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Vaadflow14");
+        System.out.println(VUOTA);
+        for (String name : lista) {
+            System.out.println(name);
+        }
+
+         tag = "src/main/java/it/algos/simple/backend/packages";
+         unaDirectory = new File(tag);
+         pathName = unaDirectory.getAbsolutePath();
+        lista = file.getAllSubFilesEntity(pathName);
+
+        assertTrue(array.isValid(lista));
+        System.out.println(VUOTA);
+        System.out.println("getAllSubFilesEntity");
+        System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Simple");
+        System.out.println(VUOTA);
+        for (String name : lista) {
+            System.out.println(name);
+        }
     }
 
 

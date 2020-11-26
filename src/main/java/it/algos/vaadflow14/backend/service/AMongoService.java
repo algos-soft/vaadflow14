@@ -141,7 +141,8 @@ public class AMongoService<capture> extends AAbstractService {
     private MongoCollection<Document> getCollection(String collectionName) {
         if (text.isValid(collectionName)) {
             return database != null ? database.getCollection(collectionName) : null;
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -156,6 +157,50 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public boolean isValid(Class<? extends AEntity> entityClazz) {
         return count(entityClazz) > 0;
+    }
+
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+    public boolean isExists(Class<? extends AEntity> entityClazz) {
+        return isExists(entityClazz.getClass().getSimpleName());
+    }
+
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+    public boolean isNotExists(Class<? extends AEntity> entityClazz) {
+        return !isExists(entityClazz);
+    }
+
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param collectionName corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+    public boolean isExists(String collectionName) {
+        return mongoOp.collectionExists(collectionName);
+    }
+
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param collectionName corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+    public boolean isNotExists(String collectionName) {
+        return !isExists(collectionName);
     }
 
 
@@ -331,12 +376,14 @@ public class AMongoService<capture> extends AAbstractService {
                 sort = listaFiltri.get(0).getSort();
                 if (sort != null) {
                     query.with(sort);
-                } else {
+                }
+                else {
                     if (sortPrevalente != null) {
                         query.with(sortPrevalente);
                     }
                 }
-            } else {
+            }
+            else {
                 for (AFiltro filtro : listaFiltri) {
                     criteria = filtro.getCriteria();
                     if (criteria != null) {
@@ -351,7 +398,8 @@ public class AMongoService<capture> extends AAbstractService {
                     query.with(sortPrevalente);
                 }
             }
-        } else {
+        }
+        else {
             if (sortPrevalente != null) {
                 query.with(sortPrevalente);
             }
@@ -456,10 +504,12 @@ public class AMongoService<capture> extends AAbstractService {
 
         if (query == null) {
             return (List<AEntity>) mongoOp.findAll(entityClazz);
-        } else {
+        }
+        else {
             if (text.isEmpty(projection)) {
                 return (List<AEntity>) mongoOp.find(query, entityClazz);
-            } else {
+            }
+            else {
                 return (List<AEntity>) mongoOp.find(query, entityClazz, projection);
             }
         }
@@ -510,7 +560,8 @@ public class AMongoService<capture> extends AAbstractService {
                         } catch (Exception unErrore2) {
                             logger.error(unErrore, this.getClass(), "findSet");
                         }
-                    } else {
+                    }
+                    else {
                         logger.error(unErrore, this.getClass(), "findSet");
                     }
                 }
@@ -650,7 +701,8 @@ public class AMongoService<capture> extends AAbstractService {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
-        } else {
+        }
+        else {
             return findById(entityClazz, keyPropertyValue);
         }
     }
@@ -1050,7 +1102,8 @@ public class AMongoService<capture> extends AAbstractService {
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "delete");
             }
-        } else {
+        }
+        else {
             logger.warn("Tentativo di cancellare una entity nulla o con id nullo", this.getClass(), "delete");
         }
 
@@ -1072,7 +1125,8 @@ public class AMongoService<capture> extends AAbstractService {
         for (AEntity entity : listaEntities) {
             if (entity != null) {
                 listaId.add(entity.id);
-            } else {
+            }
+            else {
                 logger.error("Algos - Manca una entity in AMongoService.delete()");
             }
         }
@@ -1203,10 +1257,12 @@ public class AMongoService<capture> extends AAbstractService {
 
         if (numBytes == AMongoService.STANDARD_MONGO_MAX_BYTES) {
             logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
-        } else {
+        }
+        else {
             if (numBytes == AMongoService.EXPECTED_ALGOS_MAX_BYTES) {
                 logger.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
-            } else {
+            }
+            else {
                 logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata a cazzo: " + value);
             }
         }

@@ -2,6 +2,7 @@ package it.algos.simple.backend.packages;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
@@ -27,6 +28,7 @@ import java.time.LocalTime;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "gamma")
 @TypeAlias("gamma")

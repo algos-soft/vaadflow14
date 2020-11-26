@@ -27,7 +27,7 @@ public class GenericLogic extends ALogic {
 
 
     public GenericLogic(Class<? extends AEntity> entityClazz) {
-        super.entityClazz = entityClazz;
+        this(entityClazz, AEOperation.edit);
     }
 
     public GenericLogic(Class<? extends AEntity> entityClazz, AEOperation operationForm) {
@@ -52,7 +52,7 @@ public class GenericLogic extends ALogic {
         List<String> blu = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
-        return new AlertWrap(green, blu, red,false);
+        return new AlertWrap(green, blu, red, false);
     }
 
     /**
@@ -71,7 +71,6 @@ public class GenericLogic extends ALogic {
         return annotation.getListaPropertiesGrid(entityClazz);
     }
 
-
     //    /**
     //     * Costruisce una lista di nomi delle properties della Grid nell'ordine:
     //     * 1) Cerca nell'annotation @AIList della Entity e usa quella lista (con o senza ID)
@@ -84,7 +83,6 @@ public class GenericLogic extends ALogic {
     //    public List<String> getGridPropertyNamesList() {
     //        return annotation.getGridPropertiesName(entityClazz);
     //    }
-
 
     //    /**
     //     * Gets all.
@@ -104,5 +102,32 @@ public class GenericLogic extends ALogic {
     //
     //        return items;
     //    }
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
+     */
+    @Override
+    public boolean resetEmptyOnly() {
+        return super.resetEmptyOnly();
+    }
 
 }

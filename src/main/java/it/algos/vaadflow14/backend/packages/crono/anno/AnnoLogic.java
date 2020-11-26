@@ -3,12 +3,12 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.backend.service.ADateService;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -16,9 +16,6 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,28 +214,27 @@ public class AnnoLogic extends CronoLogic {
         return (Anno) super.findByKey(keyValue);
     }
 
-
-//    /**
-//     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
-//     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
-//     */
-//    //@todo provvisorio perché è troppo lento a visualizzare tutti i records
-//    @Override
-//    public void refreshGrid() {
-//        List<? extends AEntity> items;
-//        Query query = new Query();
-//
-//        if (grid != null && grid.getGrid() != null) {
-//            updateFiltri();
-//            //            items = mongo.findAll(entityClazz, filtri, sortView);
-//            query.addCriteria(Criteria.where("ordine").gte(1990).lte(2025));
-//            query.with(Sort.by(Sort.Direction.ASC, "ordine"));
-//            items = mongo.findAll(entityClazz, query);
-//            grid.deselectAll();
-//            grid.refreshAll();
-//            grid.setItems(items);
-//        }
-//    }
+    //    /**
+    //     * Aggiorna gli items della Grid, utilizzando i filtri. <br>
+    //     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+    //     */
+    //    //@todo provvisorio perché è troppo lento a visualizzare tutti i records
+    //    @Override
+    //    public void refreshGrid() {
+    //        List<? extends AEntity> items;
+    //        Query query = new Query();
+    //
+    //        if (grid != null && grid.getGrid() != null) {
+    //            updateFiltri();
+    //            //            items = mongo.findAll(entityClazz, filtri, sortView);
+    //            query.addCriteria(Criteria.where("ordine").gte(1990).lte(2025));
+    //            query.with(Sort.by(Sort.Direction.ASC, "ordine"));
+    //            items = mongo.findAll(entityClazz, query);
+    //            grid.deselectAll();
+    //            grid.refreshAll();
+    //            grid.setItems(items);
+    //        }
+    //    }
 
 
     public List<Anno> fetchAnni(int offset, int limit) {
@@ -258,25 +254,97 @@ public class AnnoLogic extends CronoLogic {
         return lista;
     }
 
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * Deve essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    public boolean reset() {
+    //        super.deleteAll();
+    //        int ordine;
+    //        String nome;
+    //        AESecolo secoloEnum;
+    //        Secolo secolo;
+    //        String titoloSecolo;
+    //        boolean bisestile = false;
+    //
+    //        //--costruisce gli anni prima di cristo dal 1000
+    //        for (int k = ANTE_CRISTO; k > 0; k--) {
+    //            ordine = ANNO_INIZIALE - k;
+    //            nome = k + AESecolo.TAG_AC;
+    //            secoloEnum = AESecolo.getSecoloAC(k);
+    //            titoloSecolo = secoloEnum.getNome();
+    //            titoloSecolo = titoloSecolo.toLowerCase();
+    //            titoloSecolo = text.levaSpazi(titoloSecolo);
+    //            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+    //            bisestile = false; //non ci sono anni bisestili prima di Cristo
+    //            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
+    //                creaIfNotExist(ordine, nome, bisestile, secolo);
+    //            }
+    //        }
+    //
+    //        //--costruisce gli anni dopo cristo fino al 2030
+    //        for (int k = 1; k <= DOPO_CRISTO; k++) {
+    //            ordine = k + ANNO_INIZIALE;
+    //            nome = k + FlowCost.VUOTA;
+    //            secoloEnum = AESecolo.getSecoloDC(k);
+    //            titoloSecolo = secoloEnum.getNome();
+    //            titoloSecolo = titoloSecolo.toLowerCase();
+    //            titoloSecolo = text.levaSpazi(titoloSecolo);
+    //            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+    //            bisestile = date.bisestile(k);
+    //            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
+    //                creaIfNotExist(ordine, nome, bisestile, secolo);
+    //            }
+    //        }
+    //
+    //        return mongo.isValid(entityClazz);
+    //    }
 
     /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
      */
     @Override
-    public boolean reset() {
-        super.deleteAll();
+    public boolean resetEmptyOnly() {
         int ordine;
         String nome;
         AESecolo secoloEnum;
         Secolo secolo;
         String titoloSecolo;
         boolean bisestile = false;
+        int numRec = 0;
+
+        if (!super.resetEmptyOnly()) {
+            return false;
+        }
+
+        if (!checkSecolo()) {
+            return false;
+        }
 
         //--costruisce gli anni prima di cristo dal 1000
         for (int k = ANTE_CRISTO; k > 0; k--) {
@@ -289,7 +357,9 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                creaIfNotExist(ordine, nome, bisestile, secolo);
+                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+                    numRec++;
+                }
             }
         }
 
@@ -304,11 +374,34 @@ public class AnnoLogic extends CronoLogic {
             secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                creaIfNotExist(ordine, nome, bisestile, secolo);
+                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+                    numRec++;
+                }
             }
         }
 
-        return mongo.isValid(entityClazz);
+        return super.fixPostReset(numRec);
+    }
+
+    private boolean checkSecolo() {
+        String collection = "secolo";
+        SecoloLogic secoloLogic;
+
+        if (mongo.isExists(collection)) {
+            return true;
+        }
+        else {
+            secoloLogic = appContext.getBean(SecoloLogic.class);
+            if (secoloLogic != null) {
+                return secoloLogic.resetEmptyOnly();
+            }
+            if (mongo.isNotExists(collection)) {
+                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkSecolo");
+                return false;
+            }
+        }
+
+        return false;
     }
 
 }

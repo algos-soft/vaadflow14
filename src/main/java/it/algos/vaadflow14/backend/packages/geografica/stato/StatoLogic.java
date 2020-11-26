@@ -327,29 +327,109 @@ public class StatoLogic extends ALogic {
         regioneLogic.creaRegioniDiUnoStato((Stato) entityBean);
     }
 
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * Deve essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    public boolean reset() {
+    //        super.deleteAll();
+    //        String nome;
+    //        int pos = AEStatoEuropeo.values().length;
+    //        int posEuropeo;
+    //        int posCorrente;
+    //        boolean ue;
+    //        String bandieraTxt = VUOTA;
+    //        Map<String, Continente> mappa = creaMappa();
+    //        Continente continente = null;
+    //        Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
+    //        String alfaTre = VUOTA;
+    //
+    //        List<List<String>> listaStati = wiki.getStati();
+    //        if (array.isValid(listaStati)) {
+    //            for (List<String> riga : listaStati) {
+    //                continente = null;
+    //                nome = riga.get(0);
+    //                posEuropeo = AEStatoEuropeo.getPosizione(nome);
+    //                if (posEuropeo > 0) {
+    //                    posCorrente = posEuropeo;
+    //                    ue = true;
+    //                }
+    //                else {
+    //                    pos++;
+    //                    posCorrente = pos;
+    //                    ue = false;
+    //                }
+    //                if (text.isValid(riga.get(2))) {
+    //                    alfaTre = riga.get(2);
+    //                }
+    //                if (text.isValid(riga.get(3))) {
+    //                    bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
+    //                }
+    //                if (text.isValid(alfaTre)) {
+    //                    if (mappa.get(alfaTre) != null) {
+    //                        continente = mappa.get(alfaTre);
+    //                    }
+    //                }
+    //                continente = continente != null ? continente : continenteDefault;
+    //
+    //                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
+    //            }
+    //        }
+    //
+    //        return mongo.isValid(entityClazz);
+    //    }
+
 
     /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
      */
     @Override
-    public boolean reset() {
-        super.deleteAll();
-        String nome;
+    public boolean resetEmptyOnly() {
+        String nome = VUOTA;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
         int posCorrente;
         boolean ue;
+        Stato stato;
         String bandieraTxt = VUOTA;
         Map<String, Continente> mappa = creaMappa();
         Continente continente = null;
         Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
         String alfaTre = VUOTA;
+        int numRec = 0;
+
+        if (!super.resetEmptyOnly()) {
+            return false;
+        }
+
+        if (!checkContinente()) {
+            return false;
+        }
 
         List<List<String>> listaStati = wiki.getStati();
         if (array.isValid(listaStati)) {
@@ -360,7 +440,8 @@ public class StatoLogic extends ALogic {
                 if (posEuropeo > 0) {
                     posCorrente = posEuropeo;
                     ue = true;
-                } else {
+                }
+                else {
                     pos++;
                     posCorrente = pos;
                     ue = false;
@@ -378,13 +459,39 @@ public class StatoLogic extends ALogic {
                 }
                 continente = continente != null ? continente : continenteDefault;
 
-                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
+                stato = creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
+
+                if (stato != null) {
+                    numRec++;
+                }
+
             }
         }
 
-        return mongo.isValid(entityClazz);
+        return super.fixPostReset(numRec);
     }
 
+
+    private boolean checkContinente() {
+        String collection = "continente";
+        ContinenteLogic continenteLogic;
+
+        if (mongo.isExists(collection)) {
+            return true;
+        }
+        else {
+            continenteLogic = appContext.getBean(ContinenteLogic.class);
+            if (continenteLogic != null) {
+                return continenteLogic.resetEmptyOnly();
+            }
+            if (mongo.isNotExists(collection)) {
+                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkContinente");
+                return false;
+            }
+        }
+
+        return false;
+    }
 
     private Map<String, Continente> creaMappa() {
         Map<String, Continente> mappa = new HashMap<>();
@@ -420,7 +527,6 @@ public class StatoLogic extends ALogic {
         String widthEM = "12em";
         Sort sort = Sort.by("ordine");
         List items;
-
 
         items = mongo.findAll(Stato.class, sort);
         combo.setWidth(widthEM);

@@ -46,8 +46,8 @@ public class CompanyBoot extends FlowBoot {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void initData() {
-        super.initData();
+    protected void fixData() {
+        super.fixData();
 
 //        companyData.initData();
     }
@@ -59,8 +59,8 @@ public class CompanyBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void fixApplicationVar() {
-        super.fixApplicationVar();
+    protected void fixVariabili() {
+        super.fixVariabili();
 
         FlowVar.usaCompany = true;
         FlowVar.usaSecurity = true;
@@ -86,8 +86,8 @@ public class CompanyBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void addMenuRoutes() {
-        super.addMenuRoutes();
+    protected void fixMenuRoutes() {
+        super.fixMenuRoutes();
     }
 
 }

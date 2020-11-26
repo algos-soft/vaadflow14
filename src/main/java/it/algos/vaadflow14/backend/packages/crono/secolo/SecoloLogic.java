@@ -2,8 +2,8 @@ package it.algos.vaadflow14.backend.packages.crono.secolo;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -91,7 +91,6 @@ public class SecoloLogic extends CronoLogic {
 
         return new AlertWrap(null, blu, red, false);
     }
-
 
 
     /**
@@ -208,23 +207,60 @@ public class SecoloLogic extends CronoLogic {
     }
 
 
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
-     *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-    public boolean reset() {
-        super.deleteAll();
+//    /**
+//     * Creazione di alcuni dati iniziali <br>
+//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+//     * Deve essere sovrascritto <br>
+//     *
+//     * @return false se non esiste il metodo sovrascritto
+//     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+//     */
+//    public boolean reset() {
+//        super.deleteAll();
+//
+//        for (AESecolo eaSecolo : AESecolo.values()) {
+//            creaIfNotExist(eaSecolo);
+//        }
+//
+//        return mongo.isValid(entityClazz);
+//    }
 
-        for (AESecolo eaSecolo : AESecolo.values()) {
-            creaIfNotExist(eaSecolo);
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
+     */
+    @Override
+    public boolean resetEmptyOnly() {
+        int numRec = 0;
+
+        if (!super.resetEmptyOnly()) {
+            return false;
         }
 
-        return mongo.isValid(entityClazz);
+        for (AESecolo eaSecolo : AESecolo.values()) {
+            numRec = creaIfNotExist(eaSecolo) != null ? numRec + 1 : numRec;
+        }
+
+        return super.fixPostReset(numRec);
     }
 
 }

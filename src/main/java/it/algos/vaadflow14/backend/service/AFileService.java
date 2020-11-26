@@ -8,9 +8,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -1235,7 +1240,7 @@ public class AFileService extends AAbstractService {
      * @param pathFileToBeWritten nome completo del file
      * @param testo               contenuto del file
      * @param sovrascrive         anche se esiste già
-     * @param directory      da cui iniziare il path per il messaggio di avviso
+     * @param directory           da cui iniziare il path per il messaggio di avviso
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
         String message = VUOTA;
@@ -1723,8 +1728,37 @@ public class AFileService extends AAbstractService {
      * @return path parziale da una directory
      */
     public String findPathBreve(String pathIn, String directory) {
-        String path = VUOTA;
+        String pathBreve = VUOTA;
+        String pathCanonical = VUOTA;
         String prefix = "../";
+
+        if (text.isEmpty(directory)) {
+            return pathIn;
+        }
+
+        pathCanonical = findPathCanonical(pathIn, directory);
+        if (text.isValid(pathCanonical)) {
+            pathBreve = prefix + pathCanonical;
+        }
+
+        return pathBreve;
+    }
+
+    /**
+     * Estrae il path canonico da una directory indicata <br>
+     * <p>
+     * La directory indicata è l'ultima con quel nome <br>
+     * Esegue solo se il path è valido
+     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param pathIn    in ingresso
+     * @param directory da cui iniziare il path
+     *
+     * @return path parziale da una directory
+     */
+    public String findPathCanonical(String pathIn, String directory) {
+        String path = VUOTA;
 
         if (text.isEmpty(pathIn) || text.isEmpty(directory)) {
             return pathIn;
@@ -1735,36 +1769,34 @@ public class AFileService extends AAbstractService {
             if (path.startsWith(SLASH)) {
                 path = path.substring(1);
             }
-            path = prefix + path;
         }
 
         return path;
     }
 
-
-//    /**
-//     * Elabora un path eliminando i livelli iniziali indicati. <br>
-//     * <p>
-//     * Esegue solo se il testo è valido <br>
-//     * Elimina spazi vuoti iniziali e finali <br>
-//     * Aggiunge un prefisso indicativo -> '../' <br>
-//     *
-//     * @param testoIn    ingresso
-//     * @param numLivelli iniziali da eliminare nel path
-//     *
-//     * @return path semplificato
-//     */
-//    @Deprecated
-//    public String pathBreve(final String testoIn, int numLivelli) {
-//        String path = text.testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
-//        String prefix = "../";
-//
-//        if (!path.equals(testoIn)) {
-//            path = text.isValid(path) ? prefix + path : path;
-//        }
-//
-//        return path;
-//    }
+    //    /**
+    //     * Elabora un path eliminando i livelli iniziali indicati. <br>
+    //     * <p>
+    //     * Esegue solo se il testo è valido <br>
+    //     * Elimina spazi vuoti iniziali e finali <br>
+    //     * Aggiunge un prefisso indicativo -> '../' <br>
+    //     *
+    //     * @param testoIn    ingresso
+    //     * @param numLivelli iniziali da eliminare nel path
+    //     *
+    //     * @return path semplificato
+    //     */
+    //    @Deprecated
+    //    public String pathBreve(final String testoIn, int numLivelli) {
+    //        String path = text.testoDopoTagRipetuto(testoIn, SLASH, numLivelli);
+    //        String prefix = "../";
+    //
+    //        if (!path.equals(testoIn)) {
+    //            path = text.isValid(path) ? prefix + path : path;
+    //        }
+    //
+    //        return path;
+    //    }
 
 
     /**
@@ -1814,6 +1846,127 @@ public class AFileService extends AAbstractService {
         return listaEmptyProjects;
     }
 
+    /**
+     * Crea una lista di tutte le Entity esistenti nel modulo indicato <br>
+     */
+    public List<String> getModuleSubFilesEntity(String moduleName) {
+        String tagIniziale = "src/main/java/it/algos/";
+        String tagFinale = "/backend/packages";
+
+        return getAllSubFilesEntity(tagIniziale + moduleName + tagFinale);
+    }
+
+    /**
+     * Crea una lista di tutte le Entity esistenti nella directory packages <br>
+     */
+    public List<String> getAllSubFilesEntity(String path) {
+        List<String> listaCanonicalNamesOnlyEntity = new ArrayList<>();
+        List<String> listaNamesOnlyFilesJava = getAllSubFilesJava(path);
+        String simpleName;
+
+        if (array.isValid(listaNamesOnlyFilesJava)) {
+            for (String canonicalName : listaNamesOnlyFilesJava) {
+                //--estrae la parte significativa
+                simpleName = canonicalName.substring(canonicalName.lastIndexOf(PUNTO) + PUNTO.length());
+
+                //--scarta Enumeration
+                if (simpleName.startsWith("AE")) {
+                    continue;
+                }
+
+                //--scarta 'logic', 'form', 'service', 'view', 'grid'
+                if (simpleName.endsWith("Logic") || simpleName.endsWith("Form") || simpleName.endsWith("Service") || simpleName.endsWith("View") || simpleName.endsWith("Grid")) {
+                    continue;
+                }
+
+                listaCanonicalNamesOnlyEntity.add(canonicalName);
+            }
+        }
+
+        return listaCanonicalNamesOnlyEntity;
+    }
+
+    /**
+     * Crea una lista di soli files java ricorsiva nelle sub-directory <br>
+     *
+     * @return canonicalName con i PUNTI di separazione e NON lo SLASH
+     */
+    public List<String> getAllSubFilesJava(String path) {
+        List<String> listaCanonicalNamesOnlyFilesJava = new ArrayList<>();
+        List<String> listaPathNamesOnlyFiles = getAllSubPathFiles(path);
+        String tag = ".it.";
+        String canonicalName;
+
+        if (array.isValid(listaPathNamesOnlyFiles)) {
+            for (String pathName : listaPathNamesOnlyFiles) {
+                if (pathName.endsWith(JAVA_SUFFIX)) {
+                    canonicalName = text.levaCoda(pathName, JAVA_SUFFIX);
+                    canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+                    canonicalName = findPathCanonical(canonicalName, tag);
+                    canonicalName = canonicalName.substring(1);
+                    listaCanonicalNamesOnlyFilesJava.add(canonicalName);
+                }
+            }
+        }
+
+        return listaCanonicalNamesOnlyFilesJava;
+    }
+
+    /**
+     * Crea una lista di soli files ricorsiva nelle sub-directory <br>
+     *
+     * @return path name completo
+     */
+    public List<String> getAllSubPathFiles(String path) {
+        List<String> listaPathNamesOnlyFiles = new ArrayList<>();
+        List<String> listaAllPathNames = null;
+        File unaDirectory = new File(path);
+        Path start = Paths.get(unaDirectory.getAbsolutePath());
+
+        try {
+            listaAllPathNames = recursionSubPathNames(start);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getAllEntityClass");
+        }
+
+        if (array.isValid(listaAllPathNames)) {
+            for (String pathName : listaAllPathNames) {
+                if (isEsisteFile(pathName)) {
+                    listaPathNamesOnlyFiles.add(pathName);
+                }
+            }
+        }
+
+        return listaPathNamesOnlyFiles;
+    }
+
+    /**
+     * Crea una lista di files/directory ricorsiva nelle sub-directory <br>
+     *
+     * @return path name completo
+     */
+    public List<String> recursionSubPathNames(Path start) throws IOException {
+        List<String> collect;
+
+        try (Stream<Path> stream = Files.walk(start, Integer.MAX_VALUE)) {
+            collect = stream
+                    .map(String::valueOf)
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+
+        return collect;
+    }
+
+    /**
+     * Crea una lista di tutte le Entity esistenti nella directory packages <br>
+     * Considera sia il modulo vaadflow14 sia il progetto corrente <br>
+     */
+    public List<Class> getAllEntityClass() {
+        List<Class> lista = new ArrayList<>();
+
+        return lista;
+    }
 
     /**
      * Sposta un file da una directory ad un'altra <br>

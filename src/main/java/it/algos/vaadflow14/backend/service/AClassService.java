@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -24,25 +24,52 @@ public class AClassService extends AAbstractService {
 
 
     /**
-     * Istanza della sottoclasse (singleton) Service associata al nome delle Entity inviato  <br>
+     * Istanza della sottoclasse (singleton) xxxLogic associata al nome delle Entity inviata  <br>
+     *
+     * @param entityClazzCanonicalName the canonical name of entity class
+     *
+     * @return istanza di xxxLogic associata alla Entity
+     */
+    public AILogic getLogicFromEntityName(String entityClazzCanonicalName) {
+        AILogic entityLogic = null;
+        String logicClazzCanonicalName;
+        AEntity entityBean = null;
+
+        if (text.isValid(entityClazzCanonicalName)) {
+            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_BUSINESS_LOGIC;
+            try {
+                entityLogic = (AILogic) appContext.getBean(Class.forName(logicClazzCanonicalName));
+            } catch (Exception unErrore) {
+                try {
+                    entityBean = (AEntity) appContext.getBean(Class.forName(entityClazzCanonicalName));
+                    entityLogic = appContext.getBean(GenericLogic.class, entityBean.getClass());
+                } catch (Exception unErrore2) {
+                    logger.error(unErrore2.getMessage(), this.getClass(), "getLogicFromEntityName");
+                }
+            }
+        }
+        return entityLogic;
+    }
+
+    /**
+     * Istanza della sottoclasse (singleton) xxxLogic associata alla Entity inviata  <br>
      *
      * @param entityClazz the entity class
      *
-     * @return istanza del xxxService associato alla Entity
+     * @return istanza de xxxLogic associata alla Entity
      */
     public AILogic getLogicFromEntity(Class<? extends AEntity> entityClazz) {
         return getLogicFromEntity(entityClazz, AEOperation.edit);
     }
 
 
-
     /**
-     * Istanza della sottoclasse (singleton) Service associata al nome delle Entity inviato  <br>
+     * Istanza della sottoclasse (singleton) xxxLogic associata alla Entity inviata  <br>
      *
      * @param entityClazz   the entity class
      * @param operationForm supported by dialog
      *
-     * @return istanza di xxxLogic associato alla Entity
+     * @return istanza de xxxLogic associata alla Entity
      */
     public AILogic getLogicFromEntity(Class<? extends AEntity> entityClazz, AEOperation operationForm) {
         AILogic entityLogic = null;
@@ -59,12 +86,13 @@ public class AClassService extends AAbstractService {
                     try {
                         entityLogic = (AILogic) appContext.getBean(GenericLogic.class, entityClazz, operationForm);
                     } catch (Exception unErrore3) {
-                        logger.error("Non sono riuscito a creare la entityLogic", this.getClass(), "getServiceFromEntity");
+                        logger.error("Non sono riuscito a creare la entityLogic", this.getClass(), "getLogicFromEntity");
                     }
                 }
             }
-        } else {
-            logger.error("Manca la entityClazz", this.getClass(), "getServiceFromEntity");
+        }
+        else {
+            logger.error("Manca la entityClazz", this.getClass(), "getLogicFromEntity");
             return null;
         }
         return entityLogic;

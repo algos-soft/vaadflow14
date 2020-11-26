@@ -4,14 +4,19 @@ Flusso degli eventi nelle classi controllate dal programma:
 
 ###Setup non-UI logic
 - Spring context
-- Application 
-- All @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-- A ContextRefreshEvent occurs
-  
-      when an ApplicationContext gets initialized or refreshed.
+- The entry point of the Spring Boot application: metodo `main`(String[] args) nella classe che implementa SpringBootServletInitializer
+- Async stack trace (SpringBoot) in cui vengono create da `SpringBoot` tutte le istanze delle classi `Singleton` 
 
-- @EventListener
-- FlowBoot.onApplicationEvent(ContextRefreshedEvent event)
+
+    @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+nelle quali vengono iniettati i riferimenti ad altre classi ove previsti 
+    
+    @Autowired
+- `FlowBoot`: un `ContextRefreshEvent` occurs when an ApplicationContext gets initialized or refreshed e viene intercettato da tutte le classi che implementano `ServletContextListener` nel metodo `onContextRefreshEvent`()
+    
+    
+    @EventListener(ContextRefreshedEvent.class)
+    public void onContextRefreshEvent() {
 
 ###Browser call
 

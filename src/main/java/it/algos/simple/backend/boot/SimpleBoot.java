@@ -4,11 +4,11 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.data.SimpleData;
 import it.algos.simple.backend.packages.*;
 import it.algos.simple.ui.views.DeltaView;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,21 +25,31 @@ import java.time.LocalDate;
  * <p>
  * Running logic after the Spring context has been initialized <br>
  * Executed on container startup, before any browse command <br>
+ * Any class that use this @EventListener annotation, will be executed
+ * before the application is up and its onContextRefreshEvent method will be called
+ * The method onApplicationEvent() will be executed nella sottoclasse before
+ * the application is up and <br>
  * <p>
- * Sottoclasse concreta per l' applicazione specifica: <br>
- * - per sovrascrivere alcune variabili in fixApplicationVar() <br>
- * - lanciare gli schedulers in background <br>
- * - costruire e regolare una versione demo <br>
- * - controllare l' esistenza di utenti abilitati all' accesso <br>
+ * Sottoclasse concreta dell' applicazione specifica che: <br>
+ * 1) regola alcuni parametri standard del database MongoDB <br>
+ * 2) crea le preferenze standard e specifiche dell'applicazione <br>
+ * 3) regola le variabili generali dell'applicazione <br>
+ * 4) crea i dati di alcune collections sul DB mongo <br>
+ * 5) aggiunge le @Route (view) standard e specifiche <br>
+ * 6) lancia gli schedulers in background <br>
+ * 7) costruisce una versione demo <br>
+ * 8) controllare l' esistenza di utenti abilitati all' accesso <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class SimpleBoot extends FlowBoot {
 
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
      */
     public SimpleData simpleData;
 
@@ -55,36 +65,40 @@ public class SimpleBoot extends FlowBoot {
 
 
     /**
-     * Inizializzazione di alcuni parametri del database mongoDB <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Regola alcuni parametri standard del database MongoDB <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void fixDBMongo() {
         super.fixDBMongo();
     }
 
 
     /**
-     * Crea le preferenze standard, se non esistono <br>
+     * Crea le preferenze standard e specifiche dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaService <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected int creaPreferenze() {
-        return super.creaPreferenze();
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
     }
 
     /**
-     * Regola alcune variabili generali dell' applicazione al loro valore iniziale di default <br>
-     * Le variabili (static) sono uniche per tutta l' applicazione, ma il loro valore può essere modificato <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Regola le variabili generali dell' applicazione con il loro valore iniziale di default <br>
+     * Le variabili (static) sono uniche per tutta l' applicazione <br>
+     * Il loro valore può essere modificato SOLO in questa classe o in una sua sottoclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void fixApplicationVar() {
-        super.fixApplicationVar();
+    protected void fixVariabili() {
+        super.fixVariabili();
 
-        FlowVar.usaSecurity = false;
+        FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
+        FlowVar.usaSecurity = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
@@ -98,42 +112,34 @@ public class SimpleBoot extends FlowBoot {
 
 
     /**
-     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Crea i dati di alcune collections sul DB mongo <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void initData() {
-        super.initData();
+    protected void fixData() {
+        super.fixData();
         //        simpleData.initData();
     }
 
-    /**
-     * Regolazione delle preferenze standard effettuata nella sottoclasse specifica <br>
-     * Serve per modificare solo per l'applicazione specifica il valore standard della preferenza <br>
-     * Eventuali modifiche delle preferenze specifiche (che peraltro possono essere modificate all'origine) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-    }
+
 
 
     /**
-     * Questa classe viene invocata PRIMA della chiamata del browser
-     * Se NON usa la security, le @Route vengono create solo qui
-     * Se USA la security, le @Route vengono sovrascritte all' apertura del brose nella classe AUserDetailsService
+     * Aggiunge al menu le @Route (view) standard e specifiche <br>
      * <p>
-     * Aggiunge le @Route (view) standard
-     * Nella sottoclasse concreta che invoca questo metodo, aggiunge le @Route (view) specifiche dell' applicazione
-     * Le @Route vengono aggiunte ad una Lista statica mantenuta in FlowVar
-     * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Questa classe viene invocata PRIMA della chiamata del browser <br>
+     * Se NON usa la security, le @Route vengono create solo qui <br>
+     * Se USA la security, le @Route vengono sovrascritte all' apertura del browser nella classe AUserDetailsService <br>
+     * <p>
+     * Nella sottoclasse concreta che invoca questo metodo, aggiunge le @Route (view) specifiche dell' applicazione <br>
+     * Le @Route vengono aggiunte ad una Lista statica mantenuta in FlowVar <br>
+     * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void addMenuRoutes() {
-        super.addMenuRoutes();
+    protected void fixMenuRoutes() {
+        super.fixMenuRoutes();
 
-        FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Via.class);
         FlowVar.menuRouteList.add(Address.class);
         FlowVar.menuRouteList.add(DeltaView.class);
@@ -146,6 +152,30 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(PiView.class);
     }
 
+    /**
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixSchedules() {
+    }
+
+    /**
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixDemo() {
+    }
+
+    /**
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixUsers() {
+    }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
     public void setSimpleData(SimpleData simpleData) {
         this.simpleData = simpleData;
     }

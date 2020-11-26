@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.security;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.enumeration.AERole;
@@ -13,7 +14,6 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +32,7 @@ import java.util.Collection;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "utente")
 @TypeAlias("utente")

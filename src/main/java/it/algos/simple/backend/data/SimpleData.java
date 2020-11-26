@@ -1,15 +1,14 @@
 package it.algos.simple.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.GammaLogic;
+import it.algos.simple.backend.packages.LambdaLogic;
 import it.algos.vaadflow14.backend.data.FlowData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Project vaadflow14
@@ -52,63 +51,72 @@ public class SimpleData extends FlowData {
      * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
      */
     @Override
-    public void initData() {
-        Beta beta = Beta.builderBeta().code("valori booleani").build();
-        beta.id = "binario";
-        mongo.save(beta);
+    public void fixData() {
+        String moduleName = "simple";
+        List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
-        LocalDate adesso = LocalDate.now();
-        LocalDateTime adessoDate = LocalDateTime.now();
-        LocalTime adessoTime = LocalDateTime.now().toLocalTime();
-        Gamma gamma = Gamma.builderGamma()
-
-                .code("adesso")
-
-                .uno(adesso)
-
-                .due(adesso)
-
-                .tre(adesso)
-
-                .quattro(adesso)
-
-                .cinque(adesso)
-
-                .sei(adesso)
-
-                .sette(adesso)
-
-                .otto(adesso)
-
-                .nove(adesso)
-
-                .dieci(adesso)
-
-                .undici(adesso)
-
-                .dodici(adesso)
-
-                .tredici(adessoDate)
-
-                .quattordici(adessoDate)
-
-                .quindici(adessoDate)
-
-                .sedici(adessoTime)
-
-                .diciassette(adessoTime)
-
-                .build();
-
-        gamma.id = gamma.code;
-        mongo.save(gamma);
-
-        Lambda lambda = lambdaLogic.newEntity("alfa");
-        if (lambda != null) {
-            lambda.due = "betta";
-            lambda.tre = "potta";
-            mongo.save(lambda);
+        if (array.isValid(listaCanonicalNameEntity)) {
+            for (String canonicalName : listaCanonicalNameEntity) {
+                checkSingolaCollection(canonicalName);
+            }
         }
+
+//        Beta beta = Beta.builderBeta().code("valori booleani").build();
+//        beta.id = "binario";
+//        mongo.save(beta);
+//
+//        LocalDate adesso = LocalDate.now();
+//        LocalDateTime adessoDate = LocalDateTime.now();
+//        LocalTime adessoTime = LocalDateTime.now().toLocalTime();
+//        Gamma gamma = Gamma.builderGamma()
+//
+//                .code("adesso")
+//
+//                .uno(adesso)
+//
+//                .due(adesso)
+//
+//                .tre(adesso)
+//
+//                .quattro(adesso)
+//
+//                .cinque(adesso)
+//
+//                .sei(adesso)
+//
+//                .sette(adesso)
+//
+//                .otto(adesso)
+//
+//                .nove(adesso)
+//
+//                .dieci(adesso)
+//
+//                .undici(adesso)
+//
+//                .dodici(adesso)
+//
+//                .tredici(adessoDate)
+//
+//                .quattordici(adessoDate)
+//
+//                .quindici(adessoDate)
+//
+//                .sedici(adessoTime)
+//
+//                .diciassette(adessoTime)
+//
+//                .build();
+//
+//        gamma.id = gamma.code;
+//        mongo.save(gamma);
+//
+//        Lambda lambda = lambdaLogic.newEntity("alfa");
+//        if (lambda != null) {
+//            lambda.due = "betta";
+//            lambda.tre = "potta";
+//            mongo.save(lambda);
+//        }
     }
 
 }

@@ -2,6 +2,7 @@ package it.algos.simple.backend.packages;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -56,6 +57,7 @@ import javax.validation.constraints.Size;
  * (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
  * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "alfa")
 @TypeAlias("alfa")

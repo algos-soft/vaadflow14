@@ -20,6 +20,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
@@ -329,6 +330,11 @@ public abstract class ALogic implements AILogic {
      */
     protected boolean usaHeaderWrap;
 
+    /**
+     * Flag per usare i log di sistema. Normalmente true <br>
+     */
+    protected boolean usaDataLogger = true; //@todo Creare una preferenza e sostituirla qui
+
     protected DataProvider dataProvider;
 
     protected String searchFieldValue = VUOTA;
@@ -434,7 +440,8 @@ public abstract class ALogic implements AILogic {
             if (wrap != null) {
                 header = appContext.getBean(AHeaderWrap.class, wrap);
             }
-        } else {
+        }
+        else {
             if (alertHtmlList != null) {
                 header = appContext.getBean(AHeaderList.class, alertHtmlList);
             }
@@ -555,7 +562,8 @@ public abstract class ALogic implements AILogic {
         if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
             logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
             return null;
-        } else {
+        }
+        else {
             return new WrapSearch(searchType, searchProperty);
         }
     }
@@ -636,9 +644,9 @@ public abstract class ALogic implements AILogic {
     @Override
     public AGrid getBodyGridLayout() {
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-//        dataProvider = dataService.creaDataProvider(entityClazz);
-//        grid.getGrid().setDataProvider(dataProvider);
-//        grid.getGrid().setHeight("100%");
+        //        dataProvider = dataService.creaDataProvider(entityClazz);
+        //        grid.getGrid().setDataProvider(dataProvider);
+        //        grid.getGrid().setHeight("100%");
 
         refreshGrid();
         addGridListeners();
@@ -657,7 +665,6 @@ public abstract class ALogic implements AILogic {
             grid.setAllListener(this);
         }
     }
-
 
     //    /**
     //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
@@ -947,7 +954,7 @@ public abstract class ALogic implements AILogic {
                 }
                 break;
             case delete:
-                this.delete();
+                this.deleteForm();
                 this.back();
                 break;
             case prima:
@@ -1082,7 +1089,8 @@ public abstract class ALogic implements AILogic {
 
         if (mongo.isEmpty(entityClazz)) {
             clickReset();
-        } else {
+        }
+        else {
             messageDialog = new MessageDialog().setTitle("Reset").setMessage(message);
             messageDialog.addButton().text("Continua").icon(icon).error().onClick(e -> clickReset()).closeOnClick();
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
@@ -1109,7 +1117,8 @@ public abstract class ALogic implements AILogic {
                 messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> back()).closeOnClick();
                 messageDialog.open();
             }
-        } else {
+        }
+        else {
             back();
         }
     }
@@ -1164,7 +1173,6 @@ public abstract class ALogic implements AILogic {
         if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {
             fieldsNameList.add(0, FIELD_COMPANY);
         }
-
 
         return fieldsNameList;
     }
@@ -1246,7 +1254,8 @@ public abstract class ALogic implements AILogic {
                 if (!vaadinService.isDeveloper() && needCompany) {
                     filtri.add(new AFiltro(Criteria.where(FlowVar.companyClazzName).is(company)));
                 }
-            } else {
+            }
+            else {
                 logger.error("Non è selezionata nessuna company", this.getClass(), "creaFiltroCompany");
             }
         }
@@ -1272,7 +1281,8 @@ public abstract class ALogic implements AILogic {
             //            if (pref.isBool(USA_SEARCH_CASE_SENSITIVE)) { //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
             if (false) {
                 filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue), sort);
-            } else {
+            }
+            else {
                 if (text.isValid(searchFieldValue)) {
                     filtro = new AFiltro(Criteria.where(searchProperty).regex("^" + searchFieldValue, "i"), sort);
                 }
@@ -1415,7 +1425,8 @@ public abstract class ALogic implements AILogic {
         keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return mongo.findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
-        } else {
+        }
+        else {
             return findById(keyPropertyValue);
         }
     }
@@ -1443,7 +1454,6 @@ public abstract class ALogic implements AILogic {
     //    public boolean saveIfNotExist(AEntity entityBean) {
     //        return mongo.saveIfNotKey(entityBean, keyPropertyName) != null;
     //    }
-
 
     //    /**
     //     * Inserisce una entity solo se non esisteva <br>
@@ -1488,13 +1498,13 @@ public abstract class ALogic implements AILogic {
 
         if (entityBean != null) {
             logger.nuovo(entityBean);
-        } else {
+        }
+        else {
             Notification.show("La entity non è stata registrata", 3000, Notification.Position.MIDDLE);
         }
 
         return entityBean;
     }
-
 
     //    /**
     //     * Regola la chiave se esiste il campo keyPropertyName. <br>
@@ -1582,7 +1592,8 @@ public abstract class ALogic implements AILogic {
         if (valido) {
             newEntityBean = beforeSave(newEntityBean, AEOperation.addNew);
             valido = mongo.insert(newEntityBean) != null;
-        } else {
+        }
+        else {
             message = "Duplicate key error ";
             message += beanService.getModifiche(newEntityBean);
             logger.warn(message, this.getClass(), "crea");
@@ -1641,7 +1652,8 @@ public abstract class ALogic implements AILogic {
                     logger.warn("Switch - caso non definito", this.getClass(), "saveDaForm");
                     break;
             }
-        } else {
+        }
+        else {
             return false;
         }
         return false;
@@ -1671,7 +1683,8 @@ public abstract class ALogic implements AILogic {
             company = company != null ? company : vaadinService.getCompany();
             if (company == null) {
                 return null;
-            } else {
+            }
+            else {
                 ((ACEntity) entityBean).company = company;
             }
         }
@@ -1709,7 +1722,8 @@ public abstract class ALogic implements AILogic {
         }
 
         if (beanService.isModificata(entityBean)) {
-        } else {
+        }
+        else {
             return true;
         }
 
@@ -1729,12 +1743,14 @@ public abstract class ALogic implements AILogic {
                 if (operationForm == AEOperation.addNew) {
                     ALogService.messageSuccess(entityBean.toString() + " è stato creato"); //@todo Creare una preferenza e sostituirla qui
                     logger.nuovo(entityBean);
-                } else {
+                }
+                else {
                     ALogService.messageSuccess(entityBean.toString() + " è stato modificato"); //@todo Creare una preferenza e sostituirla qui
                     logger.modifica(entityBean, oldEntityBean);
                 }
             }
-        } else {
+        }
+        else {
             logger.error("Object to save must not be null", this.getClass(), "save");
         }
 
@@ -1751,7 +1767,8 @@ public abstract class ALogic implements AILogic {
                         logger.warn("Switch - caso non definito", this.getClass(), "save");
                         break;
                 }
-            } else {
+            }
+            else {
                 logger.warn("Non sono riuscito a creare la entity ", this.getClass(), "save");
             }
         }
@@ -1760,7 +1777,7 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    public boolean delete() {
+    public boolean deleteForm() {
         boolean status = false;
         AEntity entityBean = (currentForm != null) ? currentForm.getValidBean() : null;
 
@@ -1798,7 +1815,8 @@ public abstract class ALogic implements AILogic {
         if (mongo.isValid(entityClazz)) {
             mongo.mongoOp.remove(new Query(), entityClazz);
             return true;
-        } else {
+        }
+        else {
             return true;
         }
     }
@@ -1827,8 +1845,161 @@ public abstract class ALogic implements AILogic {
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
     @Override
+    @Deprecated
     public boolean reset() {
         return false;
+    }
+
+    /**
+     * Cancella la collection <br>
+     * Se usaCompany=false, cancella la intera collection <br>
+     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
+     * Se non trova la company corrente NON cancella <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste la company o non ha cancellato
+     * ....... true se la collection è stata cancellata (tutta o filtrata)
+     */
+    @Override
+    public boolean delete() {
+        boolean status = false;
+
+        return status;
+    }
+
+    /**
+     * Ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * Cancella la collection (parzialmente, se usaCompany=true) <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o se la collection
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    @Override
+    public boolean resetDeletingAll() {
+        this.delete();
+        return resetEmptyOnly();
+    }
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
+     */
+    @Override
+    public boolean resetEmptyOnly() {
+        String collection = entityClazz.getSimpleName().toLowerCase();
+
+        if (entityClazz == null) {
+            entityClazzMancante();
+            return false;
+        }
+
+        //        if (mongo.isNotExists(collection)) {
+        //            logDataMancante(collection);
+        //            return false;
+        //        }
+
+        if (mongo.isValid(entityClazz)) {
+            logDataPresente(collection);
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean fixPostReset(int numRec) {
+        if (entityClazz != null && mongo.isValid(entityClazz)) {
+            logDataCreata(entityClazz.getSimpleName().toLowerCase(), numRec);
+            return true;
+        }
+        else {
+            logDataAbortita(entityClazz.getSimpleName().toLowerCase());
+            return false;
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void metodoMancante(String collectionName) {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "Manca il metodo resetEmptyOnly per la collection " + collectionName);
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void entityClazzMancante() {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "Manca la entityClazz nella businessLogic specifica");
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void logDataPresente(String collectionName) {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " esiste già e non è stata modificata");
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void logDataMancante(String collectionName) {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "Non esiste la collezione " + collectionName + " nel mongoDB");
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void logDataCreata(String collectionName, int numRec) {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " era vuota e sono stati inseriti " + numRec + " elementi");
+        }
+    }
+
+    /**
+     * Semplice log di avviso <br>
+     * Controllato da flag/preferenza <br>
+     */
+    protected void logDataAbortita(String collectionName) {
+        if (usaDataLogger) {
+            logger.log(AETypeLog.checkData, "Non è stato possibile creare la collezione " + collectionName);
+        }
     }
 
 

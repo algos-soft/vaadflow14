@@ -4,7 +4,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
 import it.algos.vaadflow14.backend.service.AClassService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -12,6 +11,7 @@ import it.algos.vaadflow14.backend.service.AMongoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -33,8 +33,16 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
-public abstract class AData  {
+public abstract class AData {
 
+
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ApplicationContext appContext;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -75,12 +83,23 @@ public abstract class AData  {
      */
     protected String collectionName;
 
+
     /**
-     * Flag per usare i log di sistema. Normalmente true <br>
+     * Controllo se la collection è vuota. Se esiste, non faccio nulla. <br>
+     * Costruisco un' istanza della classe xxxLogic corrispondente alla entityClazz <br>
+     * Controllo se l' istanza xxxLogic è creabile <br>
+     * Utilizzo il metodo standard 'reset', presente nell' interfaccia <br>
      */
-    protected boolean usaLogger = false; //@todo Creare una preferenza e sostituirla qui
+    protected boolean checkSingolaCollection(String entityName) {
+        AILogic entityLogic = classService.getLogicFromEntityName(entityName);
 
+        if (entityLogic == null) {
+            logger.error("Non esiste la classe " + entityName + "Logic", this.getClass(), "checkSingolaCollection");
+            return false;
+        }
 
+        return entityLogic.resetEmptyOnly();
+    }
 
     /**
      * Controllo se la collection è vuota. Se esiste, non faccio nulla. <br>
@@ -91,45 +110,21 @@ public abstract class AData  {
      * @param entityClazz modello-dati specifico di un package
      */
     protected void checkSingolaCollection(Class<? extends AEntity> entityClazz) {
-        AILogic service = classService.getLogicFromEntity(entityClazz);
+        AILogic entityLogic = classService.getLogicFromEntity(entityClazz);
         String collectionName = annotation.getCollectionName(entityClazz);
 
-        if (service != null && !(service instanceof GenericLogic)) {
+        if (entityLogic != null && !(entityLogic instanceof GenericLogic)) {
             if (mongo.isEmpty(entityClazz)) {
-                if (service.reset()) {
-                    logDataCreata(collectionName);
-                } else {
+                if (entityLogic.reset()) {
+                }
+                else {
                     logger.error("Non sono riuscito a trovare  il metodo 'reset' e a creare la collezione " + collectionName, this.getClass(), "checkSingolaCollection");
                 }
-            } else {
-                logDataPresente(collectionName);
             }
-        } else {
+        }
+        else {
             logger.error("Non esiste la classe " + entityClazz.getSimpleName() + "Logic", this.getClass(), "checkSingolaCollection");
         }
     }
-
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataCreata(String collectionName) {
-        if (usaLogger) {
-            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " mancava ed è stata completamente riscritta");
-        }
-    }
-
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataPresente(String collectionName) {
-        if (usaLogger) {
-            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " è presente");
-        }
-    }
-
 
 }

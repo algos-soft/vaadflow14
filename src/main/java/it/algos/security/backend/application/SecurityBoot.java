@@ -45,8 +45,8 @@ public class SecurityBoot extends FlowBoot {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void initData() {
-        super.initData();
+    protected void fixData() {
+        super.fixData();
 
 //        testData.initData();
     }
@@ -58,8 +58,8 @@ public class SecurityBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void fixApplicationVar() {
-        super.fixApplicationVar();
+    protected void fixVariabili() {
+        super.fixVariabili();
 
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = true;
@@ -85,8 +85,8 @@ public class SecurityBoot extends FlowBoot {
      * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void addMenuRoutes() {
-        super.addMenuRoutes();
+    protected void fixMenuRoutes() {
+        super.fixMenuRoutes();
     }
 
 }

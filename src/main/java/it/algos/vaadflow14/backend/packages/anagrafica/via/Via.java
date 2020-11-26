@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Size;
  * Al lancio del programma, se la collection è vuota, carica una enumeration di valori standard <br>
  * La collection può poi venire incrementata con valori custom <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "via")
 @TypeAlias("via")

@@ -2,11 +2,11 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
@@ -16,13 +16,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
-
 import java.util.List;
 
 /**
@@ -34,6 +27,7 @@ import java.util.List;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "continente")
 @TypeAlias("continente")

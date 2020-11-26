@@ -1,16 +1,14 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.service.AArrayService;
+import it.algos.vaadflow14.backend.service.AFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+
+import java.util.List;
 
 /**
  * Project vaadflow
@@ -34,7 +32,34 @@ public class FlowData extends AData {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public PreferenzeData preferenzaData;
+    public ApplicationContext applicationContext;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AFileService file;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AArrayService array;
+
+
+    /**
+     * Crea le preferenze standard dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     */
+    public void fixPreferenze() {
+    }
+
 
     /**
      * Check iniziale di alcune collections <br>
@@ -43,22 +68,15 @@ public class FlowData extends AData {
      * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
      * L' ordine con cui vengono create le collections è significativo <br>
      */
-    public void initData() {
-        preferenzaData.creaPreferenze();
-//        checkSingolaCollection(Preferenza.class);
+    public void fixData() {
+        String moduleName = "vaadflow14";
+        List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
-        checkSingolaCollection(Secolo.class);
-        checkSingolaCollection(Anno.class);
-        checkSingolaCollection(Mese.class);
-        checkSingolaCollection(Giorno.class);
-
-//        checkSingolaCollection(Continente.class);
-//        checkSingolaCollection(Stato.class);
-//        checkSingolaCollection(Regione.class);
-
-        checkSingolaCollection(Company.class);
-        checkSingolaCollection(Utente.class);
-        checkSingolaCollection(Via.class);
+        if (array.isValid(listaCanonicalNameEntity)) {
+            for (String canonicalName : listaCanonicalNameEntity) {
+                checkSingolaCollection(canonicalName);
+            }
+        }
     }
 
 }

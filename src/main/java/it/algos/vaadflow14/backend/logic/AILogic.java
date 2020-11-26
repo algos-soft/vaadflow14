@@ -74,7 +74,6 @@ public interface AILogic {
      */
     AGrid getBodyGridLayout();
 
-
     //    /**
     //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
     //     * <p>
@@ -248,7 +247,6 @@ public interface AILogic {
      */
     public AEntity findById(String keyID);
 
-
     //    /**
     //     * Saves a given entity.
     //     * Use the returned instance for further operations as the save operation
@@ -275,5 +273,56 @@ public interface AILogic {
      * @return true se la collection è stata ri-creata
      */
     public boolean reset();
+
+
+    /**
+     * Cancella la collection <br>
+     * Se usaCompany=false, cancella la intera collection <br>
+     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
+     * Se non trova la company corrente NON cancella <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste la company o non ha cancellato
+     * ....... true se la collection è stata cancellata (tutta o filtrata)
+     */
+    public boolean delete();
+
+    /**
+     * Ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * Cancella la collection (parzialmente, se usaCompany=true) <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    public boolean resetDeletingAll();
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
+     */
+    public boolean resetEmptyOnly();
 
 }

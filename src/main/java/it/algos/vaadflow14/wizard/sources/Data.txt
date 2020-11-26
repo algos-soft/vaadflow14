@@ -40,11 +40,11 @@ public class @MODULEUPPER@Data extends FlowData {
      * Check iniziale di alcune collections <br>
      * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
-     * L' ordine con cui vengono create le collections è significativo <br>
      * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
+     * L' ordine con cui vengono create le collections è significativo <br>
      */
-    public void initData() {
-        super.initData();
+    public void fixData() {
+        super.fixData();
     }
 
 

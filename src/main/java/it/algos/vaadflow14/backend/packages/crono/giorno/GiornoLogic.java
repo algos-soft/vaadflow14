@@ -2,10 +2,10 @@ package it.algos.vaadflow14.backend.packages.crono.giorno;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,24 +195,75 @@ public class GiornoLogic extends CronoLogic {
         return (Giorno) super.findByKey(keyValue);
     }
 
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * Deve essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    public boolean reset() {
+    //        super.deleteAll();
+    //        int ordine;
+    //        String titolo;
+    //        String titoloMese;
+    //        List<HashMap> lista;
+    //        Mese mese;
+    //
+    //        //costruisce i 366 records
+    //        lista = date.getAllGiorni();
+    //        for (HashMap mappaGiorno : lista) {
+    //            titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
+    //            titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
+    //            mese = (Mese) mongo.findById(Mese.class, titoloMese);
+    //            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
+    //
+    //            creaIfNotExist(ordine, titolo, mese);
+    //        }
+    //
+    //        return mongo.isValid(entityClazz);
+    //    }
 
     /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     * @return false se non esiste il metodo sovrascritto o
+     * ......... comunque se manca la entityClazz o
+     * ......... comunque se la collection non viene trovata o
+     * ......... comunque se la collection non è vuota o
+     * ......... comunque se la collection non viene creata
+     * ....... true se esiste il metodo sovrascritto e
+     * ......... esiste la entityClazz e
+     * ......... la collection viene trovata e
+     * ......... la collection è vuota e
+     * ......... la collection viene creata
      */
     @Override
-    public boolean reset() {
-        super.deleteAll();
+    public boolean resetEmptyOnly() {
         int ordine;
         String titolo;
         String titoloMese;
         List<HashMap> lista;
         Mese mese;
+        int numRec = 0;
+
+        if (!super.resetEmptyOnly()) {
+            return false;
+        }
+        if (!checkMese()) {
+            return false;
+        }
 
         //costruisce i 366 records
         lista = date.getAllGiorni();
@@ -222,10 +273,31 @@ public class GiornoLogic extends CronoLogic {
             mese = (Mese) mongo.findById(Mese.class, titoloMese);
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
-            creaIfNotExist(ordine, titolo, mese);
+            numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
         }
 
-        return mongo.isValid(entityClazz);
+        return super.fixPostReset(numRec);
+    }
+
+    private boolean checkMese() {
+        String collection = "mese";
+        MeseLogic meseLogic;
+
+        if (mongo.isExists(collection)) {
+            return true;
+        }
+        else {
+            meseLogic = appContext.getBean(MeseLogic.class);
+            if (meseLogic != null) {
+                return meseLogic.resetEmptyOnly();
+            }
+            if (mongo.isNotExists(collection)) {
+                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkMese");
+                return false;
+            }
+        }
+
+        return false;
     }
 
 }

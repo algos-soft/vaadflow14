@@ -1,7 +1,6 @@
 package it.algos.simple.backend.packages;
 
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
@@ -17,7 +16,7 @@ import javax.annotation.PostConstruct;
 @Route(value = "alex")
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class PiView1 extends VerticalLayout {
+public class PiUnoView extends VerticalLayout {
 
     @Autowired
     private PiService service;

@@ -1,11 +1,17 @@
-package it.algos.vaadflow14.backend.enumeration;
+package it.algos.simple.backend.enumeration;
 
+import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.enumeration.AIEnum;
+import it.algos.vaadflow14.backend.enumeration.AIPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -16,28 +22,13 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: ven, 18-set-2020
  * Time: 15:41
  */
-public enum AEPreferenza implements AIPreferenza {
-    usaDebug("usaDebug", "Flag generale di debug", AETypePref.bool, false, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
+public enum AESimplePreferenza implements AIPreferenza {
 
-    usaSearchClearButton("usaSearchClearButton", "Bottone per pulire il filtro di ricerca", AETypePref.bool, true, false),
+    datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now(), false),
 
-    usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true, true),
+    datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now(), false),
 
-    usaGridHeaderMaiuscola("usaGridHeaderMaiuscola", "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true, true),
-
-    usaFormFieldMaiuscola("usaFormFieldMaiuscola", "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
-
-    usaSearchCaseSensitive("usaSearchCaseSensitive", "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
-
-    //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
-
-    iconaEdit("iconaEdit", "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
-
-    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
-
-    maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, false, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
-
-    maxEnumRadio("maxEnumRadio", "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, false, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
+    timeuno("datatre", "Solo orario", AETypePref.localtime, LocalTime.now(), false),
 
     ;
 
@@ -57,9 +48,6 @@ public enum AEPreferenza implements AIPreferenza {
     //--Link injettato da un metodo static
     private APreferenzaService preferenzaService;
 
-    //    //--chi può vedere la preferenza
-    //    private AERole show;
-
     //--usa un prefisso col codice della company
     private boolean companySpecifica;
 
@@ -67,12 +55,12 @@ public enum AEPreferenza implements AIPreferenza {
     private String note;
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica) {
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica) {
         this(keyCode, descrizione, type, defaultValue, companySpecifica, VUOTA);
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
         this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
@@ -205,7 +193,7 @@ public enum AEPreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
-            for (AEPreferenza pref : AEPreferenza.values()) {
+            for (AESimplePreferenza pref : AESimplePreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
             }
         }
