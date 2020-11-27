@@ -247,7 +247,7 @@ public class GiornoLogic extends CronoLogic {
      */
     @Override
     public String resetEmptyOnly() {
-        String message = VUOTA;
+        String message = super.resetEmptyOnly();
         int ordine;
         String titolo;
         String titoloMese;
@@ -255,8 +255,8 @@ public class GiornoLogic extends CronoLogic {
         Mese mese;
         int numRec = 0;
 
-        if (super.resetEmptyOnly().equals(VUOTA)) {
-            return "false";
+        if (!message.equals(VUOTA)) {
+            return message;
         }
         if (!checkMese()) {
             return "false";

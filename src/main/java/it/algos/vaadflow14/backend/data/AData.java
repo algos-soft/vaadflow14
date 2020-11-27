@@ -5,10 +5,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
-import it.algos.vaadflow14.backend.service.AAnnotationService;
-import it.algos.vaadflow14.backend.service.AClassService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.AMongoService;
+import it.algos.vaadflow14.backend.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -79,6 +76,14 @@ public abstract class AData {
     @Autowired
     public ALogService logger;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ATextService text;
+
 
     /**
      * Nome della collezione su mongoDB <br>
@@ -102,7 +107,9 @@ public abstract class AData {
             return false;
         }
         message = entityLogic.resetEmptyOnly();
+        message = text.isValid(message) ? message : "Non esiste il metodo resetEmptyOnly() nella classe " + entityLogic.getClass().getSimpleName();
         logger.log(AETypeLog.checkData, message);
+
         return message.equals(VUOTA);
     }
 

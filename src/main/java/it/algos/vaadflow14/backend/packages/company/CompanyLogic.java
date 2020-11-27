@@ -262,11 +262,11 @@ public class CompanyLogic extends ALogic {
      */
     @Override
     public String resetEmptyOnly() {
-        String message = VUOTA;
+        String message = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (super.resetEmptyOnly().equals(VUOTA)) {
-            return "false";
+        if (!message.equals(VUOTA)) {
+            return message;
         }
 
         numRec = creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it") != null ? numRec+1 : numRec;

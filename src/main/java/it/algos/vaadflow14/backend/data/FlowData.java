@@ -72,12 +72,12 @@ public class FlowData extends AData {
         String moduleName = "vaadflow14";
         List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
-//        if (array.isValid(listaCanonicalNameEntity)) {
-//            for (String canonicalName : listaCanonicalNameEntity) {
-//                checkSingolaCollection(canonicalName);
-//            }
-//        }
-        checkSingolaCollection("it.algos.vaadflow14.backend.packages.anagrafica.via.Via");
+        if (array.isValid(listaCanonicalNameEntity)) {
+            for (String canonicalName : listaCanonicalNameEntity) {
+                checkSingolaCollection(canonicalName);
+            }
+        }
+//        checkSingolaCollection("it.algos.vaadflow14.backend.packages.geografica.provincia.Provincia");
 
     }
 

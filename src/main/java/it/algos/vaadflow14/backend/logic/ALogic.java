@@ -1928,11 +1928,29 @@ public abstract class ALogic implements AILogic {
         }
 
         collection = entityClazz.getSimpleName().toLowerCase();
-        if (mongo.isValid(entityClazz)) {
-            return "La collezione " + collection + " esiste già e non è stata modificata";
+        if (mongo.isExists(collection)) {
+            if (mongo.isValid(entityClazz)) {
+                return "La collezione " + collection + " esiste già e non è stata modificata";
+            }
+            else {
+                return VUOTA;
+            }
+        }
+        else {
+            return "La collezione " + collection + " non esiste";
         }
 
-        return VUOTA;
+
+
+//        collection = entityClazz.getSimpleName().toLowerCase();
+//       boolean alfa= mongo.isExists(collection);
+//        boolean beta=mongo.isValid(collection);
+//
+//        if (mongo.isValid(entityClazz)) {
+//            return "La collezione " + collection + " esiste già e non è stata modificata";
+//        }
+//
+//        return "La collezione " + collection + " non esiste";
     }
 
     protected String fixPostReset(int numRec) {
@@ -1951,15 +1969,15 @@ public abstract class ALogic implements AILogic {
         }
     }
 
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void metodoMancante(String collectionName) {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "Manca il metodo resetEmptyOnly per la collection " + collectionName);
-        }
-    }
+//    /**
+//     * Semplice log di avviso <br>
+//     * Controllato da flag/preferenza <br>
+//     */
+//    protected void metodoMancante(String collectionName) {
+//        if (usaDataLogger) {
+//            logger.log(AETypeLog.checkData, "Manca il metodo resetEmptyOnly per la collection " + collectionName);
+//        }
+//    }
 
 
     public void resetForm(AEntity entityBean) {

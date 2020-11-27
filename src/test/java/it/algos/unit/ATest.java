@@ -140,6 +140,11 @@ public abstract class ATest {
     protected String sorgente2;
 
     /**
+     * The Sorgente.
+     */
+    protected String sorgente3;
+
+    /**
      * The Previsto.
      */
     protected String previsto;

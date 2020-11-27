@@ -406,7 +406,7 @@ public class StatoLogic extends ALogic {
      */
     @Override
     public String resetEmptyOnly() {
-        String message = VUOTA;
+        String message = super.resetEmptyOnly();
         String nome = VUOTA;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
@@ -420,8 +420,8 @@ public class StatoLogic extends ALogic {
         String alfaTre = VUOTA;
         int numRec = 0;
 
-        if (super.resetEmptyOnly().equals(VUOTA)) {
-            return "false";
+        if (!message.equals(VUOTA)) {
+            return message;
         }
 
         if (!checkContinente()) {

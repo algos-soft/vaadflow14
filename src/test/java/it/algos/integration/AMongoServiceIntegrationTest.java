@@ -6,15 +6,16 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.algos.simple.SimpleApplication;
+import it.algos.simple.backend.packages.Alfa;
 import it.algos.simple.backend.packages.Omega;
 import it.algos.unit.ATest;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
@@ -98,7 +99,6 @@ public class AMongoServiceIntegrationTest extends ATest {
         meseLogic.mongo = service;
         mongo.mongoOp = mongoOp;
 
-
         this.cancellazioneEntitiesProvvisorie();
         this.creazioneInizialeEntitiesProvvisorie();
     }
@@ -108,7 +108,6 @@ public class AMongoServiceIntegrationTest extends ATest {
     void setUpEach() {
         super.setUp();
     }
-
 
     //    @Test
     //    @Order(0)
@@ -131,12 +130,51 @@ public class AMongoServiceIntegrationTest extends ATest {
 
 
     @Test
+    @Order(0)
+    @DisplayName("0 - stato della collezione")
+    void inizio() {
+        System.out.println("stato della collezione");
+        System.out.println(VUOTA);
+        System.out.println("la collezione pomeriggio non esiste");
+        System.out.println("la collezione alfa esiste ma è vuota");
+        System.out.println("la collezione via esiste ed è piena");
+        sorgente = "pomeriggio";
+        sorgente2 = "alfa";
+        sorgente3 = "via";
+
+        ottenutoBooleano = service.isExists(sorgente);
+        Assert.assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.isExists(sorgente2);
+        Assert.assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.isExists(sorgente3);
+        Assert.assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.isValid(Alfa.class);
+        Assert.assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.isValid(Via.class);
+        Assert.assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.isValid(sorgente);
+        Assert.assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.isValid(sorgente2);
+        Assert.assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.isValid(sorgente3);
+        Assert.assertTrue(ottenutoBooleano);
+    }
+
+
+    @Test
     @Order(1)
     @DisplayName("1 - isValid")
     void isValid() {
         System.out.println("isValid() rimanda a count()");
 
-        ottenutoBooleano = service.isValid(null);
+        ottenutoBooleano = service.isValid((Class)null);
         Assert.assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = service.isValid(Omega.class);
@@ -176,9 +214,6 @@ public class AMongoServiceIntegrationTest extends ATest {
     void count() {
         System.out.println("metodo semplice per l'intera collection");
         System.out.println("rimanda al metodo base con filtro (query) nullo");
-
-        ottenutoIntero = service.count(Regione.class);
-        Assert.assertTrue(ottenutoIntero > 0);
 
         ottenutoIntero = service.count(Omega.class);
         Assert.assertTrue(ottenutoIntero == 0);
@@ -729,7 +764,6 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertEquals(previsto, ((Mese) entityBean).getMese());
     }
 
-
     //    @Test
     //    @Order(15)
     //    @DisplayName("findEntity")
@@ -974,7 +1008,6 @@ public class AMongoServiceIntegrationTest extends ATest {
         long fine = System.currentTimeMillis();
         System.out.println("tempo count mongoService: " + (fine - inizio));
 
-
         inizio = System.currentTimeMillis();
         for (int k = 0; k < 1000; k++) {
             mongoOp.count(new Query(), Mese.class);
@@ -988,7 +1021,6 @@ public class AMongoServiceIntegrationTest extends ATest {
         }
         fine = System.currentTimeMillis();
         System.out.println("tempo count mongoOP con query: " + (fine - inizio));
-
 
         collection.countDocuments();
         inizio = System.currentTimeMillis();
@@ -1046,7 +1078,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(175)
     @DisplayName("174 - tempiFindAll con esclusione di property")
     void tempiFindAllExclude() {

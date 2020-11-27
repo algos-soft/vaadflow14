@@ -320,11 +320,11 @@ public class UtenteLogic extends ALogic {
      */
     @Override
     public String resetEmptyOnly() {
-        String message = VUOTA;
+        String message = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (super.resetEmptyOnly().equals(VUOTA)) {
-            return "false";
+        if (!message.equals(VUOTA)) {
+            return message;
         }
 
         numRec = creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer)!= null ? numRec+1 : numRec;

@@ -326,7 +326,7 @@ public class AnnoLogic extends CronoLogic {
      */
     @Override
     public String resetEmptyOnly() {
-        String message=VUOTA;
+        String message = super.resetEmptyOnly();
         int ordine;
         String nome;
         AESecolo secoloEnum;
@@ -335,8 +335,8 @@ public class AnnoLogic extends CronoLogic {
         boolean bisestile = false;
         int numRec = 0;
 
-        if (super.resetEmptyOnly().equals(VUOTA)) {
-            return "false";
+        if (!message.equals(VUOTA)) {
+            return message;
         }
 
         if (!checkSecolo()) {

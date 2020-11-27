@@ -155,6 +155,16 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return true if the collection has entities
      */
+    public boolean isValid(String collectionName) {
+        return count(collectionName) > 0;
+    }
+    /**
+     * Check the existence of a collection. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection has entities
+     */
     public boolean isValid(Class<? extends AEntity> entityClazz) {
         return count(entityClazz) > 0;
     }
