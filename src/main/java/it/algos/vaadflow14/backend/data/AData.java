@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
 import it.algos.vaadflow14.backend.service.AAnnotationService;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vbase
@@ -91,14 +94,16 @@ public abstract class AData {
      * Utilizzo il metodo standard 'reset', presente nell' interfaccia <br>
      */
     protected boolean checkSingolaCollection(String entityName) {
+        String message;
         AILogic entityLogic = classService.getLogicFromEntityName(entityName);
 
         if (entityLogic == null) {
             logger.error("Non esiste la classe " + entityName + "Logic", this.getClass(), "checkSingolaCollection");
             return false;
         }
-
-        return entityLogic.resetEmptyOnly();
+        message = entityLogic.resetEmptyOnly();
+        logger.log(AETypeLog.checkData, message);
+        return message.equals(VUOTA);
     }
 
     /**

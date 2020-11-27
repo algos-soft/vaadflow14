@@ -1812,8 +1812,15 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public boolean deleteAll() {
+        String message;
+        String collection;
+
         if (mongo.isValid(entityClazz)) {
             mongo.mongoOp.remove(new Query(), entityClazz);
+
+            collection = entityClazz != null ? entityClazz.getSimpleName().toLowerCase() : "collezione";
+            message = "La collezione " + collection + " è stata interamente cancellata";
+            logger.log(AETypeLog.deleteAll, message);
             return true;
         }
         else {
@@ -1828,7 +1835,7 @@ public abstract class ALogic implements AILogic {
      * Rinfresca la griglia <br>
      */
     public void clickReset() {
-        if (reset()) {
+        if (resetDeletingAll()) {
             logger.reset(entityClazz);
             this.refreshGrid();
         }
@@ -1862,9 +1869,12 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public boolean delete() {
-        boolean status = false;
-
-        return status;
+        if (FlowVar.usaCompany) {
+            return false;
+        }
+        else {
+            return deleteAll();
+        }
     }
 
     /**
@@ -1883,14 +1893,23 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public boolean resetDeletingAll() {
+        String message;
         this.delete();
-        return resetEmptyOnly();
+
+        message = resetEmptyOnly();
+        logger.log(AETypeLog.reset, message);
+        return message.equals(VUOTA);
     }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * <p>
+     * 1) deve esistere lo specifico metodo sovrascritto
+     * 2) deve essere valida la entityClazz
+     * 3) deve esistere la collezione su mongoDB
+     * 4) la collezione non deve essere vuota
+     * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
      * 2) letti da un file CSV esterno <br>
@@ -1898,47 +1917,37 @@ public abstract class ALogic implements AILogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto o
-     * ......... comunque se manca la entityClazz o
-     * ......... comunque se la collection non viene trovata o
-     * ......... comunque se la collection non è vuota o
-     * ......... comunque se la collection non viene creata
-     * ....... true se esiste il metodo sovrascritto e
-     * ......... esiste la entityClazz e
-     * ......... la collection viene trovata e
-     * ......... la collection è vuota e
-     * ......... la collection viene creata
+     * @return vuota se è stata creata, altrimenti un messaggio di errore
      */
     @Override
-    public boolean resetEmptyOnly() {
-        String collection = entityClazz.getSimpleName().toLowerCase();
+    public String resetEmptyOnly() {
+        String collection;
 
         if (entityClazz == null) {
-            entityClazzMancante();
-            return false;
+            return "Manca la entityClazz nella businessLogic specifica";
         }
 
-        //        if (mongo.isNotExists(collection)) {
-        //            logDataMancante(collection);
-        //            return false;
-        //        }
-
+        collection = entityClazz.getSimpleName().toLowerCase();
         if (mongo.isValid(entityClazz)) {
-            logDataPresente(collection);
-            return false;
+            return "La collezione " + collection + " esiste già e non è stata modificata";
         }
 
-        return true;
+        return VUOTA;
     }
 
-    protected boolean fixPostReset(int numRec) {
-        if (entityClazz != null && mongo.isValid(entityClazz)) {
-            logDataCreata(entityClazz.getSimpleName().toLowerCase(), numRec);
-            return true;
+    protected String fixPostReset(int numRec) {
+        String collection;
+
+        if (entityClazz == null) {
+            return "Manca la entityClazz nella businessLogic specifica";
+        }
+
+        collection = entityClazz.getSimpleName().toLowerCase();
+        if (mongo.isValid(entityClazz)) {
+            return "La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi";
         }
         else {
-            logDataAbortita(entityClazz.getSimpleName().toLowerCase());
-            return false;
+            return "Non è stato possibile creare la collezione " + collection;
         }
     }
 
@@ -1949,56 +1958,6 @@ public abstract class ALogic implements AILogic {
     protected void metodoMancante(String collectionName) {
         if (usaDataLogger) {
             logger.log(AETypeLog.checkData, "Manca il metodo resetEmptyOnly per la collection " + collectionName);
-        }
-    }
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void entityClazzMancante() {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "Manca la entityClazz nella businessLogic specifica");
-        }
-    }
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataPresente(String collectionName) {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " esiste già e non è stata modificata");
-        }
-    }
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataMancante(String collectionName) {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "Non esiste la collezione " + collectionName + " nel mongoDB");
-        }
-    }
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataCreata(String collectionName, int numRec) {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "La collezione " + collectionName + " era vuota e sono stati inseriti " + numRec + " elementi");
-        }
-    }
-
-    /**
-     * Semplice log di avviso <br>
-     * Controllato da flag/preferenza <br>
-     */
-    protected void logDataAbortita(String collectionName) {
-        if (usaDataLogger) {
-            logger.log(AETypeLog.checkData, "Non è stato possibile creare la collezione " + collectionName);
         }
     }
 

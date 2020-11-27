@@ -309,7 +309,12 @@ public class AnnoLogic extends CronoLogic {
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * Controlla lo stato della collection e esegue SOLO se la trova ed è vuota <br>
+     * <p>
+     * 1) deve esistere lo specifico metodo sovrascritto
+     * 2) deve essere valida la entityClazz
+     * 3) deve esistere la collezione su mongoDB
+     * 4) la collezione non deve essere vuota
+     * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
      * 2) letti da un file CSV esterno <br>
@@ -317,19 +322,11 @@ public class AnnoLogic extends CronoLogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto o
-     * ......... comunque se manca la entityClazz o
-     * ......... comunque se la collection non viene trovata o
-     * ......... comunque se la collection non è vuota o
-     * ......... comunque se la collection non viene creata
-     * ....... true se esiste il metodo sovrascritto e
-     * ......... esiste la entityClazz e
-     * ......... la collection viene trovata e
-     * ......... la collection è vuota e
-     * ......... la collection viene creata
+     * @return vuota se è stata creata, altrimenti un messaggio di errore
      */
     @Override
-    public boolean resetEmptyOnly() {
+    public String resetEmptyOnly() {
+        String message=VUOTA;
         int ordine;
         String nome;
         AESecolo secoloEnum;
@@ -338,12 +335,12 @@ public class AnnoLogic extends CronoLogic {
         boolean bisestile = false;
         int numRec = 0;
 
-        if (!super.resetEmptyOnly()) {
-            return false;
+        if (super.resetEmptyOnly().equals(VUOTA)) {
+            return "false";
         }
 
         if (!checkSecolo()) {
-            return false;
+            return "false";
         }
 
         //--costruisce gli anni prima di cristo dal 1000
@@ -393,7 +390,7 @@ public class AnnoLogic extends CronoLogic {
         else {
             secoloLogic = appContext.getBean(SecoloLogic.class);
             if (secoloLogic != null) {
-                return secoloLogic.resetEmptyOnly();
+                return secoloLogic.resetEmptyOnly().equals(VUOTA);
             }
             if (mongo.isNotExists(collection)) {
                 logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkSecolo");
