@@ -1,8 +1,8 @@
 package it.algos.simple.backend.enumeration;
 
 import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.enumeration.AIEnum;
-import it.algos.vaadflow14.backend.enumeration.AIPreferenza;
+import it.algos.vaadflow14.backend.interfaces.AIEnum;
+import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import org.springframework.beans.factory.annotation.Autowired;

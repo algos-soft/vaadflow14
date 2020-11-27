@@ -1,6 +1,8 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
+import it.algos.vaadflow14.backend.interfaces.AIEnum;
+
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**

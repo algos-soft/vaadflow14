@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
+import it.algos.vaadflow14.backend.interfaces.AILogType;
+
 import java.util.ArrayList;
 import java.util.List;
 

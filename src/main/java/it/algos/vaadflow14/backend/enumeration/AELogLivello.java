@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 
-import java.util.EnumSet;
+import it.algos.vaadflow14.backend.interfaces.AIEnum;
 
 import static com.vaadin.flow.server.frontend.FrontendUtils.GREEN;
 import static com.vaadin.flow.server.frontend.FrontendUtils.RED;
