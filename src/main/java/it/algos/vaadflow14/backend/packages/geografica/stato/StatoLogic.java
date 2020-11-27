@@ -407,6 +407,7 @@ public class StatoLogic extends ALogic {
     @Override
     public String resetEmptyOnly() {
         String message = super.resetEmptyOnly();
+        String messagePropedeutico;
         String nome = VUOTA;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
@@ -414,7 +415,7 @@ public class StatoLogic extends ALogic {
         boolean ue;
         Stato stato;
         String bandieraTxt = VUOTA;
-        Map<String, Continente> mappa = creaMappa();
+        Map<String, Continente> mappa;
         Continente continente = null;
         Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
         String alfaTre = VUOTA;
@@ -424,10 +425,12 @@ public class StatoLogic extends ALogic {
             return message;
         }
 
-        if (!checkContinente()) {
-            return "false";
+        messagePropedeutico = checkContinente();
+        if (messagePropedeutico.equals(VUOTA)) {
+            return messagePropedeutico;
         }
 
+        mappa = creaMappa();
         List<List<String>> listaStati = wiki.getStati();
         if (array.isValid(listaStati)) {
             for (List<String> riga : listaStati) {
@@ -469,25 +472,34 @@ public class StatoLogic extends ALogic {
     }
 
 
-    private boolean checkContinente() {
+    private String checkContinente() {
+        String message;
         String collection = "continente";
         ContinenteLogic continenteLogic;
 
-        if (mongo.isExists(collection)) {
-            return true;
+        if (mongo.isValid(collection)) {
+            return VUOTA;
         }
         else {
             continenteLogic = appContext.getBean(ContinenteLogic.class);
             if (continenteLogic != null) {
-                return continenteLogic.resetEmptyOnly().equals(VUOTA);
+                message = continenteLogic.resetEmptyOnly();
+                return "";
+                //                if (message.equals(VUOTA)) {
+                //                    return messagePropedeutico;
+                //                }
             }
             if (mongo.isNotExists(collection)) {
                 logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkContinente");
-                return false;
+                return "false";
             }
         }
 
-        return false;
+        //        message = continenteLogic.resetEmptyOnly();
+        //        message = text.isValid(message) ? message : "Non esiste il metodo resetEmptyOnly() nella classe " + entityLogic.getClass().getSimpleName();
+        //        logger.log(AETypeLog.checkData, message);
+
+        return "false";
     }
 
     private Map<String, Continente> creaMappa() {
