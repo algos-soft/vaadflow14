@@ -44,5 +44,9 @@ Nell'architettura di SpringBoot, occorre la classe di partenza col metodo `main`
 
 - La prima classe intercettabile nel flusso è
 
+##Profiling
+javamelody
+    
+    /monitoring
 ##Link
 - running-code-on-spring-boot-startup [guru](https://springframework.guru/running-code-on-spring-boot-startup/)

@@ -2,6 +2,8 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -164,26 +166,25 @@ public class ContinenteLogic extends GeografiaLogic {
         return (Continente) super.findByKey(keyValue);
     }
 
-
-//    /**
-//     * Creazione di alcuni dati iniziali <br>
-//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return false se non esiste il metodo sovrascritto
-//     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-//     */
-//    @Override
-//    public boolean reset() {
-//        super.deleteAll();
-//
-//        for (AEContinente aeContinente : AEContinente.values()) {
-//            creaIfNotExist(aeContinente);
-//        }
-//
-//        return mongo.isValid(entityClazz);
-//    }
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * DEVE essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    public boolean reset() {
+    //        super.deleteAll();
+    //
+    //        for (AEContinente aeContinente : AEContinente.values()) {
+    //            creaIfNotExist(aeContinente);
+    //        }
+    //
+    //        return mongo.isValid(entityClazz);
+    //    }
 
 
     /**
@@ -202,22 +203,22 @@ public class ContinenteLogic extends GeografiaLogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
         for (AEContinente aeContinente : AEContinente.values()) {
-            numRec = creaIfNotExist(aeContinente) != null ? numRec+1 : numRec;
+            numRec = creaIfNotExist(aeContinente) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
 }

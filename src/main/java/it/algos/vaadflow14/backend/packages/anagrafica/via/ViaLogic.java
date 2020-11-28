@@ -2,6 +2,8 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -230,22 +232,22 @@ public class ViaLogic extends ALogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
         for (AEVia aeVia : AEVia.values()) {
             numRec = creaIfNotExist(aeVia) != null ? numRec+1 : numRec;
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.enumeration,numRec);
     }
 
 }

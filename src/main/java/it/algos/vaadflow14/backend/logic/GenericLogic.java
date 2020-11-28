@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.logic;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -119,10 +120,10 @@ public class GenericLogic extends ALogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
+    public AIResult resetEmptyOnly() {
         return super.resetEmptyOnly();
     }
 

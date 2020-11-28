@@ -5,6 +5,8 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -258,22 +260,22 @@ public class CompanyLogic extends ALogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
         numRec = creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it") != null ? numRec+1 : numRec;
         numRec = creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it") != null ? numRec+1 : numRec;
         numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec+1 : numRec;
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }
 
     /**

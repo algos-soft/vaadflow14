@@ -174,6 +174,7 @@ public abstract class FlowCost {
      */
     public static final String TAG_EM = "em";
 
+    public static final String TAG_GENERIC_LOGIC = "GenericLogic";
     public static final String TAG_GENERIC_VIEW = "view";
 
     public static final String KEY_BUTTON_DELETE_ALL = "deleteAll";

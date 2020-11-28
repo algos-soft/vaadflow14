@@ -62,6 +62,16 @@ public class AResult implements AIResult {
     }
 
     @Override
+    public boolean isErrato() {
+        return !valido;
+    }
+
+    @Override
+    public String getMessage() {
+        return isValido() ? getValidationMessage() : getErrorMessage();
+    }
+
+    @Override
     public String getErrorMessage() {
         return errorMessage;
     }

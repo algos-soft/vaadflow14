@@ -11,6 +11,10 @@ public interface AIResult {
 
     boolean isValido();
 
+    boolean isErrato();
+
+    String getMessage();
+
     String getErrorMessage();
 
     String getValidationMessage();

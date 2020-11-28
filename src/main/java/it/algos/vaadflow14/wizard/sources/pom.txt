@@ -309,6 +309,13 @@
             <version>3.0.1</version>
         </dependency>
 
+<!-- https://mvnrepository.com/artifact/net.bull.javamelody/javamelody-core -->
+<dependency>
+    <groupId>net.bull.javamelody</groupId>
+    <artifactId>javamelody-core</artifactId>
+    <version>1.86.0</version>
+</dependency>
+
         <!-- FontAwesome Iron Iconset -->
 <!--        <dependency>-->
 <!--            <groupId>com.flowingcode.addons</groupId>-->

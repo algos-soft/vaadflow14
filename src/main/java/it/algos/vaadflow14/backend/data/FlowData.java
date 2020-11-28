@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,13 +73,12 @@ public class FlowData extends AData {
         String moduleName = "vaadflow14";
         List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
-//        if (array.isValid(listaCanonicalNameEntity)) {
-//            for (String canonicalName : listaCanonicalNameEntity) {
-//                checkSingolaCollection(canonicalName);
-//            }
-//        }
-        checkSingolaCollection("it.algos.vaadflow14.backend.packages.geografica.stato.Stato");
-
+        logger.log(AETypeLog.checkData, "Sono state trovate " + listaCanonicalNameEntity.size()+" classi di tipo AEntity da controllare" );
+        if (array.isValid(listaCanonicalNameEntity)) {
+            for (String canonicalName : listaCanonicalNameEntity) {
+                checkSingolaCollection(canonicalName);
+            }
+        }
     }
 
 }

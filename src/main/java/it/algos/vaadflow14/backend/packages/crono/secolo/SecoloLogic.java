@@ -3,6 +3,8 @@ package it.algos.vaadflow14.backend.packages.crono.secolo;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -242,22 +244,22 @@ public class SecoloLogic extends CronoLogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
         for (AESecolo eaSecolo : AESecolo.values()) {
             numRec = creaIfNotExist(eaSecolo) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
 }

@@ -1569,6 +1569,22 @@ public class AFileServiceTest extends ATest {
     }
 
 
+    @Test
+    @Order(39)
+    @DisplayName("39 - estraeClasseFinale")
+    public void estraeClasseFinale() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow/";
+        previsto = "vaadflow";
+        ottenuto = file.estraeClasseFinale(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "it.algos.vaadflow14.backend.packages.geografica.stato.Stato";
+        previsto = "Stato";
+        ottenuto = file.estraeClasseFinale(sorgente);
+        assertEquals(previsto, ottenuto);
+    }
+
+
     private void printPath(String path, String dir, String pathOttenuto) {
         System.out.println("Path completo: " + path);
         System.out.println("Directory interessata: " + dir);

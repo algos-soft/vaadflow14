@@ -1,10 +1,9 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.logic.GenericLogic;
 import it.algos.vaadflow14.backend.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_LOGIC;
+import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC;
 
 /**
  * Project vbase
@@ -82,6 +82,14 @@ public abstract class AData {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
+    public AFileService file;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
     public ATextService text;
 
 
@@ -98,44 +106,32 @@ public abstract class AData {
      * Controllo se l' istanza xxxLogic è creabile <br>
      * Utilizzo il metodo standard 'reset', presente nell' interfaccia <br>
      */
-    protected boolean checkSingolaCollection(String entityName) {
-        String message;
-        AILogic entityLogic = classService.getLogicFromEntityName(entityName);
+    protected boolean checkSingolaCollection(String canonicalEntityName) {
+        AIResult result;
+        String entityLogicPrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_BUSINESS_LOGIC;
+        AILogic entityLogic = classService.getLogicFromEntityName(canonicalEntityName);
+        String nameLogic=entityLogic.getClass().getSimpleName();
+        boolean methodExists = false;
 
-        if (entityLogic == null) {
-            logger.error("Non esiste la classe " + entityName + "Logic", this.getClass(), "checkSingolaCollection");
+        if (entityLogic == null || nameLogic.equals(TAG_GENERIC_LOGIC)) {
+            logger.log(AETypeLog.checkData, "Non esiste la classe " + entityLogicPrevista +" per effettuare il Reset dei dati");
             return false;
         }
-        message = entityLogic.resetEmptyOnly();
-        message = text.isValid(message) ? message : "Non esiste il metodo resetEmptyOnly() nella classe " + entityLogic.getClass().getSimpleName();
-        logger.log(AETypeLog.checkData, message);
 
-        return message.equals(VUOTA);
-    }
+        try {
+            methodExists = entityLogic.getClass().getDeclaredMethod("resetEmptyOnly")!=null;
+        } catch (Exception unErrore) {
+        }
 
-    /**
-     * Controllo se la collection è vuota. Se esiste, non faccio nulla. <br>
-     * Costruisco un' istanza della classe xxxLogic corrispondente alla entityClazz <br>
-     * Controllo se l' istanza xxxLogic è creabile <br>
-     * Utilizzo il metodo standard 'reset', presente nell' interfaccia <br>
-     *
-     * @param entityClazz modello-dati specifico di un package
-     */
-    protected void checkSingolaCollection(Class<? extends AEntity> entityClazz) {
-        AILogic entityLogic = classService.getLogicFromEntity(entityClazz);
-        String collectionName = annotation.getCollectionName(entityClazz);
+        if (methodExists) {
+            result = entityLogic.resetEmptyOnly();
+            logger.log(AETypeLog.checkData, result.getMessage());
 
-        if (entityLogic != null && !(entityLogic instanceof GenericLogic)) {
-            if (mongo.isEmpty(entityClazz)) {
-                if (entityLogic.reset()) {
-                }
-                else {
-                    logger.error("Non sono riuscito a trovare  il metodo 'reset' e a creare la collezione " + collectionName, this.getClass(), "checkSingolaCollection");
-                }
-            }
+            return result.isValido();
         }
         else {
-            logger.error("Non esiste la classe " + entityClazz.getSimpleName() + "Logic", this.getClass(), "checkSingolaCollection");
+            logger.log(AETypeLog.checkData, "Non esiste il metodo resetEmptyOnly() nella classe " + nameLogic);
+            return false;
         }
     }
 

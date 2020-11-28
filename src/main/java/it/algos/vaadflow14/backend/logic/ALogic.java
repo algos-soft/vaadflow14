@@ -17,13 +17,12 @@ import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.wrapper.WrapSearch;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
@@ -1836,7 +1835,6 @@ public abstract class ALogic implements AILogic {
      */
     public void clickReset() {
         if (resetDeletingAll()) {
-            logger.reset(entityClazz);
             this.refreshGrid();
         }
     }
@@ -1893,12 +1891,12 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public boolean resetDeletingAll() {
-        String message;
+        AIResult result;
         this.delete();
 
-        message = resetEmptyOnly();
-        logger.log(AETypeLog.reset, message);
-        return message.equals(VUOTA);
+        result = resetEmptyOnly();
+        logger.log(AETypeLog.reset, result.isValido() ? result.getValidationMessage() : result.getErrorMessage());
+        return result.isValido();
     }
 
     /**
@@ -1917,67 +1915,45 @@ public abstract class ALogic implements AILogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
+    public AIResult resetEmptyOnly() {
         String collection;
 
         if (entityClazz == null) {
-            return "Manca la entityClazz nella businessLogic specifica";
+            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
         }
 
         collection = entityClazz.getSimpleName().toLowerCase();
         if (mongo.isExists(collection)) {
             if (mongo.isValid(entityClazz)) {
-                return "La collezione " + collection + " esiste già e non è stata modificata";
+                return AResult.errato("La collezione " + collection + " esiste già e non è stata modificata");
             }
             else {
-                return VUOTA;
+                return AResult.valido();
             }
         }
         else {
-            return "La collezione " + collection + " non esiste";
+            return AResult.errato("La collezione " + collection + " non esiste");
         }
-
-
-
-//        collection = entityClazz.getSimpleName().toLowerCase();
-//       boolean alfa= mongo.isExists(collection);
-//        boolean beta=mongo.isValid(collection);
-//
-//        if (mongo.isValid(entityClazz)) {
-//            return "La collezione " + collection + " esiste già e non è stata modificata";
-//        }
-//
-//        return "La collezione " + collection + " non esiste";
     }
 
-    protected String fixPostReset(int numRec) {
+    protected AIResult fixPostReset(AETypeReset type, final int numRec) {
         String collection;
 
         if (entityClazz == null) {
-            return "Manca la entityClazz nella businessLogic specifica";
+            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
         }
 
         collection = entityClazz.getSimpleName().toLowerCase();
         if (mongo.isValid(entityClazz)) {
-            return "La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi";
+            return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
         }
         else {
-            return "Non è stato possibile creare la collezione " + collection;
+            return AResult.errato("Non è stato possibile creare la collezione " + collection);
         }
     }
-
-//    /**
-//     * Semplice log di avviso <br>
-//     * Controllato da flag/preferenza <br>
-//     */
-//    protected void metodoMancante(String collectionName) {
-//        if (usaDataLogger) {
-//            logger.log(AETypeLog.checkData, "Manca il metodo resetEmptyOnly per la collection " + collectionName);
-//        }
-//    }
 
 
     public void resetForm(AEntity entityBean) {

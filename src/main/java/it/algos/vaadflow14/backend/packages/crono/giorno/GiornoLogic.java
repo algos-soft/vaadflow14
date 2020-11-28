@@ -3,9 +3,13 @@ package it.algos.vaadflow14.backend.packages.crono.giorno;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,11 +247,12 @@ public class GiornoLogic extends CronoLogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        AIResult resultCollectionPropedeutica;
         int ordine;
         String titolo;
         String titoloMese;
@@ -255,11 +260,16 @@ public class GiornoLogic extends CronoLogic {
         Mese mese;
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
-        if (!checkMese()) {
-            return "false";
+
+        resultCollectionPropedeutica = checkMese();
+        if (resultCollectionPropedeutica.isValido()) {
+            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+        }
+        else {
+            return resultCollectionPropedeutica;
         }
 
         //costruisce i 366 records
@@ -273,28 +283,26 @@ public class GiornoLogic extends CronoLogic {
             numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.file, numRec);
     }
 
-    private boolean checkMese() {
+    private AIResult checkMese() {
         String collection = "mese";
         MeseLogic meseLogic;
 
-        if (mongo.isExists(collection)) {
-            return true;
+        if (mongo.isValid(collection)) {
+            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
         }
         else {
             meseLogic = appContext.getBean(MeseLogic.class);
-            if (meseLogic != null) {
-                return meseLogic.resetEmptyOnly().equals(VUOTA);
+            if (meseLogic == null) {
+                return AResult.errato("Manca la classe MeseLogic");
             }
-            if (mongo.isNotExists(collection)) {
-                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkMese");
-                return false;
+            else {
+                return meseLogic.resetEmptyOnly();
             }
         }
-
-        return false;
     }
 
 }
+

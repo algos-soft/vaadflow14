@@ -7,9 +7,8 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
@@ -17,6 +16,7 @@ import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogi
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.service.AResourceService;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -402,12 +402,12 @@ public class StatoLogic extends ALogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
-        String messagePropedeutico;
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        AIResult resultCollectionPropedeutica;
         String nome = VUOTA;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
@@ -421,13 +421,16 @@ public class StatoLogic extends ALogic {
         String alfaTre = VUOTA;
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
-        messagePropedeutico = checkContinente();
-        if (messagePropedeutico.equals(VUOTA)) {
-            return messagePropedeutico;
+        resultCollectionPropedeutica = checkContinente();
+        if (resultCollectionPropedeutica.isValido()) {
+            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+        }
+        else {
+            return resultCollectionPropedeutica;
         }
 
         mappa = creaMappa();
@@ -468,38 +471,27 @@ public class StatoLogic extends ALogic {
             }
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.wikipedia, numRec);
     }
 
 
-    private String checkContinente() {
-        String message;
+    private AIResult checkContinente() {
         String collection = "continente";
         ContinenteLogic continenteLogic;
 
         if (mongo.isValid(collection)) {
-            return VUOTA;
+            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
         }
         else {
             continenteLogic = appContext.getBean(ContinenteLogic.class);
-            if (continenteLogic != null) {
-                message = continenteLogic.resetEmptyOnly();
-                return "";
-                //                if (message.equals(VUOTA)) {
-                //                    return messagePropedeutico;
-                //                }
+            if (continenteLogic == null) {
+                return AResult.errato("Manca la classe ContinenteLogic");
             }
-            if (mongo.isNotExists(collection)) {
-                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkContinente");
-                return "false";
+            else {
+                return continenteLogic.resetEmptyOnly();
             }
+
         }
-
-        //        message = continenteLogic.resetEmptyOnly();
-        //        message = text.isValid(message) ? message : "Non esiste il metodo resetEmptyOnly() nella classe " + entityLogic.getClass().getSimpleName();
-        //        logger.log(AETypeLog.checkData, message);
-
-        return "false";
     }
 
     private Map<String, Continente> creaMappa() {

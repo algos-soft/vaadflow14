@@ -5,11 +5,15 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.backend.service.ADateService;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.bson.Document;
@@ -322,11 +326,12 @@ public class AnnoLogic extends CronoLogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        AIResult resultCollectionPropedeutica;
         int ordine;
         String nome;
         AESecolo secoloEnum;
@@ -335,12 +340,16 @@ public class AnnoLogic extends CronoLogic {
         boolean bisestile = false;
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
-        if (!checkSecolo()) {
-            return "false";
+        resultCollectionPropedeutica = checkSecolo();
+        if (resultCollectionPropedeutica.isValido()) {
+            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+        }
+        else {
+            return resultCollectionPropedeutica;
         }
 
         //--costruisce gli anni prima di cristo dal 1000
@@ -377,28 +386,25 @@ public class AnnoLogic extends CronoLogic {
             }
         }
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }
 
-    private boolean checkSecolo() {
+    private AIResult checkSecolo() {
         String collection = "secolo";
         SecoloLogic secoloLogic;
 
-        if (mongo.isExists(collection)) {
-            return true;
+        if (mongo.isValid(collection)) {
+            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
         }
         else {
             secoloLogic = appContext.getBean(SecoloLogic.class);
-            if (secoloLogic != null) {
-                return secoloLogic.resetEmptyOnly().equals(VUOTA);
+            if (secoloLogic == null) {
+                return AResult.errato("Manca la classe SecoloLogic");
             }
-            if (mongo.isNotExists(collection)) {
-                logger.error("Non sono riuscito a costruire la collezione " + collection, this.getClass(), "checkSecolo");
-                return false;
+            else {
+                return secoloLogic.resetEmptyOnly();
             }
         }
-
-        return false;
     }
 
 }

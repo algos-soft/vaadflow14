@@ -6,6 +6,8 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AERole;
+import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
@@ -316,15 +318,15 @@ public class UtenteLogic extends ALogic {
      * 4) creati direttamente <br>
      * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return vuota se è stata creata, altrimenti un messaggio di errore
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public String resetEmptyOnly() {
-        String message = super.resetEmptyOnly();
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
-        if (!message.equals(VUOTA)) {
-            return message;
+        if (result.isErrato()) {
+            return result;
         }
 
         numRec = creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer)!= null ? numRec+1 : numRec;
@@ -333,7 +335,7 @@ public class UtenteLogic extends ALogic {
         numRec = creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user)!= null ? numRec+1 : numRec;
         numRec = creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest)!= null ? numRec+1 : numRec;
 
-        return super.fixPostReset(numRec);
+        return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }
 
 }

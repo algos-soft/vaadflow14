@@ -1675,6 +1675,31 @@ public class AFileService extends AAbstractService {
         return pathOut.trim();
     }
 
+    /**
+     * Recupera l'ultima classe da un path <br>
+     * <p>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param pathIn in ingresso
+     *
+     * @return classe finale del path
+     */
+    public String estraeClasseFinale(final String pathIn) {
+        String pathOut = pathIn.trim();
+
+        if (text.isValid(pathOut)) {
+            pathOut = text.levaCoda(pathOut, SLASH);
+            if (pathOut.contains(SLASH)) {
+                pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + SLASH.length());
+            }
+            if (pathOut.contains(PUNTO)) {
+                pathOut = pathOut.substring(pathOut.lastIndexOf(PUNTO) + PUNTO.length());
+            }
+        }
+
+        return pathOut.trim();
+    }
+
 
     /**
      * Estrae il path che contiene la directory indicata <br>
