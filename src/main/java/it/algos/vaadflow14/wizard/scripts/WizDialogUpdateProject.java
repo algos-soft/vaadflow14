@@ -129,14 +129,28 @@ public class WizDialogUpdateProject extends WizDialog {
             check.setAcceso(false);
         }
 
+        //--aggiunge alla mappa tutti i checkbox
         for (AECheck check : AECheck.getUpdateProject()) {
             unCheckbox = new Checkbox(check.getCaption(), check.is());
             mappaCheckbox.put(check.name(), unCheckbox);
         }
 
+        unCheckbox = mappaCheckbox.get(AECheck.all.name());
+        unCheckbox.addValueChangeListener(e -> { sincroAll(); });
+
         super.addCheckBoxMap();
     }
 
+    protected void sincroAll() {
+        Checkbox checkAll = mappaCheckbox.get(AECheck.all.name());
+        boolean accesi = checkAll.getValue();
+
+        for (String key : mappaCheckbox.keySet()) {
+            if (!key.equals(AECheck.all.name())) {
+                mappaCheckbox.get(key).setValue(accesi);
+            }
+        }
+    }
 
     protected void creaBottoni() {
         super.creaBottoni();

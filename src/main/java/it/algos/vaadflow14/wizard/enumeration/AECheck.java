@@ -44,6 +44,8 @@ public enum AECheck {
 
     read("File README con note di testo (sources)", true, true, false, false, VUOTA, VUOTA, false),
 
+    all("Abilita/disabilita tutti i checkBox", true, true, false, false, VUOTA, VUOTA, false),
+
     file("Sovrascrive il singolo FILE", false, false, false, false, VUOTA, VUOTA, false),
 
     directory("Sovrascrive la DIRECTORY", false, false, false, false, VUOTA, VUOTA, false),
