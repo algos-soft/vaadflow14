@@ -230,5 +230,4 @@ public class ViaLogic extends ALogic {
 
         return super.fixPostReset(AETypeReset.enumeration,numRec);
     }
-
 }
