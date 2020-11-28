@@ -1895,7 +1895,7 @@ public abstract class ALogic implements AILogic {
         this.delete();
 
         result = resetEmptyOnly();
-        logger.log(AETypeLog.reset, result.isValido() ? result.getValidationMessage() : result.getErrorMessage());
+        logger.log(AETypeLog.reset, result.getMessage());
         return result.isValido();
     }
 
