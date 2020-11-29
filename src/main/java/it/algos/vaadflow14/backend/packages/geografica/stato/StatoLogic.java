@@ -408,18 +408,18 @@ public class StatoLogic extends ALogic {
     public AIResult resetEmptyOnly() {
         AIResult result = super.resetEmptyOnly();
         AIResult resultCollectionPropedeutica;
-        String nome = VUOTA;
+        int numRec = 0;
+        Stato stato;
+        String nome;
         int pos = AEStatoEuropeo.values().length;
         int posEuropeo;
         int posCorrente;
         boolean ue;
-        Stato stato;
         String bandieraTxt = VUOTA;
         Map<String, Continente> mappa;
         Continente continente = null;
         Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
         String alfaTre = VUOTA;
-        int numRec = 0;
 
         if (result.isErrato()) {
             return result;

@@ -257,6 +257,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data corrente nella forma del pattern standard. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: d MMM yyyy <br>
+     * Esempio: 20 gen 2019 <br>
      *
      * @return la data sotto forma di stringa
      */
@@ -269,6 +271,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data nella forma del pattern standard. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: d MMM yyyy <br>
+     * Esempio: 20 gen 2019 <br>
      *
      * @param localDate da rappresentare
      *
@@ -319,7 +323,8 @@ public class ADateService extends AAbstractService {
     public String get(LocalDateTime localDateTime, AETypeData pattern) {
         if (pattern.isSenzaTime()) {
             return VUOTA;
-        } else {
+        }
+        else {
             return get(localDateTime, pattern.getPattern());
         }
     }
@@ -338,7 +343,8 @@ public class ADateService extends AAbstractService {
     public String get(LocalDate localDate, AETypeData pattern) {
         if (pattern.isSenzaTime()) {
             return get(localDate, pattern.getPattern());
-        } else {
+        }
+        else {
             return VUOTA;
         }
     }
@@ -372,7 +378,8 @@ public class ADateService extends AAbstractService {
     public String get(LocalDateTime localDateTime, String pattern) {
         if (localDateTime != null) {
             return localDateTime.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
-        } else {
+        }
+        else {
             return VUOTA;
         }
     }
@@ -391,7 +398,8 @@ public class ADateService extends AAbstractService {
     public String get(LocalDate localDate, String pattern) {
         if (localDate != null) {
             return localDate.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
-        } else {
+        }
+        else {
             return VUOTA;
         }
     }
@@ -410,7 +418,8 @@ public class ADateService extends AAbstractService {
     public String get(LocalTime localTime, String pattern) {
         if (localTime != null) {
             return localTime.format(DateTimeFormatter.ofPattern(pattern, LOCALE));
-        } else {
+        }
+        else {
             return VUOTA;
         }
     }
@@ -421,7 +430,9 @@ public class ADateService extends AAbstractService {
      * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
-     * Two numbers for year <b>
+     * Two numbers for year <br>
+     * Pattern: d-M-yy <br>
+     * Esempio: 5-4-17 <br>
      *
      * @param localDate da rappresentare
      *
@@ -436,6 +447,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: d-MMM-yy <br>
+     * Esempio: 5-ott-14 <br>
      *
      * @param localDate da rappresentare
      *
@@ -450,6 +463,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: d-MMMM-yyy <br>
+     * Esempio: 5-ottobre-2014 <br>
      *
      * @param localDate da rappresentare
      *
@@ -464,6 +479,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: EEEE, d-MMMM-yyy <br>
+     * Esempio: domenica, 5-ottobre-2014 <br>
      *
      * @param localDate da rappresentare
      *
@@ -477,6 +494,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: EEEE, d-MMMM-yyy <br>
+     * Esempio: dom, 5-ott-2014 <br>
      *
      * @param localDate da rappresentare
      *
@@ -491,6 +510,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data e l' orario nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: d-M-yy H:mm <br>
+     * Esempio: 18-4-17 13:45 <br>
      *
      * @param localDateTime da rappresentare
      *
@@ -505,6 +526,8 @@ public class ADateService extends AAbstractService {
      * Restituisce la data e l' orario nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
+     * Pattern: EEEE, d-MMMM-yyy 'alle' H:mm <br>
+     * Esempio: domenica, 5-ottobre-2014 alle 13:45 <br>
      *
      * @param localDateTime da rappresentare
      *
@@ -519,7 +542,6 @@ public class ADateService extends AAbstractService {
      * Restituisce l' orario corrente nella forma del pattern previsto. <br>
      * <p>
      * Returns a string representation of the date <br>
-     *
      *
      * @return la data sotto forma di stringa
      */
@@ -542,8 +564,6 @@ public class ADateService extends AAbstractService {
     }
 
 
-
-
     /**
      * Restituisce l' orario nella forma del pattern previsto. <br>
      * <p>
@@ -561,7 +581,9 @@ public class ADateService extends AAbstractService {
     /**
      * Restituisce l' orario nella forma del pattern previsto. <br>
      * <p>
-     * Returns a string representation of the date <br>
+     * Returns a string representation of the time <br>
+     * Pattern: H:mm:ss <br>
+     * Esempio:  13:45:08 <br>
      *
      * @param localDateTime da rappresentare
      *
@@ -616,7 +638,8 @@ public class ADateService extends AAbstractService {
 
             if (k == 1) {
                 mappa.put(KEY_MAPPA_GIORNI_TITOLO, PRIMO_GIORNO_MESE + SPAZIO + nomeMese);
-            } else {
+            }
+            else {
                 mappa.put(KEY_MAPPA_GIORNI_TITOLO, tag);
             }
             //--gestione degli anni bisestili
@@ -681,7 +704,8 @@ public class ADateService extends AAbstractService {
             if (math.divisibileEsatto(anno, deltaSecolo)) {
                 if (math.divisibileEsatto(anno, deltaGregoriano)) {
                     bisestile = true;
-                } else {
+                }
+                else {
                     bisestile = false;
                 }
             }

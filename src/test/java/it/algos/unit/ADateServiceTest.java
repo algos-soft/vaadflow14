@@ -1,6 +1,7 @@
 package it.algos.unit;
 
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
+import it.algos.vaadflow14.backend.wrapper.APeriodo;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 
@@ -459,7 +460,8 @@ public class ADateServiceTest extends ATest {
         for (AETypeData pattern : AETypeData.values()) {
             if (pattern.isSenzaTime()) {
                 ottenuto = date.get(LOCAL_DATE_DUE, pattern);
-            } else {
+            }
+            else {
                 ottenuto = date.get(LOCAL_DATE_TIME_DUE, pattern);
             }
             System.out.println(pattern.getTag() + tag + ottenuto);
@@ -469,7 +471,8 @@ public class ADateServiceTest extends ATest {
         for (AETypeData pattern : AETypeData.values()) {
             if (pattern.isSenzaTime()) {
                 ottenuto = date.get(LOCAL_DATE_UNO, pattern);
-            } else {
+            }
+            else {
                 ottenuto = date.get(LOCAL_DATE_TIME_UNO, pattern);
             }
             System.out.println(pattern.getTag() + tag + ottenuto);
@@ -518,28 +521,65 @@ public class ADateServiceTest extends ATest {
         System.out.println("Orario nel formato standard");
         System.out.println("---------------------------");
         ottenuto = date.getOrario(LOCAL_DATE_TIME_UNO);
-        System.out.println(LOCAL_DATE_TIME_UNO+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_UNO + SEP + ottenuto);
 
         ottenuto = date.getOrario(LOCAL_DATE_TIME_DUE);
-        System.out.println(LOCAL_DATE_TIME_DUE+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_DUE + SEP + ottenuto);
 
         ottenuto = date.getOrario(LOCAL_DATE_TIME_UNO_MEZZANOTTE);
-        System.out.println(LOCAL_DATE_TIME_UNO_MEZZANOTTE+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_UNO_MEZZANOTTE + SEP + ottenuto);
 
         ottenuto = date.getOrario(LOCAL_DATE_TIME_DUE_MEZZANOTTE);
-        System.out.println(LOCAL_DATE_TIME_DUE_MEZZANOTTE+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_DUE_MEZZANOTTE + SEP + ottenuto);
 
         System.out.println("");
         System.out.println("");
         System.out.println("Orario nel formato completo");
         System.out.println("---------------------------");
         ottenuto = date.getOrarioCompleto(LOCAL_DATE_TIME_UNO);
-        System.out.println(LOCAL_DATE_TIME_UNO+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_UNO + SEP + ottenuto);
 
         ottenuto = date.getOrarioCompleto(LOCAL_DATE_TIME_DUE);
-        System.out.println(LOCAL_DATE_TIME_DUE+ SEP + ottenuto);
+        System.out.println(LOCAL_DATE_TIME_DUE + SEP + ottenuto);
     }
 
+    @Test
+    @Order(16)
+    @DisplayName("16 - Classe APeriodo")
+    void periodo() {
+        APeriodo periodo = null;
+
+        try {
+            periodo = new APeriodo(LOCAL_DATE_DUE, LOCAL_DATE_UNO);
+            System.out.println("Inizio: " + date.get(periodo.getInizio()));
+            System.out.println("Fine: " + date.get(periodo.getFine()));
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+            System.out.println(VUOTA);
+        }
+
+        try {
+            periodo = new APeriodo(LOCAL_DATE_UNO, LOCAL_DATE_DUE);
+            System.out.println("Inizio: " + date.get(periodo.getInizio()));
+            System.out.println("Fine: " + date.get(periodo.getFine()));
+            System.out.println(VUOTA);
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+            System.out.println(VUOTA);
+        }
+
+        try {
+            periodo = new APeriodo(LOCAL_DATE_UNO, LOCAL_DATE_UNO);
+            System.out.println("Ammesso il periodo di durata nulla");
+            System.out.println("Inizio: " + date.get(periodo.getInizio()));
+            System.out.println("Fine: " + date.get(periodo.getFine()));
+            System.out.println(VUOTA);
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+            System.out.println(VUOTA);
+        }
+
+    }
 
     @Test
     @Order(90)

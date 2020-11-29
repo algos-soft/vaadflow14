@@ -10,6 +10,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * User: gac
  * Date: ven, 27-nov-2020
  * Time: 14:31
+ * <p>
+ * Semplice wrapper per veicolare una risposta con diverse property <br>
  */
 public class AResult implements AIResult {
 
@@ -50,6 +52,10 @@ public class AResult implements AIResult {
 
     public static AResult valido(String validationMessage, int valore) {
         return new AResult(true, validationMessage, valore);
+    }
+
+    public static AResult errato() {
+        return new AResult(false, "Non effettuato");
     }
 
     public static AResult errato(String errorMessage) {

@@ -1,15 +1,15 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.backend.service.AWikiService;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -161,7 +161,8 @@ public class RegioneLogic extends ALogic {
 
         if (AEPreferenza.usaBandiereStati.is()) {
             mappaComboBox.put("stato", statoLogic.creaComboStati());//@todo con bandierine
-        } else {
+        }
+        else {
             super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
         }
 
@@ -310,72 +311,147 @@ public class RegioneLogic extends ALogic {
         return items;
     }
 
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * Deve essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    public boolean reset() {
+    //        //--controlla che esista la collection 'Stato', indispensabile
+    //        if (mongo.isEmpty(Stato.class)) {
+    //            logger.warn("Manca la collection 'Stato'. Reset non eseguito.", this.getClass(), "reset");
+    //            return false;
+    //        }
+    //
+    //        super.deleteAll();
+    //
+    //        //--aggiunge le province
+    //        //        this.addProvince();
+    //
+    //        //        if (false) {
+    //        //            italia();
+    //        //            francia();
+    //        //            svizzera();
+    //        //            austria();
+    //        //            germania();
+    //        //            spagna();
+    //        //            portogallo();
+    //        //            belgio();
+    //        //            olanda();
+    //        //            croazia();
+    //        //            albania();
+    //        //            grecia();
+    //        //            cechia();
+    //        //            slovacchia();
+    //        //            ungheria();
+    //        //            romania();
+    //        //            bulgaria();
+    //        //            polonia();
+    //        //            danimarca();
+    //        //            //        slovenia(); // sono troppi
+    //        //            marocco();
+    //        //            algeria();
+    //        //            tunisia();
+    //        //        }
+    //        creaRegioniAllStati();
+    //
+    //        return mongo.isValid(entityClazz);
+    //    }
+
 
     /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto <br>
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * <p>
+     * 1) deve esistere lo specifico metodo sovrascritto
+     * 2) deve essere valida la entityClazz
+     * 3) deve esistere la collezione su mongoDB
+     * 4) la collezione non deve essere vuota
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public boolean reset() {
-        //--controlla che esista la collection 'Stato', indispensabile
-        if (mongo.isEmpty(Stato.class)) {
-            logger.warn("Manca la collection 'Stato'. Reset non eseguito.", this.getClass(), "reset");
-            return false;
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        AIResult resultCollectionPropedeutica;
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            return result;
         }
 
-        super.deleteAll();
+        resultCollectionPropedeutica = checkStato();
+        if (resultCollectionPropedeutica.isValido()) {
+            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+        }
+        else {
+            return resultCollectionPropedeutica;
+        }
 
-        //--aggiunge le province
-        //        this.addProvince();
+//        result=creaRegioniAllStati();
+//        return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
+//
+//        return super.fixPostReset(AETypeReset.wikipedia, numRec);
 
-        //        if (false) {
-        //            italia();
-        //            francia();
-        //            svizzera();
-        //            austria();
-        //            germania();
-        //            spagna();
-        //            portogallo();
-        //            belgio();
-        //            olanda();
-        //            croazia();
-        //            albania();
-        //            grecia();
-        //            cechia();
-        //            slovacchia();
-        //            ungheria();
-        //            romania();
-        //            bulgaria();
-        //            polonia();
-        //            danimarca();
-        //            //        slovenia(); // sono troppi
-        //            marocco();
-        //            algeria();
-        //            tunisia();
-        //        }
-        creaRegioniAllStati();
+        return creaRegioniAllStati();
+    }
 
-        return mongo.isValid(entityClazz);
+
+    private AIResult checkStato() {
+        String collection = "stato";
+        StatoLogic statoLogic;
+
+        if (mongo.isValid(collection)) {
+            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+        }
+        else {
+            statoLogic = appContext.getBean(StatoLogic.class);
+            if (statoLogic == null) {
+                return AResult.errato("Manca la classe StatoLogic");
+            }
+            else {
+                return statoLogic.resetEmptyOnly();
+            }
+        }
     }
 
 
     /**
      * Recupera le suddivisioni di secondo livello per tutti gli stati <br>
      */
-    public void creaRegioniAllStati() {
+    public AIResult creaRegioniAllStati() {
+        AIResult result = AResult.errato();
+        int numRec = 0;
+
         List<Stato> listaStati = statoLogic.findAllStato();
         List<WrapDueStringhe> listaWrap = null;
 
         if (array.isValid(listaStati)) {
             for (Stato stato : listaStati) {
-                creaRegioniDiUnoStato(stato);
+                result = creaRegioniDiUnoStato(stato);
+                if (result.isErrato()) {
+                    return AResult.errato("Non sono riuscito a creare le regioni di " + stato.stato);
+                }
+                else {
+                    numRec = numRec + result.getValore();
+                }
             }
+            return AResult.valido("Sono state create " + numRec + " regioni di" + listaStati.size() + " stati "+AETypeReset.wikipedia.get());
         }
+
+        return AResult.errato("Manca la collezione stati");
     }
 
 
@@ -384,7 +460,10 @@ public class RegioneLogic extends ALogic {
      * Le legge (se riesce) dalla pagina wiki 'ISO_3166-2:xx' col codice iso-alfa2 di ogni stato <br>
      * Cancella eventualmente le regioni esistenti per ricrearle correttamente <br>
      */
-    public void creaRegioniDiUnoStato(Stato stato) {
+    public AIResult creaRegioniDiUnoStato(Stato stato) {
+        AIResult result = AResult.errato();
+        Regione regione;
+        int numRec = 0;
         String tagWiki = "ISO 3166-2:";
         String alfaDue;
         String wikiPagina;
@@ -419,12 +498,19 @@ public class RegioneLogic extends ALogic {
                 sigla = text.levaTestoPrimaDi(iso, TRATTINO);
                 aeStatus = stato.id.equals("italia") ? fixStatusItalia(nome) : aeStatus;
                 if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
-                    creaIfNotExist(nome, stato, iso, sigla, aeStatus);
-                } else {
-                    logger.warn("Mancano dati essenziali", this.getClass(), "creaRegioniDiUnoStato." + stato.stato);
+                    regione = creaIfNotExist(nome, stato, iso, sigla, aeStatus);
+                    if (regione != null) {
+                        numRec++;
+                    }
+                }
+                else {
+                    logger.warn("Mancano dati essenziali", this.getClass(), "creaRegioniDiUnoStato: " + stato.stato);
                 }
             }
+            result = AResult.valido("Regioni di " + stato.stato, numRec);
         }
+
+        return result;
     }
 
 
@@ -476,7 +562,6 @@ public class RegioneLogic extends ALogic {
             creaIfNotExist(nome, stato, iso, sigla, status);
         }
     }
-
 
     //    /**
     //     * Regioni francesi (35) <br>

@@ -1,6 +1,9 @@
 package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.enumeration.AECrono;
+import it.algos.vaadflow14.backend.enumeration.AEGeografia;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.service.AArrayService;
 import it.algos.vaadflow14.backend.service.AFileService;
@@ -72,13 +75,38 @@ public class FlowData extends AData {
     public void fixData() {
         String moduleName = "vaadflow14";
         List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
+        String collezione;
 
-        logger.log(AETypeLog.checkData, "Sono state trovate " + listaCanonicalNameEntity.size()+" classi di tipo AEntity da controllare" );
+        logger.log(AETypeLog.checkData, "Sono state trovate " + listaCanonicalNameEntity.size() + " classi di tipo AEntity da controllare");
         if (array.isValid(listaCanonicalNameEntity)) {
             for (String canonicalName : listaCanonicalNameEntity) {
-                checkSingolaCollection(canonicalName);
+                collezione = file.estraeClasseFinale(canonicalName).toLowerCase();
+
+                if (checkFile(canonicalName)) {
+                    checkSingolaCollection(canonicalName);
+                }
+                else {
+                    logger.log(AETypeLog.checkData, "La collezione " + collezione + " non è prevista in questa applicazione");
+                }
             }
         }
+    }
+
+    /**
+     * Controlla i flags di due enumerations <br>
+     * Esclude i files appartenenti se i rispettivi flag sono falsi <br>
+     */
+    public boolean checkFile(String canonicalName) {
+        String name = file.estraeClasseFinale(canonicalName).toLowerCase();
+
+        if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(name)) {
+            return false;
+        }
+        if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(name)) {
+            return false;
+        }
+
+        return true;
     }
 
 }

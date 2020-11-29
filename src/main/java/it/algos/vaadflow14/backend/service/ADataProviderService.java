@@ -45,7 +45,7 @@ public class ADataProviderService extends AAbstractService {
     private AMongoService mongo;
 
 
-    public DataProvider creaDataProvider(Class entityClazz) {
+    public DataProvider<AEntity,Void> creaDataProvider(Class entityClazz) {
 
         DataProvider dataProvider = DataProvider.fromCallbacks(
 

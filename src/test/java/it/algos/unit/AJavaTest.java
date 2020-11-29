@@ -170,8 +170,8 @@ public class AJavaTest extends ATest {
     @Order(10)
     @DisplayName("Var keyword")
     void keyword() {
-        System.out.println("Java10 \n");
-
+//        System.out.println("Java10 \n");
+//
 //        var str = "a test string";
 //        var aVariable = "Marco";
 //        System.out.println(aVariable);

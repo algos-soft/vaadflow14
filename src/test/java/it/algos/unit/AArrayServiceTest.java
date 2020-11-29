@@ -2,11 +2,15 @@ package it.algos.unit;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
+import it.algos.vaadflow14.backend.enumeration.AECrono;
+import it.algos.vaadflow14.backend.enumeration.AEGeografia;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -19,6 +23,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("array")
 @DisplayName("Unit test per gli array")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AArrayServiceTest extends ATest {
 
     /**
@@ -59,7 +64,7 @@ public class AArrayServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
     }
 
@@ -79,6 +84,8 @@ public class AArrayServiceTest extends ATest {
      * Is valid.
      */
     @Test
+    @Order(1)
+    @DisplayName("1 - isValid")
     void isValid() {
         listaStr = new ArrayList<>();
         ottenutoBooleano = array.isValid((List) null);
@@ -106,13 +113,13 @@ public class AArrayServiceTest extends ATest {
 
         listaStr = LIST_STRING;
         ottenutoBooleano = array.isValid(listaStr);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid(LIST_OBJECT);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid(LIST_LONG);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         mappaSorgente = new LinkedHashMap();
         ottenutoBooleano = array.isValid(mappaSorgente);
@@ -122,13 +129,13 @@ public class AArrayServiceTest extends ATest {
         mappaSorgente.put("alfa", "irrilevante2");
         mappaSorgente.put("delta", "irrilevante3");
         ottenutoBooleano = array.isValid(mappaSorgente);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         Collection collezione = new ArrayList();
         collezione.add(24);
 
         ottenutoBooleano = array.isValid(collezione);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
     }
 
 
@@ -136,27 +143,29 @@ public class AArrayServiceTest extends ATest {
      * Is empty.
      */
     @Test
+    @Order(2)
+    @DisplayName("2 - isEmpty")
     void isEmpty() {
         listaStr = new ArrayList<>();
         ottenutoBooleano = array.isEmpty((List) null);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty((String[]) null);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty((Map) null);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty((new ArrayList()));
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         listaStr.add(null);
         ottenutoBooleano = array.isEmpty(listaStr);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         listaStr.add(PIENA);
         ottenutoBooleano = array.isEmpty(listaStr);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         listaStr = LIST_STRING;
         ottenutoBooleano = array.isEmpty(listaStr);
@@ -170,7 +179,7 @@ public class AArrayServiceTest extends ATest {
 
         mappaSorgente = new LinkedHashMap();
         ottenutoBooleano = array.isEmpty(mappaSorgente);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         mappaSorgente.put("beta", "irrilevante");
         mappaSorgente.put("alfa", "irrilevante2");
@@ -181,6 +190,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
+    @Order(3)
+    @DisplayName("3 - isMappaSemplificabile")
     void isMappaSemplificabile() {
         Map<String, List<String>> mappaSorgenteConListe = null;
         ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
@@ -200,11 +211,13 @@ public class AArrayServiceTest extends ATest {
         mappaSorgenteConListe.put("uno", LIST_SHORT_STRING);
         mappaSorgenteConListe.put("due", LIST_SHORT_STRING);
         ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
-        Assertions.assertTrue(ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
     }
 
 
     @Test
+    @Order(4)
+    @DisplayName("4 - semplificaMappa")
     void semplificaMappa() {
         Map<String, List<String>> mappaSorgenteConListe = null;
         Map<String, String> mappaPrevista = null;
@@ -235,6 +248,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
+    @Order(5)
+    @DisplayName("5 - getMappa")
     void getMappa() {
         sorgente = "valore";
         Map<String, String> mappaPrevista = null;
@@ -248,6 +263,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
+    @Order(6)
+    @DisplayName("6 - getLista")
     void getLista() {
         sorgente = "valore";
         previstoArray = new ArrayList<>();
@@ -265,6 +282,34 @@ public class AArrayServiceTest extends ATest {
         Assertions.assertNotNull(ottenutoArray);
         Assertions.assertEquals(1, ottenutoArray.size());
         Assertions.assertEquals(previstoArray, ottenutoArray);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - check enumeration")
+    void checkEnumeration() {
+
+        sorgente = "giorno";
+        ottenutoBooleano = AECrono.getValue().contains(sorgente);
+        assertTrue(ottenutoBooleano);
+
+        sorgente = "giorno";
+        ottenutoBooleano = AEGeografia.getValue().contains(sorgente);
+        assertFalse(ottenutoBooleano);
+
+        sorgente = "provincia";
+        ottenutoBooleano = AEGeografia.getValue().contains(sorgente);
+        assertTrue(ottenutoBooleano);
+
+        sorgente = "provincia";
+        ottenutoBooleano = AECrono.getValue().contains(sorgente);
+        assertFalse(ottenutoBooleano);
+
+        sorgente = "company";
+        ottenutoBooleano = AECrono.getValue().contains(sorgente);
+        assertFalse(ottenutoBooleano);
+        ottenutoBooleano = AEGeografia.getValue().contains(sorgente);
+        assertFalse(ottenutoBooleano);
     }
 
 }
