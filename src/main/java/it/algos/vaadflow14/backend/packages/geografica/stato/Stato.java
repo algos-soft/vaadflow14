@@ -85,7 +85,7 @@ public class Stato extends AEntity {
      * divisione amministrativa di secondo livello (facoltativa) <br>
      */
     @Transient()
-    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "divisione,iso,sigla,status")
+    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello: ", linkClazz = Regione.class, linkProperty = "stato", properties = "divisione,iso,sigla,status")
     @AIColumn(header = "Divisione")
     public List<Regione> regioni;
 

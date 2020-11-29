@@ -106,7 +106,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
-        FlowVar.usaCronoPackages = true;
+        FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = true;
     }
 

@@ -63,7 +63,7 @@ public class Regione extends AEntity {
      * nome (obbligatorio, unico) <br>
      */
     @NotBlank(message = "Nome obbligatorio")
-    @Size(min = 3)
+    @Size(min = 2)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, focus = true, firstCapital = true, widthEM = 19)
     @AIColumn(widthEM = 18)

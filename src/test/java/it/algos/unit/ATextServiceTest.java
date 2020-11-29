@@ -869,6 +869,26 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+    @Test
+    @Order(25)
+    @DisplayName("25 - levaTestoPrimaDi")
+    public void levaTestoPrimaDi() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
+        sorgente2 = "IdeaProjects";
+        previsto = "/operativi/vaadflow14";
+
+        ottenuto = text.levaTestoPrimaDi(sorgente, sorgente2);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        //        ottenuto = text.levaTesto(sorgente, sorgente2);
+//        assertNotNull(ottenuto);
+//        assertEquals(previsto, ottenuto);
+
+        ottenuto = text.levaTesta(sorgente, sorgente2);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }
 
     private void print(String sorgente, String ottenuto) {
         String sep = " -> ";

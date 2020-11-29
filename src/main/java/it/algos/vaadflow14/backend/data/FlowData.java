@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,12 +75,14 @@ public class FlowData extends AData {
      */
     public void fixData() {
         String moduleName = "vaadflow14";
-        List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
+        List<String> listaCanonicalNamesEntity = file.getModuleSubFilesEntity(moduleName);
+        List<String> listaEntityEffettivamenteUsate;
         String collezione;
 
-        logger.log(AETypeLog.checkData, "Sono state trovate " + listaCanonicalNameEntity.size() + " classi di tipo AEntity da controllare");
-        if (array.isValid(listaCanonicalNameEntity)) {
-            for (String canonicalName : listaCanonicalNameEntity) {
+        listaEntityEffettivamenteUsate = checkFiles(listaCanonicalNamesEntity);
+        logger.log(AETypeLog.checkData, "Sono state trovate " + listaEntityEffettivamenteUsate.size() + " classi di tipo AEntity da controllare");
+        if (array.isValid(listaEntityEffettivamenteUsate)) {
+            for (String canonicalName : listaEntityEffettivamenteUsate) {
                 collezione = file.estraeClasseFinale(canonicalName).toLowerCase();
 
                 if (checkFile(canonicalName)) {
@@ -91,6 +94,23 @@ public class FlowData extends AData {
             }
         }
     }
+
+    /**
+     * Controlla i flags di due enumerations <br>
+     * Esclude i files appartenenti se i rispettivi flag sono falsi <br>
+     */
+    public List<String> checkFiles(List<String> listaCanonicalNameEntity) {
+        List<String> listaCanonicalNameEntityEffettivamenteUsati = new ArrayList<>();
+
+        for (String canonicalName : listaCanonicalNameEntity) {
+            if (checkFile(canonicalName)) {
+                listaCanonicalNameEntityEffettivamenteUsati.add(canonicalName);
+            }
+        }
+
+        return listaCanonicalNameEntityEffettivamenteUsati;
+    }
+
 
     /**
      * Controlla i flags di due enumerations <br>

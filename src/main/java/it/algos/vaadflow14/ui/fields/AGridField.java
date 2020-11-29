@@ -84,7 +84,7 @@ public class AGridField<T> extends AField<Object> {
      */
     public void addColumnsGrid(List<String> listaProperties) {
         innerField.removeAllColumns();
-        innerField.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth("2.5em").setFlexGrow(0);
+        innerField.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth("2.8em").setFlexGrow(0);
         if (array.isValid(listaProperties)) {
             for (String propertyName : listaProperties) {
                 column.add(innerField, entityClazz, propertyName);

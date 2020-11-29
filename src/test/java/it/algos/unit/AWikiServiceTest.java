@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -80,7 +81,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(1)
     @DisplayName("1 - legge testo grezzo html")
     public void getSorgente() {
@@ -91,7 +92,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(2)
     @DisplayName("2 - legge testo wiki")
     public void legge() {
@@ -104,7 +105,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(3)
     @DisplayName("3 - legge una table wiki")
     public void leggeTable() {
@@ -134,7 +135,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(4)
     @DisplayName("4 - legge un template")
     public void getTemplateBandierina() {
@@ -152,7 +153,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(5)
     @DisplayName("5 - legge una colonna")
     public void getColonna() {
@@ -174,12 +175,12 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(6)
     @DisplayName("6 - legge una lista di template")
     public void getTemplateBandierine() {
         sorgente = "ISO_3166-2:ES";
-        previstoIntero = 17;
+        previstoIntero = 18;
         listaStr = service.getColonna(sorgente, 1, 2, 2);
         assertNotNull(listaStr);
         assertEquals(previstoIntero, listaStr.size());
@@ -192,12 +193,12 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(7)
     @DisplayName("7 - legge una coppia di colonne da una table")
     public void getDueColonne() {
         sorgente = "ISO_3166-2:ES";
-        previstoIntero = 17;
+        previstoIntero = 18;
         listaWrap = service.getDueColonne(sorgente, 1, 2, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
@@ -205,7 +206,7 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
 
         sorgente = "ISO_3166-2:IT";
-        previstoIntero = 14;
+        previstoIntero = 15;
         listaWrap = service.getDueColonne(sorgente, 2, 2, 1, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
@@ -583,9 +584,207 @@ public class AWikiServiceTest extends ATest {
     }
 
 
+    //    @Test
+    @Order(29)
+    @DisplayName("29 - legge i distretti di Finlandia")
+    public void getTableFinlandia() {
+        sorgente = "ISO_3166-2:FI";
+        previstoIntero = 19 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("29 - Finlandia: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+    //    @Test
+    @Order(30)
+    @DisplayName("30 - legge i distretti di Azerbaigian")
+    public void getTableAzerbaigian() {
+        sorgente = "ISO_3166-2:AZ";
+        previstoIntero = 77 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("30 - Azerbaigian: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+    //    @Test
+    @Order(31)
+    @DisplayName("31 - legge i distretti di Belize")
+    public void getTableBelize() {
+        sorgente = "ISO_3166-2:BZ";
+        previstoIntero = 6 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("31 - Belize: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+    //    @Test
+    @Order(32)
+    @DisplayName("32 - legge i distretti di Guatemala")
+    public void getTableGuatemala() {
+        sorgente = "ISO_3166-2:GT";
+        previstoIntero = 22 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("32 - Guatemala: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+    //    @Test
+    @Order(33)
+    @DisplayName("33 - legge i distretti di Guinea Bissau")
+    public void getTableGuinea() {
+        sorgente = "ISO_3166-2:GW";
+        previstoIntero = 9 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("33 - Guinea Bissau: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+//    @Test
+    @Order(34)
+    @DisplayName("34 - legge i distretti di Slovenia")
+    public void getTableSlovenia2() {
+        sorgente = "ISO_3166-2:SI";
+        previstoIntero = 211 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("33 - Guinea Bissau: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+    @Test
+    @Order(35)
+    @DisplayName("35 - legge i distretti di Kirghizistan")
+    public void getTableKirghizistan() {
+        sorgente = "ISO_3166-2:KG";
+        previstoIntero = 8 + 1;
+        try {
+            listaWrap = service.getRegioni(sorgente);
+        } catch (Exception unErrore) {
+        }
+        assertNotNull(listaWrap);
+        assertEquals(previstoIntero, listaWrap.size());
+        System.out.println(VUOTA);
+        System.out.println("33 - Guinea Bissau: " + (listaWrap.size() - 1) + " + titolo");
+        printWrap(listaWrap);
+    }
+
+    //    @Test
+    @Order(40)
+    @DisplayName("40 - legge le regioni dei primi 50 stati")
+    public void readStati1() {
+        List<List<String>> listaStati = service.getStati();
+        assertNotNull(listaStati);
+        listaStati = listaStati.subList(0, 50);
+        readStati(listaStati);
+    }
+
+    //    @Test
+    @Order(41)
+    @DisplayName("41 - legge le regioni degli stati 50-100")
+    public void readStati2() {
+        List<List<String>> listaStati = service.getStati();
+        assertNotNull(listaStati);
+        listaStati = listaStati.subList(50, 100);
+        readStati(listaStati);
+    }
+
+    //    @Test
+    @Order(42)
+    @DisplayName("42 - legge le regioni degli stati 100-150")
+    public void readStati3() {
+        List<List<String>> listaStati = service.getStati();
+        assertNotNull(listaStati);
+        listaStati = listaStati.subList(100, 150);
+        readStati(listaStati);
+    }
+
+    //    @Test
+    @Order(43)
+    @DisplayName("43 - legge le regioni degli stati 150-200")
+    public void readStati4() {
+        List<List<String>> listaStati = service.getStati();
+        assertNotNull(listaStati);
+        listaStati = listaStati.subList(150, 200);
+        readStati(listaStati);
+    }
+
+//    @Test
+    @Order(44)
+    @DisplayName("44 - legge le regioni degli stati 200-250")
+    public void readStati5() {
+        List<List<String>> listaStati = service.getStati();
+        assertNotNull(listaStati);
+        listaStati = listaStati.subList(200, listaStati.size() - 1);
+        readStati(listaStati);
+    }
+
+    private void readStati(List<List<String>> listaStati) {
+        String nome;
+        String tag = "ISO 3166-2:";
+        List<String> valide = new ArrayList<>();
+        List<String> errate = new ArrayList<>();
+
+        System.out.println("Legge le regioni di " + listaStati.size() + " stati (" + AWikiService.PAGINA_ISO_1 + ")");
+        System.out.println(VUOTA);
+        System.out.println("Valide                    Errate");
+        System.out.println("********************************");
+        for (List<String> lista : listaStati) {
+            nome = lista.get(0);
+            sorgente = tag + lista.get(3);
+            try {
+                listaWrap = service.getRegioni(sorgente);
+                if (listaWrap != null && listaWrap.size() > 0) {
+                    valide.add(nome);
+                    System.out.println(nome);
+                }
+            } catch (Exception unErrore) {
+                errate.add(nome);
+                System.out.println("                          " + nome);
+            }
+        }
+        System.out.println(VUOTA);
+        System.out.println("Stati con regioni valide: " + valide.size());
+        System.out.println("Stati con regioni errate: " + errate.size());
+    }
+
+
     private void printColonna(List<String> listaColonna) {
         if (array.isValid(listaColonna)) {
-            for (String stringa : listaStr) {
+            for (String stringa : listaColonna) {
                 System.out.println(stringa);
             }
         }

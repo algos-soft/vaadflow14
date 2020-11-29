@@ -79,7 +79,6 @@ public class AWikiService extends AAbstractService {
     @Autowired
     public ATextService text;
 
-
     //    /**
     //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
     //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -138,6 +137,37 @@ public class AWikiService extends AAbstractService {
         return listaTable;
     }
 
+    /**
+     * Restituisce una lista degli stati <br>
+     *
+     * @return lista dei nome degli stati
+     */
+    public List<String> getNomeStati() {
+        List<String> lista = new ArrayList<>();
+        List<List<String>> listaGrezza = getStati();
+
+        for (List<String> listaRiga : listaGrezza) {
+            lista.add(listaRiga.get(0));
+        }
+
+        return lista;
+    }
+
+    /**
+     * Restituisce una lista degli stati <br>
+     *
+     * @return lista dei nome degli stati
+     */
+    public List<String> getSiglaStati() {
+        List<String> lista = new ArrayList<>();
+        List<List<String>> listaGrezza = getStati();
+
+        for (List<String> listaRiga : listaGrezza) {
+            lista.add(listaRiga.get(3));
+        }
+
+        return lista;
+    }
 
     /**
      * Estrae una wikitable da una pagina wiki <br>
@@ -148,7 +178,6 @@ public class AWikiService extends AAbstractService {
     public Map<String, String> getTableStatiNumerico() {
         Map<String, String> mappa = new HashMap<>();
         List<List<String>> listaGrezza = null;
-        //        List<String> riga;
         String[] partiRiga = null;
         String sep = DOPPIO_PIPE_REGEX;
         String codice;
@@ -178,7 +207,6 @@ public class AWikiService extends AAbstractService {
 
         return mappa;
     }
-
 
     //    /**
     //     * Estrae una wikitable da una pagina wiki <br>
@@ -211,7 +239,6 @@ public class AWikiService extends AAbstractService {
     //
     //        return listaTable;
     //    }
-
 
     //    //@todo Funzionalità ancora da implementare
     //    public String getSiglaDaNome(String nome) {
@@ -366,7 +393,6 @@ public class AWikiService extends AAbstractService {
     //        return nome;
     //    }
 
-
     //    /**
     //     * Estrae una wikitable da una pagina wiki <br>
     //     * Restituisce una lista dei valori per ogni riga, esclusa la prima coi titoli <br>
@@ -404,7 +430,6 @@ public class AWikiService extends AAbstractService {
     //
     //        return listaTable;
     //    }
-
 
     //    private List<String> getListaProvince(String testoRiga) {
     //        List<String> lista = new ArrayList<>();
@@ -454,7 +479,8 @@ public class AWikiService extends AAbstractService {
 
         if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
             wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
-        } else {
+        }
+        else {
             wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
         }
 
@@ -572,7 +598,6 @@ public class AWikiService extends AAbstractService {
         return lista;
     }
 
-
     //    /**
     //     * Restituisce una lista di stringhe estratte dai template bandierine <br>
     //     *
@@ -606,7 +631,6 @@ public class AWikiService extends AAbstractService {
         WrapDueStringhe wrapBandierina;
         WrapTreStringhe wrapTre;
         List<WrapDueStringhe> listaDue = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
-
 
         if (array.isValid(listaDue)) {
             listaTre = new ArrayList<>();
@@ -656,7 +680,8 @@ public class AWikiService extends AAbstractService {
                     if (parti != null && parti.length >= numColonna) {
                         cella = parti[numColonna - 1];
                     }
-                } else {
+                }
+                else {
                     if (!riga.get(0).startsWith(ESCLAMATIVO)) {
                         cella = riga.get(numColonna - 1);
                     }
@@ -719,7 +744,8 @@ public class AWikiService extends AAbstractService {
                         seconda = parti[numColonnaDue - 1];
                     }
 
-                } else {
+                }
+                else {
                     if (!riga.get(0).startsWith(ESCLAMATIVO)) {
                         prima = riga.get(numColonnaUno - 1);
                         seconda = riga.get(numColonnaDue - 1);
@@ -737,7 +763,8 @@ public class AWikiService extends AAbstractService {
                     prima = text.setNoHtmlTag(prima, "kbd");
                     if (prima.contains(PIPE)) {
                         if (prima.contains(DOPPIE_GRAFFE_INI) && prima.contains(DOPPIE_GRAFFE_END)) {
-                        } else {
+                        }
+                        else {
                             prima = text.levaTestoPrimaDi(prima, PIPE);
                         }
                     }
@@ -746,7 +773,8 @@ public class AWikiService extends AAbstractService {
                     }
                     if (seconda.contains(PIPE)) {
                         if (seconda.contains(DOPPIE_GRAFFE_INI) && seconda.contains(DOPPIE_GRAFFE_END)) {
-                        } else {
+                        }
+                        else {
                             seconda = text.levaTestoPrimaDi(seconda, PIPE);
                         }
                     }
@@ -775,10 +803,18 @@ public class AWikiService extends AAbstractService {
         WrapDueStringhe wrap;
 
         listaTable = getTable(wikiTitle);
+        if (listaTable == null || listaTable.size() < 1) {
+            listaTable = getTable(wikiTitle, 2);
+        }
+
         if (listaTable != null && listaTable.size() > 0) {
             listaWrap = new ArrayList<>();
+
             wrap = getWrapTitolo(listaTable.get(0));
-            listaWrap.add(wrap);
+            if (wrap != null) {
+                listaWrap.add(wrap);
+            }
+
             for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
                 wrap = getWrapRegione(listaRiga);
                 if (wrap != null) {
@@ -821,6 +857,12 @@ public class AWikiService extends AAbstractService {
         if (listaRiga != null && listaRiga.size() == 3) {
             titoloUno = listaRiga.get(1).trim();
             titoloDue = listaRiga.get(2).trim();
+        }
+
+        //--Azerbaigian
+        if (listaRiga != null && listaRiga.size() == 4) {
+            titoloUno = listaRiga.get(0).trim();
+            titoloDue = listaRiga.get(1).trim();
         }
 
         if (text.isValid(titoloUno) && text.isValid(titoloDue)) {
@@ -870,10 +912,12 @@ public class AWikiService extends AAbstractService {
 
         if (listaRiga.get(0).contains(TRATTINO)) {
             sigla = listaRiga.get(0);
-        } else {
+        }
+        else {
             if (listaRiga.get(1).contains(TRATTINO)) {
                 sigla = listaRiga.get(1);
-            } else {
+            }
+            else {
                 if (listaRiga.get(0).length() == 1) {
                     sigla = listaRiga.get(0);
                 }
@@ -881,13 +925,19 @@ public class AWikiService extends AAbstractService {
         }
 
         //--finlandia
-        if (text.isEmpty(nome) && listaRiga.size() == 4 && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
+        if (text.isEmpty(nome) && listaRiga.size() == 4 && !listaRiga.get(1).contains(QUADRE_INI) && !listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
             nome = listaRiga.get(3);
+        }
+
+        //--azerbaigian
+        if (text.isEmpty(nome) && listaRiga.size() == 4 && listaRiga.get(3).contains(QUADRE_INI) && listaRiga.get(3).contains(QUADRE_END)) {
+            nome = listaRiga.get(1);
         }
 
         if (text.isEmpty(nome) && listaRiga.get(1).contains(QUADRE_INI) && listaRiga.get(1).contains(QUADRE_END)) {
             nome = listaRiga.get(1);
-        } else {
+        }
+        else {
             if (listaRiga.size() > 2 && listaRiga.get(2).contains(QUADRE_INI) && listaRiga.get(2).contains(QUADRE_END)) {
                 nome = listaRiga.get(2);
             }
@@ -903,7 +953,8 @@ public class AWikiService extends AAbstractService {
         if (text.isEmpty(nome)) {
             if (listaRiga.get(1).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(1).contains(DOPPIE_GRAFFE_END)) {
                 wrap = getTemplateBandierina(listaRiga.get(1));
-            } else {
+            }
+            else {
                 if (listaRiga.size() > 2 && listaRiga.get(2).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(2).contains(DOPPIE_GRAFFE_END)) {
                     wrap = getTemplateBandierina(listaRiga.get(2));
                 }
@@ -912,6 +963,11 @@ public class AWikiService extends AAbstractService {
 
         if (text.isEmpty(sigla) && text.isValid(nome)) {
             sigla = listaRiga.get(0);
+        }
+
+        //--belize
+        if (listaRiga.size() == 2 && text.isEmpty(nome) && sigla.equals(listaRiga.get(1))) {
+            nome = listaRiga.get(0);
         }
 
         sigla = sigla.trim();
@@ -924,7 +980,8 @@ public class AWikiService extends AAbstractService {
             nome = text.estrae(nome, QUADRE_INI, QUADRE_END);
             nome = text.levaTestoPrimaDi(nome, PIPE);
             wrap = new WrapDueStringhe(sigla, nome);
-        } else {
+        }
+        else {
             if (wrap != null) {
                 wrap.setPrima(sigla);
             }
@@ -987,7 +1044,6 @@ public class AWikiService extends AAbstractService {
             }
             testoTable = testoTable.trim();
         }
-
 
         //--dopo aver eliminato la testa della tabella, la coda della tabella ed i titoli, individua le righe valide
         righeTable = testoTable.split(tagTable);
@@ -1071,17 +1127,19 @@ public class AWikiService extends AAbstractService {
      */
     public String leggeTable(String wikiTitle, int pos) throws Exception {
         String testoTable = VUOTA;
-        String tag1 = "{| class=\"wikitable";
-        String tag2 = "{|class=\"wikitable";
-        String tag3 = "{| class=\"sortable wikitable";
+        String tag1 = "{|class=\"wikitable";
+        String tag2 = "{| class=\"wikitable";
+        String tag3 = "{|  class=\"wikitable";
         String tag4 = "{|class=\"sortable wikitable";
+        String tag5 = "{| class=\"sortable wikitable";
+        String tag6 = "{|  class=\"sortable wikitable";
         String tagEnd = "|}\n";
         int posIni = 0;
         int posEnd = 0;
         String testoPagina = legge(wikiTitle);
 
         if (text.isValid(testoPagina)) {
-            if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4)) {
+            if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4)|| testoPagina.contains(tag5)|| testoPagina.contains(tag6)) {
                 if (testoPagina.contains(tag1)) {
                     for (int k = 1; k <= pos; k++) {
                         posIni = testoPagina.indexOf(tag1, posIni + tag1.length());
@@ -1104,7 +1162,8 @@ public class AWikiService extends AAbstractService {
                 }
                 posEnd = testoPagina.indexOf(tagEnd, posIni) + tagEnd.length();
                 testoTable = testoPagina.substring(posIni, posEnd);
-            } else {
+            }
+            else {
                 throw new Exception("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable. AWikiService.leggeTable()");
                 //                logger.warn("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable", this.getClass(), "leggeTable");
             }
@@ -1362,7 +1421,8 @@ public class AWikiService extends AAbstractService {
         if (testoValido.startsWith(tagIni)) {
             testoValido = text.levaTesta(testoValido, tagIni);
             testoValido = text.levaCoda(testoValido, tagEnd);
-        } else {
+        }
+        else {
             testoValido = text.estrae(testoValido, tagIni, tagEnd);
         }
 
@@ -1408,7 +1468,6 @@ public class AWikiService extends AAbstractService {
 
         return testoValido.trim();
     }
-
 
     //    public String fixNomeRegione(String testoGrezzo) {
     //        String testoValido = VUOTA;

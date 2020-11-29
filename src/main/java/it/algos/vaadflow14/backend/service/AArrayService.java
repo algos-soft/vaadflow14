@@ -56,7 +56,8 @@ public class AArrayService extends AAbstractService {
 
         if (array.get(0) instanceof String) {
             return text.isValid(array.get(0));
-        } else {
+        }
+        else {
             return true;
         }
     }
@@ -206,7 +207,8 @@ public class AArrayService extends AAbstractService {
         for (Map.Entry<String, List<String>> entry : mappaConListe.entrySet()) {
             if (entry.getValue().size() == 1) {
                 mappaSemplice.put(entry.getKey(), entry.getValue().get(0));
-            } else {
+            }
+            else {
                 //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
                 //                log.error("Qualcosa non ha funzionato");
             }
@@ -228,7 +230,6 @@ public class AArrayService extends AAbstractService {
     public Map<String, String> getMappa(String keyMap, String valueMap) {
         Map<String, String> mappa = new HashMap<>();
 
-
         if (text.isEmpty(keyMap) || text.isEmpty(valueMap)) {
             return null;
         }
@@ -236,8 +237,6 @@ public class AArrayService extends AAbstractService {
         mappa.put(keyMap, valueMap);
         return mappa;
     }
-
-
 
 
     /**
@@ -253,7 +252,7 @@ public class AArrayService extends AAbstractService {
         for (Object obj : objArray) {
             objList.add(obj);
         }
-//        Collections.addAll(objList, objArray);@//@todo Funzionalità ancora da implementare
+        //        Collections.addAll(objList, objArray);@//@todo Funzionalità ancora da implementare
 
         return objList;
     }
@@ -273,7 +272,6 @@ public class AArrayService extends AAbstractService {
 
         return strList;
     }
-
 
 
     /**

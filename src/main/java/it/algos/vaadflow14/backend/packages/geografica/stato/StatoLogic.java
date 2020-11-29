@@ -323,67 +323,11 @@ public class StatoLogic extends ALogic {
 
 
     public void resetForm(AEntity entityBean) {
+        AIResult result;
         RegioneLogic regioneLogic = appContext.getBean(RegioneLogic.class);
-        regioneLogic.creaRegioniDiUnoStato((Stato) entityBean);
+        result = regioneLogic.creaRegioniDiUnoStato((Stato) entityBean);
+        logger.log(AETypeLog.reset, result.getMessage());
     }
-
-    //    /**
-    //     * Creazione di alcuni dati iniziali <br>
-    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-    //     * Deve essere sovrascritto <br>
-    //     *
-    //     * @return false se non esiste il metodo sovrascritto
-    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-    //     */
-    //    @Override
-    //    public boolean reset() {
-    //        super.deleteAll();
-    //        String nome;
-    //        int pos = AEStatoEuropeo.values().length;
-    //        int posEuropeo;
-    //        int posCorrente;
-    //        boolean ue;
-    //        String bandieraTxt = VUOTA;
-    //        Map<String, Continente> mappa = creaMappa();
-    //        Continente continente = null;
-    //        Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
-    //        String alfaTre = VUOTA;
-    //
-    //        List<List<String>> listaStati = wiki.getStati();
-    //        if (array.isValid(listaStati)) {
-    //            for (List<String> riga : listaStati) {
-    //                continente = null;
-    //                nome = riga.get(0);
-    //                posEuropeo = AEStatoEuropeo.getPosizione(nome);
-    //                if (posEuropeo > 0) {
-    //                    posCorrente = posEuropeo;
-    //                    ue = true;
-    //                }
-    //                else {
-    //                    pos++;
-    //                    posCorrente = pos;
-    //                    ue = false;
-    //                }
-    //                if (text.isValid(riga.get(2))) {
-    //                    alfaTre = riga.get(2);
-    //                }
-    //                if (text.isValid(riga.get(3))) {
-    //                    bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
-    //                }
-    //                if (text.isValid(alfaTre)) {
-    //                    if (mappa.get(alfaTre) != null) {
-    //                        continente = mappa.get(alfaTre);
-    //                    }
-    //                }
-    //                continente = continente != null ? continente : continenteDefault;
-    //
-    //                creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
-    //            }
-    //        }
-    //
-    //        return mongo.isValid(entityClazz);
-    //    }
 
 
     /**

@@ -400,11 +400,6 @@ public class RegioneLogic extends ALogic {
             return resultCollectionPropedeutica;
         }
 
-//        result=creaRegioniAllStati();
-//        return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
-//
-//        return super.fixPostReset(AETypeReset.wikipedia, numRec);
-
         return creaRegioniAllStati();
     }
 
@@ -442,13 +437,13 @@ public class RegioneLogic extends ALogic {
             for (Stato stato : listaStati) {
                 result = creaRegioniDiUnoStato(stato);
                 if (result.isErrato()) {
-                    return AResult.errato("Non sono riuscito a creare le regioni di " + stato.stato);
+                    logger.log(AETypeLog.checkData, "Non sono riuscito a creare le regioni di " + stato.stato);
                 }
                 else {
                     numRec = numRec + result.getValore();
                 }
             }
-            return AResult.valido("Sono state create " + numRec + " regioni di" + listaStati.size() + " stati "+AETypeReset.wikipedia.get());
+            return AResult.valido("Sono state create " + numRec + " regioni di " + listaStati.size() + " stati " + AETypeReset.wikipedia.get());
         }
 
         return AResult.errato("Manca la collezione stati");
@@ -466,7 +461,7 @@ public class RegioneLogic extends ALogic {
         int numRec = 0;
         String tagWiki = "ISO 3166-2:";
         String alfaDue;
-        String wikiPagina;
+        String wikiPagina = VUOTA;
         String nome;
         String sigla;
         String iso;
@@ -475,7 +470,9 @@ public class RegioneLogic extends ALogic {
         List<WrapDueStringhe> listaWrap = null;
         WrapDueStringhe wrapTitoli;
         List<Regione> regioniDaResettare = findAllByStato(stato);
-        mongo.delete(regioniDaResettare, Regione.class);
+        if (regioniDaResettare != null && regioniDaResettare.size() > 0) {
+            mongo.delete(regioniDaResettare, Regione.class);
+        }
 
         alfaDue = stato.alfadue;
         if (text.isValid(alfaDue)) {
@@ -484,7 +481,7 @@ public class RegioneLogic extends ALogic {
             try {
                 listaWrap = wiki.getRegioni(wikiPagina);
             } catch (Exception unErrore) {
-                logger.info(unErrore, this.getClass(), "creaRegioniDiUnoStato." + stato.stato);
+                return AResult.errato("Non sono riuscito a leggere la pagina di wikipedia");
             }
         }
 
@@ -508,6 +505,9 @@ public class RegioneLogic extends ALogic {
                 }
             }
             result = AResult.valido("Regioni di " + stato.stato, numRec);
+        }
+        else {
+            result = AResult.errato("Non sono riuscito a trovare la table nella pagina di wikipedia " + wikiPagina);
         }
 
         return result;

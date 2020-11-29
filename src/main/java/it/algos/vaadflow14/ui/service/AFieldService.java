@@ -7,7 +7,6 @@ import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
@@ -66,7 +65,8 @@ public class AFieldService extends AAbstractService {
 
         if (field != null) {
             this.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
-        } else {
+        }
+        else {
             AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
             logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
         }
@@ -133,7 +133,8 @@ public class AFieldService extends AAbstractService {
                     if (typeBool == AETypeBoolField.checkBox) {
                         caption = annotation.getFormFieldName(reflectionJavaField);
                         field = appContext.getBean(ABooleanField.class, typeBool, caption);
-                    } else {
+                    }
+                    else {
                         boolEnum = annotation.getBoolEnumField(reflectionJavaField);
                         field = appContext.getBean(ABooleanField.class, typeBool, boolEnum);
                     }
@@ -163,7 +164,8 @@ public class AFieldService extends AAbstractService {
                     items = getEnumerationItems(reflectionJavaField);
                     if (items != null) {
                         field = appContext.getBean(AComboField.class, items, true, false);
-                    } else {
+                    }
+                    else {
                         logger.warn("Mancano gli items per l' enumeration di " + fieldKey, this.getClass(), "creaOnly.enumeration");
                     }
                     break;
@@ -190,10 +192,13 @@ public class AFieldService extends AAbstractService {
                 caption = annotation.getFormFieldName(reflectionJavaField);
                 if (AEPreferenza.usaFormFieldMaiuscola.is()) {
                     caption = text.primaMaiuscola(caption);
-                } else {
+                }
+                else {
                     caption = text.primaMinuscola(caption);
                 }
-                field.setLabel(caption);
+                if (text.isEmpty(field.getLabel())) {
+                    field.setLabel(caption);
+                }
             }
             field.setFieldKey(fieldKey);
             field.setWidth(width);
@@ -261,11 +266,13 @@ public class AFieldService extends AAbstractService {
                 if (intMin > 0 || intMax > 0) {
                     if (intMin >= intMax) {
                         throw new RangeException("I valori del range sono errati");
-                    } else {
+                    }
+                    else {
                         integerValidator = appContext.getBean(AIntegerValidator.class, numType, intMin, intMax);
                     }
                 }
-            } else {
+            }
+            else {
                 integerValidator = appContext.getBean(AIntegerValidator.class, numType);
             }
         }
@@ -416,7 +423,8 @@ public class AFieldService extends AAbstractService {
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "getCombo");
             }
-        } else {
+        }
+        else {
             items = mongo.findAll(comboClazz);
             combo = new ComboBox<>();
             combo.setItems(items);
@@ -424,41 +432,6 @@ public class AFieldService extends AAbstractService {
 
         return combo;
     }
-
-
-    //    /**
-    //     *
-    //     */
-    //    public List getComboItems(Field reflectionJavaField) {
-    //        List items = null;
-    //        Class comboClazz;
-    //        Class logicClazz;
-    //        boolean usaComboMethod;
-    //        Sort sort;
-    //        String methodName;
-    //        Method metodo;
-    //        ALogic logicInstance;
-    //
-    //        comboClazz = annotation.getComboClass(reflectionJavaField);
-    //        sort = annotation.getSort(comboClazz);
-    //        usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
-    //
-    //        if (usaComboMethod) {
-    //            logicClazz = annotation.getLogicClass(reflectionJavaField);
-    //            methodName = annotation.getMethodName(reflectionJavaField);
-    //            try {
-    //                metodo = logicClazz.getDeclaredMethod(methodName);
-    //                logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
-    //                items = (List) metodo.invoke(logicInstance);
-    //            } catch (Exception unErrore) {
-    //                logger.error(unErrore, this.getClass(), "getComboItems");
-    //            }
-    //        } else {
-    //            items = comboClazz != null ? mongo.findAll(comboClazz, sort) : null;
-    //        }
-    //
-    //        return items;
-    //    }
 
 
     /**
@@ -493,10 +466,12 @@ public class AFieldService extends AAbstractService {
      *
      */
     public AGridField creaGridField(AEntity entityBean, Field reflectionJavaField) {
+        AGridField field = null;
         List items;
         Class linkClazz;
         List<String> gridProperties;
         String linkProperty;
+        String caption;
 
         if (entityBean == null || reflectionJavaField == null) {
             return null;
@@ -506,8 +481,12 @@ public class AFieldService extends AAbstractService {
         linkProperty = annotation.getLinkProperty(reflectionJavaField);
         items = mongo.findAll(linkClazz, linkProperty, entityBean);
         gridProperties = annotation.getLinkProperties(reflectionJavaField);
+        caption = annotation.getFormFieldName(reflectionJavaField);
+        caption = AEPreferenza.usaFormFieldMaiuscola.is() ? text.primaMaiuscola(caption) : caption;
 
-        return appContext.getBean(AGridField.class, linkClazz, gridProperties, items);
+        field = appContext.getBean(AGridField.class, linkClazz, gridProperties, items);
+        field.setLabel(caption + items.size());
+        return field;
     }
 
 }
