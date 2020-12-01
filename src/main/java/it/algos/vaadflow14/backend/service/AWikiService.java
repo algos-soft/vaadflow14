@@ -471,17 +471,28 @@ public class AWikiService extends AAbstractService {
 
         wikiTitle = text.setNoGraffe(wikiTitle);
         sigla = text.levaTestoPrimaDi(wikiTitle, TRATTINO);
+        if (sigla.contains(PIPE)) {
+            sigla = text.levaCodaDa(sigla, PIPE);
+        }
+
         if (sigla.length() < 2) {
             sigla = "0" + sigla;
         }
 
         testoGrezzo = legge(tag + wikiTitle);
 
-        if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
-            wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
-        }
-        else {
-            wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
+        if (text.isValid(testoGrezzo)) {
+            if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
+                wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
+            }
+            else {
+                if (testoGrezzo.contains("{{band div|ITA")) {
+                    wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
+                }
+                else {
+                    wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
+                }
+            }
         }
 
         return wrap;
@@ -643,7 +654,7 @@ public class AWikiService extends AAbstractService {
             }
         }
 
-        return listaTre;
+        return listaTre.subList(1, listaTre.size() - 1);
     }
 
 
@@ -711,6 +722,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di coppia di valori: sigla e nome
      */
+    @Deprecated
     public List<WrapDueStringhe> getDueColonne(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaUno, int numColonnaDue) {
         List<WrapDueStringhe> listaWrap = null;
         WrapDueStringhe wrap;
@@ -791,7 +803,7 @@ public class AWikiService extends AAbstractService {
 
 
     /**
-     * Import delle regioni da una pagina di wikipedia <br>
+     * Import delle regioni (tutti gli stati) da una pagina di wikipedia <br>
      *
      * @param wikiTitle della pagina wiki
      *
@@ -826,6 +838,32 @@ public class AWikiService extends AAbstractService {
         return listaWrap;
     }
 
+    /**
+     * Import delle province italiane da una pagina di wikipedia <br>
+     *
+     * @return lista di wrapper con due stringhe ognuno (sigla, nome)
+     */
+    public List<WrapTreStringhe> getProvince() {
+        List<WrapTreStringhe> listaWrap = null;
+        String wikiTitle = "Province d'Italia";
+        List<List<String>> listaTable = null;
+        WrapTreStringhe wrap;
+
+        listaTable = getTable(wikiTitle);
+
+        if (listaTable != null && listaTable.size() > 0) {
+            listaWrap = new ArrayList<>();
+
+            for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
+                wrap = getWrapProvincia(listaRiga);
+                if (wrap != null) {
+                    listaWrap.add(wrap);
+                }
+            }
+        }
+
+        return listaWrap;
+    }
 
     /**
      * Probabilmente il secondo elemento della lista contiene i titoli <br>
@@ -838,16 +876,6 @@ public class AWikiService extends AAbstractService {
         WrapDueStringhe wrap = null;
         String titoloUno = VUOTA;
         String titoloDue = VUOTA;
-        //        String rigaTitoli = VUOTA;
-        //        String[] parti = null;
-
-        //        if (listaRiga != null && listaRiga.size() > 1) {
-        //            rigaTitoli = listaRiga.get(1);
-        //        }
-        //
-        //        if (text.isValid(rigaTitoli) && rigaTitoli.contains(DOPPIO_ESCLAMATIVO)) {
-        //            parti = rigaTitoli.split(DOPPIO_ESCLAMATIVO);
-        //        }
 
         if (listaRiga != null && listaRiga.size() == 2) {
             titoloUno = listaRiga.get(0).trim();
@@ -990,6 +1018,65 @@ public class AWikiService extends AAbstractService {
         return wrap;
     }
 
+    /**
+     * Estrae una tripletta di valori significativi da una lista eterogenea <br>
+     * Se la lista ha un solo valore, qualcosa non funziona <br>
+     * Se la lista ha più di due valori, occorre selezionare i due significativi <br>
+     * Sicuramente uno dei due valori contiene la sigla (deve avere un trattino) <br>
+     * Uno dei valori deve essere un nome oppure il link alle bandierine (deve avere le doppie graffe) <br>
+     * Dalla eventuale bandierina recupero il nome <br>
+     *
+     * @param listaRiga valori di una singola regione
+     *
+     * @return wrapper di due stringhe valid (sigla, nome)
+     */
+    public WrapTreStringhe getWrapProvincia(List<String> listaRiga) {
+        String sigla = VUOTA;
+        String nome = VUOTA;
+        String regione = VUOTA;
+        WrapTreStringhe wrap = null;
+        WrapDueStringhe wrapDue = null;
+        String tagVdA = "Valle d'Aosta";
+
+        if (listaRiga.size() < 3) {
+            return null;
+        }
+
+        sigla = listaRiga.get(0).trim();
+        regione = listaRiga.get(2).trim();
+        regione = text.estrae(regione, QUADRE_INI, QUADRE_END);
+
+        //--template bandierine per recuperare il nome
+        if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
+            if (regione.equals(tagVdA)) {
+                sigla = "AO";
+                nome = regione;
+            }
+            else {
+                sigla = text.estraeDoppiaGraffa(sigla);
+                wrapDue = getTemplateBandierina(sigla);
+                if (wrapDue != null) {
+                    sigla = wrapDue.getPrima();
+                    nome = wrapDue.getSeconda();
+                }
+            }
+        }
+
+        //        sigla = sigla.trim();
+        //        sigla = text.setNoHtmlTag(sigla, "kbd");
+        //        sigla = text.setNoHtmlTag(sigla, "code");
+        //        sigla = text.levaCodaDa(sigla, "<ref");
+
+        //        nome = nome.trim();
+        //        nome = text.estrae(nome, QUADRE_INI, QUADRE_END);
+        //        nome = text.levaTestoPrimaDi(nome, PIPE);
+        //            wrap = new WrapDueStringhe(sigla, nome);
+
+        //        regione = regione.trim();
+
+        wrap = new WrapTreStringhe(sigla, nome, regione);
+        return wrap;
+    }
 
     /**
      * Estrae una wikitable da una pagina wiki <br>
@@ -999,7 +1086,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
-    public List<List<String>> getTable(String wikiTitle) throws Exception {
+    public List<List<String>> getTable(String wikiTitle) {
         return getTable(wikiTitle, 1);
     }
 
@@ -1016,7 +1103,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return lista di valori per ogni riga significativa della wikitable
      */
-    public List<List<String>> getTable(String wikiTitle, int posTabella) throws Exception {
+    public List<List<String>> getTable(String wikiTitle, int posTabella) {
         List<List<String>> listaTable = new ArrayList<>();
         List<String> listaRiga;
         String[] righeTable = null;
@@ -1125,7 +1212,7 @@ public class AWikiService extends AAbstractService {
      *
      * @return testo della wikitable
      */
-    public String leggeTable(String wikiTitle, int pos) throws Exception {
+    public String leggeTable(String wikiTitle, int pos) {
         String testoTable = VUOTA;
         String tag1 = "{|class=\"wikitable";
         String tag2 = "{| class=\"wikitable";
@@ -1139,7 +1226,7 @@ public class AWikiService extends AAbstractService {
         String testoPagina = legge(wikiTitle);
 
         if (text.isValid(testoPagina)) {
-            if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4)|| testoPagina.contains(tag5)|| testoPagina.contains(tag6)) {
+            if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4) || testoPagina.contains(tag5) || testoPagina.contains(tag6)) {
                 if (testoPagina.contains(tag1)) {
                     for (int k = 1; k <= pos; k++) {
                         posIni = testoPagina.indexOf(tag1, posIni + tag1.length());
@@ -1164,7 +1251,7 @@ public class AWikiService extends AAbstractService {
                 testoTable = testoPagina.substring(posIni, posEnd);
             }
             else {
-                throw new Exception("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable. AWikiService.leggeTable()");
+                //                throw new Exception("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable. AWikiService.leggeTable()");
                 //                logger.warn("La pagina wiki " + wikiTitle + " non contiene nessuna wikitable", this.getClass(), "leggeTable");
             }
         }

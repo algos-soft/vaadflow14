@@ -384,7 +384,6 @@ public class AFieldService extends AAbstractService {
         fieldKey = reflectionJavaField.getName();
         ComboBox combo = getCombo(reflectionJavaField);
         field = appContext.getBean(AComboField.class, combo);
-
         //        isRequired = annotation.isRequired(reflectionJavaField);
         //        isAllowCustomValue = annotation.isAllowCustomValue(reflectionJavaField);
         //        items = getComboItems(reflectionJavaField);

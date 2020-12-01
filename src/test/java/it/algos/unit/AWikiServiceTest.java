@@ -242,7 +242,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    //        @Test
     @Order(9)
     @DisplayName("9 - legge le righe delle province")
     public void getTableProvince() {
@@ -250,7 +250,7 @@ public class AWikiServiceTest extends ATest {
 
         //--province
         previstoIntero = 14;
-        listaWrapTre = service.getTemplateList(sorgente, 2, 2, 1, 3);
+        listaWrapTre = service.getTemplateList(sorgente, 2, 3, 1, 3);
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
         System.out.println(VUOTA);
@@ -669,7 +669,7 @@ public class AWikiServiceTest extends ATest {
         printWrap(listaWrap);
     }
 
-//    @Test
+    //    @Test
     @Order(34)
     @DisplayName("34 - legge i distretti di Slovenia")
     public void getTableSlovenia2() {
@@ -685,7 +685,8 @@ public class AWikiServiceTest extends ATest {
         System.out.println("33 - Guinea Bissau: " + (listaWrap.size() - 1) + " + titolo");
         printWrap(listaWrap);
     }
-    @Test
+
+    //    @Test
     @Order(35)
     @DisplayName("35 - legge i distretti di Kirghizistan")
     public void getTableKirghizistan() {
@@ -742,7 +743,7 @@ public class AWikiServiceTest extends ATest {
         readStati(listaStati);
     }
 
-//    @Test
+    //    @Test
     @Order(44)
     @DisplayName("44 - legge le regioni degli stati 200-250")
     public void readStati5() {
@@ -781,6 +782,22 @@ public class AWikiServiceTest extends ATest {
         System.out.println("Stati con regioni errate: " + errate.size());
     }
 
+    @Test
+    @Order(45)
+    @DisplayName("45 - legge le province italiane")
+    public void getTableProvinceItaliane() {
+        previstoIntero = 107;
+
+        listaWrapTre = service.getProvince();
+
+        assertNotNull(listaWrapTre);
+        assertEquals(previstoIntero, listaWrapTre.size());
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("45 - Province: " + listaWrapTre.size());
+        printWrapTre(listaWrapTre);
+    }
 
     private void printColonna(List<String> listaColonna) {
         if (array.isValid(listaColonna)) {

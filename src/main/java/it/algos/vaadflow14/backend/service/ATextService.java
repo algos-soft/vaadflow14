@@ -144,7 +144,8 @@ public class ATextService extends AAbstractService {
             for (String value : parti) {
                 lista.add(value.trim());
             }
-        } else {
+        }
+        else {
             lista.add(stringaMultipla);
         }
 
@@ -176,7 +177,8 @@ public class ATextService extends AAbstractService {
             for (String value : parti) {
                 lista.add(Integer.parseInt(value.trim()));
             }
-        } else {
+        }
+        else {
             lista.add(Integer.parseInt(stringaMultipla.trim()));
         }
 
@@ -286,7 +288,6 @@ public class ATextService extends AAbstractService {
 
         return testoOut.trim();
     }
-
 
     //    /**
     //     * Label colorata
@@ -940,6 +941,24 @@ public class ATextService extends AAbstractService {
         return estrae(valueIn, GRAFFA_INI, GRAFFA_END).trim();
     }
 
+    /**
+     * Estrae il contenuto interno ad una coppia di doppie graffe <br>.
+     * <p>
+     * Se le graffe sono due, utilizza la seconda <br>
+     */
+    public String estraeDoppiaGraffa(String valueIn) {
+        String contenuto;
+        int posIni ;
+        int posEnd ;
+
+        posEnd = valueIn.lastIndexOf(DOPPIE_GRAFFE_END);
+        posIni = valueIn.lastIndexOf(DOPPIE_GRAFFE_INI, posEnd);
+        posIni += DOPPIE_GRAFFE_INI.length();
+        contenuto = valueIn.substring(posIni, posEnd).trim();
+
+        return contenuto;
+    }
+
 
     /**
      * Formattazione di un numero.
@@ -975,7 +994,8 @@ public class ATextService extends AAbstractService {
                 } catch (Exception unErrore) {
                     return (String) numObj;
                 }
-            } else {
+            }
+            else {
                 if (numObj instanceof Integer) {
                     numText = Integer.toString((int) numObj);
                 }
@@ -992,7 +1012,8 @@ public class ATextService extends AAbstractService {
                     numText = Integer.toString(((Object[]) numObj).length);
                 }
             }
-        } else {
+        }
+        else {
             return null;
         }
 

@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
@@ -311,58 +312,31 @@ public class RegioneLogic extends ALogic {
         return items;
     }
 
-    //    /**
-    //     * Creazione di alcuni dati iniziali <br>
-    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-    //     * Deve essere sovrascritto <br>
-    //     *
-    //     * @return false se non esiste il metodo sovrascritto
-    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-    //     */
-    //    @Override
-    //    public boolean reset() {
-    //        //--controlla che esista la collection 'Stato', indispensabile
-    //        if (mongo.isEmpty(Stato.class)) {
-    //            logger.warn("Manca la collection 'Stato'. Reset non eseguito.", this.getClass(), "reset");
-    //            return false;
-    //        }
-    //
-    //        super.deleteAll();
-    //
-    //        //--aggiunge le province
-    //        //        this.addProvince();
-    //
-    //        //        if (false) {
-    //        //            italia();
-    //        //            francia();
-    //        //            svizzera();
-    //        //            austria();
-    //        //            germania();
-    //        //            spagna();
-    //        //            portogallo();
-    //        //            belgio();
-    //        //            olanda();
-    //        //            croazia();
-    //        //            albania();
-    //        //            grecia();
-    //        //            cechia();
-    //        //            slovacchia();
-    //        //            ungheria();
-    //        //            romania();
-    //        //            bulgaria();
-    //        //            polonia();
-    //        //            danimarca();
-    //        //            //        slovenia(); // sono troppi
-    //        //            marocco();
-    //        //            algeria();
-    //        //            tunisia();
-    //        //        }
-    //        creaRegioniAllStati();
-    //
-    //        return mongo.isValid(entityClazz);
-    //    }
+    /**
+     * Costruisce un ComboBox delle regioni filtrato sull'Italia <br>
+     * Viene invocato da ProvinciaLogic.fixMappaComboBox(): combo di selezione delle regioni nella lista delle province <br>
+     * Viene invocato da AFieldService.getCombo(), tramite 'metodo.invoke' coi parametri passati da @AIField della AEntity Provincia <br>
+     * Può essere invocata anche da altri <br>
+     */
+    public ComboBox creaComboRegioniItaliane() {
+        ComboBox<Regione> combo = new ComboBox();
+        String tag = TRE_PUNTI;
+        String widthEM = "12em";
+        Sort sort = Sort.by("ordine");
+        List items;
 
+        items = findAllItalian();
+        combo.setWidth(widthEM);
+        combo.setPreventInvalidInput(true);
+        combo.setAllowCustomValue(false);
+        combo.setPlaceholder(text.primaMaiuscola("Regione") + tag);
+        combo.setClearButtonVisible(true);
+        combo.setRequired(false);
+
+        combo.setItems(items);
+
+        return combo;
+    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -540,6 +514,7 @@ public class RegioneLogic extends ALogic {
     /**
      * Regioni italiane <br>
      */
+    @Deprecated
     public void italia() {
         File regioniCSV = new File("config" + File.separator + "regioni");
         String path = regioniCSV.getAbsolutePath();
@@ -562,214 +537,6 @@ public class RegioneLogic extends ALogic {
             creaIfNotExist(nome, stato, iso, sigla, status);
         }
     }
-
-    //    /**
-    //     * Regioni francesi (35) <br>
-    //     */
-    //    public void francia() {
-    //        //--13 regioni metropolitane
-    //        templateList(AEStato.francia, AEStatus.regioneMetropolitana, 1, 2, 2);
-    //
-    //        //--3 regioni d'oltremare
-    //        dueColonne(AEStato.francia, AEStatus.regioneOltremare, 3, 2, 2, 4);
-    //
-    //        //--9 collettività d'oltremare
-    //        dueColonne(AEStato.francia, AEStatus.collettivita, 4, 2, 1, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Cantoni svizzeri (26) <br>
-    //     */
-    //    public void svizzera() {
-    //        templateList(AEStato.svizzera, AEStatus.cantone, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Länder austriaci (9) <br>
-    //     */
-    //    public void austria() {
-    //        templateList(AEStato.austria, AEStatus.land, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Länder tedeschi (16) <br>
-    //     */
-    //    public void germania() {
-    //        templateList(AEStato.germania, AEStatus.land, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Comunità spagnole <br>
-    //     */
-    //    public void spagna() {
-    //        templateList(AEStato.spagna, AEStatus.comunita, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Distretti portoghesi (20) <br>
-    //     */
-    //    public void portogallo() {
-    //        //--18 distretti
-    //        dueColonne(AEStato.portogallo, AEStatus.distretto, 1, 2, 2, 3);
-    //
-    //        //--2 regioni autonome
-    //        dueColonne(AEStato.portogallo, AEStatus.regione, 2, 2, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni belghe (3) <br>
-    //     */
-    //    public void belgio() {
-    //        templateList(AEStato.belgio, AEStatus.regione, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Province olandesi (12) <br>
-    //     */
-    //    public void olanda() {
-    //        templateList(AEStato.olanda, AEStatus.provincia, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni croate (21) <br>
-    //     */
-    //    public void croazia() {
-    //        dueColonne(AEStato.croazia, AEStatus.regione, 1, 2, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Distretti albanesi (36) <br>
-    //     */
-    //    public void albania() {
-    //        dueColonne(AEStato.albania, AEStatus.distretto, 1, 1, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Distretti greci (64) <br>
-    //     */
-    //    public void grecia() {
-    //        //--13 periferie
-    //        dueColonne(AEStato.grecia, AEStatus.periferia, 1, 2, 1, 2);
-    //
-    //        //--51 prefetture (Attica è doppia)
-    //        dueColonne(AEStato.grecia, AEStatus.prefettura, 2, 2, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni ceche (14) <br>
-    //     */
-    //    public void cechia() {
-    //        templateList(AEStato.cechia, AEStatus.regione, 1, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni slovacche (8) <br>
-    //     */
-    //    public void slovacchia() {
-    //        dueColonne(AEStato.slovacchia, AEStatus.regione, 1, 2, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Province ungheresi (19) <br>
-    //     */
-    //    public void ungheria() {
-    //        templateList(AEStato.ungheria, AEStatus.provincia, 1, 2, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Distretti rumeni (42) <br>
-    //     */
-    //    public void romania() {
-    //        dueColonne(AEStato.romania, AEStatus.distretto, 1, 2, 2, 3);
-    //        dueColonne(AEStato.romania, AEStatus.capitale, 2, 2, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Distretti bulgari (28) <br>
-    //     */
-    //    public void bulgaria() {
-    //        dueColonne(AEStato.bulgaria, AEStatus.distretto, 1, 2, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Voivodati polacchi (16) <br>
-    //     */
-    //    public void polonia() {
-    //        dueColonne(AEStato.polonia, AEStatus.voivodato, 1, 2, 2, 3);
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni danesi (5) <br>
-    //     */
-    //    public void danimarca() {
-    //        dueColonne(AEStato.danimarca, AEStatus.regione, 1, 2, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Comuni sloveni <br>
-    //     */
-    //    public void slovenia() {
-    //        String paginaWiki = "ISO_3166-2:SI";
-    //        List<WrapDueStringhe> listaWrap = null;
-    //        String nome = VUOTA;
-    //        Stato stato = AEStato.slovenia.getStato();
-    //        ;
-    //        String iso = VUOTA;
-    //        String sigla = VUOTA;
-    //
-    //        //--212 comuni
-    //        listaWrap = wiki.getDueColonne(paginaWiki, 1, 2, 1, 2);
-    //        if (listaWrap != null && listaWrap.size() > 0) {
-    //            for (WrapDueStringhe wrap : listaWrap) {
-    //                nome = wrap.getSeconda();
-    //                iso = wrap.getPrima();
-    //                sigla = text.levaTestaDa(iso, TRATTINO);
-    //                creaIfNotExist(nome, stato, iso, sigla, AEStatus.comune);
-    //            }
-    //        }
-    //    }
-    //
-    //
-    //    /**
-    //     * Regioni marocchine (16) <br>
-    //     */
-    //    public void marocco() {
-    //        dueColonne(AEStato.marocco, AEStatus.regione, 1, 2, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Province algerine (48) <br>
-    //     */
-    //    public void algeria() {
-    //        dueColonne(AEStato.algeria, AEStatus.provincia, 1, 2, 1, 2);
-    //    }
-    //
-    //
-    //    /**
-    //     * Governatorati tunisini (24) <br>
-    //     */
-    //    public void tunisia() {
-    //        dueColonne(AEStato.tunisia, AEStatus.governatorato, 1, 2, 1, 2);
-    //    }
 
 
     /**

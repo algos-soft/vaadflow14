@@ -2,12 +2,13 @@ package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.ui.fields.AField;
+import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,13 @@ public class ProvinciaForm extends AForm {
     @Autowired
     public RegioneLogic regioneLogic;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public StatoLogic statoLogic;
 
     public ProvinciaForm(ALogic logic, WrapForm wrap) {
         super(logic,wrap);
@@ -104,13 +112,13 @@ public class ProvinciaForm extends AForm {
     protected void creaFieldsExtra() {
         super.creaFieldsExtra();
 
-        if (operationForm != AEOperation.addNew) {
-            String fieldKey = "regione";
-            AField field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
-            if (field != null) {
-                fieldsList.add(field);
-            }
-        }
+//        if (operationForm != AEOperation.addNew) {
+//            String fieldKey = "regione";
+//            AField field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
+//            if (field != null) {
+//                fieldsList.add(field);
+//            }
+//        }
     }
 
 
@@ -163,9 +171,9 @@ public class ProvinciaForm extends AForm {
      */
     @Override
     protected void fixLayoutFinal() {
-        if (operationForm == AEOperation.addNew) {
-            super.fixDueCombo(ProvinciaLogic.FIELD_REGIONE, ProvinciaLogic.FIELD_STATO);
-        }
+//        if (operationForm == AEOperation.addNew) {
+//            super.fixDueCombo(ProvinciaLogic.FIELD_REGIONE, ProvinciaLogic.FIELD_STATO);
+//        }
     }
 
 
@@ -194,6 +202,30 @@ public class ProvinciaForm extends AForm {
         fieldMaster.setItems(items); //@todo Non capisco perché ma se chiamo setItems() solo una volta NON funziona
     }
 
+    /**
+     * Get the current valid entity.
+     * Use the returned instance for further operations
+     *
+     * @return the checked entity
+     */
+    public AEntity getValidBean() {
+        writeFieldsExtra();
+
+        //--Associa i valori del binder a entityBean. Dalla UI alla business logic
+        //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
+        try {
+//            fieldsMap.get("stato").setValue(statoLogic.findById("Italia"));  //@todo Una vera porcata
+
+            if (binder.writeBeanIfValid((AEntity) entityBean)) {
+                return entityBean;
+            } else {
+                return null;
+            }
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getValidBean");
+            return null;
+        }
+    }
 
     /**
      * Regola in scrittura eventuali valori NON associati al binder

@@ -11,7 +11,11 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Project vaadflow14
@@ -58,7 +62,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("Function")
+    @DisplayName("1 - Function")
     void function() {
         Function<Long, Long> adder = value -> value + 5;
         Long resultLambda = adder.apply((long) 8);
@@ -71,7 +75,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("Lambda")
+    @DisplayName("2 - Lambda")
     void lambda() {
         List<Integer> numbers = Arrays.asList(5, 9, 8, 1);
         numbers.forEach(n -> System.out.println(n));
@@ -85,7 +89,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("Supplier")
+    @DisplayName("3 - Supplier")
     void supplier() {
         // This function returns a random value.
         Supplier<Double> randomValue = () -> Math.random();
@@ -97,7 +101,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("Supplier again")
+    @DisplayName("4 - Supplier again")
     void supplier4() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -114,7 +118,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("Supplier more")
+    @DisplayName("5 - Supplier more")
     void supplier5() {
         Supplier<String> supplier = () -> "Marcella bella";
         System.out.println(supplier.get());
@@ -122,7 +126,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(6)
-    @DisplayName("Supplier in stream")
+    @DisplayName("6 - Supplier in stream")
     void supplier6() {
         Supplier<Integer> randomNumbersSupp = () -> new Random().nextInt(10);
         Stream.generate(randomNumbersSupp)
@@ -132,7 +136,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(7)
-    @DisplayName("Supplier student")
+    @DisplayName("7 - Supplier student")
     void supplier7() {
         Supplier<Student> studentSupplier = () -> new Student(1, "Beretta", "M", 19);
         Student student = studentSupplier.get();
@@ -145,7 +149,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(8)
-    @DisplayName("Supplier strings")
+    @DisplayName("8 - Supplier strings")
     void supplier8() {
         System.out.println("Java8 Supplier strings\n");
 
@@ -155,7 +159,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("Consumer")
+    @DisplayName("9 - Consumer")
     void consumer() {
         System.out.println("Java8 Consumer\n");
 
@@ -168,15 +172,61 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(10)
-    @DisplayName("Var keyword")
+    @DisplayName("10 - Var keyword")
     void keyword() {
-//        System.out.println("Java10 \n");
-//
-//        var str = "a test string";
-//        var aVariable = "Marco";
-//        System.out.println(aVariable);
-//        var anotherVariable = 182;
-//        System.out.println(anotherVariable);
+        //        System.out.println("Java10 \n");
+        //
+        //        var str = "a test string";
+        //        var aVariable = "Marco";
+        //        System.out.println(aVariable);
+        //        var anotherVariable = 182;
+        //        System.out.println(anotherVariable);
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("11 - find regex")
+    void regex() {
+        boolean status;
+        String tag1 = "{|class=\"wikitable";
+        String tag2 = "{| class=\"wikitable";
+        String tag3 = "{|  class=\"wikitable";
+        String tag4 = "{|class=\"sortable wikitable";
+        String tag5 = "{| class=\"sortable wikitable";
+        String tag6 = "{|  class=\"sortable wikitable";
+        String tag7 = "{|   class=\"sortable wikitable";
+        String tagEnd = "|}\n";
+
+        String sor0 = "Mario non sapeva cosa fare";
+        String sor1 = "Mario non sapeva " + tag1 + " cosa fare";
+        String sor2 = "Mario non sapeva " + tag2 + " cosa fare";
+        String sor3 = "Mario non sapeva " + tag3 + " cosa fare";
+        String sor4 = "Mario non sapeva " + tag4 + " cosa fare";
+        String sor5 = "Mario non sapeva " + tag5 + " cosa fare";
+        String sor6 = "Mario non sapeva " + tag6 + " cosa fare";
+        String sor7 = "Mario non sapeva " + tag7 + " cosa fare";
+
+        List<String> tags = Arrays.asList(tag1, tag2, tag3, tag4, tag5, tag6);
+        List<String> sorgs = Arrays.asList(sor1, sor2, sor3, sor4, sor5, sor6);
+
+        for (String sor : sorgs) {
+            status = false;
+            for (String tag : tags) {
+                if (sor.contains(tag)) {
+                    status = true;
+                }
+            }
+            assertTrue(status);
+        }
+
+        String patterns = Pattern.quote("wikitable");
+        Pattern pattern = Pattern.compile(patterns);
+        Matcher matcher = pattern.matcher((String) sor1);
+        int num=matcher.groupCount();
+        matcher.matches();
+        assertTrue(matcher.matches());
+
+
     }
 
     private void printNamesSupplier(Supplier<String> supplier) {

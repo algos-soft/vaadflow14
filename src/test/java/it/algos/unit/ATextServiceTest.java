@@ -881,11 +881,30 @@ class ATextServiceTest extends ATest {
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
-        //        ottenuto = text.levaTesto(sorgente, sorgente2);
+//        ottenuto = text.levaTesto(sorgente, sorgente2);
 //        assertNotNull(ottenuto);
 //        assertEquals(previsto, ottenuto);
+    }
 
-        ottenuto = text.levaTesta(sorgente, sorgente2);
+
+    @Test
+    @Order(26)
+    @DisplayName("26 - estraeDoppiaGraffa")
+    public void estraeDoppiaGraffa() {
+        sorgente  = "{{Simbolo|Italian Province (Crown).svg|24}} {{IT-SU}}";
+        sorgente2 = " altro {{IT-SU}} pippo non mi interessa";;
+        sorgente3 = "{{IT-SU}}";;
+        previsto = "IT-SU";
+
+        ottenuto = text.estraeDoppiaGraffa(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        ottenuto = text.estraeDoppiaGraffa(sorgente2);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        ottenuto = text.estraeDoppiaGraffa(sorgente3);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
     }
