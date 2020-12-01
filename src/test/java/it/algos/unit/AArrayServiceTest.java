@@ -80,14 +80,12 @@ public class AArrayServiceTest extends ATest {
     }
 
 
-    /**
-     * Is valid.
-     */
     @Test
     @Order(1)
     @DisplayName("1 - isValid")
     void isValid() {
         listaStr = new ArrayList<>();
+
         ottenutoBooleano = array.isValid((List) null);
         Assertions.assertFalse(ottenutoBooleano);
 
@@ -100,19 +98,33 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isValid((new ArrayList()));
         Assertions.assertFalse(ottenutoBooleano);
 
-        listaStr.add(null);
-        ottenutoBooleano = array.isValid(listaStr);
+        ottenutoBooleano = array.isValid((listaStr));
         Assertions.assertFalse(ottenutoBooleano);
 
-        listaStr.add(PIENA);
+        listaStr.add(null);
         ottenutoBooleano = array.isValid(listaStr);
         Assertions.assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid((Collection) null);
         Assertions.assertFalse(ottenutoBooleano);
 
-        listaStr = LIST_STRING;
+
+        listaStr = new ArrayList<>();
+        listaStr.add(VUOTA);
         ottenutoBooleano = array.isValid(listaStr);
+        Assertions.assertFalse(ottenutoBooleano);
+
+        listaStr = new ArrayList<>();
+        listaStr.add(PIENA);
+        ottenutoBooleano = array.isValid(listaStr);
+        Assertions.assertTrue(ottenutoBooleano);
+
+        listaStr.add(null);
+        ottenutoBooleano = array.isValid(listaStr);
+        Assertions.assertFalse(ottenutoBooleano);
+
+
+        ottenutoBooleano = array.isValid(LIST_STRING);
         assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isValid(LIST_OBJECT);

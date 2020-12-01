@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  * User: gac
  * Date: gio, 19-nov-2020
  * Time: 20:14
- * Unit test di una classe di servizio <br>
+ * Unit test di una classe di servizio (di norma) <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
@@ -62,7 +62,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - Function")
+    @DisplayName("1 - Function (from 8)")
     void function() {
         Function<Long, Long> adder = value -> value + 5;
         Long resultLambda = adder.apply((long) 8);
@@ -75,7 +75,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - Lambda")
+    @DisplayName("2 - Lambda (from 8)")
     void lambda() {
         List<Integer> numbers = Arrays.asList(5, 9, 8, 1);
         numbers.forEach(n -> System.out.println(n));
@@ -89,7 +89,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - Supplier")
+    @DisplayName("3 - Supplier (from 8)")
     void supplier() {
         // This function returns a random value.
         Supplier<Double> randomValue = () -> Math.random();
@@ -159,7 +159,7 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("9 - Consumer")
+    @DisplayName("9 - Consumer (from 8)")
     void consumer() {
         System.out.println("Java8 Consumer\n");
 
@@ -172,8 +172,15 @@ public class AJavaTest extends ATest {
 
     @Test
     @Order(10)
-    @DisplayName("10 - Var keyword")
+    @DisplayName("10 - Var keyword (from 10)")
     void keyword() {
+        var lista = List.of("one", "two", "three");
+        lista.forEach(System.out::println);
+        Object obj=null;
+        if (obj instanceof String s) {
+            System.out.println(s.contains("hello"));
+        }
+
         //        System.out.println("Java10 \n");
         //
         //        var str = "a test string";
@@ -224,7 +231,7 @@ public class AJavaTest extends ATest {
         Matcher matcher = pattern.matcher((String) sor1);
         int num=matcher.groupCount();
         matcher.matches();
-        assertTrue(matcher.matches());
+//        assertTrue(matcher.matches());
 
 
     }

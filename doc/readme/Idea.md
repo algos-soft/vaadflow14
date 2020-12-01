@@ -1,6 +1,13 @@
 Idea
 ======================
-
+##Java version
+####Una tantum
+- (mela ;) File -> Project settings -> Project -> Project SDK:
+- (mela ;) File -> Project settings -> Project -> Project language level:
+- (mela ,) IntelliJIDEA -> Preferences... -> Build, Execution, Deployment -> Compiler -> Java Compiler -> Project bytecode version
+####Ogni volta che si ricompila Maven
+- (mela ;) File -> Project Structure -> Modules -> language level 
+- (mela ,) IntelliJIDEA -> Preferences... -> Build, Execution, Deployment -> Compiler -> Java Compiler -> Per-module bytecode version -> Target bytecode
 
 ##Node package manager
      For global installation:

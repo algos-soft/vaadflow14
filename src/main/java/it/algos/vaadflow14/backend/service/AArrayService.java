@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -30,36 +31,90 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 public class AArrayService extends AAbstractService {
 
 
+    public static Predicate<Object> valido = new Predicate<>() {
+
+        /**
+         * Evaluates this predicate on the given argument.
+         *
+         * @param obj the input argument
+         *
+         * @return {@code true} if the input argument matches the predicate,
+         * otherwise {@code false}
+         */
+        @Override
+        public boolean test(Object obj) {
+            if (obj instanceof String stringa) {
+                return stringa != null && stringa.length() > 0;
+            }
+            else {
+                return obj != null;
+            }
+        }
+    };
+
+    public static Predicate<Object> nonValido = new Predicate<>() {
+
+        /**
+         * Evaluates this predicate on the given argument.
+         *
+         * @param obj the input argument
+         *
+         * @return {@code true} if the input argument matches the predicate,
+         * otherwise {@code false}
+         */
+        @Override
+        public boolean test(Object obj) {
+            if (obj instanceof String stringa) {
+                return stringa == null || stringa.length() == 0;
+            }
+            else {
+                return obj == null;
+            }
+        }
+    };
+
+
     /**
      * Controlla la validità di un array (lista). <br>
      * Deve esistere (not null) <br>
      * Deve avere degli elementi (size maggiore di 0) <br>
-     * Il primo elemento deve essere valido <br>
+     * Tutti gli elementi devono avere un valore (not-null) <br>
      *
      * @param array (List) in ingresso da controllare
      *
      * @return vero se l'array soddisfa le condizioni previste
+     *
+     * @since Java 8
      */
     public boolean isValid(final List array) {
 
-        if (array == null) {
-            return false;
-        }
+        //        if (array == null || array.size() == 0) {
+        //            return false;
+        //        }
 
-        if (array.size() < 1) {
-            return false;
-        }
+        //        final List validi = (List) array.stream()
+        //                .filter(valido)
+        //                .collect(Collectors.toList());
+        //
+        //        return validi != null && validi.size() == array.size();
 
-        if (array.get(0) == null) {
-            return false;
-        }
+        //        final long countValidi =  array.stream()
+        //                .filter(valido)
+        //                .count();
+        //
+        //        return countValidi==array.size();
 
-        if (array.get(0) instanceof String) {
-            return text.isValid(array.get(0));
-        }
-        else {
-            return true;
-        }
+        //        final long countNonValidi =  array.stream()
+        //                .filter(nonValido)
+        //                .count();
+        //
+        //        return countNonValidi==0;
+
+        //        final long countNonValidi =  array.stream()
+        //                .filter(nonValido)
+        //                .count();
+
+        return array != null && array.size() > 0 && array.stream().filter(nonValido).count() == 0;
     }
 
 
