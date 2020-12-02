@@ -140,9 +140,9 @@ public class ARouteService extends AAbstractService {
         }
 
         Map<String, List<String>> mappaQuery = new HashMap<>();
-        mappaQuery.put(KEY_BEAN_CLASS, array.getLista(entityClazzCanonicalName));
-        mappaQuery.put(KEY_BEAN_ENTITY, array.getLista(text.isValid(entityBeanKey) ? entityBeanKey : KEY_NULL));
-        mappaQuery.put(KEY_FORM_TYPE, array.getLista(operationForm.name()));
+        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazzCanonicalName));
+        mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(text.isValid(entityBeanKey) ? entityBeanKey : KEY_NULL));
+        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name()));
         return new QueryParameters(mappaQuery);
     }
 
@@ -172,7 +172,7 @@ public class ARouteService extends AAbstractService {
         }
 
         Map<String, List<String>> mappaQuery = new HashMap<>();
-        mappaQuery.put(KEY_BEAN_CLASS, array.getLista(entityClazzCanonicalName));
+        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazzCanonicalName));
         return new QueryParameters(mappaQuery);
     }
 
@@ -187,7 +187,7 @@ public class ARouteService extends AAbstractService {
      * @return query da passare al Router di Vaadin
      */
     public QueryParameters getQuery(String keyMap, String valueMap) {
-        return getQuery(array.getMappa(keyMap, valueMap));
+        return getQuery(array.creaMappaSingola(keyMap, valueMap));
     }
 
 

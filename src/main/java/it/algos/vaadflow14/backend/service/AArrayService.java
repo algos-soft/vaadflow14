@@ -149,13 +149,22 @@ public class AArrayService extends AAbstractService {
      *
      * @return mappa semplificata
      */
-    public Map<String, String> semplificaMappa(Map<String, List<String>> multiParametersMap) {
+    public Map<String, String> semplificaMappa(final Map<String, List<String>> multiParametersMap) {
         Map<String, String> mappaSemplice = new HashMap<>();
 
         if (!isMappaSemplificabile(multiParametersMap)) {
             return null;
         }
 
+        //@todo Funzionalità ancora da implementare in Java11
+        //        Object alfa = multiParametersMap
+        //                .entrySet()
+        //                .stream()
+        ////                .filter(n -> n.size() > 1)
+        //                .map(getValue -> AFunction.riduce)
+        //        .collect(Collectors.toUnmodifiableList());
+        ////                .collect(Collectors.toMap(getKey, Map.Entry::getValue);
+        //        Object beta = alfa;
         for (Map.Entry<String, List<String>> entry : multiParametersMap.entrySet()) {
             if (entry.getValue().size() == 1) {
                 mappaSemplice.put(entry.getKey(), entry.getValue().get(0));
@@ -190,140 +199,156 @@ public class AArrayService extends AAbstractService {
         return multiParametersMap != null && multiParametersMap.size() > 0 && multiParametersMap.values().stream().filter(n -> n.size() > 1).count() == 0;
     }
 
+
     /**
-     * Costruisce una mappa da una singola coppia chiave-valore <br>
-     * Entrambe le stringhe devono essere valori validi <br>
+     * Convert una matrice (Object[]) in una array (List<Object>) <br>
      *
-     * @param keyMap   di chiave=valore
-     * @param valueMap di chiave=valore
+     * @param matrice to convert
      *
-     * @return mappa di un solo elemento chiave-valore
+     * @return the corresponding ist<Object>
+     *
+     * @since Java 9
      */
-    public Map<String, String> getMappa(String keyMap, String valueMap) {
-        Map<String, String> mappa = new HashMap<>();
-
-        if (text.isEmpty(keyMap) || text.isEmpty(valueMap)) {
-            return null;
-        }
-
-        mappa.put(keyMap, valueMap);
-        return mappa;
+    @Deprecated(since = "Java 9")
+    public List<Object> fromObj(final Object[] matrice) {
+        return List.of(matrice);
     }
 
 
     /**
-     * Convert a objArray to ArrayList <br>
+     * Convert una matrice (String[]) in una array (List<String>) <br>
      *
-     * @param objArray to convert
+     * @param matrice to convert
      *
-     * @return the corresponding List
+     * @return the corresponding ist<String>
+     *
+     * @since Java 9
      */
-    public List<Object> fromObj(Object[] objArray) {
-        List<Object> objList = new ArrayList<Object>();
-
-        for (Object obj : objArray) {
-            objList.add(obj);
-        }
-        //        Collections.addAll(objList, objArray);@//@todo Funzionalità ancora da implementare
-
-        return objList;
+    @Deprecated(since = "Java 9")
+    public List<String> fromStr(final String[] matrice) {
+        return List.of(matrice);
     }
 
 
     /**
-     * Convert a stringArray to List
-     *
-     * @param strArray to convert
-     *
-     * @return the corresponding string List
-     */
-    public List<String> fromStr(String[] strArray) {
-        List<String> strList = new ArrayList<String>();
-
-        Collections.addAll(strList, strArray);
-
-        return strList;
-    }
-
-
-    /**
-     * Costruisce una lista di un singolo valore <br>
+     * Crea un array di stringhe con singolo valore <br>
      *
      * @param singoloValore da inserire
      *
-     * @return mappa di un solo elemento chiave-valore
+     * @return array di un solo elemento oppure vuoto
+     *
+     * @since Java 9
      */
-    public List<String> getLista(String singoloValore) {
-        List<String> lista = new ArrayList<>();
-
-        if (text.isValid(singoloValore)) {//@todo Funzionalità ancora da implementare
-            lista.add(singoloValore);
-        }
-
-        return lista;
+    public List<String> creaArraySingolo(final String singoloValore) {
+        return text.isValid(singoloValore) ? List.of(singoloValore) : List.of();
     }
 
 
     /**
-     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * Crea una mappa con una singola coppia chiave-valore <br>
+     * Entrambe le stringhe devono essere valide <br>
      *
-     * @param array lista di valori
+     * @param key   della mappa
+     * @param value della mappa
      *
-     * @return stringa con i singoli valori divisi da un separatore
+     * @return mappa chiave-valore con un solo elemento
+     *
+     * @since Java 9
      */
-    public String toStringaPipe(List array) {
-        return toStringa(array, PIPE);
+    public Map<String, String> creaMappaSingola(final String key, final String value) {
+        return (text.isValid(key) && text.isValid(value)) ? Map.of(key, value) : Map.of();
     }
 
 
     /**
-     * Costruisce una stringa con i singoli valori divisi da una virgola seguita da uno spazio
+     * Crea una stringa con i valori dell'array separati da virgola + spazio <br>
      *
      * @param array lista di valori
      *
-     * @return stringa con i singoli valori divisi da un separatore
+     * @return stringa con i singoli valori separati da virgola + spazio
+     *
+     * @since Java 9
      */
-    public String toStringaSpazio(List array) {
-        return toStringa(array, VIRGOLA_SPAZIO);
+    public String toStringa(final List array) {
+        return toStringaBase(array,VIRGOLA_SPAZIO);
+    }
+
+    /**
+     * Crea una stringa con i valori dell'array separati da virgola <br>
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori separati da virgola
+     *
+     * @since Java 9
+     */
+    public String toStringaVirgola(final List array) {
+        return toStringaBase(array,VIRGOLA);
+    }
+
+    /**
+     * Costruisce una stringa con i singoli valori separati da un pipe <br>
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori separati da pipe
+     */
+    public String toStringaPipe(final List array) {
+        return toStringaBase(array,PIPE);
     }
 
 
     /**
-     * Costruisce una stringa con i singoli valori divisi da un separatore virgola
+     * Crea una stringa con i valori dell'array separati da un separatore <br>
      *
      * @param array lista di valori
+     * @param sep   caratteri separatore
      *
-     * @return stringa con i singoli valori divisi da un separatore
+     * @return stringa con i singoli valori separati da separatore
+     *
+     * @since Java 9
      */
-    public String toStringa(List array) {
-        return toStringa(array, VIRGOLA);
+    private String toStringaBase(final List array, final String sep) {
+        return isAllValid(array) ? String.join(sep, array) : null;
     }
 
+//    /**
+//     * Costruisce una stringa con i singoli valori divisi da un separatore virgola
+//     *
+//     * @param array lista di valori
+//     *
+//     * @return stringa con i singoli valori divisi da un separatore
+//     */
+//    @Deprecated
+//    public String toStringaOld(List array) {
+//        return toStringaOld(array, VIRGOLA);
+//    }
 
-    /**
-     * Costruisce una stringa con i singoli valori divisi da un separatore
-     *
-     * @param array lista di valori
-     * @param sep   carattere separatore
-     *
-     * @return stringa con i singoli valori divisi da un separatore
-     */
-    public String toStringa(List array, String sep) {
-        String testo = VUOTA;
-        StringBuilder textBuffer = null;
 
-        if (array != null) {
-            textBuffer = new StringBuilder();
-            for (Object obj : array) {
-                textBuffer.append(obj.toString());
-                textBuffer.append(sep);
-            }
-            testo = textBuffer.toString();
-            testo = text.levaCoda(testo, sep);
-        }
-
-        return testo.trim();
-    }
+//    /**
+//     * Costruisce una stringa con i singoli valori divisi da un separatore
+//     *
+//     * @param array lista di valori
+//     * @param sep   carattere separatore
+//     *
+//     * @return stringa con i singoli valori divisi da un separatore
+//     */
+//    public String toStringaOld(List array, String sep) {
+//        String testo = VUOTA;
+//        StringBuilder textBuffer = null;
+//
+//        if (array != null) {
+//            textBuffer = new StringBuilder();
+//            for (Object obj : array) {
+//                textBuffer.append(obj.toString());
+//                textBuffer.append(sep);
+//            }
+//            testo = textBuffer.toString();
+//            testo = text.levaCoda(testo, sep);
+//        }
+//
+//        return testo.trim();
+//    }
 
     /**
      * Ordina la lista <br>

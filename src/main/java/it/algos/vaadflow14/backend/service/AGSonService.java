@@ -123,7 +123,7 @@ public class AGSonService extends AAbstractService {
 
         testoIn = testoIn.substring(1, testoIn.length() - 1);
         if (!(testoIn.contains(GRAFFA_INI) && testoIn.contains(GRAFFA_END))) {
-            return array.getLista(testoIn);
+            return array.creaArraySingolo(testoIn);
         }
 
         listaContenutiGraffe = new ArrayList<>();

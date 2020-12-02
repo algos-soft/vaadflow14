@@ -9,7 +9,7 @@ import java.util.function.Predicate;
  * Date: mar, 01-dic-2020
  * Time: 21:20
  * <p>
- * Predicates implemented with interfaces. <br>
+ * Predicate(T): Takes one parameter type (T), produces boolean value.
  * Predicate<T> is a generic functional interface representing
  * a single argument function that returns a boolean value <br>
  */
@@ -27,8 +27,8 @@ public abstract class APredicate {
          */
         @Override
         public boolean test(Object obj) {
-            if (obj instanceof String stringa) {
-                return stringa != null && stringa.length() > 0;
+            if (obj instanceof String ) {
+                return (String)obj != null && ((String)obj).length() > 0;
             }
             else {
                 return obj != null;

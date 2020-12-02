@@ -37,6 +37,15 @@ But with higher-order functions, we can perform the following operations:
      BiFunction(T,U,R): Takes two parameters type (T,U), produces one result (R).
      UnaryOperator(T): Takes one parameter type (T), produces one result (T).
      BiaryOperator(T): Takes two parameters of type (T), produces one result (T).
+####Function
+Function is a functional interface; it takes an argument (object of type T) and returns an object (object of type R). The argument and output can be a different type.
+    
+    @FunctionalInterface
+    public interface Function<T, R> {
+          R apply(T t);
+    }
+- T – Type of the input to the function.
+- R – Type of the result of the function.
 ####Predicate
 Predicate(T): Takes one parameter type (T), produces boolean value
     
@@ -174,3 +183,4 @@ There are primitive specializations of the Supplier interface:
     
 ##Tutorial
 - Java tutorials [howtodoinjava](https://howtodoinjava.com/)
+- Java tutorials [mkyong]https://mkyong.com/tutorials/java-8-tutorials/)

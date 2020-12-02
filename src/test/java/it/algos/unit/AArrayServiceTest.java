@@ -120,7 +120,6 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isAllValid(listaStr);
         assertFalse(ottenutoBooleano);
 
-
         ottenutoBooleano = array.isAllValid(LIST_STRING);
         assertTrue(ottenutoBooleano);
 
@@ -156,11 +155,11 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isAllValid(sorgenteMatrice);
         assertFalse(ottenutoBooleano);
 
-        sorgenteMatrice = new String[]{"Mario",VUOTA, "Regioni"};
+        sorgenteMatrice = new String[]{"Mario", VUOTA, "Regioni"};
         ottenutoBooleano = array.isAllValid(sorgenteMatrice);
         assertFalse(ottenutoBooleano);
 
-        sorgenteMatrice = new String[]{VUOTA,VUOTA,VUOTA};
+        sorgenteMatrice = new String[]{VUOTA, VUOTA, VUOTA};
         ottenutoBooleano = array.isAllValid(sorgenteMatrice);
         assertFalse(ottenutoBooleano);
     }
@@ -171,7 +170,7 @@ public class AArrayServiceTest extends ATest {
     @DisplayName("3 - isAllValid (since Java 11) map")
     void isAllValid3() {
         mappaSorgente = null;
-        ottenutoBooleano = array.isAllValid((LinkedHashMap)null);
+        ottenutoBooleano = array.isAllValid((LinkedHashMap) null);
         assertFalse(ottenutoBooleano);
 
         mappaSorgente = null;
@@ -290,11 +289,11 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isEmpty(sorgenteMatrice);
         assertTrue(ottenutoBooleano);
 
-        sorgenteMatrice = new String[]{"Mario",VUOTA, "Regioni"};
+        sorgenteMatrice = new String[]{"Mario", VUOTA, "Regioni"};
         ottenutoBooleano = array.isEmpty(sorgenteMatrice);
         assertFalse(ottenutoBooleano);
 
-        sorgenteMatrice = new String[]{VUOTA,VUOTA,VUOTA};
+        sorgenteMatrice = new String[]{VUOTA, VUOTA, VUOTA};
         ottenutoBooleano = array.isEmpty(sorgenteMatrice);
         assertTrue(ottenutoBooleano);
     }
@@ -305,7 +304,7 @@ public class AArrayServiceTest extends ATest {
     @DisplayName("6 - isEmpty (since Java 11) map")
     void isEmpty3() {
         mappaSorgente = null;
-        ottenutoBooleano = array.isEmpty((LinkedHashMap)null);
+        ottenutoBooleano = array.isEmpty((LinkedHashMap) null);
         assertTrue(ottenutoBooleano);
 
         mappaSorgente = null;
@@ -370,8 +369,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(8)
-    @DisplayName("8 - isMappaSemplificabile")
+    @Order(7)
+    @DisplayName("7 - isMappaSemplificabile (since Java 11)")
     void isMappaSemplificabile() {
         ottenutoBooleano = array.isMappaSemplificabile(null);
         Assertions.assertFalse(ottenutoBooleano);
@@ -405,47 +404,90 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(9)
-    @DisplayName("9 - semplificaMappa")
+    @Order(8)
+    @DisplayName("8 - semplificaMappa (since Java 11)")
     void semplificaMappa() {
-        Map<String, List<String>> mappaSorgenteConListe = null;
-        Map<String, String> mappaPrevista = null;
+        Map<String, List<String>> multiParametersMap = null;
 
-        mappaOttenuta = array.semplificaMappa(mappaSorgenteConListe);
+        mappaOttenuta = array.semplificaMappa(null);
         Assertions.assertNull(mappaOttenuta);
 
-        mappaSorgenteConListe = new HashMap<>();
-        mappaOttenuta = array.semplificaMappa(mappaSorgenteConListe);
+        mappaOttenuta = array.semplificaMappa(multiParametersMap);
         Assertions.assertNull(mappaOttenuta);
 
-        mappaSorgenteConListe = new HashMap<>();
-        mappaSorgenteConListe.put("uno", LIST_STRING);
-        mappaSorgenteConListe.put("due", LIST_SHORT_STRING);
-        mappaOttenuta = array.semplificaMappa(mappaSorgenteConListe);
+        multiParametersMap = new HashMap<>();
+        mappaOttenuta = array.semplificaMappa(multiParametersMap);
         Assertions.assertNull(mappaOttenuta);
 
-        mappaSorgenteConListe = new HashMap<>();
-        mappaSorgenteConListe.put("uno", LIST_SHORT_STRING);
-        mappaSorgenteConListe.put("due", LIST_SHORT_STRING);
+        multiParametersMap = new HashMap<>();
+        multiParametersMap.put("uno", LIST_STRING);
+        multiParametersMap.put("due", LIST_SHORT_STRING);
+        mappaOttenuta = array.semplificaMappa(multiParametersMap);
+        Assertions.assertNull(mappaOttenuta);
+
+        multiParametersMap = new HashMap<>();
+        multiParametersMap.put("uno", LIST_SHORT_STRING);
+        multiParametersMap.put("due", LIST_SHORT_STRING_DUE);
         mappaPrevista = new HashMap<>();
         mappaPrevista.put("uno", CONTENUTO);
-        mappaPrevista.put("due", CONTENUTO);
-        mappaOttenuta = array.semplificaMappa(mappaSorgenteConListe);
+        mappaPrevista.put("due", CONTENUTO_DUE);
+        mappaOttenuta = array.semplificaMappa(multiParametersMap);
         Assertions.assertNotNull(mappaOttenuta);
         Assertions.assertEquals(mappaPrevista, mappaOttenuta);
     }
 
 
     @Test
-    @Order(10)
-    @DisplayName("10 - getMappa")
-    void getMappa() {
+    @Order(9)
+    @DisplayName("9 - creaArraySingolo (since Java 11)")
+    void creaArraySingolo() {
         sorgente = "valore";
-        Map<String, String> mappaPrevista = null;
-        mappaPrevista = new HashMap<>();
-        mappaPrevista.put("uno", sorgente);
+        previstoArray = new ArrayList<>();
 
-        mappaOttenuta = array.getMappa("uno", sorgente);
+        ottenutoArray = array.creaArraySingolo(null);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+
+        previstoArray.add(sorgente);
+        ottenutoArray = array.creaArraySingolo(sorgente);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("10 - creaMappaSingola (since Java 11)")
+    void creaMappaSingola() {
+        sorgente = "chiave";
+        sorgente2 = "valore";
+        mappaPrevista = new HashMap<>();
+
+        mappaOttenuta = array.creaMappaSingola(null, null);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaOttenuta = array.creaMappaSingola(VUOTA, VUOTA);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaOttenuta = array.creaMappaSingola(VUOTA, null);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaOttenuta = array.creaMappaSingola(null, VUOTA);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaOttenuta = array.creaMappaSingola(sorgente, VUOTA);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaOttenuta = array.creaMappaSingola(VUOTA, sorgente2);
+        Assertions.assertNotNull(mappaOttenuta);
+        Assertions.assertEquals(mappaPrevista, mappaOttenuta);
+
+        mappaPrevista.put(sorgente, sorgente2);
+        mappaOttenuta = array.creaMappaSingola(sorgente, sorgente2);
         Assertions.assertNotNull(mappaOttenuta);
         Assertions.assertEquals(mappaPrevista, mappaOttenuta);
     }
@@ -453,29 +495,61 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(11)
-    @DisplayName("11 - getLista")
-    void getLista() {
-        sorgente = "valore";
-        previstoArray = new ArrayList<>();
-        previstoArray.add(sorgente);
+    @DisplayName("11 - toStringaVirgola (since Java 11)")
+    void toStringaVirgola() {
+        sorgenteArray= List.of("alfa","beta","gamma","delta");
+        previsto= "alfa,beta,gamma,delta";
 
-        ottenutoArray = array.getLista(null);
-        Assertions.assertNotNull(ottenutoArray);
-        Assertions.assertEquals(0, ottenutoArray.size());
+        ottenuto = array.toStringaVirgola(null);
+        Assertions.assertNull(ottenuto);
 
-        ottenutoArray = array.getLista(VUOTA);
-        Assertions.assertNotNull(ottenutoArray);
-        Assertions.assertEquals(0, ottenutoArray.size());
+        ottenuto = array.toStringaVirgola(new ArrayList());
+        Assertions.assertNull(ottenuto);
 
-        ottenutoArray = array.getLista(sorgente);
-        Assertions.assertNotNull(ottenutoArray);
-        Assertions.assertEquals(1, ottenutoArray.size());
-        Assertions.assertEquals(previstoArray, ottenutoArray);
+        ottenuto = array.toStringaVirgola(sorgenteArray);
+        Assertions.assertNotNull(ottenuto);
+        Assertions.assertEquals(previsto, ottenuto);
     }
 
     @Test
     @Order(12)
-    @DisplayName("12 - check enumeration")
+    @DisplayName("12 - toStringaPipe (since Java 11)")
+    void toStringaPipe() {
+        sorgenteArray= List.of("alfa","beta","gamma","delta");
+        previsto= "alfa|beta|gamma|delta";
+
+        ottenuto = array.toStringaPipe(null);
+        Assertions.assertNull(ottenuto);
+
+        ottenuto = array.toStringaPipe(new ArrayList());
+        Assertions.assertNull(ottenuto);
+
+        ottenuto = array.toStringaPipe(sorgenteArray);
+        Assertions.assertNotNull(ottenuto);
+        Assertions.assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("13 - toStringa (since Java 11)")
+    void toStringa() {
+        sorgenteArray= List.of("alfa","beta","gamma","delta");
+        previsto= "alfa, beta, gamma, delta";
+
+        ottenuto = array.toStringa(null);
+        Assertions.assertNull(ottenuto);
+
+        ottenuto = array.toStringa(new ArrayList());
+        Assertions.assertNull(ottenuto);
+
+        ottenuto = array.toStringa(sorgenteArray);
+        Assertions.assertNotNull(ottenuto);
+        Assertions.assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("14 - check enumeration")
     void checkEnumeration() {
 
         sorgente = "giorno";

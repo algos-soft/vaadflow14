@@ -40,15 +40,21 @@ public abstract class ATest {
 
     protected static final String CONTENUTO = "contenuto";
 
+    protected static final String CONTENUTO_DUE = "mariolino";
+
     /**
      * The constant ARRAY_STRING.
      */
     protected static final String[] ARRAY_SHORT_STRING = {CONTENUTO};
 
+    protected static final String[] ARRAY_SHORT_STRING_DUE = {CONTENUTO_DUE};
+
     /**
      * The constant LIST_STRING.
      */
     protected static final List<String> LIST_SHORT_STRING = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING));
+
+    protected static final List<String> LIST_SHORT_STRING_DUE = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING_DUE));
 
     protected final static String FIELD_NAME_NOTE = "note";
 
@@ -69,6 +75,7 @@ public abstract class ATest {
     protected final static String NAME_NOME = "nome";
 
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
+
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
     protected static Field FIELD_ORDINE;

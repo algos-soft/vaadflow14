@@ -177,9 +177,9 @@ public class AJavaTest extends ATest {
         var lista = List.of("one", "two", "three");
         lista.forEach(System.out::println);
         Object obj=null;
-        if (obj instanceof String s) {
-            System.out.println(s.contains("hello"));
-        }
+//        if (obj instanceof String ) {
+//            System.out.println(s.contains("hello"));
+//        }
 
         //        System.out.println("Java10 \n");
         //
