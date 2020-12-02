@@ -94,7 +94,7 @@ public class ProvinciaForm extends AForm {
         if (operationForm == AEOperation.addNew) {
             lista = super.getPropertyNamesList();
         } else {
-            lista = array.fromString("ordine,nome,sigla,iso,status");
+            lista = array.fromStringa("ordine,nome,sigla,iso,status");
         }
 
         return lista;

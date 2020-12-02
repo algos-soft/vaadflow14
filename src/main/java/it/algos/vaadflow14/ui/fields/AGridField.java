@@ -75,7 +75,7 @@ public class AGridField<T> extends AField<Object> {
      * Aggiunge in automatico le colonne previste in listaProperties <br>
      */
     public void addColumnsGrid(String stringaDiProperties) {
-        addColumnsGrid((array.fromString(stringaDiProperties)));
+        addColumnsGrid((array.fromStringa(stringaDiProperties)));
     }
 
 

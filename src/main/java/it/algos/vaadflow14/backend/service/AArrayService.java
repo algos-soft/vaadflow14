@@ -2,11 +2,16 @@ package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.grid.Grid;
 import it.algos.vaadflow14.backend.functional.APredicate;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -270,7 +275,7 @@ public class AArrayService extends AAbstractService {
      * @since Java 9
      */
     public String toStringa(final List array) {
-        return toStringaBase(array,VIRGOLA_SPAZIO);
+        return toStringaBase(array, VIRGOLA_SPAZIO);
     }
 
     /**
@@ -283,7 +288,7 @@ public class AArrayService extends AAbstractService {
      * @since Java 9
      */
     public String toStringaVirgola(final List array) {
-        return toStringaBase(array,VIRGOLA);
+        return toStringaBase(array, VIRGOLA);
     }
 
     /**
@@ -294,7 +299,7 @@ public class AArrayService extends AAbstractService {
      * @return stringa con i singoli valori separati da pipe
      */
     public String toStringaPipe(final List array) {
-        return toStringaBase(array,PIPE);
+        return toStringaBase(array, PIPE);
     }
 
 
@@ -312,43 +317,26 @@ public class AArrayService extends AAbstractService {
         return isAllValid(array) ? String.join(sep, array) : null;
     }
 
-//    /**
-//     * Costruisce una stringa con i singoli valori divisi da un separatore virgola
-//     *
-//     * @param array lista di valori
-//     *
-//     * @return stringa con i singoli valori divisi da un separatore
-//     */
-//    @Deprecated
-//    public String toStringaOld(List array) {
-//        return toStringaOld(array, VIRGOLA);
-//    }
 
+    /**
+     * Costruisce una array da una stringa di valori separati da virgola <br>
+     *
+     * @param testo da esaminare
+     *
+     * @return matrice
+     */
+    public List<String> fromStringa(String testo) {
+        if (StringUtil.isBlank(testo)) {
+            return List.of();
+        }
+        else {
+            return Arrays.asList(testo.split(VIRGOLA))
+                    .stream()
+                    .map(n -> n.trim())
+                    .collect(Collectors.toList());
+        }
+    }
 
-//    /**
-//     * Costruisce una stringa con i singoli valori divisi da un separatore
-//     *
-//     * @param array lista di valori
-//     * @param sep   carattere separatore
-//     *
-//     * @return stringa con i singoli valori divisi da un separatore
-//     */
-//    public String toStringaOld(List array, String sep) {
-//        String testo = VUOTA;
-//        StringBuilder textBuffer = null;
-//
-//        if (array != null) {
-//            textBuffer = new StringBuilder();
-//            for (Object obj : array) {
-//                textBuffer.append(obj.toString());
-//                textBuffer.append(sep);
-//            }
-//            testo = textBuffer.toString();
-//            testo = text.levaCoda(testo, sep);
-//        }
-//
-//        return testo.trim();
-//    }
 
     /**
      * Ordina la lista <br>
@@ -379,6 +367,7 @@ public class AArrayService extends AAbstractService {
      *
      * @return matrice
      */
+    @Deprecated
     public Grid.Column[] getColumnArray(Grid grid) {
         List<Grid.Column> lista = grid.getColumns();
         Grid.Column[] matrice = new Grid.Column[lista.size()];
@@ -388,31 +377,6 @@ public class AArrayService extends AAbstractService {
         }
 
         return matrice;
-    }
-
-
-    public List<String> fromString(String testo) {
-        List<String> lista = null;
-        String tag = VIRGOLA;
-        String[] parti = null;
-
-        if (text.isEmpty(testo)) {
-            return null;
-        }
-
-        if (text.isValid(testo) && testo.contains(tag)) {
-            parti = testo.split(tag);
-        }
-
-        if (parti != null && parti.length > 0) {
-            lista = Arrays.asList(parti);
-        }
-
-        if (lista == null) {
-            lista = new ArrayList<>(Arrays.asList(testo));
-        }
-
-        return lista;
     }
 
 }

@@ -497,8 +497,8 @@ public class AArrayServiceTest extends ATest {
     @Order(11)
     @DisplayName("11 - toStringaVirgola (since Java 11)")
     void toStringaVirgola() {
-        sorgenteArray= List.of("alfa","beta","gamma","delta");
-        previsto= "alfa,beta,gamma,delta";
+        sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
+        previsto = "alfa,beta,gamma,delta";
 
         ottenuto = array.toStringaVirgola(null);
         Assertions.assertNull(ottenuto);
@@ -515,8 +515,8 @@ public class AArrayServiceTest extends ATest {
     @Order(12)
     @DisplayName("12 - toStringaPipe (since Java 11)")
     void toStringaPipe() {
-        sorgenteArray= List.of("alfa","beta","gamma","delta");
-        previsto= "alfa|beta|gamma|delta";
+        sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
+        previsto = "alfa|beta|gamma|delta";
 
         ottenuto = array.toStringaPipe(null);
         Assertions.assertNull(ottenuto);
@@ -533,8 +533,8 @@ public class AArrayServiceTest extends ATest {
     @Order(13)
     @DisplayName("13 - toStringa (since Java 11)")
     void toStringa() {
-        sorgenteArray= List.of("alfa","beta","gamma","delta");
-        previsto= "alfa, beta, gamma, delta";
+        sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
+        previsto = "alfa, beta, gamma, delta";
 
         ottenuto = array.toStringa(null);
         Assertions.assertNull(ottenuto);
@@ -549,7 +549,33 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(14)
-    @DisplayName("14 - check enumeration")
+    @DisplayName("14 - fromString (since Java 11)")
+    void fromString() {
+        previstoArray = List.of();
+        sorgente = "alfa,beta,gamma,delta";
+
+        ottenutoArray = array.fromStringa(null);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+
+        ottenutoArray = array.fromStringa(VUOTA);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+
+        previstoArray = List.of("alfa", "beta", "gamma", "delta");
+        ottenutoArray = array.fromStringa(sorgente);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+
+        sorgente = "alfa, beta, gamma, delta";
+        ottenutoArray = array.fromStringa(sorgente);
+        Assertions.assertNotNull(ottenutoArray);
+        Assertions.assertEquals(previstoArray, ottenutoArray);
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("15 - check enumeration")
     void checkEnumeration() {
 
         sorgente = "giorno";

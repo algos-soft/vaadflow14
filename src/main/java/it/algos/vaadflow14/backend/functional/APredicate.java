@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.functional;
 
+import org.jsoup.internal.StringUtil;
+
 import java.util.function.Predicate;
 
 /**
@@ -27,12 +29,7 @@ public abstract class APredicate {
          */
         @Override
         public boolean test(Object obj) {
-            if (obj instanceof String ) {
-                return (String)obj != null && ((String)obj).length() > 0;
-            }
-            else {
-                return obj != null;
-            }
+            return (obj instanceof String) ? !StringUtil.isBlank((String) obj) : obj != null;
         }
     };
 

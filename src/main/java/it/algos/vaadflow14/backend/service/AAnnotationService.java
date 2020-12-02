@@ -1654,7 +1654,7 @@ public class AAnnotationService extends AAbstractService {
         }
 
         if (text.isValid(value)) {
-            items = array.fromString(value);
+            items = array.fromStringa(value);
         }
 
         return items;
@@ -1718,7 +1718,7 @@ public class AAnnotationService extends AAbstractService {
         }
 
         if (text.isValid(value)) {
-            properties = array.fromString(value);
+            properties = array.fromStringa(value);
         }
 
         return properties;

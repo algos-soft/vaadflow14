@@ -151,7 +151,7 @@ public class AEnumerationServiceTest extends ATest {
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa,beta,gamma");
+        listValues = array.fromStringa("alfa,beta,gamma");
         singleValue = VUOTA;
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
@@ -161,34 +161,34 @@ public class AEnumerationServiceTest extends ATest {
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa,beta,gamma");
+        listValues = array.fromStringa("alfa,beta,gamma");
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa");
+        listValues = array.fromStringa("alfa");
         singleValue = "alfa";
         previsto2 = "alfa;alfa";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isValid(ottenuto));
         assertEquals(previsto2, ottenuto);
 
-        listValues = array.fromString("alfa,beta;gamma");
+        listValues = array.fromStringa("alfa,beta;gamma");
         singleValue = "delta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa,beta,gamma");
+        listValues = array.fromStringa("alfa,beta,gamma");
         singleValue = "beta,gamma";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa,beta,gamma");
+        listValues = array.fromStringa("alfa,beta,gamma");
         singleValue = "beta;gamma";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isEmpty(ottenuto));
 
-        listValues = array.fromString("alfa,beta,gamma");
+        listValues = array.fromStringa("alfa,beta,gamma");
         singleValue = "beta";
         ottenuto = service.fixPreferenzaMongoDB(listValues, singleValue);
         assertTrue(text.isValid(ottenuto));

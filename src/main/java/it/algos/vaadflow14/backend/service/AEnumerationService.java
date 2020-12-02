@@ -111,7 +111,7 @@ public class AEnumerationService extends AAbstractService {
             return VUOTA;
         }
 
-        listaValori = array.fromString(serieValoriPrevisti);
+        listaValori = array.fromStringa(serieValoriPrevisti);
         if (array.isAllValid(listaValori)) {
             return fixPreferenzaMongoDB(listaValori, valoreInizialmenteSelezionato);
         }
@@ -250,7 +250,7 @@ public class AEnumerationService extends AAbstractService {
         String stringaValori = getStringaValori(rawValue);
 
         if (text.isValid(stringaValori)) {
-            lista = array.fromString(stringaValori);
+            lista = array.fromStringa(stringaValori);
         }
 
         return lista;

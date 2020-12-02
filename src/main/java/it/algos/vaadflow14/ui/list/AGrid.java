@@ -313,7 +313,8 @@ public class AGrid {
 
         try {
             HeaderRow topRow = grid.prependHeaderRow();
-            Grid.Column[] matrix = array.getColumnArray(grid);
+            Grid.Column[] matrix = (Grid.Column[])grid.getColumns().toArray();
+
             if (matrix != null && matrix.length > 0) {
                 HeaderRow.HeaderCell informationCell = topRow.join(matrix);
                 informationCell.setComponent(headerLabelPlaceHolder);
