@@ -42,7 +42,7 @@ public class AArrayService extends AAbstractService {
      *
      * @return vero se l'array soddisfa le condizioni previste
      *
-     * @since Java 8
+     * @since Java 11
      */
     public boolean isAllValid(final List array) {
         return array != null && array.size() > 0 && array.stream().filter(APredicate.nonValido).count() == 0;
@@ -58,7 +58,9 @@ public class AArrayService extends AAbstractService {
      *
      * @param matrice (String[]) in ingresso da controllare
      *
-     * @return vero se l'array soddisfa le condizioni previste
+     * @return vero se la matrice soddisfa le condizioni previste
+     *
+     * @since Java 11
      */
     public boolean isAllValid(final String[] matrice) {
         return matrice != null && matrice.length > 0 && Arrays.asList(matrice).stream().filter(APredicate.nonValido).count() == 0;
@@ -74,55 +76,63 @@ public class AArrayService extends AAbstractService {
      *
      * @param mappa (Map) in ingresso da controllare
      *
-     * @return vero se l'array soddisfa le condizioni previste
+     * @return vero se la mappa soddisfa le condizioni previste
+     *
+     * @since Java 11
      */
     public boolean isAllValid(final Map mappa) {
         return mappa != null && mappa.size() > 0 && mappa.keySet().stream().filter(APredicate.nonValido).count() == 0;
     }
 
 
-
     /**
      * Controlla che l'array sia nullo o vuoto <br>
      * Non deve esistere (null) <br>
      * Se esiste, non deve avere elementi (size = 0) <br>
+     * Se ci sono elementi devono avere tutti valore null <br>
      *
      * @param array (List) in ingresso da controllare
      *
      * @return vero se l'array soddisfa le condizioni previste
      *
-     * @since Java 8
+     * @since Java 11
      */
     public boolean isEmpty(final List array) {
-        return !isAllValid(array);
+        return array == null || array.size() == 0 || array.stream().filter(APredicate.valido).count() == 0;
     }
 
 
     /**
-     * Controlla che l'array sia nullo o vuoto. <br>
+     * Controlla che la matrice sia nulla o vuota. <br>
      * Non deve esistere (null) <br>
      * Se esiste, non deve avere elementi (size = 0) <br>
+     * Se ci sono elementi devono avere tutti valore null o vuoto -> "" <br>
      *
-     * @param array (String[]) in ingresso da controllare
+     * @param matrice (String[]) in ingresso da controllare
      *
-     * @return vero se l'array soddisfa le condizioni previste
+     * @return vero se la matrice soddisfa le condizioni previste
+     *
+     * @since Java 11
      */
-    public boolean isEmpty(final String[] array) {
-        return !isAllValid(array);
+    public boolean isEmpty(final String[] matrice) {
+        return matrice == null || matrice.length == 0 || Arrays.asList(matrice).stream().filter(APredicate.valido).count() == 0;
     }
 
 
     /**
-     * Controlla che la mappa sia nulla o vuoto. <br>
+     * Controlla che la mappa sia nulla o vuota. <br>
      * Non deve esistere (null) <br>
      * Se esiste, non deve avere elementi (size = 0) <br>
+     * Se ci sono elementi devono avere tutti la chiave null o vuota -> "" <br>
      *
-     * @param array (Map) in ingresso da controllare
+     * @param mappa (Map) in ingresso da controllare
      *
-     * @return vero se l'array soddisfa le condizioni previste
+     * @return vero se la mappa soddisfa le condizioni previste
+     *
+     * @since Java 11
      */
-    public boolean isEmpty(final Map array) {
-        return !isAllValid(array);
+    public boolean isEmpty(final Map mappa) {
+        return mappa == null || mappa.size() == 0 || mappa.keySet().stream().filter(APredicate.valido).count() == 0;
     }
 
 

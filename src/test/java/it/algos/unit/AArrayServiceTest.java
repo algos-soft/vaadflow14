@@ -82,8 +82,8 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - isAllValid (since Java 8) array")
-    void isValid() {
+    @DisplayName("1 - isAllValid (since Java 11) array")
+    void isAllValid() {
         listaStr = new ArrayList<>();
 
         ottenutoBooleano = array.isAllValid((List) null);
@@ -134,8 +134,8 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - isAllValid (since Java 8) matrice")
-    void isValid2() {
+    @DisplayName("2 - isAllValid (since Java 11) matrice")
+    void isAllValid2() {
         sorgenteMatrice = null;
         ottenutoBooleano = array.isAllValid((String[]) null);
         assertFalse(ottenutoBooleano);
@@ -168,8 +168,8 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - isAllValid (since Java 8) map")
-    void isValid3() {
+    @DisplayName("3 - isAllValid (since Java 11) map")
+    void isAllValid3() {
         mappaSorgente = null;
         ottenutoBooleano = array.isAllValid((LinkedHashMap)null);
         assertFalse(ottenutoBooleano);
@@ -215,58 +215,13 @@ public class AArrayServiceTest extends ATest {
         assertTrue(ottenutoBooleano);
     }
 
-
     @Test
     @Order(4)
-    @DisplayName("4 - isAllValid (since Java 8) collection")
-    void isValid4() {
-        listaStr = new ArrayList<>();
-
-        ottenutoBooleano = array.isAllValid((List) null);
-        assertFalse(ottenutoBooleano);
-
-        ottenutoBooleano = array.isAllValid((Map) null);
-        assertFalse(ottenutoBooleano);
-
-        ottenutoBooleano = array.isAllValid((new ArrayList()));
-        assertFalse(ottenutoBooleano);
-
-        ottenutoBooleano = array.isAllValid((listaStr));
-        assertFalse(ottenutoBooleano);
-
-        listaStr.add(null);
-        ottenutoBooleano = array.isAllValid(listaStr);
-        assertFalse(ottenutoBooleano);
-
-
-        listaStr = new ArrayList<>();
-        listaStr.add(VUOTA);
-        ottenutoBooleano = array.isAllValid(listaStr);
-        assertFalse(ottenutoBooleano);
-
-        listaStr = new ArrayList<>();
-        listaStr.add(PIENA);
-        ottenutoBooleano = array.isAllValid(listaStr);
-        assertTrue(ottenutoBooleano);
-
-
-        Collection collezione = new ArrayList();
-        collezione.add(24);
-    }
-
-
-    /**
-     * Is empty.
-     */
-    @Test
-    @Order(7)
-    @DisplayName("7 - isEmpty (since Java 8)")
+    @DisplayName("4 - isEmpty (since Java 11) array")
     void isEmpty() {
         listaStr = new ArrayList<>();
-        ottenutoBooleano = array.isEmpty((List) null);
-        assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = array.isEmpty((String[]) null);
+        ottenutoBooleano = array.isEmpty((List) null);
         assertTrue(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty((Map) null);
@@ -275,33 +230,142 @@ public class AArrayServiceTest extends ATest {
         ottenutoBooleano = array.isEmpty((new ArrayList()));
         assertTrue(ottenutoBooleano);
 
+        ottenutoBooleano = array.isEmpty((listaStr));
+        assertTrue(ottenutoBooleano);
+
         listaStr.add(null);
         ottenutoBooleano = array.isEmpty(listaStr);
         assertTrue(ottenutoBooleano);
 
-        listaStr.add(PIENA);
+        listaStr = new ArrayList<>();
+        listaStr.add(VUOTA);
         ottenutoBooleano = array.isEmpty(listaStr);
         assertTrue(ottenutoBooleano);
 
-        listaStr = LIST_STRING;
+        listaStr = new ArrayList<>();
+        listaStr.add(PIENA);
         ottenutoBooleano = array.isEmpty(listaStr);
-        Assertions.assertFalse(ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
+
+        listaStr.add("Mario");
+        ottenutoBooleano = array.isEmpty(listaStr);
+        assertFalse(ottenutoBooleano);
+
+        listaStr.add(null);
+        ottenutoBooleano = array.isEmpty(listaStr);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = array.isEmpty(LIST_STRING);
+        assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty(LIST_OBJECT);
-        Assertions.assertFalse(ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = array.isEmpty(LIST_LONG);
-        Assertions.assertFalse(ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - isEmpty (since Java 11) matrice")
+    void isEmpty2() {
+        sorgenteMatrice = null;
+        ottenutoBooleano = array.isEmpty((String[]) null);
+        assertTrue(ottenutoBooleano);
+
+        sorgenteMatrice = null;
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertTrue(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{"Codice", "Regioni"};
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA, "Regioni"};
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA};
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertTrue(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{"Mario",VUOTA, "Regioni"};
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA,VUOTA,VUOTA};
+        ottenutoBooleano = array.isEmpty(sorgenteMatrice);
+        assertTrue(ottenutoBooleano);
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - isEmpty (since Java 11) map")
+    void isEmpty3() {
+        mappaSorgente = null;
+        ottenutoBooleano = array.isEmpty((LinkedHashMap)null);
+        assertTrue(ottenutoBooleano);
+
+        mappaSorgente = null;
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertTrue(ottenutoBooleano);
+
+        mappaSorgente = new HashMap();
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertTrue(ottenutoBooleano);
 
         mappaSorgente = new LinkedHashMap();
         ottenutoBooleano = array.isEmpty(mappaSorgente);
         assertTrue(ottenutoBooleano);
 
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("", "irrilevante");
+        mappaSorgente.put(null, "irrilevante2");
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertTrue(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
         mappaSorgente.put("beta", "irrilevante");
-        mappaSorgente.put("alfa", "irrilevante2");
+        mappaSorgente.put(VUOTA, "irrilevante2");
         mappaSorgente.put("delta", "irrilevante3");
         ottenutoBooleano = array.isEmpty(mappaSorgente);
-        Assertions.assertFalse(ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put(null, "irrilevante2");
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("", "irrilevante");
+        mappaSorgente.put(null, "irrilevante2");
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put("alfa", null);
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put("alfa", VUOTA);
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", null);
+        mappaSorgente.put("alfa", VUOTA);
+        ottenutoBooleano = array.isEmpty(mappaSorgente);
+        assertFalse(ottenutoBooleano);
     }
 
 

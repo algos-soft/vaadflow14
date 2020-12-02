@@ -37,6 +37,11 @@ But with higher-order functions, we can perform the following operations:
      BiFunction(T,U,R): Takes two parameters type (T,U), produces one result (R).
      UnaryOperator(T): Takes one parameter type (T), produces one result (T).
      BiaryOperator(T): Takes two parameters of type (T), produces one result (T).
+####Predicate
+Predicate(T): Takes one parameter type (T), produces boolean value
+    
+    public static Predicate<Integer> pari = i -> i % 2 == 0;
+    public static Predicate<Integer> dispari = Predicate.not(pari);
 ####Supplier      
     @FunctionalInterface
     public interface Supplier<T> {
@@ -165,3 +170,7 @@ There are primitive specializations of the Supplier interface:
     if (obj instanceof String s) {
         System.out.println(s.contains("hello"));
     }
+    
+    
+##Tutorial
+- Java tutorials [howtodoinjava](https://howtodoinjava.com/)
