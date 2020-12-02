@@ -373,24 +373,33 @@ public class AArrayServiceTest extends ATest {
     @Order(8)
     @DisplayName("8 - isMappaSemplificabile")
     void isMappaSemplificabile() {
-        Map<String, List<String>> mappaSorgenteConListe = null;
-        ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
+        ottenutoBooleano = array.isMappaSemplificabile(null);
         Assertions.assertFalse(ottenutoBooleano);
 
-        mappaSorgenteConListe = new HashMap<>();
-        ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
+        Map<String, List<String>> multiParametersMap = null;
+        ottenutoBooleano = array.isMappaSemplificabile(multiParametersMap);
         Assertions.assertFalse(ottenutoBooleano);
 
-        mappaSorgenteConListe = new HashMap<>();
-        mappaSorgenteConListe.put("uno", LIST_STRING);
-        mappaSorgenteConListe.put("due", LIST_SHORT_STRING);
-        ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
+        multiParametersMap = new HashMap<>();
+        ottenutoBooleano = array.isMappaSemplificabile(multiParametersMap);
         Assertions.assertFalse(ottenutoBooleano);
 
-        mappaSorgenteConListe = new HashMap<>();
-        mappaSorgenteConListe.put("uno", LIST_SHORT_STRING);
-        mappaSorgenteConListe.put("due", LIST_SHORT_STRING);
-        ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
+        multiParametersMap = new HashMap<>();
+        multiParametersMap.put("uno", LIST_STRING);
+        multiParametersMap.put("due", LIST_SHORT_STRING);
+        ottenutoBooleano = array.isMappaSemplificabile(multiParametersMap);
+        Assertions.assertFalse(ottenutoBooleano);
+
+        multiParametersMap = new HashMap<>();
+        multiParametersMap.put("", LIST_SHORT_STRING);
+        multiParametersMap.put("due", LIST_SHORT_STRING);
+        ottenutoBooleano = array.isMappaSemplificabile(multiParametersMap);
+        assertTrue(ottenutoBooleano);
+
+        multiParametersMap = new HashMap<>();
+        multiParametersMap.put("uno", LIST_SHORT_STRING);
+        multiParametersMap.put("due", LIST_SHORT_STRING);
+        ottenutoBooleano = array.isMappaSemplificabile(multiParametersMap);
         assertTrue(ottenutoBooleano);
     }
 

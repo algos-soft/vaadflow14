@@ -137,49 +137,26 @@ public class AArrayService extends AAbstractService {
 
 
     /**
-     * Controlla se una mappa può essere semplificata. <br>
-     * Deve esistere (not null) <br>
-     * Deve avere degli elementi (size maggiore di 0) <br>
-     * La mappa prevede delle liste di valori per ogni key, quindi Map<String, List<String>> <br>
-     * Se tutte le liste hanno un singolo valore, si può usare una mappa più semplice Map<String, String> <br>
+     * route costruisce uan view che implementa l'interfaccia HasUrlParameter <br>
+     * e nel metodo setParameter() riceve @OptionalParameter parameters che <br>
+     * sono del tipo Map<String, List<String>> <br>
+     * Se tutte le keys delle liste hanno un solo valore,
+     * si può semplificare in Map<String, String> <br>
+     * <p>
+     * Semplifica la mappa (se è semplificabile) <br>
+     *
+     * @param multiParametersMap mappa di liste di stringhe
+     *
+     * @return mappa semplificata
      */
-    public boolean isMappaSemplificabile(Map<String, List<String>> mappaConListe) {
-        boolean status = true;
-
-        if (mappaConListe == null) {
-            return false;
-        }
-
-        if (mappaConListe.size() < 1) {
-            return false;
-        }
-
-        for (Map.Entry<String, List<String>> entry : mappaConListe.entrySet()) {
-            if (entry.getValue().size() > 1) {
-                status = false;
-            }
-        }
-
-        return status;
-    }
-
-
-    /**
-     * Semplifica la mappa (semplificabile) <br>
-     * Deve esistere (not null) <br>
-     * Deve avere degli elementi (size maggiore di 0) <br>
-     * Questa prevede delle liste di valori per ogni key, quindi Map<String, List<String>> <br>
-     * Spesso basta un valore. <br>
-     * Se tutte le keys hanno un solo valore, si usa una mappa più semplice Map<String, String> <br>
-     */
-    public Map<String, String> semplificaMappa(Map<String, List<String>> mappaConListe) {
+    public Map<String, String> semplificaMappa(Map<String, List<String>> multiParametersMap) {
         Map<String, String> mappaSemplice = new HashMap<>();
 
-        if (!isMappaSemplificabile(mappaConListe)) {
+        if (!isMappaSemplificabile(multiParametersMap)) {
             return null;
         }
 
-        for (Map.Entry<String, List<String>> entry : mappaConListe.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : multiParametersMap.entrySet()) {
             if (entry.getValue().size() == 1) {
                 mappaSemplice.put(entry.getKey(), entry.getValue().get(0));
             }
@@ -192,6 +169,26 @@ public class AArrayService extends AAbstractService {
         return mappaSemplice;
     }
 
+    /**
+     * Controlla se una mappa può essere semplificata. <br>
+     * <p>
+     * Esamina una mappa del tipo Map<String, List<String>> e se tutte <br>
+     * le liste hanno un solo valore, semplifica in Map<String, String> <br>
+     * <p>
+     * La mappa deve essere valida <br>
+     * Deve esistere (not null) <br>
+     * Deve avere degli elementi (size maggiore di 0) <br>
+     * Ogni lista deve avere un solo valore <br>
+     *
+     * @param multiParametersMap mappa di liste di stringhe
+     *
+     * @return true se è semplificabile sostituendo le liste con un singole valore
+     *
+     * @since Java 11
+     */
+    public boolean isMappaSemplificabile(Map<String, List<String>> multiParametersMap) {
+        return multiParametersMap != null && multiParametersMap.size() > 0 && multiParametersMap.values().stream().filter(n -> n.size() > 1).count() == 0;
+    }
 
     /**
      * Costruisce una mappa da una singola coppia chiave-valore <br>
