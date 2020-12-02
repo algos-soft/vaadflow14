@@ -445,7 +445,7 @@ public class AFieldService extends AAbstractService {
         Object[] elementiEnum = null;
 
         enumItems = annotation.getEnumItems(reflectionJavaField);
-        if (array.isValid(enumItems)) {
+        if (array.isAllValid(enumItems)) {
             return enumItems;
         }
 

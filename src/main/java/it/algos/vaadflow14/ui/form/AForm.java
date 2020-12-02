@@ -377,7 +377,7 @@ public abstract class AForm extends VerticalLayout {
         AField field = null;
         fieldsNameList = getPropertyNamesList();
 
-        if (array.isValid(fieldsNameList)) {
+        if (array.isAllValid(fieldsNameList)) {
             fieldsList = new ArrayList<>();
             for (String fieldKey : fieldsNameList) {
                 field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
@@ -456,7 +456,7 @@ public abstract class AForm extends VerticalLayout {
         topLayout.removeAll();
         Component comp;
 
-        if (array.isValid(fieldsList)) {
+        if (array.isAllValid(fieldsList)) {
             for (CustomField field : fieldsList) {
                 topLayout.add(field);
 
@@ -481,7 +481,7 @@ public abstract class AForm extends VerticalLayout {
      * Crea una mappa fieldMap, per recuperare i fields dal nome <br>
      */
     protected void creaMappaFields() {
-        if (array.isValid(fieldsList)) {
+        if (array.isAllValid(fieldsList)) {
             fieldsMap = new HashMap<String, AField>();
 
             for (AField field : fieldsList) {

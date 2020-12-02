@@ -55,7 +55,7 @@ public class SimpleData extends FlowData {
         String moduleName = "simple";
         List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
-        if (array.isValid(listaCanonicalNameEntity)) {
+        if (array.isAllValid(listaCanonicalNameEntity)) {
             for (String canonicalName : listaCanonicalNameEntity) {
                 checkSingolaCollection(canonicalName);
             }

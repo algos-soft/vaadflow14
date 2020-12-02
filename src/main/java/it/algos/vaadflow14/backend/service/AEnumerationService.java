@@ -112,7 +112,7 @@ public class AEnumerationService extends AAbstractService {
         }
 
         listaValori = array.fromString(serieValoriPrevisti);
-        if (array.isValid(listaValori)) {
+        if (array.isAllValid(listaValori)) {
             return fixPreferenzaMongoDB(listaValori, valoreInizialmenteSelezionato);
         }
 

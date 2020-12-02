@@ -596,7 +596,7 @@ public class AWikiService extends AAbstractService {
         List<WrapDueStringhe> lista = null;
         WrapDueStringhe wrap;
 
-        if (array.isValid(listaTemplate)) {
+        if (array.isAllValid(listaTemplate)) {
             lista = new ArrayList<>();
             for (String wikiTitle : listaTemplate) {
                 wrap = getTemplateBandierina(wikiTitle);
@@ -643,7 +643,7 @@ public class AWikiService extends AAbstractService {
         WrapTreStringhe wrapTre;
         List<WrapDueStringhe> listaDue = getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
 
-        if (array.isValid(listaDue)) {
+        if (array.isAllValid(listaDue)) {
             listaTre = new ArrayList<>();
             for (WrapDueStringhe wrapDue : listaDue) {
                 wrapBandierina = getTemplateBandierina(wrapDue.getPrima());
@@ -683,7 +683,7 @@ public class AWikiService extends AAbstractService {
         } catch (Exception unErrore) {
         }
 
-        if (array.isValid(lista)) {
+        if (array.isAllValid(lista)) {
             colonna = new ArrayList<>();
             for (List<String> riga : lista) {
                 if (riga.size() == 1 || (riga.size() == 2 && !riga.get(0).startsWith(GRAFFA_END))) {
@@ -742,7 +742,7 @@ public class AWikiService extends AAbstractService {
         } catch (Exception unErrore) {
         }
 
-        if (array.isValid(lista)) {
+        if (array.isAllValid(lista)) {
             listaWrap = new ArrayList<>();
             for (List<String> riga : lista) {
                 wrap = null;

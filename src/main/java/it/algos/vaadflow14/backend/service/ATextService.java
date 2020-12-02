@@ -1188,7 +1188,7 @@ public class ATextService extends AAbstractService {
     public boolean isContiene(final String testoIn, ArrayList<String> listaTags) {
         boolean neContieneAlmenoUno = false;
 
-        if (array.isValid(listaTags)) {
+        if (array.isAllValid(listaTags)) {
             for (String singleTag : listaTags) {
                 if (testoIn.contains(singleTag)) {
                     neContieneAlmenoUno = true;

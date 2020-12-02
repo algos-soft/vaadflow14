@@ -237,7 +237,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected void fixBottoniSpecifici() {
-        if (array.isValid(specifici)) {
+        if (array.isAllValid(specifici)) {
             for (Button button : specifici) {
                 this.add(button);
             }
@@ -310,7 +310,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public void setAllListener(AILogic service) {
         this.service = service;
 
-        if (array.isValid(mappaBottoni)) {
+        if (array.isAllValid(mappaBottoni)) {
             for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
                 mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action));
             }
@@ -330,7 +330,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public void setAllListener(AILogic service, AEntity entityBean) {
         this.service = service;
 
-        if (array.isValid(mappaBottoni)) {
+        if (array.isAllValid(mappaBottoni)) {
             for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
                 mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action, entityBean));
             }
@@ -386,7 +386,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
     public Button getBottone(String key) {
         Button button = null;
 
-        if (array.isValid(mappaBottoni) && mappaBottoni.get(key) != null) {
+        if (array.isAllValid(mappaBottoni) && mappaBottoni.get(key) != null) {
             return mappaBottoni.get(key);
         }
 

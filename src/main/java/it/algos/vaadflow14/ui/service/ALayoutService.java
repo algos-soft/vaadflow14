@@ -1,8 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Label;
@@ -16,7 +14,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.VaadinSession;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -120,7 +117,7 @@ public class ALayoutService extends AAbstractService {
         final List<Tab> tabs = new ArrayList<>();
         Tab tab = null;
 
-        if (array.isValid(FlowVar.menuRouteList)) {
+        if (array.isAllValid(FlowVar.menuRouteList)) {
             for (Class<?> view : FlowVar.menuRouteList) {
                 tab = createTab(view);
                 if (tab != null) {

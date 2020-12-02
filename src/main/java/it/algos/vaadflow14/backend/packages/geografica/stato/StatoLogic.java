@@ -379,7 +379,7 @@ public class StatoLogic extends ALogic {
 
         mappa = creaMappa();
         List<List<String>> listaStati = wiki.getStati();
-        if (array.isValid(listaStati)) {
+        if (array.isAllValid(listaStati)) {
             for (List<String> riga : listaStati) {
                 continente = null;
                 nome = riga.get(0);
@@ -448,7 +448,7 @@ public class StatoLogic extends ALogic {
             keyTag = aeContinente.name();
             continente = continenteLogic.findById(keyTag);
             lista = resourceService.leggeListaConfig(keyTag, false);
-            if (array.isValid(lista)) {
+            if (array.isAllValid(lista)) {
                 for (String riga : lista) {
                     mappa.put(riga, continente);
                 }

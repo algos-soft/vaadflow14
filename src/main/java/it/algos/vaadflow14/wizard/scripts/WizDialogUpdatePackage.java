@@ -6,11 +6,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -70,7 +68,7 @@ public class WizDialogUpdatePackage extends WizDialog {
 
         String label = "Packages esistenti nella directory di questo progetto";
 
-        if (array.isValid(packages)) {
+        if (array.isAllValid(packages)) {
 
             fieldComboPackages = new ComboBox<>();
             // Choose which property from Department is the presentation value

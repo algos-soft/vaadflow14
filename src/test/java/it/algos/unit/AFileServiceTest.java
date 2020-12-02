@@ -193,7 +193,7 @@ public class AFileServiceTest extends ATest {
      * Alla fine verranno cancellati tutti <br>
      */
     private void creazioneDirectory() {
-        if (array.isValid(listaDirectory)) {
+        if (array.isAllValid(listaDirectory)) {
             for (File directory : listaDirectory) {
                 directory.mkdirs();
             }
@@ -206,7 +206,7 @@ public class AFileServiceTest extends ATest {
      * Alla fine verranno cancellati tutti <br>
      */
     private void creazioneFiles() {
-        if (array.isValid(listaFile)) {
+        if (array.isAllValid(listaFile)) {
             for (File unFile : listaFile) {
                 try { // prova ad eseguire il codice
                     unFile.createNewFile();
@@ -1482,7 +1482,7 @@ public class AFileServiceTest extends ATest {
             logger.error(unErrore, this.getClass(), "recursionSubPathNames");
         }
 
-        assertTrue(array.isValid(lista));
+        assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("recursionSubPathNames");
         System.out.println("Ci sono "+lista.size()+" elementi misti files/directories");
@@ -1503,7 +1503,7 @@ public class AFileServiceTest extends ATest {
 
         lista = file.getAllSubPathFiles(pathName);
 
-        assertTrue(array.isValid(lista));
+        assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubPathFiles");
         System.out.println("Ci sono "+lista.size()+" files di vario tipo");
@@ -1524,7 +1524,7 @@ public class AFileServiceTest extends ATest {
 
         lista = file.getAllSubFilesJava(pathName);
 
-        assertTrue(array.isValid(lista));
+        assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesJava");
         System.out.println("Ci sono "+lista.size()+" files di tipo Java");
@@ -1544,7 +1544,7 @@ public class AFileServiceTest extends ATest {
         String pathName = unaDirectory.getAbsolutePath();
         lista = file.getAllSubFilesEntity(pathName);
 
-        assertTrue(array.isValid(lista));
+        assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesEntity");
         System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Vaadflow14");
@@ -1558,7 +1558,7 @@ public class AFileServiceTest extends ATest {
          pathName = unaDirectory.getAbsolutePath();
         lista = file.getAllSubFilesEntity(pathName);
 
-        assertTrue(array.isValid(lista));
+        assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesEntity");
         System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Simple");

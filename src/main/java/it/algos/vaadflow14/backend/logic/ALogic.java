@@ -1304,7 +1304,7 @@ public abstract class ALogic implements AILogic {
         Object value;
         CriteriaDefinition criteria = null;
 
-        if (array.isValid(mappaComboBox)) {
+        if (array.isAllValid(mappaComboBox)) {
             for (Map.Entry<String, ComboBox> entry : mappaComboBox.entrySet()) {
                 filtro = null;
                 combo = entry.getValue();

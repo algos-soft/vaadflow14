@@ -740,7 +740,7 @@ public class AMongoService<capture> extends AAbstractService {
             listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
         }
 
-        if (array.isValid(listaOrdinata) && listaOrdinata.size() == 1) {
+        if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
             nextEntity = listaOrdinata.get(0);
         }
 
@@ -771,7 +771,7 @@ public class AMongoService<capture> extends AAbstractService {
             listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
         }
 
-        if (array.isValid(listaOrdinata) && listaOrdinata.size() == 1) {
+        if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
             nextEntity = listaOrdinata.get(0);
         }
 

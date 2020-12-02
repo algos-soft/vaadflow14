@@ -57,25 +57,25 @@ public class AHeaderWrap extends AHeader {
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void fixView() {
-        if (array.isValid(alertBlack)) {
+        if (array.isAllValid(alertBlack)) {
             for (String alert : alertBlack) {
                 this.add(text.getDivBlack(alert));
             }
         }
 
-        if (array.isValid(alertGreen)) {
+        if (array.isAllValid(alertGreen)) {
             for (String alert : alertGreen) {
                 this.add(text.getDivGreen(alert));
             }
         }
 
-        if (array.isValid(alertBlue)) {
+        if (array.isAllValid(alertBlue)) {
             for (String alert : alertBlue) {
                 this.add(text.getDivBlue(alert));
             }
         }
 
-        if (array.isValid(alertRed)) {
+        if (array.isAllValid(alertRed)) {
             for (String alert : alertRed) {
                 this.add(text.getDivRed(alert));
             }

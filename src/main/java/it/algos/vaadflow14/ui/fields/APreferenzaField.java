@@ -168,7 +168,7 @@ public class APreferenzaField extends AField<byte[]> {
                     valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
                 } else {
                     items = enumerationService.getList(entityBean);
-                    if (array.isValid(items)) {
+                    if (array.isAllValid(items)) {
                         usaEnumCombo = items.size() <= AEPreferenza.maxEnumRadio.getInt();
                         if (usaEnumCombo) {
                             valueField = appContext.getBean(ARadioField.class, items);

@@ -82,72 +82,176 @@ public class AArrayServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - isValid")
+    @DisplayName("1 - isAllValid (since Java 8) array")
     void isValid() {
         listaStr = new ArrayList<>();
 
-        ottenutoBooleano = array.isValid((List) null);
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid((List) null);
+        assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = array.isValid((String[]) null);
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid((Map) null);
+        assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = array.isValid((Map) null);
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid((new ArrayList()));
+        assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = array.isValid((new ArrayList()));
-        Assertions.assertFalse(ottenutoBooleano);
-
-        ottenutoBooleano = array.isValid((listaStr));
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid((listaStr));
+        assertFalse(ottenutoBooleano);
 
         listaStr.add(null);
-        ottenutoBooleano = array.isValid(listaStr);
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = array.isValid((Collection) null);
-        Assertions.assertFalse(ottenutoBooleano);
+        listaStr = new ArrayList<>();
+        listaStr.add(VUOTA);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertFalse(ottenutoBooleano);
+
+        listaStr = new ArrayList<>();
+        listaStr.add(PIENA);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertTrue(ottenutoBooleano);
+
+        listaStr.add("Mario");
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertTrue(ottenutoBooleano);
+
+        listaStr.add(null);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertFalse(ottenutoBooleano);
+
+
+        ottenutoBooleano = array.isAllValid(LIST_STRING);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = array.isAllValid(LIST_OBJECT);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = array.isAllValid(LIST_LONG);
+        assertTrue(ottenutoBooleano);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - isAllValid (since Java 8) matrice")
+    void isValid2() {
+        sorgenteMatrice = null;
+        ottenutoBooleano = array.isAllValid((String[]) null);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = null;
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{"Codice", "Regioni"};
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertTrue(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA, "Regioni"};
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA};
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{"Mario",VUOTA, "Regioni"};
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+
+        sorgenteMatrice = new String[]{VUOTA,VUOTA,VUOTA};
+        ottenutoBooleano = array.isAllValid(sorgenteMatrice);
+        assertFalse(ottenutoBooleano);
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - isAllValid (since Java 8) map")
+    void isValid3() {
+        mappaSorgente = null;
+        ottenutoBooleano = array.isAllValid((LinkedHashMap)null);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = null;
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new HashMap();
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put(null, "irrilevante2");
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put(VUOTA, "irrilevante2");
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertFalse(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put("alfa", null);
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertTrue(ottenutoBooleano);
+
+        mappaSorgente = new LinkedHashMap();
+        mappaSorgente.put("beta", "irrilevante");
+        mappaSorgente.put("alfa", VUOTA);
+        mappaSorgente.put("delta", "irrilevante3");
+        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        assertTrue(ottenutoBooleano);
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - isAllValid (since Java 8) collection")
+    void isValid4() {
+        listaStr = new ArrayList<>();
+
+        ottenutoBooleano = array.isAllValid((List) null);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = array.isAllValid((Map) null);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = array.isAllValid((new ArrayList()));
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = array.isAllValid((listaStr));
+        assertFalse(ottenutoBooleano);
+
+        listaStr.add(null);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertFalse(ottenutoBooleano);
 
 
         listaStr = new ArrayList<>();
         listaStr.add(VUOTA);
-        ottenutoBooleano = array.isValid(listaStr);
-        Assertions.assertFalse(ottenutoBooleano);
+        ottenutoBooleano = array.isAllValid(listaStr);
+        assertFalse(ottenutoBooleano);
 
         listaStr = new ArrayList<>();
         listaStr.add(PIENA);
-        ottenutoBooleano = array.isValid(listaStr);
-        Assertions.assertTrue(ottenutoBooleano);
-
-        listaStr.add(null);
-        ottenutoBooleano = array.isValid(listaStr);
-        Assertions.assertFalse(ottenutoBooleano);
-
-
-        ottenutoBooleano = array.isValid(LIST_STRING);
+        ottenutoBooleano = array.isAllValid(listaStr);
         assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = array.isValid(LIST_OBJECT);
-        assertTrue(ottenutoBooleano);
-
-        ottenutoBooleano = array.isValid(LIST_LONG);
-        assertTrue(ottenutoBooleano);
-
-        mappaSorgente = new LinkedHashMap();
-        ottenutoBooleano = array.isValid(mappaSorgente);
-        Assertions.assertFalse(ottenutoBooleano);
-
-        mappaSorgente.put("beta", "irrilevante");
-        mappaSorgente.put("alfa", "irrilevante2");
-        mappaSorgente.put("delta", "irrilevante3");
-        ottenutoBooleano = array.isValid(mappaSorgente);
-        assertTrue(ottenutoBooleano);
 
         Collection collezione = new ArrayList();
         collezione.add(24);
-
-        ottenutoBooleano = array.isValid(collezione);
-        assertTrue(ottenutoBooleano);
     }
 
 
@@ -155,8 +259,8 @@ public class AArrayServiceTest extends ATest {
      * Is empty.
      */
     @Test
-    @Order(2)
-    @DisplayName("2 - isEmpty")
+    @Order(7)
+    @DisplayName("7 - isEmpty (since Java 8)")
     void isEmpty() {
         listaStr = new ArrayList<>();
         ottenutoBooleano = array.isEmpty((List) null);
@@ -202,8 +306,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(3)
-    @DisplayName("3 - isMappaSemplificabile")
+    @Order(8)
+    @DisplayName("8 - isMappaSemplificabile")
     void isMappaSemplificabile() {
         Map<String, List<String>> mappaSorgenteConListe = null;
         ottenutoBooleano = array.isMappaSemplificabile(mappaSorgenteConListe);
@@ -228,8 +332,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(4)
-    @DisplayName("4 - semplificaMappa")
+    @Order(9)
+    @DisplayName("9 - semplificaMappa")
     void semplificaMappa() {
         Map<String, List<String>> mappaSorgenteConListe = null;
         Map<String, String> mappaPrevista = null;
@@ -260,8 +364,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(5)
-    @DisplayName("5 - getMappa")
+    @Order(10)
+    @DisplayName("10 - getMappa")
     void getMappa() {
         sorgente = "valore";
         Map<String, String> mappaPrevista = null;
@@ -275,8 +379,8 @@ public class AArrayServiceTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - getLista")
+    @Order(11)
+    @DisplayName("11 - getLista")
     void getLista() {
         sorgente = "valore";
         previstoArray = new ArrayList<>();
@@ -297,8 +401,8 @@ public class AArrayServiceTest extends ATest {
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - check enumeration")
+    @Order(12)
+    @DisplayName("12 - check enumeration")
     void checkEnumeration() {
 
         sorgente = "giorno";

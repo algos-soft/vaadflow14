@@ -407,7 +407,7 @@ public class RegioneLogic extends ALogic {
         List<Stato> listaStati = statoLogic.findAllStato();
         List<WrapDueStringhe> listaWrap = null;
 
-        if (array.isValid(listaStati)) {
+        if (array.isAllValid(listaStati)) {
             for (Stato stato : listaStati) {
                 result = creaRegioniDiUnoStato(stato);
                 if (result.isErrato()) {

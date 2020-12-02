@@ -285,7 +285,7 @@ public class AColumnService extends AAbstractService {
             }
         }
 
-        if (array.isValid(enumItems)) {
+        if (array.isAllValid(enumItems)) {
             field = appContext.getBean(AComboField.class, fieldKey, caption);
             ((AComboField) field).setItem(enumItems);
         }

@@ -159,7 +159,7 @@ public class ATopLayout extends AButtonLayout {
             buttonClearFilter.addClickListener(event -> searchField.clear());
         }
 
-        if (array.isValid(mappaComboBox)) {
+        if (array.isAllValid(mappaComboBox)) {
             for (Map.Entry<String, ComboBox> mappaEntry : mappaComboBox.entrySet()) {
                 mappaEntry.getValue().addValueChangeListener(event -> performAction(AEAction.valueChanged));
             }

@@ -81,7 +81,7 @@ public class FlowData extends AData {
 
         listaEntityEffettivamenteUsate = checkFiles(listaCanonicalNamesEntity);
         logger.log(AETypeLog.checkData, "Sono state trovate " + listaEntityEffettivamenteUsate.size() + " classi di tipo AEntity da controllare");
-        if (array.isValid(listaEntityEffettivamenteUsate)) {
+        if (array.isAllValid(listaEntityEffettivamenteUsate)) {
             for (String canonicalName : listaEntityEffettivamenteUsate) {
                 collezione = file.estraeClasseFinale(canonicalName).toLowerCase();
 

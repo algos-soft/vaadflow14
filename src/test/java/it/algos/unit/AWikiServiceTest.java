@@ -800,7 +800,7 @@ public class AWikiServiceTest extends ATest {
     }
 
     private void printColonna(List<String> listaColonna) {
-        if (array.isValid(listaColonna)) {
+        if (array.isAllValid(listaColonna)) {
             for (String stringa : listaColonna) {
                 System.out.println(stringa);
             }
@@ -810,7 +810,7 @@ public class AWikiServiceTest extends ATest {
 
     private void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
-        if (array.isValid(listaWrap)) {
+        if (array.isAllValid(listaWrap)) {
             for (WrapDueStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
             }
@@ -820,7 +820,7 @@ public class AWikiServiceTest extends ATest {
 
     private void printWrapTre(List<WrapTreStringhe> listaWrap) {
         System.out.println("********");
-        if (array.isValid(listaWrap)) {
+        if (array.isAllValid(listaWrap)) {
             for (WrapTreStringhe wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
             }

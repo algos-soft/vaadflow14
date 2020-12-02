@@ -1,12 +1,12 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.grid.Grid;
+import it.algos.vaadflow14.backend.functional.APredicate;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
@@ -31,54 +31,12 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 public class AArrayService extends AAbstractService {
 
 
-    public static Predicate<Object> valido = new Predicate<>() {
-
-        /**
-         * Evaluates this predicate on the given argument.
-         *
-         * @param obj the input argument
-         *
-         * @return {@code true} if the input argument matches the predicate,
-         * otherwise {@code false}
-         */
-        @Override
-        public boolean test(Object obj) {
-            if (obj instanceof String stringa) {
-                return stringa != null && stringa.length() > 0;
-            }
-            else {
-                return obj != null;
-            }
-        }
-    };
-
-    public static Predicate<Object> nonValido = new Predicate<>() {
-
-        /**
-         * Evaluates this predicate on the given argument.
-         *
-         * @param obj the input argument
-         *
-         * @return {@code true} if the input argument matches the predicate,
-         * otherwise {@code false}
-         */
-        @Override
-        public boolean test(Object obj) {
-            if (obj instanceof String stringa) {
-                return stringa == null || stringa.length() == 0;
-            }
-            else {
-                return obj == null;
-            }
-        }
-    };
-
-
     /**
      * Controlla la validità di un array (lista). <br>
      * Deve esistere (not null) <br>
      * Deve avere degli elementi (size maggiore di 0) <br>
-     * Tutti gli elementi devono avere un valore (not-null) <br>
+     * Non ci devono essere elementi con valore null <br>
+     * Non sono accettate le stringhe vuote -> "" <br>
      *
      * @param array (List) in ingresso da controllare
      *
@@ -86,35 +44,8 @@ public class AArrayService extends AAbstractService {
      *
      * @since Java 8
      */
-    public boolean isValid(final List array) {
-
-        //        if (array == null || array.size() == 0) {
-        //            return false;
-        //        }
-
-        //        final List validi = (List) array.stream()
-        //                .filter(valido)
-        //                .collect(Collectors.toList());
-        //
-        //        return validi != null && validi.size() == array.size();
-
-        //        final long countValidi =  array.stream()
-        //                .filter(valido)
-        //                .count();
-        //
-        //        return countValidi==array.size();
-
-        //        final long countNonValidi =  array.stream()
-        //                .filter(nonValido)
-        //                .count();
-        //
-        //        return countNonValidi==0;
-
-        //        final long countNonValidi =  array.stream()
-        //                .filter(nonValido)
-        //                .count();
-
-        return array != null && array.size() > 0 && array.stream().filter(nonValido).count() == 0;
+    public boolean isAllValid(final List array) {
+        return array != null && array.size() > 0 && array.stream().filter(APredicate.nonValido).count() == 0;
     }
 
 
@@ -122,27 +53,15 @@ public class AArrayService extends AAbstractService {
      * Controlla la validità di una matrice. <br>
      * Deve esistere (not null) <br>
      * Deve avere degli elementi (length maggiore di 0) <br>
-     * Il primo elemento deve essere una stringa valida <br>
+     * Non ci devono essere elementi con valore null <br>
+     * Non sono accettate le stringhe vuote -> "" <br>
      *
-     * @param array (String[]) in ingresso da controllare
+     * @param matrice (String[]) in ingresso da controllare
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isValid(final String[] array) {
-
-        if (array == null) {
-            return false;
-        }
-
-        if (array.length < 1) {
-            return false;
-        }
-
-        if (text.isEmpty(array[0])) {
-            return false;
-        }
-
-        return text.isValid((String) array[0]);
+    public boolean isAllValid(final String[] matrice) {
+        return matrice != null && matrice.length > 0 && Arrays.asList(matrice).stream().filter(APredicate.nonValido).count() == 0;
     }
 
 
@@ -150,41 +69,32 @@ public class AArrayService extends AAbstractService {
      * Controlla la validità di una mappa. <br>
      * Deve esistere (not null) <br>
      * Deve avere degli elementi (size maggiore di 0) <br>
+     * Non ci devono essere chiavi con valore null <br>
+     * Non sono accettate le chiavi vuote -> "" <br>
      *
-     * @param array (Map) in ingresso da controllare
-     *
-     * @return vero se l'array soddisfa le condizioni previste
-     */
-    public boolean isValid(final Map array) {
-        return array != null && array.size() > 0;
-    }
-
-
-    /**
-     * Controlla la validità di una colelzione. <br>
-     * Deve esistere (not null) <br>
-     * Deve avere degli elementi (size maggiore di 0) <br>
-     *
-     * @param array (Collection) in ingresso da controllare
+     * @param mappa (Map) in ingresso da controllare
      *
      * @return vero se l'array soddisfa le condizioni previste
      */
-    public boolean isValid(final Collection array) {
-        return array != null && array.size() > 0;
+    public boolean isAllValid(final Map mappa) {
+        return mappa != null && mappa.size() > 0 && mappa.keySet().stream().filter(APredicate.nonValido).count() == 0;
     }
 
 
+
     /**
-     * Controlla che l'array sia nullo o vuoto. <br>
+     * Controlla che l'array sia nullo o vuoto <br>
      * Non deve esistere (null) <br>
      * Se esiste, non deve avere elementi (size = 0) <br>
      *
      * @param array (List) in ingresso da controllare
      *
      * @return vero se l'array soddisfa le condizioni previste
+     *
+     * @since Java 8
      */
     public boolean isEmpty(final List array) {
-        return !isValid(array);
+        return !isAllValid(array);
     }
 
 
@@ -198,7 +108,7 @@ public class AArrayService extends AAbstractService {
      * @return vero se l'array soddisfa le condizioni previste
      */
     public boolean isEmpty(final String[] array) {
-        return !isValid(array);
+        return !isAllValid(array);
     }
 
 
@@ -212,7 +122,7 @@ public class AArrayService extends AAbstractService {
      * @return vero se l'array soddisfa le condizioni previste
      */
     public boolean isEmpty(final Map array) {
-        return !isValid(array);
+        return !isAllValid(array);
     }
 
 

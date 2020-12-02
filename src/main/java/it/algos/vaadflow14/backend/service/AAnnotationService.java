@@ -433,7 +433,7 @@ public class AAnnotationService extends AAbstractService {
         }
 
         listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
-        if (array.isValid(listaGrezza)) {
+        if (array.isAllValid(listaGrezza)) {
             listaFields = new ArrayList<>();
             for (Field field : listaGrezza) {
                 if (getDBRef(field) != null) {

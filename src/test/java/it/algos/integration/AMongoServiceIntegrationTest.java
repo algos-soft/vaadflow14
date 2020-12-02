@@ -365,23 +365,23 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertTrue(array.isEmpty(listaBean));
 
         listaBean = service.findAll(Mese.class, (Query) null);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query nulla");
 
         listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query vuota ordine interno");
 
         query.with(sort);
         listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query vuota ma ordinata");
 
         query = new Query();
         query.with(sort);
         query.addCriteria(Criteria.where("ordine").lt(8));
         listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata");
 
         query = new Query();
@@ -389,7 +389,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         query.with(sort);
         query.fields().exclude("ordine");
         listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata e con campo escluso");
 
         query = new Query();
@@ -397,7 +397,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         query.with(sort);
         query.fields().include("mese");
         listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata e con singolo campo selezionato");
     }
 
@@ -416,32 +416,32 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertTrue(array.isEmpty(listaBean));
 
         listaBean = service.findAll(Mese.class, (Query) null, VUOTA);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query nulla");
 
         listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query vuota");
 
         query.with(sort);
         listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query ordinata");
 
         query.addCriteria(Criteria.where("ordine").lt(10));
         listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata");
 
         query.fields().exclude("ordine");
         listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isValid(listaBean));
+        Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata e selezione dei campi");
 
         String projection = "{'code': 1}";
         query = new Query();
         listaBean = service.findAll(Mese.class, query, projection);
-        Assert.assertFalse(array.isValid(listaBean));
+        Assert.assertFalse(array.isAllValid(listaBean));
         printLista(listaBean, "la projection non funziona");
     }
 

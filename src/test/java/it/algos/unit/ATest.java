@@ -350,7 +350,7 @@ public abstract class ATest {
 
 
     protected void print(List<String> lista) {
-        if (array.isValid(lista)) {
+        if (array.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);
             }
@@ -359,10 +359,10 @@ public abstract class ATest {
 
 
     protected void printList(List<List<String>> listaTable) {
-        if (array.isValid(listaTable)) {
+        if (array.isAllValid(listaTable)) {
             for (List<String> lista : listaTable) {
                 System.out.println(VUOTA);
-                if (array.isValid(lista)) {
+                if (array.isAllValid(lista)) {
                     for (String stringa : lista) {
                         System.out.println(stringa);
                     }
@@ -374,11 +374,11 @@ public abstract class ATest {
 
     protected void printMappa(Map<String, List<String>> mappa) {
         List<String> lista;
-        if (array.isValid(mappa)) {
+        if (array.isAllValid(mappa)) {
             for (String key : mappa.keySet()) {
                 lista = mappa.get(key);
                 System.out.println(VUOTA);
-                if (array.isValid(lista)) {
+                if (array.isAllValid(lista)) {
                     print(lista);
                 }
             }

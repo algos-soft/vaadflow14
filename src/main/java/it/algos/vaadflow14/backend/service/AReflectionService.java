@@ -71,7 +71,7 @@ public class AReflectionService extends AAbstractService {
         }
 
         listaGrezza = getAllFields(entityClazz);
-        if (array.isValid(listaGrezza)) {
+        if (array.isAllValid(listaGrezza)) {
             listaFields = new ArrayList<>();
             for (Field field : listaGrezza) {
                 if (field.getDeclaringClass() == entityClazz) {
@@ -143,7 +143,7 @@ public class AReflectionService extends AAbstractService {
         List<String> listaNomi = null;
         List<Field> listaFields = getFields(entityClazz);
 
-        if (array.isValid(listaFields)) {
+        if (array.isAllValid(listaFields)) {
             listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
                 listaNomi.add(field.getName());
@@ -174,7 +174,7 @@ public class AReflectionService extends AAbstractService {
         List<String> listaNomi = null;
         List<Field> listaFields = getAllFields(entityClazz);
 
-        if (array.isValid(listaFields)) {
+        if (array.isAllValid(listaFields)) {
             listaNomi = new ArrayList<>();
             for (Field field : listaFields) {
                 listaNomi.add(field.getName());

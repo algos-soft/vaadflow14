@@ -1394,7 +1394,7 @@ public class AFileService extends AAbstractService {
             }
         }
 
-        return array.isValid(lista) ? lista.subList(1, lista.size()) : lista;
+        return array.isAllValid(lista) ? lista.subList(1, lista.size()) : lista;
     }
 
 
@@ -1615,7 +1615,7 @@ public class AFileService extends AAbstractService {
      * @return true se è piena
      */
     public boolean isPienaSubDirectory(File directoryToBeScanned, String dirInterna) {
-        return array.isValid(getSubSubDirectories(directoryToBeScanned, dirInterna));
+        return array.isAllValid(getSubSubDirectories(directoryToBeScanned, dirInterna));
     }
 
 
@@ -1889,7 +1889,7 @@ public class AFileService extends AAbstractService {
         List<String> listaNamesOnlyFilesJava = getAllSubFilesJava(path);
         String simpleName;
 
-        if (array.isValid(listaNamesOnlyFilesJava)) {
+        if (array.isAllValid(listaNamesOnlyFilesJava)) {
             for (String canonicalName : listaNamesOnlyFilesJava) {
                 //--estrae la parte significativa
                 simpleName = canonicalName.substring(canonicalName.lastIndexOf(PUNTO) + PUNTO.length());
@@ -1922,7 +1922,7 @@ public class AFileService extends AAbstractService {
         String tag = ".it.";
         String canonicalName;
 
-        if (array.isValid(listaPathNamesOnlyFiles)) {
+        if (array.isAllValid(listaPathNamesOnlyFiles)) {
             for (String pathName : listaPathNamesOnlyFiles) {
                 if (pathName.endsWith(JAVA_SUFFIX)) {
                     canonicalName = text.levaCoda(pathName, JAVA_SUFFIX);
@@ -1954,7 +1954,7 @@ public class AFileService extends AAbstractService {
             logger.error(unErrore, this.getClass(), "getAllEntityClass");
         }
 
-        if (array.isValid(listaAllPathNames)) {
+        if (array.isAllValid(listaAllPathNames)) {
             for (String pathName : listaAllPathNames) {
                 if (isEsisteFile(pathName)) {
                     listaPathNamesOnlyFiles.add(pathName);
