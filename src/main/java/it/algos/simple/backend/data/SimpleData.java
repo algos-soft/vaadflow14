@@ -3,6 +3,7 @@ package it.algos.simple.backend.data;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.packages.GammaLogic;
 import it.algos.simple.backend.packages.LambdaLogic;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,8 @@ import java.util.List;
  * L' ordine con cui vengono create le collections è significativo <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@AIScript(sovraScrivibile = false)
 public class SimpleData extends FlowData {
 
     /**

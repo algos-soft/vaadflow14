@@ -1,11 +1,12 @@
 package it.algos.@MODULELOWER@.backend.boot;
 
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.@MODULELOWER@.backend.data.@MODULEUPPER@Data;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
 
@@ -26,38 +27,20 @@ import java.time.LocalDate;
  * Sottoclasse concreta dell' applicazione specifica che: <br>
  * 1) regola alcuni parametri standard del database MongoDB <br>
  * 2) regola le variabili generali dell'applicazione <br>
- * 3) crea le preferenze standard e specifiche dell'applicazione <br>
- * 4) crea i dati di alcune collections sul DB mongo <br>
- * 5) aggiunge al menu le @Route (view) standard e specifiche <br>
+ * 3) crea i dati di alcune collections sul DB mongo <br>
+ * 4) crea le preferenze standard e specifiche dell'applicazione <br>
+ * 5) aggiunge le @Route (view) standard e specifiche <br>
  * 6) lancia gli schedulers in background <br>
  * 7) costruisce una versione demo <br>
  * 8) controllare l' esistenza di utenti abilitati all' accesso <br>
+ * <p>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Boot extends FlowBoot {
-
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public @MODULEUPPER@Data @MODULELOWER@Data;
-
-
-    /**
-     * Constructor with @Autowired on setter.<br>
-     * Per evitare di avere nel costruttore tutte le property che devono essere iniettate e per poterle aumentare <br>
-     * senza dover modificare i costruttori delle sottoclassi, l'iniezione tramite @Autowired <br>
-     * viene delegata ad alcuni metodi setter() che vengono qui invocati con valore (ancora) nullo. <br>
-     * Al termine del ciclo init() del costruttore il framework SpringBoot/Vaadin, inietterà la relativa istanza <br>
-     */
-    public @MODULEUPPER@Boot() {
-        super();
-        this.set@MODULEUPPER@Data(@MODULELOWER@Data);
-    }
 
 
     /**
@@ -80,15 +63,33 @@ public class @MODULEUPPER@Boot extends FlowBoot {
     protected void fixVariabili() {
         super.fixVariabili();
 
-        FlowVar.usaDebug = true;
-        FlowVar.usaCompany = true;
-        FlowVar.usaSecurity = true;
+        FlowVar.usaDebug = false;
+        FlowVar.usaCompany = false;
+        FlowVar.bootClazz = this.getClass();
+        FlowVar.dataClazz = @MODULEUPPER@Data.class;
+        FlowVar.usaSecurity = false;
         FlowVar.projectName = "@MODULEUPPER@";
         FlowVar.projectDescrizione = "Cambia questa descrizione nel file @MODULEUPPER@Boot";
         FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.@PROJECT@.version"));
         FlowVar.versionDate = @VERSIONDATE@;
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
-        FlowVar.layoutTitle = "Simple test";
+        FlowVar.usaCronoPackages = false;
+        FlowVar.usaGeografiaPackages = false;
+    }
+
+
+    /**
+     * Primo ingresso nel programma nella classe concreta, tramite il <br>
+     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
+     * Crea i dati di alcune collections sul DB mongo <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * <p>
+     * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
+     *
+     * @since java 8
+     */
+    protected void fixData() {
+        super.fixData();
     }
 
 
@@ -102,16 +103,6 @@ public class @MODULEUPPER@Boot extends FlowBoot {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-    }
-
-
-    /**
-     * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixData() {
-        super.fixData();
     }
 
 
@@ -151,16 +142,6 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      */
     @Override
     protected void fixUsers() {
-    }
-
-     /**
-      * Set con @Autowired di una property chiamata dal costruttore <br>
-      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-      * Chiamata dal costruttore di questa classe con valore nullo <br>
-      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-      */
-    public void set@MODULEUPPER@Data(@MODULEUPPER@Data @MODULELOWER@Data) {
-        this.@MODULELOWER@Data = @MODULELOWER@Data;
     }
 
 }

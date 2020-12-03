@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.boot;
 
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.data.AData;
+import it.algos.vaadflow14.backend.data.AIData;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
@@ -56,23 +56,17 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Deve essere creata una sottoclasse concreta per l' applicazione specifica che: <br>
  * 1) regola alcuni parametri standard del database MongoDB <br>
  * 2) regola le variabili generali dell'applicazione <br>
- * 3) crea le preferenze standard e specifiche dell'applicazione <br>
- * 4) crea i dati di alcune collections sul DB mongo <br>
- * 5) aggiunge al menu le @Route (view) standard e specifiche <br>
+ * 3) crea i dati di alcune collections sul DB mongo <br>
+ * 4) crea le preferenze standard e specifiche dell'applicazione <br>
+ * 5) aggiunge le @Route (view) standard e specifiche <br>
  * 6) lancia gli schedulers in background <br>
  * 7) costruisce una versione demo <br>
  * 8) controllare l' esistenza di utenti abilitati all' accesso <br>
  */
 public abstract class FlowBoot implements ServletContextListener {
 
-    public static Consumer<AData> fixData = AData::fixData;
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public Environment environment;
+    public static Consumer<AIData> fixData = AIData::fixData;
+    public static Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
 
     /**
      * Istanza di una interfaccia <br>
@@ -81,6 +75,14 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     @Autowired
     public ApplicationContext appContext;
+
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    public Environment environment;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -96,16 +98,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public AMongoService mongo;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public FlowData flowData;
 
-    //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
-    protected AData aData;
-    //    public static Consumer<AData> fixLog = AData::fixLog;
 
     /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
@@ -117,7 +110,6 @@ public abstract class FlowBoot implements ServletContextListener {
     public FlowBoot() {
         this.setEnvironment(environment);
         this.setMongo(mongo);
-        this.setFlowData(flowData);
         this.setLogService(logger);
     }// end of constructor with @Autowired on setter
 
@@ -143,9 +135,6 @@ public abstract class FlowBoot implements ServletContextListener {
         logger.startupIni();
 
         this.fixDBMongo();
-        //        this.fixVersioni();
-        //        this.fixRiferimenti();
-        //        this.iniziaDataPreliminari();
         this.fixVariabili();
         this.fixData();
         this.fixPreferenze();
@@ -165,34 +154,6 @@ public abstract class FlowBoot implements ServletContextListener {
     protected void fixDBMongo() {
         mongo.getMaxBlockingSortBytes();
         mongo.fixMaxBytes();
-    }
-
-
-    /**
-     * Inizializzazione delle versioni standard di vaadinFlow <br>
-     * Inizializzazione delle versioni del programma specifico <br>
-     */
-    @Deprecated()
-    protected void fixVersioni() {
-    }
-
-
-    /**
-     * Riferimento alla sottoclasse specifica di ABoot per utilizzare il metodo sovrascritto resetPreferenze() <br>
-     * DEVE essere sovrascritto <br>
-     */
-    @Deprecated()
-    protected void fixRiferimenti() {
-        //        preferenzaService.applicationBoot = this;
-    }
-
-
-    /**
-     * Inizializzazione dei dati di alcune collections essenziali per la partenza <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Deprecated()
-    protected void iniziaDataPreliminari() {
     }
 
 
@@ -286,12 +247,6 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.dataClazz = FlowData.class;
 
-        //        /**
-        //         * Eventuali titolo della pagina <br>
-        //         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
-        //         */
-        //        FlowVar.layoutTitle = VUOTA;
-
         /**
          * Classe da usare per le Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
@@ -340,7 +295,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * @since java 8
      */
     protected void fixData() {
-        Optional<AData> opt = Optional.ofNullable((AData) appContext.getBean(FlowVar.dataClazz));
+        Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
         opt.ifPresent(fixData);
     }
 
@@ -353,18 +308,9 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        flowData.fixPreferenze();
+        Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
+        opt.ifPresent(fixPreferenze);
     }
-
-    //    /**
-    //     * Primo ingresso nel programma nella classe concreta, tramite il
-    //     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
-    //     * Crea i dati di alcune collections sul DB mongo <br>
-    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixData() {
-    //        flowData.fixData();
-    //    }
 
 
     /**
@@ -448,6 +394,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.logger = logger;
     }
 
+
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -457,20 +404,6 @@ public abstract class FlowBoot implements ServletContextListener {
     @Autowired
     public void setMongo(AMongoService mongo) {
         this.mongo = mongo;
-    }
-
-
-    /**
-     * Set con @Autowired di una property chiamata dal costruttore <br>
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Chiamata dal costruttore di questa classe con valore nullo <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     *
-     * @param flowData the flow data
-     */
-    @Autowired
-    public void setFlowData(FlowData flowData) {
-        this.flowData = flowData;
     }
 
 

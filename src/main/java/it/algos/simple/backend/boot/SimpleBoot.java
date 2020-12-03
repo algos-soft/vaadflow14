@@ -9,7 +9,6 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -32,9 +31,9 @@ import java.time.LocalDate;
  * <p>
  * Sottoclasse concreta dell' applicazione specifica che: <br>
  * 1) regola alcuni parametri standard del database MongoDB <br>
- * 2) crea le preferenze standard e specifiche dell'applicazione <br>
- * 3) regola le variabili generali dell'applicazione <br>
- * 4) crea i dati di alcune collections sul DB mongo <br>
+ * 2) regola le variabili generali dell'applicazione <br>
+ * 3) crea i dati di alcune collections sul DB mongo <br>
+ * 4) crea le preferenze standard e specifiche dell'applicazione <br>
  * 5) aggiunge le @Route (view) standard e specifiche <br>
  * 6) lancia gli schedulers in background <br>
  * 7) costruisce una versione demo <br>
@@ -47,24 +46,6 @@ public class SimpleBoot extends FlowBoot {
 
 
     /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public SimpleData simpleData;
-
-
-    /**
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public SimpleBoot(SimpleData simpleData) {
-        super();
-        this.setSimpleData(simpleData);
-    }
-
-
-    /**
      * Regola alcuni parametri standard del database MongoDB <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
@@ -73,18 +54,6 @@ public class SimpleBoot extends FlowBoot {
         super.fixDBMongo();
     }
 
-
-    /**
-     * Crea le preferenze standard e specifiche dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-    }
 
     /**
      * Regola le variabili generali dell' applicazione con il loro valore iniziale di default <br>
@@ -113,6 +82,32 @@ public class SimpleBoot extends FlowBoot {
     }
 
 
+    /**
+     * Primo ingresso nel programma nella classe concreta, tramite il <br>
+     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
+     * Crea i dati di alcune collections sul DB mongo <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * <p>
+     * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
+     *
+     * @since java 8
+     */
+    protected void fixData() {
+        super.fixData();
+    }
+
+
+    /**
+     * Crea le preferenze standard e specifiche dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+    }
 
 
     /**
@@ -159,16 +154,6 @@ public class SimpleBoot extends FlowBoot {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixUsers() {
-    }
-
-    /**
-     * Set con @Autowired di una property chiamata dal costruttore <br>
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Chiamata dal costruttore di questa classe con valore nullo <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public void setSimpleData(SimpleData simpleData) {
-        this.simpleData = simpleData;
     }
 
 }
