@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -206,7 +207,7 @@ public class PreferenzaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(AEPreferenza aePref) {
+    public Preferenza creaIfNotExist(AIPreferenza aePref) {
         return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.getNote());
     }
 
@@ -381,7 +382,8 @@ public class PreferenzaLogic extends ALogic {
 
         if (objValue != null && objValue instanceof Boolean) {
             status = (boolean) objValue;
-        } else {
+        }
+        else {
             logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
         }
 
@@ -393,25 +395,6 @@ public class PreferenzaLogic extends ALogic {
         return getString(keyID);
     }
 
-
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-    @Override
-    public boolean reset() {
-
-        for (AEPreferenza aePref : AEPreferenza.values()) {
-            creaIfNotExist(aePref);
-        }
-
-        return true;
-    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -440,11 +423,20 @@ public class PreferenzaLogic extends ALogic {
             return result;
         }
 
-        for (AEPreferenza aePref : AEPreferenza.values()) {
-            numRec = creaIfNotExist(aePref) != null ? numRec+1 : numRec;
+        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
+        for (AIPreferenza aePref : AEPreferenza.values()) {
+            numRec = creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.enumeration,numRec);
+        //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
+        List<AIPreferenza> preferenzeSpecifiche = new ArrayList<>();
+        if (array.isAllValid(preferenzeSpecifiche)) {
+            for (AIPreferenza aePref : preferenzeSpecifiche) {
+                numRec = creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+            }
+        }
+
+        return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
 }

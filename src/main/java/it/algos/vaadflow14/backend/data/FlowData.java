@@ -70,7 +70,7 @@ public class FlowData extends AData {
      * Check iniziale di alcune collections <br>
      * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
-     * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * L' ordine con cui vengono create le collections è significativo <br>
      */
     public void fixData() {
@@ -93,6 +93,7 @@ public class FlowData extends AData {
                 }
             }
         }
+        logger.log(AETypeLog.checkData, "Controllati i dati iniziali di vaadflow14");
     }
 
     /**

@@ -1251,7 +1251,7 @@ public abstract class ALogic implements AILogic {
         if (FlowVar.usaCompany) {
             if (company != null) {
                 if (!vaadinService.isDeveloper() && needCompany) {
-                    filtri.add(new AFiltro(Criteria.where(FlowVar.companyClazzName).is(company)));
+                    filtri.add(new AFiltro(Criteria.where(FlowVar.companyClazz.getSimpleName().toLowerCase()).is(company)));
                 }
             }
             else {

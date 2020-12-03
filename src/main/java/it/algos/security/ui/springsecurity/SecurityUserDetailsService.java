@@ -1,8 +1,6 @@
 package it.algos.security.ui.springsecurity;
 
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.backend.application.FlowVar.projectName;
 
 /**
  * Implements the {@link UserDetailsService}.
@@ -60,7 +57,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
             passwordHash = passwordEncoder.encode(utente.getPassword());
             authorities = utente.getAuthorities();
             company = utente.company;
-            FlowVar.layoutTitle = company != null ? company.getDescrizione() : projectName;
+//            FlowVar.layoutTitle = company != null ? company.getDescrizione() : projectName;
             return new User(utente.getUsername(), passwordHash, authorities);
         } else {
             throw new UsernameNotFoundException("Non c'è nessun utente di nome: " + uniqueUserName);

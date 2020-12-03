@@ -18,12 +18,15 @@ import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContextListener;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.START_DATE;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -62,12 +65,22 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public abstract class FlowBoot implements ServletContextListener {
 
+    public static Consumer<AData> fixData = AData::fixData;
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
     public Environment environment;
+
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ApplicationContext appContext;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -90,10 +103,9 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public FlowData flowData;
 
-
     //--riferimento alla sottoclasse di AData da usare per inizializzare i dati
     protected AData aData;
-
+    //    public static Consumer<AData> fixLog = AData::fixLog;
 
     /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
@@ -135,8 +147,8 @@ public abstract class FlowBoot implements ServletContextListener {
         //        this.fixRiferimenti();
         //        this.iniziaDataPreliminari();
         this.fixVariabili();
-        this.fixPreferenze();
         this.fixData();
+        this.fixPreferenze();
         this.fixMenuRoutes();
         this.fixSchedules();
         this.fixDemo();
@@ -195,14 +207,14 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
          * Di default (per sicurezza) uguale a true <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaDebug = true;
 
         /**
          * Controlla se l' applicazione è multi-company oppure no <br>
          * Di default (per sicurezza) uguale a true <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          */
         FlowVar.usaCompany = true;
@@ -212,7 +224,7 @@ public abstract class FlowBoot implements ServletContextListener {
          * Se si usa il login, occorre la classe SecurityConfiguration <br>
          * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
          * Di default (per sicurezza) uguale a true <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          * Se usaCompany=true anche usaSecurity deve essere true <br>
          * Può essere true anche se usaCompany=false <br>
          */
@@ -222,62 +234,76 @@ public abstract class FlowBoot implements ServletContextListener {
          * Nome identificativo dell' applicazione <br>
          * Usato (eventualmente) nella barra di menu in testa pagina <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.projectName = VUOTA;
 
         /**
          * Descrizione completa dell' applicazione <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.projectDescrizione = VUOTA;
 
         /**
          * Versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
 
         /**
          * Data della versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.versionDate = START_DATE;
 
         /**
          * Eventuali informazioni aggiuntive da utilizzare nelle informazioni <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.projectNote = VUOTA;
 
         /**
          * Flag per usare le icone VaadinIcon <br>
          * In alternativa usa le icone 'lumo' <br>
-         * Può essere modificato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaVaadinIcon = true;
 
         /**
-         * Eventuali titolo della pagina <br>
-         * DEVE essere regolato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Classe da usare per lo startup del programma <br>
+         * Di default FlowBoot oppure probabile sottoclasse del progetto <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
-        FlowVar.layoutTitle = VUOTA;
+        FlowVar.bootClazz = FlowBoot.class;
 
         /**
-         * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
+         * Classe da usare per lo startup del programma <br>
+         * Di default FlowData oppure possibile sottoclasse del progetto <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.dataClazz = FlowData.class;
+
+        //        /**
+        //         * Eventuali titolo della pagina <br>
+        //         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+        //         */
+        //        FlowVar.layoutTitle = VUOTA;
+
+        /**
+         * Classe da usare per le Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
          * Eventuale casting a carico del chiamante <br>
-         * Può essere modificato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
-        FlowVar.companyClazzName = "company";
+        FlowVar.companyClazz = Company.class;
 
         /**
          * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
          * Ogni applicazione può modificarla <br>
-         * Può essere modificato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.pathLogo = "img/medal.ico";
 
@@ -291,17 +317,33 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Può essere modificato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaCronoPackages = false;
 
         /**
          * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
          * Di default (per sicurezza) uguale a false <br>
-         * Può essere modificato in xxxBoot.fixVariabili() sempre presente nella directory 'backend.boot' <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaGeografiaPackages = false;
     }
+
+    /**
+     * Primo ingresso nel programma nella classe concreta, tramite il <br>
+     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
+     * Crea i dati di alcune collections sul DB mongo <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * <p>
+     * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
+     *
+     * @since java 8
+     */
+    protected void fixData() {
+        Optional<AData> opt = Optional.ofNullable((AData) appContext.getBean(FlowVar.dataClazz));
+        opt.ifPresent(fixData);
+    }
+
 
     /**
      * Crea le preferenze standard e specifiche dell'applicazione <br>
@@ -314,14 +356,15 @@ public abstract class FlowBoot implements ServletContextListener {
         flowData.fixPreferenze();
     }
 
-
-    /**
-     * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixData() {
-        flowData.fixData();
-    }
+    //    /**
+    //     * Primo ingresso nel programma nella classe concreta, tramite il
+    //     * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
+    //     * Crea i dati di alcune collections sul DB mongo <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    protected void fixData() {
+    //        flowData.fixData();
+    //    }
 
 
     /**

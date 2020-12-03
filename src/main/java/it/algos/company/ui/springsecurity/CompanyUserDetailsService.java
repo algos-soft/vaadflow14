@@ -1,12 +1,9 @@
 package it.algos.company.ui.springsecurity;
 
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,8 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.backend.application.FlowVar.projectName;
+import static it.algos.vaadflow14.backend.application.FlowCost.MONGO_FIELD_USER;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Implements the {@link UserDetailsService}.
@@ -60,7 +57,7 @@ public class CompanyUserDetailsService implements UserDetailsService {
             passwordHash = passwordEncoder.encode(utente.getPassword());
             authorities = utente.getAuthorities();
             company = utente.company;
-            FlowVar.layoutTitle = company != null ? company.getDescrizione() : projectName;
+//            FlowVar.layoutTitle = company != null ? company.getDescrizione() : projectName;
             return new User(utente.getUsername(), passwordHash, authorities);
         } else {
             throw new UsernameNotFoundException("Non c'è nessun utente di nome: " + uniqueUserName);

@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.simple.backend.packages.GammaLogic;
 import it.algos.simple.backend.packages.LambdaLogic;
 import it.algos.vaadflow14.backend.data.FlowData;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -44,24 +45,17 @@ public class SimpleData extends FlowData {
     public LambdaLogic lambdaLogic;
 
 
-    /**
-     * Crea le preferenze standard dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
-     */
-    public void fixPreferenze() {
-        int stop=87;
-    }
 
     /**
      * Check iniziale di alcune collections <br>
      * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
-     * Puo essere sovrascritto, ma SENZA invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
     public void fixData() {
+        super.fixData();
+
         String moduleName = "simple";
         List<String> listaCanonicalNameEntity = file.getModuleSubFilesEntity(moduleName);
 
@@ -71,7 +65,9 @@ public class SimpleData extends FlowData {
             }
         }
 
-//        Beta beta = Beta.builderBeta().code("valori booleani").build();
+        logger.log(AETypeLog.checkData, "Controllati i dati iniziali di simple");
+
+        //        Beta beta = Beta.builderBeta().code("valori booleani").build();
 //        beta.id = "binario";
 //        mongo.save(beta);
 //
@@ -127,6 +123,17 @@ public class SimpleData extends FlowData {
 //            lambda.tre = "potta";
 //            mongo.save(lambda);
 //        }
+    }
+
+
+    /**
+     * Crea le preferenze standard dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     */
+    public void fixPreferenze() {
+        int stop=87;
     }
 
 }

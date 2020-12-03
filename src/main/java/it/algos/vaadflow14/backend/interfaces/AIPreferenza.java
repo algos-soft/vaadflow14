@@ -11,14 +11,19 @@ import it.algos.vaadflow14.backend.enumeration.AETypePref;
  */
 public interface AIPreferenza {
 
-    public String getKeyCode();
+    String getKeyCode();
 
-    public String getDescrizione();
+    String getDescrizione();
 
-    public AETypePref getType();
+    AETypePref getType();
 
-    public boolean isCompanySpecifica();
+    boolean isCompanySpecifica();
 
-    public Object getValue();
+    Object getValue();
+
+    Object getDefaultValue();
+
+    String getNote();
+
 
 }// end of interface

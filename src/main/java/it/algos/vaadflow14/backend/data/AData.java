@@ -1,15 +1,11 @@
 package it.algos.vaadflow14.backend.data;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.service.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_LOGIC;
 import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC;
@@ -30,9 +26,9 @@ import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Slf4j
+//@SpringComponent
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Slf4j
 public abstract class AData {
 
 
@@ -99,6 +95,12 @@ public abstract class AData {
      */
     protected String collectionName;
 
+    public void fixData() {
+    }
+    public void fixLog() {
+        logger.error("Non ho trovato nessuna classe xxxData", this.getClass(), "fixLog");
+
+    }
 
     /**
      * Controllo se la collection è vuota. Se esiste, non faccio nulla. <br>
@@ -110,16 +112,16 @@ public abstract class AData {
         AIResult result;
         String entityLogicPrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_BUSINESS_LOGIC;
         AILogic entityLogic = classService.getLogicFromEntityName(canonicalEntityName);
-        String nameLogic=entityLogic.getClass().getSimpleName();
+        String nameLogic = entityLogic.getClass().getSimpleName();
         boolean methodExists = false;
 
         if (entityLogic == null || nameLogic.equals(TAG_GENERIC_LOGIC)) {
-            logger.log(AETypeLog.checkData, "Non esiste la classe " + entityLogicPrevista +" per effettuare il Reset dei dati");
+            logger.log(AETypeLog.checkData, "Non esiste la classe " + entityLogicPrevista + " per effettuare il Reset dei dati");
             return false;
         }
 
         try {
-            methodExists = entityLogic.getClass().getDeclaredMethod("resetEmptyOnly")!=null;
+            methodExists = entityLogic.getClass().getDeclaredMethod("resetEmptyOnly") != null;
         } catch (Exception unErrore) {
         }
 

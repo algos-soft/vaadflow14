@@ -40,16 +40,16 @@ public class SecurityBoot extends FlowBoot {
     }
 
 
-    /**
-     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixData() {
-        super.fixData();
-
-//        testData.initData();
-    }
+//    /**
+//     * Inizializzazione dei dati di alcune collections sul DB mongo <br>
+//     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixData() {
+//        super.fixData();
+//
+////        testData.initData();
+//    }
 
 
     /**
@@ -68,7 +68,7 @@ public class SecurityBoot extends FlowBoot {
         FlowVar.projectVersion = 0.73;
         FlowVar.versionDate = LocalDate.of(2020, 8, 21);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
-        FlowVar.layoutTitle = "Security test";
+//        FlowVar.layoutTitle = "Security test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
     }
 

@@ -98,27 +98,18 @@ public class SimpleBoot extends FlowBoot {
 
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
+        FlowVar.bootClazz = this.getClass();
+        FlowVar.dataClazz = SimpleData.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
         FlowVar.versionDate = LocalDate.of(2020, 11, 23);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
-        FlowVar.layoutTitle = "Simple test";
+        //        FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = true;
-    }
-
-
-    /**
-     * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixData() {
-        super.fixData();
-        //        simpleData.initData();
     }
 
 

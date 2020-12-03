@@ -46,6 +46,12 @@ Function is a functional interface; it takes an argument (object of type T) and 
     }
 - T – Type of the input to the function.
 - R – Type of the result of the function.
+####Consumer
+    
+    @FunctionalInterface
+    public interface Consumer<T> {
+      void accept(T t);
+    }
 ####Predicate
 Predicate(T): Takes one parameter type (T), produces boolean value
     

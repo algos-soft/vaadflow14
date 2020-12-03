@@ -39,23 +39,14 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
 @AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code,type,value,usaCompany,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,usaCompany,descrizione,type,value")
+@AIList(fields = "code,type,value,usaCompany,usaFlow,descrizione", usaRowIndex = true)
+@AIForm(fields = "code,usaCompany,usaFlow,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
-
-    //    /**
-    //     * ordinamento (obbligatorio, unico) <br>
-    //     */
-    //    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    //    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    //    @AIColumn(header = "#")
-    //    public int ordine;
 
 
     /**
@@ -91,6 +82,13 @@ public class Preferenza extends ACEntity {
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
     @AIColumn(headerIcon = VaadinIcon.FACTORY)
     public boolean usaCompany;
+
+    /**
+     * usaFlow (facoltativo) usa un prefisso col codice della company
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
+    @AIColumn(headerIcon = VaadinIcon.HOME)
+    public boolean usaFlow;
 
     /**
      * descrizione (obbligatoria)

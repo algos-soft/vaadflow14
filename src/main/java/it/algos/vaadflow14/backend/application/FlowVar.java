@@ -31,7 +31,7 @@ public class FlowVar {
     /**
      * Controlla se l' applicazione gira in 'debug mode' oppure no <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static boolean usaDebug;
 
@@ -40,7 +40,7 @@ public class FlowVar {
      * Se si usa il login, occorre la classe SecurityConfiguration <br>
      * Se non si usa il login, occorre disabilitare l'Annotation @EnableWebSecurity di SecurityConfiguration <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      * Se usaCompany=true anche usaSecurity deve essere true <br>
      * Può essere true anche se usaCompany=false <br>
      */
@@ -50,7 +50,7 @@ public class FlowVar {
     /**
      * Controlla se l' applicazione è multi-company oppure no <br>
      * Di default (per sicurezza) uguale a true <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      * Se usaCompany=true anche usaSecurity deve essere true <br>
      */
     public static boolean usaCompany;
@@ -60,14 +60,14 @@ public class FlowVar {
      * Nome identificativo dell' applicazione <br>
      * Usato (eventualmente) nella barra di menu in testa pagina <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static String projectName;
 
 
     /**
      * Descrizione completa dell' applicazione <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static String projectDescrizione;
 
@@ -75,7 +75,7 @@ public class FlowVar {
     /**
      * Versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static double projectVersion;
 
@@ -83,7 +83,7 @@ public class FlowVar {
     /**
      * Data della versione dell' applicazione <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static LocalDate versionDate;
 
@@ -91,7 +91,7 @@ public class FlowVar {
     /**
      * Eventuali informazioni aggiuntive da utilizzare nelle informazioni <br>
      * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static String projectNote;
 
@@ -99,15 +99,29 @@ public class FlowVar {
     /**
      * Flag per usare le icone VaadinIcon <br>
      * In alternativa usa le icone 'lumo' <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static boolean usaVaadinIcon;
 
+    //    /**
+    //     * Eventuali titolo della pagina <br>
+    //     */
+    //    public static String layoutTitle;
+
 
     /**
-     * Eventuali titolo della pagina <br>
+     * Classe da usare per lo startup del programma <br>
+     * Di default FlowBoot oppure probabile sottoclasse del progetto <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
-    public static String layoutTitle;
+    public static Class bootClazz;
+
+    /**
+     * Classe da usare per lo startup del programma <br>
+     * Di default FlowData oppure possibile sottoclasse del progetto <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     */
+    public static Class dataClazz;
 
     //    /**
     //     * Service da usare per recuperare dal mongoDB l'utenza loggata tramite 'username' che è unico <br>
@@ -134,19 +148,27 @@ public class FlowVar {
     //    public static Class companyServiceClazz = CompanyService.class;
 
 
+//    /**
+//     * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
+//     * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
+//     * Eventuale casting a carico del chiamante <br>
+//     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+//     */
+//    public static String companyClazzName;
+
     /**
-     * Nome da usare per recuperare la lista delle Company (o sottoclassi) <br>
+     * Classe da usare per le Company (o sottoclassi) <br>
      * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
      * Eventuale casting a carico del chiamante <br>
-     * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
-    public static String companyClazzName;
+    public static Class companyClazz;
 
 
     /**
      * Path per recuperare dalle risorse un' immagine da inserire nella barra di menu di MainLayout. <br>
      * Ogni applicazione può modificarla <br>
-     * Deve essere regolata in xxxBoot.regolaInfo() sempre presente nella directory 'application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static String pathLogo;
 
@@ -161,14 +183,14 @@ public class FlowVar {
     /**
      * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static boolean usaCronoPackages;
 
     /**
      * Mostra i quattro packages geografici (stato, regione, provincia, comune) <br>
      * Di default (per sicurezza) uguale a false <br>
-     * Deve essere regolato in xxxBoot.regolaInfo() sempre presente nella directory 'backend.application' <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static boolean usaGeografiaPackages;
 
