@@ -323,7 +323,9 @@ public class AArrayService extends AAbstractService {
      *
      * @param testo da esaminare
      *
-     * @return matrice
+     * @return array list di un solo elemento
+     *
+     * @since Java 9
      */
     public List<String> fromStringa(String testo) {
         if (StringUtil.isBlank(testo)) {
@@ -369,11 +371,13 @@ public class AArrayService extends AAbstractService {
      */
     @Deprecated
     public Grid.Column[] getColumnArray(Grid grid) {
+        int k=0;
         List<Grid.Column> lista = grid.getColumns();
         Grid.Column[] matrice = new Grid.Column[lista.size()];
 
-        for (int k = 0; k < lista.size(); k++) {
-            matrice[k] = lista.get(k);
+        for (Grid.Column column : lista) {
+            matrice[k] = column;
+            k++;
         }
 
         return matrice;

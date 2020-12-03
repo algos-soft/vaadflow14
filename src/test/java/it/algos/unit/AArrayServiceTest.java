@@ -1,9 +1,11 @@
 package it.algos.unit;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import it.algos.vaadflow14.backend.enumeration.AECrono;
 import it.algos.vaadflow14.backend.enumeration.AEGeografia;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -572,10 +574,21 @@ public class AArrayServiceTest extends ATest {
         Assertions.assertNotNull(ottenutoArray);
         Assertions.assertEquals(previstoArray, ottenutoArray);
     }
-
     @Test
     @Order(15)
-    @DisplayName("15 - check enumeration")
+    @DisplayName("15 - getColumnArray")
+    void getColumnArray() {
+        Grid<Via> grid = new Grid();
+        Grid.Column[] colonne=array.getColumnArray(grid);
+        Assertions.assertNotNull(colonne);
+
+//        Grid.Column[] matrix = grid.getColumns().toArray((Grid.Column));
+//        Assertions.assertNotNull(colonne);
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - check enumeration")
     void checkEnumeration() {
 
         sorgente = "giorno";

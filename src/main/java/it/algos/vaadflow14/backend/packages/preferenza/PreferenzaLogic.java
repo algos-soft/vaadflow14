@@ -2,13 +2,9 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
@@ -39,10 +35,9 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  * <p>
- * Le preferenze memorizzate nella collezione del mongoDB sono di tre tipi:
+ * Le preferenze memorizzate nella collezione del mongoDB sono di due tipi:
  * A - Standard, inserite all'avvio del programma prendendole dalla enumeration AEPreferenza <br>
  * B - Specifiche, inserite all'avvio del programma prendendole da una enumeration specifica <br>
- * C - Aggiuntive, inserite direttamente dall'utente (se permesso) <br>
  * <p>
  * Ogni preferenza ha alcuni field chiave: <br>
  * A - 'code' per individuare e selezionare la preferenza richiesta; se usaCompany = true, DEVE contenere anche la sigla della company <br>
@@ -56,10 +51,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * 2 - Quando il programma parte le volte successive (quando la collection 'preferenza' sul mongoDB non è vuota),
  * vengono create tutte e sole le preferenze ('standard' e 'specifiche').
  * NON presenti. Quelli presenti NON vengono modificate.
- * 3 - Premendo il Bottone/menu 'reset' si cancellano e si ricreano tutte e sole le preferenze
- * ('standard' e 'specifiche') indipendentemente dal fatto che abbiano valori personalizzati o meno.
- * Le preferenze aggiuntive, create dall'utente, non vengono modificate
- * 4 - Premendo il Bottone/menu 'delete' si cancellano TUTTE le preferenze
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -117,7 +108,7 @@ public class PreferenzaLogic extends ALogic {
 
         this.searchType = AESearch.editField;
         this.searchProperty = annotation.getSearchPropertyName(entityClazz);
-        this.usaBottoneDeleteAll = true;
+        this.usaBottoneDeleteAll = false;
         this.usaBottoneResetList = true;
         this.usaBottoneNew = true;
         this.usaBottoneExport = false;
@@ -442,8 +433,18 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AIResult resetEmptyOnly() {
-        reset();
-        return AResult.valido();
+        AIResult result = super.resetEmptyOnly();
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            return result;
+        }
+
+        for (AEPreferenza aePref : AEPreferenza.values()) {
+            numRec = creaIfNotExist(aePref) != null ? numRec+1 : numRec;
+        }
+
+        return super.fixPostReset(AETypeReset.enumeration,numRec);
     }
 
 }

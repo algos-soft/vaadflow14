@@ -24,11 +24,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public enum AESimplePreferenza implements AIPreferenza {
 
-    datauno("datauno", "Data senza ora", AETypePref.localdate, LocalDate.now(), false),
+    datauno("datauno", "Data senza ora (pref di prova)", AETypePref.localdate, LocalDate.now(), false),
 
-    datadue("datadue", "Data e ora", AETypePref.localdatetime, LocalDateTime.now(), false),
+    datadue("datadue", "Data e ora (pref di prova)", AETypePref.localdatetime, LocalDateTime.now(), false),
 
-    timeuno("datatre", "Solo orario", AETypePref.localtime, LocalTime.now(), false),
+    timeuno("datatre", "Solo orario (pref di prova)", AETypePref.localtime, LocalTime.now(), false),
 
     ;
 

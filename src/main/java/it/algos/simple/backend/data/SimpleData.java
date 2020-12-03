@@ -45,6 +45,16 @@ public class SimpleData extends FlowData {
 
 
     /**
+     * Crea le preferenze standard dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     */
+    public void fixPreferenze() {
+        int stop=87;
+    }
+
+    /**
      * Check iniziale di alcune collections <br>
      * Crea un elenco specifico di collections che implementano il metodo 'reset' nella classe xxxLogic <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
