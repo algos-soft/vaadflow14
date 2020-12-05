@@ -66,6 +66,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 public abstract class FlowBoot implements ServletContextListener {
 
     public static Consumer<AIData> fixData = AIData::fixData;
+
     public static Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
 
     /**
@@ -84,12 +85,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public Environment environment;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
-     * al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    public ALogService logger;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -98,6 +93,13 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public AMongoService mongo;
 
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    public ALogService logger;
 
 
     /**
@@ -110,7 +112,7 @@ public abstract class FlowBoot implements ServletContextListener {
     public FlowBoot() {
         this.setEnvironment(environment);
         this.setMongo(mongo);
-        this.setLogService(logger);
+        this.setLogger(logger);
     }// end of constructor with @Autowired on setter
 
 
@@ -306,6 +308,8 @@ public abstract class FlowBoot implements ServletContextListener {
      * Se esistono, NON modifica i valori esistenti <br>
      * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @since java 8
      */
     protected void fixPreferenze() {
         Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
@@ -380,6 +384,17 @@ public abstract class FlowBoot implements ServletContextListener {
         this.environment = environment;
     }
 
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public void setMongo(AMongoService mongo) {
+        this.mongo = mongo;
+    }
+
 
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>
@@ -390,20 +405,8 @@ public abstract class FlowBoot implements ServletContextListener {
      * @param logger the log service
      */
     @Autowired
-    public void setLogService(ALogService logger) {
+    public void setLogger(ALogService logger) {
         this.logger = logger;
-    }
-
-
-    /**
-     * Set con @Autowired di una property chiamata dal costruttore <br>
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Chiamata dal costruttore di questa classe con valore nullo <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public void setMongo(AMongoService mongo) {
-        this.mongo = mongo;
     }
 
 

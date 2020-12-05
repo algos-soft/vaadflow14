@@ -11,7 +11,7 @@ public enum AETypeReset {
     enumeration("da una Enumeration"),
     fileCSV("da un file CSV"),
     wikipedia("da Wikipedia"),
-    hardCoded("scritti harCoded"),
+    hardCoded("scritti hardCoded"),
     file("da un file"),
     ;
 
