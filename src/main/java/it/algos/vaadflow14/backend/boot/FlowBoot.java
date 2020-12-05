@@ -65,8 +65,18 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public abstract class FlowBoot implements ServletContextListener {
 
+    /**
+     * Azione implementata nel metodo della classe specifica <br>
+     *
+     * @since java 8
+     */
     public static Consumer<AIData> fixData = AIData::fixData;
 
+    /**
+     * Azione implementata nel metodo della classe specifica <br>
+     *
+     * @since java 8
+     */
     public static Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
 
     /**
@@ -77,7 +87,6 @@ public abstract class FlowBoot implements ServletContextListener {
     @Autowired
     public ApplicationContext appContext;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
@@ -85,13 +94,19 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public Environment environment;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
     public AMongoService mongo;
+
+    /**
+     * Messaggio di errore <br>
+     *
+     * @since java 8
+     */
+    public Runnable mancaDataClazz = () -> System.out.println("Non ho trovato la classe xxxData");
 
 
     /**
@@ -298,7 +313,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixData() {
         Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
-        opt.ifPresent(fixData);
+        opt.ifPresentOrElse(fixPreferenze, mancaDataClazz);
     }
 
 
@@ -313,7 +328,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixPreferenze() {
         Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
-        opt.ifPresent(fixPreferenze);
+        opt.ifPresentOrElse(fixPreferenze, mancaDataClazz);
     }
 
 
