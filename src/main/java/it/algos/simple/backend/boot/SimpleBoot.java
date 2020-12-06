@@ -37,7 +37,7 @@ import java.time.LocalDate;
  * 5) aggiunge le @Route (view) standard e specifiche <br>
  * 6) lancia gli schedulers in background <br>
  * 7) costruisce una versione demo <br>
- * 8) controllare l' esistenza di utenti abilitati all' accesso <br>
+ * 8) controlla l' esistenza di utenti abilitati all' accesso <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

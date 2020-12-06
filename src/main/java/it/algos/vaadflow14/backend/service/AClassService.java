@@ -4,6 +4,8 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class AClassService extends AAbstractService {
 
 
     /**
-     * Istanza della sottoclasse (singleton) xxxLogic associata al nome delle Entity inviata  <br>
+     * Istanza della sottoclasse xxxLogic associata al nome delle Entity inviata  <br>
      *
      * @param entityClazzCanonicalName the canonical name of entity class
      *
@@ -52,7 +54,7 @@ public class AClassService extends AAbstractService {
     }
 
     /**
-     * Istanza della sottoclasse (singleton) xxxLogic associata alla Entity inviata  <br>
+     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
      *
      * @param entityClazz the entity class
      *
@@ -64,7 +66,7 @@ public class AClassService extends AAbstractService {
 
 
     /**
-     * Istanza della sottoclasse (singleton) xxxLogic associata alla Entity inviata  <br>
+     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
      *
      * @param entityClazz   the entity class
      * @param operationForm supported by dialog
@@ -98,5 +100,13 @@ public class AClassService extends AAbstractService {
         return entityLogic;
     }
 
+    /**
+     * Istanza di PreferenzaLogic associata alla Entity inviata  <br>
+     *
+     * @return istanza di PreferenzaLogic associata alla Entity
+     */
+    public PreferenzaLogic getPreferenzaLogic() {
+        return (PreferenzaLogic) getLogicFromEntity(Preferenza.class);
+    }
 
 }

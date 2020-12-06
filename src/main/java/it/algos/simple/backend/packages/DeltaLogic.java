@@ -4,6 +4,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
@@ -180,8 +181,8 @@ public class DeltaLogic extends ALogic {
      * @return false se non esiste il metodo sovrascritto
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
-    @Override
-    public boolean reset() {
+//    @Override
+    public AIResult resetEmptyOnly2() {
         deleteAll();
         Secolo secolo = secoloLogic.findById("vsecolo");
         Via via = viaLogic.findById("piazza");
@@ -205,7 +206,8 @@ public class DeltaLogic extends ALogic {
         deltaUno.immagine = imageStr;
         save(deltaUno);
 
-        return mongo.isValid(entityClazz);
+        return null;
+//        return mongo.isValid(entityClazz);
     }
 
 }

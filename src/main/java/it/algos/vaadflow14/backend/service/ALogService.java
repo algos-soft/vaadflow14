@@ -498,7 +498,6 @@ public class ALogService extends AAbstractService {
                     break;
             }
         }
-
     }
 
 

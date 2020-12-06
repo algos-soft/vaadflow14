@@ -13,6 +13,4 @@ public interface AIData {
 
     public void fixPreferenze();
 
-    public void fixLog();
-
 }

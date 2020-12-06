@@ -61,7 +61,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * 5) aggiunge le @Route (view) standard e specifiche <br>
  * 6) lancia gli schedulers in background <br>
  * 7) costruisce una versione demo <br>
- * 8) controllare l' esistenza di utenti abilitati all' accesso <br>
+ * 8) controlla l' esistenza di utenti abilitati all' accesso <br>
  */
 public abstract class FlowBoot implements ServletContextListener {
 
@@ -70,14 +70,14 @@ public abstract class FlowBoot implements ServletContextListener {
      *
      * @since java 8
      */
-    public static Consumer<AIData> fixData = AIData::fixData;
+    public  Consumer<AIData> fixData = AIData::fixData;
 
     /**
      * Azione implementata nel metodo della classe specifica <br>
      *
      * @since java 8
      */
-    public static Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
+    public  Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
 
     /**
      * Istanza di una interfaccia <br>
@@ -313,7 +313,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     protected void fixData() {
         Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
-        opt.ifPresentOrElse(fixPreferenze, mancaDataClazz);
+        opt.ifPresentOrElse(fixData, mancaDataClazz);
     }
 
 

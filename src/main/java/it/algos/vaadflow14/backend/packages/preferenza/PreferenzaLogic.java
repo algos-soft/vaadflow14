@@ -1,11 +1,16 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
@@ -207,8 +212,8 @@ public class PreferenzaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(AIPreferenza aePref) {
-        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.getNote());
+    public Preferenza creaIfNotExist(AIPreferenza aePref, boolean generale) {
+        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isCompanySpecifica(), generale, aePref.getNote());
     }
 
 
@@ -219,12 +224,13 @@ public class PreferenzaLogic extends ALogic {
      * @param descrizione  (obbligatoria)
      * @param type         (obbligatorio) per convertire in byte[] i valori
      * @param defaultValue (obbligatorio) memorizza tutto in byte[]
-     * @param note         (facoltativo)
+     * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param generale   (obbligatorio) preferenza di vaadflow, di default true
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, String note) {
-        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, note));
+    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean generale, String note) {
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, usaCompany, generale, note));
     }
 
 
@@ -236,7 +242,7 @@ public class PreferenzaLogic extends ALogic {
      * @return la nuova entity appena creata (non salvata)
      */
     public Preferenza newEntity() {
-        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, VUOTA);
+        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, FlowVar.usaCompany ? true : false, true, VUOTA);
     }
 
 
@@ -251,11 +257,13 @@ public class PreferenzaLogic extends ALogic {
      * @param descrizione  (obbligatoria)
      * @param type         (obbligatorio) per convertire in byte[] i valori
      * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+     * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param generale   (obbligatorio) preferenza di vaadflow, di default true
      * @param note         (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, String note) {
+    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean generale, String note) {
         Preferenza newEntityBean = Preferenza.builderPreferenza()
 
                 .code(text.isValid(code) ? code : null)
@@ -265,6 +273,10 @@ public class PreferenzaLogic extends ALogic {
                 .type(type != null ? type : AETypePref.string)
 
                 .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
+
+                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
+
+                .generale(generale)
 
                 .build();
 
@@ -416,27 +428,40 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result;
+        String collection;
         int numRec = 0;
 
-        if (result.isErrato()) {
-            return result;
+        if (entityClazz == null) {
+            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+        }
+
+        collection = entityClazz.getSimpleName().toLowerCase();
+        if (mongo.isExists(collection)) {
+        }
+        else {
+            return AResult.errato("La collezione " + collection + " non esiste");
         }
 
         //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
         for (AIPreferenza aePref : AEPreferenza.values()) {
-            numRec = creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+            numRec = creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
         }
 
-        //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
-        List<AIPreferenza> preferenzeSpecifiche = new ArrayList<>();
-        if (array.isAllValid(preferenzeSpecifiche)) {
-            for (AIPreferenza aePref : preferenzeSpecifiche) {
-                numRec = creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+        if (numRec == 0) {
+            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
+        }
+        else {
+            if (numRec == 1) {
+                result = AResult.valido("Mancava una nuova preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
+            }
+            else {
+                result = AResult.valido("Mancavano " + numRec + " nuove preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
             }
         }
 
-        return super.fixPostReset(AETypeReset.enumeration, numRec);
+        return result;
     }
+
 
 }

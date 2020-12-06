@@ -224,25 +224,25 @@ public class CompanyLogic extends ALogic {
     }
 
 
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-    @Override
-    public boolean reset() {
-        super.deleteAll();
-
-        creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it");
-        creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it");
-        creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it");
-
-        return mongo.isValid(entityClazz);
-    }
+//    /**
+//     * Creazione di alcuni dati iniziali <br>
+//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+//     * DEVE essere sovrascritto <br>
+//     *
+//     * @return false se non esiste il metodo sovrascritto
+//     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+//     */
+//    @Override
+//    public boolean reset() {
+//        super.deleteAll();
+//
+//        creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it");
+//        creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it");
+//        creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it");
+//
+//        return mongo.isValid(entityClazz);
+//    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

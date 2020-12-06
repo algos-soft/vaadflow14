@@ -39,8 +39,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
 @AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code,type,value,usaCompany,usaFlow,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,usaCompany,usaFlow,descrizione,type,value")
+@AIList(fields = "code,type,value,usaCompany,generale,descrizione", usaRowIndex = true)
+@AIForm(fields = "code,usaCompany,generale,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**
@@ -84,11 +84,11 @@ public class Preferenza extends ACEntity {
     public boolean usaCompany;
 
     /**
-     * usaFlow (facoltativo) usa un prefisso col codice della company
+     * generale (facoltativo) se usata da vaadflow
      */
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
     @AIColumn(headerIcon = VaadinIcon.HOME)
-    public boolean usaFlow;
+    public boolean generale;
 
     /**
      * descrizione (obbligatoria)

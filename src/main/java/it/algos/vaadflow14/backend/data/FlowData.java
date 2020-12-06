@@ -8,6 +8,8 @@ import it.algos.vaadflow14.backend.enumeration.AEGeografia;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AILogic;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import it.algos.vaadflow14.backend.service.AClassService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -36,17 +39,26 @@ import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC
  * Vengono costruite con la BeanFactory <br>
  * <p>
  * Superclasse astratta per la costruzione iniziale delle Collections <br>
- * Viene invocata PRIMA della chiamata del browser, tramite un metodo @PostConstruct della sottoclasse <br>
- * Non si possono quindi usare i service specifici dei package che sono @VaadinSessionScope <br>
- * Viceversa le repository specifiche dei package sono delle interfacce e pertanto vengono 'create' al volo <br>
+ * Viene invocata PRIMA della chiamata del browser, tramite il <br>
+ * metodo FlowBoot.onContextRefreshEvent() <br>
+ * Crea i dati di alcune collections sul DB mongo <br>
  * <p>
- * Annotated with @SpringComponent (obbligatorio per le injections) <br>
- * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+ *
+ * @since java 8
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
 public class FlowData implements AIData {
+
+    /**
+     * Messaggio di errore <br>
+     *
+     * @since java 8
+     */
+    public Runnable mancaPrefLogic = () -> System.out.println("Non ho trovato la classe PreferenzaLogic");
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -69,6 +81,12 @@ public class FlowData implements AIData {
      */
     protected ALogService logger;
 
+    /**
+     * Azione implementata nel metodo della classe specifica <br>
+     *
+     * @since java 8
+     */
+    protected Consumer<PreferenzaLogic> resetPreferenze = this::resetPreferenze;
 
     /**
      * Alcune entities possono non essere usate direttamente nel programma <br>
@@ -77,15 +95,23 @@ public class FlowData implements AIData {
      * <p>
      * Controlla il flag di ogni entity tra quelle facoltative <br>
      * Accetta solo quelle col flag positivo <br>
+     * Le preferenze vengono gestite a parte in fixPreferenze() <br>
      */
     protected Predicate<String> checkEntity = canonicalName -> {
         String name = file.estraeClasseFinale(canonicalName).toLowerCase();
+
+        if (name.equals(Preferenza.class.getSimpleName().toLowerCase())) {
+            return false;
+        }
+
         if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(name)) {
             return false;
         }
+
         if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(name)) {
             return false;
         }
+
         return true;
     };
 
@@ -188,17 +214,31 @@ public class FlowData implements AIData {
 
 
     /**
-     * Crea le preferenze standard dell'applicazione <br>
+     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
+     *
+     * @since java 8
      */
+    @Override
     public void fixPreferenze() {
+        Optional<PreferenzaLogic> prefLogic = Optional.ofNullable(classService.getPreferenzaLogic());
+        prefLogic.ifPresentOrElse(resetPreferenze, mancaPrefLogic);
     }
 
-
-    public void fixLog() {
-        logger.error("Non ho trovato nessuna classe xxxData", this.getClass(), "fixLog");
+    /**
+     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
+     * <p>
+     * Arriva qui chiamato da fixPreferenze() se esiste la classe PreferenzaLogic <br>
+     */
+    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic) {
+        AIResult result = preferenzaLogic.resetEmptyOnly();
+        logger.log(AETypeLog.checkData, result.getMessage());
+        return result;
     }
 
     /**

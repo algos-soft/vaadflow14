@@ -2,7 +2,6 @@ package it.algos.vaadflow14.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -71,9 +70,9 @@ public class PreferenzeData {
 //            }
         }
         else {
-            for (AEPreferenza eaPref : AEPreferenza.values()) {
-                preferenzaLogic.creaIfNotExist(eaPref);
-            }
+//            for (AEPreferenza eaPref : AEPreferenza.values()) {
+//                preferenzaLogic.creaIfNotExist(eaPref);
+//            }
         }
     }
 

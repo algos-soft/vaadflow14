@@ -265,15 +265,15 @@ public interface AILogic {
     public boolean deleteAll();
 
 
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse che cancella tutta la Collection <br>
-     *
-     * @return true se la collection è stata ri-creata
-     */
-    public boolean reset();
+//    /**
+//     * Creazione di alcuni dati iniziali <br>
+//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+//     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse che cancella tutta la Collection <br>
+//     *
+//     * @return true se la collection è stata ri-creata
+//     */
+//    public boolean reset();
 
 
     /**

@@ -1840,20 +1840,20 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Creazione di alcuni dati iniziali <br>
-     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-    @Override
-    @Deprecated
-    public boolean reset() {
-        return false;
-    }
+//    /**
+//     * Creazione di alcuni dati iniziali <br>
+//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+//     * DEVE essere sovrascritto <br>
+//     *
+//     * @return false se non esiste il metodo sovrascritto
+//     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+//     */
+//    @Override
+//    @Deprecated
+//    public boolean reset() {
+//        return false;
+//    }
 
     /**
      * Cancella la collection <br>

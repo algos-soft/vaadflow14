@@ -74,7 +74,7 @@ public enum AEPreferenza implements AIPreferenza {
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica,String note) {
         this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
