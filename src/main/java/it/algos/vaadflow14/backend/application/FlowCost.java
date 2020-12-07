@@ -39,6 +39,7 @@ public abstract class FlowCost {
 
     public static final Locale LOCALE = Locale.ITALIAN;
 
+    public static final String TAG_FLOW_DATA = "flowdata";
     public static final String VUOTA = "";
 
     public static final String VIRGOLA = ",";

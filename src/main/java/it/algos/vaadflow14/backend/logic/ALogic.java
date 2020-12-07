@@ -1581,12 +1581,13 @@ public abstract class ALogic implements AILogic {
             return null;
         }
 
-        binder = new Binder(newEntityBean.getClass());
-        beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
-        //--Sincronizza il binder all' apertura della scheda
-        //--Trasferisce (binder read) i valori dal DB alla UI
-        binder.readBean(newEntityBean);
-        valido = binder.isValid();
+        valido=true;
+//        binder = new Binder(newEntityBean.getClass());
+//        beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
+//        //--Sincronizza il binder all' apertura della scheda
+//        //--Trasferisce (binder read) i valori dal DB alla UI
+//        binder.readBean(newEntityBean);
+//        valido = binder.isValid();
 
         if (valido) {
             newEntityBean = beforeSave(newEntityBean, AEOperation.addNew);

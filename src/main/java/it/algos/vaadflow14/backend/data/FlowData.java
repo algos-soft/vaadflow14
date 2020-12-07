@@ -5,7 +5,9 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AECrono;
 import it.algos.vaadflow14.backend.enumeration.AEGeografia;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
@@ -13,7 +15,9 @@ import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import it.algos.vaadflow14.backend.service.AClassService;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.ALogService;
+import it.algos.vaadflow14.backend.wrapper.AResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -23,8 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_LOGIC;
-import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow
@@ -49,6 +52,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.TAG_GENERIC_LOGIC
  * @since java 8
  */
 @SpringComponent
+@Qualifier(TAG_FLOW_DATA)
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
 public class FlowData implements AIData {
@@ -236,9 +240,45 @@ public class FlowData implements AIData {
      * Arriva qui chiamato da fixPreferenze() se esiste la classe PreferenzaLogic <br>
      */
     public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic) {
-        AIResult result = preferenzaLogic.resetEmptyOnly();
+//        AIResult result = preferenzaLogic.resetEmptyOnly();
+//        logger.log(AETypeLog.checkData, result.getMessage());
+//        return result;
+
+        AIResult result;
+        String collection = Preferenza.class.getSimpleName().toLowerCase();;
+        int numRec = 0;
+
+        if (Preferenza.class == null) {
+            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+        }
+
+        //rimettere
+//        if (mongo.isExists(collection)) {
+//        }
+//        else {
+//            return AResult.errato("La collezione " + collection + " non esiste");
+//        }
+
+        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
+        for (AIPreferenza aePref : AEPreferenza.values()) {
+            numRec = preferenzaLogic.creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
+        }
+
+        if (numRec == 0) {
+            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
+        }
+        else {
+            if (numRec == 1) {
+                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
+            }
+            else {
+                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
+            }
+        }
+
         logger.log(AETypeLog.checkData, result.getMessage());
         return result;
+
     }
 
     /**

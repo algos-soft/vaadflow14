@@ -3,14 +3,10 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
@@ -409,6 +405,27 @@ public class PreferenzaLogic extends ALogic {
 
 
     /**
+     * Ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * Cancella la collection (parzialmente, se usaCompany=true) <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o se la collection
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    @Override
+    public boolean resetDeletingAll() {
+        AIResult result = resetEmptyOnly();
+        logger.log(AETypeLog.reset, result.getMessage());
+        return result.isValido();
+    }
+
+    /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
      * <p>
@@ -428,38 +445,38 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AIResult resetEmptyOnly() {
-        AIResult result;
-        String collection;
-        int numRec = 0;
-
-        if (entityClazz == null) {
-            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-        }
-
-        collection = entityClazz.getSimpleName().toLowerCase();
-        if (mongo.isExists(collection)) {
-        }
-        else {
-            return AResult.errato("La collezione " + collection + " non esiste");
-        }
-
-        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
-        for (AIPreferenza aePref : AEPreferenza.values()) {
-            numRec = creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
-        }
-
-        if (numRec == 0) {
-            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
-        }
-        else {
-            if (numRec == 1) {
-                result = AResult.valido("Mancava una nuova preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
-            }
-            else {
-                result = AResult.valido("Mancavano " + numRec + " nuove preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
-            }
-        }
-
+        AIResult result=null;
+//        String collection;
+//        int numRec = 0;
+//
+//        if (entityClazz == null) {
+//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+//        }
+//
+//        collection = entityClazz.getSimpleName().toLowerCase();
+//        if (mongo.isExists(collection)) {
+//        }
+//        else {
+//            return AResult.errato("La collezione " + collection + " non esiste");
+//        }
+//
+//        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
+//        for (AIPreferenza aePref : AEPreferenza.values()) {
+//            numRec = creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
+//        }
+//
+//        if (numRec == 0) {
+//            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
+//        }
+//        else {
+//            if (numRec == 1) {
+//                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
+//            }
+//            else {
+//                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
+//            }
+//        }
+//
         return result;
     }
 

@@ -12,10 +12,13 @@ import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import it.algos.vaadflow14.backend.wrapper.AResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
+
+import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
 
 /**
  * Project vaadflow14
@@ -35,6 +38,7 @@ import java.util.List;
  * @since java 8
  */
 @SpringComponent
+@Qualifier(TAG_SIMPLE_DATA)
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
 public class SimpleData extends FlowData {
@@ -183,10 +187,10 @@ public class SimpleData extends FlowData {
         }
         else {
             if (numRec == 1) {
-                result = AResult.valido("Mancava una nuova preferenza  specifica che è stata aggiunta senza modificare i valori di quelle esistenti");
+                result = AResult.valido("Mancava una preferenza  specifica che è stata aggiunta senza modificare i valori di quelle esistenti");
             }
             else {
-                result = AResult.valido("Mancavano " + numRec + " nuove preferenze specifiche che sono state aggiunte senza modificare i valori di quelle esistenti");
+                result = AResult.valido("Mancavano " + numRec + " preferenze specifiche che sono state aggiunte senza modificare i valori di quelle esistenti");
             }
         }
 

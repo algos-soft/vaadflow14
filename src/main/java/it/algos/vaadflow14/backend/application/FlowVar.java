@@ -111,13 +111,6 @@ public class FlowVar {
 
     /**
      * Classe da usare per lo startup del programma <br>
-     * Di default FlowBoot oppure probabile sottoclasse del progetto <br>
-     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
-     */
-    public static Class bootClazz;
-
-    /**
-     * Classe da usare per lo startup del programma <br>
      * Di default FlowData oppure possibile sottoclasse del progetto <br>
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */

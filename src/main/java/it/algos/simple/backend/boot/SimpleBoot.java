@@ -9,10 +9,15 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
+import java.util.Objects;
+
+import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
 
 
 /**
@@ -67,15 +72,13 @@ public class SimpleBoot extends FlowBoot {
 
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
-        FlowVar.bootClazz = this.getClass();
         FlowVar.dataClazz = SimpleData.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
+        FlowVar.projectVersion = Double.parseDouble(Objects.requireNonNull(environment.getProperty("algos.vaadflow.version")));
         FlowVar.versionDate = LocalDate.of(2020, 11, 23);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
-        //        FlowVar.layoutTitle = "Simple test";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = true;
@@ -86,14 +89,14 @@ public class SimpleBoot extends FlowBoot {
      * Primo ingresso nel programma nella classe concreta, tramite il <br>
      * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
      * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      * <p>
      * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
-     *
-     * @since java 8
      */
     protected void fixData() {
-        super.fixData();
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(SimpleData.class)) {
+            dataInstance.fixData();
+        }
     }
 
 
@@ -102,11 +105,13 @@ public class SimpleBoot extends FlowBoot {
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
      * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     @Override
     protected void fixPreferenze() {
-        super.fixPreferenze();
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(SimpleData.class)) {
+            dataInstance.fixPreferenze();
+        }
     }
 
 
@@ -154,6 +159,18 @@ public class SimpleBoot extends FlowBoot {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixUsers() {
+    }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_SIMPLE_DATA)
+    public void setDataInstance(SimpleData dataInstance) {
+        this.dataInstance = dataInstance;
     }
 
 }

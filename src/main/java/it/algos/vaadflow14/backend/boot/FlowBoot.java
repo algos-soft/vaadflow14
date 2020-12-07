@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.boot;
 
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.data.AIData;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
@@ -18,6 +17,7 @@ import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.wizard.Wizard;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -25,11 +25,9 @@ import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContextListener;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.Objects;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.START_DATE;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -65,19 +63,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public abstract class FlowBoot implements ServletContextListener {
 
-    /**
-     * Azione implementata nel metodo della classe specifica <br>
-     *
-     * @since java 8
-     */
-    public  Consumer<AIData> fixData = AIData::fixData;
-
-    /**
-     * Azione implementata nel metodo della classe specifica <br>
-     *
-     * @since java 8
-     */
-    public  Consumer<AIData> fixPreferenze = AIData::fixPreferenze;
 
     /**
      * Istanza di una interfaccia <br>
@@ -101,13 +86,6 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public AMongoService mongo;
 
-    /**
-     * Messaggio di errore <br>
-     *
-     * @since java 8
-     */
-    public Runnable mancaDataClazz = () -> System.out.println("Non ho trovato la classe xxxData");
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -116,6 +94,12 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     public ALogService logger;
 
+    /**
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    public FlowData dataInstance;
 
     /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
@@ -128,6 +112,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.setEnvironment(environment);
         this.setMongo(mongo);
         this.setLogger(logger);
+        this.setDataInstance(dataInstance);
     }// end of constructor with @Autowired on setter
 
 
@@ -227,7 +212,7 @@ public abstract class FlowBoot implements ServletContextListener {
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.vaadflow.version"));
+        FlowVar.projectVersion = Double.parseDouble(Objects.requireNonNull(environment.getProperty("algos.vaadflow.version")));
 
         /**
          * Data della versione dell' applicazione <br>
@@ -249,13 +234,6 @@ public abstract class FlowBoot implements ServletContextListener {
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
          */
         FlowVar.usaVaadinIcon = true;
-
-        /**
-         * Classe da usare per lo startup del programma <br>
-         * Di default FlowBoot oppure probabile sottoclasse del progetto <br>
-         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
-         */
-        FlowVar.bootClazz = FlowBoot.class;
 
         /**
          * Classe da usare per lo startup del programma <br>
@@ -301,19 +279,19 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.usaGeografiaPackages = false;
     }
 
+
     /**
      * Primo ingresso nel programma nella classe concreta, tramite il <br>
      * metodo FlowBoot.onContextRefreshEvent() della superclasse astratta <br>
      * Crea i dati di alcune collections sul DB mongo <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      * <p>
      * Invoca il metodo fixData() di FlowData oppure della sottoclasse <br>
-     *
-     * @since java 8
      */
     protected void fixData() {
-        Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
-        opt.ifPresentOrElse(fixData, mancaDataClazz);
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
+            dataInstance.fixData();
+        }
     }
 
 
@@ -322,13 +300,12 @@ public abstract class FlowBoot implements ServletContextListener {
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
      * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @since java 8
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        Optional<AIData> opt = Optional.ofNullable((AIData) appContext.getBean(FlowVar.dataClazz));
-        opt.ifPresentOrElse(fixPreferenze, mancaDataClazz);
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
+            dataInstance.fixPreferenze();
+        }
     }
 
 
@@ -416,13 +393,22 @@ public abstract class FlowBoot implements ServletContextListener {
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Chiamata dal costruttore di questa classe con valore nullo <br>
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     *
-     * @param logger the log service
      */
     @Autowired
     public void setLogger(ALogService logger) {
         this.logger = logger;
     }
 
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_FLOW_DATA)
+    public void setDataInstance(FlowData dataInstance) {
+        this.dataInstance = dataInstance;
+    }
 
 }

@@ -81,7 +81,8 @@ public class APreferenzaField extends AField<byte[]> {
     protected byte[] generateModelValue() {
         if (type == AETypePref.enumeration) {
             return enumerationService.generateModelValue(entityBean, valueField);
-        } else {
+        }
+        else {
             return type.objectToBytes(valueField.getValue());
         }
     }
@@ -92,10 +93,12 @@ public class APreferenzaField extends AField<byte[]> {
         if (valueField != null) {
             if (type == AETypePref.enumeration) {
                 valueField.setValue(enumerationService.setPresentationValue(bytes));
-            } else {
+            }
+            else {
                 valueField.setValue(type.bytesToObject(bytes));
             }
-        } else {
+        }
+        else {
             logger.warn("Manca valueField", this.getClass(), "setPresentationValue");
         }
     }
@@ -147,7 +150,7 @@ public class APreferenzaField extends AField<byte[]> {
                     valueField = appContext.getBean(ADateField.class);
                     valueField.setLabel(tag + "(solo data)");
                 } catch (Exception unErrore) {
-                    logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                    logger.error(unErrore, this.getClass(), "sincro-localdate");
                 }
                 break;
             case localdatetime:
@@ -155,7 +158,7 @@ public class APreferenzaField extends AField<byte[]> {
                     valueField = appContext.getBean(ADateTimeField.class);
                     valueField.setLabel(tag + "(data e orario)");
                 } catch (Exception unErrore) {
-                    logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+                    logger.error(unErrore, this.getClass(), "sincro-localdatetime");
                 }
                 break;
             case localtime:
@@ -166,13 +169,15 @@ public class APreferenzaField extends AField<byte[]> {
             case enumeration:
                 if (operationForm == AEOperation.addNew) {
                     valueField = appContext.getBean(ATextField.class, ENUM_FIELD_NEW);
-                } else {
+                }
+                else {
                     items = enumerationService.getList(entityBean);
                     if (array.isAllValid(items)) {
                         usaEnumCombo = items.size() <= AEPreferenza.maxEnumRadio.getInt();
                         if (usaEnumCombo) {
                             valueField = appContext.getBean(ARadioField.class, items);
-                        } else {
+                        }
+                        else {
                             valueField = appContext.getBean(AComboField.class, items);
                         }
                         valueField.setLabel(ENUM_FIELD_SHOW);

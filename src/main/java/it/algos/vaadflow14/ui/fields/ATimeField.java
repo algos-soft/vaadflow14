@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.service.ALogService;
@@ -34,9 +33,12 @@ public class ATimeField extends AField<LocalTime> {
      *
      */
     public ATimeField() {
-        timePicker = new TimePicker();
-        timePicker.setStep(STEP);
-        add(timePicker);
+        try {
+            timePicker = new TimePicker();
+            timePicker.setStep(STEP);
+            add(timePicker);
+        } catch (Exception unErrore) {
+        }
     } // end of SpringBoot constructor
 
 
