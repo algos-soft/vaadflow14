@@ -2,6 +2,8 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
+import it.algos.vaadflow14.backend.data.AIData;
+import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
@@ -12,12 +14,14 @@ import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.TAG_FLOW_DATA;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -71,6 +75,12 @@ public class PreferenzaLogic extends ALogic {
     @Autowired
     public APreferenzaService pref;
 
+    /**
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    public FlowData dataInstance;
 
     /**
      * Costruttore senza parametri <br>
@@ -95,6 +105,7 @@ public class PreferenzaLogic extends ALogic {
     public PreferenzaLogic(AEOperation operationForm) {
         super(operationForm);
         super.entityClazz = Preferenza.class;
+        this.setDataInstance(dataInstance);
     }
 
 
@@ -221,7 +232,7 @@ public class PreferenzaLogic extends ALogic {
      * @param type         (obbligatorio) per convertire in byte[] i valori
      * @param defaultValue (obbligatorio) memorizza tutto in byte[]
      * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param generale   (obbligatorio) preferenza di vaadflow, di default true
+     * @param generale     (obbligatorio) preferenza di vaadflow, di default true
      *
      * @return la nuova entity appena creata e salvata
      */
@@ -254,7 +265,7 @@ public class PreferenzaLogic extends ALogic {
      * @param type         (obbligatorio) per convertire in byte[] i valori
      * @param defaultValue (obbligatorio) memorizza tutto in byte[]
      * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param generale   (obbligatorio) preferenza di vaadflow, di default true
+     * @param generale     (obbligatorio) preferenza di vaadflow, di default true
      * @param note         (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
@@ -445,40 +456,34 @@ public class PreferenzaLogic extends ALogic {
      */
     @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
-//        String collection;
-//        int numRec = 0;
-//
-//        if (entityClazz == null) {
-//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-//        }
-//
-//        collection = entityClazz.getSimpleName().toLowerCase();
-//        if (mongo.isExists(collection)) {
-//        }
-//        else {
-//            return AResult.errato("La collezione " + collection + " non esiste");
-//        }
-//
-//        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
-//        for (AIPreferenza aePref : AEPreferenza.values()) {
-//            numRec = creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
-//        }
-//
-//        if (numRec == 0) {
-//            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
-//        }
-//        else {
-//            if (numRec == 1) {
-//                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
-//            }
-//            else {
-//                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
-//            }
-//        }
-//
+        AIResult result = null;
+        AIData dataClazz;
+
+        if (FlowVar.dataClazz != null) {
+            if (FlowVar.dataClazz.equals(FlowData.class)) {
+                result = dataInstance.resetPreferenze(this);
+            }
+            else {
+                dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
+                if (dataClazz != null) {
+                    result = dataClazz.resetPreferenze(this);
+                }
+            }
+        }
+
         return result;
     }
 
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_FLOW_DATA)
+    public void setDataInstance(FlowData dataInstance) {
+        this.dataInstance = dataInstance;
+    }
 
 }

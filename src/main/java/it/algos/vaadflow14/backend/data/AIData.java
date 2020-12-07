@@ -1,5 +1,8 @@
 package it.algos.vaadflow14.backend.data;
 
+import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
+
 /**
  * Project vbase
  * Created by Algos
@@ -9,8 +12,10 @@ package it.algos.vaadflow14.backend.data;
  */
 public interface AIData {
 
-    public void fixData();
+    void fixData();
 
-    public void fixPreferenze();
+    void fixPreferenze();
+
+    AIResult resetPreferenze(PreferenzaLogic preferenzaLogic);
 
 }

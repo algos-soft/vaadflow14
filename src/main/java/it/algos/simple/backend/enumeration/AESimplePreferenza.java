@@ -29,6 +29,7 @@ public enum AESimplePreferenza implements AIPreferenza {
     datadue("datadue", "Data e ora (pref di prova)", AETypePref.localdatetime, LocalDateTime.now(), false),
 
     timeuno("datatre", "Solo orario (pref di prova)", AETypePref.localtime, LocalTime.now(), false),
+    testo("testo", "Testo (pref di prova)", AETypePref.string, "mariolino", false),
 
     ;
 
