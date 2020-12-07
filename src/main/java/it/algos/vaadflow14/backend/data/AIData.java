@@ -16,6 +16,16 @@ public interface AIData {
 
     void fixPreferenze();
 
-    AIResult resetPreferenze(PreferenzaLogic preferenzaLogic);
+    /**
+     * Ricostruisce le preferenze standard dell'applicazione <br>
+     * Se non esistono, le crea <br>
+     * Se esistono, NON modifica i valori esistenti <br>
+     * <p>
+     *
+     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
+     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
+     *                <br>
+     */
+    AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset);
 
 }

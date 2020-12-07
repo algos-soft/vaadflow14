@@ -148,29 +148,30 @@ public class SimpleData extends FlowData {
     }
 
 
-    /**
-     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
-     *
-     * @since java 8
-     */
-    @Override
-    public void fixPreferenze() {
-        super.fixPreferenze();
-    }
+//    /**
+//     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+//     * Se non esistono, le crea <br>
+//     * Se esistono, NON modifica i valori esistenti <br>
+//     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
+//     */
+//    @Override
+//    public void fixPreferenze() {
+//        super.fixPreferenze();
+//    }
 
     /**
-     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+     * Ricostruisce le preferenze standard dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
      * <p>
-     * Arriva qui chiamato da fixPreferenze() se esiste la classe PreferenzaLogic <br>
+     *
+     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
+     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
+     *                <br>
      */
-    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic) {
-        AIResult result = super.resetPreferenze(preferenzaLogic);
+    @Override
+    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset) {
+        AIResult result = super.resetPreferenze(preferenzaLogic,isReset);
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -194,7 +195,7 @@ public class SimpleData extends FlowData {
             }
         }
 
-        logger.log(AETypeLog.checkData, result.getMessage());
+        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
         return result;
     }
 

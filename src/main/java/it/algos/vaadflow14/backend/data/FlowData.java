@@ -22,7 +22,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -85,12 +84,12 @@ public class FlowData implements AIData {
      */
     protected ALogService logger;
 
-    /**
-     * Azione implementata nel metodo della classe specifica <br>
-     *
-     * @since java 8
-     */
-    protected Consumer<PreferenzaLogic> resetPreferenze = this::resetPreferenze;
+    //    /**
+    //     * Azione implementata nel metodo della classe specifica <br>
+    //     *
+    //     * @since java 8
+    //     */
+    //    protected Consumer<PreferenzaLogic> resetPreferenze = this::resetPreferenze(null,false);
 
     /**
      * Alcune entities possono non essere usate direttamente nel programma <br>
@@ -184,6 +183,7 @@ public class FlowData implements AIData {
         this.setLogger(logger);
     }// end of constructor with @Autowired on setter
 
+
     /**
      * Check iniziale di alcune collections <br>
      * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
@@ -218,46 +218,39 @@ public class FlowData implements AIData {
 
 
     /**
-     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+     * Ricostruisce le preferenze standard dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
-     *
-     * @since java 8
      */
     @Override
     public void fixPreferenze() {
-        Optional<PreferenzaLogic> prefLogic = Optional.ofNullable(classService.getPreferenzaLogic());
-        prefLogic.ifPresentOrElse(resetPreferenze, mancaPrefLogic);
+        PreferenzaLogic preferenzaLogic = classService.getPreferenzaLogic();
+        if (preferenzaLogic != null) {
+            resetPreferenze(preferenzaLogic, false);
+        }
+
+        //        Optional<PreferenzaLogic> prefLogic = Optional.ofNullable(classService.getPreferenzaLogic());
+        //        prefLogic.ifPresentOrElse(resetPreferenze, mancaPrefLogic);
     }
 
     /**
-     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+     * Ricostruisce le preferenze standard dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
      * <p>
-     * Arriva qui chiamato da fixPreferenze() se esiste la classe PreferenzaLogic <br>
+     *
+     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
+     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
+     *                <br>
      */
-    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic) {
-//        AIResult result = preferenzaLogic.resetEmptyOnly();
-//        logger.log(AETypeLog.checkData, result.getMessage());
-//        return result;
-
+    @Override
+    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset) {
         AIResult result;
-        String collection = Preferenza.class.getSimpleName().toLowerCase();;
         int numRec = 0;
 
         if (Preferenza.class == null) {
             return AResult.errato("Manca la entityClazz nella businessLogic specifica");
         }
-
-        //rimettere
-//        if (mongo.isExists(collection)) {
-//        }
-//        else {
-//            return AResult.errato("La collezione " + collection + " non esiste");
-//        }
 
         //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
         for (AIPreferenza aePref : AEPreferenza.values()) {
@@ -276,7 +269,7 @@ public class FlowData implements AIData {
             }
         }
 
-        logger.log(AETypeLog.checkData, result.getMessage());
+        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
         return result;
 
     }

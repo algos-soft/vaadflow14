@@ -429,12 +429,12 @@ public class PreferenzaLogic extends ALogic {
      * @return false se non esiste il metodo sovrascritto o se la collection
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
-    @Override
-    public boolean resetDeletingAll() {
-        AIResult result = resetEmptyOnly();
-        logger.log(AETypeLog.reset, result.getMessage());
-        return result.isValido();
-    }
+//    @Override
+//    public boolean resetDeletingAll() {
+//        AIResult result = resetEmptyOnly();
+//        logger.log(AETypeLog.reset, result.getMessage());
+//        return result.isValido();
+//    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -461,12 +461,12 @@ public class PreferenzaLogic extends ALogic {
 
         if (FlowVar.dataClazz != null) {
             if (FlowVar.dataClazz.equals(FlowData.class)) {
-                result = dataInstance.resetPreferenze(this);
+                result = dataInstance.resetPreferenze(this,true);
             }
             else {
                 dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
                 if (dataClazz != null) {
-                    result = dataClazz.resetPreferenze(this);
+                    result = dataClazz.resetPreferenze(this,true);
                 }
             }
         }
