@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -182,6 +183,10 @@ public abstract class ATest {
     protected Field sorgenteField;
 
     protected Field ottenutoField;
+
+    protected LocalDate previstoData;
+
+    protected LocalDate ottenutoData;
 
     protected List<String> sorgenteArray;
 

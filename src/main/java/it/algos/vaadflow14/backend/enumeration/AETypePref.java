@@ -9,8 +9,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Created by gac on 30 lug 2016. <br>
@@ -30,7 +31,6 @@ public enum AETypePref {
             return bytes;
         }
 
-
         @Override
         public String bytesToObject(byte[] bytes) {
             String obj = "";
@@ -39,8 +39,12 @@ public enum AETypePref {
             }// end of if cycle
             return obj;
         }// end of method
-    },// end of single enumeration
 
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes);
+        }
+    },// end of single enumeration
 
     bool("bool", AETypeField.booleano) {
         @Override
@@ -53,21 +57,25 @@ public enum AETypePref {
             return bytes;
         }// end of method
 
-
         @Override
         @SuppressWarnings("all")
-        public Object bytesToObject(byte[] bytes) {
+        public Boolean bytesToObject(byte[] bytes) {
             Object obj = null;
             if (bytes.length > 0) {
                 byte b = bytes[0];
                 obj = new Boolean(b == (byte) 0b00000001);
-            } else {
+            }
+            else {
                 obj = new Boolean(false);
             }// end of if/else cycle
-            return obj;
+            return (Boolean) obj;
         }// end of method
-    },// end of single enumeration
 
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes) ? VERO : FALSO;
+        }
+    },// end of single enumeration
 
     integer("int", AETypeField.integer) {
         @Override
@@ -86,11 +94,16 @@ public enum AETypePref {
 
 
         @Override
-        public Object bytesToObject(byte[] bytes) {
+        public Integer bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
         }// end of method
-    },// end of single enumeration
 
+
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes) + VUOTA;
+        }
+    },// end of single enumeration
 
     lungo("long", AETypeField.lungo) {
         @Override
@@ -107,13 +120,16 @@ public enum AETypePref {
             return bytes;
         }// end of method
 
-
         @Override
-        public Object bytesToObject(byte[] bytes) {
+        public Long bytesToObject(byte[] bytes) {
             return byteArrayToLong(bytes);
         }// end of method
-    },// end of single enumeration
 
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes) + VUOTA;
+        }
+    },// end of single enumeration
 
     localdate("data", AETypeField.localDate) {
         @Override
@@ -132,7 +148,7 @@ public enum AETypePref {
 
 
         @Override
-        public Object bytesToObject(byte[] bytes) {
+        public LocalDate bytesToObject(byte[] bytes) {
             LocalDate data = null;
             long giorni = 0;
 
@@ -143,6 +159,11 @@ public enum AETypePref {
 
             return data;
         }// end of method
+
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        }
     },// end of single enumeration
 
     localdatetime("datatime", AETypeField.localDateTime) {
@@ -164,7 +185,7 @@ public enum AETypePref {
 
 
         @Override
-        public Object bytesToObject(byte[] bytes) {
+        public LocalDateTime bytesToObject(byte[] bytes) {
             LocalDateTime data = null;
             long millis = 0;
 
@@ -176,6 +197,11 @@ public enum AETypePref {
 
             return data;
         }// end of method
+
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes).format(DateTimeFormatter.ofPattern("d-M-yy H:mm"));
+        }
     },// end of single enumeration
 
     localtime("time", AETypeField.localTime) {
@@ -190,9 +216,8 @@ public enum AETypePref {
             return bytes;
         }// end of method
 
-
         @Override
-        public Object bytesToObject(byte[] bytes) {
+        public LocalTime bytesToObject(byte[] bytes) {
             LocalTime time = null;
             long millis = 0;
 
@@ -203,6 +228,11 @@ public enum AETypePref {
 
             return time;
         }// end of method
+
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes).format(DateTimeFormatter.ofPattern("H:mm"));
+        }
     },// end of single enumeration
 
     email("email", AETypeField.email) {
@@ -225,6 +255,11 @@ public enum AETypePref {
             }// end of if cycle
             return obj;
         }// end of method
+
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes);
+        }
     },// end of single enumeration
 
     enumeration("enum", AETypeField.enumeration) {
@@ -247,8 +282,12 @@ public enum AETypePref {
             }// end of if cycle
             return obj;
         }// end of method
-    },// end of single enumeration
 
+        @Override
+        public String bytesToString(byte[] bytes) {
+            return bytesToObject(bytes).substring(bytesToObject(bytes).indexOf(PUNTO_VIRGOLA) + 1);
+        }
+    },// end of single enumeration
 
     image("image", AETypeField.image) {
         //@todo RIMETTERE
@@ -261,7 +300,6 @@ public enum AETypePref {
         //            }// end of if cycle
         //            return bytes;
         //        }// end of method
-
 
         //        @Override
         //        public Object bytesToObject(byte[] bytes) {
@@ -411,6 +449,18 @@ public enum AETypePref {
     public Object bytesToObject(byte[] bytes) {
         return null;
     }// end of method
+
+    /**
+     * Converte un byte[] in una stringa visibile nella UI.
+     * Sovrascritto
+     *
+     * @param bytes il valore come byte[]
+     *
+     * @return il valore convertito in stringa
+     */
+    public String bytesToString(byte[] bytes) {
+        return bytesToObject(bytes).toString();
+    }
 
 
     /**

@@ -415,26 +415,6 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Ricreazione di alcuni dati iniziali standard <br>
-     * Invocato dal bottone Reset di alcune liste <br>
-     * Cancella la collection (parzialmente, se usaCompany=true) <br>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return false se non esiste il metodo sovrascritto o se la collection
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-     */
-//    @Override
-//    public boolean resetDeletingAll() {
-//        AIResult result = resetEmptyOnly();
-//        logger.log(AETypeLog.reset, result.getMessage());
-//        return result.isValido();
-//    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

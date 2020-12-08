@@ -282,6 +282,35 @@ public class ADateService extends AAbstractService {
         return get(localDate, AETypeData.standard);
     }
 
+    /**
+     * Restituisce la data nella forma del pattern standard. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     * Pattern: d-M-yy H:mm <br>
+     * Esempio: 18-4-17 13:45 <br>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalDateTime localDateTime) {
+        return get(localDateTime, AETypeData.normaleOrario);
+    }
+    /**
+     * Restituisce la data nella forma del pattern standard. <br>
+     * <p>
+     * Returns a string representation of the date <br>
+     * Pattern: H:mm <br>
+     * Esempio:  13:45 <br>
+     *
+     * @param localTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String get(LocalTime localTime) {
+        return get(localTime, AETypeData.orario);
+    }
+
 
     /**
      * Restituisce la data nella forma del pattern ricevuto. <br>

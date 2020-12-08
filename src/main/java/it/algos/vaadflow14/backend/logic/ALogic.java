@@ -1021,6 +1021,13 @@ public abstract class ALogic implements AILogic {
 
 
     /**
+     * Refresh della lista
+     */
+    public void reloadList() {
+        UI.getCurrent().getPage().reload();
+    }
+
+    /**
      * Refresh del form
      */
     public void reloadForm(AEntity entityBean) {
@@ -1581,13 +1588,13 @@ public abstract class ALogic implements AILogic {
             return null;
         }
 
-        valido=true;
-//        binder = new Binder(newEntityBean.getClass());
-//        beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
-//        //--Sincronizza il binder all' apertura della scheda
-//        //--Trasferisce (binder read) i valori dal DB alla UI
-//        binder.readBean(newEntityBean);
-//        valido = binder.isValid();
+        valido = true;
+        //        binder = new Binder(newEntityBean.getClass());
+        //        beanService.creaFields(newEntityBean, AEOperation.addNew, binder);
+        //        //--Sincronizza il binder all' apertura della scheda
+        //        //--Trasferisce (binder read) i valori dal DB alla UI
+        //        binder.readBean(newEntityBean);
+        //        valido = binder.isValid();
 
         if (valido) {
             newEntityBean = beforeSave(newEntityBean, AEOperation.addNew);
@@ -1837,24 +1844,24 @@ public abstract class ALogic implements AILogic {
     public void clickReset() {
         if (resetDeletingAll()) {
             this.refreshGrid();
+            this.reloadList();
         }
     }
 
-
-//    /**
-//     * Creazione di alcuni dati iniziali <br>
-//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return false se non esiste il metodo sovrascritto
-//     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-//     */
-//    @Override
-//    @Deprecated
-//    public boolean reset() {
-//        return false;
-//    }
+    //    /**
+    //     * Creazione di alcuni dati iniziali <br>
+    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
+    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
+    //     * DEVE essere sovrascritto <br>
+    //     *
+    //     * @return false se non esiste il metodo sovrascritto
+    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+    //     */
+    //    @Override
+    //    @Deprecated
+    //    public boolean reset() {
+    //        return false;
+    //    }
 
     /**
      * Cancella la collection <br>

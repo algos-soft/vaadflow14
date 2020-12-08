@@ -1479,7 +1479,7 @@ public class AFileServiceTest extends ATest {
         try {
             lista = file.recursionSubPathNames(path);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "recursionSubPathNames");
+            logger.warn(unErrore, this.getClass(), "recursionSubPathNames");
         }
 
         assertTrue(array.isAllValid(lista));

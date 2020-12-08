@@ -40,6 +40,7 @@ public abstract class FlowCost {
     public static final Locale LOCALE = Locale.ITALIAN;
 
     public static final String TAG_FLOW_DATA = "flowdata";
+
     public static final String VUOTA = "";
 
     public static final String VIRGOLA = ",";
@@ -203,6 +204,10 @@ public abstract class FlowCost {
 
     public static final String QUADRE_END = QUADRA_END + QUADRA_END;
 
+    public static final String VERO = "true";
+
+    public static final String FALSO = "false";
+
 
     /**
      * tag per la singola graffa di apertura
@@ -317,6 +322,26 @@ public abstract class FlowCost {
 
     public static final String COMPANY_TEST = "test";
 
-    public final static String LUMO_PRIMARY_COLOR = "#1676F3";  // non riesco a recuperarlo dal context allora visto che so qual è lo ridefinisco qui
+    public static final String LUMO_PRIMARY_COLOR = "#1676F3";  // non riesco a recuperarlo dal context allora visto che so qual è lo ridefinisco qui
+
+    public static final String PREF_USA_DEBUG = "usaDebug";
+
+    public static final String PREF_USA_SEARCH_CLEAR = "usaSearchClearButton";
+
+    public static final String PREF_USA_BANDIERE_STATI = "usaBandiereStati";
+
+    public static final String PREF_USA_GRID_MAIUSCOLA = "usaGridHeaderMaiuscola";
+
+    public static final String PREF_USA_FORM_MAIUSCOLA = "usaFormFieldMaiuscola";
+
+    public static final String PREF_USA_SEARCH_SENSITIVE = "usaSearchCaseSensitive";
+
+    public static final String PREF_ICONA_EDIT = "iconaEdit";
+
+    public static final String PREF_EMAIL = "email";
+
+    public static final String PREF_MAX_RIGHE_GRID = "maxRigheGrid";
+
+    public static final String PREF_MAX_RADIO = "maxEnumRadio";
 
 }

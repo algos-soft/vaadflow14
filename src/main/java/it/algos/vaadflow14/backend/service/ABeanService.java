@@ -4,6 +4,8 @@ import com.vaadin.flow.data.binder.Binder;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -182,10 +184,60 @@ public class ABeanService extends AAbstractService {
             return null;
         }
 
+        if (entityBeanOld instanceof Preferenza) {
+            return getMappaModifichePreferenza((Preferenza) entityBeanNew, (Preferenza) entityBeanOld);
+        }
+
         listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
         for (String key : listaProperties) {
-            newValue = reflection.getPropertyValue(entityBeanNew, key);
             oldValue = entityBeanOld != null ? reflection.getPropertyValue(entityBeanOld, key) : null;
+            newValue = reflection.getPropertyValue(entityBeanNew, key);
+
+            if (oldValue == null && newValue != null) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+
+            if (oldValue != null && newValue == null) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+
+            if (oldValue != null && !oldValue.equals(newValue)) {
+                wrap = new WrapDueObject(oldValue, newValue);
+                mappaModifiche.put(key, wrap);
+            }
+        }
+        return mappaModifiche;
+    }
+
+
+    /**
+     * Estrae le differenze delle sole properties modificate <br>
+     * Controlla che le due entities esistano e siano della stessa classe <br>
+     *
+     * @param entityBeanNew modificata
+     * @param entityBeanOld originaria
+     *
+     * @return mappa delle properties modificate con la coppia di valori vecchio e nuovo
+     */
+    public Map<String, WrapDueObject> getMappaModifichePreferenza(Preferenza entityBeanNew, Preferenza entityBeanOld) {
+        Map<String, WrapDueObject> mappaModifiche = new LinkedHashMap<>();
+        List<String> listaProperties;
+        Object oldValue;
+        Object newValue;
+        WrapDueObject wrap;
+        AETypePref type = entityBeanOld.type;
+
+        listaProperties = reflection.getFieldsName(entityBeanNew.getClass());
+        for (String key : listaProperties) {
+            oldValue = entityBeanOld != null ? reflection.getPropertyValue(entityBeanOld, key) : null;
+            newValue = reflection.getPropertyValue(entityBeanNew, key);
+
+            if (key.equals("value")) {
+                oldValue = type.bytesToString((byte[]) oldValue);
+                newValue = type.bytesToString((byte[]) newValue);
+            }
 
             if (oldValue == null && newValue != null) {
                 wrap = new WrapDueObject(oldValue, newValue);

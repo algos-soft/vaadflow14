@@ -4,12 +4,18 @@ import it.algos.vaadflow14.backend.interfaces.AIEnum;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
+import it.algos.vaadflow14.backend.service.ADateService;
+import it.algos.vaadflow14.backend.service.AEnumerationService;
+import it.algos.vaadflow14.backend.service.ALogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow14
@@ -19,27 +25,27 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Time: 15:41
  */
 public enum AEPreferenza implements AIPreferenza {
-    usaDebug("usaDebug", "Flag generale di debug", AETypePref.bool, false, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
+    usaDebug(PREF_USA_DEBUG, "Flag generale di debug", AETypePref.bool, false, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
 
-    usaSearchClearButton("usaSearchClearButton", "Bottone per pulire il filtro di ricerca", AETypePref.bool, true, false),
+    usaSearchClearButton(PREF_USA_SEARCH_CLEAR, "Bottone per pulire il filtro di ricerca", AETypePref.bool, true, false),
 
-    usaBandiereStati("usaBandiereStati", "Bandierine nel combobox degli stati", AETypePref.bool, true, true),
+    usaBandiereStati(PREF_USA_BANDIERE_STATI, "Bandierine nel combobox degli stati", AETypePref.bool, true, true),
 
-    usaGridHeaderMaiuscola("usaGridHeaderMaiuscola", "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true, true),
+    usaGridHeaderMaiuscola(PREF_USA_GRID_MAIUSCOLA, "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true, true),
 
-    usaFormFieldMaiuscola("usaFormFieldMaiuscola", "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
+    usaFormFieldMaiuscola(PREF_USA_FORM_MAIUSCOLA, "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
 
-    usaSearchCaseSensitive("usaSearchCaseSensitive", "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
+    usaSearchCaseSensitive(PREF_USA_SEARCH_SENSITIVE, "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
 
     //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
 
-    iconaEdit("iconaEdit", "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
+    iconaEdit(PREF_ICONA_EDIT, "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
 
-    mailTo("email", "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
+    mailTo(PREF_EMAIL, "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
 
-    maxRigheGrid("maxRigheGrid", "Righe massime della griglia semplice", AETypePref.integer, 20, false, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
+    maxRigheGrid(PREF_MAX_RIGHE_GRID, "Righe massime della griglia semplice", AETypePref.integer, 20, false, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
 
-    maxEnumRadio("maxEnumRadio", "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, false, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
+    maxEnumRadio(PREF_MAX_RADIO, "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, false, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
 
     ;
 
@@ -59,6 +65,15 @@ public enum AEPreferenza implements AIPreferenza {
     //--Link injettato da un metodo static
     private APreferenzaService preferenzaService;
 
+    //--Link injettato da un metodo static
+    private ALogService logger;
+
+    //--Link injettato da un metodo static
+    private ADateService date;
+
+    //--Link injettato da un metodo static
+    private AEnumerationService enumService;
+
     //    //--chi può vedere la preferenza
     //    private AERole show;
 
@@ -74,7 +89,7 @@ public enum AEPreferenza implements AIPreferenza {
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica,String note) {
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
         this.setKeyCode(keyCode);
         this.setDescrizione(descrizione);
         this.setType(type);
@@ -88,6 +103,17 @@ public enum AEPreferenza implements AIPreferenza {
         this.preferenzaService = preferenzaService;
     }
 
+    public void setLogger(ALogService logger) {
+        this.logger = logger;
+    }
+
+    public void setDate(ADateService date) {
+        this.date = date;
+    }
+
+    public void setEnumService(AEnumerationService enumService) {
+        this.enumService = enumService;
+    }
 
     public String getKeyCode() {
         return keyCode;
@@ -162,29 +188,76 @@ public enum AEPreferenza implements AIPreferenza {
     }
 
 
-    public boolean is() {
-        boolean status = false;
-        Object javaValue;
+    public String getStr() {
+        String valore = VUOTA;
+        Object value = defaultValue;
+        String message;
 
-        if (type == AETypePref.bool) {
-            javaValue = getValue();
-            status = javaValue instanceof Boolean && (boolean) javaValue;
+        switch (type) {
+            case string:
+            case email:
+                valore = (String) value;
+                break;
+            case bool:
+                valore = (boolean) getValue() ? VERO : FALSO;
+                message = String.format("La preferenza %s è di type boolean. Meglio chiamare is() invece di getStr()", keyCode);
+                logger.warn(message);
+                break;
+            case integer:
+                valore += getValue();
+                message = String.format("La preferenza %s è di type integer. Meglio chiamare getInt() invece di getStr()", keyCode);
+                logger.warn(message);
+                break;
+            case lungo:
+                break;
+            case localdate:
+                valore = date.get((LocalDate) getValue());
+                break;
+            case localdatetime:
+                valore = date.get((LocalDateTime) getValue());
+                break;
+            case localtime:
+                valore = date.get((LocalTime) getValue());
+                break;
+            case enumeration:
+                valore = ((String) getValue()).substring(((String) getValue()).indexOf(PUNTO_VIRGOLA) + 1);
+                break;
+            case icona:
+                break;
+            default:
+                message = String.format("La preferenza: AEPreferenza.%s è di tipo %s e non può essere convertita in stringa.", name(), type);
+                logger.error(message);
+                break;
         }
 
-        return status;
+        return valore;
+    }
+
+    public boolean is() {
+        String message;
+
+        if (type == AETypePref.bool) {
+            return (boolean) getValue();
+        }
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare is()", keyCode, type);
+            logger.error(message);
+            return false;
+        }
     }
 
 
     public int getInt() {
-        int value = 0;
-        Object javaValue;
+        String message;
 
         if (type == AETypePref.integer) {
-            javaValue = getValue();
-            value = (javaValue instanceof Integer) ? (Integer) javaValue : 0;
+            return (int) getValue();
         }
-
-        return value;
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare getInt()", keyCode, type);
+            logger.error(message);
+            return 0;
+        }
     }
 
 
@@ -204,11 +277,22 @@ public enum AEPreferenza implements AIPreferenza {
         @Autowired
         private APreferenzaService preferenzaService;
 
+        @Autowired
+        private ALogService logger;
+
+        @Autowired
+        private AEnumerationService enumService;
+
+        @Autowired
+        private ADateService date;
 
         @PostConstruct
         public void postConstruct() {
             for (AEPreferenza pref : AEPreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
+                pref.setLogger(logger);
+                pref.setDate(date);
+                pref.setEnumService(enumService);
             }
         }
 
