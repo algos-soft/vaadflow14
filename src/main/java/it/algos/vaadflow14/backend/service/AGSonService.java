@@ -51,6 +51,19 @@ public class AGSonService extends AAbstractService {
 
 
     /**
+     * Controlla se esistono coppie di graffe interne <br>
+     * Serve per i parametri di type @DBRef <br>
+     *
+     * @param doc 'documento' mongo della collezione
+     *
+     * @return true se esistono; false se non esistono
+     */
+    public boolean isDBRef(final Document doc) {
+        return countGraffe(fixDoc(doc)) > 0;
+    }
+
+
+    /**
      * Conta quante coppie di graffe interne esistono <br>
      * Serve per i parametri di type @DBRef <br>
      *
@@ -203,7 +216,7 @@ public class AGSonService extends AAbstractService {
      * Mappa dell' oggetto <br>
      * Può essere un 'documento' mongo oppure una entity <br>
      *
-     * @param doc documento della collezione
+     * @param doc 'documento' mongo della collezione
      *
      * @return mappa chiave-valore
      */
@@ -244,21 +257,6 @@ public class AGSonService extends AAbstractService {
                     mappa.put(key, value);
                 }
             }
-
-            //            String[] parti2 = stringaJSON.split(GRAFFA_INI_REGEX);
-            //            String[] parti3 = stringaJSON.split(GRAFFA_END_REGEX);
-            //            stringaJSON3=stringaJSON.substring(1,stringaJSON.length()-1);
-            //            entity = (AEntity) gSon.fromJson(stringaJSON, Anno.class);
-            //            entity = (AEntity) gSon.fromJson(stringaJSON3, Anno.class);
-            //            entity = (AEntity) gSon.fromJson(stringaJSON2, Anno.class);
-
-            //            JsonElement element=gSon.toJsonTree(doc);
-            //            JsonObject obj= element.getAsJsonObject();
-            //            stringaJSON2=obj.toString();
-            //            JsonElement sec=  obj.get("secolo");
-            //            JsonObject obj2= sec.getAsJsonObject();
-            //            JsonElement sec2=  obj2.get("id");
-            //            String value=sec2.getAsString();
         }
 
         return mappa;
@@ -269,140 +267,37 @@ public class AGSonService extends AAbstractService {
      * Costruzione della entity partendo da un documento JSON <br>
      * Recupera dal documento la stringa, sostituendo gli underscore del keyID <br>
      *
-     * @param clazz della AEntity
-     * @param doc   documento bson
+     * @param entityClazz della AEntity
+     * @param doc         'documento' mongo della collezione
      *
      * @return new entity
      */
-    public AEntity crea(Document doc, Class clazz) {
-        String jsonString = VUOTA;
+    public AEntity crea(Class entityClazz, Document doc) {
+        AEntity entityBean = null;
 
-        if (doc == null || clazz == null) {
+        if (entityClazz == null || doc == null) {
             return null;
         }
 
-        //--recupera dal documento la stringa, sostituendo gli underscore del keyID
-        jsonString = this.fixDoc(doc);
+        entityBean = creaNoDbRef(entityClazz, doc);
+        if (isDBRef(doc)) {
+            entityBean = addDbRef(entityClazz, doc, entityBean);
+        }
 
-        if (countGraffe(jsonString) > 0) {
-            return creaDbRef(doc, clazz);
-        }
-        else {
-            return creaNoDbRef(doc, clazz);
-        }
+        return entityBean;
     }
 
-    /**
-     * Costruzione della entity partendo da una stringa Gson <br>
-     * Ci sono campi linkati con @DBRef <br>
-     *
-     * @param jsonString  estratta dal document Gson
-     * @param entityClazz della AEntity
-     *
-     * @return new entity
-     */
-    public AEntity creaDbRef(Document doc,Class entityClazz) {
-        AEntity entity = null;
-        Gson gSon = new Gson();
-        String jsonString = this.fixDoc(doc);
-        List<String> listaContenutiGraffe = estraeGraffe(jsonString);
-
-
-        //--costruisce la entity SENZA il parametro linkato ad un'altra classe (@DBRef)
-        try {
-            //            entity = (AEntity) gSon.fromJson(jsonString, clazz);
-            entity = creaNoDbRef(doc, entityClazz);
-
-            //--aggiunge il valore dei parametri linkati ad un'altra classe (@DBRef)
-            entity = estraeAllRef(entityClazz, jsonString, entity);
-
-            return entity;
-        } catch (JsonSyntaxException unErrore) {
-            logger.error(unErrore, this.getClass(), "creaDbRef");
-        }
-
-        return entity;
-    }
-
-    public AEntity estraeAllRef(Class entityClazz, String jsonString, AEntity entity) {
-        List<String> listaContenutiGraffe = estraeGraffe(jsonString);
-
-        if (array.isAllValid(listaContenutiGraffe)) {
-            for (String jsonTestoLink : listaContenutiGraffe.subList(1, listaContenutiGraffe.size())) {
-                estraeSingoloRef(entity, entityClazz, jsonTestoLink);
-            }
-        }
-
-        return entity;
-    }
-
-
-    public AEntity estraeSingoloRef(AEntity entity, Class entityClazz, String jsonTestoLink) {
-        String[] parti;
-        String nomeCollezioneLinkata = VUOTA;
-        String riferimentoLinkato = VUOTA;
-        String valoreID = VUOTA;
-
-        parti = jsonTestoLink.split(DUE_PUNTI + GRAFFA_INI_REGEX);
-        if (parti != null) {
-            nomeCollezioneLinkata = parti[0];
-            nomeCollezioneLinkata = text.setNoDoppiApici(nomeCollezioneLinkata).trim();
-            riferimentoLinkato = parti[1];
-        }
-        if (text.isValid(riferimentoLinkato)) {
-            parti = riferimentoLinkato.split(VIRGOLA);
-            if (parti != null) {
-                parti = parti[0].split(DUE_PUNTI);
-
-                if (parti != null) {
-                    valoreID = parti[1];
-                    valoreID = text.setNoDoppiApici(valoreID).trim();
-                }
-            }
-        }
-
-        if (text.isValid(nomeCollezioneLinkata) && text.isValid(valoreID)) {
-            entity = creaEntity(entity, entityClazz, nomeCollezioneLinkata, valoreID);
-        }
-
-        return entity;
-    }
-
-
-    public AEntity creaEntity(AEntity entity, Class entityClazz, String nomeCollezioneLinkata, String valueID) {
-        AEntity entityBean = null;
-        Class entityLinkClazz;
-        MongoCollection<Document> collection;
-        MongoClient mongoClient = new MongoClient("localhost");
-        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
-        //        Document doc;
-        Field field = reflection.getField(entityClazz, nomeCollezioneLinkata);
-        //        Gson gSon = new Gson();
-        entityLinkClazz = annotation.getComboClass(field);
-        collection = database.getCollection(nomeCollezioneLinkata);
-        Document doc = (Document) collection.find().first();
-        entityBean = crea(doc, entityLinkClazz);
-
-        //        entityBean = mongo.findById(Secolo.class, valueID);
-        try {
-            field.set(entity, entityBean);
-        } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-        }
-
-        return entity;
-    }
 
     /**
      * Costruzione della entity partendo da una stringa Gson <br>
      * Non ci sono campi linkati con @DBRef <br>
      *
-     * @param jsonString  estratta dal document Gson
      * @param entityClazz della AEntity
+     * @param jsonString  estratta dal document Gson
      *
      * @return new entity
      */
-    public AEntity creaNoDbRef(String jsonString, Class entityClazz) {
+    public AEntity creaNoDbRef(Class entityClazz, String jsonString) {
         AEntity entity;
         Gson gSon;
         GsonBuilder builder = new GsonBuilder();
@@ -445,14 +340,116 @@ public class AGSonService extends AAbstractService {
      * Costruzione della entity partendo da un documento Gson <br>
      * Non ci sono campi linkati con @DBRef <br>
      *
-     * @param doc         document Gson
      * @param entityClazz della AEntity
+     * @param doc         'documento' mongo della collezione
      *
      * @return new entity
      */
-    public AEntity creaNoDbRef(Document doc, Class entityClazz) {
+    public AEntity creaNoDbRef(Class entityClazz, Document doc) {
         String jsonString = this.fixDoc(doc);
-        return creaNoDbRef(jsonString, entityClazz);
+        return creaNoDbRef(entityClazz, jsonString);
     }
+
+
+    /**
+     * Costruzione della entity partendo da una stringa Gson <br>
+     * Ci sono campi linkati con @DBRef <br>
+     *
+     * @param entityClazz della AEntity
+     * @param doc         'documento' mongo della collezione
+     *
+     * @return new entity
+     */
+    public AEntity addDbRef(Class entityClazz, Document doc, AEntity entityBean) {
+//        AEntity entityBean = null;
+        Gson gSon = new Gson();
+        String jsonString = this.fixDoc(doc);
+        List<String> listaContenutiGraffe = estraeGraffe(jsonString);
+
+        //--costruisce la entity SENZA il parametro linkato ad un'altra classe (@DBRef)
+        try {
+            //            entity = (AEntity) gSon.fromJson(jsonString, clazz);
+//            entityBean = creaNoDbRef(entityClazz, doc);
+
+            //--aggiunge il valore dei parametri linkati ad un'altra classe (@DBRef)
+            entityBean = estraeAllRef(entityClazz, jsonString, entityBean);
+
+            return entityBean;
+        } catch (JsonSyntaxException unErrore) {
+            logger.error(unErrore, this.getClass(), "addDbRef");
+        }
+
+        return entityBean;
+    }
+
+    public AEntity estraeAllRef(Class entityClazz, String jsonString, AEntity entity) {
+        List<String> listaContenutiGraffe = estraeGraffe(jsonString);
+
+        if (array.isAllValid(listaContenutiGraffe)) {
+            for (String jsonTestoLink : listaContenutiGraffe.subList(1, listaContenutiGraffe.size())) {
+                estraeSingoloRef(entityClazz, entity, jsonTestoLink);
+            }
+        }
+
+        return entity;
+    }
+
+
+    public AEntity estraeSingoloRef(Class entityClazz, AEntity entity, String jsonTestoLink) {
+        String[] parti;
+        String nomeCollezioneLinkata = VUOTA;
+        String riferimentoLinkato = VUOTA;
+        String valoreID = VUOTA;
+
+        parti = jsonTestoLink.split(DUE_PUNTI + GRAFFA_INI_REGEX);
+        if (parti != null) {
+            nomeCollezioneLinkata = parti[0];
+            nomeCollezioneLinkata = text.setNoDoppiApici(nomeCollezioneLinkata).trim();
+            riferimentoLinkato = parti[1];
+        }
+        if (text.isValid(riferimentoLinkato)) {
+            parti = riferimentoLinkato.split(VIRGOLA);
+            if (parti != null) {
+                parti = parti[0].split(DUE_PUNTI);
+
+                if (parti != null) {
+                    valoreID = parti[1];
+                    valoreID = text.setNoDoppiApici(valoreID).trim();
+                }
+            }
+        }
+
+        if (text.isValid(nomeCollezioneLinkata) && text.isValid(valoreID)) {
+            entity = creaEntity(entityClazz, entity, nomeCollezioneLinkata, valoreID);
+        }
+
+        return entity;
+    }
+
+
+    public AEntity creaEntity(Class entityClazz, AEntity entity, String nomeCollezioneLinkata, String valueID) {
+        AEntity entityBean = null;
+        Class entityLinkClazz;
+        MongoCollection<Document> collection;
+        MongoClient mongoClient = new MongoClient("localhost");
+        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+        //        Document doc;
+        Field field = reflection.getField(entityClazz, nomeCollezioneLinkata);
+        //        Gson gSon = new Gson();
+        entityLinkClazz = annotation.getComboClass(field);
+        collection = database.getCollection(nomeCollezioneLinkata);
+        Document doc = (Document) collection.find().first();
+        entityBean = crea(entityLinkClazz, doc);
+
+        //        entityBean = mongo.findById(Secolo.class, valueID);
+        try {
+            field.set(entity, entityBean);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
+
+        return entity;
+    }
+
 
 }

@@ -67,7 +67,6 @@ public class GSonTest extends ATest {
 
     private MongoDatabase database = mongoClient.getDatabase("vaadflow14");
 
-    private MongoCollection collection = database.getCollection("mese");
 
     private int offset;
 
@@ -75,11 +74,19 @@ public class GSonTest extends ATest {
 
     private Document doc;
 
-    private Class viaClazz = Via.class;
+    private Class clazzVia= Via.class;
 
-    private Class annoClazz = Anno.class;
+    private Class clazzAnno = Anno.class;
 
-    private Class versioneClazz = Versione.class;
+    private Class clazzVersione = Versione.class;
+
+    private MongoCollection collection;
+
+    private MongoCollection collectionVia = database.getCollection(clazzVia.getSimpleName().toLowerCase());
+
+    private MongoCollection collectionAnno = database.getCollection(clazzAnno.getSimpleName().toLowerCase());
+
+    private MongoCollection collectionVersione = database.getCollection(clazzVersione.getSimpleName().toLowerCase());
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -113,9 +120,9 @@ public class GSonTest extends ATest {
         super.setUp();
 
         gSon = new Gson();
-        collection = null;
         offset = 0;
         limit = 0;
+        collection = null;
         doc = null;
     }
 
@@ -177,7 +184,26 @@ public class GSonTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - Estrae graffa")
+    @DisplayName("2 - isDBRef")
+    void isDBRef() {
+        doc = (Document) collectionVia.find().first();
+        ottenutoBooleano = gSonService.isDBRef(doc);
+        Assert.assertFalse(ottenutoBooleano);
+
+        doc = (Document) collectionAnno.find().first();
+        ottenutoBooleano = gSonService.isDBRef(doc);
+        Assert.assertTrue(ottenutoBooleano);
+
+        doc = (Document) collectionVersione.find().first();
+        ottenutoBooleano = gSonService.isDBRef(doc);
+        Assert.assertFalse(ottenutoBooleano);
+
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Estrae graffa")
     void estraeGraffa() {
         sorgente = "{\"_id\": \"via\", \"ordine\": 1, \"nome\": \"via\", \"_class\": \"via\"}";
         ottenuto = gSonService.estraeGraffa(sorgente);
@@ -232,8 +258,8 @@ public class GSonTest extends ATest {
 
 
     @Test
-    @Order(3)
-    @DisplayName("3 - Estrae graffe")
+    @Order(4)
+    @DisplayName("4 - Estrae graffe")
     void estraeGraffe() {
         sorgente = "{\"_id\": \"via\", \"ordine\": 1, \"nome\": \"via\", \"_class\": \"via\"}";
         ottenutoArray = gSonService.estraeGraffe(sorgente);
@@ -306,8 +332,8 @@ public class GSonTest extends ATest {
 
 
     @Test
-    @Order(4)
-    @DisplayName("4 - fixStringa")
+    @Order(5)
+    @DisplayName("5 - fixStringa")
     void fixStringa() {
         sorgente = "{\"_id\":\"1971\",\"secolo\":\"_id\":\"xxsecolo\",\"collectionName\":\"secolo\"},\"ordine\":3971,\"anno\":\"1971\",\"bisestile\":false,\"secolo\":{\"_id\":\"xxsecolo\",\"collectionName\":\"secolo\"},\"_class\":\"anno\"}";
         previsto = "{\"id\":\"1971\",\"secolo\":\"id\":\"xxsecolo\",\"collectionName\":\"secolo\"},\"ordine\":3971,\"anno\":\"1971\",\"bisestile\":false,\"secolo\":{\"id\":\"xxsecolo\",\"collectionName\":\"secolo\"},\"class\":\"anno\"}";
@@ -319,13 +345,10 @@ public class GSonTest extends ATest {
 
 
     @Test
-    @Order(5)
-    @DisplayName("5 - fixDoc")
+    @Order(6)
+    @DisplayName("6 - fixDoc")
     void fixDoc() {
-        Class clazz = Versione.class;
-        String clazzName = clazz.getSimpleName().toLowerCase();
-        collection = database.getCollection(clazzName);
-        doc = (Document) collection.find().first();
+        doc = (Document) collectionVersione.find().first();
 
         previsto = "{\"id\":\"primo\",\"code\":\"primo\",\"giorno\":\"Apr 6, 2020, 12:00:00 AM\",\"descrizione\":\"forse\",\"class\":\"versione\"}";
         ottenuto = gSonService.fixDoc(doc);
@@ -335,33 +358,27 @@ public class GSonTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - creaNoDbRef - via - first")
+    @Order(7)
+    @DisplayName("7 - creaNoDbRef - via - first")
     void creaNoDbRef() {
-        clazz = viaClazz;
-        sorgente = clazz.getSimpleName().toLowerCase();
-        previsto = sorgente;
+        previsto = "via";
+        doc = (Document) collectionVia.find().first();
+        entityBean = gSonService.creaNoDbRef(clazzVia, doc);
 
-        collection = database.getCollection(sorgente);
-        doc = (Document) collection.find().first();
-        entityBean = gSonService.creaNoDbRef(doc, clazz);
-
-        Assert.assertNotNull(ottenuto);
+        Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, entityBean.id);
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - creaDbRef - anno - first")
+    @Order(8)
+    @DisplayName("8 - creaDbRef - anno - first")
     void creaDbRef() {
-        clazz = annoClazz;
-        sorgente = clazz.getSimpleName().toLowerCase();
         previsto = "1000a.c.";
         previsto2 = "XX secolo a.C.";
 
-        collection = database.getCollection(sorgente);
-        doc = (Document) collection.find().first();
-        entityBean = gSonService.creaDbRef(doc, clazz);
+        doc = (Document) collectionAnno.find().first();
+        entityBean = gSonService.creaNoDbRef(clazzAnno, doc);
+        entityBean = gSonService.addDbRef(clazzAnno, doc, entityBean);
 
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, entityBean.id);
@@ -369,17 +386,14 @@ public class GSonTest extends ATest {
     }
 
     @Test
-    @Order(8)
-    @DisplayName("8 - creaDbRef and time - versione - first")
+    @Order(9)
+    @DisplayName("9 - creaNoDbRef and time - versione - first")
     void creaNoDbRef2() {
-        clazz = versioneClazz;
-        sorgente = clazz.getSimpleName().toLowerCase();
         previsto = "primo";
         previstoIntero = 6;
 
-        collection = database.getCollection(sorgente);
-        doc = (Document) collection.find().first();
-        entityBean = gSonService.creaDbRef(doc, clazz);
+        doc = (Document) collectionVersione.find().first();
+        entityBean = gSonService.creaNoDbRef(clazzVersione, doc);
 
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, entityBean.id);
@@ -387,34 +401,76 @@ public class GSonTest extends ATest {
     }
 
     @Test
-    @Order(9)
-    @DisplayName("9 - crea - via - first")
-    void crea() {
-        clazz = viaClazz;
-        sorgente = clazz.getSimpleName().toLowerCase();
-        previsto = sorgente;
+    @Order(10)
+    @DisplayName("10 - creaViaFirst")
+    void creaViaFirst() {
+        previsto = "via";
 
-        collection = database.getCollection(sorgente);
-        doc = (Document) collection.find().first();
-        entityBean = gSonService.crea(doc, clazz);
+        doc = (Document) collectionVia.find().first();
+        entityBean = gSonService.crea(clazzVia, doc);
+
+        Assert.assertNotNull(entityBean);
+        Assert.assertEquals(previsto, entityBean.id);
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("11 - creaAnnoFirst")
+    void creaAnnoFirst() {
+        previsto = "1000a.c.";
+        previsto2 = "XX secolo a.C.";
+
+        doc = (Document) collectionAnno.find().first();
+        entityBean = gSonService.crea(clazzAnno, doc);
 
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, entityBean.id);
+        Assert.assertEquals(previsto2, ((Anno) entityBean).secolo.secolo);
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("12 - creaVersioneFirst")
+    void creaVersioneFirst() {
+        previsto = "primo";
+        previstoIntero = 6;
+
+        doc = (Document) collectionVersione.find().first();
+        entityBean = gSonService.crea(clazzVersione, doc);
+
+        Assert.assertNotNull(ottenuto);
+        Assert.assertEquals(previsto, entityBean.id);
+        Assert.assertEquals(previstoIntero, ((Versione) entityBean).giorno.getDayOfMonth());
+    }
+
+
+//    @Test
+    @Order(12)
+    @DisplayName("12 - creaViaID")
+    void creaViaID() {
+        clazz = clazzVia;
+        sorgente = "rione";
+        previsto = sorgente;
+
+        //        entityBean = gSonService.creaID(clazz, sorgente);
+
+        //        Assert.assertNotNull(ottenuto);
+        //        Assert.assertEquals(previsto, entityBean.id);
     }
 
 
     //    @Test
     @Order(41)
     @DisplayName("41 - Crea entity Via")
-    void creaVia() {
+    void creaViaOld() {
         Via via;
         Class clazz = Via.class;
         String clazzName = clazz.getSimpleName().toLowerCase();
 
-        collection = database.getCollection(clazzName);
-        doc = (Document) collection.find().first();
+        //        collectionVia = database.getCollection(clazzName);
+        doc = (Document) collectionVia.find().first();
 
-        via = (Via) gSonService.crea(doc,clazz);
+        via = (Via) gSonService.crea(clazz, doc);
         Assert.assertNotNull(via.id);
         System.out.println(VUOTA);
         System.out.println(via.id);
@@ -458,15 +514,15 @@ public class GSonTest extends ATest {
     //    @Test
     @Order(51)
     @DisplayName("51 - Crea entity Anno")
-    void creaAnno() {
+    void creaAnnoOld() {
         Anno anno;
         Class clazz = Anno.class;
         String clazzName = clazz.getSimpleName().toLowerCase();
 
-        collection = database.getCollection(clazzName);
-        doc = (Document) collection.find().first();
+        //        collection = database.getCollection(clazzName);
+        doc = (Document) collectionAnno.find().first();
 
-        anno = (Anno) gSonService.crea(doc,clazz);
+        anno = (Anno) gSonService.crea(clazz, doc);
         Assert.assertNotNull(anno.id);
         Assert.assertNotNull(anno.secolo.id);
         Assert.assertNotNull(anno.secolo.secolo);
@@ -598,20 +654,20 @@ public class GSonTest extends ATest {
         String clazzName2 = "anno";
         Class clazz = Secolo.class;
         previstoIntero = 1;
-        collection = database.getCollection(clazzName);
-        propertiesNumber = collection.countDocuments();
+        //        collection = database.getCollection(clazzName);
+        propertiesNumber = collectionVia.countDocuments();
         assertNotNull(propertiesNumber);
         System.out.println(VUOTA);
         System.out.println("Nella collezione 'Via' ci sono " + propertiesNumber + " elementi");
 
-        Document doc = (Document) collection.find().first();
+        Document doc = (Document) collectionVia.find().first();
         jsonString = doc.toJson();
         listaStr = gSonService.estraeGraffe(jsonString);
         assertNull(listaStr);
 
         previstoIntero = 2;
-        collection = database.getCollection(clazzName2);
-        propertiesNumber = collection.countDocuments();
+        //        collection = database.getCollection(clazzName2);
+        propertiesNumber = collectionAnno.countDocuments();
         assertNotNull(propertiesNumber);
         System.out.println(VUOTA);
         System.out.println("Nella collezione 'Anno' ci sono " + propertiesNumber + " elementi");
@@ -631,8 +687,8 @@ public class GSonTest extends ATest {
         Anno anno = null;
         String clazzName = clazz.getSimpleName().toLowerCase();
 
-        collection = database.getCollection(clazzName);
-        Collection<Document> documents = collection.find().skip(offset).limit(limit).into(new ArrayList());
+        //        collection = database.getCollection(clazzName);
+        Collection<Document> documents = collectionAnno.find().skip(offset).limit(limit).into(new ArrayList());
         listaRef = annotation.getDBRefFields(clazz);
 
         for (Document doc : documents) {
@@ -654,7 +710,7 @@ public class GSonTest extends ATest {
             if (listaRef != null && listaRef.size() > 0) {
                 for (Field field : listaRef) {
                     clazzName = field.getName();
-                    collection = database.getCollection(clazzName);
+                    collectionAnno = database.getCollection(clazzName);
                 }
             }
 
@@ -687,8 +743,8 @@ public class GSonTest extends ATest {
             }
         }).create();
 
-        collection = database.getCollection(clazzName);
-        Collection<Document> documents = collection.find().skip(offset).limit(limit).into(new ArrayList());
+        //        collection = database.getCollection(clazzName);
+        Collection<Document> documents = collectionVersione.find().skip(offset).limit(limit).into(new ArrayList());
         listaRef = annotation.getDBRefFields(clazz);
 
         for (Document doc : documents) {
@@ -716,7 +772,7 @@ public class GSonTest extends ATest {
             if (listaRef != null && listaRef.size() > 0) {
                 for (Field field : listaRef) {
                     clazzName = field.getName();
-                    collection = database.getCollection(clazzName);
+                    collectionVia = database.getCollection(clazzName);
                 }
             }
 
@@ -839,14 +895,14 @@ public class GSonTest extends ATest {
     //    @Test
     @Order(12)
     @DisplayName("12 - Crea entity Versione")
-    void creaVersione() {
+    void creaVersioneOld() {
         Versione versione;
         Class clazz = Versione.class;
         String clazzName = clazz.getSimpleName().toLowerCase();
 
         collection = database.getCollection(clazzName);
         doc = (Document) collection.find().first();
-        versione = (Versione) gSonService.crea(doc,clazz);
+        versione = (Versione) gSonService.crea(clazz, doc);
 
         sorgente = "Dec 16, 2020, 12:00:00 AM";
         String pattern = "MMM d, yyy, HH:mm:ss 'AM'";
@@ -882,7 +938,7 @@ public class GSonTest extends ATest {
             logger.error(unErrore, this.getClass(), "nomeDelMetodo");
         }
 
-        versione = (Versione) gSonService.crea(doc,clazz);
+        versione = (Versione) gSonService.crea(clazz, doc);
         Assert.assertNotNull(versione.id);
         Assert.assertNotNull(versione.giorno);
         System.out.println(VUOTA);
