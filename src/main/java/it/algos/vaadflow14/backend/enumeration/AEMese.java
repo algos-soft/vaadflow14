@@ -11,29 +11,29 @@ import java.util.List;
 
 public enum AEMese {
 
-    gennaio("gennaio", 31, 31, "gen"),
+    gennaio("gennaio", 31, 31, "gen", "Gen"),
 
-    febbraio("febbraio", 28, 29, "feb"),
+    febbraio("febbraio", 28, 29, "feb", "Feb"),
 
-    marzo("marzo", 31, 31, "mar"),
+    marzo("marzo", 31, 31, "mar", "Mar"),
 
-    aprile("aprile", 30, 30, "apr"),
+    aprile("aprile", 30, 30, "apr", "Apr"),
 
-    maggio("maggio", 31, 31, "mag"),
+    maggio("maggio", 31, 31, "mag", "May"),
 
-    giugno("giugno", 30, 30, "giu"),
+    giugno("giugno", 30, 30, "giu", "Jul"),
 
-    luglio("luglio", 31, 31, "lug"),
+    luglio("luglio", 31, 31, "lug", "Jul"),
 
-    agosto("agosto", 31, 31, "ago"),
+    agosto("agosto", 31, 31, "ago", "Aug"),
 
-    settembre("settembre", 30, 30, "set"),
+    settembre("settembre", 30, 30, "set", "Sep"),
 
-    ottobre("ottobre", 31, 31, "ott"),
+    ottobre("ottobre", 31, 31, "ott", "Oct"),
 
-    novembre("novembre", 30, 30, "nov"),
+    novembre("novembre", 30, 30, "nov", "Nov"),
 
-    dicembre("dicembre", 31, 31, "dic");
+    dicembre("dicembre", 31, 31, "dic", "Dec");
 
 
     /**
@@ -53,15 +53,18 @@ public enum AEMese {
 
     String sigla;
 
+    String siglaEn;
+
 
     /**
      * Costruttore interno dell'Enumeration <br>
      */
-    AEMese(String nome, int giorni, int giorniBisestili, String sigla) {
+    AEMese(String nome, int giorni, int giorniBisestili, String sigla, String siglaEn) {
         this.nome = nome;
         this.giorni = giorni;
         this.giorniBisestili = giorniBisestili;
         this.sigla = sigla;
+        this.siglaEn = siglaEn;
     }
 
 
@@ -80,7 +83,8 @@ public enum AEMese {
         if (mese != null) {
             if (!Year.of(anno).isLeap()) {
                 giorniDelMese = mese.giorni;
-            } else {
+            }
+            else {
                 giorniDelMese = mese.giorniBisestili;
             }
         }
@@ -119,14 +123,13 @@ public enum AEMese {
      *
      * @return Mese
      */
-    public static AEMese getMese(String nomeBreveLungo) {
+    public static AEMese getMese(String sigla) {
         AEMese mese = null;
-        String nomeBreveLungoMinuscolo;
 
-        if (nomeBreveLungo != null && !nomeBreveLungo.equals("")) {
-            nomeBreveLungoMinuscolo = nomeBreveLungo.toLowerCase();
+        if (sigla != null && !sigla.equals("")) {
+            sigla = sigla.toLowerCase();
             for (AEMese meseTmp : AEMese.values()) {
-                if (meseTmp.sigla.equals(nomeBreveLungoMinuscolo) || meseTmp.nome.equals(nomeBreveLungoMinuscolo)) {
+                if (meseTmp.sigla.equals(sigla) || meseTmp.nome.equals(sigla)) {
                     mese = meseTmp;
                 }
             }
@@ -145,7 +148,8 @@ public enum AEMese {
         if (mese != null) {
             if (flagBreve) {
                 nome = mese.sigla;
-            } else {
+            }
+            else {
                 nome = mese.nome;
             }
         }
@@ -241,6 +245,23 @@ public enum AEMese {
         }
 
         return lista;
+    }
+
+    /**
+     * Numero del mese dalla sigla inglese <br>
+     *
+     * @return numero del mese (gennaio=0)
+     */
+    public static int getNumMese(String siglaEn) {
+        int num = 0;
+
+        for (AEMese meseTmp : AEMese.values()) {
+            if (meseTmp.siglaEn.equals(siglaEn)) {
+                num = meseTmp.getOrd();
+            }
+        }
+
+        return num;
     }
 
 

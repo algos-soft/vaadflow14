@@ -374,7 +374,7 @@ public class ADateService extends AAbstractService {
             return get(localDate, pattern.getPattern());
         }
         else {
-            return VUOTA;
+            return get(localDate);
         }
     }
 

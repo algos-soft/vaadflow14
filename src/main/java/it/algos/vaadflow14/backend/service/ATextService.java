@@ -621,6 +621,31 @@ public class ATextService extends AAbstractService {
 
 
     /**
+     * Elimina (eventuali) graffe in testa e coda della stringa.
+     * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
+     * Se arriva una stringa vuota, restituisce una stringa vuota
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con graffe eliminate
+     */
+    public String setNoGraffe(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (isValid(stringaIn)) {
+            stringaIn = stringaIn.trim();
+
+            if (stringaIn.startsWith(GRAFFA_INI) && stringaIn.endsWith(GRAFFA_END)) {
+                stringaOut = stringaIn;
+                stringaOut = levaCoda(stringaOut, GRAFFA_END);
+                stringaOut = levaTesta(stringaOut, GRAFFA_INI);
+            }
+        }
+
+        return stringaOut.trim();
+    }
+    /**
      * Elimina (eventuali) doppie graffe in testa e coda della stringa.
      * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
@@ -630,7 +655,7 @@ public class ATextService extends AAbstractService {
      *
      * @return stringa con doppie graffe eliminate
      */
-    public String setNoGraffe(String stringaIn) {
+    public String setNoDoppieGraffe(String stringaIn) {
         String stringaOut = stringaIn;
 
         if (isValid(stringaIn)) {
@@ -817,6 +842,29 @@ public class ATextService extends AAbstractService {
         return stringaOut.trim();
     }
 
+    /**
+     * Elimina (eventuali) 'doppi apici' " in testa ed in coda alla stringa. <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa senza doppi apici iniziali e finali
+     */
+    public String setNoDoppiApici(String stringaIn) {
+        String stringaOut = stringaIn.trim();
+        String doppioApice = "\"";
+        int cicli = 4;
+
+        if (this.isValid(stringaOut)) {
+            for (int k = 0; k < cicli; k++) {
+                stringaOut = this.levaTesta(stringaOut, doppioApice);
+                stringaOut = this.levaCoda(stringaOut, doppioApice);
+            }
+        }
+
+        return stringaOut.trim();
+    }
+
 
     /**
      * Allunga un testo alla lunghezza desiderata. <br>
@@ -946,10 +994,10 @@ public class ATextService extends AAbstractService {
      * <p>
      * Se le graffe sono due, utilizza la seconda <br>
      */
-    public String estraeDoppiaGraffa(String valueIn) {
+    public String estraeGraffaDoppia(String valueIn) {
         String contenuto;
-        int posIni ;
-        int posEnd ;
+        int posIni;
+        int posEnd;
 
         posEnd = valueIn.lastIndexOf(DOPPIE_GRAFFE_END);
         posIni = valueIn.lastIndexOf(DOPPIE_GRAFFE_INI, posEnd);

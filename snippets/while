@@ -5,7 +5,7 @@
             }
 
 
-            //--prima esegue una volta, poi controlla volta
+            //--prima esegue una volta, poi controlla le volte successive
             //--se non ci sono le condizioni esegue COMUNQUE almeno una volta
             do {
                 stringaOut = stringaOut.substring(1);

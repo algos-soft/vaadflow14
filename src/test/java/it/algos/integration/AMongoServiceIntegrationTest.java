@@ -2,6 +2,7 @@ package it.algos.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -17,6 +18,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.packages.utility.Versione;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import org.bson.Document;
@@ -98,6 +100,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         service.mongoOp = mongoOp;
         meseLogic.mongo = service;
         mongo.mongoOp = mongoOp;
+        mongo.logger = logger;
 
         this.cancellazioneEntitiesProvvisorie();
         this.creazioneInizialeEntitiesProvvisorie();
@@ -174,7 +177,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     void isValid() {
         System.out.println("isValid() rimanda a count()");
 
-        ottenutoBooleano = service.isValid((Class)null);
+        ottenutoBooleano = service.isValid((Class) null);
         Assert.assertFalse(ottenutoBooleano);
 
         ottenutoBooleano = service.isValid(Omega.class);
@@ -461,7 +464,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities");
+        printLista(listaBean, "Set di entities per Mese");
 
         offset = 4;
         limit = 5;
@@ -469,7 +472,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities");
+        printLista(listaBean, "Set di entities per Mese");
 
         clazz = Anno.class;
         offset = 2850;
@@ -479,8 +482,19 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
         Assert.assertNotNull(((Anno) listaBean.get(0)).secolo.secolo);
+        printLista(listaBean, "Set di entities per Anno");
         System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
-        printLista(listaBean, "Set di entities");
+
+        clazz = Versione.class;
+        offset = 0;
+        limit = 1;
+        previstoIntero = 1;
+        listaBean = mongo.findSet(clazz, offset, limit);
+        Assert.assertNotNull(listaBean);
+        Assert.assertEquals(previstoIntero, listaBean.size());
+        Assert.assertNotNull(((Versione) listaBean.get(0)).id);
+        Assert.assertNotNull(((Versione) listaBean.get(0)).code);
+        Assert.assertNotNull(((Versione) listaBean.get(0)).descrizione);
     }
 
 
@@ -925,6 +939,24 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     }
 
+    @Test
+    @Order(23)
+    @DisplayName("23 - execute")
+    void execute() {
+        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
+        MongoClient mongoClient = new MongoClient("localhost");
+        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+        MongoCollection collection = database.getCollection("mese");
+
+        BasicDBObject command = new BasicDBObject("find", "mese");
+        Document alfa = mongoOp.executeCommand(String.valueOf(command));
+        //        String gamma = alfa.getString("cursor");
+//        ObjectId beta = alfa.getObjectId("cursor");
+        int a = 87;
+        //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
+        //        Object alfga = mongo.mongoOp.executeCommand(jsonCommand);
+
+    }
 
     @Test
     @Order(94)

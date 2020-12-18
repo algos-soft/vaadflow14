@@ -7,13 +7,17 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,8 +44,8 @@ import java.time.LocalTime;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Gamma", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette", usaRowIndex = true, headerAlert = "Esempio di date e tempi, rappresentati in diversi modi")
-@AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette")
+@AIList(fields = "code,mese,secolo,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette", usaRowIndex = true, headerAlert = "Esempio di date e tempi, rappresentati in diversi modi")
+@AIForm(fields = "code,mese,secolo,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette")
 public class Gamma extends AEntity {
 
     /**
@@ -60,6 +64,26 @@ public class Gamma extends AEntity {
     @AIColumn(header = "Code")
     public String code;
 
+
+    /**
+     * mese di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Mese.class)
+    @AIColumn(widthEM = 8)
+    public Mese mese;
+
+    /**
+     * secolo di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
+    @AIColumn(flexGrow = true)
+    public Secolo secolo;
 
     @AIField(type = AETypeField.localDate, caption = "AETypeData.dateShort")
     @AIColumn(typeData = AETypeData.standard, header = "standard")

@@ -13,6 +13,7 @@ import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.packages.utility.Versione;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.wizard.Wizard;
@@ -336,6 +337,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
         FlowVar.menuRouteList.add(Preferenza.class);
         FlowVar.menuRouteList.add(Wizard.class);
+        FlowVar.menuRouteList.add(Versione.class);
 
         if (FlowVar.usaGeografiaPackages) {
             FlowVar.menuRouteList.add(Continente.class);

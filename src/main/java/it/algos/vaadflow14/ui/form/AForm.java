@@ -383,7 +383,8 @@ public abstract class AForm extends VerticalLayout {
                 field = fieldService.crea(entityBean, binder, operationForm, fieldKey);
                 if (field != null) {
                     fieldsList.add(field);
-                } else {
+                }
+                else {
                     AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
                     logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
                 }
@@ -471,7 +472,8 @@ public abstract class AForm extends VerticalLayout {
                 //                        topLayout.add(comp);
                 //                    }
             }
-        } else {
+        }
+        else {
             logger.warn("La fieldsList è vuota", this.getClass(), "addFieldsToLayout");
         }
     }
@@ -596,9 +598,11 @@ public abstract class AForm extends VerticalLayout {
         //--Associa i valori del binder a entityBean. Dalla UI alla business logic
         //        return binder.writeBeanIfValid(entityBean) ? entityBean : null;
         try {
+            boolean status = binder.isValid();
             if (binder.writeBeanIfValid((AEntity) entityBean)) {
                 return entityBean;
-            } else {
+            }
+            else {
                 return null;
             }
         } catch (Exception unErrore) {
@@ -629,7 +633,7 @@ public abstract class AForm extends VerticalLayout {
         try {
             binder.writeBean(entityBean);
         } catch (Exception unErrore) {
-            int a=87;
+            int a = 87;
         }
         return beanService.isModificata(entityBean);
     }

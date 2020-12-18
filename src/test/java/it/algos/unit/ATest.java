@@ -255,6 +255,7 @@ public abstract class ATest {
 
     protected byte[] bytes;
 
+    protected Class clazz;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -323,7 +324,6 @@ public abstract class ATest {
         file.logger = logger;
         date.math = math;
         sort = null;
-
     }
 
 
@@ -358,10 +358,13 @@ public abstract class ATest {
         bytes = null;
         FIELD_ORDINE = reflection.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
         FIELD_NOME = reflection.getField(VIA_ENTITY_CLASS, NAME_NOME);
+        entityBean = null;
+        clazz = null;
     }
 
 
     protected void print(List<String> lista) {
+        System.out.println(VUOTA);
         if (array.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);

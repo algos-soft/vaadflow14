@@ -186,7 +186,10 @@ There are primitive specializations of the Supplier interface:
         System.out.println(s.contains("hello"));
     }
     
-    
+##Parser
+Gson, Jackson, and Moshi 
+- gson-vs-jackson-vs-moshi [ericdecanini](https://www.ericdecanini.com/2020/09/29/gson-vs-jackson-vs-moshi-the-best-android-json-parser/)
+- gson-vs-jackson [javacodegeeks](https://examples.javacodegeeks.com/jackson-vs-gson-a-deep-dive/)
 ##Tutorial
 - Java tutorials [howtodoinjava](https://howtodoinjava.com/)
 - Java tutorials [mkyong]https://mkyong.com/tutorials/java-8-tutorials/)

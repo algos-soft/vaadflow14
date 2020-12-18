@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -141,6 +142,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Omega.class);
         FlowVar.menuRouteList.add(Lambda.class);
         FlowVar.menuRouteList.add(PiView.class);
+        FlowVar.menuRouteList.add(Anno.class);
     }
 
     /**

@@ -896,15 +896,15 @@ class ATextServiceTest extends ATest {
         sorgente3 = "{{IT-SU}}";;
         previsto = "IT-SU";
 
-        ottenuto = text.estraeDoppiaGraffa(sorgente);
+        ottenuto = text.estraeGraffaDoppia(sorgente);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
-        ottenuto = text.estraeDoppiaGraffa(sorgente2);
+        ottenuto = text.estraeGraffaDoppia(sorgente2);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
-        ottenuto = text.estraeDoppiaGraffa(sorgente3);
+        ottenuto = text.estraeGraffaDoppia(sorgente3);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
     }

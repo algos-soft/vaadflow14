@@ -237,7 +237,7 @@ public enum AEPreferenza implements AIPreferenza {
         String message;
 
         if (type == AETypePref.bool) {
-            return (boolean) getValue();
+            return getValue() != null ? (boolean) getValue() : false;
         }
         else {
             message = String.format("La preferenza %s è di type %s. Non puoi usare is()", keyCode, type);
@@ -251,7 +251,7 @@ public enum AEPreferenza implements AIPreferenza {
         String message;
 
         if (type == AETypePref.integer) {
-            return (int) getValue();
+            return getValue() != null ? (int) getValue() : 0;
         }
         else {
             message = String.format("La preferenza %s è di type %s. Non puoi usare getInt()", keyCode, type);

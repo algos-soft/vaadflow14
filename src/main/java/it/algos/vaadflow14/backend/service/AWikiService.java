@@ -469,7 +469,7 @@ public class AWikiService extends AAbstractService {
             return null;
         }
 
-        wikiTitle = text.setNoGraffe(wikiTitle);
+        wikiTitle = text.setNoDoppieGraffe(wikiTitle);
         sigla = text.levaTestoPrimaDi(wikiTitle, TRATTINO);
         if (sigla.contains(PIPE)) {
             sigla = text.levaCodaDa(sigla, PIPE);
@@ -699,7 +699,7 @@ public class AWikiService extends AAbstractService {
                 }
                 if (text.isValid(cella)) {
                     cella = cella.trim();
-                    cella = text.setNoGraffe(cella);
+                    cella = text.setNoDoppieGraffe(cella);
                     cella = fixCode(cella);
                     colonna.add(cella);
                 }
@@ -766,8 +766,8 @@ public class AWikiService extends AAbstractService {
                 if (text.isValid(prima) && text.isValid(seconda)) {
                     prima = text.levaCodaDa(prima, REF);
                     seconda = text.levaCodaDa(seconda, REF);
-                    prima = text.setNoGraffe(prima);
-                    seconda = text.setNoGraffe(seconda);
+                    prima = text.setNoDoppieGraffe(prima);
+                    seconda = text.setNoDoppieGraffe(seconda);
                     prima = text.setNoQuadre(prima);
                     seconda = text.setNoQuadre(seconda);
                     prima = fixCode(prima);
@@ -1053,7 +1053,7 @@ public class AWikiService extends AAbstractService {
                 nome = regione;
             }
             else {
-                sigla = text.estraeDoppiaGraffa(sigla);
+                sigla = text.estraeGraffaDoppia(sigla);
                 wrapDue = getTemplateBandierina(sigla);
                 if (wrapDue != null) {
                     sigla = wrapDue.getPrima();
@@ -1695,7 +1695,7 @@ public class AWikiService extends AAbstractService {
 
 
     public String estraeGraffa(String testoCompleto) {
-        return text.setNoGraffe(estraeGraffaCon(testoCompleto));
+        return text.setNoDoppieGraffe(estraeGraffaCon(testoCompleto));
     }
 
 }

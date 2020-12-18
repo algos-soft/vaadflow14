@@ -13,6 +13,7 @@ import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -69,6 +70,13 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public MongoOperations mongoOp;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AGSonService agSonService;
 
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
@@ -76,7 +84,6 @@ public class AMongoService<capture> extends AAbstractService {
     private MongoClient mongoClient;
 
     private MongoDatabase database;
-
 
     /**
      * Costruttore @Autowired. <br>
@@ -158,6 +165,7 @@ public class AMongoService<capture> extends AAbstractService {
     public boolean isValid(String collectionName) {
         return count(collectionName) > 0;
     }
+
     /**
      * Check the existence of a collection. <br>
      *
@@ -572,7 +580,14 @@ public class AMongoService<capture> extends AAbstractService {
                         }
                     }
                     else {
-                        logger.error(unErrore, this.getClass(), "findSet");
+                        entityBean = agSonService.crea(doc, entityClazz);
+
+                        //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
+                        //                            logger.error("Non legge la data", this.getClass(), "findSet");
+                        //                        }
+                        //                        else {
+                        //                            logger.error(unErrore, this.getClass(), "findSet");
+                        //                        }
                     }
                 }
 

@@ -1,6 +1,7 @@
 package it.algos.@MODULELOWER@.backend.packages.@PACKAGE@;
 
 import com.querydsl.core.annotations.QueryEntity;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -25,6 +26,7 @@ import javax.validation.constraints.Size;
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
+@SpringComponent
 @QueryEntity
 @Document(collection = "@PACKAGE@")
 @TypeAlias("@PACKAGE@")
