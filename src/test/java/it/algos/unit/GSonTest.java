@@ -70,6 +70,7 @@ public class GSonTest extends ATest {
 
     private MongoDatabase database = mongoClient.getDatabase("vaadflow14");
 
+    private String valueID;
 
     private int offset;
 
@@ -133,6 +134,7 @@ public class GSonTest extends ATest {
         limit = 0;
         collection = null;
         doc = null;
+        valueID = VUOTA;
     }
 
 
@@ -357,9 +359,9 @@ public class GSonTest extends ATest {
     @Order(6)
     @DisplayName("6 - fixDoc")
     void fixDoc() {
-        doc = (Document) collectionVersione.find().first();
+        doc = (Document) collectionVia.find().first();
 
-        previsto = "{\"id\":\"primo\",\"code\":\"primo\",\"giorno\":\"Apr 6, 2020, 12:00:00 AM\",\"descrizione\":\"forse\",\"class\":\"versione\"}";
+        previsto = "{\"id\":\"via\",\"ordine\":1,\"nome\":\"via\",\"class\":\"via\"}";
         ottenuto = gSonService.fixDoc(doc);
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, ottenuto);
@@ -398,15 +400,13 @@ public class GSonTest extends ATest {
     @Order(9)
     @DisplayName("9 - creaNoDbRef and time - versione - first")
     void creaNoDbRef2() {
-        previsto = "primo";
-        previstoIntero = 6;
+        previsto = "setup";
 
         doc = (Document) collectionVersione.find().first();
         entityBean = gSonService.creaNoDbRef(doc, clazzVersione);
 
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, entityBean.id);
-        Assert.assertEquals(previstoIntero, ((Versione) entityBean).giorno.getDayOfMonth());
     }
 
     @Test
@@ -441,15 +441,13 @@ public class GSonTest extends ATest {
     @Order(12)
     @DisplayName("12 - crea - versione - first")
     void creaVersioneFirst() {
-        previsto = "primo";
-        previstoIntero = 6;
+        previsto = "setup";
 
         doc = (Document) collectionVersione.find().first();
         entityBean = gSonService.crea(doc, clazzVersione);
 
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, entityBean.id);
-        Assert.assertEquals(previstoIntero, ((Versione) entityBean).giorno.getDayOfMonth());
     }
 
 
@@ -500,54 +498,83 @@ public class GSonTest extends ATest {
     @Order(16)
     @DisplayName("16 - crea - via")
     void creaVia() {
-        sorgente = "galleria";
-        previsto = sorgente;
+        valueID = "via";
+        previsto = valueID;
 
         objectQuery = new BasicDBObject();
-        objectQuery.put("_id", sorgente);
+        objectQuery.put("_id", valueID);
         doc = (Document) collectionVia.find(objectQuery).first();
         entityBean = gSonService.crea(doc, clazzVia);
 
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, entityBean.id);
 
-        sorgente = "calle";
-        previsto = sorgente;
-        entityBean = gSonService.crea(clazzVia, sorgente);
+        valueID = "calle";
+        previsto = valueID;
+        entityBean = gSonService.crea(clazzVia, valueID);
 
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, entityBean.id);
+
+        valueID = "nonEsiste";
+        entityBean = gSonService.crea(clazzVia, valueID);
+        Assert.assertNull(entityBean);
     }
 
     @Test
     @Order(17)
     @DisplayName("17 - crea - anno")
     void creaAnno() {
-        sorgente = "308";
-        previsto = sorgente;
+        valueID = "308";
+        previsto = valueID;
         previsto2 = "ivsecolo";
 
-        entityBean = gSonService.crea(clazzAnno, sorgente);
+        entityBean = gSonService.crea(clazzAnno, valueID);
 
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, entityBean.id);
         Assert.assertEquals(previsto2, ((Anno) entityBean).secolo.id);
+
+        valueID = "nonEsiste";
+        entityBean = gSonService.crea(clazzAnno, valueID);
+        Assert.assertNull(entityBean);
     }
 
     @Test
     @Order(18)
     @DisplayName("18 - crea - versione")
     void creaVersione() {
-        sorgente = "primo";
-        previsto = sorgente;
+        valueID = "setup";
+        previsto = valueID;
 
-        entityBean = gSonService.crea(clazzVersione, sorgente);
+        entityBean = gSonService.crea(clazzVersione, valueID);
 
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, entityBean.id);
         ottenutoData = ((Versione) entityBean).giorno;
         Assert.assertNotNull(ottenutoData);
         System.out.println(date.getCompleta(ottenutoData));
+
+        valueID = "nonEsiste";
+        entityBean = gSonService.crea(clazzVersione, valueID);
+        Assert.assertNull(entityBean);
+    }
+
+    @Test
+    @Order(19)
+    @DisplayName("19 - crea - delta")
+    void creaDelta() {
+        for (AEMese aeMese : AEMese.values()) {
+            entityBean = gSonService.crea(clazzDelta, aeMese.getNome());
+
+            Assert.assertNotNull(entityBean);
+            Assert.assertEquals(aeMese.getNome(), entityBean.id);
+            System.out.println(entityBean);
+        }
+
+        valueID = "nonEsiste";
+        entityBean = gSonService.crea(clazzDelta, valueID);
+        Assert.assertNull(entityBean);
     }
 
     //    @Test
