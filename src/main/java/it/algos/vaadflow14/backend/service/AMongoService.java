@@ -580,7 +580,7 @@ public class AMongoService<capture> extends AAbstractService {
                         }
                     }
                     else {
-                        entityBean = agSonService.crea(entityClazz,doc);
+                        entityBean = agSonService.crea(doc,entityClazz);
 
                         //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
                         //                            logger.error("Non legge la data", this.getClass(), "findSet");

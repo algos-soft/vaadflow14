@@ -5,6 +5,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
@@ -19,6 +20,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Project vaadflow14
@@ -41,8 +45,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Delta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,secolo,via,immagine", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
-@AIForm(fields = "code,secolo,via,immagine")
+@AIList(fields = "code,secolo,via,immagine,uno,due,tre", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
+@AIForm(fields = "code,secolo,via,immagine,uno,due,tre")
 public class Delta extends AEntity {
 
     /**
@@ -72,7 +76,6 @@ public class Delta extends AEntity {
     @AIColumn(widthEM = 10)
     public Secolo secolo;
 
-
     /**
      * via (facoltativo)
      * riferimento dinamico CON @DBRef
@@ -82,10 +85,22 @@ public class Delta extends AEntity {
     @AIColumn(widthEM = 8)
     public Via via;
 
-
     @AIField(type = AETypeField.image)
     public String immagine;
 
+    @AIField(type = AETypeField.localDateTime, caption = "data e orario completi")
+    @AIColumn(typeData = AETypeData.completaOrario, header = "data e orario completi")
+    public LocalDateTime uno;
+
+
+    @AIField(type = AETypeField.localDate, caption = "AETypeData.dateShort")
+    @AIColumn(typeData = AETypeData.standard, header = "standard")
+    public LocalDate due;
+
+
+    @AIField(type = AETypeField.localTime, caption = "Settimana estesa")
+    @AIColumn(typeData = AETypeData.orario, header = "orario")
+    public LocalTime tre;
 
     /**
      * @return a string representation of the object.

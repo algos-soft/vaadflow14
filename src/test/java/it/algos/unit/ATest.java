@@ -1,5 +1,6 @@
 package it.algos.unit;
 
+import com.mongodb.BasicDBObject;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
@@ -17,6 +18,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -184,9 +187,17 @@ public abstract class ATest {
 
     protected Field ottenutoField;
 
+    protected LocalDateTime previstoDataTime;
+
+    protected LocalDateTime ottenutoDataTime;
+
     protected LocalDate previstoData;
 
     protected LocalDate ottenutoData;
+
+    protected LocalTime previstoOrario;
+
+    protected LocalTime ottenutoOrario;
 
     protected List<String> sorgenteArray;
 
@@ -240,6 +251,8 @@ public abstract class ATest {
 
 
     protected Query query;
+
+    protected BasicDBObject objectQuery;
 
     protected Sort sort;
 

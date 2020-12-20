@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.google.gson.JsonElement;
 import it.algos.vaadflow14.backend.enumeration.AEMese;
 import it.algos.vaadflow14.backend.enumeration.AETypeData;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -296,6 +297,7 @@ public class ADateService extends AAbstractService {
     public String get(LocalDateTime localDateTime) {
         return get(localDateTime, AETypeData.normaleOrario);
     }
+
     /**
      * Restituisce la data nella forma del pattern standard. <br>
      * <p>
@@ -741,6 +743,60 @@ public class ADateService extends AAbstractService {
         }
 
         return bisestile;
+    }
+
+    /**
+     * Deserializza un elemento temporale
+     *
+     * @param json da cui estrarre l' elemento temporale
+     *
+     * @return elemento temporale
+     */
+    public LocalDateTime deserializeLocalDateTime(JsonElement json) {
+        LocalDate data;
+        LocalTime orario;
+
+        String[] parti = json.getAsString().split(SPAZIO);
+        int mese = AEMese.getNumMese(parti[0]);
+        int giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
+        int anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
+
+        data = LocalDate.of(anno, mese, giorno);
+        parti = parti[3].split(DUE_PUNTI);
+        orario = LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
+
+        return LocalDateTime.of(data, orario);
+    }
+
+
+    /**
+     * Deserializza un elemento temporale
+     *
+     * @param json da cui estrarre l' elemento temporale
+     *
+     * @return elemento temporale
+     */
+    public LocalDate deserializeLocalDate(JsonElement json) {
+        String[] parti = json.getAsString().split(SPAZIO);
+        int mese = AEMese.getNumMese(parti[0]);
+        int giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
+        int anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
+
+        return LocalDate.of(anno, mese, giorno);
+    }
+
+    /**
+     * Deserializza un elemento temporale
+     *
+     * @param json da cui estrarre l' elemento temporale
+     *
+     * @return elemento temporale
+     */
+    public LocalTime deserializeLocalTime(JsonElement json) {
+        String[] parti = json.getAsString().split(SPAZIO);
+        parti = parti[3].split(DUE_PUNTI);
+
+        return LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
     }
 
 }

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AEMese;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;

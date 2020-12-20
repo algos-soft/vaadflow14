@@ -1,11 +1,11 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.google.gson.*;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEMese;
 import org.bson.Document;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -49,16 +48,27 @@ public class AGSonService extends AAbstractService {
      */
     private static final long serialVersionUID = 1L;
 
+    private MongoClient mongoClient = new MongoClient("localhost");
+
+    private MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+
+    private MongoCollection<Document> collection;
+
+    private Document document;
+
+    private BasicDBObject query;
+
+    private Document doc;
 
     /**
      * Controlla se esistono coppie di graffe interne <br>
      * Serve per i parametri di type @DBRef <br>
      *
-     * @param doc 'documento' mongo della collezione
+     * @param doc 'documento' JSon della collezione mongo
      *
      * @return true se esistono; false se non esistono
      */
-    public boolean isDBRef(final Document doc) {
+    public boolean isEsistonoDBRef(final Document doc) {
         return countGraffe(fixDoc(doc)) > 0;
     }
 
@@ -67,17 +77,17 @@ public class AGSonService extends AAbstractService {
      * Conta quante coppie di graffe interne esistono <br>
      * Serve per i parametri di type @DBRef <br>
      *
-     * @param testoIn da elaborare
+     * @param jsonString estratta dal 'documento' JSon della collezione mongo
      *
      * @return numero di coppie interne; 0 se mancano; -1 se coppie non pari
      */
-    public int countGraffe(final String testoIn) {
-        String testo = testoIn.trim();
+    public int countGraffe(final String jsonString) {
+        String testo = jsonString.trim();
         int error = -1;
         int numIni;
         int numEnd;
 
-        if (text.isEmpty(testoIn)) {
+        if (text.isEmpty(jsonString)) {
             return error;
         }
 
@@ -90,57 +100,58 @@ public class AGSonService extends AAbstractService {
 
 
     /**
-     * Estrae il contenuto della PRIMA coppia di graffe <br>
+     * Estrae il contenuto della PRIMA (eventuale) coppia di graffe <br>
      * Comprensivo del nome del parametro che PRECEDE le graffe <br>
      *
-     * @param testoIn da elaborare
+     * @param jsonString estratta dal 'documento' JSon della collezione mongo
      *
      * @return contenuto della graffa COMPRESI gli estremi ed il nome del paragrafo
      */
-    public String estraeGraffa(final String testoIn) {
-        String testo;
+    public String estraeGraffa(final String jsonString) {
+        String testoOut;
         int ini;
         int end;
 
-        if (text.isEmpty(testoIn)) {
+        if (text.isEmpty(jsonString)) {
             return null;
         }
 
-        testo = testoIn.trim();
-        if (countGraffe(testo) <= 0) {
+        testoOut = jsonString.trim();
+        if (countGraffe(testoOut) <= 0) {
             return null;
         }
 
-        testo = text.setNoGraffe(testo);
-        ini = testo.indexOf(GRAFFA_INI);
-        end = testo.indexOf(GRAFFA_END, ini) + 1;
-        ini = testo.lastIndexOf(VIRGOLA, ini) + 1;
-        testo = testo.substring(ini, end);
-        testo = text.setNoDoppiApici(testo);
+        testoOut = text.setNoGraffe(testoOut);
+        ini = testoOut.indexOf(GRAFFA_INI);
+        end = testoOut.indexOf(GRAFFA_END, ini) + 1;
+        ini = testoOut.lastIndexOf(VIRGOLA, ini) + 1;
+        testoOut = testoOut.substring(ini, end);
+        testoOut = text.setNoDoppiApici(testoOut);
 
-        return testo.trim();
+        return testoOut.trim();
     }
 
 
     /**
      * Estrae i contenuti di (eventuali) coppie di graffe interne <br>
-     * Se non ci sono graffe interne, restituisce un array di un solo elemento <br>
+     * Contenuto delle graffe COMPRESI gli estremi ed il nome del paragrafo <br>
+     * Se non ci sono graffe interne, restituisce un array nullo <br>
      * Se ci sono graffe interne, nel primo elemento dell'array il testoIn completo MENO i contenuti interni <br>
      *
-     * @param testoIn da elaborare
+     * @param jsonString estratta dal 'documento' JSon della collezione mongo
      *
      * @return lista di sub-contenuti, null se non ci sono graffe interne
      */
-    public List<String> estraeGraffe(final String testoIn) {
+    public List<String> estraeGraffe(final String jsonString) {
         List<String> lista;
         String testo;
         String contenuto;
 
-        if (text.isEmpty(testoIn)) {
+        if (text.isEmpty(jsonString)) {
             return null;
         }
 
-        testo = testoIn.trim();
+        testo = jsonString.trim();
         if (countGraffe(testo) <= 0) {
             return null;
         }
@@ -171,15 +182,15 @@ public class AGSonService extends AAbstractService {
      * Elimina gli underscore del tag _id <br>
      * Elimina gli underscore del tag _class <br>
      *
-     * @param testoIn ingresso
+     * @param jsonString estratta dal 'documento' JSon della collezione mongo
      *
      * @return stringa elaborata
      */
-    public String fixStringa(final String testoIn) {
+    public String fixStringa(final String jsonString) {
         String testoOut = VUOTA;
 
-        if (text.isValid(testoIn)) {
-            testoOut = testoIn;
+        if (text.isValid(jsonString)) {
+            testoOut = jsonString;
             testoOut = testoOut.replace("_id", "id");
             testoOut = testoOut.replace("_class", "class");
         }
@@ -194,7 +205,7 @@ public class AGSonService extends AAbstractService {
      * Elimina gli underscore del tag _id <br>
      * Elimina gli underscore del tag _class <br>
      *
-     * @param doc 'documento' mongo della collezione
+     * @param doc 'documento' JSon della collezione mongo
      *
      * @return stringa in formato JSon
      */
@@ -211,77 +222,45 @@ public class AGSonService extends AAbstractService {
         return stringaJSON;
     }
 
-
     /**
-     * Mappa dell' oggetto <br>
-     * Può essere un 'documento' mongo oppure una entity <br>
-     *
-     * @param doc 'documento' mongo della collezione
-     *
-     * @return mappa chiave-valore
-     */
-    @Deprecated
-    public LinkedHashMap toMap(Object doc) {
-        LinkedHashMap mappa = null;
-        String stringaJSON = VUOTA;
-        String stringaJSON2 = VUOTA;
-        String stringaJSON3 = VUOTA;
-        AEntity entity;
-        String sepJSON = "\",\"";
-        String sepParti = "\":\"";
-        List<String> listaContenutiGraffe = null;
-        String[] parametri;
-        String[] parti;
-        String key;
-        String value;
-
-        if (doc != null) {
-            mappa = new LinkedHashMap<>();
-            stringaJSON = fixDoc(doc);
-            //            stringaJSON = text.estraeGraffaSingola(stringaJSON);
-            stringaJSON = text.setNoGraffe(stringaJSON);
-            stringaJSON = text.setNoDoppiApici(stringaJSON);
-            listaContenutiGraffe = estraeGraffe(stringaJSON);
-
-            if (array.isAllValid(listaContenutiGraffe)) {
-                for (String contenuto : listaContenutiGraffe) {
-                    stringaJSON = stringaJSON.replace(contenuto, VUOTA);
-                }
-            }
-            parametri = stringaJSON.split(sepJSON);
-            for (String parametro : parametri) {
-                parti = parametro.split(sepParti);
-                if (parti.length == 2) {
-                    key = parti[0];
-                    value = parti[1];
-                    mappa.put(key, value);
-                }
-            }
-        }
-
-        return mappa;
-    }
-
-
-    /**
-     * Costruzione della entity partendo da un documento JSON <br>
-     * Recupera dal documento la stringa, sostituendo gli underscore del keyID <br>
+     * Costruzione della entity partendo dal valore della keyID <br>
      *
      * @param entityClazz della AEntity
-     * @param doc         'documento' mongo della collezione
+     * @param valueID     della entityBean
      *
      * @return new entity
      */
-    public AEntity crea(Class entityClazz, Document doc) {
+    public AEntity crea(final Class entityClazz, final String valueID) {
+        AEntity entityBean = null;
+        collection = database.getCollection(entityClazz.getSimpleName().toLowerCase());
+        query = new BasicDBObject();
+        query.put("_id", valueID);
+
+        doc = (Document) collection.find(query).first();
+        entityBean = this.crea(doc, entityClazz);
+
+        return entityBean;
+    }
+
+    /**
+     * Costruzione della entity partendo da un documento JSON <br>
+     * 1) Non ci sono campi linkati con @DBRef <br>
+     * 2) Ci sono campi linkati con @DBRef <br>
+     *
+     * @param doc         'documento' JSon della collezione mongo
+     * @param entityClazz della AEntity
+     *
+     * @return new entity
+     */
+    public AEntity crea(final Document doc, final Class entityClazz) {
         AEntity entityBean = null;
 
-        if (entityClazz == null || doc == null) {
-            return null;
-        }
+        if (entityClazz != null && doc != null) {
+            entityBean = creaNoDbRef(doc, entityClazz);
 
-        entityBean = creaNoDbRef(entityClazz, doc);
-        if (isDBRef(doc)) {
-            entityBean = addDbRef(entityClazz, doc, entityBean);
+            if (isEsistonoDBRef(doc)) {
+                entityBean = addAllDBRef(doc, entityBean);
+            }
         }
 
         return entityBean;
@@ -289,63 +268,16 @@ public class AGSonService extends AAbstractService {
 
 
     /**
-     * Costruzione della entity partendo da una stringa Gson <br>
-     * Non ci sono campi linkati con @DBRef <br>
-     *
-     * @param entityClazz della AEntity
-     * @param jsonString  estratta dal document Gson
-     *
-     * @return new entity
-     */
-    public AEntity creaNoDbRef(Class entityClazz, String jsonString) {
-        AEntity entity;
-        Gson gSon;
-        GsonBuilder builder = new GsonBuilder();
-
-        builder.registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-
-            @Override
-            public LocalDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                String[] parti = json.getAsString().split(SPAZIO);
-                int mese = AEMese.getNumMese(parti[0]);
-                int giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
-                int anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
-                LocalDate data = LocalDate.of(anno, mese, giorno);
-                parti = parti[3].split(DUE_PUNTI);
-                LocalTime orario = LocalTime.of(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]), Integer.parseInt(parti[2]));
-                LocalDateTime dateTime = LocalDateTime.of(data, orario);
-                return dateTime;
-            }
-        });
-        builder.registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-
-            @Override
-            public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                String[] parti = json.getAsString().split(SPAZIO);
-                int mese = AEMese.getNumMese(parti[0]);
-                int giorno = Integer.parseInt(text.levaCoda(parti[1], VIRGOLA));
-                int anno = Integer.parseInt(text.levaCoda(parti[2], VIRGOLA));
-                LocalDate data = LocalDate.of(anno, mese, giorno);
-                return data;
-            }
-        });
-        gSon = builder.create();
-
-        entity = (AEntity) gSon.fromJson(jsonString, entityClazz);
-
-        return entity;
-    }
-
-    /**
      * Costruzione della entity partendo da un documento Gson <br>
      * Non ci sono campi linkati con @DBRef <br>
+     * Recupera dal documento la stringa, sostituendo gli underscore del keyID <br>
      *
+     * @param doc         'documento' JSon della collezione mongo
      * @param entityClazz della AEntity
-     * @param doc         'documento' mongo della collezione
      *
      * @return new entity
      */
-    public AEntity creaNoDbRef(Class entityClazz, Document doc) {
+    public AEntity creaNoDbRef(final Document doc, final Class entityClazz) {
         String jsonString = this.fixDoc(doc);
         return creaNoDbRef(entityClazz, jsonString);
     }
@@ -353,55 +285,88 @@ public class AGSonService extends AAbstractService {
 
     /**
      * Costruzione della entity partendo da una stringa Gson <br>
-     * Ci sono campi linkati con @DBRef <br>
+     * Non ci sono campi linkati con @DBRef <br>
      *
      * @param entityClazz della AEntity
-     * @param doc         'documento' mongo della collezione
+     * @param jsonString  estratta dal 'documento' JSon della collezione mongo
      *
-     * @return new entity
+     * @return new entityBean
      */
-    public AEntity addDbRef(Class entityClazz, Document doc, AEntity entityBean) {
-//        AEntity entityBean = null;
-        Gson gSon = new Gson();
+    public AEntity creaNoDbRef(final Class entityClazz, final String jsonString) {
+        AEntity entityBean;
+        Gson gSon;
+        GsonBuilder builder = new GsonBuilder();
+
+        builder.registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+
+            @Override
+            public LocalDateTime deserialize(JsonElement json, Type type2, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                return date.deserializeLocalDateTime(json);
+            }
+        });
+        builder.registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+
+            @Override
+            public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                return date.deserializeLocalDate(json);
+            }
+        });
+        builder.registerTypeAdapter(LocalTime.class, new JsonDeserializer<LocalTime>() {
+
+            @Override
+            public LocalTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                return date.deserializeLocalTime(json);
+            }
+        });
+        gSon = builder.create();
+
+        entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
+
+        return entityBean;
+    }
+
+
+    /**
+     * Integra la entity aggiungendo i parametri DBRef <br>
+     * Ci sono campi linkati con @DBRef <br>
+     * Aggiunge il valore dei parametri linkati ad un'altra classe (@DBRef)
+     * Recupera dal documento la stringa, sostituendo gli underscore del keyID <br>
+     *
+     * @param doc        'documento' JSon della collezione mongo
+     * @param entityBean senza i parametri DBRef
+     *
+     * @return entityBean con aggiunti i parametri DBRef
+     */
+    public AEntity addAllDBRef(final Document doc, final AEntity entityBean) {
         String jsonString = this.fixDoc(doc);
         List<String> listaContenutiGraffe = estraeGraffe(jsonString);
 
-        //--costruisce la entity SENZA il parametro linkato ad un'altra classe (@DBRef)
-        try {
-            //            entity = (AEntity) gSon.fromJson(jsonString, clazz);
-//            entityBean = creaNoDbRef(entityClazz, doc);
-
-            //--aggiunge il valore dei parametri linkati ad un'altra classe (@DBRef)
-            entityBean = estraeAllRef(entityClazz, jsonString, entityBean);
-
-            return entityBean;
-        } catch (JsonSyntaxException unErrore) {
-            logger.error(unErrore, this.getClass(), "addDbRef");
+        if (array.isAllValid(listaContenutiGraffe)) {
+            for (String jsonTestoLink : listaContenutiGraffe.subList(1, listaContenutiGraffe.size())) {
+                addSingoloDBRef(entityBean, jsonTestoLink);
+            }
         }
 
         return entityBean;
     }
 
-    public AEntity estraeAllRef(Class entityClazz, String jsonString, AEntity entity) {
-        List<String> listaContenutiGraffe = estraeGraffe(jsonString);
 
-        if (array.isAllValid(listaContenutiGraffe)) {
-            for (String jsonTestoLink : listaContenutiGraffe.subList(1, listaContenutiGraffe.size())) {
-                estraeSingoloRef(entityClazz, entity, jsonTestoLink);
-            }
-        }
-
-        return entity;
-    }
-
-
-    public AEntity estraeSingoloRef(Class entityClazz, AEntity entity, String jsonTestoLink) {
+    /**
+     * Integra la entity aggiungendo il singolo parametro DBRef <br>
+     *
+     * @param entityBean     senza il parametro DBRef
+     * @param jsonStringLink estratta dal 'documento' JSon della collezione mongo
+     *
+     * @return entityBean con aggiunto il parametro DBRef
+     */
+    public AEntity addSingoloDBRef(final AEntity entityBean, final String jsonStringLink) {
+        AEntity entityBeanConDBRef = null;
         String[] parti;
         String nomeCollezioneLinkata = VUOTA;
         String riferimentoLinkato = VUOTA;
         String valoreID = VUOTA;
 
-        parti = jsonTestoLink.split(DUE_PUNTI + GRAFFA_INI_REGEX);
+        parti = jsonStringLink.split(DUE_PUNTI + GRAFFA_INI_REGEX);
         if (parti != null) {
             nomeCollezioneLinkata = parti[0];
             nomeCollezioneLinkata = text.setNoDoppiApici(nomeCollezioneLinkata).trim();
@@ -420,35 +385,45 @@ public class AGSonService extends AAbstractService {
         }
 
         if (text.isValid(nomeCollezioneLinkata) && text.isValid(valoreID)) {
-            entity = creaEntity(entityClazz, entity, nomeCollezioneLinkata, valoreID);
+            entityBeanConDBRef = creaEntityDBRef(entityBean, nomeCollezioneLinkata, valoreID);
         }
 
-        return entity;
+        return entityBeanConDBRef;
     }
 
 
-    public AEntity creaEntity(Class entityClazz, AEntity entity, String nomeCollezioneLinkata, String valueID) {
-        AEntity entityBean = null;
+    /**
+     * Crea la entity linkata dal DBRef <br>
+     *
+     * @param entityBean            senza il parametro DBRef
+     * @param nomeCollezioneLinkata del parametro DBRef
+     * @param valueID               della entityBeanLinkata
+     *
+     * @return entityBean con aggiunto il parametro DBRef
+     */
+    public AEntity creaEntityDBRef(final AEntity entityBean, final String nomeCollezioneLinkata, final String valueID) {
+        AEntity entityBeanConDBRef = entityBean;
+        AEntity entityBeanLinkata;
         Class entityLinkClazz;
-        MongoCollection<Document> collection;
-        MongoClient mongoClient = new MongoClient("localhost");
-        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
-        //        Document doc;
-        Field field = reflection.getField(entityClazz, nomeCollezioneLinkata);
-        //        Gson gSon = new Gson();
+        Field field;
+
+        field = reflection.getField(entityBean.getClass(), nomeCollezioneLinkata);
         entityLinkClazz = annotation.getComboClass(field);
         collection = database.getCollection(nomeCollezioneLinkata);
-        Document doc = (Document) collection.find().first();
-        entityBean = crea(entityLinkClazz, doc);
 
-        //        entityBean = mongo.findById(Secolo.class, valueID);
+        query = new BasicDBObject();
+        query.put("_id", valueID);
+        document = collection.find(query).first();
+
+        entityBeanLinkata = crea(document, entityLinkClazz);
+
         try {
-            field.set(entity, entityBean);
+            field.set(entityBeanConDBRef, entityBeanLinkata);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            logger.error(unErrore, this.getClass(), "creaEntity");
         }
 
-        return entity;
+        return entityBeanConDBRef;
     }
 
 

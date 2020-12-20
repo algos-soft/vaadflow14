@@ -148,16 +148,6 @@ public class SimpleData extends FlowData {
     }
 
 
-//    /**
-//     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
-//     * Se non esistono, le crea <br>
-//     * Se esistono, NON modifica i valori esistenti <br>
-//     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
-//     */
-//    @Override
-//    public void fixPreferenze() {
-//        super.fixPreferenze();
-//    }
 
     /**
      * Ricostruisce le preferenze standard dell'applicazione <br>

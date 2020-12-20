@@ -3,7 +3,7 @@ Streams are Collections that have been modified for functional use. Consider the
 List<String> myList = Arrays.asList("a1", "a2", "b1", "c2", "c1");
 Stream<String> myStream = myList.stream();
 
-myStream()
+myStream
     .filter(s -> s.startsWith("c"))
     .map(String::toUpperCase)
     .sorted()

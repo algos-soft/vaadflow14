@@ -7,11 +7,14 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum AEMese {
 
-    gennaio("gennaio", 31, 31, "gen", "Gen"),
+    gennaio("gennaio", 31, 31, "gen", "Jan"),
 
     febbraio("febbraio", 28, 29, "feb", "Feb"),
 
@@ -21,7 +24,7 @@ public enum AEMese {
 
     maggio("maggio", 31, 31, "mag", "May"),
 
-    giugno("giugno", 30, 30, "giu", "Jul"),
+    giugno("giugno", 30, 30, "giu", "Jun"),
 
     luglio("luglio", 31, 31, "lug", "Jul"),
 
@@ -250,16 +253,18 @@ public enum AEMese {
     /**
      * Numero del mese dalla sigla inglese <br>
      *
-     * @return numero del mese (gennaio=0)
+     * @return numero del mese (gennaio=1)
+     *
+     * @since java 11
      */
     public static int getNumMese(String siglaEn) {
-        int num = 0;
+        int num;
+        List<AEMese> meseList = Arrays.asList(AEMese.values());
+        Stream<AEMese> meseStream = meseList.stream();
 
-        for (AEMese meseTmp : AEMese.values()) {
-            if (meseTmp.siglaEn.equals(siglaEn)) {
-                num = meseTmp.getOrd();
-            }
-        }
+        num = meseStream
+                .filter(mese -> mese.siglaEn.equals(siglaEn))
+                .collect(Collectors.summingInt(AEMese::getOrd));
 
         return num;
     }
