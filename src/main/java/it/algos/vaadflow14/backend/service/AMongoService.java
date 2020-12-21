@@ -580,7 +580,7 @@ public class AMongoService<capture> extends AAbstractService {
                         }
                     }
                     else {
-                        entityBean = agSonService.crea(doc,entityClazz);
+                        entityBean = agSonService.crea(doc, entityClazz);
 
                         //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
                         //                            logger.error("Non legge la data", this.getClass(), "findSet");
@@ -676,6 +676,17 @@ public class AMongoService<capture> extends AAbstractService {
         return entityBean;
     }
 
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param valueID     della entityBean
+     *
+     * @return new entity
+     */
+    public AEntity crea(final Class entityClazz, final String valueID) {
+        return agSonService.crea(entityClazz, valueID);
+    }
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>

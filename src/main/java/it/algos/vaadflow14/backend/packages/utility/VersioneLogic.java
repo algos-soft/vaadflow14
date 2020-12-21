@@ -177,8 +177,8 @@ public class VersioneLogic extends ALogic {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
-    public AIResult resetEmptyOnly() {
+//    @Override
+    public AIResult resetEmptyOnly2() {
         AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 

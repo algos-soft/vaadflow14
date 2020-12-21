@@ -66,6 +66,7 @@ public class Versione extends AEntity {
     @AIColumn(typeData = AETypeData.normaleOrario, header = "data")
     public LocalDate giorno;
 
+
     /**
      * descrizione (obbligatoria)
      */

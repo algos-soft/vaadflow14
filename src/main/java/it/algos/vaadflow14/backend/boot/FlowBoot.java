@@ -25,6 +25,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContextListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -145,6 +146,7 @@ public abstract class FlowBoot implements ServletContextListener {
         this.fixSchedules();
         this.fixDemo();
         this.fixUsers();
+        this.fixVersioni();
 
         logger.startupEnd();
     }
@@ -364,6 +366,28 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixUsers() {
+    }
+
+    /**
+     * Inizializzazione delle versioni standard di vaadinFlow <br>
+     * Inizializzazione delle versioni del programma specifico <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixVersioni() {
+        String codeVersione = VUOTA;
+        String descVersione = VUOTA;
+        Versione entityBean;
+
+        //--inizio
+        codeVersione = "Setup";
+        descVersione = "Creazione ed installazione iniziale dell'applicazione";
+        entityBean = (Versione) mongo.findByKey(Versione.class, codeVersione);
+        if (entityBean == null) {
+            entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
+            entityBean.id = codeVersione;
+            mongo.save(entityBean);
+        }
+
     }
 
 
