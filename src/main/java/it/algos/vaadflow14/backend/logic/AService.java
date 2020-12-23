@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_ORDINE;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
@@ -659,6 +660,16 @@ public abstract class AService extends AAbstractService implements AIService {
         List<Button> listaBottoni = new ArrayList<>();
 
         return listaBottoni;
+    }
+
+    /**
+     * Ordine di presentazione (facoltativo) <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     */
+    protected int getNewOrdine() {
+        return mongo.getNewOrder(entityClazz, FIELD_ORDINE);
     }
 
 }

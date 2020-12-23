@@ -84,12 +84,6 @@ public class FlowData implements AIData {
      */
     protected ALogService logger;
 
-    //    /**
-    //     * Azione implementata nel metodo della classe specifica <br>
-    //     *
-    //     * @since java 8
-    //     */
-    //    protected Consumer<PreferenzaLogic> resetPreferenze = this::resetPreferenze(null,false);
 
     /**
      * Alcune entities possono non essere usate direttamente nel programma <br>
@@ -212,7 +206,7 @@ public class FlowData implements AIData {
      *
      * @since java 8
      */
-    protected void fixData(String moduleName) {
+    protected void fixData(final String moduleName) {
         List<String> allEntities;
         long entities;
         String message;
@@ -245,9 +239,6 @@ public class FlowData implements AIData {
         if (preferenzaLogic != null) {
             resetPreferenze(preferenzaLogic, false);
         }
-
-        //        Optional<PreferenzaLogic> prefLogic = Optional.ofNullable(classService.getPreferenzaLogic());
-        //        prefLogic.ifPresentOrElse(resetPreferenze, mancaPrefLogic);
     }
 
     /**
@@ -261,7 +252,7 @@ public class FlowData implements AIData {
      *                <br>
      */
     @Override
-    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset) {
+    public AIResult resetPreferenze(final PreferenzaLogic preferenzaLogic, final boolean isReset) {
         AIResult result;
         int numRec = 0;
 
@@ -298,7 +289,7 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    void setFile(AFileService file) {
+    void setFile(final AFileService file) {
         this.file = file;
     }
 
@@ -309,7 +300,7 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    void setClassService(AClassService classService) {
+    void setClassService(final AClassService classService) {
         this.classService = classService;
     }
 
@@ -320,7 +311,7 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    void setLogger(ALogService logger) {
+    void setLogger(final ALogService logger) {
         this.logger = logger;
     }
 

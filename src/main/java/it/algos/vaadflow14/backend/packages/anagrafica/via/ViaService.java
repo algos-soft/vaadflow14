@@ -67,7 +67,6 @@ public class ViaService extends AService {
     }
 
 
-
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
      * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
@@ -149,7 +148,7 @@ public class ViaService extends AService {
     public Via newEntity(int ordine, String nome) {
         Via newEntityBean = Via.builderVia()
 
-                .ordine(ordine)
+                .ordine(ordine > 0 ? ordine : this.getNewOrdine())
 
                 .nome(text.isValid(nome) ? nome : null)
 
@@ -158,33 +157,34 @@ public class ViaService extends AService {
         return (Via) fixKey(newEntityBean);
     }
 
-        /**
-         * Retrieves an entity by its id.
-         *
-         * @param keyID must not be {@literal null}.
-         *
-         * @return the entity with the given id or {@literal null} if none found
-         *
-         * @throws IllegalArgumentException if {@code id} is {@literal null}
-         */
-        @Override
-        public Via findById(String keyID) {
-            return (Via) super.findById(keyID);
-        }
 
-        /**
-         * Retrieves an entity by its keyProperty.
-         *
-         * @param keyValue must not be {@literal null}.
-         *
-         * @return the entity with the given id or {@literal null} if none found
-         *
-         * @throws IllegalArgumentException if {@code id} is {@literal null}
-         */
-        @Override
-        public Via findByKey(String keyValue) {
-            return (Via) super.findByKey(keyValue);
-        }
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Via findById(String keyID) {
+        return (Via) super.findById(keyID);
+    }
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Via findByKey(String keyValue) {
+        return (Via) super.findByKey(keyValue);
+    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

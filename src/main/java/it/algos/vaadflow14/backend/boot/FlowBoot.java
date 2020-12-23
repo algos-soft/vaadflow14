@@ -398,7 +398,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(final Environment environment) {
         this.environment = environment;
     }
 
@@ -409,7 +409,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public void setMongo(AMongoService mongo) {
+    public void setMongo(final AMongoService mongo) {
         this.mongo = mongo;
     }
 
@@ -421,7 +421,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public void setLogger(ALogService logger) {
+    public void setLogger(final ALogService logger) {
         this.logger = logger;
     }
 
@@ -433,7 +433,7 @@ public abstract class FlowBoot implements ServletContextListener {
      */
     @Autowired
     @Qualifier(TAG_FLOW_DATA)
-    public void setDataInstance(FlowData dataInstance) {
+    public void setDataInstance(final FlowData dataInstance) {
         this.dataInstance = dataInstance;
     }
 

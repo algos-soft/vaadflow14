@@ -60,7 +60,6 @@ public interface AIService {
     ATopLayout getTopLayout();
 
 
-
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
      * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean
@@ -72,7 +71,8 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-     Object creaIfNotExist(final String keyPropertyValue);
+    Object creaIfNotExist(final String keyPropertyValue);
+
 
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
@@ -82,7 +82,7 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-     AEntity checkAndSave(final AEntity newEntityBean);
+    AEntity checkAndSave(final AEntity newEntityBean);
 
 
     /**
@@ -92,7 +92,7 @@ public interface AIService {
      *
      * @return true if exist
      */
-     boolean isEsiste(final String keyId);
+    boolean isEsiste(final String keyId);
 
 
     /**
@@ -108,7 +108,8 @@ public interface AIService {
      *
      * @return the modified entity
      */
-     AEntity beforeSave(final AEntity entityBean, final AEOperation operation);
+    AEntity beforeSave(final AEntity entityBean, final AEOperation operation);
+
 
     /**
      * Regola la chiave se esiste il campo keyPropertyName <br>
@@ -120,7 +121,7 @@ public interface AIService {
      *
      * @return the checked entityBean
      */
-     AEntity fixKey(final AEntity newEntityBean);
+    AEntity fixKey(final AEntity newEntityBean);
 
 
     /**
@@ -132,7 +133,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-     AEntity findById(final String keyID);
+    AEntity findById(final String keyID);
 
 
     /**
@@ -144,9 +145,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-     AEntity findByKey(final String keyPropertyValue);
-
-
+    AEntity findByKey(final String keyPropertyValue);
 
 
     /**
