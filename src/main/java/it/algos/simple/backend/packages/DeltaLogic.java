@@ -11,7 +11,7 @@ import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
+import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -59,7 +59,7 @@ public class DeltaLogic extends ALogic {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public SecoloLogic secoloLogic;
+    public SecoloService secoloService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -213,7 +213,7 @@ public class DeltaLogic extends ALogic {
             return result;
         }
 
-        secolo = secoloLogic.findById("vsecolo");
+        secolo = secoloService.findById("vsecolo");
         via = viaService.findById("piazza");
         bandiera = new File("config" + File.separator + "at.png");
 

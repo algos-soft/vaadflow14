@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
-import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.list.AGrid;
 
@@ -45,21 +44,21 @@ public interface AILogic {
 //    AHeader getAlertHeaderLayout(AEVista typeVista);
 
 
-    /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
-     *
-     * @return componente grafico per il placeHolder
-     */
-    ATopLayout getTopLayout();
+//    /**
+//     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+//     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+//     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+//     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+//     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+//     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+//     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    ATopLayout getTopLayout();
 
 
     /**
@@ -126,14 +125,14 @@ public interface AILogic {
     List<String> getListaPropertiesForm();
 
 
-    /**
-     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @return lista di nomi delle properties da usare nel form
-     */
-    List<String> getListaPropertiesFormNew();
+//    /**
+//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+//     * Sovrascritto nella sottoclasse concreta <br>
+//     *
+//     * @return lista di nomi delle properties da usare nel form
+//     */
+//    List<String> getListaPropertiesFormNew();
 
 
     /**
@@ -146,14 +145,14 @@ public interface AILogic {
     List<String> getListaPropertiesFormEdit();
 
 
-    /**
-     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @return lista di nomi delle properties da usare nel form
-     */
-    List<String> getListaPropertiesFormDelete();
+//    /**
+//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+//     * Sovrascritto nella sottoclasse concreta <br>
+//     *
+//     * @return lista di nomi delle properties da usare nel form
+//     */
+//    List<String> getListaPropertiesFormDelete();
 
 
     /**

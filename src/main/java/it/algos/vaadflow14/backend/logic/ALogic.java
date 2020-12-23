@@ -23,7 +23,6 @@ import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.backend.wrapper.WrapSearch;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.button.ATopLayout;
@@ -486,131 +485,131 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-     * Costruisce un' istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public ATopLayout getTopLayout() {
-        ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-        this.addTopListeners(topLayout);
-
-        return topLayout;
-    }
-
-
-    /**
-     * Costruisce un wrapper di dati <br>
-     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
-     * I dati vengono passati alla View che li usa <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    public WrapButtons getWrapButtonsTop() {
-        List<AEButton> iniziali = this.getListaBottoniIniziali();
-        WrapSearch wrapSearch = this.getWrapSearch();
-        List<AEButton> centrali = this.getListaBottoniCentrali();
-        List<Button> specifici = this.getListaBottoniSpecifici();
-        List<AEButton> finali = this.getListaBottoniFinali();
-        AEOperation operationForm = null;
-
-        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniIniziali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneDeleteAll) {
-            listaBottoni.add(AEButton.deleteAll);
-        }
-
-        if (usaBottoneResetList) {
-            listaBottoni.add(AEButton.resetList);
-        }
-
-        return listaBottoni;
-    }
-
-
-    /**
-     * Costruisce un wrap per la ricerca <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected WrapSearch getWrapSearch() {
-        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
-            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
-            return null;
-        }
-        else {
-            return new WrapSearch(searchType, searchProperty);
-        }
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
-     * Di default costruisce (come da flag) solo il bottone 'new' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniCentrali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneNew) {
-            listaBottoni.add(AEButton.nuovo);
-        }
-
-        return listaBottoni;
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni specifici <br>
-     * Di default non costruisce nulla <br>
-     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<Button> getListaBottoniSpecifici() {
-        List<Button> listaBottoni = new ArrayList<>();
-
-        return listaBottoni;
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
-     * Di default non costruisce nulla <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniFinali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
-        }
-
-        if (usaBottonePaginaWiki) {
-            listaBottoni.add(AEButton.wiki);
-        }
-
-        return listaBottoni;
-    }
+//    /**
+//     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+//     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+//     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+//     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+//     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+//     * Costruisce un' istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+//     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    @Override
+//    public ATopLayout getTopLayout() {
+//        ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+//        this.addTopListeners(topLayout);
+//
+//        return topLayout;
+//    }
+//
+//
+//    /**
+//     * Costruisce un wrapper di dati <br>
+//     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
+//     * I dati vengono passati alla View che li usa <br>
+//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper di dati per la view
+//     */
+//    public WrapButtons getWrapButtonsTop() {
+//        List<AEButton> iniziali = this.getListaBottoniIniziali();
+//        WrapSearch wrapSearch = this.getWrapSearch();
+//        List<AEButton> centrali = this.getListaBottoniCentrali();
+//        List<Button> specifici = this.getListaBottoniSpecifici();
+//        List<AEButton> finali = this.getListaBottoniFinali();
+//        AEOperation operationForm = null;
+//
+//        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
+//    }
+//
+//
+//    /**
+//     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
+//     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    protected List<AEButton> getListaBottoniIniziali() {
+//        List<AEButton> listaBottoni = new ArrayList<>();
+//
+//        if (usaBottoneDeleteAll) {
+//            listaBottoni.add(AEButton.deleteAll);
+//        }
+//
+//        if (usaBottoneResetList) {
+//            listaBottoni.add(AEButton.resetList);
+//        }
+//
+//        return listaBottoni;
+//    }
+//
+//
+//    /**
+//     * Costruisce un wrap per la ricerca <br>
+//     * Può essere sovrascritto <br>
+//     * Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    protected WrapSearch getWrapSearch() {
+//        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
+//            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
+//            return null;
+//        }
+//        else {
+//            return new WrapSearch(searchType, searchProperty);
+//        }
+//    }
+//
+//
+//    /**
+//     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
+//     * Di default costruisce (come da flag) solo il bottone 'new' <br>
+//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    protected List<AEButton> getListaBottoniCentrali() {
+//        List<AEButton> listaBottoni = new ArrayList<>();
+//
+//        if (usaBottoneNew) {
+//            listaBottoni.add(AEButton.nuovo);
+//        }
+//
+//        return listaBottoni;
+//    }
+//
+//
+//    /**
+//     * Costruisce una lista di bottoni specifici <br>
+//     * Di default non costruisce nulla <br>
+//     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    protected List<Button> getListaBottoniSpecifici() {
+//        List<Button> listaBottoni = new ArrayList<>();
+//
+//        return listaBottoni;
+//    }
+//
+//
+//    /**
+//     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
+//     * Di default non costruisce nulla <br>
+//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+//     */
+//    protected List<AEButton> getListaBottoniFinali() {
+//        List<AEButton> listaBottoni = new ArrayList<>();
+//
+//        if (usaBottoneExport) {
+//            listaBottoni.add(AEButton.export);
+//        }
+//
+//        if (usaBottonePaginaWiki) {
+//            listaBottoni.add(AEButton.wiki);
+//        }
+//
+//        return listaBottoni;
+//    }
 
 
     /**
@@ -841,17 +840,17 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @return lista di nomi delle properties da usare nel form
-     */
-    @Override
-    public List<String> getListaPropertiesFormNew() {
-        return getListaPropertiesForm();
-    }
+//    /**
+//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+//     * Sovrascritto nella sottoclasse concreta <br>
+//     *
+//     * @return lista di nomi delle properties da usare nel form
+//     */
+//    @Override
+//    public List<String> getListaPropertiesFormNew() {
+//        return getListaPropertiesForm();
+//    }
 
 
     /**
@@ -867,17 +866,17 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-     * Sovrascritto nella sottoclasse concreta <br>
-     *
-     * @return lista di nomi delle properties da usare nel form
-     */
-    @Override
-    public List<String> getListaPropertiesFormDelete() {
-        return getListaPropertiesForm();
-    }
+//    /**
+//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+//     * Sovrascritto nella sottoclasse concreta <br>
+//     *
+//     * @return lista di nomi delle properties da usare nel form
+//     */
+//    @Override
+//    public List<String> getListaPropertiesFormDelete() {
+//        return getListaPropertiesForm();
+//    }
 
 
     /**

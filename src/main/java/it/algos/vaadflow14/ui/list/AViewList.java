@@ -36,30 +36,6 @@ public class AViewList extends AView {
     }// end of Vaadin/@Route constructor
 
 
-    /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Tipicamente usato SOLO nella List <br>
-     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un' istanza dedicata con i bottoni <br>
-     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
-     */
-    @Override
-    protected void fixTopLayout() {
-        ATopLayout topLayout = null;
-
-        if (entityLogic != null) {
-            topLayout = entityLogic.getTopLayout();
-        }
-
-        if (topPlaceholder != null && topLayout != null) {
-            topPlaceholder.add(topLayout);
-            this.add(topPlaceholder);
-        }
-
-    }
 
 
     /**

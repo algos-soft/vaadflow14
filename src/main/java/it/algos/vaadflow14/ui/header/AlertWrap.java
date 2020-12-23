@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.ui.header;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,6 +35,10 @@ public class AlertWrap {
     private List<String> alertParticolare;
 
 
+    public AlertWrap(String singoloAlert) {
+        this(new ArrayList(Arrays.asList(singoloAlert)));
+    }
+
     public AlertWrap(List<String> alertUser) {
         this.alertUser = alertUser;
     }
@@ -43,13 +49,13 @@ public class AlertWrap {
             this.alertUser = prima;
             this.alertAdmin = seconda;
             this.alertDev = terza;
-        } else {
+        }
+        else {
             this.alertGreen = prima;
             this.alertBlue = seconda;
             this.alertRed = terza;
         }
     }
-
 
     //    public AlertWrap(List<String> alertUser, List<String> alertAdmin, List<String> alertDev) {
     //        this.alertUser = alertUser;

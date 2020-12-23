@@ -47,7 +47,6 @@ public class GenericLogic extends ALogic {
      *
      * @return wrapper per passaggio dati
      */
-    @Override
     protected AlertWrap getAlertWrap(AEVista typeVista) {
         List<String> green = new ArrayList<>();
         List<String> blu = new ArrayList<>();

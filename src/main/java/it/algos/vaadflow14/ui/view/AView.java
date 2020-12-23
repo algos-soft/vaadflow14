@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.view;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.footer.AFooter;
 import it.algos.vaadflow14.ui.header.AHeader;
@@ -285,6 +286,12 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
     protected void fixTopLayout() {
+        ATopLayout topLayout = entityService.getTopLayout();
+
+        if (topPlaceholder != null && topLayout != null) {
+            topPlaceholder.add(topLayout);
+            this.add(topPlaceholder);
+        }
     }
 
 

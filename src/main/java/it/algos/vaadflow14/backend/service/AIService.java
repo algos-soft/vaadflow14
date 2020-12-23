@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AHeader;
 
@@ -14,9 +15,51 @@ import it.algos.vaadflow14.ui.header.AHeader;
  * Time: 10:53
  * Interfaccia di collegamento tra il 'backend' e le 'views' <br>
  * Contiene le API per fornire funzionalità alle Views ed altre classi <br>
- * L'implementazione astratta è AService <br>
+ * L'implementazione astratta è in AService <br>
  */
 public interface AIService {
+
+    /**
+     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Normalmente ad uso esclusivo del developer <br>
+     * Nell' implementazione standard di default NON presenta nessun avviso <br>
+     * Recupera dal service specifico gli (eventuali) avvisi <br>
+     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
+     * <p>
+     * AHeaderWrap:
+     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
+     * Se l' applicazione non usa security, il colore è unico (blue) <br>
+     * Se AHeaderWrap esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
+     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+     * <p>
+     * AHeaderList:
+     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return componente grafico per il placeHolder
+     */
+    AHeader getAlertHeaderLayout(final AEVista typeVista);
+
+    /**
+     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     *
+     * @return componente grafico per il placeHolder
+     */
+    ATopLayout getTopLayout();
+
+
 
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
@@ -29,7 +72,7 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Object creaIfNotExist(final String keyPropertyValue);
+     Object creaIfNotExist(final String keyPropertyValue);
 
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
@@ -39,7 +82,7 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public AEntity checkAndSave(final AEntity newEntityBean);
+     AEntity checkAndSave(final AEntity newEntityBean);
 
 
     /**
@@ -49,7 +92,7 @@ public interface AIService {
      *
      * @return true if exist
      */
-    public boolean isEsiste(final String keyId);
+     boolean isEsiste(final String keyId);
 
 
     /**
@@ -65,7 +108,7 @@ public interface AIService {
      *
      * @return the modified entity
      */
-    public AEntity beforeSave(final AEntity entityBean, final AEOperation operation);
+     AEntity beforeSave(final AEntity entityBean, final AEOperation operation);
 
     /**
      * Regola la chiave se esiste il campo keyPropertyName <br>
@@ -77,7 +120,7 @@ public interface AIService {
      *
      * @return the checked entityBean
      */
-    public AEntity fixKey(final AEntity newEntityBean);
+     AEntity fixKey(final AEntity newEntityBean);
 
 
     /**
@@ -89,7 +132,7 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findById(final String keyID);
+     AEntity findById(final String keyID);
 
 
     /**
@@ -101,7 +144,9 @@ public interface AIService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findByKey(final String keyPropertyValue);
+     AEntity findByKey(final String keyPropertyValue);
+
+
 
 
     /**
@@ -122,31 +167,7 @@ public interface AIService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    public AIResult resetEmptyOnly();
-
-    /**
-     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Normalmente ad uso esclusivo del developer <br>
-     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
-     * <p>
-     * AHeaderWrap:
-     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-     * Se l' applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
-     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-     * <p>
-     * AHeaderList:
-     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return componente grafico per il placeHolder
-     */
-    AHeader getAlertHeaderLayout(AEVista typeVista);
+    AIResult resetEmptyOnly();
 
 }
 

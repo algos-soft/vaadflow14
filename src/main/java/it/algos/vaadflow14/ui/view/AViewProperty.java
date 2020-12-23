@@ -275,6 +275,7 @@ public abstract class AViewProperty extends VerticalLayout {
      */
     public void fixProperty() {
         this.entityClazz = null;
+        this.entityService = null;
         this.entityLogic = null;
         this.entityBean = null;
         this.typeVista = null;

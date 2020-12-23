@@ -81,7 +81,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.versionDate = LocalDate.of(2020, 11, 23);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
-        FlowVar.usaCronoPackages = false;
+        FlowVar.usaCronoPackages = true;
         FlowVar.usaGeografiaPackages = true;
     }
 

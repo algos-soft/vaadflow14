@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -15,6 +15,10 @@ import it.algos.vaadflow14.backend.service.ABeanService;
 import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.backend.service.AVaadinService;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.wrapper.WrapSearch;
+import it.algos.vaadflow14.ui.button.ATopLayout;
+import it.algos.vaadflow14.ui.button.WrapButtons;
+import it.algos.vaadflow14.ui.enumeration.AEButton;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.AGenericForm;
@@ -23,8 +27,6 @@ import it.algos.vaadflow14.ui.header.AHeaderList;
 import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -51,8 +53,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * I riferimenti sono 'public' per poterli usare con TestUnit <br>
  * <p>
  */
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public abstract class AService extends AAbstractService implements AIService {
 
     /**
@@ -161,6 +161,13 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     protected LinkedHashMap<String, ComboBox> mappaComboBox;
 
+    /**
+     * Costruttore senza parametri <br>
+     * Regola la entityClazz associata a questo service <br>
+     */
+    public AService(Class<? extends AEntity> entityClazz) {
+        this.entityClazz = entityClazz;
+    }
 
     /**
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
@@ -239,7 +246,7 @@ public abstract class AService extends AAbstractService implements AIService {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public AEntity checkAndSave( AEntity newEntityBean) {
+    public AEntity checkAndSave(AEntity newEntityBean) {
         boolean valido = false;
         String message = VUOTA;
 
@@ -266,7 +273,7 @@ public abstract class AService extends AAbstractService implements AIService {
     /**
      * Check the existence of a single entity. <br>
      *
-     * @param keyId       chiave identificativa
+     * @param keyId chiave identificativa
      *
      * @return true if exist
      */
@@ -452,8 +459,8 @@ public abstract class AService extends AAbstractService implements AIService {
      * <p>
      * AHeaderWrap:
      * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-     * Se l' applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
+     * Se l' applicazione non usa security, il colore è unico (blue) <br>
+     * Se AHeaderWrap esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      * <p>
      * AHeaderList:
@@ -464,10 +471,22 @@ public abstract class AService extends AAbstractService implements AIService {
      * @return componente grafico per il placeHolder
      */
     @Override
-    public AHeader getAlertHeaderLayout(AEVista typeVista) {
+    public AHeader getAlertHeaderLayout(final AEVista typeVista) {
         AHeader header = null;
-        AlertWrap wrap = getAlertWrap(typeVista);
+        AlertWrap wrap = null;
         List<String> alertHtmlList = getAlertList(typeVista);
+
+        switch (typeVista) {
+            case list:
+                wrap = getAlertWrapList();
+                break;
+            case form:
+                wrap = getAlertWrapForm();
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "getAlertHeaderLayout");
+                break;
+        }
 
         if (usaHeaderWrap) {
             if (wrap != null) {
@@ -483,17 +502,28 @@ public abstract class AService extends AAbstractService implements AIService {
         return header;
     }
 
+
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
+     * DEVE essere sovrascritto <br>
      * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
      *
      * @return wrapper per passaggio dati
      */
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
+        return null;
+    }
+
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nel Form <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @return wrapper per passaggio dati
+     */
+    protected AlertWrap getAlertWrapForm() {
         return null;
     }
 
@@ -510,6 +540,125 @@ public abstract class AService extends AAbstractService implements AIService {
     protected List<String> getAlertList(AEVista typeVista) {
         String headerAlert = annotation.getHeaderAlert(entityClazz);
         return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
+    }
+
+    /**
+     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     *
+     * @return componente grafico per il placeHolder
+     */
+    @Override
+    public ATopLayout getTopLayout() {
+        return appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+    }
+
+    /**
+     * Costruisce un wrapper di dati <br>
+     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
+     * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper di dati per la view
+     */
+    protected WrapButtons getWrapButtonsTop() {
+        List<AEButton> iniziali = this.getListaBottoniIniziali();
+        WrapSearch wrapSearch = this.getWrapSearch();
+        List<AEButton> centrali = this.getListaBottoniCentrali();
+        List<Button> specifici = this.getListaBottoniSpecifici();
+        List<AEButton> finali = this.getListaBottoniFinali();
+        AEOperation operationForm = null;
+
+        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
+    }
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniIniziali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneDeleteAll) {
+            listaBottoni.add(AEButton.deleteAll);
+        }
+
+        if (usaBottoneResetList) {
+            listaBottoni.add(AEButton.resetList);
+        }
+
+        return listaBottoni;
+    }
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
+     * Di default non costruisce nulla <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniFinali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
+
+        if (usaBottonePaginaWiki) {
+            listaBottoni.add(AEButton.wiki);
+        }
+
+        return listaBottoni;
+    }
+
+    /**
+     * Costruisce un wrap per la ricerca <br>
+     * Può essere sovrascritto <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected WrapSearch getWrapSearch() {
+        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
+            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
+            return null;
+        }
+        else {
+            return new WrapSearch(searchType, searchProperty);
+        }
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
+     * Di default costruisce (come da flag) solo il bottone 'new' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniCentrali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneNew) {
+            listaBottoni.add(AEButton.nuovo);
+        }
+
+        return listaBottoni;
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni specifici <br>
+     * Di default non costruisce nulla <br>
+     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<Button> getListaBottoniSpecifici() {
+        List<Button> listaBottoni = new ArrayList<>();
+
+        return listaBottoni;
     }
 
 }

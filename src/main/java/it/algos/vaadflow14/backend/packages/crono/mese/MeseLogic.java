@@ -73,8 +73,8 @@ public class MeseLogic extends CronoLogic {
 
 
     /**
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Informazioni (eventuali) specifiche di ogni modulo <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
      * Deve essere sovrascritto <br>
      * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
      *

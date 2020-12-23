@@ -16,8 +16,9 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: lun, 21-dic-2020
  * Time: 20:37
  * <p>
- * Classe SINGLETON di servizio per la entity <br>
- * Estende la classe astratta AService <br>
+ * Service di una entityClazz specifica e di un package <br>
+ * Garantisce i metodi di collegamento per accedere al database <br>
+ * Non mantiene lo stato di una istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -32,9 +33,10 @@ public class ContinenteService extends AService {
 
     /**
      * Costruttore senza parametri <br>
+     * Regola la entityClazz associata a questo service <br>
      */
     public ContinenteService() {
-        super.entityClazz = Continente.class;
+        super(Continente.class);
     }
 
 
