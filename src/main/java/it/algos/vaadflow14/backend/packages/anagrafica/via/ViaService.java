@@ -79,7 +79,7 @@ public class ViaService extends AService {
      * @return la nuova entityBean appena creata e salvata
      */
     @Override
-    public Via creaIfNotExist(String keyPropertyValue) {
+    public Via creaIfNotExist(final String keyPropertyValue) {
         return (Via) checkAndSave(newEntity(keyPropertyValue));
     }
 
@@ -91,7 +91,7 @@ public class ViaService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Via creaIfNotExist(AEVia aeVia) {
+    public Via creaIfNotExist(final AEVia aeVia) {
         return creaIfNotExist(aeVia.getPos(), aeVia.toString());
     }
 
@@ -104,7 +104,7 @@ public class ViaService extends AService {
      *
      * @return true se la nuova entityBean è stata creata e salvata
      */
-    public Via creaIfNotExist(int ordine, String nome) {
+    public Via creaIfNotExist(final int ordine, final String nome) {
         return (Via) checkAndSave(newEntity(ordine, nome));
     }
 
@@ -130,7 +130,7 @@ public class ViaService extends AService {
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Via newEntity(String nome) {
+    public Via newEntity(final String nome) {
         return newEntity(0, nome);
     }
 
@@ -145,7 +145,7 @@ public class ViaService extends AService {
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Via newEntity(int ordine, String nome) {
+    public Via newEntity(final int ordine, final String nome) {
         Via newEntityBean = Via.builderVia()
 
                 .ordine(ordine > 0 ? ordine : this.getNewOrdine())
@@ -168,7 +168,7 @@ public class ViaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Via findById(String keyID) {
+    public Via findById(final String keyID) {
         return (Via) super.findById(keyID);
     }
 
@@ -182,7 +182,7 @@ public class ViaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Via findByKey(String keyValue) {
+    public Via findByKey(final String keyValue) {
         return (Via) super.findByKey(keyValue);
     }
 
