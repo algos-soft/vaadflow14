@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
-
 import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
 
 /**
@@ -74,77 +72,7 @@ public class SimpleData extends FlowData {
     @Override
     public void fixData() {
         super.fixData();
-
-        String moduleName = "simple";
-        List<String> allEntities;
-        String message;
-
-        //--spazzola tutta la directory packages
-        allEntities = file.getModuleSubFilesEntity(moduleName);
-
-        //--elabora le collections valide
-        allEntities.stream()
-                .filter(checkEntity)
-                .forEach(resetEmptyOnly);
-        message = "Controllati i dati iniziali di simple";
-        logger.log(AETypeLog.checkData, message);
-
-        //        Beta beta = Beta.builderBeta().code("valori booleani").build();
-        //        beta.id = "binario";
-        //        mongo.save(beta);
-        //
-        //        LocalDate adesso = LocalDate.now();
-        //        LocalDateTime adessoDate = LocalDateTime.now();
-        //        LocalTime adessoTime = LocalDateTime.now().toLocalTime();
-        //        Gamma gamma = Gamma.builderGamma()
-        //
-        //                .code("adesso")
-        //
-        //                .uno(adesso)
-        //
-        //                .due(adesso)
-        //
-        //                .tre(adesso)
-        //
-        //                .quattro(adesso)
-        //
-        //                .cinque(adesso)
-        //
-        //                .sei(adesso)
-        //
-        //                .sette(adesso)
-        //
-        //                .otto(adesso)
-        //
-        //                .nove(adesso)
-        //
-        //                .dieci(adesso)
-        //
-        //                .undici(adesso)
-        //
-        //                .dodici(adesso)
-        //
-        //                .tredici(adessoDate)
-        //
-        //                .quattordici(adessoDate)
-        //
-        //                .quindici(adessoDate)
-        //
-        //                .sedici(adessoTime)
-        //
-        //                .diciassette(adessoTime)
-        //
-        //                .build();
-        //
-        //        gamma.id = gamma.code;
-        //        mongo.save(gamma);
-        //
-        //        Lambda lambda = lambdaLogic.newEntity("alfa");
-        //        if (lambda != null) {
-        //            lambda.due = "betta";
-        //            lambda.tre = "potta";
-        //            mongo.save(lambda);
-        //        }
+        super.fixData("simple");
     }
 
 

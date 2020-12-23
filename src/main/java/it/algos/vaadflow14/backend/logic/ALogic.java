@@ -33,9 +33,6 @@ import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.AGenericForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
-import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.header.AHeaderList;
-import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import it.algos.vaadflow14.ui.list.AGrid;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -407,47 +404,47 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Normalmente ad uso esclusivo del developer <br>
-     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
-     * <p>
-     * AHeaderWrap:
-     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-     * Se l' applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
-     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-     * <p>
-     * AHeaderList:
-     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public AHeader getAlertHeaderLayout(AEVista typeVista) {
-        AHeader header = null;
-        AlertWrap wrap = getAlertWrap(typeVista);
-        List<String> alertHtmlList = getAlertList(typeVista);
-
-        if (usaHeaderWrap) {
-            if (wrap != null) {
-                header = appContext.getBean(AHeaderWrap.class, wrap);
-            }
-        }
-        else {
-            if (alertHtmlList != null) {
-                header = appContext.getBean(AHeaderList.class, alertHtmlList);
-            }
-        }
-
-        return header;
-    }
+//    /**
+//     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Normalmente ad uso esclusivo del developer <br>
+//     * Nell' implementazione standard di default NON presenta nessun avviso <br>
+//     * Recupera dal service specifico gli (eventuali) avvisi <br>
+//     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
+//     * <p>
+//     * AHeaderWrap:
+//     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
+//     * Se l' applicazione non usa security, il colore è unico <br<
+//     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
+//     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+//     * <p>
+//     * AHeaderList:
+//     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
+//     *
+//     * @param typeVista in cui inserire gli avvisi
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    @Override
+//    public AHeader getAlertHeaderLayout(AEVista typeVista) {
+//        AHeader header = null;
+//        AlertWrap wrap = getAlertWrap(typeVista);
+//        List<String> alertHtmlList = getAlertList(typeVista);
+//
+//        if (usaHeaderWrap) {
+//            if (wrap != null) {
+//                header = appContext.getBean(AHeaderWrap.class, wrap);
+//            }
+//        }
+//        else {
+//            if (alertHtmlList != null) {
+//                header = appContext.getBean(AHeaderList.class, alertHtmlList);
+//            }
+//        }
+//
+//        return header;
+//    }
 
 
     /**

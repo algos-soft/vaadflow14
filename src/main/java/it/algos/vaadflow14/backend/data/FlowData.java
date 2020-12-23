@@ -9,11 +9,11 @@ import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import it.algos.vaadflow14.backend.service.AClassService;
 import it.algos.vaadflow14.backend.service.AFileService;
+import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.wrapper.AResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,35 +121,36 @@ public class FlowData implements AIData {
     /**
      * Controllo la singola collezione <br>
      * <p>
-     * Costruisco un' istanza della classe xxxLogic corrispondente alla entityClazz <br>
-     * Controllo se l' istanza xxxLogic è creabile <br>
-     * Controllo se esiste un metodo resetEmptyOnly() nella classe xxxLogic specifica <br>
-     * Invoco il metodo standard resetEmptyOnly(), presente nell' interfaccia <br>
+     * Costruisco un' istanza della classe xxxService corrispondente alla entityClazz <br>
+     * Controllo se l' istanza xxxService è creabile <br>
+     * Controllo se esiste un metodo resetEmptyOnly() nella classe xxxService specifica <br>
+     * Invoco il metodo standard resetEmptyOnly(), presente nella superclasse <br>
      */
     protected Consumer<String> resetEmptyOnly = canonicalEntityName -> {
         final AIResult result;
-        final String entityLogicPrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_BUSINESS_LOGIC;
-        final AILogic entityLogic = classService.getLogicFromEntityName(canonicalEntityName);
-        final String nameLogic = entityLogic.getClass().getSimpleName();
+        final String entityServicePrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_BUSINESS_SERVICE;
+        final AIService entityService = classService.getServiceFromEntityName(canonicalEntityName);
+        final String nameService = entityService.getClass().getSimpleName();
         boolean methodExists = false;
         String message;
 
-        if (entityLogic == null || nameLogic.equals(TAG_GENERIC_LOGIC)) {
-            message = String.format("Non esiste la classe %s per effettuare il Reset dei dati", entityLogicPrevista);
+        if (entityService == null || nameService.equals(TAG_GENERIC_SERVICE)) {
+            message = String.format("Non esiste la classe %s per effettuare il Reset dei dati", entityServicePrevista);
             logger.log(AETypeLog.checkData, message);
+            return;
         }
 
         try {
-            methodExists = entityLogic.getClass().getDeclaredMethod("resetEmptyOnly") != null;
+            methodExists = !nameService.equals(TAG_GENERIC_SERVICE) && entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null;
         } catch (Exception unErrore) {
         }
 
         if (methodExists) {
-            result = entityLogic.resetEmptyOnly();
+            result = entityService.resetEmptyOnly();
             logger.log(AETypeLog.checkData, result.getMessage());
         }
         else {
-            message = String.format("Non esiste il metodo resetEmptyOnly() nella classe %s", nameLogic);
+            message = String.format("Non esiste il metodo resetEmptyOnly() nella classe %s", nameService);
             logger.log(AETypeLog.checkData, message);
         }
     };
@@ -195,7 +196,23 @@ public class FlowData implements AIData {
      * @since java 8
      */
     public void fixData() {
-        String moduleName = "vaadflow14";
+        this.fixData("vaadflow14");
+    }
+
+
+    /**
+     * Check iniziale di alcune collections <br>
+     * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
+     * Vengono create se mancano e se esiste un metodo resetEmptyOnly() nella classe xxxLogic specifica <br>
+     * Crea un elenco di entities/collections che implementano il metodo resetEmptyOnly() <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * L' ordine con cui vengono create le collections è significativo <br>
+     *
+     * @param moduleName da controllare
+     *
+     * @since java 8
+     */
+    protected void fixData(String moduleName) {
         List<String> allEntities;
         long entities;
         String message;
@@ -205,14 +222,14 @@ public class FlowData implements AIData {
 
         //--conta le collections valide
         entities = checkFiles.apply(allEntities);
-        message = String.format("Sono state trovate %d classi di tipo AEntity da controllare", entities);
+        message = String.format("In %s sono state trovate %d classi di tipo AEntity da controllare", moduleName, entities);
         logger.log(AETypeLog.checkData, message);
 
         //--elabora le collections valide
         allEntities.stream()
                 .filter(checkEntity)
                 .forEach(resetEmptyOnly);
-        message = "Controllati i dati iniziali di vaadflow14";
+        message = String.format("Controllati i dati iniziali di %s", moduleName);
         logger.log(AETypeLog.checkData, message);
     }
 

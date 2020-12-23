@@ -4,8 +4,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
@@ -108,26 +108,20 @@ public abstract class AViewProperty extends VerticalLayout {
     @Autowired
     public APreferenzaService pref;
 
-
     //    @Autowired
     //    public ABootService boot;
-
 
     //    @Autowired
     //    public AColumnService column;
 
-
     //    @Autowired
     //    public ADateService date;
-
 
     //    @Autowired
     //    public AFieldService field;
 
-
     //        @Autowired
     //        public AMongoService mongo;
-
 
     //    @Autowired
     //    public AEnumerationService enumService;
@@ -169,18 +163,24 @@ public abstract class AViewProperty extends VerticalLayout {
      */
     protected VerticalLayout footerPlaceholder;
 
-    /**
-     * The Entity Logic (obbligatorio per liste e form)
-     */
-    protected AILogic entityLogic;
 
     /**
-     * The Entity Class  (obbligatorio per liste e form)
+     * The entityClazz obbligatorio di tipo AEntity, per liste e form <br>
      */
     protected Class<? extends AEntity> entityClazz;
 
     /**
-     * The Entity Bean  (obbligatorio  per il form)
+     * The entityService obbligatorio, singleton di tipo xxxService <br>
+     */
+    protected AIService entityService;
+
+    /**
+     * The entityLogic obbligatorio, prototype di tipo xxxLogic <br>
+     */
+    protected AILogic entityLogic;
+
+    /**
+     * The entityBean obbligatorio, istanza di entityClazz per liste e form <br>
      */
     protected AEntity entityBean;
 

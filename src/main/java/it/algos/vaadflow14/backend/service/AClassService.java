@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
+import it.algos.vaadflow14.backend.logic.GenericService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_LOGIC;
+import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_SERVICE;
 
 
 /**
@@ -26,6 +28,46 @@ public class AClassService extends AAbstractService {
 
 
     /**
+     * Istanza della sottoclasse xxxService (singleton) associata alla entity <br>
+     *
+     * @param entityClazz di riferimento
+     *
+     * @return istanza di xxxService associata alla Entity
+     */
+    public AIService getServiceFromEntityClazz(Class<? extends AEntity> entityClazz) {
+        return getServiceFromEntityName(entityClazz.getCanonicalName());
+    }
+
+    /**
+     * Istanza della sottoclasse xxxService (singleton) associata alla entity <br>
+     *
+     * @param entityClazzCanonicalName the canonical name of entity class
+     *
+     * @return istanza di xxxService associata alla Entity
+     */
+    public AIService getServiceFromEntityName(String entityClazzCanonicalName) {
+        AIService entityService = null;
+        String serviceClazzCanonicalName;
+        AEntity entityBean;
+
+        if (text.isValid(entityClazzCanonicalName)) {
+            serviceClazzCanonicalName = entityClazzCanonicalName + SUFFIX_BUSINESS_SERVICE;
+            try {
+                entityService = (AIService) appContext.getBean(Class.forName(serviceClazzCanonicalName));
+            } catch (Exception unErrore) {
+                try {
+                    entityBean = (AEntity) appContext.getBean(Class.forName(entityClazzCanonicalName));
+                    entityService = appContext.getBean(GenericService.class, entityBean.getClass());
+                } catch (Exception unErrore2) {
+                    logger.error(unErrore2.getMessage(), this.getClass(), "getServiceFromEntityName");
+                }
+            }
+        }
+        return entityService;
+    }
+
+
+    /**
      * Istanza della sottoclasse xxxLogic associata al nome delle Entity inviata  <br>
      *
      * @param entityClazzCanonicalName the canonical name of entity class
@@ -35,7 +77,7 @@ public class AClassService extends AAbstractService {
     public AILogic getLogicFromEntityName(String entityClazzCanonicalName) {
         AILogic entityLogic = null;
         String logicClazzCanonicalName;
-        AEntity entityBean = null;
+        AEntity entityBean;
 
         if (text.isValid(entityClazzCanonicalName)) {
             logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_BUSINESS_LOGIC;

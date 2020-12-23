@@ -9,7 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogic;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.ui.fields.AComboField;
@@ -67,7 +67,7 @@ public class DeltaLogic extends ALogic {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ViaLogic viaLogic;
+    public ViaService viaService;
 
 
     /**
@@ -169,7 +169,7 @@ public class DeltaLogic extends ALogic {
         ComboBox box = combo.comboBox;
         Object obj = box.getValue();
         if (obj instanceof String) {
-            Via via = viaLogic.creaIfNotExist((String) obj);
+            Via via = viaService.creaIfNotExist((String) obj);
             entityBean.via = via;
         }
 
@@ -214,7 +214,7 @@ public class DeltaLogic extends ALogic {
         }
 
         secolo = secoloLogic.findById("vsecolo");
-        via = viaLogic.findById("piazza");
+        via = viaService.findById("piazza");
         bandiera = new File("config" + File.separator + "at.png");
 
         try {

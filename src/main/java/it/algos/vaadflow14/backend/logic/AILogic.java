@@ -7,9 +7,7 @@ import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.header.AHeader;
 import it.algos.vaadflow14.ui.list.AGrid;
 
 import java.util.List;
@@ -27,24 +25,24 @@ import java.util.List;
 public interface AILogic {
 
 
-    /**
-     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Normalmente ad uso esclusivo del developer <br>
-     * Nell'implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un'istanza dedicata con le liste di avvisi <br>
-     * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
-     * Se l'applicazione non usa security, il colore è unico <br<
-     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
-     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return componente grafico per il placeHolder
-     */
-    AHeader getAlertHeaderLayout(AEVista typeVista);
+//    /**
+//     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Normalmente ad uso esclusivo del developer <br>
+//     * Nell'implementazione standard di default NON presenta nessun avviso <br>
+//     * Recupera dal service specifico gli (eventuali) avvisi <br>
+//     * Costruisce un'istanza dedicata con le liste di avvisi <br>
+//     * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
+//     * Se l'applicazione non usa security, il colore è unico <br<
+//     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
+//     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+//     *
+//     * @param typeVista in cui inserire gli avvisi
+//     *
+//     * @return componente grafico per il placeHolder
+//     */
+//    AHeader getAlertHeaderLayout(AEVista typeVista);
 
 
     /**

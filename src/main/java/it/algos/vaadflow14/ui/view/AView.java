@@ -71,11 +71,12 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * - le property devono essere regolate
      * <p>
      * Questa classe, chiamata da @Route è praticamente un Singleton <br>
-     * le propertry vanno pertanto azzera ad ogni utilizzo <br>
+     * le property vanno pertanto azzera ad ogni utilizzo <br>
      * <p>
-     * The Entity Service (obbligatorio) di tipo AEntityService
-     * The Entity Class  (obbligatorio) (per la Grid) di tipo AEntity
-     * The Entity Bean  (obbligatorio) (per il Form)
+     * The entityClazz obbligatorio di tipo AEntity, per la Grid <br>
+     * The entityService obbligatorio, singleton di tipo xxxService <br>
+     * The entityLogic obbligatorio, prototype di tipo xxxLogic <br>
+     * The entityBean obbligatorio, istanza di entityClazz per il Form <br>
      */
     public void fixProperty() {
         super.fixProperty();
@@ -86,9 +87,9 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
         this.fixTypeView();
         this.fixEntityClazz();
+        this.fixEntityService();
         this.fixEntityLogic();
         this.fixEntityBean();
-
 
         //        if (annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
         //            this.fixPropertyGenericView(parametro);
@@ -133,7 +134,8 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
 
     /**
-     *
+     * Controlla che esista il riferimento alla entityClazz <br>
+     * Se non esiste, lo crea <br>
      */
     protected void fixEntityClazz() {
         String canonicalName;
@@ -145,20 +147,36 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
             } catch (Exception unErrore) {
                 logger.error("Non sono riuscito a creare la entityClazz", AView.class, "fixEntityClazz");
             }
-        } else {
+        }
+        else {
             logger.info("Esisteva già la entityClazz", AView.class, "fixEntityClazz");
         }
     }
 
 
     /**
-     *
+     * Controlla che esista il riferimento alla classe entityService <br>
+     * Se non esiste, lo crea <br>
+     */
+    protected void fixEntityService() {
+        if (entityService == null) {
+            entityService = classService.getServiceFromEntityClazz(entityClazz);
+        }
+        else {
+            logger.info("Esisteva già la entityService", AView.class, "fixEntityService");
+        }
+    }
+
+    /**
+     * Controlla che esista il riferimento alla classe entityLogic <br>
+     * Se non esiste, lo crea <br>
      */
     protected void fixEntityLogic() {
         if (entityLogic == null) {
             entityLogic = classService.getLogicFromEntity(entityClazz, operationForm);
-        } else {
-            logger.info("Esisteva già la entityLogic", AView.class, "fixEntityService");
+        }
+        else {
+            logger.info("Esisteva già la entityLogic", AView.class, "fixEntityLogic");
         }
     }
 
@@ -183,10 +201,13 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         if (entityClazz == null || entityLogic == null) {
             if (entityClazz == null) {
-                logger.error("Manca la entityClazz", AView.class, "fixBody");
+                logger.error("Manca la entityClazz", AView.class, "beforeEnter");
+            }
+            if (entityService == null) {
+                logger.error("Manca la entityService", AView.class, "beforeEnter");
             }
             if (entityLogic == null) {
-                logger.error("Manca la entityLogic", AView.class, "fixBody");
+                logger.error("Manca la entityLogic", AView.class, "beforeEnter");
             }
             return;
         }
@@ -243,11 +264,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
     protected void fixHeaderLayout() {
-        AHeader header = null;
-
-        if (entityLogic != null) {
-            header = entityLogic.getAlertHeaderLayout(typeVista);
-        }
+        AHeader header = entityService.getAlertHeaderLayout(typeVista);
 
         if (alertPlaceholder != null && header != null) {
             alertPlaceholder.add(header);
