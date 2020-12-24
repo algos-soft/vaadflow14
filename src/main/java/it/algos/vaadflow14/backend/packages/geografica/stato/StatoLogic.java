@@ -7,17 +7,17 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.geografica.continente.AEContinente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
 import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteLogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.service.AResourceService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -25,9 +25,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.TRE_PUNTI;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -125,17 +123,14 @@ public class StatoLogic extends ALogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> blue = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
@@ -330,133 +325,133 @@ public class StatoLogic extends ALogic {
     }
 
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        AIResult resultCollectionPropedeutica;
-        int numRec = 0;
-        Stato stato;
-        String nome;
-        int pos = AEStatoEuropeo.values().length;
-        int posEuropeo;
-        int posCorrente;
-        boolean ue;
-        String bandieraTxt = VUOTA;
-        Map<String, Continente> mappa;
-        Continente continente = null;
-        Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
-        String alfaTre = VUOTA;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        resultCollectionPropedeutica = checkContinente();
-        if (resultCollectionPropedeutica.isValido()) {
-            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-        }
-        else {
-            return resultCollectionPropedeutica;
-        }
-
-        mappa = creaMappa();
-        List<List<String>> listaStati = wiki.getStati();
-        if (array.isAllValid(listaStati)) {
-            for (List<String> riga : listaStati) {
-                continente = null;
-                nome = riga.get(0);
-                posEuropeo = AEStatoEuropeo.getPosizione(nome);
-                if (posEuropeo > 0) {
-                    posCorrente = posEuropeo;
-                    ue = true;
-                }
-                else {
-                    pos++;
-                    posCorrente = pos;
-                    ue = false;
-                }
-                if (text.isValid(riga.get(2))) {
-                    alfaTre = riga.get(2);
-                }
-                if (text.isValid(riga.get(3))) {
-                    bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
-                }
-                if (text.isValid(alfaTre)) {
-                    if (mappa.get(alfaTre) != null) {
-                        continente = mappa.get(alfaTre);
-                    }
-                }
-                continente = continente != null ? continente : continenteDefault;
-
-                stato = creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
-
-                if (stato != null) {
-                    numRec++;
-                }
-
-            }
-        }
-
-        return super.fixPostReset(AETypeReset.wikipedia, numRec);
-    }
-
-
-    private AIResult checkContinente() {
-        String collection = "continente";
-        ContinenteLogic continenteLogic;
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            continenteLogic = appContext.getBean(ContinenteLogic.class);
-            if (continenteLogic == null) {
-                return AResult.errato("Manca la classe ContinenteLogic");
-            }
-            else {
-                return continenteLogic.resetEmptyOnly();
-            }
-
-        }
-    }
-
-    private Map<String, Continente> creaMappa() {
-        Map<String, Continente> mappa = new HashMap<>();
-        List<String> lista;
-        Continente continente;
-        String keyTag;
-
-        for (AEContinente aeContinente : AEContinente.values()) {
-            keyTag = aeContinente.name();
-            continente = continenteLogic.findById(keyTag);
-            lista = resourceService.leggeListaConfig(keyTag, false);
-            if (array.isAllValid(lista)) {
-                for (String riga : lista) {
-                    mappa.put(riga, continente);
-                }
-            }
-        }
-
-        return mappa;
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        AIResult resultCollectionPropedeutica;
+//        int numRec = 0;
+//        Stato stato;
+//        String nome;
+//        int pos = AEStatoEuropeo.values().length;
+//        int posEuropeo;
+//        int posCorrente;
+//        boolean ue;
+//        String bandieraTxt = VUOTA;
+//        Map<String, Continente> mappa;
+//        Continente continente = null;
+//        Continente continenteDefault = continenteLogic.findById(AEContinente.antartide.getNome());
+//        String alfaTre = VUOTA;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        resultCollectionPropedeutica = checkContinente();
+//        if (resultCollectionPropedeutica.isValido()) {
+//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+//        }
+//        else {
+//            return resultCollectionPropedeutica;
+//        }
+//
+//        mappa = creaMappa();
+//        List<List<String>> listaStati = wiki.getStati();
+//        if (array.isAllValid(listaStati)) {
+//            for (List<String> riga : listaStati) {
+//                continente = null;
+//                nome = riga.get(0);
+//                posEuropeo = AEStatoEuropeo.getPosizione(nome);
+//                if (posEuropeo > 0) {
+//                    posCorrente = posEuropeo;
+//                    ue = true;
+//                }
+//                else {
+//                    pos++;
+//                    posCorrente = pos;
+//                    ue = false;
+//                }
+//                if (text.isValid(riga.get(2))) {
+//                    alfaTre = riga.get(2);
+//                }
+//                if (text.isValid(riga.get(3))) {
+//                    bandieraTxt = resourceService.getSrcBandieraPng(riga.get(3));
+//                }
+//                if (text.isValid(alfaTre)) {
+//                    if (mappa.get(alfaTre) != null) {
+//                        continente = mappa.get(alfaTre);
+//                    }
+//                }
+//                continente = continente != null ? continente : continenteDefault;
+//
+//                stato = creaIfNotExist(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
+//
+//                if (stato != null) {
+//                    numRec++;
+//                }
+//
+//            }
+//        }
+//
+//        return super.fixPostReset(AETypeReset.wikipedia, numRec);
+//    }
+//
+//
+//    private AIResult checkContinente() {
+//        String collection = "continente";
+//        ContinenteLogic continenteLogic;
+//
+//        if (mongo.isValid(collection)) {
+//            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+//        }
+//        else {
+//            continenteLogic = appContext.getBean(ContinenteLogic.class);
+//            if (continenteLogic == null) {
+//                return AResult.errato("Manca la classe ContinenteLogic");
+//            }
+//            else {
+//                return continenteLogic.resetEmptyOnly();
+//            }
+//
+//        }
+//    }
+//
+//    private Map<String, Continente> creaMappa() {
+//        Map<String, Continente> mappa = new HashMap<>();
+//        List<String> lista;
+//        Continente continente;
+//        String keyTag;
+//
+//        for (AEContinente aeContinente : AEContinente.values()) {
+//            keyTag = aeContinente.name();
+//            continente = continenteLogic.findById(keyTag);
+//            lista = resourceService.leggeListaConfig(keyTag, false);
+//            if (array.isAllValid(lista)) {
+//                for (String riga : lista) {
+//                    mappa.put(riga, continente);
+//                }
+//            }
+//        }
+//
+//        return mappa;
+//    }
 
 
     /**

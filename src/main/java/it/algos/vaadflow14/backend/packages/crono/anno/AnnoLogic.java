@@ -2,19 +2,11 @@ package it.algos.vaadflow14.backend.packages.crono.anno;
 
 import com.google.gson.Gson;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
-import it.algos.vaadflow14.backend.packages.crono.secolo.AESecolo;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
 import it.algos.vaadflow14.backend.service.ADateService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,17 +89,14 @@ public class AnnoLogic extends CronoLogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> blu = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
@@ -310,101 +299,101 @@ public class AnnoLogic extends CronoLogic {
     //        return mongo.isValid(entityClazz);
     //    }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        AIResult resultCollectionPropedeutica;
-        int ordine;
-        String nome;
-        AESecolo secoloEnum;
-        Secolo secolo;
-        String titoloSecolo;
-        boolean bisestile = false;
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        resultCollectionPropedeutica = checkSecolo();
-        if (resultCollectionPropedeutica.isValido()) {
-            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-        }
-        else {
-            return resultCollectionPropedeutica;
-        }
-
-        //--costruisce gli anni prima di cristo dal 1000
-        for (int k = ANTE_CRISTO; k > 0; k--) {
-            ordine = ANNO_INIZIALE - k;
-            nome = k + AESecolo.TAG_AC;
-            secoloEnum = AESecolo.getSecoloAC(k);
-            titoloSecolo = secoloEnum.getNome();
-            titoloSecolo = titoloSecolo.toLowerCase();
-            titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
-            bisestile = false; //non ci sono anni bisestili prima di Cristo
-            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
-                    numRec++;
-                }
-            }
-        }
-
-        //--costruisce gli anni dopo cristo fino al 2030
-        for (int k = 1; k <= DOPO_CRISTO; k++) {
-            ordine = k + ANNO_INIZIALE;
-            nome = k + FlowCost.VUOTA;
-            secoloEnum = AESecolo.getSecoloDC(k);
-            titoloSecolo = secoloEnum.getNome();
-            titoloSecolo = titoloSecolo.toLowerCase();
-            titoloSecolo = text.levaSpazi(titoloSecolo);
-            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
-            bisestile = date.bisestile(k);
-            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
-                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
-                    numRec++;
-                }
-            }
-        }
-
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
-    }
-
-    private AIResult checkSecolo() {
-        String collection = "secolo";
-        SecoloLogic secoloLogic;
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            secoloLogic = appContext.getBean(SecoloLogic.class);
-            if (secoloLogic == null) {
-                return AResult.errato("Manca la classe SecoloLogic");
-            }
-            else {
-                return secoloLogic.resetEmptyOnly();
-            }
-        }
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        AIResult resultCollectionPropedeutica;
+//        int ordine;
+//        String nome;
+//        AESecolo secoloEnum;
+//        Secolo secolo;
+//        String titoloSecolo;
+//        boolean bisestile = false;
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        resultCollectionPropedeutica = checkSecolo();
+//        if (resultCollectionPropedeutica.isValido()) {
+//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+//        }
+//        else {
+//            return resultCollectionPropedeutica;
+//        }
+//
+//        //--costruisce gli anni prima di cristo dal 1000
+//        for (int k = ANTE_CRISTO; k > 0; k--) {
+//            ordine = ANNO_INIZIALE - k;
+//            nome = k + AESecolo.TAG_AC;
+//            secoloEnum = AESecolo.getSecoloAC(k);
+//            titoloSecolo = secoloEnum.getNome();
+//            titoloSecolo = titoloSecolo.toLowerCase();
+//            titoloSecolo = text.levaSpazi(titoloSecolo);
+//            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+//            bisestile = false; //non ci sono anni bisestili prima di Cristo
+//            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
+//                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+//                    numRec++;
+//                }
+//            }
+//        }
+//
+//        //--costruisce gli anni dopo cristo fino al 2030
+//        for (int k = 1; k <= DOPO_CRISTO; k++) {
+//            ordine = k + ANNO_INIZIALE;
+//            nome = k + FlowCost.VUOTA;
+//            secoloEnum = AESecolo.getSecoloDC(k);
+//            titoloSecolo = secoloEnum.getNome();
+//            titoloSecolo = titoloSecolo.toLowerCase();
+//            titoloSecolo = text.levaSpazi(titoloSecolo);
+//            secolo = (Secolo) mongo.findById(Secolo.class, titoloSecolo);
+//            bisestile = date.bisestile(k);
+//            if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(nome)) {
+//                if (creaIfNotExist(ordine, nome, bisestile, secolo) != null) {
+//                    numRec++;
+//                }
+//            }
+//        }
+//
+//        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+//    }
+//
+//    private AIResult checkSecolo() {
+//        String collection = "secolo";
+//        SecoloLogic secoloLogic;
+//
+//        if (mongo.isValid(collection)) {
+//            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+//        }
+//        else {
+//            secoloLogic = appContext.getBean(SecoloLogic.class);
+//            if (secoloLogic == null) {
+//                return AResult.errato("Manca la classe SecoloLogic");
+//            }
+//            else {
+//                return secoloLogic.resetEmptyOnly();
+//            }
+//        }
+//    }
 
 }

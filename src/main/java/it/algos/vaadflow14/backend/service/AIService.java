@@ -3,9 +3,6 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import it.algos.vaadflow14.ui.header.AHeader;
 
 /**
  * Project vaadflow14
@@ -13,51 +10,11 @@ import it.algos.vaadflow14.ui.header.AHeader;
  * User: gac
  * Date: mar, 22-dic-2020
  * Time: 10:53
- * Interfaccia di collegamento tra il 'backend' e le 'views' <br>
- * Contiene le API per fornire funzionalità alle Views ed altre classi <br>
- * L'implementazione astratta è in AService <br>
+ * Interfaccia di collegamento del backend con mongoDB <br>
+ * Contiene le API per fornire funzionalità di accesso a mongoDB <br>
+ * La superclasse di implementazione astratta è AService <br>
  */
 public interface AIService {
-
-    /**
-     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Normalmente ad uso esclusivo del developer <br>
-     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
-     * <p>
-     * AHeaderWrap:
-     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-     * Se l' applicazione non usa security, il colore è unico (blue) <br>
-     * Se AHeaderWrap esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
-     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-     * <p>
-     * AHeaderList:
-     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return componente grafico per il placeHolder
-     */
-    AHeader getAlertHeaderLayout(final AEVista typeVista);
-
-    /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
-     *
-     * @return componente grafico per il placeHolder
-     */
-    ATopLayout getTopLayout();
 
 
     /**

@@ -3,10 +3,12 @@ package it.algos.vaadflow14.backend.logic;
 
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
+import it.algos.vaadflow14.ui.button.ATopLayout;
+import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
+import it.algos.vaadflow14.ui.header.AHeader;
 import it.algos.vaadflow14.ui.list.AGrid;
 
 import java.util.List;
@@ -24,41 +26,41 @@ import java.util.List;
 public interface AILogic {
 
 
-//    /**
-//     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * Normalmente ad uso esclusivo del developer <br>
-//     * Nell'implementazione standard di default NON presenta nessun avviso <br>
-//     * Recupera dal service specifico gli (eventuali) avvisi <br>
-//     * Costruisce un'istanza dedicata con le liste di avvisi <br>
-//     * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
-//     * Se l'applicazione non usa security, il colore è unico <br<
-//     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
-//     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-//     *
-//     * @param typeVista in cui inserire gli avvisi
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    AHeader getAlertHeaderLayout(AEVista typeVista);
+    /**
+     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Normalmente ad uso esclusivo del developer <br>
+     * Nell'implementazione standard di default NON presenta nessun avviso <br>
+     * Recupera dal service specifico gli (eventuali) avvisi <br>
+     * Costruisce un'istanza dedicata con le liste di avvisi <br>
+     * Gli avvisi sono realizzati con label differenziate per colore in base all'utente collegato <br>
+     * Se l'applicazione non usa security, il colore è unico <br<
+     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
+     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return componente grafico per il placeHolder
+     */
+    AHeader getAlertHeaderLayout(AEVista typeVista);
 
 
-//    /**
-//     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-//     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-//     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-//     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-//     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-//     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-//     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    ATopLayout getTopLayout();
+    /**
+     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
+     *
+     * @return componente grafico per il placeHolder
+     */
+    ATopLayout getTopLayout();
 
 
     /**
@@ -301,24 +303,24 @@ public interface AILogic {
      */
     public boolean resetDeletingAll();
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    public AIResult resetEmptyOnly();
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    public AIResult resetEmptyOnly();
 
 }

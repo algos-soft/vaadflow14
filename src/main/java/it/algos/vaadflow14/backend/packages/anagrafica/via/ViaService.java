@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -33,38 +32,38 @@ public class ViaService extends AService {
 
     /**
      * Costruttore senza parametri <br>
-     * Regola la entityClazz associata a questo service <br>
+     * Regola la entityClazz (final) associata a questo service <br>
      */
     public ViaService() {
         super(Via.class);
     }
 
-    /**
-     * Preferenze usate da questo service <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneResetList = true;
-    }
-
-
-    /**
-     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * DEVE essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @return wrapper per passaggio dati
-     */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        return new AlertWrap("Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.");
-    }
+//    /**
+//     * Preferenze usate da questo service <br>
+//     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+//     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixPreferenze() {
+//        super.fixPreferenze();
+//
+//        super.usaBottoneDeleteAll = true;
+//        super.usaBottoneResetList = true;
+//    }
+//
+//
+//    /**
+//     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+//     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+//     * DEVE essere sovrascritto <br>
+//     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+//     *
+//     * @return wrapper per passaggio dati
+//     */
+//    @Override
+//    protected AlertWrap getAlertWrapList() {
+//        return new AlertWrap("Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.");
+//    }
 
 
     /**

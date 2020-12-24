@@ -12,23 +12,23 @@ import org.springframework.stereotype.Service;
  * Date: lun, 21-dic-2020
  * Time: 12:06
  * <p>
- * Service di una entityClazz specifica e di un package <br>
- * Garantisce i metodi di collegamento per accedere al database <br>
- * Mantiene lo stato di una entityClazz <br>
- * Non mantiene lo stato di una entityBean <br>
- * Di tipo SCOPE_PROTOTYPE ne viene creato uno per ogni
+ * Classe di servizio per la Entity di un package <br>
+ * Layer di collegamento tra il 'backend' e mongoDB <br>
+ * Mantiene lo stato di una (final) entityClazz <br>
+ * Di tipo SCOPE_PROTOTYPE ne viene creata una per ogni
  * package che non implementa la classe specifica xxxService <br>
+ * I metodi esistono ma occorre un cast <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GenericService extends AService {
+public class EntityService extends AService {
 
 
     /**
      * Costruttore con parametro <br>
-     * Regola la entityClazz associata a questo service <br>
+     * Regola la entityClazz (final) associata a questo service <br>
      */
-    public GenericService(Class<? extends AEntity> entityClazz) {
+    public EntityService(final Class<? extends AEntity> entityClazz) {
         super(entityClazz);
     }
 

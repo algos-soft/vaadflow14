@@ -23,6 +23,7 @@ import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.wrapper.WrapSearch;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
 import it.algos.vaadflow14.ui.button.ATopLayout;
@@ -32,6 +33,9 @@ import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.AGenericForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
+import it.algos.vaadflow14.ui.header.AHeader;
+import it.algos.vaadflow14.ui.header.AHeaderList;
+import it.algos.vaadflow14.ui.header.AHeaderWrap;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import it.algos.vaadflow14.ui.list.AGrid;
 import it.algos.vaadflow14.ui.service.AFieldService;
@@ -403,60 +407,81 @@ public abstract class ALogic implements AILogic {
     }
 
 
-//    /**
-//     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * Normalmente ad uso esclusivo del developer <br>
-//     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-//     * Recupera dal service specifico gli (eventuali) avvisi <br>
-//     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
-//     * <p>
-//     * AHeaderWrap:
-//     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-//     * Se l' applicazione non usa security, il colore è unico <br<
-//     * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
-//     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-//     * <p>
-//     * AHeaderList:
-//     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
-//     *
-//     * @param typeVista in cui inserire gli avvisi
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    @Override
-//    public AHeader getAlertHeaderLayout(AEVista typeVista) {
-//        AHeader header = null;
-//        AlertWrap wrap = getAlertWrap(typeVista);
-//        List<String> alertHtmlList = getAlertList(typeVista);
-//
-//        if (usaHeaderWrap) {
-//            if (wrap != null) {
-//                header = appContext.getBean(AHeaderWrap.class, wrap);
-//            }
-//        }
-//        else {
-//            if (alertHtmlList != null) {
-//                header = appContext.getBean(AHeaderList.class, alertHtmlList);
-//            }
-//        }
-//
-//        return header;
-//    }
-
-
     /**
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Normalmente ad uso esclusivo del developer <br>
+     * Nell' implementazione standard di default NON presenta nessun avviso <br>
+     * Recupera dal service specifico gli (eventuali) avvisi <br>
+     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
+     * <p>
+     * AHeaderWrap:
+     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
+     * Se l' applicazione non usa security, il colore è unico (blue) <br>
+     * Se AHeaderWrap esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
+     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+     * <p>
+     * AHeaderList:
+     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
      *
      * @param typeVista in cui inserire gli avvisi
      *
+     * @return componente grafico per il placeHolder
+     */
+        @Override
+    public AHeader getAlertHeaderLayout(final AEVista typeVista) {
+        AHeader header = null;
+        AlertWrap wrap = null;
+        List<String> alertHtmlList = getAlertList(typeVista);
+
+        switch (typeVista) {
+            case list:
+                wrap = getAlertWrapList();
+                break;
+            case form:
+                wrap = getAlertWrapForm();
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "getAlertHeaderLayout");
+                break;
+        }
+
+        if (usaHeaderWrap) {
+            if (wrap != null) {
+                header = appContext.getBean(AHeaderWrap.class, wrap);
+            }
+        }
+        else {
+            if (alertHtmlList != null) {
+                header = appContext.getBean(AHeaderList.class, alertHtmlList);
+            }
+        }
+
+        return header;
+    }
+
+
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * DEVE essere sovrascritto <br>
+     *
      * @return wrapper per passaggio dati
      */
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
+        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+    }
+
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nel Form <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Deve essere sovrascritto <br>
+     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+     *
+     * @return wrapper per passaggio dati
+     */
+    protected AlertWrap getAlertWrapForm() {
         return null;
     }
 
@@ -485,131 +510,131 @@ public abstract class ALogic implements AILogic {
     }
 
 
-//    /**
-//     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-//     * <p>
-//     * Chiamato da AView.initView() <br>
-//     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-//     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-//     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-//     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-//     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-//     * Costruisce un' istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-//     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
-//     *
-//     * @return componente grafico per il placeHolder
-//     */
-//    @Override
-//    public ATopLayout getTopLayout() {
-//        ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-//        this.addTopListeners(topLayout);
-//
-//        return topLayout;
-//    }
-//
-//
-//    /**
-//     * Costruisce un wrapper di dati <br>
-//     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
-//     * I dati vengono passati alla View che li usa <br>
-//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper di dati per la view
-//     */
-//    public WrapButtons getWrapButtonsTop() {
-//        List<AEButton> iniziali = this.getListaBottoniIniziali();
-//        WrapSearch wrapSearch = this.getWrapSearch();
-//        List<AEButton> centrali = this.getListaBottoniCentrali();
-//        List<Button> specifici = this.getListaBottoniSpecifici();
-//        List<AEButton> finali = this.getListaBottoniFinali();
-//        AEOperation operationForm = null;
-//
-//        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
-//    }
-//
-//
-//    /**
-//     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
-//     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-//     */
-//    protected List<AEButton> getListaBottoniIniziali() {
-//        List<AEButton> listaBottoni = new ArrayList<>();
-//
-//        if (usaBottoneDeleteAll) {
-//            listaBottoni.add(AEButton.deleteAll);
-//        }
-//
-//        if (usaBottoneResetList) {
-//            listaBottoni.add(AEButton.resetList);
-//        }
-//
-//        return listaBottoni;
-//    }
-//
-//
-//    /**
-//     * Costruisce un wrap per la ricerca <br>
-//     * Può essere sovrascritto <br>
-//     * Invocare PRIMA il metodo della superclasse <br>
-//     */
-//    protected WrapSearch getWrapSearch() {
-//        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
-//            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
-//            return null;
-//        }
-//        else {
-//            return new WrapSearch(searchType, searchProperty);
-//        }
-//    }
-//
-//
-//    /**
-//     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
-//     * Di default costruisce (come da flag) solo il bottone 'new' <br>
-//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-//     */
-//    protected List<AEButton> getListaBottoniCentrali() {
-//        List<AEButton> listaBottoni = new ArrayList<>();
-//
-//        if (usaBottoneNew) {
-//            listaBottoni.add(AEButton.nuovo);
-//        }
-//
-//        return listaBottoni;
-//    }
-//
-//
-//    /**
-//     * Costruisce una lista di bottoni specifici <br>
-//     * Di default non costruisce nulla <br>
-//     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-//     */
-//    protected List<Button> getListaBottoniSpecifici() {
-//        List<Button> listaBottoni = new ArrayList<>();
-//
-//        return listaBottoni;
-//    }
-//
-//
-//    /**
-//     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
-//     * Di default non costruisce nulla <br>
-//     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-//     */
-//    protected List<AEButton> getListaBottoniFinali() {
-//        List<AEButton> listaBottoni = new ArrayList<>();
-//
-//        if (usaBottoneExport) {
-//            listaBottoni.add(AEButton.export);
-//        }
-//
-//        if (usaBottonePaginaWiki) {
-//            listaBottoni.add(AEButton.wiki);
-//        }
-//
-//        return listaBottoni;
-//    }
+    /**
+     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
+     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
+     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
+     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
+     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
+     * Costruisce un' istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
+     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
+     *
+     * @return componente grafico per il placeHolder
+     */
+    @Override
+    public ATopLayout getTopLayout() {
+        ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+        this.addTopListeners(topLayout);
+
+        return topLayout;
+    }
+
+
+    /**
+     * Costruisce un wrapper di dati <br>
+     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
+     * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper di dati per la view
+     */
+    public WrapButtons getWrapButtonsTop() {
+        List<AEButton> iniziali = this.getListaBottoniIniziali();
+        WrapSearch wrapSearch = this.getWrapSearch();
+        List<AEButton> centrali = this.getListaBottoniCentrali();
+        List<Button> specifici = this.getListaBottoniSpecifici();
+        List<AEButton> finali = this.getListaBottoniFinali();
+        AEOperation operationForm = null;
+
+        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniIniziali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneDeleteAll) {
+            listaBottoni.add(AEButton.deleteAll);
+        }
+
+        if (usaBottoneResetList) {
+            listaBottoni.add(AEButton.resetList);
+        }
+
+        return listaBottoni;
+    }
+
+
+    /**
+     * Costruisce un wrap per la ricerca <br>
+     * Può essere sovrascritto <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected WrapSearch getWrapSearch() {
+        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
+            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
+            return null;
+        }
+        else {
+            return new WrapSearch(searchType, searchProperty);
+        }
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
+     * Di default costruisce (come da flag) solo il bottone 'new' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniCentrali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneNew) {
+            listaBottoni.add(AEButton.nuovo);
+        }
+
+        return listaBottoni;
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni specifici <br>
+     * Di default non costruisce nulla <br>
+     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<Button> getListaBottoniSpecifici() {
+        List<Button> listaBottoni = new ArrayList<>();
+
+        return listaBottoni;
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
+     * Di default non costruisce nulla <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaBottoniFinali() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
+
+        if (usaBottonePaginaWiki) {
+            listaBottoni.add(AEButton.wiki);
+        }
+
+        return listaBottoni;
+    }
 
 
     /**
@@ -839,18 +864,17 @@ public abstract class ALogic implements AILogic {
         return lista;
     }
 
-
-//    /**
-//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-//     * Sovrascritto nella sottoclasse concreta <br>
-//     *
-//     * @return lista di nomi delle properties da usare nel form
-//     */
-//    @Override
-//    public List<String> getListaPropertiesFormNew() {
-//        return getListaPropertiesForm();
-//    }
+    //    /**
+    //     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+    //     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+    //     * Sovrascritto nella sottoclasse concreta <br>
+    //     *
+    //     * @return lista di nomi delle properties da usare nel form
+    //     */
+    //    @Override
+    //    public List<String> getListaPropertiesFormNew() {
+    //        return getListaPropertiesForm();
+    //    }
 
 
     /**
@@ -865,18 +889,17 @@ public abstract class ALogic implements AILogic {
         return getListaPropertiesForm();
     }
 
-
-//    /**
-//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-//     * Sovrascritto nella sottoclasse concreta <br>
-//     *
-//     * @return lista di nomi delle properties da usare nel form
-//     */
-//    @Override
-//    public List<String> getListaPropertiesFormDelete() {
-//        return getListaPropertiesForm();
-//    }
+    //    /**
+    //     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+    //     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+    //     * Sovrascritto nella sottoclasse concreta <br>
+    //     *
+    //     * @return lista di nomi delle properties da usare nel form
+    //     */
+    //    @Override
+    //    public List<String> getListaPropertiesFormDelete() {
+    //        return getListaPropertiesForm();
+    //    }
 
 
     /**
@@ -923,7 +946,7 @@ public abstract class ALogic implements AILogic {
                 this.openConfirmReset();
                 break;
             case resetForm:
-                this.resetForm(entityBean);
+//                this.resetForm(entityBean);
                 this.reloadForm(entityBean);
                 break;
             case doubleClick:
@@ -1895,72 +1918,72 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public boolean resetDeletingAll() {
-        AIResult result;
+        AIResult result=AResult.errato();
         this.delete();
 
-        result = resetEmptyOnly();
+//        result = resetEmptyOnly();
         return result.isValido();
     }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        String collection;
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        String collection;
+//
+//        if (entityClazz == null) {
+//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+//        }
+//
+//        collection = entityClazz.getSimpleName().toLowerCase();
+//        if (mongo.isExists(collection)) {
+//            if (mongo.isValid(entityClazz)) {
+//                return AResult.errato("La collezione " + collection + " esiste già e non è stata modificata");
+//            }
+//            else {
+//                return AResult.valido();
+//            }
+//        }
+//        else {
+//            return AResult.errato("La collezione " + collection + " non esiste");
+//        }
+//    }
 
-        if (entityClazz == null) {
-            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-        }
-
-        collection = entityClazz.getSimpleName().toLowerCase();
-        if (mongo.isExists(collection)) {
-            if (mongo.isValid(entityClazz)) {
-                return AResult.errato("La collezione " + collection + " esiste già e non è stata modificata");
-            }
-            else {
-                return AResult.valido();
-            }
-        }
-        else {
-            return AResult.errato("La collezione " + collection + " non esiste");
-        }
-    }
-
-    protected AIResult fixPostReset(AETypeReset type, final int numRec) {
-        String collection;
-
-        if (entityClazz == null) {
-            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-        }
-
-        collection = entityClazz.getSimpleName().toLowerCase();
-        if (mongo.isValid(entityClazz)) {
-            return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
-        }
-        else {
-            return AResult.errato("Non è stato possibile creare la collezione " + collection);
-        }
-    }
+//    protected AIResult fixPostReset(AETypeReset type, final int numRec) {
+//        String collection;
+//
+//        if (entityClazz == null) {
+//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+//        }
+//
+//        collection = entityClazz.getSimpleName().toLowerCase();
+//        if (mongo.isValid(entityClazz)) {
+//            return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
+//        }
+//        else {
+//            return AResult.errato("Non è stato possibile creare la collezione " + collection);
+//        }
+//    }
 
 
-    public void resetForm(AEntity entityBean) {
-    }
+//    public void resetForm(AEntity entityBean) {
+//    }
 
 
     /**

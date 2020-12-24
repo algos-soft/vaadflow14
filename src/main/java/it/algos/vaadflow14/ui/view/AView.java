@@ -265,7 +265,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
     protected void fixHeaderLayout() {
-        AHeader header = entityService.getAlertHeaderLayout(typeVista);
+        AHeader header = entityLogic.getAlertHeaderLayout(typeVista);
 
         if (alertPlaceholder != null && header != null) {
             alertPlaceholder.add(header);
@@ -286,7 +286,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
     protected void fixTopLayout() {
-        ATopLayout topLayout = entityService.getTopLayout();
+        ATopLayout topLayout = entityLogic.getTopLayout();
 
         if (topPlaceholder != null && topLayout != null) {
             topPlaceholder.add(topLayout);

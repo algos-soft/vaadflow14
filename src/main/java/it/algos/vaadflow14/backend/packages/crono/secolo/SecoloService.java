@@ -45,27 +45,6 @@ public class SecoloService extends AService {
     }
 
 
-    /**
-     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * DEVE essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @return wrapper per passaggio dati
-     */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> blu = new ArrayList<>();
-        List<String> red = new ArrayList<>();
-
-        blu.add("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo");
-        blu.add("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari");
-        if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'");
-        }
-
-        return new AlertWrap(null, blu, red, false);
-    }
 
 
     /**

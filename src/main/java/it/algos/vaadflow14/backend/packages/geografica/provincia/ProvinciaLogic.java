@@ -6,15 +6,12 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -322,103 +319,103 @@ public class ProvinciaLogic extends ALogic {
         }
     }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    //    @Override
-    public AIResult resetEmptyOnly2() {
-        AIResult result = super.resetEmptyOnly();
-        AIResult resultCollectionPropedeutica;
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        resultCollectionPropedeutica = checkRegione();
-        if (resultCollectionPropedeutica.isValido()) {
-            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-        }
-        else {
-            return resultCollectionPropedeutica;
-        }
-
-        return creaProvinceItaliane();
-    }
-
-
-    private AIResult checkRegione() {
-        String collection = "regione";
-        RegioneLogic regioneLogic;
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            regioneLogic = appContext.getBean(RegioneLogic.class);
-            if (regioneLogic == null) {
-                return AResult.errato("Manca la classe RegioneLogic");
-            }
-            else {
-                return regioneLogic.resetEmptyOnly();
-            }
-        }
-    }
-
-    private AIResult creaProvinceItaliane() {
-        AIResult result = AResult.errato();
-        List<WrapTreStringhe> listaWrap;
-        Provincia provincia;
-        int ordine = 0;
-        String nome;
-        String sigla = VUOTA;
-        String regioneTxt;
-        Regione regione = null;
-        Stato stato = AEStato.italia.getStato();
-        String iso;
-        AETypeProvincia status = AETypeProvincia.provincia;
-
-        listaWrap = wiki.getProvince();
-        if (listaWrap != null && listaWrap.size() > 0) {
-            for (WrapTreStringhe wrap : listaWrap) {
-                nome = wrap.getSeconda();
-                sigla = wrap.getPrima();
-                iso = sigla;
-                regioneTxt = wrap.getTerza().toLowerCase();
-                regione = regioneLogic.findById(regioneTxt);
-
-                if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
-                    provincia = creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
-                    if (provincia != null) {
-                        ordine++;
-                    }
-                }
-                else {
-                    logger.warn("Mancano dati essenziali", this.getClass(), "creaProvinceItaliane");
-                }
-            }
-            result = AResult.valido("Province italiane: ", ordine);
-        }
-        else {
-            result = AResult.errato("Non sono riuscito a trovare la table nella pagina di wikipedia 'Province d'Italia'");
-        }
-
-        return result;
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    //    @Override
+//    public AIResult resetEmptyOnly2() {
+//        AIResult result = super.resetEmptyOnly();
+//        AIResult resultCollectionPropedeutica;
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        resultCollectionPropedeutica = checkRegione();
+//        if (resultCollectionPropedeutica.isValido()) {
+//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+//        }
+//        else {
+//            return resultCollectionPropedeutica;
+//        }
+//
+//        return creaProvinceItaliane();
+//    }
+//
+//
+//    private AIResult checkRegione() {
+//        String collection = "regione";
+//        RegioneLogic regioneLogic;
+//
+//        if (mongo.isValid(collection)) {
+//            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+//        }
+//        else {
+//            regioneLogic = appContext.getBean(RegioneLogic.class);
+//            if (regioneLogic == null) {
+//                return AResult.errato("Manca la classe RegioneLogic");
+//            }
+//            else {
+//                return regioneLogic.resetEmptyOnly();
+//            }
+//        }
+//    }
+//
+//    private AIResult creaProvinceItaliane() {
+//        AIResult result = AResult.errato();
+//        List<WrapTreStringhe> listaWrap;
+//        Provincia provincia;
+//        int ordine = 0;
+//        String nome;
+//        String sigla = VUOTA;
+//        String regioneTxt;
+//        Regione regione = null;
+//        Stato stato = AEStato.italia.getStato();
+//        String iso;
+//        AETypeProvincia status = AETypeProvincia.provincia;
+//
+//        listaWrap = wiki.getProvince();
+//        if (listaWrap != null && listaWrap.size() > 0) {
+//            for (WrapTreStringhe wrap : listaWrap) {
+//                nome = wrap.getSeconda();
+//                sigla = wrap.getPrima();
+//                iso = sigla;
+//                regioneTxt = wrap.getTerza().toLowerCase();
+//                regione = regioneLogic.findById(regioneTxt);
+//
+//                if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
+//                    provincia = creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
+//                    if (provincia != null) {
+//                        ordine++;
+//                    }
+//                }
+//                else {
+//                    logger.warn("Mancano dati essenziali", this.getClass(), "creaProvinceItaliane");
+//                }
+//            }
+//            result = AResult.valido("Province italiane: ", ordine);
+//        }
+//        else {
+//            result = AResult.errato("Non sono riuscito a trovare la table nella pagina di wikipedia 'Province d'Italia'");
+//        }
+//
+//        return result;
+//    }
 
 }

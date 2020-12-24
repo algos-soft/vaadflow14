@@ -6,12 +6,9 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AERole;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -118,17 +115,14 @@ public class UtenteLogic extends ALogic {
     }
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> red = new ArrayList<>();
 
         if (AEPreferenza.usaDebug.is()) {
@@ -302,40 +296,40 @@ public class UtenteLogic extends ALogic {
     //    }
 
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        numRec = creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer)!= null ? numRec+1 : numRec;
-        numRec = creaIfNotExist(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin)!= null ? numRec+1 : numRec;
-        numRec = creaIfNotExist(null, "marco.beretta", "beretta123", AERole.admin)!= null ? numRec+1 : numRec;
-        numRec = creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user)!= null ? numRec+1 : numRec;
-        numRec = creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest)!= null ? numRec+1 : numRec;
-
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        numRec = creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer)!= null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin)!= null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist(null, "marco.beretta", "beretta123", AERole.admin)!= null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user)!= null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest)!= null ? numRec+1 : numRec;
+//
+//        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+//    }
 
 }

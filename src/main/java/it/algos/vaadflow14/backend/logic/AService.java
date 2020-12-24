@@ -1,39 +1,18 @@
 package it.algos.vaadflow14.backend.logic;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.AAbstractService;
-import it.algos.vaadflow14.backend.service.ABeanService;
 import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.backend.service.AVaadinService;
 import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.backend.wrapper.WrapSearch;
-import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.button.WrapButtons;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.AGenericForm;
-import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.header.AHeaderList;
-import it.algos.vaadflow14.ui.header.AHeaderWrap;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_ORDINE;
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
@@ -45,128 +24,33 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: lun, 21-dic-2020
  * Time: 07:18
  * <p>
- * Classe astratta di gestione dei 'service' di una Entity e di un package <br>
- * Collegamento tra il 'backend' e le views <br>
- * Le sottoclassi concrete sono SCOPE_SINGLETON <br>
- * <p>
- * Questo 'service' garantisce i metodi di collegamento per accedere al database <br>
- * Contiene i riferimenti ad altre classi per usarli nelle sottoclassi concrete <br>
- * I riferimenti sono 'public' per poterli usare con TestUnit <br>
- * <p>
+ * Layer di collegamento del backend con mongoDB <br>
+ * Classe astratta di servizio per la Entity di un package <br>
+ * Le sottoclassi concrete sono SCOPE_SINGLETON e non mantengono dati <br>
+ * L'unico dato mantenuto nelle sottoclassi concrete:
+ * la property final entityClazz <br>
+ * Se la sottoclasse xxxService non esiste (non è indispensabile), usa la classe
+ * generica EntityService; i metodi esistono ma occorre un cast in uscita <br>
  */
 public abstract class AService extends AAbstractService implements AIService {
 
     /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     * The Entity Class  (obbligatoria sempre e final)
      */
-    @Autowired
-    public AVaadinService vaadinService;
+    protected final Class<? extends AEntity> entityClazz;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public ABeanService beanService;
-
-    /**
-     * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true. <br>
-     */
-    public boolean usaBottoneEdit;
-
-    /**
-     * The Entity Class  (obbligatoria sempre; in ViewForm può essere ricavata dalla entityBean)
-     */
-    protected Class<? extends AEntity> entityClazz;
 
     /**
      * Flag di preferenza per specificare la property della entity da usare come ID <br>
      */
     protected String keyPropertyName;
 
-    /**
-     * Flag di preferenza per selezionare la ricerca testuale: <br>
-     * 1) nessuna <br>
-     * 2) campo editText di selezione per una property specificata in searchProperty <br>
-     * 3) bottone che apre un dialogo di selezione <br>
-     */
-    protected AESearch searchType;
-
-    /**
-     * Flag di preferenza per specificare la property della entity su cui effettuare la ricerca <br>
-     * Ha senso solo se searchType=EASearch.editField
-     */
-    protected String searchProperty;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneDeleteAll;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneResetList;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
-     */
-    protected boolean usaBottoneNew;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottonePaginaWiki;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneExport;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneResetForm;
-
-    /**
-     * Flag di preferenza per l' utilizzo dei bottoni di spostamento. Di default false. <br>
-     */
-    protected boolean usaBottoniSpostamentoForm;
-
-    /**
-     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
-     */
-    protected String wikiPageTitle;
-
-
-    /**
-     * Flag di preferenza per i messaggi di avviso in alertPlacehorder <br>
-     * Si può usare la classe AHeaderWrap con i messaggi suddivisi per ruolo (user, admin, developer) <br>
-     * Oppure si può usare la classe AHeaderList con i messaggi in Html (eventualmente colorati) <br>
-     * Di default false <br>
-     */
-    protected boolean usaHeaderWrap;
-
-
-    /**
-     * The Form Class  (obbligatoria per costruire la currentForm)
-     */
-    protected Class<? extends AForm> formClazz;
-
-
-    /**
-     * Mappa di ComboBox di selezione e filtro <br>
-     */
-    protected LinkedHashMap<String, ComboBox> mappaComboBox;
 
     /**
      * Costruttore senza parametri <br>
-     * Regola la entityClazz associata a questo service <br>
+     * Regola la entityClazz (final) associata a questo service <br>
      */
-    public AService(Class<? extends AEntity> entityClazz) {
+    public AService(final Class<? extends AEntity> entityClazz) {
         this.entityClazz = entityClazz;
     }
 
@@ -179,17 +63,7 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     @PostConstruct
     protected void postConstruct() {
-        fixProperties();
         fixPreferenze();
-    }
-
-
-    /**
-     * Costruisce le properties di questa istanza <br>
-     */
-    private void fixProperties() {
-        this.mappaComboBox = new LinkedHashMap<>();
-        this.fixMappaComboBox();
     }
 
 
@@ -200,27 +74,6 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     protected void fixPreferenze() {
         this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-        this.searchType = AESearch.nonUsata;
-        this.searchProperty = annotation.getSearchPropertyName(entityClazz);
-        this.usaBottoneDeleteAll = false;
-        this.usaBottoneResetList = false;
-        this.usaBottoneNew = true;
-        this.usaBottoneExport = false;
-        this.usaBottonePaginaWiki = false;
-        this.wikiPageTitle = VUOTA;
-        this.usaHeaderWrap = true;
-        this.usaBottoneEdit = true;
-        this.usaBottoneResetForm = false;
-        this.usaBottoniSpostamentoForm = false;
-        this.formClazz = AGenericForm.class;
-    }
-
-
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-    protected void fixMappaComboBox() {
     }
 
 
@@ -247,7 +100,8 @@ public abstract class AService extends AAbstractService implements AIService {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public AEntity checkAndSave(AEntity newEntityBean) {
+    public AEntity checkAndSave(final AEntity newEntityBean) {
+        AEntity entityBean;
         boolean valido = false;
         String message = VUOTA;
 
@@ -259,16 +113,16 @@ public abstract class AService extends AAbstractService implements AIService {
         valido = true;
 
         if (valido) {
-            newEntityBean = beforeSave(newEntityBean, AEOperation.addNew);
-            valido = mongo.insert(newEntityBean) != null;
+            entityBean = beforeSave(newEntityBean, AEOperation.addNew);
+            valido = mongo.insert(entityBean) != null;
+            return entityBean;
         }
         else {
             message = "Duplicate key error ";
             message += beanService.getModifiche(newEntityBean);
             logger.warn(message, this.getClass(), "checkAndSave");
+            return newEntityBean;
         }
-
-        return newEntityBean;
     }
 
     /**
@@ -296,34 +150,35 @@ public abstract class AService extends AAbstractService implements AIService {
      *
      * @return the modified entity
      */
-    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+    public AEntity beforeSave(final AEntity entityBean, final AEOperation operation) {
+        AEntity entityBeanWithID;
         Company company;
 
-        entityBean = fixKey(entityBean);
+        entityBeanWithID = fixKey(entityBean);
 
-        if (FlowVar.usaCompany && entityBean instanceof ACEntity) {
-            company = ((ACEntity) entityBean).company;
+        if (FlowVar.usaCompany && entityBeanWithID instanceof ACEntity) {
+            company = ((ACEntity) entityBeanWithID).company;
             company = company != null ? company : vaadinService.getCompany();
             if (company == null) {
                 return null;
             }
             else {
-                ((ACEntity) entityBean).company = company;
+                ((ACEntity) entityBeanWithID).company = company;
             }
         }
 
         if (annotation.usaCreazioneModifica(entityClazz)) {
             if (operation == AEOperation.addNew) {
-                entityBean.creazione = LocalDateTime.now();
+                entityBeanWithID.creazione = LocalDateTime.now();
             }
             if (operation != AEOperation.showOnly) {
-                if (beanService.isModificata(entityBean)) {
-                    entityBean.modifica = LocalDateTime.now();
+                if (beanService.isModificata(entityBeanWithID)) {
+                    entityBeanWithID.modifica = LocalDateTime.now();
                 }
             }
         }
 
-        return entityBean;
+        return entityBeanWithID;
     }
 
 
@@ -433,7 +288,7 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
-    protected AIResult fixPostReset(AETypeReset type, final int numRec) {
+    protected AIResult fixPostReset(final AETypeReset type, final int numRec) {
         String collection;
 
         if (entityClazz == null) {
@@ -449,218 +304,6 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
-    /**
-     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Normalmente ad uso esclusivo del developer <br>
-     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un' istanza dedicata (secondo il flag usaHeaderWrap) con le liste di avvisi <br>
-     * <p>
-     * AHeaderWrap:
-     * Gli avvisi sono realizzati con label differenziate per colore in base all' utente collegato <br>
-     * Se l' applicazione non usa security, il colore è unico (blue) <br>
-     * Se AHeaderWrap esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
-     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
-     * <p>
-     * AHeaderList:
-     * Gli avvisi sono realizzati con elementi html con possibilità di color e bold <br>
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public AHeader getAlertHeaderLayout(final AEVista typeVista) {
-        AHeader header = null;
-        AlertWrap wrap = null;
-        List<String> alertHtmlList = getAlertList(typeVista);
-
-        switch (typeVista) {
-            case list:
-                wrap = getAlertWrapList();
-                break;
-            case form:
-                wrap = getAlertWrapForm();
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "getAlertHeaderLayout");
-                break;
-        }
-
-        if (usaHeaderWrap) {
-            if (wrap != null) {
-                header = appContext.getBean(AHeaderWrap.class, wrap);
-            }
-        }
-        else {
-            if (alertHtmlList != null) {
-                header = appContext.getBean(AHeaderList.class, alertHtmlList);
-            }
-        }
-
-        return header;
-    }
-
-
-    /**
-     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * DEVE essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @return wrapper per passaggio dati
-     */
-    protected AlertWrap getAlertWrapList() {
-        return null;
-    }
-
-    /**
-     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nel Form <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @return wrapper per passaggio dati
-     */
-    protected AlertWrap getAlertWrapForm() {
-        return null;
-    }
-
-    /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return wrapper per passaggio dati
-     */
-    protected List<String> getAlertList(AEVista typeVista) {
-        String headerAlert = annotation.getHeaderAlert(entityClazz);
-        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
-    }
-
-    /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * 1) Recupera dal service specifico una List<AEButton> di bottoni previsti <br>
-     * Se List<AEButton> è vuota, ATopLayout usa i bottoni di default (solo New) <br>
-     * 2) Recupera dal service specifico la condizione e la property previste (searchType,searchProperty) <br>
-     * 3) Recupera dal service specifico una List<ComboBox> di popup di selezione e filtro <br>
-     * Se List<ComboBox> è vuota, ATopLayout non usa popup <br>
-     * Costruisce un'istanza dedicata con i bottoni, il campo textEdit di ricerca (eventuale) ed i comboBox (eventuali) <br>
-     * Inserisce l'istanza (grafica) in topPlacehorder della view <br>
-     *
-     * @return componente grafico per il placeHolder
-     */
-    @Override
-    public ATopLayout getTopLayout() {
-        return appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-    }
-
-    /**
-     * Costruisce un wrapper di dati <br>
-     * I dati sono gestiti da questa 'logic' (nella sottoclasse eventualmente) <br>
-     * I dati vengono passati alla View che li usa <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    protected WrapButtons getWrapButtonsTop() {
-        List<AEButton> iniziali = this.getListaBottoniIniziali();
-        WrapSearch wrapSearch = this.getWrapSearch();
-        List<AEButton> centrali = this.getListaBottoniCentrali();
-        List<Button> specifici = this.getListaBottoniSpecifici();
-        List<AEButton> finali = this.getListaBottoniFinali();
-        AEOperation operationForm = null;
-
-        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
-    }
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniIniziali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneDeleteAll) {
-            listaBottoni.add(AEButton.deleteAll);
-        }
-
-        if (usaBottoneResetList) {
-            listaBottoni.add(AEButton.resetList);
-        }
-
-        return listaBottoni;
-    }
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
-     * Di default non costruisce nulla <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniFinali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
-        }
-
-        if (usaBottonePaginaWiki) {
-            listaBottoni.add(AEButton.wiki);
-        }
-
-        return listaBottoni;
-    }
-
-    /**
-     * Costruisce un wrap per la ricerca <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected WrapSearch getWrapSearch() {
-        if (searchType == AESearch.editField && text.isEmpty(searchProperty)) {
-            logger.error("Tipo di ricerca prevede un campo edit ma manca il nome della property", this.getClass(), "getWrapSearch");
-            return null;
-        }
-        else {
-            return new WrapSearch(searchType, searchProperty);
-        }
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
-     * Di default costruisce (come da flag) solo il bottone 'new' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniCentrali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneNew) {
-            listaBottoni.add(AEButton.nuovo);
-        }
-
-        return listaBottoni;
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni specifici <br>
-     * Di default non costruisce nulla <br>
-     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<Button> getListaBottoniSpecifici() {
-        List<Button> listaBottoni = new ArrayList<>();
-
-        return listaBottoni;
-    }
 
     /**
      * Ordine di presentazione (facoltativo) <br>
@@ -671,5 +314,6 @@ public abstract class AService extends AAbstractService implements AIService {
     protected int getNewOrdine() {
         return mongo.getNewOrder(entityClazz, FIELD_ORDINE);
     }
+
 
 }

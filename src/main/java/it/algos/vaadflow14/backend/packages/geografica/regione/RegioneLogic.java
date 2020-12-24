@@ -12,7 +12,6 @@ import it.algos.vaadflow14.backend.service.AResourceService;
 import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -128,17 +127,14 @@ public class RegioneLogic extends ALogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> blue = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
@@ -338,63 +334,63 @@ public class RegioneLogic extends ALogic {
         return combo;
     }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        AIResult resultCollectionPropedeutica;
-        int numRec = 0;
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        AIResult resultCollectionPropedeutica;
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        resultCollectionPropedeutica = checkStato();
+//        if (resultCollectionPropedeutica.isValido()) {
+//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+//        }
+//        else {
+//            return resultCollectionPropedeutica;
+//        }
+//
+//        return creaRegioniAllStati();
+//    }
 
-        if (result.isErrato()) {
-            return result;
-        }
 
-        resultCollectionPropedeutica = checkStato();
-        if (resultCollectionPropedeutica.isValido()) {
-            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-        }
-        else {
-            return resultCollectionPropedeutica;
-        }
-
-        return creaRegioniAllStati();
-    }
-
-
-    private AIResult checkStato() {
-        String collection = "stato";
-        StatoLogic statoLogic;
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            statoLogic = appContext.getBean(StatoLogic.class);
-            if (statoLogic == null) {
-                return AResult.errato("Manca la classe StatoLogic");
-            }
-            else {
-                return statoLogic.resetEmptyOnly();
-            }
-        }
-    }
+//    private AIResult checkStato() {
+//        String collection = "stato";
+//        StatoLogic statoLogic;
+//
+//        if (mongo.isValid(collection)) {
+//            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+//        }
+//        else {
+//            statoLogic = appContext.getBean(StatoLogic.class);
+//            if (statoLogic == null) {
+//                return AResult.errato("Manca la classe StatoLogic");
+//            }
+//            else {
+//                return statoLogic.resetEmptyOnly();
+//            }
+//        }
+//    }
 
 
     /**

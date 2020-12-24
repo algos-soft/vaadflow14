@@ -5,10 +5,7 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -105,17 +102,14 @@ public class CompanyLogic extends ALogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> red = new ArrayList<>();
 
         if (AEPreferenza.usaDebug.is()) {
@@ -244,39 +238,39 @@ public class CompanyLogic extends ALogic {
 //        return mongo.isValid(entityClazz);
 //    }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        numRec = creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it") != null ? numRec+1 : numRec;
-        numRec = creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it") != null ? numRec+1 : numRec;
-        numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec+1 : numRec;
-
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        numRec = creaIfNotExist("Algos", "Company Algos di prova", VUOTA, "info@algos.it") != null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it") != null ? numRec+1 : numRec;
+//        numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec+1 : numRec;
+//
+//        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+//    }
 
     /**
      * Recupera dal db mongo la company (se esiste)

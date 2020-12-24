@@ -2,14 +2,14 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.data.AIData;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AETypePref;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import it.algos.vaadflow14.ui.header.AlertWrap;
@@ -132,17 +132,14 @@ public class PreferenzaLogic extends ALogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> green = new ArrayList<>();
         List<String> blue = new ArrayList<>();
         List<String> red = new ArrayList<>();
@@ -416,43 +413,43 @@ public class PreferenzaLogic extends ALogic {
 
 
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = null;
-        AIData dataClazz;
-
-        if (FlowVar.dataClazz != null) {
-            if (FlowVar.dataClazz.equals(FlowData.class)) {
-                result = dataInstance.resetPreferenze(this,true);
-            }
-            else {
-                dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
-                if (dataClazz != null) {
-                    result = dataClazz.resetPreferenze(this,true);
-                }
-            }
-        }
-
-        return result;
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = null;
+//        AIData dataClazz;
+//
+//        if (FlowVar.dataClazz != null) {
+//            if (FlowVar.dataClazz.equals(FlowData.class)) {
+//                result = dataInstance.resetPreferenze(this,true);
+//            }
+//            else {
+//                dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
+//                if (dataClazz != null) {
+//                    result = dataClazz.resetPreferenze(this,true);
+//                }
+//            }
+//        }
+//
+//        return result;
+//    }
 
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>

@@ -3,24 +3,18 @@ package it.algos.vaadflow14.backend.packages.crono.giorno;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -85,17 +79,14 @@ public class GiornoLogic extends CronoLogic {
 
 
     /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto <br>
-     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-     *
-     * @param typeVista in cui inserire gli avvisi
+     * DEVE essere sovrascritto <br>
      *
      * @return wrapper per passaggio dati
      */
     @Override
-    protected AlertWrap getAlertWrap(AEVista typeVista) {
+    protected AlertWrap getAlertWrapList() {
         List<String> blu = new ArrayList<>();
         List<String> red = new ArrayList<>();
 
@@ -231,78 +222,78 @@ public class GiornoLogic extends CronoLogic {
     //        return mongo.isValid(entityClazz);
     //    }
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
-     * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
-        AIResult resultCollectionPropedeutica;
-        int ordine;
-        String titolo;
-        String titoloMese;
-        List<HashMap> lista;
-        Mese mese;
-        int numRec = 0;
-
-        if (result.isErrato()) {
-            return result;
-        }
-
-        resultCollectionPropedeutica = checkMese();
-        if (resultCollectionPropedeutica.isValido()) {
-            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-        }
-        else {
-            return resultCollectionPropedeutica;
-        }
-
-        //costruisce i 366 records
-        lista = date.getAllGiorni();
-        for (HashMap mappaGiorno : lista) {
-            titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
-            titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
-            mese = (Mese) mongo.findById(Mese.class, titoloMese);
-            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
-
-            numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
-        }
-
-        return super.fixPostReset(AETypeReset.file, numRec);
-    }
-
-    private AIResult checkMese() {
-        String collection = "mese";
-        MeseLogic meseLogic;
-
-        if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
-        }
-        else {
-            meseLogic = appContext.getBean(MeseLogic.class);
-            if (meseLogic == null) {
-                return AResult.errato("Manca la classe MeseLogic");
-            }
-            else {
-                return meseLogic.resetEmptyOnly();
-            }
-        }
-    }
+//    /**
+//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+//     * <p>
+//     * 1) deve esistere lo specifico metodo sovrascritto
+//     * 2) deve essere valida la entityClazz
+//     * 3) deve esistere la collezione su mongoDB
+//     * 4) la collezione non deve essere vuota
+//     * <p>
+//     * I dati possono essere: <br>
+//     * 1) recuperati da una Enumeration interna <br>
+//     * 2) letti da un file CSV esterno <br>
+//     * 3) letti da Wikipedia <br>
+//     * 4) creati direttamente <br>
+//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @return wrapper col risultato ed eventuale messaggio di errore
+//     */
+//    @Override
+//    public AIResult resetEmptyOnly() {
+//        AIResult result = super.resetEmptyOnly();
+//        AIResult resultCollectionPropedeutica;
+//        int ordine;
+//        String titolo;
+//        String titoloMese;
+//        List<HashMap> lista;
+//        Mese mese;
+//        int numRec = 0;
+//
+//        if (result.isErrato()) {
+//            return result;
+//        }
+//
+//        resultCollectionPropedeutica = checkMese();
+//        if (resultCollectionPropedeutica.isValido()) {
+//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+//        }
+//        else {
+//            return resultCollectionPropedeutica;
+//        }
+//
+//        //costruisce i 366 records
+//        lista = date.getAllGiorni();
+//        for (HashMap mappaGiorno : lista) {
+//            titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
+//            titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
+//            mese = (Mese) mongo.findById(Mese.class, titoloMese);
+//            ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
+//
+//            numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
+//        }
+//
+//        return super.fixPostReset(AETypeReset.file, numRec);
+//    }
+//
+//    private AIResult checkMese() {
+//        String collection = "mese";
+//        MeseLogic meseLogic;
+//
+//        if (mongo.isValid(collection)) {
+//            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+//        }
+//        else {
+//            meseLogic = appContext.getBean(MeseLogic.class);
+//            if (meseLogic == null) {
+//                return AResult.errato("Manca la classe MeseLogic");
+//            }
+//            else {
+//                return meseLogic.resetEmptyOnly();
+//            }
+//        }
+//    }
 
 }
 

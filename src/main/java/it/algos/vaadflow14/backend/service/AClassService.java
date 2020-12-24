@@ -4,7 +4,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.logic.GenericLogic;
-import it.algos.vaadflow14.backend.logic.GenericService;
+import it.algos.vaadflow14.backend.logic.EntityService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -57,7 +57,7 @@ public class AClassService extends AAbstractService {
             } catch (Exception unErrore) {
                 try {
                     entityBean = (AEntity) appContext.getBean(Class.forName(entityClazzCanonicalName));
-                    entityService = appContext.getBean(GenericService.class, entityBean.getClass());
+                    entityService = appContext.getBean(EntityService.class, entityBean.getClass());
                 } catch (Exception unErrore2) {
                     logger.error(unErrore2.getMessage(), this.getClass(), "getServiceFromEntityName");
                 }
