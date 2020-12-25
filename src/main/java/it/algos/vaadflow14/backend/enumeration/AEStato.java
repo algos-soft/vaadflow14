@@ -1,5 +1,6 @@
-package it.algos.vaadflow14.backend.packages.geografica.stato;
+package it.algos.vaadflow14.backend.enumeration;
 
+import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

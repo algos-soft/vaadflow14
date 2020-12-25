@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.geografica.continente;
+package it.algos.vaadflow14.backend.enumeration;
 
 /**
  * Project vaadflow14

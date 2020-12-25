@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
+import it.algos.vaadflow14.backend.enumeration.AEVia;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,33 +39,6 @@ public class ViaService extends AService {
         super(Via.class);
     }
 
-//    /**
-//     * Preferenze usate da questo service <br>
-//     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-//     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected void fixPreferenze() {
-//        super.fixPreferenze();
-//
-//        super.usaBottoneDeleteAll = true;
-//        super.usaBottoneResetList = true;
-//    }
-//
-//
-//    /**
-//     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-//     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
-//     * DEVE essere sovrascritto <br>
-//     * Esempio:     return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
-//     *
-//     * @return wrapper per passaggio dati
-//     */
-//    @Override
-//    protected AlertWrap getAlertWrapList() {
-//        return new AlertWrap("Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.");
-//    }
-
 
     /**
      * Crea e registra una entityBean solo se non esisteva <br>
@@ -90,7 +64,7 @@ public class ViaService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public Via creaIfNotExist(final AEVia aeVia) {
+    private Via creaIfNotExist(final AEVia aeVia) {
         return creaIfNotExist(aeVia.getPos(), aeVia.toString());
     }
 
@@ -103,7 +77,7 @@ public class ViaService extends AService {
      *
      * @return true se la nuova entityBean è stata creata e salvata
      */
-    public Via creaIfNotExist(final int ordine, final String nome) {
+    private Via creaIfNotExist(final int ordine, final String nome) {
         return (Via) checkAndSave(newEntity(ordine, nome));
     }
 
@@ -112,9 +86,11 @@ public class ViaService extends AService {
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
+    @Override
     public Via newEntity() {
         return newEntity(0, VUOTA);
     }
@@ -129,7 +105,7 @@ public class ViaService extends AService {
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Via newEntity(final String nome) {
+    private Via newEntity(final String nome) {
         return newEntity(0, nome);
     }
 

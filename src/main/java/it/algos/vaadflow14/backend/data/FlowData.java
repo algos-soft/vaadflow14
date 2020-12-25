@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.logic.AILogic;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import it.algos.vaadflow14.backend.service.AClassService;
@@ -117,25 +118,48 @@ public class FlowData implements AIData {
      * <p>
      * Costruisco un' istanza della classe xxxService corrispondente alla entityClazz <br>
      * Controllo se l' istanza xxxService è creabile <br>
+     * Costruisco un' istanza della classe xxxLogic corrispondente alla entityClazz <br>
+     * Controllo se l' istanza xxxLogic è creabile <br>
+     * Un package standard contiene entrambe le classi <br>
      * Controllo se esiste un metodo resetEmptyOnly() nella classe xxxService specifica <br>
-     * Invoco il metodo standard resetEmptyOnly(), presente nella superclasse <br>
+     * Invoco il metodo API resetEmptyOnly() della interfaccia AIService <br>
      */
     protected Consumer<String> resetEmptyOnly = canonicalEntityName -> {
         final AIResult result;
-        final String entityServicePrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_BUSINESS_SERVICE;
+        final String entityServicePrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_ENTITY_SERVICE;
+        final String entityLogicPrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_ENTITY_LOGIC;
         final AIService entityService = classService.getServiceFromEntityName(canonicalEntityName);
-        final String nameService = entityService.getClass().getSimpleName();
+        final AILogic entityLogic = classService.getLogicFromEntityName(canonicalEntityName);
+        final String nameService;
+        final String nameLogic;
+        final String packageName = file.estraeClasseFinale(canonicalEntityName).toLowerCase();
         boolean methodExists = false;
         String message;
 
-        if (entityService == null || nameService.equals(TAG_GENERIC_SERVICE)) {
-            message = String.format("Non esiste la classe %s per effettuare il Reset dei dati", entityServicePrevista);
-            logger.log(AETypeLog.checkData, message);
+        if (entityService == null) {
+            logger.error(String.format("Nel package %s manca la entityService specifica e non sono neanche riuscito a creare la EntityService generica", packageName));
             return;
         }
 
+        if (entityLogic == null) {
+            logger.error(String.format("Nel package %s manca la entityLogic specifica e non sono neanche riuscito a creare la EntityLogic generica", packageName));
+            return;
+        }
+
+        nameService = entityService.getClass().getSimpleName();
+        if (nameService.equals(TAG_GENERIC_SERVICE)) {
+            message = String.format("Nel package %s non esiste la classe %s e usa EntityService. Non esiste il metodo resetEmptyOnly()", packageName, entityServicePrevista);
+            logger.log(AETypeLog.checkData, message);
+        }
+
+        nameLogic = entityLogic.getClass().getSimpleName();
+        if (nameLogic.equals(TAG_GENERIC_LOGIC)) {
+            message = String.format("Nel package %s non esiste la classe %s e usa EntityLogic", packageName, entityLogicPrevista);
+            logger.log(AETypeLog.checkData, message);
+        }
+
         try {
-            methodExists = !nameService.equals(TAG_GENERIC_SERVICE) && entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null;
+            methodExists = !packageName.equals(TAG_GENERIC_SERVICE) && entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null;
         } catch (Exception unErrore) {
         }
 
@@ -144,8 +168,10 @@ public class FlowData implements AIData {
             logger.log(AETypeLog.checkData, result.getMessage());
         }
         else {
-            message = String.format("Non esiste il metodo resetEmptyOnly() nella classe %s", nameService);
-            logger.log(AETypeLog.checkData, message);
+            if (!nameService.equals(TAG_GENERIC_SERVICE)) {
+                message = String.format("Nella classe %s del package %s non esiste il metodo resetEmptyOnly() ", entityServicePrevista, packageName);
+                logger.log(AETypeLog.checkData, message);
+            }
         }
     };
 
@@ -216,7 +242,7 @@ public class FlowData implements AIData {
 
         //--conta le collections valide
         entities = checkFiles.apply(allEntities);
-        message = String.format("In %s sono state trovate %d classi di tipo AEntity da controllare", moduleName, entities);
+        message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity da controllare", moduleName, entities);
         logger.log(AETypeLog.checkData, message);
 
         //--elabora le collections valide

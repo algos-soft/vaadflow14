@@ -95,9 +95,9 @@ public abstract class FlowCost {
 
     public static final String DOPPIO_PIPE_REGEX = PIPE_REGEX + PIPE_REGEX;
 
-    public static final String SUFFIX_BUSINESS_LOGIC = "Logic";
+    public static final String SUFFIX_ENTITY_LOGIC = "Logic";
 
-    public static final String SUFFIX_BUSINESS_SERVICE = "Service";
+    public static final String SUFFIX_ENTITY_SERVICE = "Service";
 
     public static final String SUFFIX_FORM = "Form";
 
@@ -180,9 +180,9 @@ public abstract class FlowCost {
      */
     public static final String TAG_EM = "em";
 
-    public static final String TAG_GENERIC_LOGIC = "GenericLogic";
+    public static final String TAG_GENERIC_SERVICE = "EntityService";
 
-    public static final String TAG_GENERIC_SERVICE = "GenericService";
+    public static final String TAG_GENERIC_LOGIC = "EntityLogic";
 
     public static final String TAG_GENERIC_VIEW = "view";
 

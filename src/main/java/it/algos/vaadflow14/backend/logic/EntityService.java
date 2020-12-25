@@ -32,5 +32,16 @@ public class EntityService extends AService {
         super(entityClazz);
     }
 
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    @Override
+    public AEntity newEntity() {
+        return null;
+    }
 
 }

@@ -1,6 +1,6 @@
-package it.algos.vaadflow14.backend.packages.crono.secolo;
+package it.algos.vaadflow14.backend.packages.crono.mese;
 
-import it.algos.vaadflow14.backend.enumeration.AESecolo;
+import it.algos.vaadflow14.backend.enumeration.AEMese;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AService;
@@ -14,8 +14,8 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: mer, 23-dic-2020
- * Time: 06:58
+ * Date: ven, 25-dic-2020
+ * Time: 16:47
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
@@ -23,7 +23,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class SecoloService extends AService {
+public class MeseService extends AService {
 
 
     /**
@@ -36,48 +36,47 @@ public class SecoloService extends AService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public SecoloService() {
-        super(Secolo.class);
+    public MeseService() {
+        super(Mese.class);
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param aeSecolo: enumeration per la creazione-reset di tutte le entities
+     * @param aeMese enumeration per la creazione-reset di tutte le entities
      *
-     * @return la nuova entityBean appena creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public Secolo creaIfNotExist(final AESecolo aeSecolo) {
-        return creaIfNotExist(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
+    public Mese creaIfNotExist(final AEMese aeMese) {
+        return creaIfNotExist(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param secolo     (obbligatorio, unico)
-     * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
-     * @param inizio     (obbligatorio, unico)
-     * @param fine       (obbligatorio, unico)
+     * @param mese            nome completo (obbligatorio, unico)
+     * @param giorni          numero di giorni presenti (obbligatorio)
+     * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
+     * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
      *
-     * @return la nuova entityBean appena creata e salvata
+     * @return la nuova entity appena creata e salvata
      */
-    public Secolo creaIfNotExist(final String secolo, final boolean anteCristo, final int inizio, final int fine) {
-        return (Secolo) checkAndSave(newEntity(secolo, anteCristo, inizio, fine));
+    public Mese creaIfNotExist(final String mese, final int giorni, final int giorniBisestile, final String sigla) {
+        return (Mese) checkAndSave(newEntity(mese, giorni, giorniBisestile, sigla));
     }
-
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @return la nuova entityBean appena creata (non salvata)
+     * @return la nuova entity appena creata (non salvata)
      */
     @Override
-    public Secolo newEntity() {
-        return newEntity(VUOTA, false, 0, 0);
+    public Mese newEntity() {
+        return newEntity(VUOTA, 0, 0, VUOTA);
     }
 
 
@@ -86,43 +85,43 @@ public class SecoloService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param aeSecolo: enumeration per la creazione-reset di tutte le entities
+     * @param aeMese: enumeration per la creazione-reset di tutte le entities
      *
-     * @return la nuova entityBean appena creata (non salvata)
+     * @return la nuova entity appena creata (non salvata)
      */
-    public Secolo newEntity(final AESecolo aeSecolo) {
-        return newEntity(aeSecolo.getNome(), aeSecolo.isAnteCristo(), aeSecolo.getInizio(), aeSecolo.getFine());
+    public Mese newEntity(final AEMese aeMese) {
+        return newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
     }
-
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
      *
-     * @param secolo     (obbligatorio, unico)
-     * @param anteCristo flag per i secoli prima di cristo (obbligatorio)
-     * @param inizio     (obbligatorio, unico)
-     * @param fine       (obbligatorio, unico)
+     * @param mese            nome completo (obbligatorio, unico)
+     * @param giorni          numero di giorni presenti (obbligatorio)
+     * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
+     * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Secolo newEntity(final String secolo, final boolean anteCristo, final int inizio, final int fine) {
-        Secolo newEntityBean = Secolo.builderSecolo()
+    public Mese newEntity(final String mese, final int giorni, final int giorniBisestile, final String sigla) {
+        Mese newEntityBean = Mese.builderMese()
 
                 .ordine(getNewOrdine())
 
-                .secolo(text.isValid(secolo) ? secolo : null)
+                .mese(text.isValid(mese) ? mese : null)
 
-                .anteCristo(anteCristo)
+                .giorni(giorni)
 
-                .inizio(inizio)
+                .giorniBisestile(giorniBisestile)
 
-                .fine(fine)
+                .sigla(text.isValid(sigla) ? sigla : null)
 
                 .build();
 
-        return (Secolo) fixKey(newEntityBean);
+        return (Mese) fixKey(newEntityBean);
     }
 
 
@@ -136,8 +135,8 @@ public class SecoloService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Secolo findById(final String keyID) {
-        return (Secolo) super.findById(keyID);
+    public Mese findById(final String keyID) {
+        return (Mese) super.findById(keyID);
     }
 
 
@@ -151,10 +150,9 @@ public class SecoloService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Secolo findByKey(final String keyValue) {
-        return (Secolo) super.findByKey(keyValue);
+    public Mese findByKey(final String keyValue) {
+        return (Mese) super.findByKey(keyValue);
     }
-
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -183,11 +181,11 @@ public class SecoloService extends AService {
             return result;
         }
 
-        for (AESecolo eaSecolo : AESecolo.values()) {
-            numRec = creaIfNotExist(eaSecolo) != null ? numRec + 1 : numRec;
+        for (AEMese aeMese : AEMese.values()) {
+            numRec = creaIfNotExist(aeMese) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.enumeration, numRec);
+        return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }
 
 }

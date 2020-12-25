@@ -74,7 +74,7 @@ public class Via extends AEntity {
      */
     @Override
     public String toString() {
-        return getNome();
+        return nome;
     }
 
 }

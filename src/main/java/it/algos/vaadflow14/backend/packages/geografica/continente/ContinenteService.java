@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.continente;
 
+import it.algos.vaadflow14.backend.enumeration.AEContinente;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AService;
@@ -33,7 +34,7 @@ public class ContinenteService extends AService {
 
     /**
      * Costruttore senza parametri <br>
-     * Regola la entityClazz associata a questo service <br>
+     * Regola la entityClazz (final) associata a questo service <br>
      */
     public ContinenteService() {
         super(Continente.class);
@@ -43,11 +44,11 @@ public class ContinenteService extends AService {
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param aeContinente: enumeration per la creazione-reset di tutte le entities
+     * @param aeContinente enumeration per la creazione-reset di tutte le entities
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Continente creaIfNotExist(AEContinente aeContinente) {
+    public Continente creaIfNotExist(final AEContinente aeContinente) {
         return creaIfNotExist(aeContinente.getOrd(), aeContinente.getNome(), aeContinente.isAbitato());
     }
 
@@ -59,7 +60,7 @@ public class ContinenteService extends AService {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Continente creaIfNotExist(int ordine, String nome, boolean abitato) {
+    public Continente creaIfNotExist(final int ordine, final String nome, final boolean abitato) {
         return (Continente) checkAndSave(newEntity(ordine, nome, abitato));
     }
 
@@ -71,6 +72,7 @@ public class ContinenteService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
+    @Override
     public Continente newEntity() {
         return newEntity(0, VUOTA, true);
     }
@@ -83,10 +85,10 @@ public class ContinenteService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Continente newEntity(int ordine, String nome, boolean abitato) {
+    public Continente newEntity(final int ordine, final String nome, final boolean abitato) {
         Continente newEntityBean = Continente.builderContinente()
 
-                .ordine(ordine)
+                .ordine(ordine > 0 ? ordine : getNewOrdine())
 
                 .nome(text.isValid(nome) ? nome : null)
 
@@ -96,6 +98,37 @@ public class ContinenteService extends AService {
 
         return (Continente) fixKey(newEntityBean);
     }
+
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Continente findById(final String keyID) {
+        return (Continente) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Continente findByKey(final String keyValue) {
+        return (Continente) super.findByKey(keyValue);
+    }
+
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

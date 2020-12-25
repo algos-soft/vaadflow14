@@ -6,7 +6,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.anno.AnnoLogic;
+import it.algos.vaadflow14.backend.packages.crono.anno.AnnoService;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.service.AColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class OmegaView extends VerticalLayout {
      */
     @Autowired
 
-    public AnnoLogic annoLogic;
+    public AnnoService annoService;
 
     private Grid<Anno> grid;
 
@@ -91,7 +91,7 @@ public class OmegaView extends VerticalLayout {
         //                // Second callback fetches the number of items for a query
         //                query -> annoLogic.getCount()
         //        );
-        List<Anno> items = annoLogic.fetchAnni(5, 24);
+        List<Anno> items = annoService.fetchAnni(5, 24);
         grid = new Grid<>();
         grid.setPageSize(10);
 

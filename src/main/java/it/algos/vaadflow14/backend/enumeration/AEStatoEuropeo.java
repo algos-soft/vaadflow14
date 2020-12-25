@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.geografica.stato;
+package it.algos.vaadflow14.backend.enumeration;
 
 /**
  * Project vaadflow14

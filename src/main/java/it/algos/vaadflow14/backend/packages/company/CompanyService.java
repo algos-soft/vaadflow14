@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.company;
 
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.logic.AService;
@@ -33,7 +34,7 @@ public class CompanyService extends AService {
 
     /**
      * Costruttore senza parametri <br>
-     * Regola la entityClazz associata a questo service <br>
+     * Regola la entityClazz (final) associata a questo service <br>
      */
     public CompanyService() {
         super(Company.class);
@@ -41,14 +42,18 @@ public class CompanyService extends AService {
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entityBean con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
      *
-     * @param code        di riferimento
-     * @param descrizione completa
+     * @param code        obbligatorio
+     * @param descrizione obbligatorio
      *
-     * @return la nuova entity appena creata e salvata
+     * @return la nuova entityBean appena creata e salvata
      */
-    public Company creaIfNotExist(String code, String descrizione) {
+    private Company creaIfNotExist(final String code, final String descrizione) {
         return creaIfNotExist(code, descrizione, VUOTA, VUOTA);
     }
 
@@ -61,9 +66,10 @@ public class CompanyService extends AService {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Company creaIfNotExist(String code, String descrizione, String telefono, String email) {
+    private Company creaIfNotExist(final String code, final String descrizione, final String telefono, final String email) {
         return (Company) checkAndSave(newEntity(code, descrizione, telefono, email));
     }
+
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
@@ -72,6 +78,7 @@ public class CompanyService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
+    @Override
     public Company newEntity() {
         return newEntity(VUOTA, VUOTA, VUOTA, VUOTA);
     }
@@ -89,7 +96,7 @@ public class CompanyService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Company newEntity(String code, String descrizione, String telefono, String email) {
+    public Company newEntity(final String code, final String descrizione, final String telefono, final String email) {
         Company newEntityBean = Company.builderCompany()
 
                 .code(text.isValid(code) ? code : null)
@@ -105,34 +112,35 @@ public class CompanyService extends AService {
         return (Company) fixKey(newEntityBean);
     }
 
-//    /**
-//     * Retrieves an entity by its id.
-//     *
-//     * @param keyID must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    @Override
-//    public Company findById(String keyID) {
-//        return (Company) super.findById(keyID);
-//    }
-//
-//
-//    /**
-//     * Retrieves an entity by its keyProperty.
-//     *
-//     * @param keyValue must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    @Override
-//    public Company findByKey(String keyValue) {
-//        return (Company) super.findByKey(keyValue);
-//    }
+
+    /**
+     * Retrieves an entity by its id.
+     *
+     * @param keyID must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Company findById(final String keyID) {
+        return (Company) super.findById(keyID);
+    }
+
+
+    /**
+     * Retrieves an entity by its keyProperty.
+     *
+     * @param keyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     */
+    @Override
+    public Company findByKey(final String keyValue) {
+        return (Company) super.findByKey(keyValue);
+    }
 
 
     /**
@@ -167,6 +175,29 @@ public class CompanyService extends AService {
         numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec + 1 : numRec;
 
         return super.fixPostReset(AETypeReset.hardCoded, numRec);
+    }
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getAlgos() {
+        return findById(FlowCost.COMPANY_ALGOS);
+    }
+
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getDemo() {
+        return findById(FlowCost.COMPANY_DEMO);
+    }
+
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getTest() {
+        return findById(FlowCost.COMPANY_TEST);
     }
 
 }

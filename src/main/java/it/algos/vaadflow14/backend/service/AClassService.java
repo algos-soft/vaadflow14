@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.logic.GenericLogic;
+import it.algos.vaadflow14.backend.logic.EntityLogic;
 import it.algos.vaadflow14.backend.logic.EntityService;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
@@ -11,8 +11,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_LOGIC;
-import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_BUSINESS_SERVICE;
+import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_ENTITY_LOGIC;
+import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_ENTITY_SERVICE;
 
 
 /**
@@ -51,7 +51,7 @@ public class AClassService extends AAbstractService {
         AEntity entityBean;
 
         if (text.isValid(entityClazzCanonicalName)) {
-            serviceClazzCanonicalName = entityClazzCanonicalName + SUFFIX_BUSINESS_SERVICE;
+            serviceClazzCanonicalName = entityClazzCanonicalName + SUFFIX_ENTITY_SERVICE;
             try {
                 entityService = (AIService) appContext.getBean(Class.forName(serviceClazzCanonicalName));
             } catch (Exception unErrore) {
@@ -80,13 +80,13 @@ public class AClassService extends AAbstractService {
         AEntity entityBean;
 
         if (text.isValid(entityClazzCanonicalName)) {
-            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_BUSINESS_LOGIC;
+            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_ENTITY_LOGIC;
             try {
                 entityLogic = (AILogic) appContext.getBean(Class.forName(logicClazzCanonicalName));
             } catch (Exception unErrore) {
                 try {
                     entityBean = (AEntity) appContext.getBean(Class.forName(entityClazzCanonicalName));
-                    entityLogic = appContext.getBean(GenericLogic.class, entityBean.getClass());
+                    entityLogic = appContext.getBean(EntityLogic.class, entityBean.getClass());
                 } catch (Exception unErrore2) {
                     logger.error(unErrore2.getMessage(), this.getClass(), "getLogicFromEntityName");
                 }
@@ -120,7 +120,7 @@ public class AClassService extends AAbstractService {
         String canonicalName;
 
         if (entityClazz != null) {
-            canonicalName = entityClazz.getCanonicalName() + SUFFIX_BUSINESS_LOGIC;
+            canonicalName = entityClazz.getCanonicalName() + SUFFIX_ENTITY_LOGIC;
             try {
                 entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm);
             } catch (Exception unErrore) {
@@ -128,7 +128,7 @@ public class AClassService extends AAbstractService {
                     entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName));
                 } catch (Exception unErrore2) {
                     try {
-                        entityLogic = (AILogic) appContext.getBean(GenericLogic.class, entityClazz, operationForm);
+                        entityLogic = (AILogic) appContext.getBean(EntityLogic.class, entityClazz, operationForm);
                     } catch (Exception unErrore3) {
                         logger.error("Non sono riuscito a creare la entityLogic", this.getClass(), "getLogicFromEntity");
                     }

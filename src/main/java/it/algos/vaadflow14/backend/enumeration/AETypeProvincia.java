@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.geografica.provincia;
+package it.algos.vaadflow14.backend.enumeration;
 
 import java.util.ArrayList;
 import java.util.List;

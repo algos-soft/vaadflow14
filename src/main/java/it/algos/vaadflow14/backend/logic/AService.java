@@ -63,7 +63,7 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     @PostConstruct
     protected void postConstruct() {
-        fixPreferenze();
+        this.fixPreferenze();
     }
 
 
@@ -88,7 +88,7 @@ public abstract class AService extends AAbstractService implements AIService {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Object creaIfNotExist(final String keyPropertyValue) {
+    public AEntity creaIfNotExist(final String keyPropertyValue) {
         return null;
     }
 

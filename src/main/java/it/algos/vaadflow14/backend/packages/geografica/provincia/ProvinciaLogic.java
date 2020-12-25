@@ -1,26 +1,19 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
-import it.algos.vaadflow14.backend.packages.geografica.stato.AEStato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
-import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -139,93 +132,93 @@ public class ProvinciaLogic extends ALogic {
     }
 
 
-    /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
-     */
-    @Override
-    protected void fixMappaComboBox() {
-        ComboBox comboBox;
-
-        //        List<Regione> items = regioneLogic.findAllItalian();
-        //        super.creaComboBox("regione", items, 14, null);
-        //        super.creaComboBox("regione");
-        //        mappaComboBox.put("regione", regioneLogic.creaComboRegioniItaliane());
-        //        super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
-        //        super.creaComboBox("status", 16);
-
-        //        //--in realtà il render non è necessario. Basta il toString() nella Enumeration.
-        //        //--rimane come esempio
-        //        comboBox.setRenderer(TemplateRenderer.<AETypeProvincia>of("<div>[[item.tag]]</div>").withProperty("tag", AETypeProvincia::getTag));
-    }
-
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param ordine  (obbligatorio, unico)
-     * @param nome    (obbligatorio, unico)
-     * @param sigla   (consuetudinaria, obbligatoria)
-     * @param regione (obbligatorio)
-     * @param stato   (obbligatorio)
-     * @param iso     di riferimento (obbligatorio, unico)
-     * @param status  (obbligatorio)
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Provincia creaIfNotExist(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
-        return (Provincia) checkAndSave(newEntity(ordine, nome, sigla, regione, stato, iso, status));
-    }
+//    /**
+//     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+//     * DEVE essere sovrascritto nella sottoclasse <br>
+//     */
+//    @Override
+//    protected void fixMappaComboBox() {
+//        ComboBox comboBox;
+//
+//        //        List<Regione> items = regioneLogic.findAllItalian();
+//        //        super.creaComboBox("regione", items, 14, null);
+//        //        super.creaComboBox("regione");
+//        //        mappaComboBox.put("regione", regioneLogic.creaComboRegioniItaliane());
+//        //        super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
+//        //        super.creaComboBox("status", 16);
+//
+//        //        //--in realtà il render non è necessario. Basta il toString() nella Enumeration.
+//        //        //--rimane come esempio
+//        //        comboBox.setRenderer(TemplateRenderer.<AETypeProvincia>of("<div>[[item.tag]]</div>").withProperty("tag", AETypeProvincia::getTag));
+//    }
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Provincia newEntity() {
-        return newEntity(0, VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
-    }
+//    /**
+//     * Crea e registra una entity solo se non esisteva <br>
+//     *
+//     * @param ordine  (obbligatorio, unico)
+//     * @param nome    (obbligatorio, unico)
+//     * @param sigla   (consuetudinaria, obbligatoria)
+//     * @param regione (obbligatorio)
+//     * @param stato   (obbligatorio)
+//     * @param iso     di riferimento (obbligatorio, unico)
+//     * @param status  (obbligatorio)
+//     *
+//     * @return la nuova entity appena creata e salvata
+//     */
+//    public Provincia creaIfNotExist(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
+//        return (Provincia) checkAndSave(newEntity(ordine, nome, sigla, regione, stato, iso, status));
+//    }
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param ordine  (obbligatorio, unico)
-     * @param nome    (obbligatorio, unico)
-     * @param sigla   (consuetudinaria, obbligatoria)
-     * @param regione (obbligatorio)
-     * @param stato   (obbligatorio)
-     * @param iso     di riferimento (obbligatorio, unico)
-     * @param status  (obbligatorio)
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Provincia newEntity(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
-        Provincia newEntityBean = Provincia.builderProvincia()
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Provincia newEntity() {
+//        return newEntity(0, VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
+//    }
 
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
 
-                .nome(text.isValid(nome) ? nome : null)
-
-                .sigla(text.isValid(sigla) ? sigla : null)
-
-                .regione(regione)
-
-                .stato(stato)
-
-                .iso(text.isValid(iso) ? iso : null)
-
-                .status(status != null ? status : AETypeProvincia.provincia)
-
-                .build();
-
-        return (Provincia) fixKey(newEntityBean);
-    }
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     *
+//     * @param ordine  (obbligatorio, unico)
+//     * @param nome    (obbligatorio, unico)
+//     * @param sigla   (consuetudinaria, obbligatoria)
+//     * @param regione (obbligatorio)
+//     * @param stato   (obbligatorio)
+//     * @param iso     di riferimento (obbligatorio, unico)
+//     * @param status  (obbligatorio)
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Provincia newEntity(int ordine, String nome, String sigla, Regione regione, Stato stato, String iso, AETypeProvincia status) {
+//        Provincia newEntityBean = Provincia.builderProvincia()
+//
+//                .ordine(ordine > 0 ? ordine : getNewOrdine())
+//
+//                .nome(text.isValid(nome) ? nome : null)
+//
+//                .sigla(text.isValid(sigla) ? sigla : null)
+//
+//                .regione(regione)
+//
+//                .stato(stato)
+//
+//                .iso(text.isValid(iso) ? iso : null)
+//
+//                .status(status != null ? status : AETypeProvincia.provincia)
+//
+//                .build();
+//
+//        return (Provincia) fixKey(newEntityBean);
+//    }
 
 
     /**
@@ -258,66 +251,66 @@ public class ProvinciaLogic extends ALogic {
     }
 
 
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Provincia findById(String keyID) {
-        return (Provincia) super.findById(keyID);
-    }
+//    /**
+//     * Retrieves an entity by its id.
+//     *
+//     * @param keyID must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    @Override
+//    public Provincia findById(String keyID) {
+//        return (Provincia) super.findById(keyID);
+//    }
+//
+//
+//    /**
+//     * Retrieves an entity by its keyProperty.
+//     *
+//     * @param keyValue must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    @Override
+//    public Provincia findByKey(String keyValue) {
+//        return (Provincia) super.findByKey(keyValue);
+//    }
 
 
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Provincia findByKey(String keyValue) {
-        return (Provincia) super.findByKey(keyValue);
-    }
 
-
-
-    public void creaBlocco(int posTabella, int ordine, AETypeProvincia status) {
-        List<WrapTreStringhe> listaWrapTre;
-        String wikiTitle = "ISO 3166-2:IT";
-        String nome;
-        String sigla;
-        Regione regione;
-        Stato stato = AEStato.italia.getStato();
-        String iso;
-
-        listaWrapTre = wiki.getTemplateList(wikiTitle, posTabella, 2, 1, 3);
-        if (listaWrapTre != null && listaWrapTre.size() > 0) {
-            for (WrapTreStringhe wrap : listaWrapTre) {
-                ordine++;
-                nome = wrap.getSeconda();
-                sigla = wrap.getPrima();
-                regione = regioneLogic.findByIsoItalian(wrap.getTerza());
-                iso = "IT-" + sigla;
-                if (status != AETypeProvincia.metropolitana) {
-                    status = AETypeProvincia.findBySigla(regione.sigla);
-                }
-                if (status == null) {
-                    status = AETypeProvincia.provincia;
-                }
-
-                creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
-            }
-
-        }
-    }
+//    public void creaBlocco(int posTabella, int ordine, AETypeProvincia status) {
+//        List<WrapTreStringhe> listaWrapTre;
+//        String wikiTitle = "ISO 3166-2:IT";
+//        String nome;
+//        String sigla;
+//        Regione regione;
+//        Stato stato = AEStato.italia.getStato();
+//        String iso;
+//
+//        listaWrapTre = wiki.getTemplateList(wikiTitle, posTabella, 2, 1, 3);
+//        if (listaWrapTre != null && listaWrapTre.size() > 0) {
+//            for (WrapTreStringhe wrap : listaWrapTre) {
+//                ordine++;
+//                nome = wrap.getSeconda();
+//                sigla = wrap.getPrima();
+//                regione = regioneLogic.findByIsoItalian(wrap.getTerza());
+//                iso = "IT-" + sigla;
+//                if (status != AETypeProvincia.metropolitana) {
+//                    status = AETypeProvincia.findBySigla(regione.sigla);
+//                }
+//                if (status == null) {
+//                    status = AETypeProvincia.provincia;
+//                }
+//
+//                creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
+//            }
+//
+//        }
+//    }
 
 //    /**
 //     * Creazione o ricreazione di alcuni dati iniziali standard <br>

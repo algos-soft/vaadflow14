@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
+import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneService;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.ui.form.AForm;
@@ -35,7 +35,7 @@ public class ProvinciaForm extends AForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public RegioneLogic regioneLogic;
+    public RegioneService regioneService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -197,7 +197,7 @@ public class ProvinciaForm extends AForm {
     protected void sincroSlave(HasValue.ValueChangeEvent event) {
         Stato value = (Stato) event.getValue();
 
-        List items = regioneLogic.findAllByStato(value.id);
+        List items = regioneService.findAllByStato(value.id);
         fieldMaster.setItems(items);
         fieldMaster.setItems(items); //@todo Non capisco perché ma se chiamo setItems() solo una volta NON funziona
     }

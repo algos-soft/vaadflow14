@@ -28,7 +28,7 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    Object creaIfNotExist(final String keyPropertyValue);
+    AEntity creaIfNotExist(final String keyPropertyValue);
 
 
     /**
@@ -53,6 +53,28 @@ public interface AIService {
 
 
     /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+     AEntity newEntity();
+
+    /**
+     * Regola la chiave se esiste il campo keyPropertyName <br>
+     * Se la company è nulla, la recupera dal login <br>
+     * Se la company è ancora nulla, la entity viene creata comunque
+     * ma verrà controllata ancora nel metodo beforeSave() <br>
+     *
+     * @param newEntityBean to be checked
+     *
+     * @return the checked entityBean
+     */
+    AEntity fixKey(final AEntity newEntityBean);
+
+
+    /**
      * Operazioni eseguite PRIMA di save o di insert <br>
      * Regolazioni automatiche di property <br>
      * Controllo della validità delle properties obbligatorie <br>
@@ -66,19 +88,6 @@ public interface AIService {
      * @return the modified entity
      */
     AEntity beforeSave(final AEntity entityBean, final AEOperation operation);
-
-
-    /**
-     * Regola la chiave se esiste il campo keyPropertyName <br>
-     * Se la company è nulla, la recupera dal login <br>
-     * Se la company è ancora nulla, la entity viene creata comunque
-     * ma verrà controllata ancora nel metodo beforeSave() <br>
-     *
-     * @param newEntityBean to be checked
-     *
-     * @return the checked entityBean
-     */
-    AEntity fixKey(final AEntity newEntityBean);
 
 
     /**
