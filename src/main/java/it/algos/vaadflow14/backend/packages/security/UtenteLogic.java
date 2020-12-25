@@ -2,23 +2,15 @@ package it.algos.vaadflow14.backend.packages.security;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
 import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.MONGO_FIELD_USER;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -46,15 +38,6 @@ public class UtenteLogic extends ALogic {
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
-
-
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public CompanyLogic companyLogic;
 
 
     /**
@@ -105,7 +88,8 @@ public class UtenteLogic extends ALogic {
 
             super.usaBottoneNew = vaadinService.isAdminOrDeveloper();
             super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
-        } else {
+        }
+        else {
             if (AEPreferenza.usaDebug.is()) {
                 super.usaBottoneDeleteAll = true;
                 super.usaBottoneResetList = true;
@@ -133,203 +117,5 @@ public class UtenteLogic extends ALogic {
         return new AlertWrap(null, null, red, false);
     }
 
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param username o nickName
-     * @param password in chiaro
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Utente creaIfNotExist(String username, String password) {
-        return (Utente) checkAndSave(newEntity(username, password, (AERole) null));
-    }
-
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     * Può forzare una company DIVERSA da quella corrente usata da newEntity() <br>
-     *
-     * @param company  obbligatoria se FlowVar.usaCompany=true
-     * @param username o nickName
-     * @param password in chiaro
-     * @param role     authority per il login
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Utente creaIfNotExist(Company company, String username, String password, AERole role) {
-        Utente entity = newEntity(username, password, role);
-        entity.company = company;
-        return (Utente) checkAndSave(entity);
-    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * Senza properties per compatibilità con la superclasse <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    @Override
-    public AEntity newEntity() {
-        return newEntity(VUOTA, VUOTA, (AERole) null);
-    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * <p>
-     * //     * @param company  obbligatoria se FlowVar.usaCompany=true
-     *
-     * @param username o nickName
-     * @param password in chiaro
-     * @param role     authority per il login
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Utente newEntity(String username, String password, AERole role) {
-        Utente newEntityBean = Utente.builderUtente()
-
-                .username(text.isValid(username) ? username : null)
-
-                .password(text.isValid(password) ? password : null)
-
-                .accountNonExpired(true)
-
-                .accountNonLocked(true)
-
-                .credentialsNonExpired(true)
-
-                .enabled(true)
-
-                .role(role != null ? role : AERole.user)
-
-                .build();
-
-        return (Utente) fixKey(newEntityBean);
-    }
-
-
-    /**
-     * Operazioni eseguite PRIMA di save o di insert <br>
-     * Regolazioni automatiche di property <br>
-     * Controllo della validità delle properties obbligatorie <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, Edit)
-     *
-     * @return the modified entity
-     */
-    @Override
-    public Utente beforeSave(AEntity entityBean, AEOperation operation) {
-        Utente entity = (Utente) super.beforeSave(entityBean, operation);
-
-        if (entity != null && entity.username != null) {
-            entity.username = text.levaSpazi(entity.username);
-        }
-
-        return entity;
-    }
-
-
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Utente findById(String keyID) {
-        return (Utente) super.findById(keyID);
-    }
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Utente findByKey(String keyValue) {
-        return (Utente) super.findByKey(keyValue);
-    }
-
-    /**
-     * Retrieves an entity by userName.
-     *
-     * @param userName must not be {@literal null}.
-     */
-    public Utente findByUser(String userName) {
-        return (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, userName);
-    }
-
-    //    /**
-    //     * Creazione di alcuni dati iniziali <br>
-    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-    //     * DEVE essere sovrascritto <br>
-    //     *
-    //     * @return false se non esiste il metodo sovrascritto
-    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-    //     */
-    //    @Override
-    //    public boolean reset() {
-    //        super.deleteAll();
-    //
-    //        creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer);
-    //        creaIfNotExist(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin);
-    //        creaIfNotExist(null, "marco.beretta", "beretta123", AERole.admin);
-    //        creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user);
-    //        creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest);
-    //
-    //        return mongo.isValid(entityClazz);
-    //    }
-
-
-//    /**
-//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-//     * <p>
-//     * 1) deve esistere lo specifico metodo sovrascritto
-//     * 2) deve essere valida la entityClazz
-//     * 3) deve esistere la collezione su mongoDB
-//     * 4) la collezione non deve essere vuota
-//     * <p>
-//     * I dati possono essere: <br>
-//     * 1) recuperati da una Enumeration interna <br>
-//     * 2) letti da un file CSV esterno <br>
-//     * 3) letti da Wikipedia <br>
-//     * 4) creati direttamente <br>
-//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper col risultato ed eventuale messaggio di errore
-//     */
-//    @Override
-//    public AIResult resetEmptyOnly() {
-//        AIResult result = super.resetEmptyOnly();
-//        int numRec = 0;
-//
-//        if (result.isErrato()) {
-//            return result;
-//        }
-//
-//        numRec = creaIfNotExist(companyLogic.getAlgos(), "Gac", "fulvia", AERole.developer)!= null ? numRec+1 : numRec;
-//        numRec = creaIfNotExist(companyLogic.getDemo(), "mario_rossi", "rossi123", AERole.admin)!= null ? numRec+1 : numRec;
-//        numRec = creaIfNotExist(null, "marco.beretta", "beretta123", AERole.admin)!= null ? numRec+1 : numRec;
-//        numRec = creaIfNotExist(companyLogic.getTest(), "antonia-pellegrini", "pellegrini123", AERole.user)!= null ? numRec+1 : numRec;
-//        numRec = creaIfNotExist(null, "paolo cremona", "cremona123", AERole.guest)!= null ? numRec+1 : numRec;
-//
-//        return super.fixPostReset(AETypeReset.hardCoded, numRec);
-//    }
 
 }

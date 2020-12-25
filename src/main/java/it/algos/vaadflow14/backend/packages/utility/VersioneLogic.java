@@ -3,13 +3,8 @@ package it.algos.vaadflow14.backend.packages.utility;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.time.LocalDate;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow14
@@ -38,8 +33,6 @@ public class VersioneLogic extends ALogic {
      */
     private static final long serialVersionUID = 1L;
 
-    @Value("${spring.data.mongodb.database}")
-    private String databaseName;
 
     /**
      * Costruttore senza parametri <br>
@@ -77,115 +70,5 @@ public class VersioneLogic extends ALogic {
         super.fixPreferenze();
     }
 
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param code        di riferimento
-     * @param giorno      di ricompilazione del programma
-     * @param descrizione completa
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Versione creaIfNotExist(String code, LocalDate giorno, String descrizione) {
-        return (Versione) checkAndSave(newEntity(code, giorno, descrizione));
-    }
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Versione newEntity() {
-        return newEntity(VUOTA, null, VUOTA);
-    }
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param code        di riferimento
-     * @param giorno      di ricompilazione del programma
-     * @param descrizione completa
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Versione newEntity(String code, LocalDate giorno, String descrizione) {
-        Versione newEntityBean = Versione.builderVersione()
-
-                .code(text.isValid(code) ? code : null)
-
-                .giorno(giorno != giorno ? giorno : LocalDate.now())
-
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
-
-                .build();
-
-        return (Versione) fixKey(newEntityBean);
-    }
-
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Versione findById(String keyID) {
-        return (Versione) super.findById(keyID);
-    }
-
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Versione findByKey(String keyValue) {
-        return (Versione) super.findByKey(keyValue);
-    }
-
-//    /**
-//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-//     * <p>
-//     * 1) deve esistere lo specifico metodo sovrascritto
-//     * 2) deve essere valida la entityClazz
-//     * 3) deve esistere la collezione su mongoDB
-//     * 4) la collezione non deve essere vuota
-//     * <p>
-//     * I dati possono essere: <br>
-//     * 1) recuperati da una Enumeration interna <br>
-//     * 2) letti da un file CSV esterno <br>
-//     * 3) letti da Wikipedia <br>
-//     * 4) creati direttamente <br>
-//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper col risultato ed eventuale messaggio di errore
-//     */
-////    @Override
-//    public AIResult resetEmptyOnly2() {
-//        AIResult result = super.resetEmptyOnly();
-//        int numRec = 0;
-//
-//        if (result.isErrato()) {
-//            return result;
-//        }
-//
-//        numRec = creaIfNotExist("Setup", LocalDate.now(), "Installazione iniziale di "+ FlowVar.projectName) != null ? numRec + 1 : numRec;
-//
-//        return super.fixPostReset(AETypeReset.hardCoded, numRec);
-//    }
 
 }

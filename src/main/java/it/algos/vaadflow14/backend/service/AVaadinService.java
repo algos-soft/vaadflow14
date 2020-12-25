@@ -8,7 +8,7 @@ import it.algos.vaadflow14.backend.login.ALogin;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
 import it.algos.vaadflow14.backend.packages.security.Utente;
-import it.algos.vaadflow14.backend.packages.security.UtenteLogic;
+import it.algos.vaadflow14.backend.packages.security.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class AVaadinService extends AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public UtenteLogic utenteLogic;
+    public UtenteService utenteService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -90,11 +90,11 @@ public class AVaadinService extends AAbstractService {
 
         if (isNotLogin()) {
             username = getLoggedUsername();
-            utente = utenteLogic.findByUser(username);
+            utente = utenteService.findByUser(username);
 
             if (utente != null) {
                 if (FlowVar.usaCompany) {
-                    company = utente.getCompany();
+                    company = utente.company;
                     if (company != null) {
                         vaadSession.setAttribute(KEY_SESSION_LOGIN, new ALogin(utente, company));
                     } else {
