@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -23,7 +23,6 @@ import it.algos.vaadflow14.backend.packages.utility.Versione;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
@@ -66,9 +65,9 @@ public class GSonTest extends ATest {
 
     private Gson gSon;
 
-    private MongoClient mongoClient = new MongoClient("localhost");
+    private MongoClient mongoClient = null;
 
-    private MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+    private MongoDatabase database = null;
 
     private String valueID;
 
@@ -107,7 +106,12 @@ public class GSonTest extends ATest {
 
         MockitoAnnotations.initMocks(this);
 
-        mongoClient = new MongoClient("localhost");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + "vaadin14");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        mongoClient = MongoClients.create(mongoClientSettings);
+
         database = mongoClient.getDatabase("vaadflow14");
         gSonService.reflection = reflection;
         gSonService.annotation = annotation;
@@ -1039,7 +1043,7 @@ public class GSonTest extends ATest {
 
         sorgente = "Dec 16, 2020, 12:00:00 AM";
         String pattern = "MMM d, yyy, HH:mm:ss 'AM'";
-        DateTime dt = DateTime.parse(sorgente);
+        LocalDateTime dt = LocalDateTime.parse(sorgente);
         System.out.println(VUOTA);
         System.out.println(dt);
         System.out.println(VUOTA);

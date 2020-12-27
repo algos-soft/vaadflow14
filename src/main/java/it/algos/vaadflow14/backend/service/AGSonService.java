@@ -2,7 +2,7 @@ package it.algos.vaadflow14.backend.service;
 
 import com.google.gson.*;
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.algos.vaadflow14.backend.entity.AEntity;
@@ -48,9 +48,9 @@ public class AGSonService extends AAbstractService {
      */
     private static final long serialVersionUID = 1L;
 
-    private MongoClient mongoClient = new MongoClient("localhost");
+    private MongoClient mongoClient = null;
 
-    private MongoDatabase database = mongoClient.getDatabase("vaadflow14");
+    private MongoDatabase database = null;
 
     private MongoCollection<Document> collection;
 

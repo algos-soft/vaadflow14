@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
@@ -118,7 +121,13 @@ public class AMongoService<capture> extends AAbstractService {
      * Metodo private che NON può essere sovrascritto <br>
      */
     private void fixProperties() {
-        mongoClient = new MongoClient("localhost");
+        //        mongoClient = new MongoClient("localhost");
+
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + databaseName);
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        mongoClient = MongoClients.create(mongoClientSettings);
 
         if (text.isValid(databaseName)) {
             database = mongoClient.getDatabase(databaseName);
@@ -1213,7 +1222,14 @@ public class AMongoService<capture> extends AAbstractService {
      * Restituisce un generico database
      */
     public MongoDatabase getDB(String databaseName) {
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
+//        MongoClient mongoClient = new MongoClient("localhost", 27017);
+
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + databaseName);
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        mongoClient = MongoClients.create(mongoClientSettings);
+
         return mongoClient.getDatabase(databaseName);
     }
 

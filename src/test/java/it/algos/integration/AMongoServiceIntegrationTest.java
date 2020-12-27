@@ -3,7 +3,10 @@ package it.algos.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.algos.simple.SimpleApplication;
@@ -944,7 +947,11 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("23 - execute")
     void execute() {
         String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
-        MongoClient mongoClient = new MongoClient("localhost");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + "vaadflow14");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         MongoDatabase database = mongoClient.getDatabase("vaadflow14");
         MongoCollection collection = database.getCollection("mese");
 
@@ -1029,7 +1036,11 @@ public class AMongoServiceIntegrationTest extends ATest {
     void tempiCount() {
         long numRec = 0;
         Query query = new Query();
-        MongoClient mongoClient = new MongoClient("localhost");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + "vaadflow14");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         MongoDatabase database = mongoClient.getDatabase("vaadflow14");
         MongoCollection collection = database.getCollection("mese");
 
@@ -1057,7 +1068,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         collection.countDocuments();
         inizio = System.currentTimeMillis();
         for (int k = 0; k < 1000; k++) {
-            collection.count();
+            collection.countDocuments();
         }
         fine = System.currentTimeMillis();
         System.out.println("tempo count mongoClient: " + (fine - inizio));
@@ -1076,7 +1087,11 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("174 - tempiFindAll")
     void tempiFindAll() {
         Query query = new Query();
-        MongoClient mongoClient = new MongoClient("localhost");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + "vaadflow14");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(mongoClientSettings);
         MongoDatabase database = mongoClient.getDatabase("vaadflow14");
         MongoCollection collection = database.getCollection("mese");
 
@@ -1116,8 +1131,6 @@ public class AMongoServiceIntegrationTest extends ATest {
     void tempiFindAllExclude() {
         int cicli;
         Query query = new Query();
-        MongoClient mongoClient = new MongoClient("localhost");
-        MongoDatabase database = mongoClient.getDatabase("vaadflow14");
 
         cicli = 100;
         long inizio = System.currentTimeMillis();
