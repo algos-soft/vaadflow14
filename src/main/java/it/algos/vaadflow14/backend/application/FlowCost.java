@@ -348,4 +348,6 @@ public abstract class FlowCost {
 
     public static final String PREF_MAX_RADIO = "maxEnumRadio";
 
+    public static final double ICON_WIDTH = 3.0;
+
 }
