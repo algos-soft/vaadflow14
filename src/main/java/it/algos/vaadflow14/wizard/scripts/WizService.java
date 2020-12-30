@@ -485,7 +485,12 @@ public class WizService {
         String testoFinaleElaborato = testoGrezzoDaElaborare;
 
         for (AEToken token : AEToken.values()) {
-            testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            try {
+                testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            } catch (Exception unErrore) {
+                logger.error(token.getTokenTag(), this.getClass(), "elaboraFileCreatoDaSource");
+                testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            }
         }
 
         //        testoFinaleElaborato = AEToken.replace(AEToken.projectNameUpper, testoFinaleElaborato, AEToken.projectNameUpper.getValue());
@@ -674,11 +679,17 @@ public class WizService {
             return false;
         }
 
+        if (text.isValid(packageName)) {
+            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(packageName.toLowerCase());
+            AEToken.entity.setValue(text.primaMaiuscola(packageName));
+        }
         AEToken.nameTargetProject.setValue(projectName);
         AEToken.projectNameUpper.setValue(projectName.toUpperCase());
         AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
         AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
         AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+        AEToken.packageName.setValue(packageName);
         AEToken.user.setValue(AEDir.nameUser.get());
         AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
         AEToken.time.setValue(date.getOrario());
@@ -703,12 +714,12 @@ public class WizService {
         AEToken.propertiesDoc.setValue(fixPropertiesDoc());
         AEToken.propertiesParams.setValue(fixPropertiesParams());
         AEToken.propertiesBuild.setValue(fixPropertiesBuild());
+        AEToken.creaIfNotExist.setValue(fixCreaIfNotExist());
+        AEToken.codeDoc.setValue(fixCodeDoc());
+        AEToken.codeParams.setValue(fixCodeParams());
+        AEToken.codeRinvio.setValue(fixCodeRinvio());
+        AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
-        if (text.isValid(packageName)) {
-            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(packageName.toLowerCase());
-            AEToken.entity.setValue(text.primaMaiuscola(packageName));
-        }
 
         return status;
     }
@@ -820,10 +831,10 @@ public class WizService {
 
     protected String fixPropertiesBuild() {
         String testo = VUOTA;
-        String sep = A_CAPO + A_CAPO+TAB+TAB+TAB+TAB;
+        String sep = A_CAPO + A_CAPO + TAB + TAB + TAB + TAB;
 
         if (AECheck.ordine.is()) {
-            testo += String.format(".%s(this.getNewOrdine())" + sep, AECheck.ordine.getFieldName());
+            testo += String.format(".%1$s(%1$s > 0 ? %1$s : this.getNewOrdine())" + sep, AECheck.ordine.getFieldName());
         }
 
         if (AECheck.code.is()) {
@@ -835,10 +846,79 @@ public class WizService {
         }
 
         if (AECheck.valido.is()) {
-            testo += String.format(".%s(%s)" + sep, AECheck.valido.getFieldName(),AECheck.valido.getFieldName());
+            testo += String.format(".%s(%s)" + sep, AECheck.valido.getFieldName(), AECheck.valido.getFieldName());
         }
 
         return testo.trim();
+    }
+
+    protected String fixCreaIfNotExist() {
+        String testo = VUOTA;
+        String tagSources = "MethodCreaIfNotExist";
+        String sourceText = VUOTA;
+
+        if (AECheck.code.is()) {
+            sourceText = this.leggeFile(tagSources);
+            testo = this.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+    protected String fixNewEntityUnica() {
+        String testo = VUOTA;
+        String tagSources = "MethodNewEntityKeyUnica";
+        String sourceText = VUOTA;
+
+        if (AECheck.code.is() && (AECheck.ordine.is() || AECheck.descrizione.is() || AECheck.valido.is())) {
+            sourceText = this.leggeFile(tagSources);
+            testo = this.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+
+    protected String fixCodeDoc() {
+        String testo = VUOTA;
+
+        if (AECheck.code.is()) {
+            testo += String.format("* @param %s di riferimento (obbligatorio, unico)", AECheck.code.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixCodeParams() {
+        String testo = VUOTA;
+
+        if (AECheck.code.is()) {
+            testo += String.format("final String %s", AECheck.code.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixCodeRinvio() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += "0" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.code.is()) {
+            testo += AECheck.code.getFieldName() + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += "VUOTA" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.valido.is()) {
+            testo += "false" + VIRGOLA_SPAZIO;
+        }
+
+        return text.levaCoda(testo, VIRGOLA_SPAZIO);
     }
 
     protected String fixString() {
