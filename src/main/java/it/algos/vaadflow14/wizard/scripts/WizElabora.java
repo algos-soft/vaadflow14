@@ -406,6 +406,9 @@ public abstract class WizElabora implements WizRecipient {
         if (AEPackage.entity.isAttivo()) {
             this.fixEntity();
         }
+        if (AEPackage.service.isAttivo()) {
+            this.fixFileService();
+        }
         if (AEPackage.logic.isAttivo()) {
             this.fixFileLogic();
         }
@@ -435,6 +438,18 @@ public abstract class WizElabora implements WizRecipient {
     /**
      * Creazione del file nella directory del package <br>
      */
+    protected void fixFileService() {
+        String tag = "Service";
+        String pathFileToBeWritten = AEDir.fileTargetService.get();
+        if (AECheck.service.is()) {
+            wizService.creaFilePackage(AECopyFile.checkFlagSeEsiste, tag, pathFileToBeWritten);
+        }
+    }
+
+
+    /**
+     * Creazione del file nella directory del package <br>
+     */
     protected void fixFileLogic() {
         String tag = "Logic";
         String pathFileToBeWritten = AEDir.fileTargetLogic.get();
@@ -459,7 +474,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void fixBootMenu() {
         String testo = VUOTA;
-        String tagOld = "super.addMenuRoutes();";
+        String tagOld = "super.fixMenuRoutes();";
         String pack = AEDir.nameTargetPackageUpper.get();
         String tagNew = "FlowVar.menuRouteList.add(" + pack + ".class);";
         String pathError;

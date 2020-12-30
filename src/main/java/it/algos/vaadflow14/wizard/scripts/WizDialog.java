@@ -16,11 +16,8 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_WIDTH;
 
@@ -87,7 +84,9 @@ public abstract class WizDialog extends Dialog {
 
     protected WizRecipient wizRecipient;
 
-    protected LinkedHashMap<String, Checkbox> mappaCheckbox;
+    protected LinkedHashMap<String, Checkbox> mappaCheckboxOld;
+
+    protected LinkedHashMap<String, WizBox> mappaWizBox;
 
     protected boolean isNuovoProgetto;
 
@@ -221,7 +220,7 @@ public abstract class WizDialog extends Dialog {
     protected void creaCheckBoxLayout() {
         checkBoxLayout = fixSezione("Flags di regolazione");
         this.add(checkBoxLayout);
-        mappaCheckbox = new LinkedHashMap<>();
+        mappaWizBox = new LinkedHashMap<>();
     }
 
 
@@ -262,8 +261,8 @@ public abstract class WizDialog extends Dialog {
      * Aggiunge al layout i checkbox di controllo <br>
      */
     protected void addCheckBoxMap() {
-        for (String key : mappaCheckbox.keySet()) {
-            checkBoxLayout.add(mappaCheckbox.get(key));
+        for (String key : mappaWizBox.keySet()) {
+            checkBoxLayout.add(mappaWizBox.get(key));
         }
     }
 
@@ -301,12 +300,15 @@ public abstract class WizDialog extends Dialog {
      * Chiamato alla dismissione del dialogo <br>
      * Elabora tutti i valori della Enumeration AECheck dipendenti dal nome del progetto <br>
      * Verranno usati da: <br>
-     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject, WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      */
     protected boolean regolaAECheck() {
         for (AECheck check : AECheck.values()) {
-            if (mappaCheckbox != null && mappaCheckbox.get(check.name()) != null) {
-                check.setAcceso(mappaCheckbox.get(check.name()).getValue());
+            if (mappaWizBox != null && mappaWizBox.get(check.name()) != null) {
+                check.setAcceso(mappaWizBox.get(check.name()).is());
+                if (check.isFieldAssociato()) {
+                    check.setFieldName(mappaWizBox.get(check.name()).getValue().toLowerCase());
+                }
             }
         }
 
@@ -325,7 +327,7 @@ public abstract class WizDialog extends Dialog {
 
         projectName = AEDir.nameTargetProject.get();
         packageName = AEDir.nameTargetPackage.get();
-        return  wizService.regolaAEToken(projectName,packageName);
+        return wizService.regolaAEToken(projectName, packageName);
     }
 
 

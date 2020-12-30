@@ -7,8 +7,11 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
+import static it.algos.vaadwiki14.backend.application.Vaadwiki14Cost.*;
 
 /**
  * Project @MODULELOWER@
@@ -65,7 +68,6 @@ public class @MODULEUPPER@Boot extends FlowBoot {
 
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
-        FlowVar.bootClazz = this.getClass();
         FlowVar.dataClazz = @MODULEUPPER@Data.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "@MODULEUPPER@";
@@ -89,7 +91,9 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      * @since java 8
      */
     protected void fixData() {
-        super.fixData();
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(@MODULEUPPER@Data.class)) {
+            dataInstance.fixData();
+        }
     }
 
 
@@ -102,7 +106,9 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      */
     @Override
     protected void fixPreferenze() {
-        super.fixPreferenze();
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(@MODULEUPPER@Data.class)) {
+             dataInstance.fixPreferenze();
+         }
     }
 
 
@@ -142,6 +148,18 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      */
     @Override
     protected void fixUsers() {
+    }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_@PROJECTALLUPPER@_DATA)
+    public void setDataInstance(@MODULEUPPER@Data dataInstance) {
+        this.dataInstance = dataInstance;
     }
 
 }

@@ -161,8 +161,7 @@ public class WizDialogNewProject extends WizDialog {
         AECheck.security.setAcceso(false);
 
         for (AECheck check : AECheck.getNewProject()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.is());
-            mappaCheckbox.put(check.name(), unCheckbox);
+            mappaWizBox.put(check.name(), new WizBox(check));
         }
 
         super.addCheckBoxMap();

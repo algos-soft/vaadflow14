@@ -82,11 +82,29 @@ public enum AEToken {
 
     properties("PROPERTIES"),
 
+    propertyOrdineName("ORDINENAME"),
+
     propertyOrdine("ORDINE"),
+
+    propertyCodeName("CODENAME"),
 
     propertyCode("CODE"),
 
+    propertyDescrizioneName("DESCRIZIONENAME"),
+
     propertyDescrizione("DESCRIZIONE"),
+
+    propertyValidoName("VALIDONAME"),
+
+    propertyValido("VALIDO"),
+
+    propertiesRinvio("PROPERTIESRINVIO"),
+
+    propertiesDoc("PROPERTIESDOC"),
+
+    propertiesParams("PROPERTIESPARAMS"),
+
+    propertiesBuild("PROPERTIESBUILD"),
 
     toString("TOSTRING"),
 

@@ -12,13 +12,13 @@ package it.algos.vaadflow14.wizard.enumeration;
 public enum AEPackage {
     entity("Entity base del package", true),
 
+    service("Service specifico del package", true),
+
     logic("Business logic del package", true),
 
     list("List specifico del package", false),
 
     form("Form specifico del package", false),
-
-    service("Service specifico del package", false),
 
     data("Creazione dati specifico del package", false),
 
