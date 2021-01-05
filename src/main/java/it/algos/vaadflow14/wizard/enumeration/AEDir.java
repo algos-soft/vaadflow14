@@ -396,6 +396,22 @@ public enum AEDir {
 
     //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
     //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
+    fileTargetService(false, false, true, "File di xxxService") {
+        @Override
+        public boolean modificaPackage(String packageName) {
+            String filePath = pathTargetPackage.get();
+
+            filePath += text.primaMaiuscola(packageName);
+            filePath += SERVICE_SUFFIX;
+            filePath += JAVA_SUFFIX;
+
+            this.setValue(filePath);
+            return text.isValid(filePath);
+        }
+    },// end of single enumeration
+
+    //--regolata DOPO essere passati da un dialogo (WizDialogNewProject, WizDialogUpdateProject, WizDialogNewPackage, WizDialogUpdatePackage)
+    //--tutte le property il cui nome inizia con 'file' iniziano con uno SLASH e finiscono col suffix .java
     fileTargetLogic(false, false, true, "File di xxxLogic") {
         @Override
         public boolean modificaPackage(String packageName) {

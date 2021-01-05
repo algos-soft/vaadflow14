@@ -68,7 +68,7 @@ public class ViaLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
+        super.usaBottoneDelete = true;
         super.usaBottoneResetList = true;
     }
 

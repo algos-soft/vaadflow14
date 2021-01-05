@@ -485,7 +485,12 @@ public class WizService {
         String testoFinaleElaborato = testoGrezzoDaElaborare;
 
         for (AEToken token : AEToken.values()) {
-            testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            try {
+                testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            } catch (Exception unErrore) {
+                logger.error(token.getTokenTag(), this.getClass(), "elaboraFileCreatoDaSource");
+                testoFinaleElaborato = AEToken.replace(token, testoFinaleElaborato, token.getValue());
+            }
         }
 
         //        testoFinaleElaborato = AEToken.replace(AEToken.projectNameUpper, testoFinaleElaborato, AEToken.projectNameUpper.getValue());
@@ -674,11 +679,17 @@ public class WizService {
             return false;
         }
 
+        if (text.isValid(packageName)) {
+            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
+            AEToken.packageName.setValue(packageName.toLowerCase());
+            AEToken.entity.setValue(text.primaMaiuscola(packageName));
+        }
         AEToken.nameTargetProject.setValue(projectName);
         AEToken.projectNameUpper.setValue(projectName.toUpperCase());
         AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
         AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
         AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+        AEToken.packageName.setValue(packageName);
         AEToken.user.setValue(AEDir.nameUser.get());
         AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
         AEToken.time.setValue(date.getOrario());
@@ -686,20 +697,29 @@ public class WizService {
         AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
         AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
         AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-        AEToken.keyProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
-        AEToken.searchProperty.setValue(AECheck.code.is() ? AECheck.code.getField() : VUOTA);
-        AEToken.sortProperty.setValue(AECheck.ordine.is() ? AECheck.ordine.getField() : VUOTA);
+        AEToken.keyProperty.setValue(AECheck.code.is() ? AECheck.code.getFieldName().toLowerCase() : VUOTA);
+        AEToken.searchProperty.setValue(AECheck.code.is() ? AECheck.code.getFieldName().toLowerCase() : VUOTA);
+        AEToken.sortProperty.setValue(AECheck.ordine.is() ? AECheck.ordine.getFieldName().toLowerCase() : AECheck.code.is() ? AECheck.code.getFieldName().toLowerCase() : VUOTA);
         AEToken.rowIndex.setValue(AECheck.rowIndex.is() ? "true" : "false");
         AEToken.properties.setValue(fixProperties());
+        AEToken.propertyOrdineName.setValue(AECheck.ordine.getFieldName().toLowerCase());
         AEToken.propertyOrdine.setValue(fixProperty(AECheck.ordine));
+        AEToken.propertyCodeName.setValue(AECheck.code.getFieldName().toLowerCase());
         AEToken.propertyCode.setValue(fixProperty(AECheck.code));
+        AEToken.propertyDescrizioneName.setValue(AECheck.descrizione.getFieldName().toLowerCase());
         AEToken.propertyDescrizione.setValue(fixProperty(AECheck.descrizione));
+        AEToken.propertyValidoName.setValue(AECheck.valido.getFieldName().toLowerCase());
+        AEToken.propertyValido.setValue(fixProperty(AECheck.valido));
+        AEToken.propertiesRinvio.setValue(fixPropertiesRinvio());
+        AEToken.propertiesDoc.setValue(fixPropertiesDoc());
+        AEToken.propertiesParams.setValue(fixPropertiesParams());
+        AEToken.propertiesBuild.setValue(fixPropertiesBuild());
+        AEToken.creaIfNotExist.setValue(fixCreaIfNotExist());
+        AEToken.codeDoc.setValue(fixCodeDoc());
+        AEToken.codeParams.setValue(fixCodeParams());
+        AEToken.codeRinvio.setValue(fixCodeRinvio());
+        AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
-        if (text.isValid(packageName)) {
-            AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(packageName.toLowerCase());
-            AEToken.entity.setValue(text.primaMaiuscola(packageName));
-        }
 
         return status;
     }
@@ -722,30 +742,194 @@ public class WizService {
         String testo = VUOTA;
 
         if (AECheck.ordine.is()) {
-            testo += AECheck.ordine.getField() + VIRGOLA;
+            testo += AECheck.ordine.getFieldName() + VIRGOLA;
         }
 
         if (AECheck.code.is()) {
-            testo += AECheck.code.getField() + VIRGOLA;
+            testo += AECheck.code.getFieldName() + VIRGOLA;
         }
 
         if (AECheck.descrizione.is()) {
-            testo += AECheck.descrizione.getField() + VIRGOLA;
+            testo += AECheck.descrizione.getFieldName() + VIRGOLA;
+        }
+
+        if (AECheck.valido.is()) {
+            testo += AECheck.valido.getFieldName() + VIRGOLA;
         }
 
         testo = text.levaCoda(testo, VIRGOLA);
         return text.setApici(testo).trim();
     }
 
+    protected String fixPropertiesRinvio() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += "0" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.code.is()) {
+            testo += "VUOTA" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += "VUOTA" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.valido.is()) {
+            testo += "false" + VIRGOLA_SPAZIO;
+        }
+
+        return text.levaCoda(testo, VIRGOLA_SPAZIO);
+    }
+
+    protected String fixPropertiesDoc() {
+        String testo = VUOTA;
+        String sep = A_CAPO + TAB + SPAZIO;
+
+        if (AECheck.ordine.is()) {
+            testo += String.format("* @param %s (obbligatorio, unico)" + sep, AECheck.ordine.getFieldName());
+        }
+
+        if (AECheck.code.is()) {
+            testo += String.format("* @param %s di riferimento (obbligatorio, unico)" + sep, AECheck.code.getFieldName());
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += String.format("* @param %s (facoltativo, non unico)" + sep, AECheck.descrizione.getFieldName());
+        }
+
+        if (AECheck.valido.is()) {
+            testo += String.format("* @param %s flag (facoltativo, di default false)" + sep, AECheck.valido.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixPropertiesParams() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += String.format("final int %s" + VIRGOLA_SPAZIO, AECheck.ordine.getFieldName());
+        }
+
+        if (AECheck.code.is()) {
+            testo += String.format("final String %s" + VIRGOLA_SPAZIO, AECheck.code.getFieldName());
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += String.format("final String %s" + VIRGOLA_SPAZIO, AECheck.descrizione.getFieldName());
+        }
+
+        if (AECheck.valido.is()) {
+            testo += String.format("final boolean %s" + VIRGOLA_SPAZIO, AECheck.valido.getFieldName());
+        }
+
+        testo = text.levaCoda(testo, VIRGOLA_SPAZIO);
+        return testo;
+    }
+
+    protected String fixPropertiesBuild() {
+        String testo = VUOTA;
+        String sep = A_CAPO + A_CAPO + TAB + TAB + TAB + TAB;
+
+        if (AECheck.ordine.is()) {
+            testo += String.format(".%1$s(%1$s > 0 ? %1$s : this.getNewOrdine())" + sep, AECheck.ordine.getFieldName());
+        }
+
+        if (AECheck.code.is()) {
+            testo += String.format(".%1$s(text.isValid(%1$s) ? %s : null)" + sep, AECheck.code.getFieldName());
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += String.format(".%1$s(text.isValid(%1$s) ? %1$s : null)" + sep, AECheck.descrizione.getFieldName());
+        }
+
+        if (AECheck.valido.is()) {
+            testo += String.format(".%s(%s)" + sep, AECheck.valido.getFieldName(), AECheck.valido.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixCreaIfNotExist() {
+        String testo = VUOTA;
+        String tagSources = "MethodCreaIfNotExist";
+        String sourceText = VUOTA;
+
+        if (AECheck.code.is()) {
+            sourceText = this.leggeFile(tagSources);
+            testo = this.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+    protected String fixNewEntityUnica() {
+        String testo = VUOTA;
+        String tagSources = "MethodNewEntityKeyUnica";
+        String sourceText = VUOTA;
+
+        if (AECheck.code.is() && (AECheck.ordine.is() || AECheck.descrizione.is() || AECheck.valido.is())) {
+            sourceText = this.leggeFile(tagSources);
+            testo = this.elaboraFileCreatoDaSource(sourceText);
+        }
+
+        return testo;
+    }
+
+
+    protected String fixCodeDoc() {
+        String testo = VUOTA;
+
+        if (AECheck.code.is()) {
+            testo += String.format("* @param %s di riferimento (obbligatorio, unico)", AECheck.code.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixCodeParams() {
+        String testo = VUOTA;
+
+        if (AECheck.code.is()) {
+            testo += String.format("final String %s", AECheck.code.getFieldName());
+        }
+
+        return testo.trim();
+    }
+
+    protected String fixCodeRinvio() {
+        String testo = VUOTA;
+
+        if (AECheck.ordine.is()) {
+            testo += "0" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.code.is()) {
+            testo += AECheck.code.getFieldName() + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.descrizione.is()) {
+            testo += "VUOTA" + VIRGOLA_SPAZIO;
+        }
+
+        if (AECheck.valido.is()) {
+            testo += "false" + VIRGOLA_SPAZIO;
+        }
+
+        return text.levaCoda(testo, VIRGOLA_SPAZIO);
+    }
+
     protected String fixString() {
         String toString = "VUOTA";
 
         if (AECheck.code.is()) {
-            toString = "code";
+            toString = AECheck.code.getFieldName();
         }
         else {
             if (AECheck.descrizione.is()) {
-                toString = "descrizione";
+                toString = AECheck.descrizione.getFieldName();
             }
         }
 

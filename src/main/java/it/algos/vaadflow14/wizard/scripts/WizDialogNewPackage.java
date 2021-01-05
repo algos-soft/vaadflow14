@@ -94,8 +94,7 @@ public class WizDialogNewPackage extends WizDialog {
         }
 
         for (AECheck check : AECheck.getNewPackage()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.is());
-            mappaCheckbox.put(check.name(), unCheckbox);
+            mappaWizBox.put(check.name(), new WizBox(check));
         }
 
         super.addCheckBoxMap();

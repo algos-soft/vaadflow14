@@ -108,27 +108,22 @@ public class WizDialogUpdatePackage extends WizDialog {
         //--regola tutti i checkbox
         AECheck.reset();
         for (AECheck check : AECheck.getUpdatePackage()) {
-            check.setAcceso(check.isAccesoInizialmente());
+            mappaWizBox.put(check.name(), new WizBox(check));
         }
 
-        for (AECheck check : AECheck.getUpdatePackage()) {
-            unCheckbox = new Checkbox(check.getCaption(), check.is());
-            mappaCheckbox.put(check.name(), unCheckbox);
-        }
-
-        unCheckbox = mappaCheckbox.get(AECheck.rowIndex.name());
+        unCheckbox = mappaWizBox.get(AECheck.rowIndex.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroRow(); });
-        unCheckbox = mappaCheckbox.get(AECheck.ordine.name());
+        unCheckbox = mappaWizBox.get(AECheck.ordine.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroOrdine(); });
-        unCheckbox = mappaCheckbox.get(AECheck.docFile.name());
+        unCheckbox = mappaWizBox.get(AECheck.docFile.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroDocPackage(); });
 
         super.addCheckBoxMap();
     }
 
     protected void sincroRow() {
-        Checkbox checkRow = mappaCheckbox.get(AECheck.rowIndex.name());
-        Checkbox checkOrdine = mappaCheckbox.get(AECheck.ordine.name());
+        Checkbox checkRow = mappaWizBox.get(AECheck.rowIndex.name()).getBox();
+        Checkbox checkOrdine = mappaWizBox.get(AECheck.ordine.name()).getBox();
 
         if (checkRow.getValue()) {
             checkOrdine.setValue(false);
@@ -136,8 +131,8 @@ public class WizDialogUpdatePackage extends WizDialog {
     }
 
     protected void sincroOrdine() {
-        Checkbox checkRow = mappaCheckbox.get(AECheck.rowIndex.name());
-        Checkbox checkOrdine = mappaCheckbox.get(AECheck.ordine.name());
+        Checkbox checkRow = mappaWizBox.get(AECheck.rowIndex.name()).getBox();
+        Checkbox checkOrdine = mappaWizBox.get(AECheck.ordine.name()).getBox();
 
         if (checkOrdine.getValue()) {
             checkRow.setValue(false);
@@ -145,14 +140,15 @@ public class WizDialogUpdatePackage extends WizDialog {
     }
 
     protected void sincroDocPackage() {
-        Checkbox checkDocPackage = mappaCheckbox.get(AECheck.docFile.name());
+        Checkbox checkDocPackage = mappaWizBox.get(AECheck.docFile.name()).getBox();
 
         if (checkDocPackage.getValue()) {
-            for (String key : mappaCheckbox.keySet()) {
+            for (String key : mappaWizBox.keySet()) {
                 if (!key.equals(AECheck.docFile.name())) {
-                    mappaCheckbox.get(key).setValue(false);
+                    mappaWizBox.get(key).setValue(false);
                 }
             }
+
             confirmButton.setEnabled(true);
         }
         else {
@@ -195,7 +191,7 @@ public class WizDialogUpdatePackage extends WizDialog {
             packageName = fieldComboPackages.getValue();
         }
 
-        if (mappaCheckbox != null && mappaCheckbox.get(AECheck.docFile.name()) != null && mappaCheckbox.get(AECheck.docFile.name()).getValue()) {
+        if (mappaWizBox != null && mappaWizBox.get(AECheck.docFile.name()) != null && mappaWizBox.get(AECheck.docFile.name()).is()) {
             AEDir.modificaPackageAll(VUOTA);
         }
         else {

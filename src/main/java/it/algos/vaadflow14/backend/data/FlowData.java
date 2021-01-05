@@ -169,7 +169,7 @@ public class FlowData implements AIData {
         }
         else {
             if (!nameService.equals(TAG_GENERIC_SERVICE)) {
-                message = String.format("Nella classe %s del package %s non esiste il metodo resetEmptyOnly() ", entityServicePrevista, packageName);
+                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName,entityServicePrevista);
                 logger.log(AETypeLog.checkData, message);
             }
         }

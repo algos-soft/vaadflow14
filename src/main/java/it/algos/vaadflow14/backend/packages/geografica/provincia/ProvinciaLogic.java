@@ -97,7 +97,7 @@ public class ProvinciaLogic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = false;
+        super.usaBottoneDelete = false;
         super.usaBottoneResetList = true;
         super.usaBottoneNew = true;
         super.usaBottonePaginaWiki = true;

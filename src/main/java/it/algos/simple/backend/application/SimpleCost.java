@@ -13,7 +13,7 @@ import java.time.LocalTime;
  */
 public abstract class SimpleCost {
 
-    public static final String TAG_SIMPLE_DATA = "simpledata";
+    public static final String TAG_SIMPLE_DATA = "simpleData";
 
     public static final String PREF_DATA = "data";
 

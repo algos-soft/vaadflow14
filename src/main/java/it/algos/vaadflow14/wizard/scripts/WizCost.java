@@ -36,7 +36,6 @@ public abstract class WizCost {
     public static final String PATH_OPERATIVI_DIR_STANDARD = PATH_PROJECTS_DIR_STANDARD + DIR_OPERATIVI;
 
 
-
     public static final String DIR_RESOURCES = "resources/";
 
     public static final String DIR_META = "META-INF/";
@@ -104,7 +103,7 @@ public abstract class WizCost {
 
     public static final String PATH_VAADFLOW_DIR_STANDARD = PATH_ROOT + VAADFLOW_DIR_STANDARD;
 
-//    public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
+    //    public static final String PATH_OPERATIVI = PATH_PROJECTS_DIR_STANDARD + "operativi/";
 
 
     public static final String FILE_WIZARD = "Wizard";
@@ -171,6 +170,8 @@ public abstract class WizCost {
     public static final String MD_SUFFIX = ".md";
 
     public static final String LOGIC_SUFFIX = "Logic";
+
+    public static final String SERVICE_SUFFIX = "Service";
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)

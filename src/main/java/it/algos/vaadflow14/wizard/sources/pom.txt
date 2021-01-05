@@ -12,25 +12,26 @@
     <version>1.0-SNAPSHOT</version>
 
 
+    <parent>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.0.RELEASE</version>
+    </parent>
+
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8
         </project.reporting.outputEncoding>
-        <!-- <maven.compiler.source>1.8</maven.compiler.source> -->
-        <!-- <maven.compiler.target>1.8</maven.compiler.target> -->
+
+        <!-- Va controllata la versione di JAVA -->
+        <java.version>11</java.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
         <vaadin.version>14.4.4</vaadin.version>
     </properties>
-
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
-    </parent>
 
 
     <repositories>

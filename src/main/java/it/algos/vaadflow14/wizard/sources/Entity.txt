@@ -7,6 +7,8 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
+import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -15,6 +17,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static java.awt.image.ImageObserver.WIDTH;
 
 /**
  * Project @MODULELOWER@ <br>
@@ -35,7 +39,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder(builderMethodName = "builder@ENTITY@")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = true)
 @AIEntity(recordName = "@PACKAGE@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
 @AIView(menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
@@ -48,9 +52,13 @@ public class @ENTITY@ extends @SUPERCLASSENTITY@ {
      */
     private final static long serialVersionUID = 1L;
 
-      @ORDINE@
-      @CODE@
-      @DESCRIZIONE@
+     @ORDINE@
+
+     @CODE@
+
+     @DESCRIZIONE@
+
+     @VALIDO@
 
 
     /**

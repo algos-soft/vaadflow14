@@ -1,9 +1,9 @@
 package it.algos.@MODULELOWER@.backend.packages.@PACKAGE@;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,16 @@ import org.springframework.stereotype.Service;
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
- * <br>
- * Business class specifica di questa package. <br>
  * <p>
- * Un'istanza viene costruita dal metodo AView.fixEntityLogic() ogni volta che si crea una @Route <br>
+ * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
+ * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
+ * L' istanza può essere richiamata con: <br>
+ * 1) @Autowired private Via ; <br>
+ * 2) StaticContextAccessor.getBean(Via.class) (senza parametri) <br>
+ * 3) appContext.getBean(Via.class) (preceduto da @Autowired ApplicationContext appContext) <br>
  * <p>
- * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
+ * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
- * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
- * - la documentazione precedente a questo tag viene SEMPRE riscritta <br>
- * - se occorre preservare delle @Annotation con valori specifici, spostarle DOPO @AIScript <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -47,6 +46,7 @@ public class @ENTITY@Logic extends ALogic {
         this(AEOperation.edit);
     }
 
+
     /**
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -62,29 +62,29 @@ public class @ENTITY@Logic extends ALogic {
 
 
     /**
-     * Preferenze standard <br>
+     * Preferenze usate da questo service <br>
      * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneResetList = true;
+        super.usaBottoneDelete = true;
+        super.usaBottoneResetList = false;
     }
 
-     /**
-      * Creazione in memoria di una nuova entity che NON viene salvata
-      * Eventuali regolazioni iniziali delle property
-      * Senza properties per compatibilità con la superclasse
-      *
-      * @return la nuova entity appena creata (non salvata)
-      */
-     public @ENTITY@ newEntity() {
-         return null;
-     }// end of method
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce un wrapper di liste d'informazioni per costruire l' istanza di AHeaderWrap <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrapList() {
+        return null;
+    }
 
 
 }// end of class

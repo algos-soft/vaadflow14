@@ -2,9 +2,17 @@ package it.algos.@MODULELOWER@.backend.data;
 
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.data.FlowData;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
+import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.wrapper.AResult;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
 import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import java.util.List;
+import static it.algos.vaadwiki14.backend.application.Vaadwiki14Cost.*;
 
 /**
  * Project @MODULELOWER@
@@ -24,6 +32,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
  * @since java 8
  */
 @SpringComponent
+@Qualifier(TAG_@PROJECTALLUPPER@_DATA)
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
 public class @MODULEUPPER@Data extends FlowData {
@@ -42,33 +51,46 @@ public class @MODULEUPPER@Data extends FlowData {
     @Override
     public void fixData() {
         super.fixData();
-
-        String moduleName = "@MODULELOWER@";
-        List<String> allEntities;
-        String message;
-
-        //--spazzola tutta la directory packages
-        allEntities = file.getModuleSubFilesEntity(moduleName);
-
-        //--elabora le collections valide
-        allEntities.stream()
-                .filter(checkEntity)
-                .forEach(resetEmptyOnly);
-        message = "Controllati i dati iniziali di @MODULELOWER@";
-        logger.log(AETypeLog.checkData, message);
+        super.fixData("@MODULELOWER@");
     }
 
+
     /**
-     * Ricostruisce al valore di default le preferenze standard dell'applicazione <br>
+     * Ricostruisce le preferenze standard dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Il metodo reset() può essere chiamato anche dal bottone di  preferenzaLogic <br>
+     * <p>
      *
-     * @since java 8
+     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
+     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
+     *                <br>
      */
     @Override
-    public void fixPreferenze() {
-        super.fixPreferenze();
+    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset) {
+        AIResult result = super.resetPreferenze(preferenzaLogic,isReset);
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            return result;
+        }
+
+        //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
+
+
+        if (numRec == 0) {
+            result = AResult.valido("Non ci sono nuove preferenze specifiche da aggiungere.");
+        }
+        else {
+            if (numRec == 1) {
+                result = AResult.valido("Mancava una preferenza  specifica che è stata aggiunta senza modificare i valori di quelle esistenti");
+            }
+            else {
+                result = AResult.valido("Mancavano " + numRec + " preferenze specifiche che sono state aggiunte senza modificare i valori di quelle esistenti");
+            }
+        }
+        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
+
+        return result;
     }
 
 }// end of data class

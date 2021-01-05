@@ -62,9 +62,9 @@ public enum AEToken {
 
     methodNewOrdine("NEWORDINE"),
 
-    methodIdKeySpecifica("IDKEYSPECIFICA"),
+    creaIfNotExist("CREAIFNOTEXIST"),
 
-    keyUnica("KEYUNICA"),
+    newEntityKeyUnica("NEWENTITYKEYUNICA"),
 
     builder("BUILDER"),
 
@@ -82,11 +82,35 @@ public enum AEToken {
 
     properties("PROPERTIES"),
 
+    propertyOrdineName("ORDINENAME"),
+
     propertyOrdine("ORDINE"),
+
+    propertyCodeName("CODENAME"),
 
     propertyCode("CODE"),
 
+    propertyDescrizioneName("DESCRIZIONENAME"),
+
     propertyDescrizione("DESCRIZIONE"),
+
+    propertyValidoName("VALIDONAME"),
+
+    propertyValido("VALIDO"),
+
+    propertiesRinvio("PROPERTIESRINVIO"),
+
+    propertiesDoc("PROPERTIESDOC"),
+
+    propertiesParams("PROPERTIESPARAMS"),
+
+    propertiesBuild("PROPERTIESBUILD"),
+
+    codeDoc("CODEDOC"),
+
+    codeParams("CODEPARAMS"),
+
+    codeRinvio("CODERINVIO"),
 
     toString("TOSTRING"),
 

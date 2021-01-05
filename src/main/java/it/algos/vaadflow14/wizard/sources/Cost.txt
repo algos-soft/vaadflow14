@@ -22,4 +22,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @AIScript(sovraScrivibile = false)
 public abstract class @MODULEUPPER@Cost {
 
+    public static final String TAG_@PROJECTALLUPPER@_DATA = "@MODULELOWER@Data";
+
 }// end of static class

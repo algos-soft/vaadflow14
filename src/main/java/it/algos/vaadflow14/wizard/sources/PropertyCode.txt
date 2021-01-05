@@ -1,9 +1,9 @@
     /**
-     * codice di riferimento (obbligatorio, unico) <br>
+     * @CODENAME@ di riferimento (obbligatorio, unico) <br>
      */
-    @NotBlank(message = "Il codice è obbligatorio")
-    @Indexed(unique = false)
+    @NotBlank(message = "Il @CODENAME@ è obbligatorio")
+    @Indexed(unique = true)
     @Size(min = 2)
-    @AIField(type = AETypeField.text, required = true, focus = true, widthEM = 8)
-    @AIColumn(widthEM = 8)
-    public String code;
+    @AIField(type = AETypeField.text, required = true, focus = true, caption = "@CODENAME@", widthEM = 8)
+    @AIColumn(header = "@CODENAME@", widthEM = 8)
+    public String @CODENAME@;

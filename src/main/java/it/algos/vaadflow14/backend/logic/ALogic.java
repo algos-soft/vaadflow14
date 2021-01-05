@@ -283,7 +283,7 @@ public abstract class ALogic implements AILogic {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
-    protected boolean usaBottoneDeleteAll;
+    protected boolean usaBottoneDelete;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -393,7 +393,7 @@ public abstract class ALogic implements AILogic {
         //        this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         this.searchType = AESearch.nonUsata;
         this.searchProperty = annotation.getSearchPropertyName(entityClazz);
-        this.usaBottoneDeleteAll = false;
+        this.usaBottoneDelete = false;
         this.usaBottoneResetList = false;
         this.usaBottoneNew = true;
         this.usaBottoneExport = false;
@@ -561,7 +561,7 @@ public abstract class ALogic implements AILogic {
     protected List<AEButton> getListaBottoniIniziali() {
         List<AEButton> listaBottoni = new ArrayList<>();
 
-        if (usaBottoneDeleteAll) {
+        if (usaBottoneDelete) {
             listaBottoni.add(AEButton.deleteAll);
         }
 

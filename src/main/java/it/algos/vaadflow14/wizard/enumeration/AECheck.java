@@ -26,7 +26,7 @@ public enum AECheck {
 
     snippets("Directory SNIPPETS di codice suggerito (VaadFlow)", true, true, false, false, VUOTA, VUOTA, false),
 
-    flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false, VUOTA, VUOTA, false),
+    flow("Directory BASE di VaadFlow (Wizard compreso)", true, true, false, false, VUOTA, VUOTA, true),
 
     projectNew("Directory modulo del nuovo progetto (...)", true, false, false, false, VUOTA, VUOTA, false),
 
@@ -52,23 +52,25 @@ public enum AECheck {
 
     entity("Entity base del package", false, false, true, true, VUOTA, VUOTA, true),
 
-    logic("Business logic del package", false, false, true, true, VUOTA, VUOTA, false),
+    service("Service specifico del package", false, false, true, true, VUOTA, VUOTA, true),
+
+    logic("Business logic del package", false, false, true, true, VUOTA, VUOTA, true),
 
     form("Form specifico del package", false, false, true, true, VUOTA, VUOTA, false),
 
     list("List specifico del package", false, false, true, true, VUOTA, VUOTA, false),
 
-    service("Service specifico del package", false, false, true, true, VUOTA, VUOTA, false),
-
     company("Entity subclass di Company", false, false, true, true, VUOTA, VUOTA, false),
 
     rowIndex("Entity usa rowIndex", false, false, true, true, VUOTA, VUOTA, false),
 
-    ordine("Entity usa property Ordine", false, false, true, true, "ordine", "PropertyOrdine", true),
+    ordine("Entity usa property (int)", false, false, true, true, "ordine", "PropertyOrdine", false,true,"Ordine"),
 
-    code("Entity usa property Code", false, false, true, true, "code", "PropertyCode", true),
+    code("Entity usa property (String)", false, false, true, true, "code", "PropertyCode", true,true,"Code"),
 
-    descrizione("Entity usa property Descrizione", false, false, true, true, "descrizione", "PropertyDescrizione", true),
+    descrizione("Entity usa property (String)", false, false, true, true, "descrizione", "PropertyDescrizione", true,true,"Descrizione"),
+
+    valido("Entity usa property (boolean)", false, false, true, true, "valido", "PropertyValido", false,true,"Valido"),
 
     docFile("Update doc of all packages", false, false, false, true, VUOTA, VUOTA, false),
 
@@ -95,6 +97,10 @@ public enum AECheck {
 
     private boolean accesoInizialmente;
 
+    private boolean fieldAssociato;
+
+    private String fieldName;
+
 
     /**
      * Costruttore completo <br>
@@ -108,6 +114,22 @@ public enum AECheck {
         this.field = field;
         this.sourcesTag = sourcesTag;
         this.accesoInizialmente = accesoInizialmente;
+    }
+
+    /**
+     * Costruttore completo <br>
+     */
+    AECheck(String caption, boolean newProject, boolean updateProject, boolean newPackage, boolean updatePackage, String field, String sourcesTag, boolean accesoInizialmente, boolean fieldAssociato, String fieldName) {
+        this.caption = caption;
+        this.newProject = newProject;
+        this.updateProject = updateProject;
+        this.newPackage = newPackage;
+        this.updatePackage = updatePackage;
+        this.field = field;
+        this.sourcesTag = sourcesTag;
+        this.accesoInizialmente = accesoInizialmente;
+        this.fieldAssociato = fieldAssociato;
+        this.fieldName = fieldName;
     }
 
 
@@ -235,6 +257,18 @@ public enum AECheck {
 
     public boolean isAccesoInizialmente() {
         return accesoInizialmente;
+    }
+
+    public boolean isFieldAssociato() {
+        return fieldAssociato;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }
 

@@ -20,7 +20,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public enum AEButton {
 
-    deleteAll("Delete all", VaadinIcon.TRASH, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
+    deleteAll("Delete", VaadinIcon.TRASH, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
 
     resetList("Reset", VaadinIcon.REFRESH, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
 

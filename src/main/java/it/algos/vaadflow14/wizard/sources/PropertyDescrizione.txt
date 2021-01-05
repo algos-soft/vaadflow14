@@ -1,10 +1,9 @@
 
     /**
-     * descrizione (obbligatoria, non unica) <br>
+     * @DESCRIZIONENAME@ (facoltativo, non unico) <br>
      */
-    @NotBlank(message = "La descrizione è obbligatoria")
     @Indexed(unique = false)
     @Size(min = 2, max = 50)
-    @AIField(type = AETypeField.text, required = true, firstCapital = true, widthEM = 24)
-    @AIColumn(flexGrow = true)
-    public String descrizione;
+    @AIField(type = AETypeField.text, firstCapital = true, caption = "@DESCRIZIONENAME@", widthEM = 24)
+    @AIColumn(header = "@DESCRIZIONENAME@", flexGrow = true)
+    public String @DESCRIZIONENAME@;

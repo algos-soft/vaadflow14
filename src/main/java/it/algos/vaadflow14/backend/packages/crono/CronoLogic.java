@@ -46,7 +46,7 @@ public abstract class CronoLogic extends ALogic {
         super.usaHeaderWrap = true;
         if (FlowVar.usaSecurity) {
             if (vaadinService.isDeveloper()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
                 super.usaBottoneNew = true;
             } else {
@@ -56,7 +56,7 @@ public abstract class CronoLogic extends ALogic {
             super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
         } else {
             if (AEPreferenza.usaDebug.is()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
                 super.usaBottoneNew = true;
             } else {
