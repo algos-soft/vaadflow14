@@ -15,7 +15,6 @@ Per il merge di una branch:
 9) eseguire SUBITO un commit (forzando con una modifica farlocca)
 
 
-
 ##Gitignore
 - Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 - Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
