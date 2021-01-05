@@ -78,7 +78,7 @@ public class UtenteLogic extends ALogic {
 
         if (FlowVar.usaSecurity) {
             if (vaadinService.isDeveloper()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
 
             }
@@ -91,7 +91,7 @@ public class UtenteLogic extends ALogic {
         }
         else {
             if (AEPreferenza.usaDebug.is()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
             }
             super.usaBottoneNew = true;

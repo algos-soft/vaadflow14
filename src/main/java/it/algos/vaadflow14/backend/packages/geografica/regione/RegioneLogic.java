@@ -104,7 +104,7 @@ public class RegioneLogic extends ALogic {
         super.fixPreferenze();
 
         super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
+        super.usaBottoneDelete = AEPreferenza.usaDebug.is();
         super.usaBottoneResetList = AEPreferenza.usaDebug.is();
         super.usaBottoneNew = AEPreferenza.usaDebug.is();
         super.usaBottonePaginaWiki = true;

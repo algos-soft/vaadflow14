@@ -121,7 +121,7 @@ public class PreferenzaLogic extends ALogic {
 
         this.searchType = AESearch.editField;
         this.searchProperty = annotation.getSearchPropertyName(entityClazz);
-        this.usaBottoneDeleteAll = false;
+        this.usaBottoneDelete = false;
         this.usaBottoneResetList = true;
         this.usaBottoneNew = true;
         this.usaBottoneExport = false;

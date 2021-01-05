@@ -70,8 +70,8 @@ public class @ENTITY@Logic extends ALogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneResetList = true;
+        super.usaBottoneDelete = true;
+        super.usaBottoneResetList = false;
     }
 
     /**

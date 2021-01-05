@@ -78,7 +78,7 @@ public class StatoLogic extends ALogic {
         super.fixPreferenze();
 
         super.operationForm = debug ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = debug;
+        super.usaBottoneDelete = debug;
         super.usaBottoneResetList = debug;
         super.usaBottoneNew = debug;
         super.usaBottonePaginaWiki = true;

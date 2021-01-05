@@ -76,7 +76,7 @@ public class CompanyLogic extends ALogic {
 
         if (FlowVar.usaCompany) {
             if (vaadinService.isDeveloper()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
 
             }
@@ -89,7 +89,7 @@ public class CompanyLogic extends ALogic {
         }
         else {
             if (AEPreferenza.usaDebug.is()) {
-                super.usaBottoneDeleteAll = true;
+                super.usaBottoneDelete = true;
                 super.usaBottoneResetList = true;
             }
             super.usaBottoneNew = true;
