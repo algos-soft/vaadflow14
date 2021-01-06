@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.google.common.base.Strings;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +44,7 @@ public class ATextService extends AAbstractService {
      * @return vero se la stringa è vuota o nulla
      */
     public boolean isEmpty(final String stringa) {
-        return stringa == null || stringa.trim().isEmpty();
+        return Strings.isNullOrEmpty(stringa);
     }
 
 
@@ -130,7 +131,7 @@ public class ATextService extends AAbstractService {
      *
      * @return lista di singole stringhe
      */
-    public List<String> getArray(String stringaMultipla) {
+    public List<String> getArray(final String stringaMultipla) {
         List<String> lista = new ArrayList<>();
         String tag = VIRGOLA;
         String[] parti;
@@ -163,7 +164,7 @@ public class ATextService extends AAbstractService {
      *
      * @return lista di singoli interi
      */
-    public List<Integer> getArrayInt(String stringaMultipla) {
+    public List<Integer> getArrayInt(final String stringaMultipla) {
         List<Integer> lista = new ArrayList<>();
         String tag = VIRGOLA;
         String[] parti;
@@ -198,13 +199,14 @@ public class ATextService extends AAbstractService {
      *
      * @return testo ridotto in uscita
      */
-    public String levaTesta(String testoIn, String tagIniziale) {
+    public String levaTesta(final String testoIn, final String tagIniziale) {
         String testoOut = testoIn.trim();
+        String tag = VUOTA;
 
         if (this.isValid(testoOut) && this.isValid(tagIniziale)) {
-            tagIniziale = tagIniziale.trim();
-            if (testoOut.startsWith(tagIniziale)) {
-                testoOut = testoOut.substring(tagIniziale.length());
+            tag = tagIniziale.trim();
+            if (testoOut.startsWith(tag)) {
+                testoOut = testoOut.substring(tag.length());
             }
         }
 
@@ -224,13 +226,14 @@ public class ATextService extends AAbstractService {
      *
      * @return testo ridotto in uscita
      */
-    public String levaTestoPrimaDi(final String testoIn, String tagIniziale) {
+    public String levaTestoPrimaDi(final String testoIn, final String tagIniziale) {
         String testoOut = testoIn.trim();
+        String tag = VUOTA;
 
         if (this.isValid(testoOut) && this.isValid(tagIniziale)) {
-            tagIniziale = tagIniziale.trim();
-            if (testoOut.contains(tagIniziale)) {
-                testoOut = testoOut.substring(testoOut.indexOf(tagIniziale) + tagIniziale.length());
+            tag = tagIniziale.trim();
+            if (testoOut.contains(tag)) {
+                testoOut = testoOut.substring(testoOut.indexOf(tag) + tag.length());
             }
         }
 
@@ -250,13 +253,14 @@ public class ATextService extends AAbstractService {
      *
      * @return testo ridotto in uscita
      */
-    public String levaCoda(final String testoIn, String tagFinale) {
+    public String levaCoda(final String testoIn, final String tagFinale) {
         String testoOut = testoIn.trim();
+        String tag = VUOTA;
 
         if (this.isValid(testoOut) && this.isValid(tagFinale)) {
-            tagFinale = tagFinale.trim();
-            if (testoOut.endsWith(tagFinale)) {
-                testoOut = testoOut.substring(0, testoOut.length() - tagFinale.length());
+            tag = tagFinale.trim();
+            if (testoOut.endsWith(tag)) {
+                testoOut = testoOut.substring(0, testoOut.length() - tag.length());
             }
         }
 
@@ -276,30 +280,19 @@ public class ATextService extends AAbstractService {
      *
      * @return testo ridotto in uscita
      */
-    public String levaCodaDa(final String testoIn, String tagInterrompi) {
+    public String levaCodaDa(final String testoIn, final String tagInterrompi) {
         String testoOut = testoIn.trim();
+        String tag = VUOTA;
 
         if (this.isValid(testoOut) && this.isValid(tagInterrompi)) {
-            tagInterrompi = tagInterrompi.trim();
-            if (testoOut.contains(tagInterrompi)) {
-                testoOut = testoOut.substring(0, testoOut.lastIndexOf(tagInterrompi));
+            tag = tagInterrompi.trim();
+            if (testoOut.contains(tag)) {
+                testoOut = testoOut.substring(0, testoOut.lastIndexOf(tag));
             }
         }
 
         return testoOut.trim();
     }
-
-    //    /**
-    //     * Label colorata
-    //     *
-    //     * @param message    da visualizzare
-    //     * @param labelColor del messaggio
-    //     *
-    //     * @return etichetta visualizzata
-    //     */
-    //    private Label getLabel(String message, String labelColor) {
-    //        return getLabel(message, labelColor, false);
-    //    }
 
 
     /**
@@ -621,7 +614,7 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Elimina (eventuali) graffe in testa e coda della stringa.
+     * Elimina (eventuali) graffe singole in testa e coda della stringa.
      * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
      * Elimina spazi vuoti iniziali e finali
@@ -645,8 +638,9 @@ public class ATextService extends AAbstractService {
 
         return stringaOut.trim();
     }
+
     /**
-     * Elimina (eventuali) doppie graffe in testa e coda della stringa.
+     * Elimina (eventuali) graffe doppie in testa e coda della stringa.
      * Funziona solo se le graffe sono esattamente in TESTA ed in CODA alla stringa
      * Se arriva una stringa vuota, restituisce una stringa vuota
      * Elimina spazi vuoti iniziali e finali
@@ -673,7 +667,7 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Elimina (eventuali) parentesi quadre in testa e coda della stringa. <br>
+     * Elimina (eventuali) parentesi quadre singole in testa e coda della stringa. <br>
      * Funziona solo se le quadre sono esattamente in TESTA ed in CODA alla stringa <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>
      * Elimina spazi vuoti iniziali e finali <br>
@@ -733,7 +727,7 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Aggiunge parentesi quadre in testa e coda alla stringa. <br>
+     * Aggiunge parentesi quadre singole in testa e coda alla stringa. <br>
      * Aggiunge SOLO se gia non esistono <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>
      * Elimina spazi vuoti iniziali e finali <br>
@@ -763,34 +757,7 @@ public class ATextService extends AAbstractService {
 
 
     /**
-     * Aggiunge apici in testa e coda alla stringa. <br>
-     * Aggiunge SOLO se gia non esistono <br>
-     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
-     * Elimina spazi vuoti iniziali e finali <br>
-     *
-     * @param stringaIn in ingresso
-     *
-     * @return stringa con apici aggiunti
-     */
-    public String setApici(String stringaIn) {
-        String stringaOut = stringaIn.trim();
-
-        if (this.isValid(stringaOut)) {
-            if (stringaOut.startsWith(APICE)) {
-                stringaOut = levaTesta(stringaOut, APICE);
-            }
-            if (stringaOut.endsWith(APICE)) {
-                stringaOut = levaTesta(stringaOut, APICE);
-            }
-        }
-
-        stringaOut = APICE + stringaOut + APICE;
-        return stringaOut.trim();
-    }
-
-
-    /**
-     * Aggiunge doppie parentesi quadre in testa e coda alla stringa. <br>
+     * Aggiunge parentesi quadre doppie in testa e coda alla stringa. <br>
      * Aggiunge SOLO se gia non esistono (ne doppie, ne singole) <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>
      * Elimina spazi vuoti iniziali e finali <br>
@@ -815,6 +782,33 @@ public class ATextService extends AAbstractService {
             }
         }
 
+        return stringaOut.trim();
+    }
+
+
+    /**
+     * Aggiunge apici singol in testa e coda alla stringa. <br>
+     * Aggiunge SOLO se gia non esistono <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con apici aggiunti
+     */
+    public String setApici(String stringaIn) {
+        String stringaOut = stringaIn.trim();
+
+        if (this.isValid(stringaOut)) {
+            if (stringaOut.startsWith(APICE)) {
+                stringaOut = levaTesta(stringaOut, APICE);
+            }
+            if (stringaOut.endsWith(APICE)) {
+                stringaOut = levaTesta(stringaOut, APICE);
+            }
+        }
+
+        stringaOut = APICE + stringaOut + APICE;
         return stringaOut.trim();
     }
 

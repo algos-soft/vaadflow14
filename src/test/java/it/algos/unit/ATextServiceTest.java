@@ -114,6 +114,11 @@ class ATextServiceTest extends ATest {
         ottenuto = text.primaMaiuscola(sorgente);
         assertEquals(previsto, ottenuto);
 
+        sorgente = "maRio";
+        previsto = "MaRio";
+        ottenuto = text.primaMaiuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
         sorgente = " mario";
         previsto = "Mario";
         ottenuto = text.primaMaiuscola(sorgente);
@@ -130,10 +135,55 @@ class ATextServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
-
     @Test
     @Order(5)
-    @DisplayName("5 - Restituisce una lista di stringhe")
+    @DisplayName("5 - Prima minuscola")
+    void primaMinuscola() {
+        sorgente = null;
+        previsto = VUOTA;
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = VUOTA;
+        previsto = VUOTA;
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "mario";
+        previsto = "mario";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "Mario";
+        previsto = "mario";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "MaRio";
+        previsto = "maRio";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = " MARIO";
+        previsto = "mARIO";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "Mario ";
+        previsto = "mario";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = " Mario ";
+        previsto = "mario";
+        ottenuto = text.primaMinuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - Restituisce una lista di stringhe")
     void getArray() {
         ottenutoArray = text.getArray(null);
         assertNull(ottenutoArray);
@@ -166,8 +216,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - Restituisce una lista di interi")
+    @Order(7)
+    @DisplayName("7 - Restituisce una lista di interi")
     void getArrayInt() {
         ottenutoInteroArray = text.getArrayInt(null);
         assertNull(ottenutoInteroArray);
@@ -200,8 +250,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(7)
-    @DisplayName("7 - Leva un testo iniziale")
+    @Order(8)
+    @DisplayName("8 - Leva un testo iniziale")
     void levaTesta() {
         sorgente = "Non Levare questo inizio ";
         tag = "Non";
@@ -224,8 +274,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(8)
-    @DisplayName("8 - Leva un testo finale")
+    @Order(9)
+    @DisplayName("9 - Leva un testo finale")
     void levaCoda() {
         sorgente = " Levare questa fine Non ";
         tag = "Non";
@@ -249,8 +299,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(9)
-    @DisplayName("9 - Leva un testo finale a partire da")
+    @Order(10)
+    @DisplayName("10 - Leva un testo finale a partire da")
     void levaCodaDa() {
         sorgente = " Levare questa fine Non ";
         tag = "N";
@@ -281,8 +331,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(10)
-    @DisplayName("10 - Label user verde")
+    @Order(11)
+    @DisplayName("11 - Label user verde")
     void getLabelUser() {
         sorgente = "green";
         Label label = text.getLabelUser(sorgente);
@@ -292,8 +342,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(11)
-    @DisplayName("11 - Label admin blue")
+    @Order(12)
+    @DisplayName("12 - Label admin blue")
     void getLabelAdmin() {
         sorgente = "blue";
         Label label = text.getLabelAdmin(sorgente);
@@ -303,8 +353,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(12)
-    @DisplayName("12 - Label developer rossa")
+    @Order(13)
+    @DisplayName("13 - Label developer rossa")
     void getLabelDev() {
         sorgente = "red";
         Label label = text.getLabelDev(sorgente);
@@ -314,8 +364,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(13)
-    @DisplayName("13 - Restituisce una matrice di stringhe")
+    @Order(14)
+    @DisplayName("14 - Restituisce una matrice di stringhe")
     public void getMatrice() {
         sorgente = VUOTA;
         ottenutoMatrice = text.getMatrice(sorgente);
@@ -341,8 +391,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(14)
-    @DisplayName("14 - Restituisce una matrice di interi")
+    @Order(15)
+    @DisplayName("15 - Restituisce una matrice di interi")
     public void getMatriceInt() {
         sorgente = VUOTA;
         ottenutoInteroMatrice = text.getMatriceInt(sorgente);
@@ -368,8 +418,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(15)
-    @DisplayName("15 - Elimina parentesi quadre in testa e coda della stringa")
+    @Order(16)
+    @DisplayName("16 - Elimina parentesi quadre in testa e coda della stringa")
     public void setNoQuadre() {
         System.out.println(VUOTA);
         System.out.println("Elimina parentesi quadre in testa e coda della stringa");
@@ -441,8 +491,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(16)
-    @DisplayName("16 - Aggiunge parentesi quadre in testa e coda alla stringa")
+    @Order(17)
+    @DisplayName("17 - Aggiunge parentesi quadre in testa e coda alla stringa")
     public void setQuadre() {
         System.out.println(VUOTA);
         System.out.println("Aggiunge parentesi quadre in testa e coda alla stringa");
@@ -512,11 +562,11 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(17)
-    @DisplayName("17 - Aggiunge doppie parentesi quadre in testa e coda alla stringa")
+    @Order(18)
+    @DisplayName("18 - Aggiunge parentesi quadre doppie in testa e coda alla stringa")
     public void setDoppieQuadre() {
         System.out.println(VUOTA);
-        System.out.println("Aggiunge doppie parentesi quadre in testa e coda alla stringa");
+        System.out.println("Aggiunge parentesi quadre doppie in testa e coda alla stringa");
 
         sorgente = VUOTA;
         previsto = VUOTA;
@@ -583,8 +633,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(18)
-    @DisplayName("18 - Allunga un testo alla lunghezza desiderata")
+    @Order(19)
+    @DisplayName("19 - Allunga un testo alla lunghezza desiderata")
     public void rightPad() {
         sorgenteIntero = 7;
 
@@ -619,8 +669,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(19)
-    @DisplayName("19 - Forza un testo alla lunghezza desiderata")
+    @Order(20)
+    @DisplayName("20 - Forza un testo alla lunghezza desiderata")
     public void fixSize() {
         sorgenteIntero = 7;
 
@@ -676,8 +726,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(20)
-    @DisplayName("20 - Forza un testo alla lunghezza desiderata ed aggiunge parentesi quadre")
+    @Order(21)
+    @DisplayName("21 - Forza un testo alla lunghezza desiderata ed aggiunge parentesi quadre")
     public void fixSizeQuadre() {
         sorgenteIntero = 4;
 
@@ -725,8 +775,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(21)
-    @DisplayName("21 - Elimina gli spazi interni della stringa")
+    @Order(22)
+    @DisplayName("22 - Elimina gli spazi interni della stringa")
     public void levaSpaziInterni() {
         sorgente = "Mariolino Birichino";
         previsto = "MariolinoBirichino";
@@ -779,8 +829,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(22)
-    @DisplayName("22 - levaTestoPrimaDiEnneRipetizioni")
+    @Order(23)
+    @DisplayName("23 - levaTestoPrimaDiEnneRipetizioni")
     public void levaTestoPrimaDiEnneRipetizioni() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
         sorgente2 = SLASH;
@@ -822,8 +872,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(23)
-    @DisplayName("23 - setApici")
+    @Order(24)
+    @DisplayName("24 - setApici")
     public void setApici() {
         previsto = "\\\"mario\\\"";
 
@@ -846,8 +896,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(24)
-    @DisplayName("24 - valueTextReplace")
+    @Order(25)
+    @DisplayName("25 - valueTextReplace")
     public void replaceValue() {
         tag = "\" value \":{\"";
         String tagEnd = "},";
@@ -870,8 +920,8 @@ class ATextServiceTest extends ATest {
     }
 
     @Test
-    @Order(25)
-    @DisplayName("25 - levaTestoPrimaDi")
+    @Order(26)
+    @DisplayName("26 - levaTestoPrimaDi")
     public void levaTestoPrimaDi() {
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14";
         sorgente2 = "IdeaProjects";
@@ -888,8 +938,8 @@ class ATextServiceTest extends ATest {
 
 
     @Test
-    @Order(26)
-    @DisplayName("26 - estraeDoppiaGraffa")
+    @Order(27)
+    @DisplayName("27 - estraeDoppiaGraffa")
     public void estraeDoppiaGraffa() {
         sorgente  = "{{Simbolo|Italian Province (Crown).svg|24}} {{IT-SU}}";
         sorgente2 = " altro {{IT-SU}} pippo non mi interessa";;

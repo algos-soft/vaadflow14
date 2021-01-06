@@ -58,7 +58,7 @@ public class AViewForm extends AView {
      * Inserisce l'istanza (grafica) in bodyPlacehorder della view <br>
      */
     @Override
-    protected void fixBody() {
+    protected void fixBodyLayout() {
         AForm form;
 
         if (entityClazz == null) {

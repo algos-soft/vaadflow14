@@ -46,7 +46,7 @@ public class AViewList extends AView {
      * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      */
     @Override
-    protected void fixBody() {
+    protected void fixBodyLayout() {
 //        AGrid grid = entityLogic.getBodyGridLayout();
 
         if (bodyPlaceholder != null) {

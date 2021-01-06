@@ -200,7 +200,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      */
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        if (entityClazz == null || entityLogic == null) {
+        if (entityClazz == null || entityService == null || entityLogic == null) {
             if (entityClazz == null) {
                 logger.error("Manca la entityClazz", AView.class, "beforeEnter");
             }
@@ -241,7 +241,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
         this.fixTopLayout();
 
         //--body con la Grid oppure il Form o qualsiasi altro componente grafico
-        this.fixBody();
+        this.fixBodyLayout();
 
         //--eventuale barra di bottoni in basso
         this.fixBottomLayout();
@@ -271,7 +271,6 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
             alertPlaceholder.add(header);
             this.add(alertPlaceholder);
         }
-
     }
 
 
@@ -302,7 +301,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Costruisce un' istanza dedicata <br>
      * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      */
-    protected void fixBody() {
+    protected void fixBodyLayout() {
     }
 
 

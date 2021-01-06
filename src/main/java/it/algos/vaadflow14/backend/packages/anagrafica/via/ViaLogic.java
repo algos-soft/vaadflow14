@@ -49,7 +49,7 @@ public class ViaLogic extends ALogic {
     /**
      * Costruttore con parametro <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
+     * Costruttore usato da AView <br>
      * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso

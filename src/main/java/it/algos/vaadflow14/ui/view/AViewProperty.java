@@ -159,7 +159,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Placeholder finale per messaggi (list e form) <br>
      * Contenuto facoltativo, presente di default (list) <br>
      * Contenuto facoltativo, assente di default (form) <br>
-     * Barra inferiore di messaggi per l'utilizzattore <br>
+     * Barra inferiore di messaggi per l'utilizzatore <br>
      */
     protected VerticalLayout footerPlaceholder;
 
@@ -218,6 +218,7 @@ public abstract class AViewProperty extends VerticalLayout {
         this.alertPlaceholder.setPadding(false);
 
         //--Costruisce un layout (obbligatorio) per i menu ed i bottoni di comando della view <br>
+        //--Eventualmente i bottoni potrebbero andare su due righe <br>
         this.topPlaceholder = new VerticalLayout();
         this.topPlaceholder.removeAll();
         this.topPlaceholder.addClassName("view-toolbar");
@@ -225,18 +226,21 @@ public abstract class AViewProperty extends VerticalLayout {
         this.topPlaceholder.setSpacing(false);
         this.topPlaceholder.setPadding(false);
 
+        //--Corpo principale del Form (dialogo) <br>
         this.bodyPlaceholder = new VerticalLayout();
         this.bodyPlaceholder.removeAll();
         bodyPlaceholder.setMargin(false);
         bodyPlaceholder.setSpacing(false);
         bodyPlaceholder.setPadding(false);
 
+        //--Eventuali bottoni sotto il Form (dialogo) <br>
         this.bottomPlaceholder = new VerticalLayout();
         this.bottomPlaceholder.removeAll();
         bottomPlaceholder.setMargin(false);
         bottomPlaceholder.setSpacing(false);
         bottomPlaceholder.setPadding(false);
 
+        //--Eventuali scritte in basso al video <br>
         this.footerPlaceholder = new VerticalLayout();
         this.footerPlaceholder.removeAll();
         footerPlaceholder.setMargin(false);
