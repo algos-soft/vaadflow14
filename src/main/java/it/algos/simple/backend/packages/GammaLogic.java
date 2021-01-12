@@ -6,8 +6,6 @@ import it.algos.vaadflow14.backend.logic.ALogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-
 /**
  * Project vaadflow14
  * Created by Algos
@@ -98,33 +96,33 @@ public class GammaLogic extends ALogic {
     //    }
 
 
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entity con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    @Override
-    public Gamma creaIfNotExist(String keyPropertyValue) {
-        return (Gamma) checkAndSave(newEntity(keyPropertyValue));
-    }
+//    /**
+//     * Crea e registra una entity solo se non esisteva <br>
+//     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+//     * solo col valore di un parametro da usare anche come keyID <br>
+//     * Controlla che non esista già una entity con lo stesso keyID <br>
+//     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+//     *
+//     * @param keyPropertyValue obbligatorio
+//     *
+//     * @return la nuova entity appena creata e salvata
+//     */
+//    @Override
+//    public Gamma creaIfNotExist(String keyPropertyValue) {
+//        return (Gamma) checkAndSave(newEntity(keyPropertyValue));
+//    }
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Gamma newEntity() {
-        return newEntity(VUOTA);
-    }
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Gamma newEntity() {
+//        return newEntity(VUOTA);
+//    }
 
 
     /**

@@ -17,12 +17,12 @@ import de.codecamp.vaadin.components.messagedialog.MessageDialog;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AESearch;
+import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.wrapper.WrapSearch;
 import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.AEAction;
@@ -46,7 +46,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
-import org.springframework.data.mongodb.core.query.Query;
 import org.vaadin.haijian.Exporter;
 
 import javax.annotation.PostConstruct;
@@ -346,13 +345,25 @@ public abstract class ALogic implements AILogic {
 
     protected LinkedHashMap<String, ComboBox> mappaComboBox;
 
+    /**
+     * The entityService obbligatorio, singleton di tipo xxxService <br>
+     */
+    protected AIService entityService;
 
+    /**
+     * Costruttore senza parametri <br>
+     */
     public ALogic() {
     }
 
 
-    public ALogic(AEOperation operationForm) {
+    public ALogic(final AEOperation operationForm) {
         this.operationForm = operationForm;
+    }
+
+    public ALogic(final AEOperation operationForm, final AIService entityService) {
+        this.operationForm = operationForm;
+        this.entityService = entityService;
     }
 
 
@@ -429,7 +440,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return componente grafico per il placeHolder
      */
-        @Override
+    @Override
     public AHeader getAlertHeaderLayout(final AEVista typeVista) {
         AHeader header = null;
         AlertWrap wrap = null;
@@ -528,7 +539,6 @@ public abstract class ALogic implements AILogic {
     public ATopLayout getTopLayout() {
         ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
         this.addTopListeners(topLayout);
-
         return topLayout;
     }
 
@@ -634,19 +644,6 @@ public abstract class ALogic implements AILogic {
         }
 
         return listaBottoni;
-    }
-
-
-    /**
-     * Aggiunge tutti i listeners ai bottoni di 'topPlaceholder' che sono stati creati SENZA listeners <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected void addTopListeners(ATopLayout topLayout) {
-        if (topLayout != null) {
-            topLayout.setAllListener(this);
-        }
     }
 
 
@@ -763,9 +760,8 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public ABottomLayout getBottomLayout(AEOperation operationForm) {
-        ABottomLayout bottomLayout = appContext.getBean(ABottomLayout.class, getWrapButtonsBottom());
+        ABottomLayout bottomLayout = appContext.getBean(ABottomLayout.class, getWrapButtonsBottom(operationForm));
         this.addBottomListeners(bottomLayout);
-
         return bottomLayout;
     }
 
@@ -778,7 +774,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return wrapper di dati per la view
      */
-    public WrapButtons getWrapButtonsBottom() {
+    public WrapButtons getWrapButtonsBottom(AEOperation operationForm) {
         List<AEButton> listaInizialiBottom = this.getListaInizialiBottom();
         List<Button> listaSpecificiBottom = this.getListaSpecificiBottom();
         List<AEButton> listaFinaliBottom = this.getListaFinaliBottom();
@@ -827,6 +823,18 @@ public abstract class ALogic implements AILogic {
         }
 
         return listaBottoni;
+    }
+
+    /**
+     * Aggiunge tutti i listeners ai bottoni di 'topPlaceholder' che sono stati creati SENZA listeners <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected void addTopListeners(ATopLayout topLayout) {
+        if (topLayout != null) {
+            topLayout.setAllListener(this);
+        }
     }
 
 
@@ -946,13 +954,15 @@ public abstract class ALogic implements AILogic {
                 this.openConfirmReset();
                 break;
             case resetForm:
-//                this.resetForm(entityBean);
+                //                this.resetForm(entityBean);
                 this.reloadForm(entityBean);
                 break;
             case doubleClick:
-                executeRoute(entityBean);
+                this.operationForm = AEOperation.edit;
+                this.executeRoute(entityBean);
                 break;
             case nuovo:
+                this.operationForm = AEOperation.addNew;
                 this.executeRoute();
                 break;
             case edit:
@@ -1372,23 +1382,21 @@ public abstract class ALogic implements AILogic {
         return mongo.findAll(entityClazz, filtri, sortView);
     }
 
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entity con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    @Override
-    public Object creaIfNotExist(String keyPropertyValue) {
-        return null;
-    }
-
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+    //     * solo col valore di un parametro da usare anche come keyID <br>
+    //     * Controlla che non esista già una entity con lo stesso keyID <br>
+    //     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+    //     *
+    //     * @param keyPropertyValue obbligatorio
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    @Override
+    //    public Object creaIfNotExist(String keyPropertyValue) {
+    //        return null;
+    //    }
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
@@ -1399,15 +1407,7 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public AEntity newEntity() {
-        AEntity newEntityBean = null;
-
-        try {
-            newEntityBean = (AEntity) entityClazz.newInstance();
-        } catch (Exception unErrore) {
-            logger.warn(unErrore.toString(), this.getClass(), "newEntity");
-        }
-
-        return newEntityBean;
+        return entityService.newEntity();
     }
 
 
@@ -1417,8 +1417,9 @@ public abstract class ALogic implements AILogic {
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>
      */
+    @Override
     public int getNewOrdine() {
-        return mongo.getNewOrder(entityClazz, "ordine");
+        return entityService.getNewOrdine();
     }
 
 
@@ -1433,7 +1434,7 @@ public abstract class ALogic implements AILogic {
      */
     @Override
     public AEntity findById(String keyID) {
-        return mongo.findById(entityClazz, keyID);
+        return entityService.findById(keyID);
     }
 
 
@@ -1446,14 +1447,9 @@ public abstract class ALogic implements AILogic {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
+    @Override
     public AEntity findByKey(String keyPropertyValue) {
-        keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-        if (text.isValid(keyPropertyName)) {
-            return mongo.findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
-        }
-        else {
-            return findById(keyPropertyValue);
-        }
+        return entityService.findByKey(keyPropertyValue);
     }
 
 
@@ -1530,17 +1526,6 @@ public abstract class ALogic implements AILogic {
 
         return entityBean;
     }
-
-    //    /**
-    //     * Regola la chiave se esiste il campo keyPropertyName. <br>
-    //     *
-    //     * @param newEntityBean to be checked
-    //     *
-    //     * @return the checked entity
-    //     */
-    //    public AEntity fixKey(AEntity newEntityBean) {
-    //        return fixKeyAndCompany(newEntityBean, (Company) null);
-    //    }
 
 
     /**
@@ -1822,35 +1807,10 @@ public abstract class ALogic implements AILogic {
      * Ridisegna la GUI <br>
      */
     public void clickDeleteAll() {
-        if (deleteAll()) {
+        if (entityService.deleteAll()) {
             logger.deleteAll(entityClazz);
             this.refreshGrid();
             UI.getCurrent().getPage().reload();
-        }
-    }
-
-
-    /**
-     * Deletes all entities of the collection. <br>
-     * Può essere sovrascritto nel service specifico <br>
-     *
-     * @return true se la collection è stata cancellata
-     */
-    @Override
-    public boolean deleteAll() {
-        String message;
-        String collection;
-
-        if (mongo.isValid(entityClazz)) {
-            mongo.mongoOp.remove(new Query(), entityClazz);
-
-            collection = entityClazz != null ? entityClazz.getSimpleName().toLowerCase() : "collezione";
-            message = "La collezione " + collection + " è stata interamente cancellata";
-            logger.log(AETypeLog.deleteAll, message);
-            return true;
-        }
-        else {
-            return true;
         }
     }
 
@@ -1867,40 +1827,6 @@ public abstract class ALogic implements AILogic {
         }
     }
 
-    //    /**
-    //     * Creazione di alcuni dati iniziali <br>
-    //     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-    //     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-    //     * DEVE essere sovrascritto <br>
-    //     *
-    //     * @return false se non esiste il metodo sovrascritto
-    //     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
-    //     */
-    //    @Override
-    //    @Deprecated
-    //    public boolean reset() {
-    //        return false;
-    //    }
-
-    /**
-     * Cancella la collection <br>
-     * Se usaCompany=false, cancella la intera collection <br>
-     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
-     * Se non trova la company corrente NON cancella <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @return false se non esiste la company o non ha cancellato
-     * ....... true se la collection è stata cancellata (tutta o filtrata)
-     */
-    @Override
-    public boolean delete() {
-        if (FlowVar.usaCompany) {
-            return false;
-        }
-        else {
-            return deleteAll();
-        }
-    }
 
     /**
      * Ricreazione di alcuni dati iniziali standard <br>
@@ -1911,79 +1837,14 @@ public abstract class ALogic implements AILogic {
      * 2) letti da un file CSV esterno <br>
      * 3) letti da Wikipedia <br>
      * 4) creati direttamente <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @return false se non esiste il metodo sovrascritto o se la collection
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
-    @Override
-    public boolean resetDeletingAll() {
-        AIResult result=AResult.errato();
-        this.delete();
-
-//        result = resetEmptyOnly();
-        return result.isValido();
+    private boolean resetDeletingAll() {
+        entityService.delete();
+        return entityService.resetEmptyOnly().isValido();
     }
-
-//    /**
-//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-//     * <p>
-//     * 1) deve esistere lo specifico metodo sovrascritto
-//     * 2) deve essere valida la entityClazz
-//     * 3) deve esistere la collezione su mongoDB
-//     * 4) la collezione non deve essere vuota
-//     * <p>
-//     * I dati possono essere: <br>
-//     * 1) recuperati da una Enumeration interna <br>
-//     * 2) letti da un file CSV esterno <br>
-//     * 3) letti da Wikipedia <br>
-//     * 4) creati direttamente <br>
-//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper col risultato ed eventuale messaggio di errore
-//     */
-//    @Override
-//    public AIResult resetEmptyOnly() {
-//        String collection;
-//
-//        if (entityClazz == null) {
-//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-//        }
-//
-//        collection = entityClazz.getSimpleName().toLowerCase();
-//        if (mongo.isExists(collection)) {
-//            if (mongo.isValid(entityClazz)) {
-//                return AResult.errato("La collezione " + collection + " esiste già e non è stata modificata");
-//            }
-//            else {
-//                return AResult.valido();
-//            }
-//        }
-//        else {
-//            return AResult.errato("La collezione " + collection + " non esiste");
-//        }
-//    }
-
-//    protected AIResult fixPostReset(AETypeReset type, final int numRec) {
-//        String collection;
-//
-//        if (entityClazz == null) {
-//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-//        }
-//
-//        collection = entityClazz.getSimpleName().toLowerCase();
-//        if (mongo.isValid(entityClazz)) {
-//            return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
-//        }
-//        else {
-//            return AResult.errato("Non è stato possibile creare la collezione " + collection);
-//        }
-//    }
-
-
-//    public void resetForm(AEntity entityBean) {
-//    }
 
 
     /**

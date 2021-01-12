@@ -1,18 +1,10 @@
 package it.algos.simple.backend.packages;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.ui.form.AGenericForm;
+import it.algos.vaadflow14.backend.logic.ALogic;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
 
 /**
  * Project vaadflow14
@@ -92,16 +84,16 @@ public class LambdaLogic extends ALogic {
     }
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Lambda newEntity() {
-        return newEntity(VUOTA);
-    }
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Lambda newEntity() {
+//        return newEntity(VUOTA);
+//    }
 
 
     /**

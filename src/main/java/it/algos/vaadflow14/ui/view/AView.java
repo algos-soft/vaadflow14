@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.view;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.footer.AFooter;
@@ -174,7 +175,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      */
     protected void fixEntityLogic() {
         if (entityLogic == null) {
-            entityLogic = classService.getLogicFromEntity(entityClazz, operationForm);
+            entityLogic = classService.getLogicFromEntityClazz(entityClazz, entityService, operationForm);
         }
         else {
             logger.info("Esisteva già la entityLogic", AView.class, "fixEntityLogic");
@@ -280,7 +281,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nella List <br>
      * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dal service specifico i menu/bottoni previsti <br>
+     * Recupera dalla logica specifica i menu/bottoni previsti <br>
      * Costruisce un' istanza dedicata con i bottoni <br>
      * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
@@ -306,16 +307,22 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
 
     /**
-     * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>
+     * Costruisce un layout per i bottoni di comando in bottomPlaceholder della view <br>
      * <p>
      * Chiamato da AView.initView() <br>
      * Tipicamente usato SOLO nel Form <br>
-     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un' istanza dedicata con i bottoni <br>
-     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
+     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+     * Recupera dalla logica specifica i menu/bottoni previsti <br>
+     * Costruisce un'istanza dedicata con i bottoni <br>
+     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
      */
     protected void fixBottomLayout() {
+        ABottomLayout bottomLayout = entityLogic.getBottomLayout(operationForm);
+
+        if (bottomPlaceholder != null && bottomLayout != null) {
+            bottomPlaceholder.add(bottomLayout);
+            this.add(bottomPlaceholder);
+        }
     }
 
 

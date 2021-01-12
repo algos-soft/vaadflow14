@@ -59,7 +59,17 @@ public interface AIService {
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-     AEntity newEntity();
+    AEntity newEntity();
+
+    /**
+     * Ordine di presentazione (facoltativo) <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     *
+     * @return ordine di presentazione per la nuova entity
+     */
+    int getNewOrdine();
 
     /**
      * Regola la chiave se esiste il campo keyPropertyName <br>
@@ -115,6 +125,27 @@ public interface AIService {
 
 
     /**
+     * Cancella la collection <br>
+     * Se usaCompany=false, cancella la intera collection <br>
+     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
+     * Se non trova la company corrente NON cancella <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste la company o non ha cancellato
+     * ....... true se la collection è stata cancellata (tutta o filtrata)
+     */
+    boolean delete();
+
+
+    /**
+     * Deletes all entities of the collection. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return true se la collection è stata cancellata
+     */
+    boolean deleteAll();
+
+    /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
      * <p>
@@ -133,6 +164,11 @@ public interface AIService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     AIResult resetEmptyOnly();
+
+    /**
+     * The Entity Class  (obbligatoria sempre e final)
+     */
+    Class<? extends AEntity> getEntityClazz();
 
 }
 

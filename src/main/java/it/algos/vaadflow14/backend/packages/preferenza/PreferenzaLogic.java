@@ -238,16 +238,16 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Preferenza newEntity() {
-        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, FlowVar.usaCompany ? true : false, true, VUOTA);
-    }
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Preferenza newEntity() {
+//        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, FlowVar.usaCompany ? true : false, true, VUOTA);
+//    }
 
 
     /**
@@ -353,19 +353,19 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Preferenza findByKey(String keyValue) {
-        return (Preferenza) super.findByKey(keyValue);
-    }
+//    /**
+//     * Retrieves an entity by its keyProperty.
+//     *
+//     * @param keyValue must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    @Override
+//    public Preferenza findByKey(String keyValue) {
+//        return (Preferenza) super.findByKey(keyValue);
+//    }
 
 
     public Object getValue(String keyID) {

@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,28 +36,29 @@ public class ViaLogic extends ALogic {
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * Costruttore senza parametri <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    public ViaLogic() {
-        this(AEOperation.edit);
-    }
+//    /**
+//     * Costruttore senza parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Costruttore usato da AListView <br>
+//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService) <br>
+//     */
+//    public ViaLogic(AIService entityService) {
+//        this(entityService, AEOperation.listNoForm);
+//    }
 
 
     /**
-     * Costruttore con parametro <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
      * @param operationForm tipologia di Form in uso
      */
-    public ViaLogic(AEOperation operationForm) {
+    public ViaLogic(AIService entityService, AEOperation operationForm) {
         super(operationForm);
-        super.entityClazz = Via.class;
+        super.entityService = entityService;
+        super.entityClazz = entityService.getEntityClazz();
     }
 
     /**
@@ -67,6 +69,7 @@ public class ViaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
         super.usaBottoneDelete = true;
         super.usaBottoneResetList = true;
     }

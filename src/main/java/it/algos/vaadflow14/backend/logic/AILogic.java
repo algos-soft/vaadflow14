@@ -126,15 +126,14 @@ public interface AILogic {
      */
     List<String> getListaPropertiesForm();
 
-
-//    /**
-//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-//     * Sovrascritto nella sottoclasse concreta <br>
-//     *
-//     * @return lista di nomi delle properties da usare nel form
-//     */
-//    List<String> getListaPropertiesFormNew();
+    //    /**
+    //     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+    //     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+    //     * Sovrascritto nella sottoclasse concreta <br>
+    //     *
+    //     * @return lista di nomi delle properties da usare nel form
+    //     */
+    //    List<String> getListaPropertiesFormNew();
 
 
     /**
@@ -146,15 +145,14 @@ public interface AILogic {
      */
     List<String> getListaPropertiesFormEdit();
 
-
-//    /**
-//     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
-//     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
-//     * Sovrascritto nella sottoclasse concreta <br>
-//     *
-//     * @return lista di nomi delle properties da usare nel form
-//     */
-//    List<String> getListaPropertiesFormDelete();
+    //    /**
+    //     * Costruisce una lista di nomi delle properties del Form, specializzata per una specifica operazione <br>
+    //     * Di default utilizza la lista generale di getListaPropertiesForm() <br>
+    //     * Sovrascritto nella sottoclasse concreta <br>
+    //     *
+    //     * @return lista di nomi delle properties da usare nel form
+    //     */
+    //    List<String> getListaPropertiesFormDelete();
 
 
     /**
@@ -211,19 +209,18 @@ public interface AILogic {
      */
     List<String> getFormPropertyNamesList();
 
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entity con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Object creaIfNotExist(String keyPropertyValue);
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
+    //     * solo col valore di un parametro da usare anche come keyID <br>
+    //     * Controlla che non esista già una entity con lo stesso keyID <br>
+    //     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+    //     *
+    //     * @param keyPropertyValue obbligatorio
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    public Object creaIfNotExist(String keyPropertyValue);
 
 
     /**
@@ -233,7 +230,18 @@ public interface AILogic {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public AEntity newEntity();
+    AEntity newEntity();
+
+
+    /**
+     * Ordine di presentazione (facoltativo) <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     *
+     * @return ordine di presentazione per la nuova entity
+     */
+    int getNewOrdine();
 
 
     /**
@@ -245,63 +253,18 @@ public interface AILogic {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findById(String keyID);
-
-    //    /**
-    //     * Saves a given entity.
-    //     * Use the returned instance for further operations as the save operation
-    //     * might have changed the entity instance completely.
-    //     *
-    //     * @param entityBean to be saved
-    //     *
-    //     * @return the saved entity
-    //     */
-    //    public AEntity save(AEntity entityBean);
-
-    /**
-     * Deletes all entities of the collection.
-     */
-    public boolean deleteAll();
-
-
-//    /**
-//     * Creazione di alcuni dati iniziali <br>
-//     * Viene invocato alla creazione del programma e dal bottone Reset della lista (solo in alcuni casi) <br>
-//     * I dati possono essere presi da una Enumeration o creati direttamente <br>
-//     * Deve essere sovrascritto - Invocare PRIMA il metodo della superclasse che cancella tutta la Collection <br>
-//     *
-//     * @return true se la collection è stata ri-creata
-//     */
-//    public boolean reset();
+    AEntity findById(String keyID);
 
 
     /**
-     * Cancella la collection <br>
-     * Se usaCompany=false, cancella la intera collection <br>
-     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
-     * Se non trova la company corrente NON cancella <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Retrieves an entity by its keyProperty.
      *
-     * @return false se non esiste la company o non ha cancellato
-     * ....... true se la collection è stata cancellata (tutta o filtrata)
-     */
-    public boolean delete();
-
-    /**
-     * Ricreazione di alcuni dati iniziali standard <br>
-     * Invocato dal bottone Reset di alcune liste <br>
-     * Cancella la collection (parzialmente, se usaCompany=true) <br>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * @param keyPropertyValue must not be {@literal null}.
      *
-     * @return false se non esiste il metodo sovrascritto
-     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public boolean resetDeletingAll();
-
+    AEntity findByKey(final String keyPropertyValue);
 
 }

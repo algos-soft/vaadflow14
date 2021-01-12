@@ -303,7 +303,7 @@ public abstract class AForm extends VerticalLayout {
         }
 
         if (entityClazz != null) {
-            entityLogic = entityLogic != null ? entityLogic : classService.getLogicFromEntity(entityClazz);
+            entityLogic = entityLogic != null ? entityLogic : classService.getLogicFromEntityClazz(entityClazz);
         }
 
         if (entityBean == null && entityLogic != null) {

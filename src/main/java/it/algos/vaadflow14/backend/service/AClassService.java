@@ -102,8 +102,18 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogic getLogicFromEntity(Class<? extends AEntity> entityClazz) {
-        return getLogicFromEntity(entityClazz, AEOperation.edit);
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz) {
+        return getLogicFromEntityClazz(entityClazz, null,AEOperation.listNoForm);
+    }
+    /**
+     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+     *
+     * @param entityClazz the entity class
+     *
+     * @return istanza de xxxLogic associata alla Entity
+     */
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz,AIService entityService) {
+        return getLogicFromEntityClazz(entityClazz, entityService,AEOperation.listNoForm);
     }
 
 
@@ -115,17 +125,17 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogic getLogicFromEntity(Class<? extends AEntity> entityClazz, AEOperation operationForm) {
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService,AEOperation operationForm) {
         AILogic entityLogic = null;
         String canonicalName;
 
         if (entityClazz != null) {
             canonicalName = entityClazz.getCanonicalName() + SUFFIX_ENTITY_LOGIC;
             try {
-                entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm);
+                entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService,operationForm);
             } catch (Exception unErrore) {
                 try {
-                    entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName));
+                    entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName),entityService);
                 } catch (Exception unErrore2) {
                     try {
                         entityLogic = (AILogic) appContext.getBean(EntityLogic.class, entityClazz, operationForm);
@@ -148,7 +158,7 @@ public class AClassService extends AAbstractService {
      * @return istanza di PreferenzaLogic associata alla Entity
      */
     public PreferenzaLogic getPreferenzaLogic() {
-        return (PreferenzaLogic) getLogicFromEntity(Preferenza.class);
+        return (PreferenzaLogic) getLogicFromEntityClazz(Preferenza.class);
     }
 
 }

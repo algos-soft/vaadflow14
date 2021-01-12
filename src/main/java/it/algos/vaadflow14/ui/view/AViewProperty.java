@@ -194,7 +194,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Tipologia di Form in uso <br>
      * Si recupera nel metodo AView.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
      */
-    protected AEOperation operationForm;
+    protected AEOperation operationForm = AEOperation.listNoForm;
 
 
     /**

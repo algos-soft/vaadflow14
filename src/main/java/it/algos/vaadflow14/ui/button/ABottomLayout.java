@@ -73,7 +73,6 @@ public class ABottomLayout extends AButtonLayout {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
         this.getElement().getStyle().set("background-color", AEColor.grigio1.getEsadecimale());
     }
 
@@ -86,6 +85,8 @@ public class ABottomLayout extends AButtonLayout {
         if (array.isEmpty(iniziali) && operationForm != null) {
             iniziali = new ArrayList<>();
             switch (operationForm) {
+                case listNoForm:
+                    break;
                 case edit:
                     iniziali.add(AEButton.back);
                     iniziali.add(AEButton.registra);

@@ -3,7 +3,6 @@ package it.algos.vaadflow14.ui.form;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.ui.button.ABottomLayout;
 import it.algos.vaadflow14.ui.view.AView;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -84,29 +83,29 @@ public class AViewForm extends AView {
     }
 
 
-    /**
-     * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Tipicamente usato SOLO nel Form <br>
-     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un'istanza dedicata con i bottoni <br>
-     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
-     */
-    @Override
-    protected void fixBottomLayout() {
-        ABottomLayout bottomLayout = null;
-
-        if (entityLogic != null) {
-            bottomLayout = entityLogic.getBottomLayout(operationForm);
-        }
-
-        if (bottomPlaceholder != null && bottomLayout != null) {
-            bottomPlaceholder.add(bottomLayout);
-        }
-
-        this.add(bottomPlaceholder);
-    }
+//    /**
+//     * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Tipicamente usato SOLO nel Form <br>
+//     * Nell'implementazione standard di default presenta solo il bottone 'New' <br>
+//     * Recupera dal service specifico i menu/bottoni previsti <br>
+//     * Costruisce un'istanza dedicata con i bottoni <br>
+//     * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
+//     */
+//    @Override
+//    protected void fixBottomLayout() {
+//        ABottomLayout bottomLayout = null;
+//
+//        if (entityLogic != null) {
+//            bottomLayout = entityLogic.getBottomLayout(operationForm);
+//        }
+//
+//        if (bottomPlaceholder != null && bottomLayout != null) {
+//            bottomPlaceholder.add(bottomLayout);
+//        }
+//
+//        this.add(bottomPlaceholder);
+//    }
 
 }

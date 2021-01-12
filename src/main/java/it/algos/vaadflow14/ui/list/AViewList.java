@@ -5,7 +5,6 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadflow14.backend.service.ADataProviderService;
 import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.ui.button.ATopLayout;
 import it.algos.vaadflow14.ui.view.AView;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -67,18 +66,18 @@ public class AViewList extends AView {
         return grid.getGrid();
     }
 
-    /**
-     * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>
-     * <p>
-     * Chiamato da AView.initView() <br>
-     * Tipicamente usato SOLO nel Form <br>
-     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dal service specifico i menu/bottoni previsti <br>
-     * Costruisce un' istanza dedicata con i bottoni <br>
-     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
-     */
-    @Override
-    protected void fixBottomLayout() {
-    }
+//    /**
+//     * Costruisce un layout per i bottoni di comando in footerPlacehorder della view <br>
+//     * <p>
+//     * Chiamato da AView.initView() <br>
+//     * Tipicamente usato SOLO nel Form <br>
+//     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
+//     * Recupera dal service specifico i menu/bottoni previsti <br>
+//     * Costruisce un' istanza dedicata con i bottoni <br>
+//     * Inserisce l' istanza (grafica) in bottomPlacehorder della view <br>
+//     */
+//    @Override
+//    protected void fixBottomLayout() {
+//    }
 
 }

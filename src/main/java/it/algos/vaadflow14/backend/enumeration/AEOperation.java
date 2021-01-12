@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.enumeration;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
 /**
  * Project vaadflow
  * Created by Algos
@@ -10,6 +12,7 @@ package it.algos.vaadflow14.backend.enumeration;
  * Delete is enabled when editing an already existing item.
  */
 public enum AEOperation {
+    listNoForm(VUOTA, VUOTA, false, false),
     addNew("New", "add", true, false),
     edit("Edit", "edit", true, true),
     editProfile("Edit", "edit", true, false),

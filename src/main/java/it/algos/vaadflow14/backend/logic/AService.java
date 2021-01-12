@@ -4,12 +4,14 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.entity.ACEntity;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.enumeration.AETypeReset;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.backend.wrapper.AResult;
+import org.springframework.data.mongodb.core.query.Query;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -136,6 +138,25 @@ public abstract class AService extends AAbstractService implements AIService {
         return mongo.isEsiste(entityClazz, keyId);
     }
 
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    public AEntity newEntity() {
+        AEntity newEntityBean = null;
+
+        try {
+            newEntityBean = entityClazz.getDeclaredConstructor().newInstance();
+        } catch (Exception unErrore) {
+            logger.warn(unErrore.toString(), this.getClass(), "newEntity");
+        }
+
+        return newEntityBean;
+    }
+
 
     /**
      * Operazioni eseguite PRIMA di save o di insert <br>
@@ -193,12 +214,10 @@ public abstract class AService extends AAbstractService implements AIService {
      * @return the checked entity
      */
     public AEntity fixKey(final AEntity newEntityBean) {
-        String keyPropertyName;
         String keyPropertyValue;
         Company company;
 
         if (text.isEmpty(newEntityBean.id)) {
-            keyPropertyName = annotation.getKeyPropertyName(newEntityBean.getClass());
             if (text.isValid(keyPropertyName)) {
                 keyPropertyValue = reflection.getPropertyValueStr(newEntityBean, keyPropertyName);
                 if (text.isValid(keyPropertyValue)) {
@@ -248,6 +267,49 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
+    /**
+     * Cancella la collection <br>
+     * Se usaCompany=false, cancella la intera collection <br>
+     * Se usaCompany=true, cancella usando la company corrente come filtro <br>
+     * Se non trova la company corrente NON cancella <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return false se non esiste la company o non ha cancellato
+     * ....... true se la collection è stata cancellata (tutta o filtrata)
+     */
+    @Override
+    public boolean delete() {
+        if (FlowVar.usaCompany) {
+            return false;
+        }
+        else {
+            return deleteAll();
+        }
+    }
+
+    /**
+     * Deletes all entities of the collection. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return true se la collection è stata cancellata
+     */
+    @Override
+    public boolean deleteAll() {
+        String message;
+        String collection;
+
+        if (mongo.isValid(entityClazz)) {
+            mongo.mongoOp.remove(new Query(), entityClazz);
+
+            collection = entityClazz != null ? entityClazz.getSimpleName().toLowerCase() : "collezione";
+            message = "La collezione " + collection + " è stata interamente cancellata";
+            logger.log(AETypeLog.deleteAll, message);
+            return true;
+        }
+        else {
+            return true;
+        }
+    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -310,10 +372,21 @@ public abstract class AService extends AAbstractService implements AIService {
      * Viene calcolato in automatico alla creazione della entity <br>
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>
+     *
+     * @return ordine di presentazione per la nuova entity
      */
-    protected int getNewOrdine() {
+    @Override
+    public int getNewOrdine() {
         return mongo.getNewOrder(entityClazz, FIELD_ORDINE);
     }
 
+
+    /**
+     * The Entity Class  (obbligatoria sempre e final)
+     */
+    @Override
+    public Class<? extends AEntity> getEntityClazz() {
+        return entityClazz;
+    }
 
 }
