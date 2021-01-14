@@ -6,7 +6,6 @@ import com.vaadin.flow.server.WrappedSession;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.login.ALogin;
 import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
 import it.algos.vaadflow14.backend.packages.security.Utente;
 import it.algos.vaadflow14.backend.packages.security.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +52,13 @@ public class AVaadinService extends AAbstractService {
     @Autowired
     public UtenteService utenteService;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public CompanyLogic companyLogic;
+//    /**
+//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+//     */
+//    @Autowired
+//    public CompanyLogic companyLogic;
 
 
     /**

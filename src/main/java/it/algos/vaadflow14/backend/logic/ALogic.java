@@ -366,6 +366,21 @@ public abstract class ALogic implements AILogic {
         this.entityService = entityService;
     }
 
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+     *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
+     * @param operationForm tipologia di Form in uso
+     */
+    public ALogic(AIService entityService, AEOperation operationForm) {
+        this.entityService = entityService;
+        this.operationForm = operationForm;
+        this.entityClazz = entityService.getEntityClazz();
+    }
+
 
     /**
      * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
@@ -1144,6 +1159,11 @@ public abstract class ALogic implements AILogic {
         MessageDialog messageDialog;
         String message = "La entity è stata modificata. Sei sicuro di voler perdere le modifiche? L' operazione non è reversibile.";
         VaadinIcon iconBack = VaadinIcon.ARROW_LEFT;
+
+        if (operationForm == AEOperation.addNew) {
+            back();
+            return;
+        }
 
         if (currentForm.isModificato()) {
             if (mongo.isValid(entityClazz)) {
