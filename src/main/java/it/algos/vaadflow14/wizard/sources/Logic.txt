@@ -7,6 +7,7 @@ import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 
 /**
  * Project @MODULELOWER@ <br>
@@ -16,15 +17,14 @@ import org.springframework.stereotype.Service;
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza deve essere costruita con: <br>
- * private AILogic entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm)
+ * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
-@Service
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@AIScript(sovraScrivibile = true)
+@AIScript(sovraScrivibile = false)
 public class @ENTITY@Logic extends ALogic {
 
 
@@ -44,9 +44,7 @@ public class @ENTITY@Logic extends ALogic {
      * @param operationForm tipologia di Form in uso
      */
     public @ENTITY@Logic(AIService entityService, AEOperation operationForm) {
-        super(operationForm);
-        super.entityService = entityService;
-        super.entityClazz = entityService.getEntityClazz();
+        super(entityService, operationForm);
     }
 
 
@@ -63,6 +61,7 @@ public class @ENTITY@Logic extends ALogic {
         super.usaBottoneResetList = false;
     }
 
+
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste d'informazioni per costruire l' istanza di AHeaderWrap <br>
@@ -72,7 +71,7 @@ public class @ENTITY@Logic extends ALogic {
      */
     @Override
     protected AlertWrap getAlertWrapList() {
-        return null;
+        return new AlertWrap("Test.");
     }
 
 

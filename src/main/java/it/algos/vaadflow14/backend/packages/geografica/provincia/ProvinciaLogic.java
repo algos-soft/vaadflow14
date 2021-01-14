@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
@@ -24,16 +25,14 @@ import java.util.List;
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private Provincia ; <br>
- * 2) StaticContextAccessor.getBean(Provincia.class) (senza parametri) <br>
- * 3) appContext.getBean(Provincia.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@AIScript(sovraScrivibile = false)
 public class ProvinciaLogic extends ALogic {
 
     public static final String FIELD_REGIONE = "regione";

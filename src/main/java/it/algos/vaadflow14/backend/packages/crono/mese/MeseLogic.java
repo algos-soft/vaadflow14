@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
@@ -20,16 +21,14 @@ import java.util.List;
  * <p>
  * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private MeseLogic ; <br>
- * 2) StaticContextAccessor.getBean(MeseLogic.class) (senza parametri) <br>
- * 3) appContext.getBean(MeseLogic.class) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@AIScript(sovraScrivibile = false)
 public class MeseLogic extends CronoLogic {
 
 
