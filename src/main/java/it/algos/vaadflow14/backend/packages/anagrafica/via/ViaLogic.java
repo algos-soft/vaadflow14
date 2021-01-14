@@ -36,30 +36,19 @@ public class ViaLogic extends ALogic {
     private static final long serialVersionUID = 1L;
 
 
-//    /**
-//     * Costruttore senza parametri <br>
-//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-//     * Costruttore usato da AListView <br>
-//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService) <br>
-//     */
-//    public ViaLogic(AIService entityService) {
-//        this(entityService, AEOperation.listNoForm);
-//    }
-
-
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AView <br>
      * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
     public ViaLogic(AIService entityService, AEOperation operationForm) {
-        super(operationForm);
-        super.entityService = entityService;
-        super.entityClazz = entityService.getEntityClazz();
+        super(entityService, operationForm);
     }
+
 
     /**
      * Preferenze usate da questo service <br>
