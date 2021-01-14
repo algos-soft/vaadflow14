@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,28 +41,16 @@ public class UtenteLogic extends ALogic {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    @Deprecated
-    public UtenteLogic() {
-        this(AEOperation.edit);
-    }
-
-
-    /**
-     * Costruttore con parametro <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public UtenteLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Utente.class;
+    public UtenteLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
 
 
@@ -97,6 +86,7 @@ public class UtenteLogic extends ALogic {
         }
     }
 
+
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
      * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
@@ -115,6 +105,5 @@ public class UtenteLogic extends ALogic {
 
         return new AlertWrap(null, null, red, false);
     }
-
 
 }

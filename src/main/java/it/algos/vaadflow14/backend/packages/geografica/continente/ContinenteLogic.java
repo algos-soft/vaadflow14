@@ -3,7 +3,8 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
+import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.service.AIService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -24,7 +25,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class ContinenteLogic extends GeografiaLogic {
+public class ContinenteLogic extends ALogic {
 
 
     /**
@@ -34,27 +35,16 @@ public class ContinenteLogic extends GeografiaLogic {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    public ContinenteLogic() {
-        this(AEOperation.edit);
-    }
-
-
-    /**
-     * Costruttore con parametro <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public ContinenteLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Continente.class;
+    public ContinenteLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
 
 
@@ -72,13 +62,5 @@ public class ContinenteLogic extends GeografiaLogic {
         super.wikiPageTitle = "Continente";
         super.formClazz = ContinenteForm.class;
     }
-
-
-
-
-
-
-
-
 
 }

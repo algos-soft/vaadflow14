@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AEStato;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoService;
+import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.backend.service.AWikiService;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,29 +67,17 @@ public class RegioneLogic extends ALogic {
     //    @Autowired
     //    public AResourceService resource;
 
-
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    public RegioneLogic() {
-        this(AEOperation.edit);
-    }
-
-
-    /**
-     * Costruttore con parametro <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public RegioneLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Regione.class;
+    public RegioneLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
 
 
@@ -151,6 +140,5 @@ public class RegioneLogic extends ALogic {
 
         super.creaComboBox("status", 14);
     }
-
 
 }
