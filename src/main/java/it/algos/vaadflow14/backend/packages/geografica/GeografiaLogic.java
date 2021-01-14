@@ -2,8 +2,9 @@ package it.algos.vaadflow14.backend.packages.geografica;
 
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
+import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.service.AIService;
 
 /**
  * Project vaadflow14
@@ -15,15 +16,16 @@ import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 public abstract class GeografiaLogic extends ALogic {
 
     /**
-     * Costruttore con parametro <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public GeografiaLogic(AEOperation operationForm) {
-        super(operationForm);
+    public GeografiaLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
 
 

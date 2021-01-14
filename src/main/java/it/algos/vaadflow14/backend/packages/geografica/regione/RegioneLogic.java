@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
 import it.algos.vaadflow14.backend.enumeration.AEStato;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoService;
 import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.backend.service.AWikiService;
@@ -35,7 +35,7 @@ import java.util.List;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class RegioneLogic extends ALogic {
+public class RegioneLogic extends GeografiaLogic {
 
     /**
      * Versione della classe per la serializzazione

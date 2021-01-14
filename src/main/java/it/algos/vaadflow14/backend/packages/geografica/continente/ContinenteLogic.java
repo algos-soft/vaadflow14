@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
 import it.algos.vaadflow14.backend.service.AIService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class ContinenteLogic extends ALogic {
+public class ContinenteLogic extends GeografiaLogic {
 
 
     /**

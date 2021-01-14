@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
 import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
 import it.algos.vaadflow14.backend.service.AIService;
@@ -34,7 +34,7 @@ import java.util.List;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class ProvinciaLogic extends ALogic {
+public class ProvinciaLogic extends GeografiaLogic {
 
     public static final String FIELD_REGIONE = "regione";
 
