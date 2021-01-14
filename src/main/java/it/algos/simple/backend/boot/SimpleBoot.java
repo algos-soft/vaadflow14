@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.util.Objects;
-
 import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
 
 
@@ -77,8 +74,6 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
-        FlowVar.projectVersion = Double.parseDouble(Objects.requireNonNull(environment.getProperty("algos.vaadflow.version")));
-        FlowVar.versionDate = LocalDate.of(2020, 11, 23);
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.usaCronoPackages = true;

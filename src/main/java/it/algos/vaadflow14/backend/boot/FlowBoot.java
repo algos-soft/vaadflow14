@@ -29,7 +29,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.TAG_FLOW_DATA;
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 
 /**
@@ -213,16 +214,19 @@ public abstract class FlowBoot implements ServletContextListener {
         /**
          * Versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
          */
         FlowVar.projectVersion = Double.parseDouble(Objects.requireNonNull(environment.getProperty("algos.vaadflow.version")));
 
         /**
          * Data della versione dell' applicazione <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>
-         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
          */
-        FlowVar.versionDate = START_DATE;
+        int anno = Integer.parseInt(environment.getProperty("algos.vaadflow.version.date.anno"));
+        int mese = Integer.parseInt(environment.getProperty("algos.vaadflow.version.date.mese"));
+        int giorno = Integer.parseInt(environment.getProperty("algos.vaadflow.version.date.giorno"));
+        FlowVar.versionDate = LocalDate.of(anno, mese, giorno);
 
         /**
          * Eventuali informazioni aggiuntive da utilizzare nelle informazioni <br>

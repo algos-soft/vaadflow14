@@ -3,9 +3,9 @@
 server.port=${PORT:8080}
 
 # versione del framework
-vaadin.version=14.4.4
-algos.vaadflow.version=0.35
-algos.vaadflow.version.date=sab, 28 nov 2020
+vaadin.version=14.4.6
+algos.vaadflow.version=0.36
+algos.vaadflow.version.date=ven, 15 gen 2021
 
 # versione del progetto
 algos.@PROJECT@.version=0.1
