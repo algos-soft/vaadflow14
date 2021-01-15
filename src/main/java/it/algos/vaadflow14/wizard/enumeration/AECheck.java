@@ -72,7 +72,7 @@ public enum AECheck {
 
     valido("Entity usa property (boolean)", false, false, true, true, "valido", "PropertyValido", false,true,"Valido"),
 
-    docFile("Update doc of all packages", false, false, false, true, VUOTA, VUOTA, false),
+    docFile("Update doc of all packages", false, false, false, false, VUOTA, VUOTA, false),
 
     sovrascrivePackage("Sovrascrive un package esistente", false, false, false, false, VUOTA, VUOTA, false),
 

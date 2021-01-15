@@ -25,6 +25,8 @@ public enum AEFlag {
 
     isUpdatePackage(),
 
+    isDocPackages(),
+
     ;
 
     private boolean status;
@@ -41,17 +43,6 @@ public enum AEFlag {
         }
     }
 
-
-    public boolean is() {
-        return status;
-    }
-
-
-    public void set(boolean status) {
-        this.status = status;
-    }
-
-
     /**
      * Visualizzazione di controllo <br>
      */
@@ -61,10 +52,18 @@ public enum AEFlag {
             System.out.println("AEFlag  - " + posizione);
             System.out.println("********************");
             for (AEFlag flag : AEFlag.values()) {
-                System.out.println("AEFlag." + flag.name() +  " = " + flag.is());
+                System.out.println("AEFlag." + flag.name() + " = " + flag.is());
             }
             System.out.println("");
         }
+    }
+
+    public boolean is() {
+        return status;
+    }
+
+    public void set(boolean status) {
+        this.status = status;
     }
 
 }// end of enumeration class

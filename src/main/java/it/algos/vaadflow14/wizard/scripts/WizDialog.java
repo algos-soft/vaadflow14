@@ -241,7 +241,7 @@ public abstract class WizDialog extends Dialog {
         confirmButton.setWidth(NORMAL_WIDTH);
         confirmButton.setHeight(NORMAL_HEIGHT);
         confirmButton.setVisible(true);
-        confirmButton.setEnabled(!isNuovoProgetto);
+        confirmButton.setEnabled(false);
     }
 
 
@@ -278,6 +278,7 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
         status = status && this.regolaAEToken();
+        status = status && this.regolaAEPackage();
 
         return status;
     }
@@ -330,6 +331,21 @@ public abstract class WizDialog extends Dialog {
         return wizService.regolaAEToken(projectName, packageName);
     }
 
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Elabora tutti i valori della Enumeration AEPackage dipendenti dalla classe del package <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject, WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     */
+    protected boolean regolaAEPackage() {
+        for (AEPackage pack : AEPackage.values()) {
+            if (mappaWizBox != null && mappaWizBox.get(pack.name()) != null) {
+                pack.setAcceso(mappaWizBox.get(pack.name()).is());
+            }
+        }
+
+        return true;
+    }
 
     protected VerticalLayout fixSezione(String titolo) {
         return fixSezione(titolo, "black");

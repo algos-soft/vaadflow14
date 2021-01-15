@@ -86,6 +86,12 @@ public class Wizard extends VerticalLayout {
     private WizDialogUpdatePackage dialogUpdatePackage;
 
     /**
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la documentazione delle varie classi standard <br>
+     */
+    @Autowired
+    private WizDialogDocPackages dialogDocPackages;
+
+    /**
      * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la directory wizard di VaadFlow14 <br>
      */
     @Autowired
@@ -115,6 +121,13 @@ public class Wizard extends VerticalLayout {
      */
     @Autowired
     private WizElaboraUpdatePackage elaboraUpdatePackage;
+
+    /**
+     * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la documentazione delle varie classi standard <br>
+     */
+    @Autowired
+    private WizElaboraDocPackages elaboraDocPackages;
+
 
     /**
      * Utilizzato dall'interno di un qualsiasi progetto per aggiornare la directory wizard di VaadFlow14 <br>
@@ -171,10 +184,12 @@ public class Wizard extends VerticalLayout {
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
             paragrafoUpdateProject();
-        } else {
+        }
+        else {
             paragrafoUpdateProject();
             paragrafoNewPackage();
             paragrafoUpdatePackage();
+            paragrafoDocPackages();
             paragrafoFeedBackWizard();
         }
     }
@@ -231,7 +246,8 @@ public class Wizard extends VerticalLayout {
 
         if (AEFlag.isBaseFlow.is()) {
             layout.add(new Label("Seleziona un progetto dalla enumeration AEProgetto"));
-        } else {
+        }
+        else {
             layout.add(new Label("Update del modulo vaadflow14 di questo progetto"));
         }
         layout.add(new Label("Regola alcuni flags per le modifiche"));
@@ -303,10 +319,37 @@ public class Wizard extends VerticalLayout {
         this.add(new H2());
     }
 
-
     private void elaboraUpdatePackage() {
         elaboraUpdatePackage.esegue();
         dialogUpdatePackage.close();
+    }
+
+    public void paragrafoDocPackages() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(false);
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        H3 paragrafo = new H3(TITOLO_DOC_PACKAGES);
+        paragrafo.getElement().getStyle().set("color", "blue");
+
+        this.add(paragrafo);
+
+        layout.add(new Label("Documentation delle classi standard dei package esistenti"));
+        layout.add(new Label("Seleziona quali classi modificare"));
+
+        Button bottone = new Button("Doc packages");
+        bottone.getElement().setAttribute("theme", "primary");
+        bottone.addClickListener(event -> dialogDocPackages.open(this::elaboraDocPackages));
+
+        layout.add(bottone);
+        this.add(layout);
+        this.add(new H2());
+    }
+
+
+    private void elaboraDocPackages() {
+        elaboraDocPackages.esegue();
+        dialogDocPackages.close();
     }
 
 

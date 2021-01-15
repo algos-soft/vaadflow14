@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.wizard.scripts;
 
+import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.backend.enumeration.AECopyFile;
 import it.algos.vaadflow14.backend.service.AFileService;
@@ -403,13 +404,13 @@ public abstract class WizElabora implements WizRecipient {
      * Creazione o modifica dei files previsti per il package <br>
      */
     protected void fixPackage() {
-        if (AEPackage.entity.isAttivo()) {
+        if (AEPackage.entity.isAccesoInizialmente()) {
             this.fixEntity();
         }
-        if (AEPackage.service.isAttivo()) {
+        if (AEPackage.service.isAccesoInizialmente()) {
             this.fixFileService();
         }
-        if (AEPackage.logic.isAttivo()) {
+        if (AEPackage.logic.isAccesoInizialmente()) {
             this.fixFileLogic();
         }
     }
@@ -532,38 +533,34 @@ public abstract class WizElabora implements WizRecipient {
     protected void fixDocPackage() {
         boolean status = true;
         String projectName = AEDir.nameTargetProject.get();
-        String oldPackageName = AEDir.nameTargetPackage.get();
 
         for (String packageName : wizService.getPackages()) {
-            status = status && AEDir.modificaPackageAll(packageName);
             status = status && wizService.regolaAEToken(projectName, packageName);
             if (status) {
-                if (AEPackage.entity.isAttivo()) {
-                    this.fixDocEntity();
-                }
-                if (AEPackage.logic.isAttivo()) {
-                    this.fixDocLogic();
+                for (AEPackage pack : AEPackage.values()) {
+                    if (pack.is()) {
+                        this.elaboraDoc(packageName, pack);
+                    }
                 }
             }
         }
-
-        AEDir.modificaPackageAll(oldPackageName);
-        wizService.regolaAEToken(projectName, oldPackageName);
     }
 
-    protected void fixDocEntity() {
-        String tag = "Entity";
-        String pathFileToBeWritten = AEDir.fileTargetEntity.get();
-
-        wizService.fixDocFile(tag, pathFileToBeWritten);
+    protected void elaboraDoc(String packageName, AEPackage pack) {
+        String message;
+        String upperName = text.primaMaiuscola(packageName);
+        String fileName = upperName + pack.getTag();
+        String pathFileToBeWritten = AEDir.pathTargetAllPackages.get() + packageName + FlowCost.SLASH + fileName + FlowCost.JAVA_SUFFIX;
+        if (file.isEsisteFile(pathFileToBeWritten)) {
+            wizService.regolaAEToken(AEDir.nameTargetProject.get(), packageName);
+            wizService.fixDocFile(text.isValid(pack.getTag()) ? pack.getTag() : "Entity", pathFileToBeWritten);
+        }
+        else {
+            message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getTag()) ? pack.getTag() : "Entity", packageName);
+            logger.info(message, this.getClass(), "elaboraDoc");
+        }
     }
 
-    protected void fixDocLogic() {
-        String tag = "Logic";
-        String pathFileToBeWritten = AEDir.fileTargetLogic.get();
-
-        wizService.fixDocFile(tag, pathFileToBeWritten);
-    }
 
     public void creaModuloProgetto() {
         //--crea directory principale del modulo target (empty)
@@ -602,7 +599,6 @@ public abstract class WizElabora implements WizRecipient {
         //            creaDirectorySecurity();
     }
 
-
     /**
      * Crea il file principale con la MainClass <br>
      */
@@ -615,7 +611,6 @@ public abstract class WizElabora implements WizRecipient {
 
         wizService.creaFile(AECopyFile.sovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix, AEDir.nameTargetProject.get());
     }
-
 
     protected void creaFileCost() {
         wizService.creaFile(AECopyFile.checkFlagSeEsiste, FILE_COST, AEDir.fileTargetCost.get(), AEDir.nameTargetProject.get());

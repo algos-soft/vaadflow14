@@ -1,5 +1,9 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.LOGIC_SUFFIX;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.SERVICE_SUFFIX;
+
 /**
  * Project alfa
  * Created by Algos
@@ -10,40 +14,71 @@ package it.algos.vaadflow14.wizard.enumeration;
  * Possibili componenti di un package
  */
 public enum AEPackage {
-    entity("Entity base del package", true),
+    entity(VUOTA, "Entity base del package", true),
 
-    service("Service specifico del package", true),
+    logic(LOGIC_SUFFIX, "Business logic del package", true),
 
-    logic("Business logic del package", true),
+    service(SERVICE_SUFFIX, "Service specifico del package", true),
 
-    list("List specifico del package", false),
+    list("List", "List specifico del package", false),
 
-    form("Form specifico del package", false),
+    form("Form", "Form specifico del package", false),
 
-    data("Creazione dati specifico del package", false),
+    data("Data", "Creazione dati specifico del package", false),
 
-    enumeration("Enumerations specifiche del package", false),
+    enumeration("Enum", "Enumerations specifiche del package", false),
 
-    csv("Files csv esterni per i dati del package", false),
+    csv("CSV", "Files csv esterni per i dati del package", false),
     ;
+
+    private String tag;
 
     private String descrizione;
 
-    private boolean attivo;
+    private boolean acceso;
+
+    private boolean accesoInizialmente;
 
     /**
      * Costruttore completo <br>
      */
-    AEPackage(String descrizione, boolean attivo) {
+    AEPackage(String tag, String descrizione, boolean accesoInizialmente) {
+        this.tag = tag;
         this.descrizione = descrizione;
-        this.attivo = attivo;
+        this.accesoInizialmente = accesoInizialmente;
+        this.acceso = accesoInizialmente;
+    }
+
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    public static void printInfo(String posizione) {
+        System.out.println("********************");
+        System.out.println("AEPackage  - " + posizione);
+        System.out.println("********************");
+        for (AEPackage pack : AEPackage.values()) {
+            System.out.println("AEPackage." + pack.name() + "  = " + pack.is());
+        }
+        System.out.println("");
     }
 
     public String getDescrizione() {
         return descrizione;
     }
 
-    public boolean isAttivo() {
-        return attivo;
+    public boolean isAccesoInizialmente() {
+        return accesoInizialmente;
+    }
+
+    public boolean is() {
+        return acceso;
+    }
+
+    public void setAcceso(boolean acceso) {
+        this.acceso = acceso;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }// end of enumeration class

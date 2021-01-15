@@ -2,6 +2,7 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEFlag;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -21,10 +22,7 @@ public class WizElaboraUpdatePackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        if (AECheck.docFile.is()) {
-            super.fixDocPackage();
-        }
-        else {
+        if (AEFlag.isUpdatePackage.is()) {
             super.fixPackage();
         }
     }

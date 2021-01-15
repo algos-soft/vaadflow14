@@ -124,7 +124,8 @@ public abstract class WizCost {
 
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
 
-    public static final String TITOLO_UPDATE_PACKAGE = "Update packages";
+    public static final String TITOLO_UPDATE_PACKAGE = "Update package";
+    public static final String TITOLO_DOC_PACKAGES = "Doc packages";
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
 

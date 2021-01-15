@@ -40,7 +40,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @Builder(builderMethodName = "builder@ENTITY@")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = true)
-@AIEntity(recordName = "@PACKAGE@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
+@AIEntity(recordName = "@ENTITY@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
 @AIView(menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
 @AIForm(fields = @PROPERTIES@)

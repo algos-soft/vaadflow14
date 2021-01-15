@@ -11,8 +11,6 @@ import it.algos.vaadflow14.wizard.enumeration.AEToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NEW_PACKAGE;
 
@@ -66,8 +64,9 @@ public class WizDialogNewPackage extends WizDialog {
         fieldPackageName = new TextField("Nome del package");
         fieldPackageName.setAutofocus(true);
         selezioneLayout.add(fieldPackageName);
+        confirmButton.setEnabled(false);
 
-        //        addListener();//@todo Funzionalità ancora da implementare
+        addListener();
     }
 
 
@@ -121,7 +120,8 @@ public class WizDialogNewPackage extends WizDialog {
         if (text.isValid(value) && value.length() > 1) {
             confirmButton.setEnabled(true);
             AEToken.packageName.setValue(value);
-        } else {
+        }
+        else {
             confirmButton.setEnabled(false);
             AEToken.packageName.setValue(VUOTA);
         }
@@ -143,7 +143,8 @@ public class WizDialogNewPackage extends WizDialog {
         if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
             packageName = fieldPackageName.getValue().toLowerCase();
             status = AEDir.modificaPackageAll(packageName);
-        } else {
+        }
+        else {
             status = false;
         }
 

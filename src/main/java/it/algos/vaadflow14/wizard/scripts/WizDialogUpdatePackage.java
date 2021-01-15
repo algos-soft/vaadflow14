@@ -115,8 +115,8 @@ public class WizDialogUpdatePackage extends WizDialog {
         unCheckbox.addValueChangeListener(e -> { sincroRow(); });
         unCheckbox = mappaWizBox.get(AECheck.ordine.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroOrdine(); });
-        unCheckbox = mappaWizBox.get(AECheck.docFile.name()).getBox();
-        unCheckbox.addValueChangeListener(e -> { sincroDocPackage(); });
+//        unCheckbox = mappaWizBox.get(AECheck.docFile.name()).getBox();
+//        unCheckbox.addValueChangeListener(e -> { sincroDocPackage(); });
 
         super.addCheckBoxMap();
     }

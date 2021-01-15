@@ -58,6 +58,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
 
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
+        confirmButton.setEnabled(true);
     }
 
 }

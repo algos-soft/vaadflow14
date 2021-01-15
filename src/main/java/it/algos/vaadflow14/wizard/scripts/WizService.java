@@ -146,6 +146,7 @@ public class WizService {
         AEDir.printInfo(message);
         AEFlag.printInfo(message);
         AECheck.printInfo(message);
+        AEPackage.printInfo(message);
     }
 
     /**
@@ -240,7 +241,7 @@ public class WizService {
     /**
      * Sostituisce l'header di un file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
      * <p>
-     * Modifica il testo esistenza dall'inizio fino al tag @AIScript(... <br>
+     * Modifica il testo esistente dal termine dei dati cronologici fino al tag @AIScript(... <br>
      * Controlla che esista il file destinazione da modificare <br>
      * Controlla che nella directory wizard.sources di VaadFlow14 esista il file sorgente da copiare <br>
      * Nei messaggi di avviso, accorcia il pathFileToBeWritten eliminando i primi 4 livelli (/Users/gac/Documents/IdeaProjects) <br>
@@ -251,7 +252,9 @@ public class WizService {
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      */
     public void fixDocFile(String nameSourceText, String pathFileToBeWritten) {
-        String tag = "@AIScript(";
+        String message;
+        String tagIni = "* <p>";
+        String tagEnd = "@AIScript(";
         String oldHeader;
         String newHeader;
         String realText = file.leggeFile(pathFileToBeWritten);
@@ -274,13 +277,17 @@ public class WizService {
             return;
         }
 
-        if (realText.contains(tag)) {
-            oldHeader = realText.substring(0, realText.indexOf(tag));
-            newHeader = sourceText.substring(0, sourceText.indexOf(tag));
+        if (realText.contains(tagIni) && realText.contains(tagEnd)) {
+            oldHeader = realText.substring(realText.indexOf(tagIni), realText.indexOf(tagEnd));
+            newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 realText = text.sostituisce(realText, oldHeader, newHeader);
             }
             file.scriveFile(pathFileToBeWritten, realText, true, DIR_PACKAGES);
+        }
+        else {
+            message = String.format("Documentazione - Manca il tag @AIScript nel file %s", path);
+            logger.info(message, this.getClass(), "fixDocFile");
         }
     }
 
@@ -666,7 +673,7 @@ public class WizService {
         String tagCompany = "AECompany";
         AEToken.reset();
 
-        if (!AEFlag.isPackage.is() && !AEFlag.isProject.is()) {
+        if (text.isEmpty(projectName) && text.isEmpty(packageName)) {
             logger.warn("Manca sia projectName che packageName.", this.getClass(), "regolaAEToken");
             return false;
         }
