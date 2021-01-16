@@ -75,4 +75,4 @@ public class ViaLogic extends ALogic {
         return new AlertWrap("Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.");
     }
 
-}
+}// end of prototype class

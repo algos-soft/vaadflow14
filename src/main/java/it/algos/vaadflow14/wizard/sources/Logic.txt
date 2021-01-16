@@ -4,20 +4,21 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogic;
 import it.algos.vaadflow14.ui.header.AlertWrap;
+import it.algos.vaadflow14.backend.service.AIService;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import it.algos.vaadflow14.backend.annotation.AIScript;
 
 /**
  * Project @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
+ * Fix time: @TIME@ <br>
  * <p>
- * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
- * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+ * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
+ * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
+ * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
@@ -38,7 +39,7 @@ public class @ENTITY@Logic extends ALogic {
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
      * Costruttore usato da AView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
@@ -75,4 +76,4 @@ public class @ENTITY@Logic extends ALogic {
     }
 
 
-}// end of class
+}// end of prototype class

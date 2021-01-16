@@ -17,6 +17,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
+ * Fix time: @TIME@ <br>
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
@@ -144,4 +145,4 @@ public class @ENTITY@Service extends AService {
         // return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
-}// end of class
+}// end of singleton class

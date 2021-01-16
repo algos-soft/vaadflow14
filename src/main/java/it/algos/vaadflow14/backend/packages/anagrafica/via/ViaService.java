@@ -147,6 +147,7 @@ public class ViaService extends AService {
         return (Via) super.findById(keyID);
     }
 
+
     /**
      * Retrieves an entity by its keyProperty.
      *
@@ -160,6 +161,7 @@ public class ViaService extends AService {
     public Via findByKey(final String keyValue) {
         return (Via) super.findByKey(keyValue);
     }
+
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -195,4 +197,4 @@ public class ViaService extends AService {
         return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
-}
+}// end of singleton class

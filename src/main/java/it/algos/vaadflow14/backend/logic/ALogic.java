@@ -378,7 +378,7 @@ public abstract class ALogic implements AILogic {
     public ALogic(AIService entityService, AEOperation operationForm) {
         this.entityService = entityService;
         this.operationForm = operationForm;
-        this.entityClazz = entityService.getEntityClazz();
+        this.entityClazz = entityService != null ? entityService.getEntityClazz() : null;
     }
 
 
