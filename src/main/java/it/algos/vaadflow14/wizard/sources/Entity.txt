@@ -21,7 +21,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static java.awt.image.ImageObserver.WIDTH;
 
 /**
- * Project @MODULELOWER@ <br>
+ * Project: @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>
@@ -39,7 +39,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AllArgsConstructor
 @Builder(builderMethodName = "builder@ENTITY@")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = true)
+@AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "@ENTITY@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
 @AIView(menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)

@@ -529,8 +529,10 @@ public abstract class WizElabora implements WizRecipient {
 
     /**
      * Modifica della documentazione dei files di un package <br>
+     *
+     * @param inizioFile per la modifica dell'header
      */
-    protected void fixDocPackage() {
+    protected void fixDocPackage(boolean inizioFile) {
         boolean status = true;
         String projectName = AEDir.nameTargetProject.get();
 
@@ -539,21 +541,24 @@ public abstract class WizElabora implements WizRecipient {
             if (status) {
                 for (AEPackage pack : AEPackage.values()) {
                     if (pack.is()) {
-                        this.elaboraDoc(packageName, pack);
+                        this.elaboraDoc(packageName, pack, inizioFile);
                     }
                 }
             }
         }
     }
 
-    protected void elaboraDoc(String packageName, AEPackage pack) {
+    /**
+     * @param inizioFile per la modifica dell'header
+     */
+    protected void elaboraDoc(String packageName, AEPackage pack, boolean inizioFile) {
         String message;
         String upperName = text.primaMaiuscola(packageName);
         String fileName = upperName + pack.getTag();
         String pathFileToBeWritten = AEDir.pathTargetAllPackages.get() + packageName + FlowCost.SLASH + fileName + FlowCost.JAVA_SUFFIX;
         if (file.isEsisteFile(pathFileToBeWritten)) {
             wizService.regolaAEToken(AEDir.nameTargetProject.get(), packageName);
-            wizService.fixDocFile(text.isValid(pack.getTag()) ? pack.getTag() : "Entity", pathFileToBeWritten);
+            wizService.fixDocFile(text.isValid(pack.getTag()) ? pack.getTag() : "Entity", pathFileToBeWritten, inizioFile);
         }
         else {
             message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getTag()) ? pack.getTag() : "Entity", packageName);

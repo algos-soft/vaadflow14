@@ -23,6 +23,8 @@ public class WizBox extends HorizontalLayout {
 
     private TextField textField;
 
+    private AECheck check;
+
     public WizBox(AEPackage pack) {
         checkbox = new ACheckBox(pack.getDescrizione());
         this.setValue(pack.isAccesoInizialmente());
@@ -34,11 +36,26 @@ public class WizBox extends HorizontalLayout {
         checkbox = new ACheckBox(check.getCaption(), check.getCaption());
         this.setValue(check.isAccesoInizialmente());
         this.add(checkbox);
+        this.check = check;
 
         if (check.isFieldAssociato()) {
             textField = new TextField();
-            textField.setValue(check.getFieldName());
+            if (check.is()) {
+                textField.setValue(check.getFieldName());
+            }
+            textField.setAutoselect(true);
+            checkbox.getBinder().addValueChangeListener(event -> sincroText());
+
             this.add(textField);
+        }
+    }
+
+    private void sincroText() {
+        if (checkbox.getBinder().getValue()) {
+            textField.setValue(check.getFieldName());
+        }
+        else {
+            textField.setValue(VUOTA);
         }
     }
 

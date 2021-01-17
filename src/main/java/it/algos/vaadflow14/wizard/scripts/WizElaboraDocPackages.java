@@ -22,7 +22,7 @@ public class WizElaboraDocPackages extends WizElabora {
     @Override
     public void esegue() {
         if (AEFlag.isDocPackages.is()) {
-            super.fixDocPackage();
+            super.fixDocPackage(true);
         }
     }
 

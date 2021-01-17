@@ -261,6 +261,7 @@ public abstract class WizDialog extends Dialog {
      * Aggiunge al layout i checkbox di controllo <br>
      */
     protected void addCheckBoxMap() {
+        checkBoxLayout.removeAll();
         for (String key : mappaWizBox.keySet()) {
             checkBoxLayout.add(mappaWizBox.get(key));
         }
@@ -308,7 +309,9 @@ public abstract class WizDialog extends Dialog {
             if (mappaWizBox != null && mappaWizBox.get(check.name()) != null) {
                 check.setAcceso(mappaWizBox.get(check.name()).is());
                 if (check.isFieldAssociato()) {
-                    check.setFieldName(mappaWizBox.get(check.name()).getValue().toLowerCase());
+                    WizBox alfa = mappaWizBox.get(check.name());
+                    String beta = alfa.getValue();
+                    check.setFieldName(beta.toLowerCase());
                 }
             }
         }

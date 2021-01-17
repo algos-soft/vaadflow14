@@ -10,7 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 /**
- * Project @MODULELOWER@ <br>
+ * Project: @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Fix date: @TODAY@ <br>

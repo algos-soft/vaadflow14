@@ -250,10 +250,11 @@ public class WizService {
      *
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
+     * @param inizioFile          per la modifica dell'header
      */
-    public void fixDocFile(String nameSourceText, String pathFileToBeWritten) {
+    public void fixDocFile(String nameSourceText, String pathFileToBeWritten, boolean inizioFile) {
         String message;
-        String tagIni = "* <p>";
+        String tagIni = inizioFile ? "package" : "* <p>";
         String tagEnd = "@AIScript(";
         String oldHeader;
         String newHeader;

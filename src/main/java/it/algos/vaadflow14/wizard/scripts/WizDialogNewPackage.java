@@ -64,9 +64,10 @@ public class WizDialogNewPackage extends WizDialog {
         fieldPackageName = new TextField("Nome del package");
         fieldPackageName.setAutofocus(true);
         selezioneLayout.add(fieldPackageName);
-        confirmButton.setEnabled(false);
 
-        addListener();
+        //@todo Funzionalità ancora da implementare- Non riesco a sincronizzarlo
+//        confirmButton.setEnabled(false);
+//        addListener();
     }
 
 
@@ -106,6 +107,7 @@ public class WizDialogNewPackage extends WizDialog {
 
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
+        confirmButton.setEnabled(true);
     }
 
 
@@ -126,7 +128,6 @@ public class WizDialogNewPackage extends WizDialog {
             AEToken.packageName.setValue(VUOTA);
         }
     }
-
 
     /**
      * Chiamato alla dismissione del dialogo <br>

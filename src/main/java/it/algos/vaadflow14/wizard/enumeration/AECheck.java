@@ -64,13 +64,13 @@ public enum AECheck {
 
     rowIndex("Entity usa rowIndex", false, false, true, true, VUOTA, VUOTA, false),
 
-    ordine("Entity usa property (int)", false, false, true, true, "ordine", "PropertyOrdine", false,true,"Ordine"),
+    ordine("Entity usa property (int)", false, false, true, true, "ordine", "PropertyOrdine", false, true, "ordine"),
 
-    code("Entity usa property (String)", false, false, true, true, "code", "PropertyCode", true,true,"Code"),
+    code("Entity usa property (String)", false, false, true, true, "code", "PropertyCode", true, true, "code"),
 
-    descrizione("Entity usa property (String)", false, false, true, true, "descrizione", "PropertyDescrizione", true,true,"Descrizione"),
+    descrizione("Entity usa property (String)", false, false, true, true, "descrizione", "PropertyDescrizione", true, true, "descrizione"),
 
-    valido("Entity usa property (boolean)", false, false, true, true, "valido", "PropertyValido", false,true,"Valido"),
+    valido("Entity usa property (boolean)", false, false, true, true, "valido", "PropertyValido", false, true, "valido"),
 
     docFile("Update doc of all packages", false, false, false, false, VUOTA, VUOTA, false),
 
@@ -114,6 +114,7 @@ public enum AECheck {
         this.field = field;
         this.sourcesTag = sourcesTag;
         this.accesoInizialmente = accesoInizialmente;
+        this.acceso = accesoInizialmente;
     }
 
     /**
@@ -128,6 +129,7 @@ public enum AECheck {
         this.field = field;
         this.sourcesTag = sourcesTag;
         this.accesoInizialmente = accesoInizialmente;
+        this.acceso = accesoInizialmente;
         this.fieldAssociato = fieldAssociato;
         this.fieldName = fieldName;
     }
@@ -203,8 +205,13 @@ public enum AECheck {
             System.out.println("********************");
             System.out.println("AECheck  - " + posizione);
             System.out.println("********************");
-            for (AECheck flag : AECheck.values()) {
-                System.out.println("AECheck." + flag.name() + " \"" + flag.caption + "\" = " + flag.is());
+            for (AECheck check : AECheck.values()) {
+                if (check.isFieldAssociato()) {
+                    System.out.println("AECheck." + check.name() + " \"" + check.caption + "\" = " + check.is() + " -> value=" + check.fieldName);
+                }
+                else {
+                    System.out.println("AECheck." + check.name() + " \"" + check.caption + "\" = " + check.is());
+                }
             }
             System.out.println("");
         }
@@ -263,12 +270,12 @@ public enum AECheck {
         return fieldAssociato;
     }
 
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
     public String getFieldName() {
         return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 }
 
