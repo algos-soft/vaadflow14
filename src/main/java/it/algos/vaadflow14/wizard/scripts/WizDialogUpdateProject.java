@@ -156,6 +156,7 @@ public class WizDialogUpdateProject extends WizDialog {
 
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
+        confirmButton.setEnabled(true);
     }
 
 

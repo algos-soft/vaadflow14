@@ -184,6 +184,7 @@ public class Wizard extends VerticalLayout {
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
             paragrafoUpdateProject();
+            paragrafoDocPackages();
         }
         else {
             paragrafoUpdateProject();
