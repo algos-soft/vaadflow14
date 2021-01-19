@@ -6,6 +6,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import it.algos.vaadflow14.ui.fields.ACheckBox;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
 import it.algos.vaadflow14.wizard.enumeration.AEPackage;
+import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
@@ -24,6 +25,12 @@ public class WizBox extends HorizontalLayout {
     private TextField textField;
 
     private AECheck check;
+
+    public WizBox(AEWizCost aeCost) {
+        checkbox = new ACheckBox(aeCost.getDescrizione());
+        this.setValue(aeCost.isAccesoInizialmente());
+        this.add(checkbox);
+    }
 
     public WizBox(AEPackage pack) {
         checkbox = new ACheckBox(pack.getDescrizione());

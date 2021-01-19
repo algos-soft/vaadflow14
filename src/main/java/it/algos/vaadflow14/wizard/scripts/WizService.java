@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.PROJECT_VAADFLOW;
 
 
 /**
@@ -76,7 +76,8 @@ public class WizService {
         //--reset di tutte le enumeration
         reset();
 
-        fixAEFlag();
+        fixAEWizCost();
+        //        fixAEFlag();
         fixAEDir();
     }
 
@@ -85,14 +86,28 @@ public class WizService {
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
      * Chiamato da Wizard.initView() <br>
      */
-    public void fixAEFlag() {
-        String pathCurrent;
-        String path;
+    public void fixAEWizCost() {
+        String pathCurrent = System.getProperty("user.dir") + SLASH;
+        AEWizCost.pathCurrent.setValue(pathCurrent);
+
+        String user = pathCurrent.substring(1);
+        user = text.levaTestoPrimaDi(user, SLASH);
+        user = user.substring(0, user.indexOf(SLASH));
+        AEWizCost.nameUser.setValue(user);
+
+        String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+        project = text.primaMaiuscola(project);
+        AEWizCost.projectCurrent.setValue(project);
 
         //--isBaseFlow
-        pathCurrent = System.getProperty("user.dir") + SLASH;
-        path = file.estraeDirectoryFinale(pathCurrent);
-        AEFlag.isBaseFlow.set(path.equals(PROJECT_VAADFLOW));
+        boolean isBaseFlow = false;
+        String dirProject = file.estraeDirectoryFinale(pathCurrent);
+        isBaseFlow = dirProject.equals(AEWizCost.dirVaadFlow14.getValue());
+        if (!isBaseFlow) {
+            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.getValue() + project.toLowerCase(Locale.ROOT) + SLASH);
+        }
+        AEFlag.isBaseFlow.set(isBaseFlow);
     }
 
 
@@ -143,8 +158,8 @@ public class WizService {
      * Visualizzazione iniziale di controllo <br>
      */
     public void printStart() {
-        WizCost.printInfo();
-        AEProgetto.printInfo();
+        AEWizCost.printInfo();
+        //        AEProgetto.printInfo();
     }
 
 

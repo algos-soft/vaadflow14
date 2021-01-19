@@ -8,6 +8,7 @@ package it.algos.vaadflow14.wizard.scripts;
  * Time: 05:09
  */
 public abstract class WizCost {
+    public static final String VALORE_MANCANTE = "ATTENZIONE - Manca un valore indispensabile";
 
     //--flag per stampare info di debug
     public static final boolean FLAG_DEBUG_WIZ = true;
@@ -185,23 +186,5 @@ public abstract class WizCost {
     public static final String DIR_VAADFLOW_SOURCES = ROOT_DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
 
 
-    //--metodo statico invocato da Wizard.initView()
-    public static void printInfo() {
-        if (FLAG_DEBUG_WIZ) {
-            System.out.println("");
-            System.out.println("********************");
-            System.out.println("Costanti statiche");
-            System.out.println("********************");
-            System.out.println("PATH_PROJECTS_DIR_STANDARD = " + PATH_PROJECTS_DIR_STANDARD);
-            System.out.println("PATH_OPERATIVI_DIR_STANDARD = " + PATH_OPERATIVI_DIR_STANDARD);
-            System.out.println("PATH_VAADFLOW_DIR_STANDARD = " + PATH_VAADFLOW_DIR_STANDARD);
-            System.out.println("DIR_MAIN = " + ROOT_DIR_MAIN);
-            System.out.println("DIR_ALGOS = " + ROOT_DIR_ALGOS);
-            //            System.out.println("DIR_RESOURCES = " + DIR_RESOURCES);
-            System.out.println("DIR_FRONTEND = " + ROOT_DIR_FRONTEND);
-            System.out.println("DIR_VAADFLOW_SOURCES = " + DIR_VAADFLOW_SOURCES);
-            System.out.println("");
-        }
-    }
 
 }

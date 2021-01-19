@@ -3,10 +3,9 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.util.LinkedHashMap;
 
 import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_FEEDBACK_PROGETTO;
 
@@ -40,13 +39,24 @@ public class WizDialogFeedbackWizard extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
+        String pathWizard;
+        String pathModuloBase;
+        String pathSources;
         topLayout = fixSezione(TITOLO_FEEDBACK_PROGETTO, "green");
         this.add(topLayout);
 
-        topLayout.add(text.getLabelGreenBold("Ricopia su vaadflow14 la directory wizard di questo progetto"));
-        topLayout.add(text.getLabelGreenBold("La sub-directory sources di wizard, viene mantenuta"));
-        topLayout.add(text.getLabelGreenBold("Le altre sub-directory di wizard su vaadflow, vengono perse"));
-        topLayout.add(text.getLabelRedBold("Le modifiche sono irreversibili"));
+
+        if (!AEFlag.isBaseFlow.is()) {
+            pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.getValue(), "algos");
+            pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.getValue(), "operativi");
+            topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di questo progetto su %s", pathWizard, pathModuloBase)));
+
+            pathSources = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.getValue(), AEWizCost.dirVaadFlow14.getValue());
+            topLayout.add(text.getLabelGreenBold(String.format("Non modifica la sub-directory %s esistente su %s", pathSources, pathModuloBase)));
+
+            topLayout.add(text.getLabelRedBold("Le modifiche sono irreversibili"));
+        }
+
     }
 
     protected void creaCheckBoxLayout() {

@@ -276,12 +276,24 @@ public abstract class WizDialog extends Dialog {
     protected boolean regolazioniFinali() {
         boolean status = true;
 
+        status = status && this.regolaAEWizCost();
         status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
         status = status && this.regolaAEToken();
         status = status && this.regolaAEPackage();
 
         return status;
+    }
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected boolean regolaAEWizCost() {
+        return true;
     }
 
 

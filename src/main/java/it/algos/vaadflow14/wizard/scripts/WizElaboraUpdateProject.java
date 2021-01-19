@@ -1,7 +1,9 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -18,11 +20,35 @@ public class WizElaboraUpdateProject extends WizElabora {
 
     @Override
     public void esegue() {
-        super.esegue();
+        this.copyRoot();
+
         if (AECheck.projectUpdate.is()) {
-            super.creaModuloProgetto();
+//            super.creaModuloProgetto();
         }
     }
 
+    public void copyRoot() {
+        String srcPath = AEWizCost.pathVaadFlow14Root.getValue();
+        String destPath = AEWizCost.pathTargetProjectRoot.getValue();
+
+        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+            if (aeCost.isAcceso()) {
+                srcPath += aeCost.getValue();
+                destPath += aeCost.getValue();
+                wizService.copyDirectoryProject(aeCost.getCopy(), srcPath, destPath);
+            }
+        }
+
+        //
+        //        this.copiaDirectoryVaadFlow();
+        //
+        //        this.copiaDirectoryMetaInf();
+        //        this.creaFileProperties();
+        //        this.creaFileBanner();
+        //
+        //        this.creaFileGit();
+        //        this.creaFilePom();
+        //        this.creaFileRead();
+    }
 
 }
