@@ -14,6 +14,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -169,7 +170,10 @@ public class Wizard extends VerticalLayout {
 
 
     /**
-     * Qui va tutta la logica iniziale della view <br>
+     * Qui va tutta la logica iniziale della view principale <br>
+     * Per adesso regolo SOLO le costanti base <br>
+     * Per adesso posso solo selezionare se sono in VaadFlow14 oppure no <br>
+     * In base a questo decido quale paragrafo/possibilità mostrare <br>
      */
     protected void initView() {
         this.setMargin(true);
@@ -177,8 +181,8 @@ public class Wizard extends VerticalLayout {
         this.setSpacing(false);
         this.titolo();
 
-        wizService.printStart();
         wizService.fixVariabiliIniziali();
+        wizService.printStart();
         wizService.printInfo("Apertura iniziale della view Wizard");
 
         if (AEFlag.isBaseFlow.is()) {
@@ -241,7 +245,15 @@ public class Wizard extends VerticalLayout {
         layout.setPadding(false);
         layout.setSpacing(false);
         H3 paragrafo = new H3();
-        paragrafo.setText(AEFlag.isBaseFlow.is() ? TITOLO_MODIFICA_PROGETTO : TITOLO_MODIFICA_QUESTO_PROGETTO);
+        String titolo;
+        if (AEFlag.isBaseFlow.is()) {
+            titolo = TITOLO_MODIFICA_PROGETTO;
+        }
+        else {
+            titolo = TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.projectCurrent.getValue() + ")";
+        }
+
+        paragrafo.setText(titolo);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
