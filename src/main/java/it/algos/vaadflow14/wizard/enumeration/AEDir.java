@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 /**
@@ -169,7 +168,7 @@ public enum AEDir {
         @Override
         public boolean modificaProject(String projectName) {
             boolean status = true;
-            String path = VUOTA;
+            String path = pathCurrent.get();
 
             if (AEFlag.isBaseFlow.is()) {
                 if (AEFlag.isNewProject.is()) {
@@ -178,9 +177,9 @@ public enum AEDir {
                 if (AEFlag.isUpdateProject.is()) {
                     path = pathIdeaProjects.get() + DIR_OPERATIVI + nameTargetProject.get() + SLASH;
                 }
-                if (text.isEmpty(path)) {
-                    return false;
-                }
+//                if (text.isEmpty(path)) {
+//                    return false;
+//                }
 
                 if (!file.isEsisteDirectory(path)) {
                     path = AEProgetto.getProgetto(projectName).getPathCompleto();
@@ -515,7 +514,7 @@ public enum AEDir {
         boolean status = true;
 
         for (AEDir aeDir : AEDir.getModificabiliProject()) {
-            status = status && aeDir.modificaProject(projectName);
+            aeDir.modificaProject(projectName);
         }
 
         return status;

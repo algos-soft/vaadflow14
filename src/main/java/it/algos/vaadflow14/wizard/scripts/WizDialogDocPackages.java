@@ -36,12 +36,6 @@ public class WizDialogDocPackages extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-//        if (AEFlag.isBaseFlow.is()) {
-//            logger.error("Non dovrebbe arrivare qui", this.getClass(), "creaTopLayout");
-//        }
-//        else {
-//            topLayout = fixSezione("Doc delle classi standard", "green");
-//        }
         topLayout = fixSezione("Doc delle classi standard", "green");
         this.add(topLayout);
 

@@ -109,7 +109,7 @@ public class WizService {
         AEDir.elaboraAll(pathCurrent);
 
         //--se è un progetto specifico, ne conosco il nome e lo inserisco nelle enumeration AEDir modificabili
-        if (!AEFlag.isBaseFlow.is()) {
+        if (AEFlag.isBaseFlow.is()) {
             projectName = file.estraeDirectoryFinale(pathCurrent);
             if (projectName.endsWith(SLASH)) {
                 projectName = text.levaCoda(projectName, SLASH);
@@ -117,6 +117,15 @@ public class WizService {
 
             AEDir.modificaProjectAll(projectName);
         }
+        else {
+            projectName = file.estraeDirectoryFinale(pathCurrent);
+            if (projectName.endsWith(SLASH)) {
+                projectName = text.levaCoda(projectName, SLASH);
+            }
+
+            AEDir.modificaProjectAll(projectName);
+        }
+
     }
 
 

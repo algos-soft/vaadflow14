@@ -1653,7 +1653,6 @@ public class AFileService extends AAbstractService {
         return pathOut.trim();
     }
 
-
     /**
      * Recupera l'ultima directory da un path <br>
      * <p>
@@ -1663,6 +1662,27 @@ public class AFileService extends AAbstractService {
      * @param pathIn in ingresso
      *
      * @return directory finale del path
+     */
+    public String estraeDirectoryFinaleSenzaSlash(final String pathIn) {
+        String pathOut = pathIn.trim();
+
+        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
+            pathOut = text.levaCoda(pathOut, SLASH);
+            pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + 1) ;
+        }
+
+        return pathOut.trim();
+    }
+
+    /**
+     * Recupera l'ultima directory da un path <br>
+     * <p>
+     * Esegue solo se il path è valido <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     *
+     * @param pathIn in ingresso
+     *
+     * @return directory finale del path, comprensiva di SLASH
      */
     public String estraeDirectoryFinale(final String pathIn) {
         String pathOut = pathIn.trim();
@@ -1766,7 +1786,7 @@ public class AFileService extends AAbstractService {
             pathBreve = prefix + pathCanonical;
         }
 
-        return pathBreve;
+        return text.levaCoda(pathBreve,SLASH);
     }
 
     /**
