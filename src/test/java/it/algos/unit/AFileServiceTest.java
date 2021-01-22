@@ -1,7 +1,7 @@
 package it.algos.unit;
 
 import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.enumeration.AECopyDir;
+import it.algos.vaadflow14.backend.enumeration.AECopy;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.*;
 
@@ -903,7 +903,7 @@ public class AFileServiceTest extends ATest {
         //--messaggio di errore
         assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.addingOnly, srcPathNonEsistente, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirAddingOnly, srcPathNonEsistente, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
 
@@ -911,7 +911,7 @@ public class AFileServiceTest extends ATest {
         //--messaggio di errore
         assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.deletingAll, srcPathNonEsistente, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirDeletingAll, srcPathNonEsistente, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
 
@@ -919,7 +919,7 @@ public class AFileServiceTest extends ATest {
         //--messaggio di errore
         assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathNonEsistente, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirSoloSeNonEsiste, srcPathNonEsistente, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
 
@@ -927,35 +927,35 @@ public class AFileServiceTest extends ATest {
         //--messaggio di errore
         assertFalse(file.isEsisteDirectory(srcPathNonEsistente));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory((AECopyDir) null, srcPathNonEsistente, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory((AECopy) null, srcPathNonEsistente, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
 
         //--esegue con destinazione NON esistente
         assertTrue(file.isEsisteDirectory(srcPathValida));
         assertFalse(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirSoloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
         assertTrue(ottenutoBooleano);
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
 
         //--esegue con destinazione esistente
         assertTrue(file.isEsisteDirectory(srcPathValida));
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.deletingAll, srcPathValida, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirDeletingAll, srcPathValida, destPathDaSovrascrivere);
         assertTrue(ottenutoBooleano);
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
 
         //--esegue con destinazione esistente
         assertTrue(file.isEsisteDirectory(srcPathValida));
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.addingOnly, srcPathValida, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirAddingOnly, srcPathValida, destPathDaSovrascrivere);
         assertTrue(ottenutoBooleano);
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
 
         //--esegue con destinazione esistente
         assertTrue(file.isEsisteDirectory(srcPathValida));
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
-        ottenutoBooleano = file.copyDirectory(AECopyDir.soloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
+        ottenutoBooleano = file.copyDirectory(AECopy.dirSoloSeNonEsiste, srcPathValida, destPathDaSovrascrivere);
         assertFalse(ottenutoBooleano);
         assertTrue(file.isEsisteDirectory(destPathDaSovrascrivere));
 
@@ -1426,31 +1426,31 @@ public class AFileServiceTest extends ATest {
         printPath(VUOTA, sorgente2, ottenuto);
 
         sorgente2 = "tutorial";
-        previsto = VUOTA;
+        previsto = sorgente;
         ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
         printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "IdeaProjects";
-        previsto = "../IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno/";
+        previsto = "../IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno";
         ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
         printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "operativi";
-        previsto = "../operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno/";
+        previsto = "../operativi/vaadflow14/src/main/java/it/algos/vaadflow14/backend/packages/crono/giorno";
         ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
         printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "vaadflow14";
-        previsto = "../vaadflow14/backend/packages/crono/giorno/";
+        previsto = "../vaadflow14/backend/packages/crono/giorno";
         ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
         printPath(sorgente, sorgente2, ottenuto);
 
         sorgente2 = "packages";
-        previsto = "../packages/crono/giorno/";
+        previsto = "../packages/crono/giorno";
         ottenuto = file.findPathBreve(sorgente, sorgente2);
         assertEquals(previsto, ottenuto);
         printPath(sorgente, sorgente2, ottenuto);

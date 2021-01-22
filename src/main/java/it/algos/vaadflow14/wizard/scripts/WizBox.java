@@ -3,12 +3,12 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.ui.fields.ACheckBox;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.AEPackage;
 import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadwiki14
@@ -27,7 +27,7 @@ public class WizBox extends HorizontalLayout {
     private AECheck check;
 
     public WizBox(AEWizCost aeCost) {
-        checkbox = new ACheckBox(aeCost.getDescrizione());
+        checkbox = new ACheckBox(aeCost.getDescrizione() + FlowCost.FORWARD + "AECopy."+aeCost.getCopy());
         this.setValue(aeCost.isAccesoInizialmente());
         this.add(checkbox);
     }
@@ -62,7 +62,7 @@ public class WizBox extends HorizontalLayout {
             textField.setValue(check.getFieldName());
         }
         else {
-            textField.setValue(VUOTA);
+            textField.setValue(FlowCost.VUOTA);
         }
     }
 
@@ -75,7 +75,7 @@ public class WizBox extends HorizontalLayout {
     }
 
     public String getValue() {
-        return textField != null ? textField.getValue() : VUOTA;
+        return textField != null ? textField.getValue() : FlowCost.VUOTA;
     }
 
     public void setValue(boolean value) {

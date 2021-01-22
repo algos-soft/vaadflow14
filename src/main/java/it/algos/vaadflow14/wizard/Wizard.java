@@ -183,7 +183,7 @@ public class Wizard extends VerticalLayout {
 
         wizService.fixVariabiliIniziali();
         wizService.printStart();
-        wizService.printInfo("Apertura iniziale della view Wizard");
+//        wizService.printInfo("Apertura iniziale della view Wizard");
 
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();

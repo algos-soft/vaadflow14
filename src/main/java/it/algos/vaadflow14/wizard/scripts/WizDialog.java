@@ -398,7 +398,7 @@ public abstract class WizDialog extends Dialog {
                 this.close();
                 return;
             }
-            wizService.printInfoCompleto("Uscita del dialogo");
+//            wizService.printInfoCompleto("Uscita del dialogo");
 
             this.close();
             wizRecipient.esegue();

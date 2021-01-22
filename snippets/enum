@@ -7,20 +7,20 @@
 
 
     @Component
-    public static class ParBioServiceInjector {
+    public static class WizCostServiceInjector {
 
         @Autowired
-        private LibBio libBio;
+        private AFileService file;
 
 
         @PostConstruct
         public void postConstruct() {
-            for (ParBio parBio : ParBio.values()) {
-                parBio.setLibBio(libBio);
-            }// end of for cycle
-        }// end of method
+            for (AEWizCost aeWizCost : AEWizCost.values()) {
+                aeWizCost.setFile(file);
+            }
+        }
 
-    }// end of class
+    }
 
 
     public static List<AEColor> getColors() {

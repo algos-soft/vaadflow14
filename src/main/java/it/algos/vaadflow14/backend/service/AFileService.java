@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.enumeration.AECopyDir;
-import it.algos.vaadflow14.backend.enumeration.AECopyFile;
+import it.algos.vaadflow14.backend.enumeration.AECopy;
+import it.algos.vaadflow14.backend.application.*;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -16,8 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -94,7 +92,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory esiste, false se non sono rispettate le condizioni della richiesta
      */
     public boolean isEsisteDirectory(File directoryToBeChecked) {
-        return isEsisteDirectoryStr(directoryToBeChecked).equals(VUOTA);
+        return isEsisteDirectoryStr(directoryToBeChecked).equals(FlowCost.VUOTA);
     }
 
 
@@ -127,7 +125,7 @@ public class AFileService extends AAbstractService {
 
         if (directoryToBeChecked.exists()) {
             if (directoryToBeChecked.isDirectory()) {
-                return VUOTA;
+                return FlowCost.VUOTA;
             }
             else {
                 return NON_E_DIRECTORY;
@@ -159,7 +157,7 @@ public class AFileService extends AAbstractService {
         if (parentDirectoryCreata) {
             try { // prova ad eseguire il codice
                 unFile.createNewFile();
-                risposta = VUOTA;
+                risposta = FlowCost.VUOTA;
             } catch (Exception unErrore) { // intercetta l'errore
                 System.out.println("Errore nel path per la creazione di un file");
             }
@@ -185,7 +183,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory esiste, false se non sono rispettate le condizioni della richiesta
      */
     public boolean isEsisteDirectory(String absolutePathDirectoryToBeChecked) {
-        return isEsisteDirectoryStr(absolutePathDirectoryToBeChecked).equals(VUOTA);
+        return isEsisteDirectoryStr(absolutePathDirectoryToBeChecked).equals(FlowCost.VUOTA);
     }
 
 
@@ -232,7 +230,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file esiste, false se non sono rispettate le condizioni della richiesta
      */
     public boolean isEsisteFile(File fileToBeChecked) {
-        return isEsisteFileStr(fileToBeChecked).equals(VUOTA);
+        return isEsisteFileStr(fileToBeChecked).equals(FlowCost.VUOTA);
     }
 
 
@@ -251,7 +249,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file esiste, false se non sono rispettate le condizioni della richiesta
      */
     public boolean isEsisteFile(String pathDirectoryToBeChecked, String fileName) {
-        return isEsisteFile(pathDirectoryToBeChecked + SLASH + fileName);
+        return isEsisteFile(pathDirectoryToBeChecked + FlowCost.SLASH + fileName);
     }
 
 
@@ -269,7 +267,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file esiste, false se non sono rispettate le condizioni della richiesta
      */
     public boolean isEsisteFile(String absolutePathFileWithSuffixToBeChecked) {
-        return isEsisteFileStr(absolutePathFileWithSuffixToBeChecked).equals(VUOTA);
+        return isEsisteFileStr(absolutePathFileWithSuffixToBeChecked).equals(FlowCost.VUOTA);
     }
 
 
@@ -287,7 +285,7 @@ public class AFileService extends AAbstractService {
      * @return testo di errore, vuoto se il file esiste
      */
     public String isEsisteFileStr(String absolutePathFileWithSuffixToBeChecked) {
-        String risposta = VUOTA;
+        String risposta = FlowCost.VUOTA;
 
         if (text.isEmpty(absolutePathFileWithSuffixToBeChecked)) {
             return PATH_NULLO;
@@ -298,7 +296,7 @@ public class AFileService extends AAbstractService {
         }
 
         risposta = isEsisteFileStr(new File(absolutePathFileWithSuffixToBeChecked));
-        if (!risposta.equals(VUOTA)) {
+        if (!risposta.equals(FlowCost.VUOTA)) {
             if (isEsisteDirectory(new File(absolutePathFileWithSuffixToBeChecked))) {
                 return NON_E_FILE;
             }
@@ -341,7 +339,7 @@ public class AFileService extends AAbstractService {
 
         if (fileToBeChecked.exists()) {
             if (fileToBeChecked.isFile()) {
-                return VUOTA;
+                return FlowCost.VUOTA;
             }
             else {
                 return NON_E_FILE;
@@ -356,7 +354,7 @@ public class AFileService extends AAbstractService {
                 return NON_ESISTE_FILE;
             }
 
-            return VUOTA;
+            return FlowCost.VUOTA;
         }
     }
 
@@ -377,7 +375,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file è stato creato, false se non sono rispettate le condizioni della richiesta
      */
     public boolean creaFile(String absolutePathFileWithSuffixToBeCreated) {
-        return creaFileStr(absolutePathFileWithSuffixToBeCreated).equals(VUOTA);
+        return creaFileStr(absolutePathFileWithSuffixToBeCreated).equals(FlowCost.VUOTA);
     }
 
 
@@ -422,7 +420,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file è stato creato, false se non sono rispettate le condizioni della richiesta
      */
     public boolean creaFile(File fileToBeCreated) {
-        return creaFileStr(fileToBeCreated).equals(VUOTA);
+        return creaFileStr(fileToBeCreated).equals(FlowCost.VUOTA);
     }
 
 
@@ -464,7 +462,7 @@ public class AFileService extends AAbstractService {
             return creaDirectoryParentAndFile(fileToBeCreated);
         }
 
-        return fileToBeCreated.exists() ? VUOTA : NON_CREATO_FILE;
+        return fileToBeCreated.exists() ? FlowCost.VUOTA : NON_CREATO_FILE;
     }
 
 
@@ -482,7 +480,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory è stata creata, false se non sono rispettate le condizioni della richiesta
      */
     public boolean creaDirectory(String absolutePathDirectoryToBeCreated) {
-        return creaDirectoryStr(absolutePathDirectoryToBeCreated).equals(VUOTA);
+        return creaDirectoryStr(absolutePathDirectoryToBeCreated).equals(FlowCost.VUOTA);
     }
 
 
@@ -522,7 +520,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory è stata creata, false se non sono rispettate le condizioni della richiesta
      */
     public boolean creaDirectory(File directoryToBeCreated) {
-        return creaDirectoryStr(directoryToBeCreated).equals(VUOTA);
+        return creaDirectoryStr(directoryToBeCreated).equals(FlowCost.VUOTA);
     }
 
 
@@ -562,7 +560,7 @@ public class AFileService extends AAbstractService {
             return NON_CREATA_DIRECTORY;
         }
 
-        return directoryToBeCreated.exists() ? VUOTA : NON_CREATA_DIRECTORY;
+        return directoryToBeCreated.exists() ? FlowCost.VUOTA : NON_CREATA_DIRECTORY;
     }
 
 
@@ -580,7 +578,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file è stato cancellato oppure non esisteva
      */
     public boolean deleteFile(String absolutePathFileWithSuffixToBeCanceled) {
-        return deleteFileStr(absolutePathFileWithSuffixToBeCanceled).equals(VUOTA);
+        return deleteFileStr(absolutePathFileWithSuffixToBeCanceled).equals(FlowCost.VUOTA);
     }
 
 
@@ -620,7 +618,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file è stato cancellato oppure non esisteva
      */
     public boolean deleteFile(File fileToBeDeleted) {
-        return deleteFileStr(fileToBeDeleted).equals(VUOTA);
+        return deleteFileStr(fileToBeDeleted).equals(FlowCost.VUOTA);
     }
 
 
@@ -660,7 +658,7 @@ public class AFileService extends AAbstractService {
         }
 
         if (fileToBeDeleted.delete()) {
-            return VUOTA;
+            return FlowCost.VUOTA;
         }
         else {
             return NON_CANCELLATO_FILE;
@@ -682,7 +680,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory è stato cancellato oppure non esisteva
      */
     public boolean deleteDirectory(String absolutePathDirectoryToBeDeleted) {
-        return deleteDirectoryStr(absolutePathDirectoryToBeDeleted).equals(VUOTA);
+        return deleteDirectoryStr(absolutePathDirectoryToBeDeleted).equals(FlowCost.VUOTA);
     }
 
 
@@ -720,7 +718,7 @@ public class AFileService extends AAbstractService {
      * @return true se la directory è stata cancellata oppure non esisteva
      */
     public boolean deleteDirectory(File directoryToBeDeleted) {
-        return deleteDirectoryStr(directoryToBeDeleted).equals(VUOTA);
+        return deleteDirectoryStr(directoryToBeDeleted).equals(FlowCost.VUOTA);
     }
 
 
@@ -754,12 +752,12 @@ public class AFileService extends AAbstractService {
         }
 
         if (directoryToBeDeleted.delete()) {
-            return VUOTA;
+            return FlowCost.VUOTA;
         }
         else {
             try {
                 FileUtils.deleteDirectory(directoryToBeDeleted);
-                return VUOTA;
+                return FlowCost.VUOTA;
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "deleteDirectoryStr");
                 return NON_CANCELLATA_DIRECTORY;
@@ -782,7 +780,7 @@ public class AFileService extends AAbstractService {
      */
     @Deprecated
     public boolean copyFile(String srcPath, String destPath) {
-        return copyFileStr(srcPath, destPath) == VUOTA;
+        return copyFileStr(srcPath, destPath) == FlowCost.VUOTA;
     }
 
 
@@ -806,7 +804,7 @@ public class AFileService extends AAbstractService {
             deleteFile(destPath);
         }
 
-        return copyFileStr(srcPath, destPath) == VUOTA;
+        return copyFileStr(srcPath, destPath) == FlowCost.VUOTA;
     }
 
 
@@ -822,7 +820,7 @@ public class AFileService extends AAbstractService {
      * @return true se il file è stato copiato
      */
     public boolean copyFileOnlyNotExisting(String srcPath, String destPath) {
-        return copyFileStr(srcPath, destPath) == VUOTA;
+        return copyFileStr(srcPath, destPath) == FlowCost.VUOTA;
     }
 
 
@@ -839,7 +837,7 @@ public class AFileService extends AAbstractService {
      * @return testo di errore, vuoto se il file è stato copiato
      */
     public String copyFileStr(String srcPath, String destPath) {
-        String risposta = VUOTA;
+        String risposta = FlowCost.VUOTA;
         File srcFile = new File(srcPath);
         File destFile = new File(destPath);
 
@@ -879,8 +877,8 @@ public class AFileService extends AAbstractService {
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath) {
-        return copyDirectory(typeCopy, srcPath, destPath, VUOTA);
+    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath) {
+        return copyDirectory(typeCopy, srcPath, destPath, FlowCost.VUOTA);
     }
 
 
@@ -900,7 +898,7 @@ public class AFileService extends AAbstractService {
      * @param destPath       nome completo di suffisso del file da creare
      * @param firstDirectory da cui iniziare il path per il messaggio di avviso
      */
-    public void copyFile(AECopyFile typeCopy, String srcPath, String destPath, String firstDirectory) {
+    public void copyFile(AECopy typeCopy, String srcPath, String destPath, String firstDirectory) {
         boolean esisteFileDest;
         String message;
         String path = this.findPathBreve(destPath, firstDirectory);
@@ -912,9 +910,9 @@ public class AFileService extends AAbstractService {
 
         esisteFileDest = this.isEsisteFile(destPath);
         switch (typeCopy) {
-            case sovrascriveSempreAncheSeEsiste:
+            case fileSovrascriveSempreAncheSeEsiste:
                 if (esisteFileDest) {
-                    message = "Il file: " + path + " esiste già e ma è stato modificato.";
+                    message = "Il file: " + path + " esisteva già ed è stato modificato.";
                     logger.info(message, this.getClass(), "copyFile");
                 }
                 else {
@@ -923,9 +921,9 @@ public class AFileService extends AAbstractService {
                 }
                 this.copyFileDeletingAll(srcPath, destPath);
                 break;
-            case soloSeNonEsiste:
+            case fileSoloSeNonEsiste:
                 if (esisteFileDest) {
-                    message = "Il file: " + path + " esiste già e non è stato modificato.";
+                    message = "Il file: " + path + " esisteva già e non è stato modificato.";
                     logger.info(message, this.getClass(), "copyFile");
                 }
                 else {
@@ -959,10 +957,10 @@ public class AFileService extends AAbstractService {
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyDirectory(AECopyDir typeCopy, String srcPath, String destPath, String firstDirectory) {
+    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath, String firstDirectory) {
         boolean copiata = false;
         boolean esisteDest;
-        String message = VUOTA;
+        String message = FlowCost.VUOTA;
         String tag;
         String path;
 
@@ -974,7 +972,7 @@ public class AFileService extends AAbstractService {
             path = this.findPathBreve(destPath, firstDirectory);
             if (isEsisteDirectory(srcPath)) {
                 switch (typeCopy) {
-                    case soloSeNonEsiste:
+                    case dirSoloSeNonEsiste:
                         copiata = copyDirectoryOnlyNotExisting(srcPath, destPath);
                         if (copiata) {
                             message = "La directory: " + path + " non esisteva ed è stata copiata.";
@@ -983,9 +981,9 @@ public class AFileService extends AAbstractService {
                             message = "La directory: " + path + " esisteva già e non è stata toccata.";
                         }
                         logger.info(message, this.getClass(), "copyDirectory");
-                        message = VUOTA;
+                        message = FlowCost.VUOTA;
                         break;
-                    case deletingAll:
+                    case dirDeletingAll:
                         esisteDest = isEsisteDirectory(destPath);
                         copiata = copyDirectoryDeletingAll(srcPath, destPath);
                         if (copiata) {
@@ -996,7 +994,7 @@ public class AFileService extends AAbstractService {
                                 message = "La directory: " + path + " non esisteva ed è stata creata.";
                             }
                             logger.info(message, this.getClass(), "copyDirectory");
-                            message = VUOTA;
+                            message = FlowCost.VUOTA;
                         }
                         else {
                             if (esisteDest) {
@@ -1007,7 +1005,7 @@ public class AFileService extends AAbstractService {
                             }
                         }
                         break;
-                    case addingOnly:
+                    case dirAddingOnly:
                         esisteDest = isEsisteDirectory(destPath);
                         copiata = copyDirectoryAddingOnly(srcPath, destPath);
                         if (copiata) {
@@ -1229,7 +1227,7 @@ public class AFileService extends AAbstractService {
      * @param sovrascrive         anche se esiste già
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
-        return scriveFile(pathFileToBeWritten, testo, sovrascrive, VUOTA);
+        return scriveFile(pathFileToBeWritten, testo, sovrascrive, FlowCost.VUOTA);
     }
 
 
@@ -1243,7 +1241,7 @@ public class AFileService extends AAbstractService {
      * @param directory           da cui iniziare il path per il messaggio di avviso
      */
     public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
-        String message = VUOTA;
+        String message = FlowCost.VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
         String path = this.findPathBreve(pathFileToBeWritten, directory);
@@ -1320,8 +1318,8 @@ public class AFileService extends AAbstractService {
      * @param pathFileToBeRead nome completo del file
      */
     public String leggeFile(String pathFileToBeRead) {
-        String testo = VUOTA;
-        String aCapo = A_CAPO;
+        String testo = FlowCost.VUOTA;
+        String aCapo = FlowCost.A_CAPO;
         String currentLine;
 
         //-- non va, perché se arriva it/algos/Alfa.java becca anche il .java
@@ -1352,7 +1350,7 @@ public class AFileService extends AAbstractService {
      * @return lista di liste di valori, senza titoli
      */
     public List<List<String>> leggeListaCSV(String pathFileToBeRead) {
-        return leggeListaCSV(pathFileToBeRead, VIRGOLA, A_CAPO);
+        return leggeListaCSV(pathFileToBeRead, FlowCost.VIRGOLA, FlowCost.A_CAPO);
     }
 
 
@@ -1408,7 +1406,7 @@ public class AFileService extends AAbstractService {
      * @return lista di mappe di valori
      */
     public List<LinkedHashMap<String, String>> leggeMappaCSV(String pathFileToBeRead) {
-        return leggeMappaCSV(pathFileToBeRead, VIRGOLA, A_CAPO);
+        return leggeMappaCSV(pathFileToBeRead, FlowCost.VIRGOLA, FlowCost.A_CAPO);
     }
 
 
@@ -1578,15 +1576,15 @@ public class AFileService extends AAbstractService {
     public List<File> getSubSubDirectories(File directoryToBeScanned, String dirInterna) {
         String subDir = directoryToBeScanned.getAbsolutePath();
 
-        if (subDir.endsWith(SLASH)) {
-            subDir = text.levaCoda(subDir, SLASH);
+        if (subDir.endsWith(FlowCost.SLASH)) {
+            subDir = text.levaCoda(subDir, FlowCost.SLASH);
         }
 
-        if (dirInterna.startsWith(SLASH)) {
-            dirInterna = text.levaTesta(dirInterna, SLASH);
+        if (dirInterna.startsWith(FlowCost.SLASH)) {
+            dirInterna = text.levaTesta(dirInterna, FlowCost.SLASH);
         }
 
-        String newPath = subDir + SLASH + dirInterna;
+        String newPath = subDir + FlowCost.SLASH + dirInterna;
         File subFile = new File(newPath);
 
         return getSubDirectories(subFile);
@@ -1602,7 +1600,7 @@ public class AFileService extends AAbstractService {
      * @return true se esiste
      */
     public boolean isEsisteSubDirectory(File directoryToBeScanned, String dirInterna) {
-        return isEsisteDirectory(directoryToBeScanned.getAbsolutePath() + SLASH + dirInterna);
+        return isEsisteDirectory(directoryToBeScanned.getAbsolutePath() + FlowCost.SLASH + dirInterna);
     }
 
 
@@ -1645,9 +1643,9 @@ public class AFileService extends AAbstractService {
     public String levaDirectoryFinale(final String pathIn) {
         String pathOut = pathIn.trim();
 
-        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
-            pathOut = text.levaCoda(pathOut, SLASH);
-            pathOut = text.levaCodaDa(pathOut, SLASH) + SLASH;
+        if (text.isValid(pathOut) && pathOut.endsWith(FlowCost.SLASH)) {
+            pathOut = text.levaCoda(pathOut, FlowCost.SLASH);
+            pathOut = text.levaCodaDa(pathOut, FlowCost.SLASH) + FlowCost.SLASH;
         }
 
         return pathOut.trim();
@@ -1666,9 +1664,9 @@ public class AFileService extends AAbstractService {
     public String estraeDirectoryFinaleSenzaSlash(final String pathIn) {
         String pathOut = pathIn.trim();
 
-        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
-            pathOut = text.levaCoda(pathOut, SLASH);
-            pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + 1) ;
+        if (text.isValid(pathOut) && pathOut.endsWith(FlowCost.SLASH)) {
+            pathOut = text.levaCoda(pathOut, FlowCost.SLASH);
+            pathOut = pathOut.substring(pathOut.lastIndexOf(FlowCost.SLASH) + 1);
         }
 
         return pathOut.trim();
@@ -1687,9 +1685,9 @@ public class AFileService extends AAbstractService {
     public String estraeDirectoryFinale(final String pathIn) {
         String pathOut = pathIn.trim();
 
-        if (text.isValid(pathOut) && pathOut.endsWith(SLASH)) {
-            pathOut = text.levaCoda(pathOut, SLASH);
-            pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + 1) + SLASH;
+        if (text.isValid(pathOut) && pathOut.endsWith(FlowCost.SLASH)) {
+            pathOut = text.levaCoda(pathOut, FlowCost.SLASH);
+            pathOut = pathOut.substring(pathOut.lastIndexOf(FlowCost.SLASH) + 1) + FlowCost.SLASH;
         }
 
         return pathOut.trim();
@@ -1708,12 +1706,12 @@ public class AFileService extends AAbstractService {
         String pathOut = pathIn.trim();
 
         if (text.isValid(pathOut)) {
-            pathOut = text.levaCoda(pathOut, SLASH);
-            if (pathOut.contains(SLASH)) {
-                pathOut = pathOut.substring(pathOut.lastIndexOf(SLASH) + SLASH.length());
+            pathOut = text.levaCoda(pathOut, FlowCost.SLASH);
+            if (pathOut.contains(FlowCost.SLASH)) {
+                pathOut = pathOut.substring(pathOut.lastIndexOf(FlowCost.SLASH) + FlowCost.SLASH.length());
             }
-            if (pathOut.contains(PUNTO)) {
-                pathOut = pathOut.substring(pathOut.lastIndexOf(PUNTO) + PUNTO.length());
+            if (pathOut.contains(FlowCost.PUNTO)) {
+                pathOut = pathOut.substring(pathOut.lastIndexOf(FlowCost.PUNTO) + FlowCost.PUNTO.length());
             }
         }
 
@@ -1751,7 +1749,7 @@ public class AFileService extends AAbstractService {
             pathOut = pathOut.substring(0, pathOut.indexOf(directoryFindPath));
         }
         else {
-            pathOut = VUOTA;
+            pathOut = FlowCost.VUOTA;
             logger.warn("Non esiste la directory indicata nel path indicato", this.getClass(), "findPathDirectory");
         }
 
@@ -1773,8 +1771,8 @@ public class AFileService extends AAbstractService {
      * @return path parziale da una directory
      */
     public String findPathBreve(String pathIn, String directory) {
-        String pathBreve = VUOTA;
-        String pathCanonical = VUOTA;
+        String pathBreve = pathIn;
+        String pathCanonical = FlowCost.VUOTA;
         String prefix = "../";
 
         if (text.isEmpty(directory)) {
@@ -1784,9 +1782,10 @@ public class AFileService extends AAbstractService {
         pathCanonical = findPathCanonical(pathIn, directory);
         if (text.isValid(pathCanonical)) {
             pathBreve = prefix + pathCanonical;
+            pathBreve = text.levaCoda(pathBreve, FlowCost.SLASH);
         }
 
-        return text.levaCoda(pathBreve,SLASH);
+        return pathBreve;
     }
 
     /**
@@ -1803,7 +1802,7 @@ public class AFileService extends AAbstractService {
      * @return path parziale da una directory
      */
     public String findPathCanonical(String pathIn, String directory) {
-        String path = VUOTA;
+        String path = FlowCost.VUOTA;
 
         if (text.isEmpty(pathIn) || text.isEmpty(directory)) {
             return pathIn;
@@ -1811,7 +1810,7 @@ public class AFileService extends AAbstractService {
 
         if (pathIn.contains(directory)) {
             path = pathIn.substring(pathIn.lastIndexOf(directory));
-            if (path.startsWith(SLASH)) {
+            if (path.startsWith(FlowCost.SLASH)) {
                 path = path.substring(1);
             }
         }
@@ -1912,7 +1911,7 @@ public class AFileService extends AAbstractService {
         if (array.isAllValid(listaNamesOnlyFilesJava)) {
             for (String canonicalName : listaNamesOnlyFilesJava) {
                 //--estrae la parte significativa
-                simpleName = canonicalName.substring(canonicalName.lastIndexOf(PUNTO) + PUNTO.length());
+                simpleName = canonicalName.substring(canonicalName.lastIndexOf(FlowCost.PUNTO) + FlowCost.PUNTO.length());
 
                 //--scarta Enumeration
                 if (simpleName.startsWith("AE")) {
@@ -1944,9 +1943,9 @@ public class AFileService extends AAbstractService {
 
         if (array.isAllValid(listaPathNamesOnlyFiles)) {
             for (String pathName : listaPathNamesOnlyFiles) {
-                if (pathName.endsWith(JAVA_SUFFIX)) {
-                    canonicalName = text.levaCoda(pathName, JAVA_SUFFIX);
-                    canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+                if (pathName.endsWith(FlowCost.JAVA_SUFFIX)) {
+                    canonicalName = text.levaCoda(pathName, FlowCost.JAVA_SUFFIX);
+                    canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
                     canonicalName = findPathCanonical(canonicalName, tag);
                     canonicalName = canonicalName.substring(1);
                     listaCanonicalNamesOnlyFilesJava.add(canonicalName);
@@ -2025,7 +2024,7 @@ public class AFileService extends AAbstractService {
      * @return testo di errore, vuoto se il file è stato spostato
      */
     public boolean spostaFile(String pathFileToBeRead, String pathFileToBeWrite) {
-        return spostaFileStr(pathFileToBeRead, pathFileToBeWrite) == VUOTA;
+        return spostaFileStr(pathFileToBeRead, pathFileToBeWrite) == FlowCost.VUOTA;
     }
 
 
@@ -2041,7 +2040,7 @@ public class AFileService extends AAbstractService {
      * @return testo di errore, vuoto se il file è stato spostato
      */
     public String spostaFileStr(String pathFileToBeRead, String pathFileToBeWrite) {
-        String status = VUOTA;
+        String status = FlowCost.VUOTA;
 
         if (text.isValid(pathFileToBeRead) && text.isValid(pathFileToBeWrite)) {
             status = copyFileStr(pathFileToBeRead, pathFileToBeWrite);
@@ -2050,7 +2049,7 @@ public class AFileService extends AAbstractService {
             return PATH_NULLO;
         }
 
-        if (status.equals(VUOTA)) {
+        if (status.equals(FlowCost.VUOTA)) {
             status = deleteFileStr(pathFileToBeRead);
         }
 
@@ -2089,7 +2088,7 @@ public class AFileService extends AAbstractService {
      * @return true se NON è uno 'slash'
      */
     public boolean isNotSlash(String testoIngresso) {
-        return isNotCarattere(testoIngresso, SLASH);
+        return isNotCarattere(testoIngresso, FlowCost.SLASH);
     }
 
 
@@ -2112,7 +2111,7 @@ public class AFileService extends AAbstractService {
         if (text.isValid(testoIngresso)) {
             max = testoIngresso.length();
             quartultimoCarattere = testoIngresso.substring(max - gap, max - gap + 1);
-            if (quartultimoCarattere.equals(PUNTO)) {
+            if (quartultimoCarattere.equals(FlowCost.PUNTO)) {
                 status = false;
             }
         }

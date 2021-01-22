@@ -133,7 +133,6 @@ public class WizDialogUpdateProject extends WizDialog {
     @Override
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
-        Checkbox unCheckbox;
 
         for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
             mappaWizBox.put(aeCost.name(), new WizBox(aeCost));

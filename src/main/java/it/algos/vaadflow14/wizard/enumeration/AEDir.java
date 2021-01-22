@@ -608,15 +608,15 @@ public enum AEDir {
      * Visualizzazione di controllo <br>
      */
     public static void printInfo(String posizione) {
-        if (FLAG_DEBUG_WIZ) {
-            System.out.println("********************");
-            System.out.println("AEDir  - " + posizione);
-            System.out.println("********************");
-            for (AEDir aeDir : AEDir.values()) {
-                System.out.println("AEDir." + aeDir.name() + " \"" + aeDir.getDescrizione() + "\" = " + aeDir.get());
-            }
-            System.out.println("");
-        }
+//        if (FLAG_DEBUG_WIZ) {
+//            System.out.println("********************");
+//            System.out.println("AEDir  - " + posizione);
+//            System.out.println("********************");
+//            for (AEDir aeDir : AEDir.values()) {
+//                System.out.println("AEDir." + aeDir.name() + " \"" + aeDir.getDescrizione() + "\" = " + aeDir.get());
+//            }
+//            System.out.println("");
+//        }
     }
 
 

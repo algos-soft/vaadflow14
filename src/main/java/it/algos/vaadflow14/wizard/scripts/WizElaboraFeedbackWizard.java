@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadflow14.backend.enumeration.AECopy;
 import it.algos.vaadflow14.backend.enumeration.AECopyDir;
 import it.algos.vaadflow14.backend.enumeration.AECopyFile;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
@@ -52,7 +53,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
 
-        wizService.copyFile(AECopyFile.sovrascriveSempreAncheSeEsiste, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyFile(AECopy.fileSovrascriveSempreAncheSeEsiste, srcPath, destPath, DIR_VAADFLOW);
     }
 
 
@@ -74,7 +75,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
         }
 
-        file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, DIR_VAADFLOW);
+        file.copyDirectory(AECopy.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 
@@ -96,7 +97,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
         }
 
-        file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, DIR_VAADFLOW);
+        file.copyDirectory(AECopy.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 }
