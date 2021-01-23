@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEPackage;
+import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import it.algos.vaadflow14.backend.application.*;
 
@@ -208,7 +209,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void copiaDirectoryConfig() {
         if (AECheck.config.is()) {
-            wizService.copyDirectoryProjectRoot(AECopy.dirDeletingAll, ROOT_DIR_CONFIG);
+            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_CONFIG);
         }
     }
 
@@ -223,7 +224,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void copiaDirectoryDoc() {
         if (AECheck.documentation.is()) {
-            wizService.copyDirectoryProjectRoot(AECopy.dirDeletingAll, ROOT_DIR_DOC);
+            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_DOC);
         }
     }
 
@@ -238,7 +239,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void copiaDirectoryFrontend() {
         if (AECheck.frontend.is()) {
-            wizService.copyDirectoryProjectRoot(AECopy.dirAddingOnly, ROOT_DIR_FRONTEND);
+            wizService.copyDirectoryProjectRoot(AECopyWiz.dirAddingOnly, ROOT_DIR_FRONTEND);
         }
     }
 
@@ -253,7 +254,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void copiaDirectoryLinks() {
         if (AECheck.links.is()) {
-            wizService.copyDirectoryProjectRoot(AECopy.dirDeletingAll, ROOT_DIR_LINKS);
+            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_LINKS);
         }
     }
 
@@ -268,7 +269,7 @@ public abstract class WizElabora implements WizRecipient {
      */
     protected void copiaDirectorySnippets() {
         if (AECheck.snippets.is()) {
-            wizService.copyDirectoryProjectRoot(AECopy.dirDeletingAll, ROOT_DIR_SNIPPETS);
+            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_SNIPPETS);
         }
     }
 
@@ -285,7 +286,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPath = AEDir.pathTargetAlgos.get() + DIR_VAADFLOW;
 
         if (AECheck.flow.is()) {
-            wizService.copyDirectoryProject(AECopy.dirDeletingAll, srcPath, destPath);
+            wizService.copyDirectoryProject(AECopyWiz.dirDeletingAll, srcPath, destPath);
             if (file.deleteDirectory(AEDir.pathTargetSources.get())) {
                 logger.info("Cancellata la directory wizard/sources", this.getClass(), "copiaDirectoryVaadFlow");
             }
@@ -308,7 +309,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPath = AEDir.pathTargetResources.get() + DIR_META;
 
         if (AECheck.resources.is()) {
-            wizService.copyDirectoryProject(AECopy.dirAddingOnly, srcPath, destPath);
+            wizService.copyDirectoryProject(AECopyWiz.dirAddingOnly, srcPath, destPath);
         }
     }
 
@@ -324,7 +325,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPathSuffix = AEDir.pathTargetResources.get() + FILE_PROPERTIES_DEST;
 
         if (AECheck.property.is()) {
-            wizService.creaFileProject(AECopy.fileSoloSeNonEsiste, nameSourceText, destPathSuffix);
+            wizService.creaFileProject(AECopyWiz.fileSoloSeNonEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -340,7 +341,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPathSuffix = AEDir.pathTargetResources.get() + FILE_BANNER + TXT_SUFFIX;
 
         if (AECheck.banner.is()) {
-            wizService.creaFileProject(AECopy.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -357,7 +358,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_GIT;
 
         if (AECheck.git.is()) {
-            wizService.creaFileProject(AECopy.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -374,7 +375,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_POM + XML_SUFFIX;
 
         if (AECheck.pom.is()) {
-            wizService.creaFileProject(AECopy.fileCheckFlagSeEsiste, nameSourceText, destPathSuffix);
+            wizService.creaFileProject(AECopyWiz.fileCheckFlagSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -391,7 +392,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_READ + TXT_SUFFIX;
 
         if (AECheck.read.is()) {
-            wizService.creaFileProject(AECopy.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
         }
     }
 
@@ -428,7 +429,7 @@ public abstract class WizElabora implements WizRecipient {
         String tag = "Entity";
         String pathFileToBeWritten = AEDir.fileTargetEntity.get();
         if (AECheck.entity.is()) {
-            wizService.creaFilePackage(AECopy.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
+            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
         }
     }
 
@@ -439,7 +440,7 @@ public abstract class WizElabora implements WizRecipient {
         String tag = "Service";
         String pathFileToBeWritten = AEDir.fileTargetService.get();
         if (AECheck.service.is()) {
-            wizService.creaFilePackage(AECopy.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
+            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
         }
     }
 
@@ -451,7 +452,7 @@ public abstract class WizElabora implements WizRecipient {
         String tag = "Logic";
         String pathFileToBeWritten = AEDir.fileTargetLogic.get();
         if (AECheck.logic.is()) {
-            wizService.creaFilePackage(AECopy.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
+            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
         }
     }
 
@@ -610,19 +611,19 @@ public abstract class WizElabora implements WizRecipient {
         destPathSuffix += "Application";
         destPathSuffix += WizCost.JAVA_SUFFIX;
 
-        wizService.creaFile(AECopy.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix, AEDir.nameTargetProject.get());
+        wizService.creaFile(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix, AEDir.nameTargetProject.get());
     }
 
     protected void creaFileCost() {
-        wizService.creaFile(AECopy.fileCheckFlagSeEsiste, FILE_COST, AEDir.fileTargetCost.get(), AEDir.nameTargetProject.get());
+        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_COST, AEDir.fileTargetCost.get(), AEDir.nameTargetProject.get());
     }
 
     public void creaFileBoot() {
-        wizService.creaFile(AECopy.fileCheckFlagSeEsiste, FILE_BOOT, AEDir.fileTargetBoot.get(), AEDir.nameTargetProject.get());
+        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_BOOT, AEDir.fileTargetBoot.get(), AEDir.nameTargetProject.get());
     }
 
     public void creaFileData() {
-        wizService.creaFile(AECopy.fileCheckFlagSeEsiste, FILE_DATA, AEDir.fileTargetData.get(), AEDir.nameTargetProject.get());
+        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_DATA, AEDir.fileTargetData.get(), AEDir.nameTargetProject.get());
     }
 
 

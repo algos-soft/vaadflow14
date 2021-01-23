@@ -3,11 +3,11 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.ui.fields.ACheckBox;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.AEPackage;
 import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
+import it.algos.vaadflow14.backend.application.*;
 
 
 /**
@@ -27,7 +27,7 @@ public class WizBox extends HorizontalLayout {
     private AECheck check;
 
     public WizBox(AEWizCost aeCost) {
-        checkbox = new ACheckBox(aeCost.getDescrizione() + FlowCost.FORWARD + "AECopy."+aeCost.getCopy());
+        checkbox = new ACheckBox(aeCost.getDescrizione() + FlowCost.FORWARD + "AECopy."+aeCost.getCopyWiz());
         this.setValue(aeCost.isAccesoInizialmente());
         this.add(checkbox);
     }

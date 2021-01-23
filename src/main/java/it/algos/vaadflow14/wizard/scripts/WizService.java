@@ -1,25 +1,17 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.vaadflow14.backend.enumeration.AECopy;
-import it.algos.vaadflow14.backend.enumeration.AECopyDir;
-import it.algos.vaadflow14.backend.enumeration.AECopyFile;
-import it.algos.vaadflow14.backend.service.ADateService;
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.ATextService;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PROJECTS;
+import java.time.*;
+import java.util.*;
 
 
 /**
@@ -199,7 +191,7 @@ public class WizService {
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      */
-    public void creaFileProject(AECopy typeCopy, String nameSourceText, String pathFileToBeWritten) {
+    public void creaFileProject(AECopyWiz typeCopy, String nameSourceText, String pathFileToBeWritten) {
         creaFile(typeCopy, nameSourceText, pathFileToBeWritten, DIR_PROJECTS);
     }
 
@@ -221,7 +213,7 @@ public class WizService {
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      */
-    public void creaFilePackage(AECopy typeCopy, String nameSourceText, String pathFileToBeWritten) {
+    public void creaFilePackage(AECopyWiz typeCopy, String nameSourceText, String pathFileToBeWritten) {
         creaFile(typeCopy, nameSourceText, pathFileToBeWritten, FlowCost.DIR_PACKAGES);
     }
 
@@ -239,14 +231,14 @@ public class WizService {
      * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      * Scrive il file col path e suffisso indicati <br>
      *
-     * @param typeCopy            modalità di comportamento se esiste il file di destinazione
+     * @param copyWiz             modalità di comportamento se esiste il file di destinazione
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      * @param directory           da cui iniziare il path
      */
-    public void creaFile(AECopy typeCopy, String nameSourceText, String pathFileToBeWritten, String directory) {
+    public void creaFile(AECopyWiz copyWiz, String nameSourceText, String pathFileToBeWritten, String directory) {
         boolean esisteFileDest = false;
-        String message = FlowCost.VUOTA;
+        String message;
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileToBeWritten, directory);
 
@@ -262,35 +254,35 @@ public class WizService {
         }
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
-        switch (typeCopy) {
-//            case sovrascriveSempreAncheSeEsiste:
-//                file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
-//                break;
-//            case soloSeNonEsiste:
-//                if (esisteFileDest) {
-//                    message = "Il file: " + path + " esisteva già e non è stato modificato.";
-//                    logger.info(message, this.getClass(), "creaFile");
-//                }
-//                else {
-//                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
-//                    message = "Il file: " + path + " non esisteva ed è stato creato da source.";
-//                    logger.info(message, this.getClass(), "creaFile");
-//                }
-//                break;
-//            case checkFlagSeEsiste:
-//                if (esisteFileDest) {
-//                    if (checkFileCanBeModified(pathFileToBeWritten)) {
-//                        file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
-//                    }
-//                    else {
-//                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
-//                        logger.info(message, this.getClass(), "creaFile");
-//                    }
-//                }
-//                else {
-//                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
-//                }
-//                break;
+        switch (copyWiz) {
+            case sourceSovrascriveSempreAncheSeEsiste:
+                file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                break;
+            case sourceSoloSeNonEsiste:
+                if (esisteFileDest) {
+                    message = "Il file: " + path + " esisteva già e non è stato modificato.";
+                    logger.info(message, this.getClass(), "creaFile");
+                }
+                else {
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                    message = "Il file: " + path + " non esisteva ed è stato creato da source.";
+                    logger.info(message, this.getClass(), "creaFile");
+                }
+                break;
+            case sourceCheckFlagSeEsiste:
+                if (esisteFileDest) {
+                    if (checkFileCanBeModified(pathFileToBeWritten)) {
+                        file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                    }
+                    else {
+                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
+                        logger.info(message, this.getClass(), "creaFile");
+                    }
+                }
+                else {
+                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                }
+                break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "creaFile");
                 break;
@@ -601,7 +593,7 @@ public class WizService {
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyDirectoryProjectRoot(AECopy typeCopy, String dirName) {
+    public boolean copyDirectoryProjectRoot(AECopyWiz typeCopy, String dirName) {
         String srcPath = AEDir.pathVaadFlowRoot.get() + dirName;
         String destPath = AEDir.pathTargetRoot.get() + dirName;
 
@@ -620,7 +612,7 @@ public class WizService {
      *
      * @return true se la directory  è stata copiata
      */
-    public boolean copyDirectoryProject(AECopy typeCopy, String srcPath, String destPath) {
+    public boolean copyDirectoryProject(AECopyWiz typeCopy, String srcPath, String destPath) {
         boolean copiata = false;
         int numLivelli = 4;
 

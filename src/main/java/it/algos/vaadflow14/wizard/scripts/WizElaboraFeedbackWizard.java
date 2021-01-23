@@ -2,15 +2,11 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AECopy;
-import it.algos.vaadflow14.backend.enumeration.AECopyDir;
-import it.algos.vaadflow14.backend.enumeration.AECopyFile;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
 import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_VAADFLOW;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_WIZARD;
 
 /**
  * Project vaadflow

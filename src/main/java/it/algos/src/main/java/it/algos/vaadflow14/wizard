@@ -19,9 +19,11 @@ import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import it.algos.vaadflow14.backend.application.*;
 
 import javax.annotation.PostConstruct;
+
+import static it.algos.vaadflow14.backend.application.FlowCost.TAG_WIZ;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 
 /**
@@ -34,11 +36,11 @@ import javax.annotation.PostConstruct;
  * Utilizzato dal progetto corrente, per importare/aggiornare il codice da VaadFlow14 <br>
  * Utilizzato dal progetto corrente, per creare/aggiornare nuovi packages <br>
  */
-@Route(value = FlowCost.TAG_WIZ, layout = MainLayout.class)
+@Route(value = TAG_WIZ, layout = MainLayout.class)
 @SpringComponent
 @UIScope
-@PageTitle(FlowCost.TAG_WIZ)
-@Qualifier(FlowCost.TAG_WIZ)
+@PageTitle(TAG_WIZ)
+@Qualifier(TAG_WIZ)
 @CssImport("./styles/shared-styles.css")
 public class Wizard extends VerticalLayout {
 
@@ -181,7 +183,7 @@ public class Wizard extends VerticalLayout {
 
         wizService.fixVariabiliIniziali();
         wizService.printStart();
-//        wizService.printInfo("Apertura iniziale della view Wizard");
+        wizService.printInfo("Apertura iniziale della view Wizard");
 
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
@@ -210,7 +212,7 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_NUOVO_PROGETTO);
+        H3 paragrafo = new H3(TITOLO_NUOVO_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
@@ -245,10 +247,10 @@ public class Wizard extends VerticalLayout {
         H3 paragrafo = new H3();
         String titolo;
         if (AEFlag.isBaseFlow.is()) {
-            titolo = WizCost.TITOLO_MODIFICA_PROGETTO;
+            titolo = TITOLO_MODIFICA_PROGETTO;
         }
         else {
-            titolo = WizCost.TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.projectCurrent.getValue() + ")";
+            titolo = TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.projectCurrent.getValue() + ")";
         }
 
         paragrafo.setText(titolo);
@@ -284,7 +286,7 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_NEW_PACKAGE);
+        H3 paragrafo = new H3(TITOLO_NEW_PACKAGE);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 
@@ -312,7 +314,7 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_UPDATE_PACKAGE);
+        H3 paragrafo = new H3(TITOLO_UPDATE_PACKAGE);
         paragrafo.getElement().getStyle().set("color", "blue");
 
         this.add(paragrafo);
@@ -340,7 +342,7 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_DOC_PACKAGES);
+        H3 paragrafo = new H3(TITOLO_DOC_PACKAGES);
         paragrafo.getElement().getStyle().set("color", "blue");
 
         this.add(paragrafo);
@@ -369,7 +371,7 @@ public class Wizard extends VerticalLayout {
         layout.setMargin(false);
         layout.setPadding(false);
         layout.setSpacing(false);
-        H3 paragrafo = new H3(WizCost.TITOLO_FEEDBACK_PROGETTO);
+        H3 paragrafo = new H3(TITOLO_FEEDBACK_PROGETTO);
         paragrafo.getElement().getStyle().set("color", "blue");
         this.add(paragrafo);
 

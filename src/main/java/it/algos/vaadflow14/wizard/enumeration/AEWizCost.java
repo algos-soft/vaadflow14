@@ -1,13 +1,10 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import it.algos.vaadflow14.backend.enumeration.AECopy;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.wizard.scripts.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.SLASH;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.VALORE_MANCANTE;
+import java.util.*;
 
 /**
  * Project vaadwiki14
@@ -26,19 +23,19 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathCurrent("Directory dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE),
+    pathCurrent("Directory dove gira il programma in uso. Recuperata dal System"),
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameUser("Programmatore. Ricavato dal path della directory corrente.", VALORE_MANCANTE),
+    nameUser("Programmatore. Ricavato dal path della directory corrente."),
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    projectCurrent("Nome del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+    projectCurrent("Nome del programma in uso. Ricavato dal path della directory corrente"),
 
     /**
      * Root del progetto target. Hardcoded su di un singolo computer. <br>
@@ -46,7 +43,7 @@ public enum AEWizCost {
      * Potrebbe essere diverso <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectRoot("Path root del progetto target", VALORE_MANCANTE),
+    pathTargetProjectRoot("Path root del progetto target"),
 
     /**
      * Root iniziale. Hardcoded su di un singolo computer. <br>
@@ -102,19 +99,25 @@ public enum AEWizCost {
      * Cartella a livello di modulo. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirModulo("Percorso standard completo files java", "src/main/java/it/algos/"),
+    dirModulo("Directory files java", "src/main/java/it/algos/"),
+
+    /**
+     * Cartella a livello di resources. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirResources("Directory resources", "src/main/resources/"),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootConfig(true, true, String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopy.dirAddingOnly),
+    dirRootConfig(String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootDoc(true, true, String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopy.dirDeletingAll),
+    dirRootDoc(String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirDeletingAll),
 
     /**
      * Cartella a livello di root. <br>
@@ -123,25 +126,25 @@ public enum AEWizCost {
      * contiene styles/ (sempre)
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootFrontend(true, true, String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14.value), "frontend/", AECopy.dirAddingOnly),
+    dirRootFrontend(String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14.value), "frontend/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootLinks(true, true, String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14.value), "links/", AECopy.dirAddingOnly),
+    dirRootLinks(String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14.value), "links/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootSnippets(true, true, String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopy.dirDeletingAll),
+    dirRootSnippets(String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirDeletingAll),
 
     /**
      * Cartella a livello di modulo. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirModuloVaadFlow14(true, true, String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopy.dirDeletingAll),
+    dirModuloVaadFlow14(String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll),
 
     /**
      * Percorso del modulo base vaadflow14. Nei Documents di Gac <br>
@@ -189,7 +192,7 @@ public enum AEWizCost {
      * Modulo del progetto target. Hardcoded su di un singolo computer. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectModulo(true, true, "Directory nuovo MODULO di questo progetto", VALORE_MANCANTE, AECopy.dirAddingOnly),
+    pathTargetProjectModulo("Directory nuovo MODULO di questo progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
 
     /**
      * Nome della directory sources. <br>
@@ -204,79 +207,89 @@ public enum AEWizCost {
     nameWizard("Nome del file wizard", "Wizard.java"),
 
     /**
-     * File a livello di root. <br>
+     * File. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootGit(true, true, String.format("File root GIT di esclusione (da %s)", nameSources.value), ".gitignore", AECopy.fileSovrascriveSempreAncheSeEsiste),
+    fileProperties(String.format("File application.properties (da %s)", nameSources.value), dirResources.value + "application.properties", AECopyWiz.sourceCheckFlagSeEsiste, "properties"),
 
     /**
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootPOM(true, true, String.format("File root POM.xml di Maven (da %s)", nameSources.value), "pom.xml", AECopy.fileCheckFlagSeEsiste),
+    fileRootGit(String.format("File root GIT di esclusione (da %s)", nameSources.value), ".gitignore", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
 
     /**
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootREAD(true, true, String.format("File root README con note di testo (da %s)", nameSources.value), "README.txt", AECopy.fileSovrascriveSempreAncheSeEsiste),
+    fileRootPOM(String.format("File root POM.xml di Maven (da %s)", nameSources.value), "pom.xml", AECopyWiz.fileCheckFlagSeEsiste),
+
+    /**
+     * File a livello di root. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    fileRootREAD(String.format("File root README con note di testo (da %s)", nameSources.value), "README.txt", AECopyWiz.fileSovrascriveSempreAncheSeEsiste),
 
     ;
-
-    private boolean newProject;
-
-    private boolean updateProject;
 
     private String descrizione;
 
     private String value;
 
+    private String sourcesName;
+
+    private boolean newProject;
+
+    private boolean updateProject;
+
     private boolean accesoInizialmente;
 
     private boolean acceso;
 
-    private AECopy copy;
+    private AECopyWiz copyWiz;
 
+
+    /**
+     * Costruttore parziale <br>
+     */
+    AEWizCost(String descrizione) {
+        this(descrizione, WizCost.VALORE_MANCANTE);
+    }
 
     /**
      * Costruttore parziale <br>
      */
     AEWizCost(String descrizione, String value) {
-        this(false, false, descrizione, value);
+        this(descrizione, value, (AECopyWiz) null,FlowCost.VUOTA, false, false, false);
     }
 
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(boolean newProject, boolean updateProject, String descrizione, String value) {
-        this(newProject, updateProject, descrizione, value, false);
+    AEWizCost(String descrizione, String value, AECopyWiz copyWiz) {
+        this(descrizione, value, copyWiz,FlowCost.VUOTA, true, true, false);
     }
+
 
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(boolean newProject, boolean updateProject, String descrizione, String value, boolean accesoInizialmente) {
-        this(newProject, updateProject, descrizione, value, accesoInizialmente, AECopy.fileSoloSeNonEsiste);
+    AEWizCost(String descrizione, String value, AECopyWiz copyWiz, String sourcesName) {
+        this(descrizione, value, copyWiz, sourcesName, true, true, false);
     }
+
 
     /**
      * Costruttore completo <br>
      */
-    AEWizCost(boolean newProject, boolean updateProject, String descrizione, String value, AECopy copy) {
-        this(newProject, updateProject, descrizione, value, false, copy);
-    }
-
-    /**
-     * Costruttore completo <br>
-     */
-    AEWizCost(boolean newProject, boolean updateProject, String descrizione, String value, boolean accesoInizialmente, AECopy copy) {
-        this.newProject = newProject;
-        this.updateProject = updateProject;
+    AEWizCost(String descrizione, String value, AECopyWiz copyWiz, String sourcesName, boolean newProject, boolean updateProject, boolean accesoInizialmente) {
         this.descrizione = descrizione;
         this.value = value;
+        this.copyWiz = copyWiz;
+        this.sourcesName = sourcesName;
+        this.newProject = newProject;
+        this.updateProject = updateProject;
         this.accesoInizialmente = accesoInizialmente;
-        this.acceso = accesoInizialmente;
-        this.copy = copy;
     }
 
     //--metodo statico invocato da Wizard.initView()
@@ -288,7 +301,7 @@ public enum AEWizCost {
         for (AEWizCost aeWizCost : AEWizCost.values()) {
             System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
             if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-                System.out.print(FlowCost.FORWARD + "AECopy."+aeWizCost.copy.name());
+                System.out.print(FlowCost.FORWARD + "AECopy." + aeWizCost.copyWiz.name());
             }
             System.out.println(FlowCost.VUOTA);
         }
@@ -332,6 +345,15 @@ public enum AEWizCost {
         return listaCost;
     }
 
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
     public String getValue() {
         return value;
     }
@@ -340,12 +362,12 @@ public enum AEWizCost {
         this.value = value;
     }
 
-    public String getDescrizione() {
-        return descrizione;
+    public String getSourcesName() {
+        return sourcesName;
     }
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
+    public void setSourcesName(String sourcesName) {
+        this.sourcesName = sourcesName;
     }
 
     public boolean isNewProject() {
@@ -380,12 +402,12 @@ public enum AEWizCost {
         this.acceso = acceso;
     }
 
-    public AECopy getCopy() {
-        return copy;
+    public AECopyWiz getCopyWiz() {
+        return copyWiz;
     }
 
-    public void setCopy(AECopy copy) {
-        this.copy = copy;
+    public void setCopyWiz(AECopyWiz copyWiz) {
+        this.copyWiz = copyWiz;
     }
 
 }

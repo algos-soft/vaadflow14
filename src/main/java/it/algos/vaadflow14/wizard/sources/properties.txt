@@ -2,10 +2,14 @@
 # Può essere sovrascritto sul server
 server.port=${PORT:8080}
 
-# versione del framework
+# versione di vaadin
 vaadin.version=14.4.6
+# versione del framework
 algos.vaadflow.version=0.36
-algos.vaadflow.version.date=ven, 15 gen 2021
+# data del framework
+algos.vaadflow.version.date.anno=2021
+algos.vaadflow.version.date.mese=1
+algos.vaadflow.version.date.giorno=25
 
 # versione del progetto
 algos.@PROJECT@.version=0.1
@@ -57,3 +61,7 @@ spring.mail.properties.mail.smtp.starttls.required=true
 # Messaggi di errore
 javax.validation.constraints.Size.message=Lunghezza errata del testo
 spring.main.allow-bean-definition-overriding=true
+
+# LOGGING
+# the configuration file for logback
+logging.config=config/logback-spring.xml
