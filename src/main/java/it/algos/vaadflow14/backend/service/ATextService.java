@@ -1,17 +1,14 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.google.common.base.Strings;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.common.base.*;
+import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.apache.commons.lang3.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.util.*;
 
 
 /**
@@ -1214,7 +1211,7 @@ public class ATextService extends AAbstractService {
      *
      * @return vero se ne contiene nessuno
      */
-    public boolean nonContiene(final String testoIn, ArrayList<String> listaTags) {
+    public boolean nonContiene(final String testoIn, List<String> listaTags) {
         return !isContiene(testoIn, listaTags);
     }
 
@@ -1227,7 +1224,7 @@ public class ATextService extends AAbstractService {
      *
      * @return vero se ne contiene uno o più di uno
      */
-    public boolean isContiene(final String testoIn, ArrayList<String> listaTags) {
+    public boolean isContiene(final String testoIn, List<String> listaTags) {
         boolean neContieneAlmenoUno = false;
 
         if (array.isAllValid(listaTags)) {

@@ -1,8 +1,9 @@
 package it.algos.vaadflow14.backend.wrapper;
 
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.service.*;
 
 /**
  * Project vaadflow14
@@ -17,14 +18,14 @@ public class AResult implements AIResult {
 
     private boolean valido;
 
-    private String errorMessage = VUOTA;
+    private String errorMessage = FlowCost.VUOTA;
 
-    private String validationMessage = VUOTA;
+    private String validationMessage = FlowCost.VUOTA;
 
     private int valore = 0;
 
     private AResult() {
-        this(true, VUOTA);
+        this(true, FlowCost.VUOTA);
     }
 
     private AResult(boolean valido, String message) {
@@ -92,4 +93,13 @@ public class AResult implements AIResult {
         return valore;
     }
 
+    @Override
+    public void print(ALogService logger, AETypeLog typeLog) {
+        if (isValido()) {
+            logger.log(typeLog, getValidationMessage());
+        }
+        else {
+            logger.log(typeLog, getErrorMessage());
+        }
+    }
 }

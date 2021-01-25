@@ -1,5 +1,8 @@
 package it.algos.vaadflow14.backend.interfaces;
 
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -20,6 +23,8 @@ public interface AIResult {
     String getValidationMessage();
 
     int getValore();
+
+    void print(ALogService logger, AETypeLog typeLog);
 
 }// end of interface
 

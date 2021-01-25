@@ -1,5 +1,7 @@
-# @AIScript(sovraScrivibile = false)
 # Può essere sovrascritto sul server
+# @AIScript(sovraScrivibile = false)
+
+# Porta (modificabile)
 server.port=${PORT:8080}
 
 # versione di vaadin

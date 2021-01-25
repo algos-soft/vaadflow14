@@ -1,21 +1,18 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.enumeration.AECopy;
 import it.algos.vaadflow14.backend.application.*;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.apache.commons.io.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
 
 
 /**
@@ -1213,7 +1210,7 @@ public class AFileService extends AAbstractService {
      * @param pathFileToBeWritten nome completo del file
      * @param text                contenuto del file
      */
-    public boolean scriveNewFile(String pathFileToBeWritten, String text) {
+    public AIResult scriveNewFile(String pathFileToBeWritten, String text) {
         return scriveFile(pathFileToBeWritten, text, false);
     }
 
@@ -1226,7 +1223,7 @@ public class AFileService extends AAbstractService {
      * @param testo               contenuto del file
      * @param sovrascrive         anche se esiste già
      */
-    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
+    public AIResult scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive) {
         return scriveFile(pathFileToBeWritten, testo, sovrascrive, FlowCost.VUOTA);
     }
 
@@ -1240,7 +1237,8 @@ public class AFileService extends AAbstractService {
      * @param sovrascrive         anche se esiste già
      * @param directory           da cui iniziare il path per il messaggio di avviso
      */
-    public boolean scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
+    public AIResult scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
+        AIResult result = AResult.errato();
         String message = FlowCost.VUOTA;
         File fileToBeWritten;
         FileWriter fileWriter;
@@ -1251,12 +1249,12 @@ public class AFileService extends AAbstractService {
                 sovraScriveFile(pathFileToBeWritten, testo);
                 message = "Il file: " + path + " esisteva già ed è stato aggiornato";
                 logger.info(message, this.getClass(), "scriveFile");
-                return true;
+                result = AResult.valido(message);
             }
             else {
                 message = "Il file: " + path + " esisteva già e non è stato modificato";
                 logger.info(message, this.getClass(), "scriveFile");
-                return false;
+                result = AResult.errato(message);
             }
         }
         else {
@@ -1264,15 +1262,15 @@ public class AFileService extends AAbstractService {
             if (text.isEmpty(message)) {
                 sovraScriveFile(pathFileToBeWritten, testo);
                 message = "Il file: " + path + " non esisteva ed è stato creato";
-                logger.info(message, this.getClass(), "scriveFile");
-                return true;
+                result = AResult.valido(message);
             }
             else {
-                logger.warn("Il file: " + path + " non è stato scritto perché " + message, this.getClass(), "scriveFile");
-                return false;
+                //                logger.warn("Il file: " + path + " non è stato scritto perché " + message, this.getClass(), "scriveFile");
+                //                result = AResult.errato(message);
             }
         }
 
+        return result;
     }
 
 

@@ -3,7 +3,9 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.annotation.*;
@@ -236,51 +238,79 @@ public class WizService {
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      * @param directory           da cui iniziare il path
      */
-    public void creaFile(AECopyWiz copyWiz, String nameSourceText, String pathFileToBeWritten, String directory) {
+    public void creaFile(final AECopyWiz copyWiz, final String nameSourceText, final String pathFileToBeWritten, final String directory) {
+        AIResult result;
         boolean esisteFileDest = false;
         String message;
-        String sourceText = leggeFile(nameSourceText);
+        String sourceTextGrezzo;
+        String sourceTextElaborato;
+        String fileName = nameSourceText;
+        String pathSource;
         String path = file.findPathBreve(pathFileToBeWritten, directory);
 
-        if (text.isEmpty(sourceText)) {
-            logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "creaFile");
+        if (!fileName.endsWith(FlowCost.TXT_SUFFIX)) {
+            fileName += FlowCost.TXT_SUFFIX;
+        }
+
+        pathSource = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.getValue() + fileName, AEWizCost.nameVaadFlow14.getValue().toLowerCase());
+        if (!file.isEsisteFile(AEWizCost.pathVaadFlow14WizSources.getValue(), fileName)) {
+            message = String.format("Non sono riuscito a trovare il file sorgente %s", pathSource);
+            logger.log(AETypeLog.wizard, message);
             return;
         }
 
-        sourceText = elaboraFileCreatoDaSource(sourceText);
-        if (text.isEmpty(sourceText)) {
-            logger.warn("Non sono riuscito a elaborare i tokens del file " + path, this.getClass(), "creaFile");
+        sourceTextGrezzo = leggeFile(fileName);
+        if (text.isEmpty(sourceTextGrezzo)) {
+            message = String.format("Non sono riuscito ad elaborare il file sorgente %s", pathSource);
+            logger.log(AETypeLog.wizard, message);
+            return;
+        }
+
+        sourceTextElaborato = elaboraFileCreatoDaSource(sourceTextGrezzo);
+        if (text.isEmpty(sourceTextElaborato) || sourceTextElaborato.equals(sourceTextGrezzo)) {
+            message = String.format("Non sono riuscito ad elaborare i tokens del file sorgente %s", pathSource);
+            logger.log(AETypeLog.wizard, message);
             return;
         }
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
         switch (copyWiz) {
             case sourceSovrascriveSempreAncheSeEsiste:
-                file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, directory);
                 break;
             case sourceSoloSeNonEsiste:
                 if (esisteFileDest) {
-                    message = "Il file: " + path + " esisteva già e non è stato modificato.";
-                    logger.info(message, this.getClass(), "creaFile");
+                    message = String.format("Il file %s esisteva già e non è stato modificato", path);
+                    logger.log(AETypeLog.wizard, message);
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
-                    message = "Il file: " + path + " non esisteva ed è stato creato da source.";
-                    logger.info(message, this.getClass(), "creaFile");
+                    file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, directory);
+                    message = String.format("Il file %s non esisteva ed è stato creato da source.", path);
+                    logger.log(AETypeLog.wizard, message);
                 }
                 break;
             case sourceCheckFlagSeEsiste:
                 if (esisteFileDest) {
-                    if (checkFileCanBeModified(pathFileToBeWritten)) {
-                        file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                    result = checkFileCanBeModified(pathFileToBeWritten);
+                    message = result.getMessage();
+                    if (result.isValido()) {
+                        result = file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, directory);
+                        if (result.isValido()) {
+                            logger.log(AETypeLog.wizard, String.format("Il file: %s esisteva già %s", path, message));
+                        }
+                        else {
+                            result.print(logger, AETypeLog.wizard);
+                        }
                     }
                     else {
-                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
-                        logger.info(message, this.getClass(), "creaFile");
+//                        message = String.format("Il file: %s esiste già col flag sovraScrivibile=false e NON accetta modifiche.", path);
+                        logger.log(AETypeLog.wizard, String.format("Il file: %s esiste già %s", path, message));
+//                        logger.log(AETypeLog.wizard, message);
                     }
                 }
                 else {
-                    file.scriveFile(pathFileToBeWritten, sourceText, true, directory);
+                    result = file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, directory);
+                    result.print(logger, AETypeLog.wizard);
                 }
                 break;
             default:
@@ -381,7 +411,7 @@ public class WizService {
      */
     public void copyFile(AECopy typeCopy, String srcPath, String destPath, String firstDir) {
         boolean esisteFileDest;
-        String message;
+        String message = FlowCost.VUOTA;
         String path;
 
         switch (typeCopy) {
@@ -393,13 +423,13 @@ public class WizService {
                 path = file.findPathBreve(destPath, firstDir);
                 esisteFileDest = file.isEsisteFile(destPath);
                 if (esisteFileDest) {
-                    if (checkFileCanBeModified(destPath)) {
-                        file.copyFileDeletingAll(srcPath, destPath);
-                        message = "Il file: " + path + " esisteva già ma è stato sovrascritto.";
-                    }
-                    else {
-                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
-                    }
+                    //                    if (checkFileCanBeModified(destPath)) {
+                    //                        file.copyFileDeletingAll(srcPath, destPath);
+                    //                        message = "Il file: " + path + " esisteva già ma è stato sovrascritto.";
+                    //                    }
+                    //                    else {
+                    //                        message = "Il file: " + path + " esiste già col flag sovraScrivibile=false e NON accetta modifiche.";
+                    //                    }
                 }
                 else {
                     file.copyFileDeletingAll(srcPath, destPath);
@@ -526,10 +556,10 @@ public class WizService {
 
         if (!nomeFileTxt.endsWith(FlowCost.TXT_SUFFIX)) {
             nomeFileTxt += FlowCost.TXT_SUFFIX;
-        }// end of if cycle
+        }
 
-        return file.leggeFile(AEDir.pathVaadFlowSources.get() + nomeFileTxt);
-    }// end of method
+        return file.leggeFile(AEWizCost.pathVaadFlow14WizSources.getValue() + nomeFileTxt);
+    }
 
 
     /**
@@ -670,35 +700,118 @@ public class WizService {
      *
      * @return true se il flag non esiste o è sovraScrivibile=true
      * .       false se il flag esiste ed è sovraScrivibile=false
+     * <p>
+     * .       0 non esiste il flag sovraScrivibile
+     * .       1 il flag sovraScrivibile esiste ma non è completo
+     * .       2 il flag sovraScrivibile esiste ed è sovrascrivibile=true
+     * .       3 il flag sovraScrivibile esiste ed è sovrascrivibile=false
+     * .       4 il flag sovraScrivibile esiste ma non è ne true ne false
      */
-    public boolean checkFileCanBeModified(String pathFileToBeChecked) {
+    public AIResult checkFileCanBeModified(String pathFileToBeChecked) {
+        AIResult result = AResult.errato();
+        int risultato = 0;
         String oldText = FlowCost.VUOTA;
 
         if (!file.isEsisteFile(pathFileToBeChecked)) {
-            return true;
+            result = AResult.errato();
         }
 
         oldText = file.leggeFile(pathFileToBeChecked);
-        if (text.isValid(oldText) && checkFile(oldText)) {
-            return true;
+        if (text.isValid(oldText)) {
+            risultato = checkFlagSovrascrivibile(oldText);
+            switch (risultato) {
+                case 0:
+                    result = AResult.valido("ma è stato modificato perché mancava il flag sovraScrivibile");
+                    break;
+                case 1:
+                    result = AResult.errato("col flag sovraScrivibile incompleto e non accetta modifiche");
+                    break;
+                case 2:
+                    result = AResult.valido("col flag sovraScrivibile=true ed è stato modificato");
+                    break;
+                case 3:
+                    result = AResult.errato("col flag sovraScrivibile=false e non accetta modifiche");
+                    break;
+                case 4:
+                    result = AResult.errato("col flag sovraScrivibile ne true ne false e non accetta modifiche");
+                    break;
+                default:
+                    logger.warn("Switch - caso non definito", this.getClass(), "checkFileCanBeModified");
+                    break;
+            }
+        }
+        else {
+            result = AResult.errato("Non esiste il file");
         }
 
-        return false;
+        return result;
     }
 
 
-    private boolean checkFile(String oldFileText) {
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("@AIScript(sovrascrivibile = false)");
-        tags.add("@AIScript(sovrascrivibile=false)");
-        tags.add("@AIScript(sovrascrivibile= false)");
-        tags.add("@AIScript(sovrascrivibile =false)");
-        tags.add("@AIScript(sovraScrivibile = false)");
-        tags.add("@AIScript(sovraScrivibile=false)");
-        tags.add("@AIScript(sovraScrivibile= false)");
-        tags.add("@AIScript(sovraScrivibile =false)");
+    /**
+     * Controlla lo stato del flag 'sovraScrivibile' (se esiste) <br>
+     *
+     * @param oldFileText testo completo del file da controllare
+     *
+     * @return 0 non esiste il flag sovraScrivibile
+     * .       1 il flag sovraScrivibile esiste ma non è completo
+     * .       2 il flag sovraScrivibile esiste ed è sovrascrivibile=true
+     * .       3 il flag sovraScrivibile esiste ed è sovrascrivibile=false
+     * .       4 il flag sovraScrivibile esiste ma non è ne true ne false
+     */
+    public int checkFlagSovrascrivibile(final String oldFileText) {
+        int risultato = 0;
+        String tag1 = "@AIScript(sovra";
+        String tag2 = "@AIScript(Sovra";
+        List<String> tagsTrue = new ArrayList<>();
+        List<String> tagsFalse = new ArrayList<>();
+        List<String> tagsNullo = new ArrayList<>();
 
-        return text.nonContiene(oldFileText, tags);
+        if (oldFileText.contains(tag1) || oldFileText.contains(tag2)) {
+            risultato = 1;
+        }
+        else {
+            return risultato;
+        }
+
+        tagsTrue.add("@AIScript(sovrascrivibile = true)");
+        tagsTrue.add("@AIScript(sovrascrivibile=true)");
+        tagsTrue.add("@AIScript(sovrascrivibile= true)");
+        tagsTrue.add("@AIScript(sovrascrivibile =true)");
+        tagsTrue.add("@AIScript(sovraScrivibile = true)");
+        tagsTrue.add("@AIScript(sovraScrivibile=true)");
+        tagsTrue.add("@AIScript(sovraScrivibile= true)");
+        tagsTrue.add("@AIScript(sovraScrivibile =true)");
+
+        tagsFalse.add("@AIScript(sovrascrivibile = false)");
+        tagsFalse.add("@AIScript(sovrascrivibile=false)");
+        tagsFalse.add("@AIScript(sovrascrivibile= false)");
+        tagsFalse.add("@AIScript(sovrascrivibile =false)");
+        tagsFalse.add("@AIScript(sovraScrivibile = false)");
+        tagsFalse.add("@AIScript(sovraScrivibile=false)");
+        tagsFalse.add("@AIScript(sovraScrivibile= false)");
+        tagsFalse.add("@AIScript(sovraScrivibile =false)");
+
+        tagsNullo.add("@AIScript(sovrascrivibile = )");
+        tagsNullo.add("@AIScript(sovrascrivibile=)");
+        tagsNullo.add("@AIScript(sovrascrivibile= )");
+        tagsNullo.add("@AIScript(sovrascrivibile =)");
+        tagsNullo.add("@AIScript(sovraScrivibile = )");
+        tagsNullo.add("@AIScript(sovraScrivibile=)");
+        tagsNullo.add("@AIScript(sovraScrivibile= )");
+        tagsNullo.add("@AIScript(sovraScrivibile =)");
+
+        if (text.isContiene(oldFileText, tagsTrue)) {
+            risultato = 2;
+        }
+        if (text.isContiene(oldFileText, tagsFalse)) {
+            risultato = 3;
+        }
+        if (text.isContiene(oldFileText, tagsNullo)) {
+            risultato = 4;
+        }
+
+        return risultato;
     }
 
 
