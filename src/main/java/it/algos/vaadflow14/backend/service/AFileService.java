@@ -179,6 +179,26 @@ public class AFileService extends AAbstractService {
      *
      * @return true se la directory esiste, false se non sono rispettate le condizioni della richiesta
      */
+    public boolean isNotEsisteDirectory(String absolutePathDirectoryToBeChecked) {
+        return !isEsisteDirectoryStr(absolutePathDirectoryToBeChecked).equals(FlowCost.VUOTA);
+    }
+
+
+    /**
+     * Controlla l'esistenza di una directory <br>
+     * <p>
+     * Il path non deve essere nullo <br>
+     * Il path non deve essere vuoto <br>
+     * Il path deve essere completo ed iniziare con uno 'slash' <br>
+     * Il path deve essere completo e terminare con un 'suffix' <br>
+     * Controlla che getPath() e getAbsolutePath() siano uguali <br>
+     * La richiesta è CASE INSENSITIVE (maiuscole e minuscole SONO uguali) <br>
+     * Una volta costruita la directory, getPath() e getAbsolutePath() devono essere uguali
+     *
+     * @param absolutePathDirectoryToBeChecked path completo della directory che DEVE cominciare con '/' SLASH
+     *
+     * @return true se la directory esiste, false se non sono rispettate le condizioni della richiesta
+     */
     public boolean isEsisteDirectory(String absolutePathDirectoryToBeChecked) {
         return isEsisteDirectoryStr(absolutePathDirectoryToBeChecked).equals(FlowCost.VUOTA);
     }
@@ -955,6 +975,30 @@ public class AFileService extends AAbstractService {
      * @return true se la directory  è stata copiata
      */
     public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath, String firstDirectory) {
+        return copyDirectory(typeCopy, srcPath, destPath, firstDirectory, false);
+    }
+
+    /**
+     * Copia una directory <br>
+     * <p>
+     * Controlla che siano validi i path di riferimento <br>
+     * Controlla che esista la directory sorgente da copiare <br>
+     * Se manca la directory sorgente, non fa nulla <br>
+     * Se non esiste la directory di destinazione, la crea <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.soloSeNonEsiste, non fa nulla <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
+     * Se esiste la directory di destinazione ed è AECopyDir.addingOnly, la integra aggiungendo file/cartelle <br>
+     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
+     *
+     * @param typeCopy       modalità di comportamento se esiste la directory di destinazione
+     * @param srcPath        nome completo della directory sorgente
+     * @param destPath       nome completo della directory destinazione
+     * @param firstDirectory da cui iniziare il path per il messaggio di avviso
+     * @param stampaInfo     flag per usare il logger
+     *
+     * @return true se la directory  è stata copiata
+     */
+    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath, String firstDirectory, boolean stampaInfo) {
         boolean copiata = false;
         boolean esisteDest;
         String message = FlowCost.VUOTA;
@@ -977,7 +1021,9 @@ public class AFileService extends AAbstractService {
                         else {
                             message = "La directory: " + path + " esisteva già e non è stata toccata.";
                         }
-                        logger.info(message, this.getClass(), "copyDirectory");
+                        if (stampaInfo) {
+                            logger.info(message, this.getClass(), "copyDirectory");
+                        }
                         message = FlowCost.VUOTA;
                         break;
                     case dirDeletingAll:
@@ -990,7 +1036,9 @@ public class AFileService extends AAbstractService {
                             else {
                                 message = "La directory: " + path + " non esisteva ed è stata creata.";
                             }
-                            logger.info(message, this.getClass(), "copyDirectory");
+                            if (stampaInfo) {
+                                logger.info(message, this.getClass(), "copyDirectory");
+                            }
                             message = FlowCost.VUOTA;
                         }
                         else {
@@ -1012,7 +1060,9 @@ public class AFileService extends AAbstractService {
                             else {
                                 message = "La directory: " + path + " non esisteva ed è stata creata.";
                             }
-                            logger.info(message, this.getClass(), "copyDirectory");
+                            if (stampaInfo) {
+                                logger.info(message, this.getClass(), "copyDirectory");
+                            }
                         }
                         else {
                             if (esisteDest) {

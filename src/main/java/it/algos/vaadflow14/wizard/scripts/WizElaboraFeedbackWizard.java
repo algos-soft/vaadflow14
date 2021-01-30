@@ -2,7 +2,7 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AECopy;
-import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -71,7 +71,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
         }
 
-        file.copyDirectory(AECopy.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyDir(AECopyWiz.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 
@@ -93,7 +93,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
         }
 
-        file.copyDirectory(AECopy.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyDir(AECopyWiz.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
     }
 
 }

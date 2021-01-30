@@ -214,6 +214,16 @@ public abstract class FlowCost {
 
 
     /**
+     * tag per la singola parentesi tonda di apertura
+     */
+    public static final String TONDA_INI = "(";
+
+    /**
+     * tag per la singola parentesi tonda di chiusura
+     */
+    public static final String TONDA_END = ")";
+
+    /**
      * tag per la singola graffa di apertura
      */
     public static final String GRAFFA_INI = "{";

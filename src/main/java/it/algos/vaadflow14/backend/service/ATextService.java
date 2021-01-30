@@ -724,6 +724,31 @@ public class ATextService extends AAbstractService {
 
 
     /**
+     * Aggiunge parentesi tonde singole in testa e coda alla stringa. <br>
+     * Aggiunge SOLO se gia non esistono <br>
+     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
+     * Elimina spazi vuoti iniziali e finali <br>
+     * Elimina eventuali quadre già presenti, per evitare di metterle doppie <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa con parentesi tonde aggiunte
+     */
+    public String setTonde(String stringaIn) {
+        String stringaOut = stringaIn;
+
+        if (!stringaOut.startsWith(TONDA_INI)) {
+            stringaOut = TONDA_INI + stringaOut;
+        }
+        if (!stringaOut.endsWith(TONDA_END)) {
+            stringaOut = stringaOut + TONDA_END;
+        }
+
+        return stringaOut.trim();
+    }
+
+
+    /**
      * Aggiunge parentesi quadre singole in testa e coda alla stringa. <br>
      * Aggiunge SOLO se gia non esistono <br>
      * Se arriva una stringa vuota, restituisce una stringa vuota <br>

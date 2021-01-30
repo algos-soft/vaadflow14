@@ -8,10 +8,12 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
@@ -176,6 +178,79 @@ public class WizService {
     }
 
     /**
+     * Copia una cartella da VaadFlow al progetto <br>
+     *
+     * @param copyWiz   modalità di comportamento se esiste la directory di destinazione
+     * @param srcPath   nome completo della directory sorgente
+     * @param destPath  nome completo della directory destinazione
+     * @param directory da cui iniziare il pathBreve del messaggio
+     */
+    public void copyDir(final AECopyWiz copyWiz, final String srcPath, final String destPath, final String directory) {
+        String message = FlowCost.VUOTA;
+        File srcDir = new File(srcPath);
+        File destDir = new File(destPath);
+        String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrent.getValue().toLowerCase();
+        String pathBreve = file.findPathBreve(destPath, dirPath);
+        String type = text.setTonde(copyWiz.name());
+
+        switch (copyWiz) {
+            case dirDeletingAll:
+                message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                if (file.isEsisteDirectory(destPath)) {
+                    delete(destDir);
+                    message = String.format("La directory %s %s esisteva già ed è stata cancellata e completamente sostituita.", pathBreve, type);
+                }
+                copy(srcDir, destDir);
+                break;
+            case dirAddingOnly:
+                message = String.format("La directory %s %s esiste già ed è stata integrata.", pathBreve, type);
+                if (file.isNotEsisteDirectory(destPath)) {
+                    message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                }
+                copy(srcDir, destDir);
+                break;
+            case dirSoloSeNonEsiste:
+                message = String.format("La directory %s %s esiste già e non è stata modificata.", pathBreve, type);
+                if (file.isNotEsisteDirectory(destPath)) {
+                    copy(srcDir, destDir);
+                    message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                }
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "copyDir");
+                break;
+        }
+        logger.log(AETypeLog.wizard, message);
+    }
+
+
+    private boolean delete(final File destDir) {
+        try {
+            FileUtils.deleteDirectory(destDir);
+            return true;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "delete");
+            return false;
+        }
+    }
+
+
+    private boolean copy(final File srcDir, final File destDir) {
+        try {
+            FileUtils.copyDirectory(srcDir, destDir);
+            return true;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "copy");
+            return false;
+        }
+    }
+
+
+    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath) {
+        return file.copyDirectory(typeCopy, srcPath, destPath, DIR_PROJECTS);
+    }
+
+    /**
      * Crea un nuovo file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
      * <p>
      * Controlla che sia valido il path di riferimento <br>
@@ -247,6 +322,7 @@ public class WizService {
         String fileName = nameSourceText;
         String pathSource;
         String path = file.findPathBreve(pathFileToBeWritten, directory);
+        String tagToken = "@.+@";
 
         if (!fileName.endsWith(FlowCost.TXT_SUFFIX)) {
             fileName += FlowCost.TXT_SUFFIX;
@@ -267,7 +343,7 @@ public class WizService {
         }
 
         sourceTextElaborato = elaboraFileCreatoDaSource(sourceTextGrezzo);
-        if (text.isEmpty(sourceTextElaborato) || sourceTextElaborato.equals(sourceTextGrezzo)) {
+        if (sourceTextGrezzo.matches(tagToken)) {
             message = String.format("Non sono riuscito ad elaborare i tokens del file sorgente %s", pathSource);
             logger.log(AETypeLog.wizard, message);
             return;
@@ -303,9 +379,9 @@ public class WizService {
                         }
                     }
                     else {
-//                        message = String.format("Il file: %s esiste già col flag sovraScrivibile=false e NON accetta modifiche.", path);
+                        //                        message = String.format("Il file: %s esiste già col flag sovraScrivibile=false e NON accetta modifiche.", path);
                         logger.log(AETypeLog.wizard, String.format("Il file: %s esiste già %s", path, message));
-//                        logger.log(AETypeLog.wizard, message);
+                        //                        logger.log(AETypeLog.wizard, message);
                     }
                 }
                 else {
@@ -412,15 +488,16 @@ public class WizService {
     public void copyFile(AECopy typeCopy, String srcPath, String destPath, String firstDir) {
         boolean esisteFileDest;
         String message = FlowCost.VUOTA;
-        String path;
+        String path = file.findPathBreve(destPath, firstDir);
 
         switch (typeCopy) {
             case fileSovrascriveSempreAncheSeEsiste:
             case fileSoloSeNonEsiste:
                 file.copyFile(typeCopy, srcPath, destPath, firstDir);
+                message = String.format("Il file %s esisteva già ma è stato modificato.", path);
+                logger.log(AETypeLog.wizard, message);
                 break;
             case fileCheckFlagSeEsiste:
-                path = file.findPathBreve(destPath, firstDir);
                 esisteFileDest = file.isEsisteFile(destPath);
                 if (esisteFileDest) {
                     //                    if (checkFileCanBeModified(destPath)) {
@@ -672,11 +749,6 @@ public class WizService {
         //        }
 
         return copiata;
-    }
-
-
-    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath) {
-        return file.copyDirectory(typeCopy, srcPath, destPath, DIR_PROJECTS);
     }
 
 
