@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AECopy;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,10 +35,10 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaFileWizard() {
-        String dirWizard = AEWizCost.dirRootWizard.getValue();
-        String pathFile = dirWizard + AEWizCost.nameWizard.getValue();
-        String srcPath = AEWizCost.pathTargetProjectRoot.getValue() + pathFile;
-        String destPath = AEWizCost.pathVaadFlow14Root.getValue() + pathFile;
+        String dirWizard = AEWizCost.dirRootWizard.get();
+        String pathFile = dirWizard + AEWizCost.nameWizard.get();
+        String srcPath = AEWizCost.pathTargetProjectRoot.get() + pathFile;
+        String destPath = AEWizCost.pathVaadFlow14Root.get() + pathFile;
 
         if (!file.isEsisteFile(srcPath)) {
             logger.warn("Errato il path per il file Wizard locale da ricopiare", this.getClass(), "copiaFileWizard");
@@ -49,7 +48,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
 
-        wizService.copyFile(AECopy.fileSovrascriveSempreAncheSeEsiste, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyFile(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, srcPath, destPath, DIR_VAADFLOW);
     }
 
 
@@ -60,8 +59,8 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaDirectoryEnumeration() {
-        String srcPath = AEWizCost.pathTargetProjectRoot.getValue() + AEWizCost.dirRootWizardEnumeration.getValue();
-        String destPath = AEWizCost.pathVaadFlow14Root.getValue() + AEWizCost.dirRootWizardEnumeration.getValue();
+        String srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardEnumeration.get();
+        String destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardEnumeration.get();
 
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory enum locale da ricopiare", this.getClass(), "copiaDirectoryEnumeration");
@@ -82,8 +81,8 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaDirectoryScripts() {
-        String srcPath = AEWizCost.pathTargetProjectRoot.getValue() + AEWizCost.dirRootWizardScripts.getValue();
-        String destPath = AEWizCost.pathVaadFlow14Root.getValue() + AEWizCost.dirRootWizardScripts.getValue();
+        String srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardScripts.get();
+        String destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardScripts.get();
 
         if (!file.isEsisteDirectory(srcPath)) {
             logger.warn("Errato il path per la directory scripts locale da ricopiare", this.getClass(), "copiaDirectoryScripts");

@@ -1,16 +1,10 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import it.algos.vaadflow14.wizard.enumeration.*;
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import it.algos.vaadflow14.wizard.enumeration.AEPackage;
-import org.springframework.beans.factory.annotation.Autowired;
 import it.algos.vaadflow14.backend.application.*;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_PACKAGES;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.annotation.*;
 
 
 /**
@@ -179,97 +173,91 @@ public abstract class WizElabora implements WizRecipient {
      */
     @Override
     public void esegue() {
-        this.copiaDirectoryConfig();
-        this.copiaDirectoryDoc();
-        this.copiaDirectoryFrontend();
-        this.copiaDirectoryLinks();
-        this.copiaDirectorySnippets();
+        //        this.copiaDirectoryConfig();
+        //        this.copiaDirectoryDoc();
+        //        this.copiaDirectoryFrontend();
+        //        this.copiaDirectoryLinks();
+        //        this.copiaDirectorySnippets();
 
         this.copiaDirectoryVaadFlow();
 
         this.copiaDirectoryMetaInf();
-        this.creaFileProperties();
-        this.creaFileBanner();
-
-        this.creaFileGit();
-        this.creaFilePom();
-        this.creaFileRead();
+        //        this.creaFileProperties();
+        //        this.creaFileBanner();
+        //        this.creaFileGit();
+        //        this.creaFilePom();
+        //        this.creaFileRead();
     }
 
+    //    /**
+    //     * Crea la cartella CONFIG di risorse on-line extra JAR (in formati vari) <br>
+    //     * Posizionata a livello di root <br>
+    //     * Copia la directory omonima di VaadFlow <br>
+    //     * Se esiste già, aggiunge nuovi elementi SENZA cancellare quelli esistenti <br>
+    //     * Se è isNewProject()=true, la crea nuova o la integra se esisteva già <br>
+    //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+    //     */
+    //    protected void copiaDirectoryConfig() {
+    //        if (AECheck.config.is()) {
+    //            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_CONFIG);
+    //        }
+    //    }
 
-    /**
-     * Crea la cartella CONFIG di risorse on-line extra JAR (in formati vari) <br>
-     * Posizionata a livello di root <br>
-     * Copia la directory omonima di VaadFlow <br>
-     * Se esiste già, aggiunge nuovi elementi SENZA cancellare quelli esistenti <br>
-     * Se è isNewProject()=true, la crea nuova o la integra se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-     */
-    protected void copiaDirectoryConfig() {
-        if (AECheck.config.is()) {
-            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_CONFIG);
-        }
-    }
+    //    /**
+    //     * Crea la cartella DOC di documentazione ALGOS (in formati vari) <br>
+    //     * Posizionata a livello di root <br>
+    //     * Copia la directory omonima di VaadFlow <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+    //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+    //     */
+    //    protected void copiaDirectoryDoc() {
+    //        if (AECheck.documentation.is()) {
+    //            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_DOC);
+    //        }
+    //    }
 
+    //    /**
+    //     * Crea la cartella FRONTEND di risorse per NPM (in formati vari) <br>
+    //     * Posizionata a livello di root <br>
+    //     * Copia la directory omonima di VaadFlow <br>
+    //     * Se esiste già, aggiunge nuovi elementi SENZA cancellare quelli esistenti <br>
+    //     * Se è isNewProject()=true, la crea nuova o la integra se esisteva già <br>
+    //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+    //     */
+    //    protected void copiaDirectoryFrontend() {
+    //        if (AECheck.frontend.is()) {
+    //            wizService.copyDirectoryProjectRoot(AECopyWiz.dirAddingOnly, ROOT_DIR_FRONTEND);
+    //        }
+    //    }
 
-    /**
-     * Crea la cartella DOC di documentazione ALGOS (in formati vari) <br>
-     * Posizionata a livello di root <br>
-     * Copia la directory omonima di VaadFlow <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-     */
-    protected void copiaDirectoryDoc() {
-        if (AECheck.documentation.is()) {
-            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_DOC);
-        }
-    }
+    //    /**
+    //     * Crea la cartella LINKS di siti WEB interessanti (in formato text) <br>
+    //     * Posizionata a livello di root <br>
+    //     * Copia la directory omonima di VaadFlow <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+    //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+    //     */
+    //    protected void copiaDirectoryLinks() {
+    //        if (AECheck.links.is()) {
+    //            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_LINKS);
+    //        }
+    //    }
 
-
-    /**
-     * Crea la cartella FRONTEND di risorse per NPM (in formati vari) <br>
-     * Posizionata a livello di root <br>
-     * Copia la directory omonima di VaadFlow <br>
-     * Se esiste già, aggiunge nuovi elementi SENZA cancellare quelli esistenti <br>
-     * Se è isNewProject()=true, la crea nuova o la integra se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-     */
-    protected void copiaDirectoryFrontend() {
-        if (AECheck.frontend.is()) {
-            wizService.copyDirectoryProjectRoot(AECopyWiz.dirAddingOnly, ROOT_DIR_FRONTEND);
-        }
-    }
-
-
-    /**
-     * Crea la cartella LINKS di siti WEB interessanti (in formato text) <br>
-     * Posizionata a livello di root <br>
-     * Copia la directory omonima di VaadFlow <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-     */
-    protected void copiaDirectoryLinks() {
-        if (AECheck.links.is()) {
-            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_LINKS);
-        }
-    }
-
-
-    /**
-     * Crea la cartella SNIPPETS di pezzetti utili di codice (in formato txt) <br>
-     * Posizionata a livello di root <br>
-     * Copia la directory omonima di VaadFlow <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-     */
-    protected void copiaDirectorySnippets() {
-        if (AECheck.snippets.is()) {
-            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_SNIPPETS);
-        }
-    }
+    //    /**
+    //     * Crea la cartella SNIPPETS di pezzetti utili di codice (in formato txt) <br>
+    //     * Posizionata a livello di root <br>
+    //     * Copia la directory omonima di VaadFlow <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
+    //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
+    //     */
+    //    protected void copiaDirectorySnippets() {
+    //        if (AECheck.snippets.is()) {
+    //            wizService.copyDirectoryProjectRoot(AECopyWiz.dirDeletingAll, ROOT_DIR_SNIPPETS);
+    //        }
+    //    }
 
 
     /**
@@ -284,7 +272,7 @@ public abstract class WizElabora implements WizRecipient {
         String destPath = AEDir.pathTargetAlgos.get() + DIR_VAADFLOW;
 
         if (AECheck.flow.is()) {
-            wizService.copyDirectoryProject(AECopyWiz.dirDeletingAll, srcPath, destPath);
+            wizService.copyDir(AECopyWiz.dirDeletingAll, srcPath, destPath, "");
             if (file.deleteDirectory(AEDir.pathTargetSources.get())) {
                 logger.info("Cancellata la directory wizard/sources", this.getClass(), "copiaDirectoryVaadFlow");
             }
@@ -307,151 +295,125 @@ public abstract class WizElabora implements WizRecipient {
         String destPath = AEDir.pathTargetResources.get() + DIR_META;
 
         if (AECheck.resources.is()) {
-            wizService.copyDirectoryProject(AECopyWiz.dirAddingOnly, srcPath, destPath);
+            wizService.copyDir(AECopyWiz.dirAddingOnly, srcPath, destPath, "");
         }
     }
 
+    //    /**
+    //     * Crea il file application.properties (in formato txt) <br>
+    //     * Legge il testo da wizard.sources di VaadFlow14 <br>
+    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+    //     * Se esiste già il file, controlla che NON ci sia il flag sovraScrivibile=false <br>
+    //     */
+    //    protected void creaFileProperties() {
+    //        String nameSourceText = FILE_PROPERTIES;
+    //        String destPathSuffix = AEDir.pathTargetResources.get() + FILE_PROPERTIES_DEST;
+    //
+    //        if (AECheck.property.is()) {
+    //            wizService.creaFileProject(AECopyWiz.fileSoloSeNonEsiste, nameSourceText, destPathSuffix);
+    //        }
+    //    }
 
-    /**
-     * Crea il file application.properties (in formato txt) <br>
-     * Legge il testo da wizard.sources di VaadFlow14 <br>
-     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-     * Se esiste già il file, controlla che NON ci sia il flag sovraScrivibile=false <br>
-     */
-    protected void creaFileProperties() {
-        String nameSourceText = FILE_PROPERTIES;
-        String destPathSuffix = AEDir.pathTargetResources.get() + FILE_PROPERTIES_DEST;
+    //    /**
+    //     * Crea il file BANNER (in formato txt) <br>
+    //     * Legge il testo da wizard.sources di VaadFlow14 <br>
+    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     */
+    //    protected void creaFileBanner() {
+    //        String nameSourceText = FILE_BANNER;
+    //        String destPathSuffix = AEDir.pathTargetResources.get() + FILE_BANNER + TXT_SUFFIX;
+    //
+    //        if (AECheck.banner.is()) {
+    //            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    //        }
+    //    }
 
-        if (AECheck.property.is()) {
-            wizService.creaFileProject(AECopyWiz.fileSoloSeNonEsiste, nameSourceText, destPathSuffix);
-        }
-    }
+    //    /**
+    //     * Crea il file GIT (senza formato) <br>
+    //     * Posizionato a livello di root <br>
+    //     * Legge il testo da wizard.sources di VaadFlow14 <br>
+    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     */
+    //    protected void creaFileGit() {
+    //        String nameSourceText = FILE_GIT;
+    //        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_GIT;
+    //
+    //        if (AECheck.git.is()) {
+    //            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    //        }
+    //    }
 
+    //    /**
+    //     * Crea il file POM di Maven (in formato xml) <br>
+    //     * Posizionato a livello di root <br>
+    //     * Legge il testo da wizard.sources di VaadFlow14 <br>
+    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+    //     * Se esiste già il file, controlla che NON ci sia il flag sovraScrivibile=false <br>
+    //     */
+    //    protected void creaFilePom() {
+    //        String nameSourceText = FILE_POM;
+    //        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_POM + XML_SUFFIX;
+    //
+    //        if (AECheck.pom.is()) {
+    //            wizService.creaFileProject(AECopyWiz.fileCheckFlagSeEsiste, nameSourceText, destPathSuffix);
+    //        }
+    //    }
 
-    /**
-     * Crea il file BANNER (in formato txt) <br>
-     * Legge il testo da wizard.sources di VaadFlow14 <br>
-     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     */
-    protected void creaFileBanner() {
-        String nameSourceText = FILE_BANNER;
-        String destPathSuffix = AEDir.pathTargetResources.get() + FILE_BANNER + TXT_SUFFIX;
-
-        if (AECheck.banner.is()) {
-            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
-        }
-    }
-
-
-    /**
-     * Crea il file GIT (senza formato) <br>
-     * Posizionato a livello di root <br>
-     * Legge il testo da wizard.sources di VaadFlow14 <br>
-     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     */
-    protected void creaFileGit() {
-        String nameSourceText = FILE_GIT;
-        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_GIT;
-
-        if (AECheck.git.is()) {
-            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
-        }
-    }
-
-
-    /**
-     * Crea il file POM di Maven (in formato xml) <br>
-     * Posizionato a livello di root <br>
-     * Legge il testo da wizard.sources di VaadFlow14 <br>
-     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-     * Se esiste già il file, controlla che NON ci sia il flag sovraScrivibile=false <br>
-     */
-    protected void creaFilePom() {
-        String nameSourceText = FILE_POM;
-        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_POM + XML_SUFFIX;
-
-        if (AECheck.pom.is()) {
-            wizService.creaFileProject(AECopyWiz.fileCheckFlagSeEsiste, nameSourceText, destPathSuffix);
-        }
-    }
-
-
-    /**
-     * Sovrascrive il file README (in formato MD) <br>
-     * Posizionato a livello di root <br>
-     * Legge il testo da wizard.sources di VaadFlow14 <br>
-     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
-     */
-    protected void creaFileRead() {
-        String nameSourceText = FILE_READ;
-        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_READ + TXT_SUFFIX;
-
-        if (AECheck.read.is()) {
-            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
-        }
-    }
+    //    /**
+    //     * Sovrascrive il file README (in formato MD) <br>
+    //     * Posizionato a livello di root <br>
+    //     * Legge il testo da wizard.sources di VaadFlow14 <br>
+    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
+    //     * Se esiste già, ci va sopra cancellando la preesistente versione <br>
+    //     */
+    //    protected void creaFileRead() {
+    //        String nameSourceText = FILE_READ;
+    //        String destPathSuffix = AEDir.pathTargetRoot.get() + FILE_READ + TXT_SUFFIX;
+    //
+    //        if (AECheck.read.is()) {
+    //            wizService.creaFileProject(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix);
+    //        }
+    //    }
 
 
     /**
      * Creazione o modifica dei files previsti per il package <br>
      */
     protected void fixPackage() {
-        if (AEPackage.entity.isAccesoInizialmente()) {
-            this.fixEntity();
-        }
-        if (AEPackage.service.isAccesoInizialmente()) {
-            this.fixFileService();
-        }
-        if (AEPackage.logic.isAccesoInizialmente()) {
-            this.fixFileLogic();
+        for (AEPackage pack : AEPackage.values()) {
+            if (pack.is()) {
+                if (pack.isFile()) {
+                    fixFile(pack);
+                }
+            }
         }
     }
+
+
+    /**
+     * Creazione del file nella directory del package <br>
+     */
+    protected void fixFile(AEPackage pack) {
+        String suffix = pack.getSuffix() + JAVA_SUFFIX;
+        String nameSourceText = pack.getSourcesName();
+        String pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get();
+        pathFileToBeWritten += suffix;
+
+        if (pack.is()) {
+            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, nameSourceText, pathFileToBeWritten);
+        }
+    }
+
 
     /**
      * Creazione del file nella directory dei packages <br>
      * Creazione del menu nel file xxxBoot <br>
      */
     protected void fixEntity() {
-        this.fixFileEntity();
+//        this.fixFileEntity();
         this.fixBoot();
-    }
-
-
-    /**
-     * Creazione del file nella directory del package <br>
-     */
-    protected void fixFileEntity() {
-        String tag = "Entity";
-        String pathFileToBeWritten = AEDir.fileTargetEntity.get();
-        if (AECheck.entity.is()) {
-            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
-        }
-    }
-
-    /**
-     * Creazione del file nella directory del package <br>
-     */
-    protected void fixFileService() {
-        String tag = "Service";
-        String pathFileToBeWritten = AEDir.fileTargetService.get();
-        if (AECheck.service.is()) {
-            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
-        }
-    }
-
-
-    /**
-     * Creazione del file nella directory del package <br>
-     */
-    protected void fixFileLogic() {
-        String tag = "Logic";
-        String pathFileToBeWritten = AEDir.fileTargetLogic.get();
-        if (AECheck.logic.is()) {
-            wizService.creaFilePackage(AECopyWiz.fileCheckFlagSeEsiste, tag, pathFileToBeWritten);
-        }
     }
 
 
@@ -549,14 +511,14 @@ public abstract class WizElabora implements WizRecipient {
     protected void elaboraDoc(String packageName, AEPackage pack, boolean inizioFile) {
         String message;
         String upperName = text.primaMaiuscola(packageName);
-        String fileName = upperName + pack.getTag();
+        String fileName = upperName + pack.getSuffix();
         String pathFileToBeWritten = AEDir.pathTargetAllPackages.get() + packageName + FlowCost.SLASH + fileName + FlowCost.JAVA_SUFFIX;
         if (file.isEsisteFile(pathFileToBeWritten)) {
             wizService.regolaAEToken(AEDir.nameTargetProject.get(), packageName);
-            wizService.fixDocFile(text.isValid(pack.getTag()) ? pack.getTag() : "Entity", pathFileToBeWritten, inizioFile);
+            wizService.fixDocFile(text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", pathFileToBeWritten, inizioFile);
         }
         else {
-            message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getTag()) ? pack.getTag() : "Entity", packageName);
+            message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", packageName);
             logger.info(message, this.getClass(), "elaboraDoc");
         }
     }

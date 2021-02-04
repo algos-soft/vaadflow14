@@ -143,6 +143,8 @@ public abstract class WizCost {
 
     public static final String FILE_READ = "README";
 
+    public static final String FILE_ENTIY = "";
+
     public static final String FILE_COST = "Cost";
 
     public static final String FILE_BOOT = "Boot";
@@ -171,9 +173,18 @@ public abstract class WizCost {
 
     public static final String MD_SUFFIX = ".md";
 
-    public static final String LOGIC_SUFFIX = "Logic";
+    public static final String SOURCE_ENTITY = "Entity";
 
-    public static final String SERVICE_SUFFIX = "Service";
+    public static final String SOURCE_LOGIC = "Logic";
+
+    public static final String SOURCE_SERVICE = "Service";
+
+
+    public static final String SUFFIX_ENTITY = "";
+
+    public static final String SUFFIX_LOGIC = "Logic";
+
+    public static final String SUFFIX_SERVICE = "Service";
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)

@@ -6,9 +6,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -152,18 +150,10 @@ public class WizDialogNewProject extends WizDialog {
     @Override
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
-        Checkbox unCheckbox;
 
-        //--accende tutti i checkbox escluso flagSecurity
-        for (AECheck check : AECheck.getNewProject()) {
-            check.setAcceso(true);
+        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, aeCost.isAccesoInizialmenteNew()));
         }
-        AECheck.security.setAcceso(false);
-
-        for (AECheck check : AECheck.getNewProject()) {
-            mappaWizBox.put(check.name(), new WizBox(check));
-        }
-
         super.addCheckBoxMap();
     }
 

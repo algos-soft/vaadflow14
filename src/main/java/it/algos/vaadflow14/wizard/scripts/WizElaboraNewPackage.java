@@ -1,8 +1,9 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -49,21 +50,19 @@ public class WizElaboraNewPackage extends WizElabora {
      */
     @Override
     public void esegue() {
-        if (this.creaDirectory()) {
-            super.fixPackage();
-        }
+        this.creaDirectory();
+        super.fixPackage();
     }
 
 
-    protected boolean creaDirectory() {
-        if (file.isEsisteDirectory(AEDir.pathTargetPackage.get())) {
-            logger.info("La directory " + AEDir.nameTargetPackage.get() + " esiste già e non può essere sovrascritta", this.getClass(), "creaDirectory");
-            return false;
-        }
-        else {
-            file.creaDirectory(AEDir.pathTargetPackage.get());
-            logger.info("La directory per il package " + AEDir.nameTargetPackageUpper.get() + " è stato creata", this.getClass(), "creaDirectory");
-            return true;
+    protected void creaDirectory() {
+        String message;
+
+        if (file.isNotEsisteDirectory(AEWizCost.pathTargetPackage.get())) {
+            if (file.creaDirectory(AEWizCost.pathTargetPackage.get())) {
+                message = String.format("Creata in %s la directory ../packages/%s per un nuovo package che non esisteva.", AEWizCost.projectCurrent.get(), AEWizCost.nameTargetPackage.get());
+                logger.log(AETypeLog.wizard, message);
+            }
         }
     }
 

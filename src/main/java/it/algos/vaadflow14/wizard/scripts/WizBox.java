@@ -1,13 +1,11 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import it.algos.vaadflow14.ui.fields.ACheckBox;
-import it.algos.vaadflow14.wizard.enumeration.*;
-import it.algos.vaadflow14.wizard.enumeration.AEPackage;
-import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 
 
 /**
@@ -24,31 +22,45 @@ public class WizBox extends HorizontalLayout {
 
     private TextField textField;
 
-    private AECheck check;
+    private String fieldCaption;
 
-    public WizBox(AEWizCost aeCost) {
-        checkbox = new ACheckBox(aeCost.getDescrizione() + FlowCost.FORWARD + "AECopy."+aeCost.getCopyWiz());
-        this.setValue(aeCost.isAccesoInizialmente());
+
+    public WizBox(AEWizCost aeCost, boolean isAccesoInizialmente) {
+        checkbox = new ACheckBox(aeCost.getDescrizione() + FlowCost.FORWARD + "AECopyWiz." + aeCost.getCopyWiz());
+        this.setValue(isAccesoInizialmente);
         this.add(checkbox);
+
     }
 
     public WizBox(AEPackage pack) {
         checkbox = new ACheckBox(pack.getDescrizione());
         this.setValue(pack.isAccesoInizialmente());
         this.add(checkbox);
+        fieldCaption = pack.getFieldName();
+
+        if (pack.isFieldAssociato()) {
+            textField = new TextField();
+            if (pack.is()) {
+                textField.setValue(pack.getFieldName());
+            }
+            textField.setAutoselect(true);
+            checkbox.getBinder().addValueChangeListener(event -> sincroText());
+
+            this.add(textField);
+        }
     }
 
-
+    @Deprecated
     public WizBox(AECheck check) {
         checkbox = new ACheckBox(check.getCaption(), check.getCaption());
         this.setValue(check.isAccesoInizialmente());
         this.add(checkbox);
-        this.check = check;
+        this.fieldCaption = check.getFieldName();
 
         if (check.isFieldAssociato()) {
             textField = new TextField();
             if (check.is()) {
-                textField.setValue(check.getFieldName());
+                textField.setValue(fieldCaption);
             }
             textField.setAutoselect(true);
             checkbox.getBinder().addValueChangeListener(event -> sincroText());
@@ -59,7 +71,7 @@ public class WizBox extends HorizontalLayout {
 
     private void sincroText() {
         if (checkbox.getBinder().getValue()) {
-            textField.setValue(check.getFieldName());
+            textField.setValue(fieldCaption);
         }
         else {
             textField.setValue(FlowCost.VUOTA);

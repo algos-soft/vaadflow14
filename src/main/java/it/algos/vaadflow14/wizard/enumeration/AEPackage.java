@@ -1,8 +1,7 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.LOGIC_SUFFIX;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.SERVICE_SUFFIX;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 /**
  * Project alfa
@@ -14,39 +13,100 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.SERVICE_SUFFIX;
  * Possibili componenti di un package
  */
 public enum AEPackage {
-    entity(VUOTA, "Entity base del package", true),
+    entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
 
-    logic(LOGIC_SUFFIX, "Business logic del package", true),
+    menu("Inserimento del package nel menu", false, false, false, false),
 
-    service(SERVICE_SUFFIX, "Service specifico del package", true),
+    logic("Business logic del package", true, true, false, false, SOURCE_LOGIC, SUFFIX_LOGIC),
 
-    list("List", "List specifico del package", false),
+    service("Service specifico del package", true, true, false, false, SOURCE_SERVICE, SUFFIX_SERVICE),
 
-    form("Form", "Form specifico del package", false),
+    //    list("List", false, "List specifico del package"),
+    //
+    //    form("Form", false, "Form specifico del package"),
+    //
+    //    data("Data", false, "Creazione dati specifico del package"),
+    //
+    //    enumeration("Enum", false, "Enumerations specifiche del package"),
+    //
+    //    csv("CSV", false, "Files csv esterni per i dati del package"),
+    //
+    //    company("Entity subclass di Company", false),
 
-    data("Data", "Creazione dati specifico del package", false),
+    rowIndex("Entity usa rowIndex", false, false, false, false),
 
-    enumeration("Enum", "Enumerations specifiche del package", false),
+    ordine("Entity usa property (int)", false, false, true, true, "PropertyOrdine", VUOTA, "ordine", "ordine"),
 
-    csv("CSV", "Files csv esterni per i dati del package", false),
+    code("Entity usa property (String)", true, false, true, true, "PropertyCode", VUOTA, "code", "code"),
+
+    description("Entity usa property (String)", true, false, true, true, "PropertyDescrizione", VUOTA, "descrizione", "descrizione"),
+
+    valido("Entity usa property (boolean)", false, false, true, true, "PropertyValido", VUOTA, "valido", "valido"),
     ;
 
-    private String tag;
 
     private String descrizione;
 
-    private boolean acceso;
+    private boolean isAccesoInizialmente;
 
-    private boolean accesoInizialmente;
+    private boolean isAcceso;
+
+    private boolean isFile;
+
+    private boolean isProperty;
+
+    private boolean isFieldAssociato;
+
+    private String sourcesName;
+
+    private String suffix;
+
+    private String field;
+
+    private String fieldName;
+
+    //    /**
+    //     * Costruttore parziale <br>
+    //     */
+    //    AEPackage(String descrizione, boolean isAccesoInizialmente) {
+    //        this(descrizione, false, false, isAccesoInizialmente, FlowCost.VUOTA, FlowCost.VUOTA, FlowCost.VUOTA, FlowCost.VUOTA);
+    //    }
+    //
+    //    /**
+    //     * Costruttore parziale <br>
+    //     */
+    //    AEPackage(String descrizione, boolean isAccesoInizialmente, String suffix) {
+    //        this(descrizione, isAccesoInizialmente, false, false, suffix, FlowCost.VUOTA, FlowCost.VUOTA, FlowCost.VUOTA);
+    //    }
+
+    /**
+     * Costruttore parziale <br>
+     */
+    AEPackage(String descrizione, boolean isAccesoInizialmente, boolean isFile, boolean isProperty, boolean isFieldAssociato) {
+        this(descrizione, isAccesoInizialmente, isFile, isProperty, isFieldAssociato, VUOTA, VUOTA);
+    }
+
+    /**
+     * Costruttore parziale <br>
+     */
+    AEPackage(String descrizione, boolean isAccesoInizialmente, boolean isFile, boolean isProperty, boolean isFieldAssociato, String sourcesName, String suffix) {
+        this(descrizione, isAccesoInizialmente, isFile, isProperty, isFieldAssociato, sourcesName, suffix, VUOTA, VUOTA);
+    }
 
     /**
      * Costruttore completo <br>
      */
-    AEPackage(String tag, String descrizione, boolean accesoInizialmente) {
-        this.tag = tag;
+    AEPackage(String descrizione, boolean isAccesoInizialmente, boolean isFile, boolean isProperty, boolean isFieldAssociato, String sourcesName, String suffix, String field, String fieldName) {
         this.descrizione = descrizione;
-        this.accesoInizialmente = accesoInizialmente;
-        this.acceso = accesoInizialmente;
+        this.isAccesoInizialmente = isAccesoInizialmente;
+        this.isAcceso = isAccesoInizialmente;
+        this.isFile = isFile;
+        this.isProperty = isProperty;
+        this.isFieldAssociato = isFieldAssociato;
+        this.sourcesName = sourcesName;
+        this.suffix = suffix;
+        this.field = field;
+        this.fieldName = fieldName;
     }
 
     /**
@@ -62,23 +122,52 @@ public enum AEPackage {
         System.out.println("");
     }
 
+
+    public boolean is() {
+        return isAcceso;
+    }
+
     public String getDescrizione() {
         return descrizione;
     }
 
     public boolean isAccesoInizialmente() {
-        return accesoInizialmente;
+        return isAccesoInizialmente;
     }
 
-    public boolean is() {
-        return acceso;
+    public boolean isAcceso() {
+        return isAcceso;
     }
 
     public void setAcceso(boolean acceso) {
-        this.acceso = acceso;
+        isAcceso = acceso;
     }
 
-    public String getTag() {
-        return tag;
+    public boolean isFile() {
+        return isFile;
+    }
+
+    public boolean isProperty() {
+        return isProperty;
+    }
+
+    public boolean isFieldAssociato() {
+        return isFieldAssociato;
+    }
+
+    public String getSourcesName() {
+        return sourcesName;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }// end of enumeration class

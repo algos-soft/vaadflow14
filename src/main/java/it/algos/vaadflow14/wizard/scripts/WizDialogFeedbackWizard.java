@@ -47,11 +47,11 @@ public class WizDialogFeedbackWizard extends WizDialog {
 
 
         if (!AEFlag.isBaseFlow.is()) {
-            pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.getValue(), "algos");
-            pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.getValue(), "operativi");
+            pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.get(), "algos");
+            pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.get(), "operativi");
             topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di questo progetto su %s", pathWizard, pathModuloBase)));
 
-            pathSources = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.getValue(), AEWizCost.dirVaadFlow14.getValue());
+            pathSources = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), AEWizCost.dirVaadFlow14.get());
             topLayout.add(text.getLabelGreenBold(String.format("Non modifica la sub-directory %s esistente su %s", pathSources, pathModuloBase)));
 
             topLayout.add(text.getLabelRedBold("Le modifiche sono irreversibili"));

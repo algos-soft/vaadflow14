@@ -51,7 +51,7 @@ public class @ENTITY@Service extends AService {
      * Eventuali regolazioni iniziali delle property <br>
      * Senza properties per compatibilità con la superclasse <br>
      *
-     * @return la nuova entityBean appena creata (non salvata)
+     * @return la nuova entityBean appena creata (non salvata
      */
     @Override
     public @ENTITY@ newEntity() {

@@ -1,25 +1,22 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.dialog.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.notification.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.annotation.*;
 
-import java.io.File;
-import java.util.LinkedHashMap;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_WIDTH;
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -341,8 +338,8 @@ public abstract class WizDialog extends Dialog {
         String packageName;
         AEToken.reset();
 
-        projectName = AEDir.nameTargetProject.get();
-        packageName = AEDir.nameTargetPackage.get();
+        projectName = AEWizCost.projectCurrent.get();
+        packageName = AEWizCost.nameTargetPackage.get();
         return wizService.regolaAEToken(projectName, packageName);
     }
 
@@ -398,7 +395,7 @@ public abstract class WizDialog extends Dialog {
                 this.close();
                 return;
             }
-//            wizService.printInfoCompleto("Uscita del dialogo");
+            //            wizService.printInfoCompleto("Uscita del dialogo");
 
             this.close();
             wizRecipient.esegue();

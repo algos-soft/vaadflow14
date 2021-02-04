@@ -1277,7 +1277,6 @@ public class AFileService extends AAbstractService {
         return scriveFile(pathFileToBeWritten, testo, sovrascrive, FlowCost.VUOTA);
     }
 
-
     /**
      * Scrive un file
      * Se non esiste, lo crea
@@ -1288,6 +1287,20 @@ public class AFileService extends AAbstractService {
      * @param directory           da cui iniziare il path per il messaggio di avviso
      */
     public AIResult scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory) {
+        return scriveFile(pathFileToBeWritten, testo, sovrascrive, directory, false);
+    }
+
+    /**
+     * Scrive un file
+     * Se non esiste, lo crea
+     *
+     * @param pathFileToBeWritten nome completo del file
+     * @param testo               contenuto del file
+     * @param sovrascrive         anche se esiste già
+     * @param directory           da cui iniziare il path per il messaggio di avviso
+     * @param stampaInfo          flag per usare il logger
+     */
+    public AIResult scriveFile(String pathFileToBeWritten, String testo, boolean sovrascrive, String directory, boolean stampaInfo) {
         AIResult result = AResult.errato();
         String message = FlowCost.VUOTA;
         File fileToBeWritten;
@@ -1298,12 +1311,16 @@ public class AFileService extends AAbstractService {
             if (sovrascrive) {
                 sovraScriveFile(pathFileToBeWritten, testo);
                 message = "Il file: " + path + " esisteva già ed è stato aggiornato";
-                logger.info(message, this.getClass(), "scriveFile");
+                if (stampaInfo) {
+                    logger.info(message, this.getClass(), "scriveFile");
+                }
                 result = AResult.valido(message);
             }
             else {
                 message = "Il file: " + path + " esisteva già e non è stato modificato";
-                logger.info(message, this.getClass(), "scriveFile");
+                if (stampaInfo) {
+                    logger.info(message, this.getClass(), "scriveFile");
+                }
                 result = AResult.errato(message);
             }
         }

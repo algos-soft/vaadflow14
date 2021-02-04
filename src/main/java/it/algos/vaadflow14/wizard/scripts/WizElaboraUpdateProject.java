@@ -28,8 +28,8 @@ public class WizElaboraUpdateProject extends WizElabora {
     }
 
     public void copyRoot() {
-        String srcPath = AEWizCost.pathVaadFlow14Root.getValue();
-        String destPath = AEWizCost.pathTargetProjectRoot.getValue();
+        String srcPath = AEWizCost.pathVaadFlow14Root.get();
+        String destPath = AEWizCost.pathTargetProjectRoot.get();
         String value;
         String message;
         AECopyWiz copyWiz;
@@ -39,7 +39,7 @@ public class WizElaboraUpdateProject extends WizElabora {
         for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
                 copyWiz = aeWizCost.getCopyWiz();
-                value = aeWizCost.getValue();
+                value = aeWizCost.get();
                 directory = aeWizCost.getPathBreve();
 
                 if (text.isEmpty(value)) {
@@ -54,13 +54,9 @@ public class WizElaboraUpdateProject extends WizElabora {
                         wizService.copyDir(copyWiz, srcPath+value, destPath + value, directory);
                         break;
                     case fileSovrascriveSempreAncheSeEsiste:
-                        wizService.creaFile(aeWizCost.getCopyWiz(), value, destPath + value, AEWizCost.projectCurrent.getValue().toLowerCase());
-                        break;
                     case fileSoloSeNonEsiste:
-                        wizService.creaFile(aeWizCost.getCopyWiz(), value, destPath + value, AEWizCost.projectCurrent.getValue().toLowerCase());
-                        break;
                     case fileCheckFlagSeEsiste:
-                        wizService.creaFile(aeWizCost.getCopyWiz(), value, destPath + value, AEWizCost.projectCurrent.getValue().toLowerCase());
+                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
                         break;
                     case sourceSovrascriveSempreAncheSeEsiste:
                     case sourceSoloSeNonEsiste:

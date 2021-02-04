@@ -1,18 +1,14 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEToken;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NEW_PACKAGE;
 
 /**
  * Project provider
@@ -66,8 +62,8 @@ public class WizDialogNewPackage extends WizDialog {
         selezioneLayout.add(fieldPackageName);
 
         //@todo Funzionalità ancora da implementare- Non riesco a sincronizzarlo
-//        confirmButton.setEnabled(false);
-//        addListener();
+        //        confirmButton.setEnabled(false);
+        //        addListener();
     }
 
 
@@ -85,18 +81,10 @@ public class WizDialogNewPackage extends WizDialog {
     @Override
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
-        Checkbox unCheckbox;
 
-        //--regola tutti i checkbox
-        AECheck.reset();
-        for (AECheck check : AECheck.getUpdatePackage()) {
-            check.setAcceso(check.isAccesoInizialmente());
+        for (AEPackage pack : AEPackage.values()) {
+            mappaWizBox.put(pack.name(), new WizBox(pack));
         }
-
-        for (AECheck check : AECheck.getNewPackage()) {
-            mappaWizBox.put(check.name(), new WizBox(check));
-        }
-
         super.addCheckBoxMap();
     }
 
@@ -131,6 +119,25 @@ public class WizDialogNewPackage extends WizDialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected boolean regolaAEWizCost() {
+        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
+            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
+            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+        }
+        AEWizCost.printInfo();
+
+        return true;
+    }
+
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
      * Resetta i valori regolabili della Enumeration AEDir <br>
      * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
      * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
@@ -138,16 +145,16 @@ public class WizDialogNewPackage extends WizDialog {
      */
     protected boolean regolaAEDir() {
         boolean status = true;
-        String packageName;
-        super.regolaAEDir();
-
-        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            packageName = fieldPackageName.getValue().toLowerCase();
-            status = AEDir.modificaPackageAll(packageName);
-        }
-        else {
-            status = false;
-        }
+        //        String packageName;
+        //        super.regolaAEDir();
+        //
+        //        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+        //            packageName = fieldPackageName.getValue().toLowerCase();
+        //            status = AEDir.modificaPackageAll(packageName);
+        //        }
+        //        else {
+        //            status = false;
+        //        }
 
         return status;
     }

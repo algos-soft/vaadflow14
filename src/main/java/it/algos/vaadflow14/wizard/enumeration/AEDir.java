@@ -401,7 +401,7 @@ public enum AEDir {
             String filePath = pathTargetPackage.get();
 
             filePath += text.primaMaiuscola(packageName);
-            filePath += SERVICE_SUFFIX;
+            filePath += SUFFIX_SERVICE;
             filePath += JAVA_SUFFIX;
 
             this.setValue(filePath);
@@ -417,7 +417,7 @@ public enum AEDir {
             String filePath = pathTargetPackage.get();
 
             filePath += text.primaMaiuscola(packageName);
-            filePath += LOGIC_SUFFIX;
+            filePath += SUFFIX_LOGIC;
             filePath += JAVA_SUFFIX;
 
             this.setValue(filePath);

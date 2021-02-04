@@ -51,6 +51,8 @@ public enum AECheck {
 
     entity("Entity base del package", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, true),
 
+    menu("Inserimento del package nel menu", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, true),
+
     service("Service specifico del package", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, true),
 
     logic("Business logic del package", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, true),
