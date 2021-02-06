@@ -38,6 +38,15 @@ public class WizService {
     @Autowired
     public ATextService text;
 
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AArrayService array;
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -96,15 +105,11 @@ public class WizService {
         AEWizCost.projectCurrent.setValue(project);
 
         //--isBaseFlow
-        boolean isBaseFlow = false;
         String dirProject = file.estraeDirectoryFinale(pathCurrent);
-        isBaseFlow = dirProject.equals(AEWizCost.dirVaadFlow14.get());
-        if (!isBaseFlow) {
-            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        }
-        AEFlag.isBaseFlow.set(isBaseFlow);
+        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        AEFlag.isBaseFlow.set(dirProject.equals(AEWizCost.dirVaadFlow14.get()));
     }
 
 
@@ -515,7 +520,7 @@ public class WizService {
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 if (newHeader.trim().equals(oldHeader.trim())) {
                     message = String.format("Documentazione - Non è stato modificato il file standard %s nel package %s", nameSourceText, packageName);
-                    risultato = AResult.valido(message);
+                    risultato = AResult.errato(message);
                 }
                 else {
                     realText = text.sostituisce(realText, oldHeader, newHeader);
@@ -898,15 +903,52 @@ public class WizService {
 
     /**
      * Lista dei packages esistenti nel target project <br>
+     * Controlla che non sia una directory di raggruppamento. Nel caso entra nelle sub-directories <br>
+     * Prende il nome della directory di livello più interno <br>
      */
     public List<String> getPackages() {
         List<String> packages = new ArrayList<>();
         String path = AEWizCost.pathTargetProjectPackages.get();
+
         if (text.isValid(path)) {
-            packages = file.getSubDirectoriesName(path);
+            packages = getLastSubDirNames(path);
+        }
+
+        if (array.isEmpty(packages)) {
+            logger.log(AETypeLog.wizard, "Non ci sono packages");
         }
 
         return packages;
+    }
+
+
+    /**
+     * Estrae l'ultimo livello di sub-directories da una directory <br>
+     *
+     * @param pathDirectoryToBeScanned nome completo della directory
+     */
+    public List<String> getLastSubDirNames(String pathDirectoryToBeScanned) {
+        List<String> pathSubDirName = new ArrayList<>();
+        List<File> pathSubDir = file.getSubDirectories(pathDirectoryToBeScanned);
+        List<File> pathSubSub;
+        List<String> pathSubSubName = new ArrayList<>();
+
+        if (pathSubDir != null) {
+            for (File subDir : pathSubDir) {
+                pathSubSub = file.getSubDirectories(subDir.getAbsolutePath());
+                if (pathSubSub != null && pathSubSub.size() > 0) {
+                    pathSubSubName = getLastSubDirNames(subDir.getAbsolutePath());
+                    for (String nome : pathSubSubName) {
+                        pathSubDirName.add(subDir.getName() + SLASH + nome);
+                    }
+                }
+                else {
+                    pathSubDirName.add(subDir.getName());
+                }
+            }
+        }
+
+        return pathSubDirName;
     }
 
     /**

@@ -528,24 +528,33 @@ public abstract class WizElabora implements WizRecipient {
     }
 
     /**
+     * Il packageName può arrivare maiuscolo o minuscolo <br>
+     * Il packageName può arrivare con degli slash <br>
+     * fileName è la parte terminale di packageName dopo lo slash <br>
+     * upperName è la parte terminale di packageName dopo lo slash con la prima maiuscola <br>
+     * pathFileToBeWritten è il path completo con upperName, il suffisso del package ed il suffisso java <br>
+     *
      * @param inizioFile per la modifica dell'header
      */
     protected AIResult elaboraDoc(String packageName, AEPackage pack, boolean inizioFile) {
         AIResult risultato = AResult.errato();
+        String fileName;
+        String upperName;
+        String pathFileToBeWritten;
         String message;
-        String upperName = text.primaMaiuscola(packageName);
-        String fileName = upperName + pack.getSuffix();
 
-        AEWizCost.nameTargetPackage.setValue(packageName);
-        AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(packageName));
-        AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+        fileName = packageName.contains("/") ? text.levaTestoPrimaDi(packageName, FlowCost.SLASH) : packageName;
+        fileName = fileName.toLowerCase();
+        upperName = text.primaMaiuscola(fileName);
 
-        String pathFileToBeWritten = AEWizCost.pathTargetPackage.get();
-        pathFileToBeWritten += fileName + FlowCost.JAVA_SUFFIX;
+        AEWizCost.nameTargetPackage.setValue(fileName);
+        AEWizCost.nameTargetPackageUpper.setValue(upperName);
+        AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
+        pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + upperName + pack.getSuffix() + FlowCost.JAVA_SUFFIX;
 
         if (file.isEsisteFile(pathFileToBeWritten)) {
-            wizService.regolaAEToken(AEWizCost.projectCurrent.get(), packageName);
-            risultato = wizService.fixDocFile( packageName,text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", pathFileToBeWritten, inizioFile);
+            wizService.regolaAEToken(AEWizCost.projectCurrent.get(), fileName);
+            risultato = wizService.fixDocFile(packageName, text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", pathFileToBeWritten, inizioFile);
         }
         else {
             message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", packageName);
