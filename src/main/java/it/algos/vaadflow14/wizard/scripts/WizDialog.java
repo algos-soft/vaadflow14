@@ -276,8 +276,8 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAEWizCost();
         status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
-        status = status && this.regolaAEToken();
         status = status && this.regolaAEPackage();
+        status = status && this.regolaAEToken();
 
         return status;
     }
@@ -350,12 +350,26 @@ public abstract class WizDialog extends Dialog {
      * WizElaboraNewProject, WizElaboraUpdateProject, WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      */
     protected boolean regolaAEPackage() {
-        for (AEPackage pack : AEPackage.values()) {
-            if (mappaWizBox != null && mappaWizBox.get(pack.name()) != null) {
-                pack.setAcceso(mappaWizBox.get(pack.name()).is());
-            }
+        WizBox wizBox;
+        String fieldName;
+
+        if (mappaWizBox == null) {
+            return false;
         }
 
+        for (AEPackage pack : AEPackage.values()) {
+            wizBox = mappaWizBox.get(pack.name());
+            if (wizBox != null) {
+                pack.setAcceso(wizBox.is());
+                if (pack.isProperty()) {
+                    fieldName = wizBox.getValue();
+                    if (text.isValid(fieldName)) {
+                        pack.setFieldName(fieldName);
+                    }
+                }
+            }
+        }
+        AEPackage.printInfo("test");
         return true;
     }
 

@@ -2,6 +2,7 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -186,7 +187,7 @@ public class WizService {
      * @param directory da cui iniziare il pathBreve del messaggio
      */
     public void copyDir(final AECopyWiz copyWiz, final String srcPath, final String destPath, final String directory) {
-        String message = FlowCost.VUOTA;
+        String message = VUOTA;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
         String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrent.get().toLowerCase();
@@ -397,8 +398,8 @@ public class WizService {
 
     private void copy(final AECopyWiz copyWiz, final String pathFileToBeWritten, final String sourceTextElaborato, final String firstDir, String type) {
         AIResult result;
-        String message = FlowCost.VUOTA;
-        String messageFile = FlowCost.VUOTA;
+        String message = VUOTA;
+        String messageFile = VUOTA;
         boolean esisteFileDest = false;
         String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrent.get().toLowerCase();
         String pathBreve = file.findPathBreve(pathFileToBeWritten, dirPath);
@@ -476,12 +477,14 @@ public class WizService {
      * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      * Modifica il file col path e suffisso indicati <br>
      *
+     * @param packageName         nome della directory per il package in esame
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      * @param inizioFile          per la modifica dell'header
      */
-    public void fixDocFile(String nameSourceText, String pathFileToBeWritten, boolean inizioFile) {
-        String message;
+    public AIResult fixDocFile(String packageName, String nameSourceText, String pathFileToBeWritten, boolean inizioFile) {
+        AIResult risultato = AResult.errato();
+        String message = VUOTA;
         String tagIni = inizioFile ? "package" : "* <p>";
         String tagEnd = "@AIScript(";
         String oldHeader;
@@ -492,32 +495,48 @@ public class WizService {
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
-            return;
+            return risultato;
         }
 
         sourceText = elaboraFileCreatoDaSource(sourceText);
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a elaborare i tokens del file " + path, this.getClass(), "fixDocFile");
-            return;
+            return risultato;
         }
 
         if (!file.isEsisteFile(pathFileToBeWritten)) {
             logger.warn("Non esiste il file " + path, this.getClass(), "fixDocFile");
-            return;
+            return risultato;
         }
 
         if (realText.contains(tagIni) && realText.contains(tagEnd)) {
             oldHeader = realText.substring(realText.indexOf(tagIni), realText.indexOf(tagEnd));
             newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
-                realText = text.sostituisce(realText, oldHeader, newHeader);
+                if (newHeader.trim().equals(oldHeader.trim())) {
+                    message = String.format("Documentazione - Non è stato modificato il file standard %s nel package %s", nameSourceText, packageName);
+                    risultato = AResult.valido(message);
+                }
+                else {
+                    realText = text.sostituisce(realText, oldHeader, newHeader);
+                    risultato = file.scriveFile(pathFileToBeWritten, realText, true, FlowCost.DIR_PACKAGES);
+                    if (risultato.isValido()) {
+                        message = String.format("Documentazione - Il file standard %s nel package %s è stato aggiornato", nameSourceText, packageName);
+                        risultato = AResult.valido(message);
+                    }
+                }
             }
-            file.scriveFile(pathFileToBeWritten, realText, true, FlowCost.DIR_PACKAGES);
+            else {
+                message = String.format("Documentazione - Non sono riuscito a elaborare il file %s" + path);
+                logger.log(AETypeLog.wizard, message);
+            }
         }
         else {
-            message = String.format("Documentazione - Manca il tag @AIScript nel file %s", path);
-            logger.info(message, this.getClass(), "fixDocFile");
+            message = String.format("Documentazione - Manca il tag @AIScript nel file %s che non è stato modificato", path);
+            logger.log(AETypeLog.wizard, message);
         }
+
+        return risultato;
     }
 
     //    /**
@@ -666,7 +685,7 @@ public class WizService {
      * @return testo nella forma 'LocalDate.of(2020, 10, 19)'
      */
     public String fixVersionDate() {
-        String testoData = FlowCost.VUOTA;
+        String testoData = VUOTA;
         LocalDate dataAttuale = LocalDate.now();
 
         testoData = "LocalDate.of(";
@@ -772,7 +791,7 @@ public class WizService {
     public AIResult checkFileCanBeModified(String pathFileToBeChecked) {
         AIResult result = AResult.errato();
         int risultato = 0;
-        String oldText = FlowCost.VUOTA;
+        String oldText = VUOTA;
 
         if (!file.isEsisteFile(pathFileToBeChecked)) {
             result = AResult.errato();
@@ -882,7 +901,7 @@ public class WizService {
      */
     public List<String> getPackages() {
         List<String> packages = new ArrayList<>();
-        String path = AEDir.pathTargetAllPackages.get();
+        String path = AEWizCost.pathTargetProjectPackages.get();
         if (text.isValid(path)) {
             packages = file.getSubDirectoriesName(path);
         }
@@ -932,9 +951,9 @@ public class WizService {
         AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
         AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
         AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-        AEToken.keyProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : FlowCost.VUOTA);
-        AEToken.searchProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : FlowCost.VUOTA);
-        AEToken.sortProperty.setValue(AEPackage.ordine.is() ? AEPackage.ordine.getFieldName().toLowerCase() : AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : FlowCost.VUOTA);
+        AEToken.keyProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
+        AEToken.searchProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
+        AEToken.sortProperty.setValue(AEPackage.ordine.is() ? AEPackage.ordine.getFieldName().toLowerCase() : AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
         AEToken.rowIndex.setValue(AEPackage.rowIndex.is() ? "true" : "false");
         AEToken.properties.setValue(fixProperties());
         AEToken.propertyOrdineName.setValue(AEPackage.ordine.getFieldName().toLowerCase());
@@ -960,8 +979,8 @@ public class WizService {
     }
 
     protected String fixProperty(AEPackage pack) {
-        String testo = FlowCost.VUOTA;
-        String sourceText = FlowCost.VUOTA;
+        String testo = VUOTA;
+        String sourceText = VUOTA;
         String tagSources = pack.getSourcesName();
 
         if (pack.is()) {
@@ -974,7 +993,7 @@ public class WizService {
 
 
     protected String fixProperties() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.ordine.is()) {
             testo += AEPackage.ordine.getFieldName() + FlowCost.VIRGOLA;
@@ -997,7 +1016,7 @@ public class WizService {
     }
 
     protected String fixPropertiesRinvio() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.ordine.is()) {
             testo += "0" + FlowCost.VIRGOLA_SPAZIO;
@@ -1019,7 +1038,7 @@ public class WizService {
     }
 
     protected String fixPropertiesDoc() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
         String sep = FlowCost.A_CAPO + FlowCost.TAB + FlowCost.SPAZIO;
 
         if (AEPackage.ordine.is()) {
@@ -1042,7 +1061,7 @@ public class WizService {
     }
 
     protected String fixPropertiesParams() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.ordine.is()) {
             testo += String.format("final int %s" + FlowCost.VIRGOLA_SPAZIO, AEPackage.ordine.getFieldName());
@@ -1065,7 +1084,7 @@ public class WizService {
     }
 
     protected String fixPropertiesBuild() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
         String sep = FlowCost.A_CAPO + FlowCost.A_CAPO + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB;
 
         if (AEPackage.ordine.is()) {
@@ -1088,9 +1107,9 @@ public class WizService {
     }
 
     protected String fixCreaIfNotExist() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
         String tagSources = "MethodCreaIfNotExist";
-        String sourceText = FlowCost.VUOTA;
+        String sourceText = VUOTA;
 
         if (AEPackage.code.is()) {
             sourceText = this.leggeFile(tagSources);
@@ -1101,9 +1120,8 @@ public class WizService {
     }
 
 
-
     protected String fixCodeDoc() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.code.is()) {
             testo += String.format("* @param %s di riferimento (obbligatorio, unico)", AEPackage.code.getFieldName());
@@ -1113,7 +1131,7 @@ public class WizService {
     }
 
     protected String fixCodeParams() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.code.is()) {
             testo += String.format("final String %s", AEPackage.code.getFieldName());
@@ -1123,7 +1141,7 @@ public class WizService {
     }
 
     protected String fixCodeRinvio() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
 
         if (AEPackage.ordine.is()) {
             testo += "0" + FlowCost.VIRGOLA_SPAZIO;
@@ -1145,9 +1163,9 @@ public class WizService {
     }
 
     protected String fixNewEntityUnica() {
-        String testo = FlowCost.VUOTA;
+        String testo = VUOTA;
         String tagSources = "MethodNewEntityKeyUnica";
-        String sourceText = FlowCost.VUOTA;
+        String sourceText = VUOTA;
 
         if (AEPackage.code.is() && (AEPackage.ordine.is() || AEPackage.description.is() || AEPackage.valido.is())) {
             sourceText = this.leggeFile(tagSources);
@@ -1173,16 +1191,16 @@ public class WizService {
     }
 
     protected String fixVersion() {
-        String versione = FlowCost.VUOTA;
+        String versione = VUOTA;
         String tag = "LocalDate.of(";
         String anno;
         String mese;
         String giorno;
         LocalDate localDate = LocalDate.now();
 
-        anno = localDate.getYear() + FlowCost.VUOTA;
-        mese = localDate.getMonth().getValue() + FlowCost.VUOTA;
-        giorno = localDate.getDayOfMonth() + FlowCost.VUOTA;
+        anno = localDate.getYear() + VUOTA;
+        mese = localDate.getMonth().getValue() + VUOTA;
+        giorno = localDate.getDayOfMonth() + VUOTA;
         versione = tag + anno + FlowCost.VIRGOLA + mese + FlowCost.VIRGOLA + giorno + ")";
 
         return versione;

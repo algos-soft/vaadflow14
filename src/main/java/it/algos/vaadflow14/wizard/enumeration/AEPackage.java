@@ -3,6 +3,8 @@ package it.algos.vaadflow14.wizard.enumeration;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
+import java.util.*;
+
 /**
  * Project alfa
  * Created by Algos
@@ -109,6 +111,18 @@ public enum AEPackage {
         this.fieldName = fieldName;
     }
 
+    public static List<AEPackage> getFiles() {
+        List<AEPackage> listaPackages = new ArrayList<>();
+
+        for (AEPackage pack : AEPackage.values()) {
+            if (pack.isFile()) {
+                listaPackages.add(pack);
+            }
+        }
+
+        return listaPackages;
+    }
+
     /**
      * Visualizzazione di controllo <br>
      */
@@ -117,9 +131,15 @@ public enum AEPackage {
         System.out.println("AEPackage  - " + posizione);
         System.out.println("********************");
         for (AEPackage pack : AEPackage.values()) {
-            System.out.println("AEPackage." + pack.name() + "  = " + pack.is());
+            System.out.print("AEPackage.");
+            System.out.print(pack.name()+ ": ");
+            System.out.print("Acceso=");
+            System.out.print(pack.is());
+            System.out.print(" FieldName=");
+            System.out.print(pack.fieldName);
+            System.out.println(VUOTA);
         }
-        System.out.println("");
+        System.out.println(VUOTA);
     }
 
 
@@ -169,5 +189,9 @@ public enum AEPackage {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 }// end of enumeration class

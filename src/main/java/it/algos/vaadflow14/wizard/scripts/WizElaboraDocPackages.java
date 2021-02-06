@@ -1,8 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -21,9 +20,7 @@ public class WizElaboraDocPackages extends WizElabora {
      */
     @Override
     public void esegue() {
-        if (AEFlag.isDocPackages.is()) {
-            super.fixDocPackage(true);
-        }
+        super.fixDocPackage(false);
     }
 
 }

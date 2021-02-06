@@ -130,7 +130,7 @@ public class WizDialogNewPackage extends WizDialog {
             AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
             AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
         }
-        AEWizCost.printInfo();
+//        AEWizCost.printInfo();
 
         return true;
     }

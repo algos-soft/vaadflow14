@@ -40,6 +40,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
     @Override
     protected void creaTopLayout() {
         String pathWizard;
+        String pathProject;
         String pathModuloBase;
         String pathSources;
         topLayout = fixSezione(TITOLO_FEEDBACK_PROGETTO, "green");
@@ -48,8 +49,9 @@ public class WizDialogFeedbackWizard extends WizDialog {
 
         if (!AEFlag.isBaseFlow.is()) {
             pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.get(), "algos");
+            pathProject = file.findPathBreve(AEWizCost.projectCurrent.get(), "algos");
             pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.get(), "operativi");
-            topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di questo progetto su %s", pathWizard, pathModuloBase)));
+            topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di %s su %s", pathWizard, pathProject, pathModuloBase)));
 
             pathSources = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), AEWizCost.dirVaadFlow14.get());
             topLayout.add(text.getLabelGreenBold(String.format("Non modifica la sub-directory %s esistente su %s", pathSources, pathModuloBase)));
@@ -69,6 +71,16 @@ public class WizDialogFeedbackWizard extends WizDialog {
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
         confirmButton.setEnabled(true);
+    }
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola tutti i valori delle enumeration AEDir, AECheck e EAToken che saranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     */
+    @Override
+    protected boolean regolazioniFinali() {
+        return true;
     }
 
 }

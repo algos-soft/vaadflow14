@@ -34,7 +34,7 @@ public class WizBox extends HorizontalLayout {
 
     public WizBox(AEPackage pack) {
         checkbox = new ACheckBox(pack.getDescrizione());
-        this.setValue(pack.isAccesoInizialmente());
+        this.setValue(pack.isAcceso());
         this.add(checkbox);
         fieldCaption = pack.getFieldName();
 

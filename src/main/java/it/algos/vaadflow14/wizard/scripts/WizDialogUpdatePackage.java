@@ -1,19 +1,17 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.wizard.enumeration.AECheck;
-import it.algos.vaadflow14.wizard.enumeration.AEDir;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -25,6 +23,12 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WizDialogUpdatePackage extends WizDialog {
+
+
+    /**
+     * Sezione superiore,coi titoli e le info <br>
+     */
+    protected HorizontalLayout propertyLayout;
 
     /**
      * Apertura del dialogo <br>
@@ -106,40 +110,52 @@ public class WizDialogUpdatePackage extends WizDialog {
         super.creaCheckBoxLayout();
         Checkbox unCheckbox;
 
-        //--regola tutti i checkbox
-        AECheck.reset();
-
-        for (AECheck check : AECheck.getUpdatePackage()) {
-            mappaWizBox.put(check.name(), new WizBox(check));
+        for (AEPackage pack : AEPackage.values()) {
+            mappaWizBox.put(pack.name(), new WizBox(pack));
         }
+        super.addCheckBoxMap();
+
+        //        //--regola tutti i checkbox
+        //        AECheck.reset();
+
+        //        for (AECheck check : AECheck.getUpdatePackage()) {
+        //            mappaWizBox.put(check.name(), new WizBox(check));
+        //        }
 
         unCheckbox = mappaWizBox.get(AECheck.rowIndex.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroRow(); });
         unCheckbox = mappaWizBox.get(AECheck.ordine.name()).getBox();
         unCheckbox.addValueChangeListener(e -> { sincroOrdine(); });
+
         //        unCheckbox = mappaWizBox.get(AECheck.docFile.name()).getBox();
         //        unCheckbox.addValueChangeListener(e -> { sincroDocPackage(); });
 
         super.addCheckBoxMap();
+        propertyLayout = new HorizontalLayout();
+        this.add(propertyLayout);
     }
 
     /**
      * legge i nomi dei 4 fields base (int, String, String, boolean) (se ci sono)
      */
-    private void leggeFieldsEsistenti(String packageName) {
-        String nameSourceText = AEDir.pathTargetAllPackages.get() + packageName + FlowCost.SLASH + text.primaMaiuscola(packageName) + FlowCost.JAVA_SUFFIX;
+    private int leggeFieldsBaseEsistenti(String packageName) {
+        int tot = 0;
+        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
         String sourceText = file.leggeFile(nameSourceText);
 
-        check(sourceText, AETypeField.integer, "int", 1, AECheck.ordine);
-        check(sourceText, AETypeField.text, "String", 1, AECheck.code);
-        check(sourceText, AETypeField.text, "String", 2, AECheck.descrizione);
-        check(sourceText, AETypeField.booleano, "boolean", 1, AECheck.valido);
+        tot = pack(sourceText, AETypeField.integer, "int", 1, AEPackage.ordine) ? tot + 1 : tot;
+        tot = pack(sourceText, AETypeField.text, "String", 1, AEPackage.code) ? tot + 1 : tot;
+        tot = pack(sourceText, AETypeField.text, "String", 2, AEPackage.description) ? tot + 1 : tot;
+        tot = pack(sourceText, AETypeField.booleano, "boolean", 1, AEPackage.valido) ? tot + 1 : tot;
+
+        return tot;
     }
 
     /**
      * Controlla se nel file AEntity esiste una property del tipo indicato (nella posizione) <br>
      */
-    private void check(String sourceText, AETypeField type, String tag, int pos, AECheck check) {
+    private boolean pack(String sourceText, AETypeField type, String tag, int pos, AEPackage pack) {
+        boolean esiste = false;
         String tagType = "type = AETypeField." + type.name();
         String tagIni = "public " + tag;
         String tagEnd = FlowCost.PUNTO_VIRGOLA;
@@ -147,8 +163,8 @@ public class WizDialogUpdatePackage extends WizDialog {
         int posEnd = 0;
         String fieldName;
 
-        check.setAcceso(false);
-        check.setFieldName(VUOTA);
+        pack.setAcceso(false);
+        pack.setFieldName(VUOTA);
 
         if (sourceText.contains(tagType)) {
             posIni = sourceText.indexOf(tagType);
@@ -162,12 +178,28 @@ public class WizDialogUpdatePackage extends WizDialog {
             fieldName = sourceText.substring(posIni, posEnd).trim();
 
             if (text.isValid(fieldName)) {
-                check.setAcceso(true);
-                check.setFieldName(fieldName);
+                pack.setAcceso(true);
+                pack.setFieldName(fieldName);
+                esiste = true;
             }
         }
+
+        return esiste;
     }
 
+    /**
+     * conto le properties esistenti
+     */
+    private int contaFieldsTotaliEsistenti(String packageName) {
+        int tot = 0;
+        String tag = "@AIField\\(type";
+
+        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
+        String sourceText = file.leggeFile(nameSourceText);
+
+        tot = sourceText.split(tag).length - 1;
+        return tot;
+    }
 
     protected void sincroRow() {
         Checkbox checkRow = mappaWizBox.get(AECheck.rowIndex.name()).getBox();
@@ -218,13 +250,23 @@ public class WizDialogUpdatePackage extends WizDialog {
 
 
     private void sincroProject(String packageName) {
-        leggeFieldsEsistenti(packageName);
-
-        for (AECheck check : AECheck.getUpdatePackage()) {
-            mappaWizBox.put(check.name(), new WizBox(check));
+        int fields = 0;
+        if (text.isValid(packageName)) {
+            AEWizCost.nameTargetPackage.setValue(packageName);
+            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(packageName));
+            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
         }
+        fields = leggeFieldsBaseEsistenti(packageName);
 
+        for (AEPackage pack : AEPackage.values()) {
+            mappaWizBox.put(pack.name(), new WizBox(pack));
+        }
         super.addCheckBoxMap();
+
+        propertyLayout.removeAll();
+        if (contaFieldsTotaliEsistenti(packageName) > fields) {
+            propertyLayout.add(text.getLabelRedBold("Attenzione ci sono altri fields che verrebbero cancellati"));
+        }
 
         confirmButton.setEnabled(text.isValid(packageName));
     }

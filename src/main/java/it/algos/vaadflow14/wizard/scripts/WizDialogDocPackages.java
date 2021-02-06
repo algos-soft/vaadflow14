@@ -1,8 +1,8 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEPackage;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -61,7 +61,7 @@ public class WizDialogDocPackages extends WizDialog {
         mappaWizBox = new LinkedHashMap<>();
 
         //--regola tutti i checkbox
-        for (AEPackage pack : AEPackage.values()) {
+        for (AEPackage pack : AEPackage.getFiles()) {
             mappaWizBox.put(pack.name(), new WizBox(pack));
             mappaWizBox.get(pack.name()).getBox().addValueChangeListener(e -> {
                 sincroDoc();
@@ -88,6 +88,25 @@ public class WizDialogDocPackages extends WizDialog {
         cancelButton.getElement().setAttribute("theme", "primary");
         confirmButton.getElement().setAttribute("theme", "error");
     }
+
+//    /**
+//     * Chiamato alla dismissione del dialogo <br>
+//     * Regola i valori regolabili della Enumeration AEWizCost <br>
+//     * Verranno usati da: <br>
+//     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected boolean regolaAEWizCost() {
+//        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+//            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
+//            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
+//            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+//        }
+//                AEWizCost.printInfo();
+//
+//        return true;
+//    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>
