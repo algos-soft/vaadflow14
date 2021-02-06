@@ -26,6 +26,7 @@ import javax.validation.constraints.NotBlank;
  * Time: 06:48
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @SpringComponent
 @QueryEntity

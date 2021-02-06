@@ -1,6 +1,6 @@
 package it.algos.security.ui.springsecurity;
 
-import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.packages.security.utente.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.ui.security.CustomRequestCache;
 import it.algos.vaadflow14.ui.security.SecurityUtils;

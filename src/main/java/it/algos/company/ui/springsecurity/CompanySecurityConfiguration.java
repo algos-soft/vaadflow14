@@ -1,11 +1,10 @@
 package it.algos.company.ui.springsecurity;
 
-import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.packages.security.utente.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.ui.security.CustomRequestCache;
 import it.algos.vaadflow14.ui.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;

@@ -1,28 +1,22 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.data.renderer.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.enumeration.AEContinente;
-import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
-import it.algos.vaadflow14.backend.packages.geografica.continente.ContinenteService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.TRE_PUNTI;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -33,10 +27,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class StatoService extends AService {
 
 

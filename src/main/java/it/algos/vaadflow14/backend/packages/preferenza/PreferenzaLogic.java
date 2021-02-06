@@ -1,28 +1,21 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.data.FlowData;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.WrapForm;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.ui.form.*;
+import it.algos.vaadflow14.ui.header.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.TAG_FLOW_DATA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -31,35 +24,16 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Date: mar, 25-ago-2020
  * Time: 21:30
  * <p>
- * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
- * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza può essere richiamata con: <br>
- * 1) @Autowired private PreferenzaLogic ; <br>
- * 2) StaticContextAccessor.getBean(PreferenzaLogic.class, operationForm) (con parametro) <br>
- * 3) appContext.getBean(PreferenzaLogic.class, operationForm) (preceduto da @Autowired ApplicationContext appContext) <br>
+ * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
+ * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
+ * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
- * <p>
- * Le preferenze memorizzate nella collezione del mongoDB sono di due tipi:
- * A - Standard, inserite all'avvio del programma prendendole dalla enumeration AEPreferenza <br>
- * B - Specifiche, inserite all'avvio del programma prendendole da una enumeration specifica <br>
- * <p>
- * Ogni preferenza ha alcuni field chiave: <br>
- * A - 'code' per individuare e selezionare la preferenza richiesta; se usaCompany = true, DEVE contenere anche la sigla della company <br>
- * B - 'descrizione' per individuare lo scopo ed il funzionamento della preferenza <br>
- * C - 'type' per suddividere le preferenze secondo la enumeration AETypePref <br>
- * D - 'value' per memorizzare il valore nel mongoDB sotto forma di byte[], convertiti secondo il 'type' <br>
- * <p>
- * Funzionamento:
- * 1 - Quando parte il programma la prima volta (quando è vuota la collection 'preferenza' sul mongoDB), vengono create
- * TUTTE le preferenze 'standard' e 'specifiche' provenienti dalle enumeration
- * 2 - Quando il programma parte le volte successive (quando la collection 'preferenza' sul mongoDB non è vuota),
- * vengono create tutte e sole le preferenze ('standard' e 'specifiche').
- * NON presenti. Quelli presenti NON vengono modificate.
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@AIScript(sovraScrivibile = false)
 public class PreferenzaLogic extends ALogic {
 
     /**

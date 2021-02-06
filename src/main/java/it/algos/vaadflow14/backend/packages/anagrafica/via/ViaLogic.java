@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.AIService;
 import it.algos.vaadflow14.ui.header.AlertWrap;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Scope;
  * Date: gio, 10-set-2020
  * Time: 11:30
  * <p>
- * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
- * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+ * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
+ * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
+ * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>

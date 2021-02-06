@@ -1,21 +1,18 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.address;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import lombok.*;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.mapping.*;
+
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -25,6 +22,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Time: 20:21
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @SpringComponent
 @QueryEntity
@@ -34,7 +32,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderAddress")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Address")
 @AIView(menuIcon = VaadinIcon.COG)

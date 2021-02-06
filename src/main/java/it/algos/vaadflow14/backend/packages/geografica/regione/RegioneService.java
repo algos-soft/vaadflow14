@@ -1,25 +1,19 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import it.algos.vaadflow14.backend.enumeration.AEStatus;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.*;
+import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -30,10 +24,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class RegioneService extends AService {
 
 

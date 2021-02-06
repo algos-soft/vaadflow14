@@ -31,6 +31,7 @@ import javax.validation.constraints.Size;
  * Time: 11:29
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @SpringComponent
 @QueryEntity
@@ -40,7 +41,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderProvincia")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")

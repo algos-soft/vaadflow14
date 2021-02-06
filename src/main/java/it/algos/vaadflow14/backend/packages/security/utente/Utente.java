@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.security;
+package it.algos.vaadflow14.backend.packages.security.utente;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -31,6 +31,7 @@ import java.util.Collection;
  * Time: 07:09
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @SpringComponent
 @QueryEntity

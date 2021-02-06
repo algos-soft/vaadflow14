@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.geografica.continente;
+package it.algos.vaadflow14.backend.packages.anagrafica.address;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -13,8 +13,8 @@ import org.springframework.stereotype.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: lun, 21-dic-2020
- * Time: 20:37
+ * Date: sab, 06-feb-2021
+ * Time: 21:22
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
@@ -23,7 +23,7 @@ import org.springframework.stereotype.*;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class ContinenteService extends AService {
+public class AddressService extends AService {
 
 
     /**
@@ -36,69 +36,59 @@ public class ContinenteService extends AService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public ContinenteService() {
-        super(Continente.class);
+    public AddressService() {
+        super(Address.class);
     }
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entityBean con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
      *
-     * @param aeContinente enumeration per la creazione-reset di tutte le entities
+     * @param keyPropertyValue obbligatorio
      *
-     * @return la nuova entity appena creata e salvata
+     * @return la nuova entityBean appena creata e salvata
      */
-    public Continente creaIfNotExist(final AEContinente aeContinente) {
-        return creaIfNotExist(aeContinente.getOrd(), aeContinente.getNome(), aeContinente.isAbitato());
-    }
+//    @Override
+//    public Address creaIfNotExist(final String keyPropertyValue) {
+//        return (Address) checkAndSave(newEntity(keyPropertyValue));
+//    }
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param nome obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Continente creaIfNotExist(final int ordine, final String nome, final boolean abitato) {
-        return (Continente) checkAndSave(newEntity(ordine, nome, abitato));
-    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * Senza properties per compatibilità con la superclasse <br>
      *
-     * @return la nuova entity appena creata (non salvata)
+     * @return la nuova entityBean appena creata (non salvata)
      */
     @Override
-    public Continente newEntity() {
-        return newEntity(0, VUOTA, true);
+    public Address newEntity() {
+        return newEntity(0, VUOTA);
     }
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @return la nuova entity appena creata (non salvata)
+     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
+     * @param code   (obbligatorio, unico)
+     *
+     * @return la nuova entityBean appena creata (non salvata)
      */
-    public Continente newEntity(final int ordine, final String nome, final boolean abitato) {
-        Continente newEntityBean = Continente.builderContinente()
-
-                .ordine(ordine > 0 ? ordine : getNewOrdine())
-
-                .nome(text.isValid(nome) ? nome : null)
-
-                .abitato(abitato)
+    public Address newEntity(final int ordine, final String code) {//@TODO: Le properties riportate sono INDICATIVE e debbono essere sostituite
+        Address newEntityBean = Address.builderAddress()
 
                 .build();
 
-        return (Continente) fixKey(newEntityBean);
+        return (Address) fixKey(newEntityBean);
     }
-
 
     /**
      * Retrieves an entity by its id.
@@ -110,8 +100,8 @@ public class ContinenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Continente findById(final String keyID) {
-        return (Continente) super.findById(keyID);
+    public Address findById(final String keyID) {
+        return (Address) super.findById(keyID);
     }
 
 
@@ -125,10 +115,9 @@ public class ContinenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Continente findByKey(final String keyValue) {
-        return (Continente) super.findByKey(keyValue);
+    public Address findByKey(final String keyValue) {
+        return (Address) super.findByKey(keyValue);
     }
-
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -157,9 +146,10 @@ public class ContinenteService extends AService {
             return result;
         }
 
-        for (AEContinente aeContinente : AEContinente.values()) {
-            numRec = creaIfNotExist(aeContinente) != null ? numRec + 1 : numRec;
-        }
+        //--da sostituire
+        String message;
+        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "Address", "AddressService");
+//        return AResult.errato(message);
 
         return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }

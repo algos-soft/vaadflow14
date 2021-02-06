@@ -19,7 +19,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.packages.utility.Versione;
+import it.algos.vaadflow14.backend.packages.utility.versione.Versione;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;

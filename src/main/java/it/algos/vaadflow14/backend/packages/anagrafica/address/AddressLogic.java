@@ -1,24 +1,20 @@
-package it.algos.vaadflow14.backend.packages.crono.mese;
+package it.algos.vaadflow14.backend.packages.anagrafica.address;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.header.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 31-lug-2020
- * Time: 22:07
+ * Date: sab, 06-feb-2021
+ * Time: 21:22
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -30,7 +26,7 @@ import java.util.List;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class MeseLogic extends CronoLogic {
+public class AddressLogic extends ALogic {
 
 
     /**
@@ -48,8 +44,20 @@ public class MeseLogic extends CronoLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public MeseLogic(AIService entityService, AEOperation operationForm) {
+    public AddressLogic(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
+    }
+
+
+    /**
+     * Preferenze standard <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Può essere sovrascritto <br>
+     * Invocare PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
     }
 
 
@@ -62,16 +70,7 @@ public class MeseLogic extends CronoLogic {
      */
     @Override
     protected AlertWrap getAlertWrapList() {
-        List<String> blu = new ArrayList<>();
-        List<String> red = new ArrayList<>();
-
-        blu.add("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");
-        blu.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
-        if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'");
-        }
-
-        return new AlertWrap(null, blu, red, false);
+        return new AlertWrap("Test.");
     }
 
 }

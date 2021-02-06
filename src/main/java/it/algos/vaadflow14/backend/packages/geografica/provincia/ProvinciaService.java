@@ -1,22 +1,18 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import it.algos.vaadflow14.backend.enumeration.AEStato;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETypeProvincia;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneService;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -27,10 +23,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class ProvinciaService extends AService {
 
 

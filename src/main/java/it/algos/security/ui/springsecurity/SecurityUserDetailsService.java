@@ -2,7 +2,7 @@ package it.algos.security.ui.springsecurity;
 
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.packages.security.utente.Utente;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;

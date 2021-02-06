@@ -1,19 +1,15 @@
-package it.algos.vaadflow14.backend.packages.security;
+package it.algos.vaadflow14.backend.packages.security.utente;
 
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AERole;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.logic.AService;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.company.CompanyService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.MONGO_FIELD_USER;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import org.springframework.stereotype.*;
 
 /**
  * Project vaadflow14
@@ -24,10 +20,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class UtenteService extends AService {
 
 

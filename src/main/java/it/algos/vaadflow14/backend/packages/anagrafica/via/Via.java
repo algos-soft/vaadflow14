@@ -24,8 +24,7 @@ import javax.validation.constraints.Size;
  * Time: 10:58
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Al lancio del programma, se la collection è vuota, carica una enumeration di valori standard <br>
- * La collection può poi venire incrementata con valori custom <br>
+ * Le properties sono PUBLIC per poter usare la Reflection <br>
  */
 @SpringComponent
 @QueryEntity

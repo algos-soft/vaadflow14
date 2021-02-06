@@ -4,7 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import it.algos.vaadflow14.backend.enumeration.AERole;
 import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.security.Utente;
+import it.algos.vaadflow14.backend.packages.security.utente.Utente;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
