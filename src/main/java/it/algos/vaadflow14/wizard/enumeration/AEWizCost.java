@@ -221,13 +221,32 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirPackages("Nome della directory packages", "backend/packages/"),
+    dirPackages("Nome della directory packages del modulo target", "backend/packages/"),
 
     /**
      * Percorso della directory packages. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectPackages("Directory target packages", pathTargetProjectModulo.value + dirPackages.value),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirApplication("Nome della directory application del modulo target", "backend/application/"),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirData("Nome della directory data del modulo target", "backend/data/"),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirUI("Nome della directory UI del modulo target", "backend/data/"),
+
 
     /**
      * Nome della directory sources. <br>
