@@ -77,7 +77,7 @@ public class WizElaboraUpdateProject extends WizElabora {
     }
 
     public void targetModulo() {
-        int a = 87;
+       super.creaModuloProgetto();
     }
 
 }

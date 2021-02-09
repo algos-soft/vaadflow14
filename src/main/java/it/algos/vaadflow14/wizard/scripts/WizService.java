@@ -409,7 +409,7 @@ public class WizService {
         String messageFile = VUOTA;
         boolean esisteFileDest = false;
         String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrent.get().toLowerCase();
-        String pathBreve = file.findPathBreve(pathFileToBeWritten, dirPath);
+        String pathBreve = file.findPathBreveDa(pathFileToBeWritten, dirPath);
         String esistenza;
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
