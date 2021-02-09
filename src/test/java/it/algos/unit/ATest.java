@@ -1,31 +1,22 @@
 package it.algos.unit;
 
-import com.mongodb.BasicDBObject;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
+import com.mongodb.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import org.junit.jupiter.api.Assertions;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Query;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.junit.jupiter.api.*;
+import org.mockito.*;
+import org.slf4j.*;
+import org.springframework.context.*;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.*;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.time.*;
+import java.util.*;
 
 
 /**
@@ -85,6 +76,8 @@ public abstract class ATest {
     protected static Field FIELD_ORDINE;
 
     protected static Field FIELD_NOME;
+
+    protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
 
     /**
      * The App context.

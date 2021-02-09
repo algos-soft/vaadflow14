@@ -51,6 +51,8 @@ public abstract class WizCost {
 
     public static final String DIR_BACKEND = "backend/";
 
+    public static final String DIR_PACKAGES = "packages/";
+
     public static final String DIR_UI = "ui/";
 
     //--parte dal livello di root del progetto
@@ -132,8 +134,6 @@ public abstract class WizCost {
 
 
     public static final String DIR_APPLICATION = "application/";
-
-    public static final String DIR_PACKAGES = "packages/";
 
     public static final String DIR_BOOT = "boot/";
 

@@ -34,6 +34,12 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
+    projectCurrentLower("Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+
+    /**
+     * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
     projectCurrent("Nome del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
 
     /**
@@ -203,6 +209,18 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
+    dirBoot("Nome della directory boot", "backend/boot/"),
+
+    /**
+     * Percorso della directory boot. <br>
+     * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
+     */
+    pathTargetProjectBoot("Directory target boot", pathTargetProjectModulo.value + dirBoot.value),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
     dirPackages("Nome della directory packages", "backend/packages/"),
 
     /**
@@ -275,7 +293,7 @@ public enum AEWizCost {
      * Percorso del package. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetPackage("Directory del package da creare/modificare", VALORE_MANCANTE),
+    pathTargetSingoloPackage("Directory del package da creare/modificare", VALORE_MANCANTE),
 
     ;
 

@@ -20,14 +20,6 @@ public class WizElaboraUpdateProject extends WizElabora {
 
     @Override
     public void esegue() {
-        this.copyRoot();
-
-        //        if (AECheck.projectUpdate.is()) {
-        ////            super.creaModuloProgetto();
-        //        }
-    }
-
-    public void copyRoot() {
         String srcPath = AEWizCost.pathVaadFlow14Root.get();
         String destPath = AEWizCost.pathTargetProjectRoot.get();
         String value;
@@ -38,20 +30,26 @@ public class WizElaboraUpdateProject extends WizElabora {
 
         for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
+
+                if (aeWizCost == AEWizCost.pathTargetProjectModulo) {
+                    targetModulo();
+                    continue;
+                }
+
                 copyWiz = aeWizCost.getCopyWiz();
                 value = aeWizCost.get();
                 directory = aeWizCost.getPathBreve();
 
                 if (text.isEmpty(value)) {
                     logger.error(String.format("In AEWizCost.%s manca il valore del path", aeWizCost.name()));
-                    break;
+                    continue;
                 }
 
                 switch (copyWiz) {
                     case dirDeletingAll:
                     case dirAddingOnly:
                     case dirSoloSeNonEsiste:
-                        wizService.copyDir(copyWiz, srcPath+value, destPath + value, directory);
+                        wizService.copyDir(copyWiz, srcPath + value, destPath + value, directory);
                         break;
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileSoloSeNonEsiste:
@@ -77,4 +75,9 @@ public class WizElaboraUpdateProject extends WizElabora {
             }
         }
     }
+
+    public void targetModulo() {
+        int a = 87;
+    }
+
 }

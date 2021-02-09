@@ -15,13 +15,14 @@ import java.util.*;
  * Possibili componenti di un package
  */
 public enum AEPackage {
-    entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
 
-    menu("Inserimento del package nel menu", false, false, false, false),
+    entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
 
     logic("Business logic del package", true, true, false, false, SOURCE_LOGIC, SUFFIX_LOGIC),
 
     service("Service specifico del package", true, true, false, false, SOURCE_SERVICE, SUFFIX_SERVICE),
+
+    menu("Inserimento del package nel menu", true, false, false, false),
 
     //    list("List", false, "List specifico del package"),
     //

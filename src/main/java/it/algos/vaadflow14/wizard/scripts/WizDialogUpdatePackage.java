@@ -140,7 +140,7 @@ public class WizDialogUpdatePackage extends WizDialog {
      */
     private int leggeFieldsBaseEsistenti(String packageName) {
         int tot = 0;
-        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
+        String nameSourceText = AEWizCost.pathTargetSingoloPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
         String sourceText = file.leggeFile(nameSourceText);
 
         tot = pack(sourceText, AETypeField.integer, "int", 1, AEPackage.ordine) ? tot + 1 : tot;
@@ -194,7 +194,7 @@ public class WizDialogUpdatePackage extends WizDialog {
         int tot = 0;
         String tag = "@AIField\\(type";
 
-        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
+        String nameSourceText = AEWizCost.pathTargetSingoloPackage.get() + AEWizCost.nameTargetPackageUpper.get() + JAVA_SUFFIX;
         String sourceText = file.leggeFile(nameSourceText);
 
         tot = sourceText.split(tag).length - 1;
@@ -254,7 +254,7 @@ public class WizDialogUpdatePackage extends WizDialog {
         if (text.isValid(packageName)) {
             AEWizCost.nameTargetPackage.setValue(packageName);
             AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(packageName));
-            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+            AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
         }
         fields = leggeFieldsBaseEsistenti(packageName);
 

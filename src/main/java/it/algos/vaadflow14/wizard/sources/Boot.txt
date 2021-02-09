@@ -72,7 +72,7 @@ public class @MODULEUPPER@Boot extends FlowBoot {
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "@MODULEUPPER@";
         FlowVar.projectDescrizione = "Cambia questa descrizione nel file @MODULEUPPER@Boot";
-        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.@PROJECT@.version"));
+        FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.@PROJECTLOWER@.version"));
         FlowVar.versionDate = @VERSIONDATE@;
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
         FlowVar.usaCronoPackages = false;

@@ -101,6 +101,7 @@ public class WizService {
         AEWizCost.nameUser.setValue(user);
 
         String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+        AEWizCost.projectCurrentLower.setValue(project.toLowerCase());
         project = text.primaMaiuscola(project);
         AEWizCost.projectCurrent.setValue(project);
 
@@ -108,6 +109,7 @@ public class WizService {
         String dirProject = file.estraeDirectoryFinale(pathCurrent);
         AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
         AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
         AEFlag.isBaseFlow.set(dirProject.equals(AEWizCost.dirVaadFlow14.get()));
     }
@@ -981,6 +983,7 @@ public class WizService {
             AEToken.entity.setValue(text.primaMaiuscola(packageName));
         }
         AEToken.nameTargetProject.setValue(projectName);
+        AEToken.nameTargetProjectLower.setValue(projectName.toLowerCase());
         AEToken.projectNameUpper.setValue(projectName.toUpperCase());
         AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
         AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));

@@ -1825,7 +1825,7 @@ public class AFileService extends AAbstractService {
     /**
      * Estrae il path parziale da una directory indicata, escludendo il percorso iniziale <br>
      * <p>
-     * La directory indicata è l'ultima con quel nome <br>
+     * La directory indicata è la prima con quel nome <br>
      * Esegue solo se il path è valido
      * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
      * Elimina spazi vuoti iniziali e finali
@@ -1845,6 +1845,37 @@ public class AFileService extends AAbstractService {
         }
 
         pathCanonical = findPathCanonical(pathIn, directory);
+        if (text.isValid(pathCanonical)) {
+            pathBreve = prefix + pathCanonical;
+            pathBreve = text.levaCoda(pathBreve, FlowCost.SLASH);
+        }
+
+        return pathBreve;
+    }
+
+    /**
+     * Estrae il path parziale da una directory indicata, escludendo il percorso iniziale <br>
+     * <p>
+     * La directory indicata è l'ultima con quel nome <br>
+     * Esegue solo se il path è valido
+     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param pathIn    in ingresso
+     * @param directory da cui iniziare il path
+     *
+     * @return path parziale da una directory
+     */
+    public String findPathBreveDa(String pathIn, String directory) {
+        String pathBreve = pathIn;
+        String pathCanonical = FlowCost.VUOTA;
+        String prefix = "../";
+
+        if (text.isEmpty(directory)) {
+            return pathIn;
+        }
+
+        pathCanonical = findPathCanonicalDa(pathIn, directory);
         if (text.isValid(pathCanonical)) {
             pathBreve = prefix + pathCanonical;
             pathBreve = text.levaCoda(pathBreve, FlowCost.SLASH);
@@ -1875,6 +1906,37 @@ public class AFileService extends AAbstractService {
 
         if (pathIn.contains(directory)) {
             path = pathIn.substring(pathIn.lastIndexOf(directory));
+            if (path.startsWith(FlowCost.SLASH)) {
+                path = path.substring(1);
+            }
+        }
+
+        return path;
+    }
+
+
+    /**
+     * Estrae il path canonico da una directory indicata <br>
+     * <p>
+     * La directory indicata è l'ultima con quel nome <br>
+     * Esegue solo se il path è valido
+     * Se la directory indicata non esiste nel path, restituisce tutto il path completo <br>
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param pathIn    in ingresso
+     * @param directory da cui iniziare il path
+     *
+     * @return path parziale da una directory
+     */
+    public String findPathCanonicalDa(String pathIn, String directory) {
+        String path = FlowCost.VUOTA;
+
+        if (text.isEmpty(pathIn) || text.isEmpty(directory)) {
+            return pathIn;
+        }
+
+        if (pathIn.contains(directory)) {
+            path = pathIn.substring(pathIn.lastIndexOf(directory) + directory.length());
             if (path.startsWith(FlowCost.SLASH)) {
                 path = path.substring(1);
             }

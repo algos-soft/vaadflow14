@@ -1,21 +1,16 @@
 package it.algos.unit;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.enumeration.AECopy;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.junit.jupiter.api.*;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import static it.algos.vaadflow14.backend.service.AFileService.*;
+import org.apache.tomcat.util.http.fileupload.*;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -1485,7 +1480,7 @@ public class AFileServiceTest extends ATest {
         assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("recursionSubPathNames");
-        System.out.println("Ci sono "+lista.size()+" elementi misti files/directories");
+        System.out.println("Ci sono " + lista.size() + " elementi misti files/directories");
         System.out.println(VUOTA);
         for (String name : lista) {
             System.out.println(name);
@@ -1506,7 +1501,7 @@ public class AFileServiceTest extends ATest {
         assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubPathFiles");
-        System.out.println("Ci sono "+lista.size()+" files di vario tipo");
+        System.out.println("Ci sono " + lista.size() + " files di vario tipo");
         System.out.println(VUOTA);
         for (String name : lista) {
             System.out.println(name);
@@ -1527,7 +1522,7 @@ public class AFileServiceTest extends ATest {
         assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesJava");
-        System.out.println("Ci sono "+lista.size()+" files di tipo Java");
+        System.out.println("Ci sono " + lista.size() + " files di tipo Java");
         System.out.println(VUOTA);
         for (String name : lista) {
             System.out.println(name);
@@ -1547,21 +1542,21 @@ public class AFileServiceTest extends ATest {
         assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesEntity");
-        System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Vaadflow14");
+        System.out.println("Ci sono " + lista.size() + " files di tipo AEntity nel modulo Vaadflow14");
         System.out.println(VUOTA);
         for (String name : lista) {
             System.out.println(name);
         }
 
-         tag = "src/main/java/it/algos/simple/backend/packages";
-         unaDirectory = new File(tag);
-         pathName = unaDirectory.getAbsolutePath();
+        tag = "src/main/java/it/algos/simple/backend/packages";
+        unaDirectory = new File(tag);
+        pathName = unaDirectory.getAbsolutePath();
         lista = file.getAllSubFilesEntity(pathName);
 
         assertTrue(array.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubFilesEntity");
-        System.out.println("Ci sono "+lista.size()+" files di tipo AEntity nel modulo Simple");
+        System.out.println("Ci sono " + lista.size() + " files di tipo AEntity nel modulo Simple");
         System.out.println(VUOTA);
         for (String name : lista) {
             System.out.println(name);
@@ -1584,12 +1579,90 @@ public class AFileServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }
 
+    @Test
+    @Order(40)
+    @DisplayName("40 - findPathBreve")
+    public void findPathBreve() {
+        sorgente = PATH;
+        System.out.println("findPathBreve con la directory COMPRESA");
+        System.out.println(VUOTA);
+
+        sorgente2 = "mario";
+        previsto = sorgente;
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+
+        sorgente2 = "operativi";
+        previsto = "../operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+
+        sorgente2 = "it";
+        previsto = "../it/algos/vaadflow14/wizard";
+        ottenuto = file.findPathBreve(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(41)
+    @DisplayName("41 - findPathBreveDa")
+    public void findPathBreveDa() {
+        sorgente = PATH;
+        System.out.println("findPathBreve con la directory ESCLUSA");
+        System.out.println(VUOTA);
+
+        sorgente2 = "mario";
+        previsto = sorgente;
+        ottenuto = file.findPathBreveDa(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+
+        sorgente2 = "operativi";
+        previsto = "../vaadflow14/src/main/java/it/algos/vaadflow14/wizard";
+        ottenuto = file.findPathBreveDa(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+
+        sorgente2 = "it";
+        previsto = "../algos/vaadflow14/wizard";
+        ottenuto = file.findPathBreveDa(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(sorgente);
+        System.out.println(sorgente2);
+        System.out.println(ottenuto);
+    }
 
     private void printPath(String path, String dir, String pathOttenuto) {
         System.out.println("Path completo: " + path);
         System.out.println("Directory interessata: " + dir);
         System.out.println("Path che la contiene:  " + pathOttenuto);
-        System.out.println("");
+        System.out.println(VUOTA);
     }
 
     /**

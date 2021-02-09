@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.wizard.scripts;
 
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.DIR_PACKAGES;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -386,10 +387,14 @@ public abstract class WizElabora implements WizRecipient {
      * Creazione o modifica dei files previsti per il package <br>
      */
     protected void fixPackage() {
+        logger.log(AETypeLog.wizard, VUOTA);
         for (AEPackage pack : AEPackage.values()) {
             if (pack.is()) {
                 if (pack.isFile()) {
                     fixFile(pack);
+                }
+                if (pack == AEPackage.menu) {
+                    fixMenu();
                 }
             }
         }
@@ -402,7 +407,7 @@ public abstract class WizElabora implements WizRecipient {
     protected void fixFile(AEPackage pack) {
         String suffix = pack.getSuffix() + FlowCost.JAVA_SUFFIX;
         String nameSourceText = pack.getSourcesName();
-        String pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetPackageUpper.get();
+        String pathFileToBeWritten = AEWizCost.pathTargetSingoloPackage.get() + AEWizCost.nameTargetPackageUpper.get();
         pathFileToBeWritten += suffix;
 
         if (pack.is()) {
@@ -412,20 +417,10 @@ public abstract class WizElabora implements WizRecipient {
 
 
     /**
-     * Creazione del file nella directory dei packages <br>
-     * Creazione del menu nel file xxxBoot <br>
-     */
-    protected void fixEntity() {
-        //        this.fixFileEntity();
-        this.fixBoot();
-    }
-
-
-    /**
      * Creazione del menu nel file xxxBoot <br>
      * Aggiunta import necessario in testa al file <br>
      */
-    protected void fixBoot() {
+    protected void fixMenu() {
         this.fixBootMenu();
         this.fixBootImport();
     }
@@ -435,26 +430,36 @@ public abstract class WizElabora implements WizRecipient {
      * Creazione del menu nel file xxxBoot <br>
      */
     protected void fixBootMenu() {
-        String testo = VUOTA;
-        String tagOld = "super.fixMenuRoutes();";
-        String pack = AEDir.nameTargetPackageUpper.get();
-        String tagNew = "FlowVar.menuRouteList.add(" + pack + ".class);";
-        String pathError;
+        String message;
+        String oldText;
+        String newText;
+        String tagIni = "super.fixMenuRoutes();";
+        String nomeFileTextSorgente = "Boot";
+        String packageName = AEWizCost.nameTargetPackageUpper.get();
+        String tagNew = "FlowVar.menuRouteList.add(" + packageName + ".class);";
+        String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
+        pathFileBoot += AEWizCost.projectCurrent.get() + nomeFileTextSorgente;
+        String pathBreve = file.findPathBreve(pathFileBoot, DIR_BACKEND);
+        pathFileBoot += FlowCost.JAVA_SUFFIX;
 
-        String pathFileBoot = AEDir.fileTargetBoot.get();
-        testo = file.leggeFile(pathFileBoot);
-        pathError = file.findPathBreve(pathFileBoot, DIR_BACKEND);
+        oldText = file.leggeFile(pathFileBoot);
 
-        if (testo.contains(tagOld)) {
-            if (!testo.contains(tagNew)) {
-                tagNew = tagOld + FlowCost.A_CAPO + FlowCost.TAB + FlowCost.TAB + tagNew;
-                testo = testo.replace(tagOld, tagNew);
-                file.sovraScriveFile(pathFileBoot, testo);
-                logger.info("Aggiunto menuRoutes nel file " + pathError, this.getClass(), "fixBootMenu");
+        if (oldText.contains(tagIni)) {
+            if (!oldText.contains(tagNew)) {
+                tagNew = tagIni + FlowCost.A_CAPO + FlowCost.TAB + FlowCost.TAB + tagNew;
+                newText = oldText.replace(tagIni, tagNew);
+                file.sovraScriveFile(pathFileBoot, newText);
+                message = String.format("Aggiunto link alla Entity %s in %s.fixMenuRoutes()", packageName, pathBreve);
+                logger.log(AETypeLog.wizard, message);
+            }
+            else {
+                message = String.format("Esisteva già il riferimento alla Entity %s in %s.fixMenuRoutes()", packageName, pathBreve);
+                logger.log(AETypeLog.wizard, message);
             }
         }
         else {
-            logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootMenu");
+            message = String.format("Nel file %s manca un codice di riferimento essenziale", pathBreve);
+            logger.log(AETypeLog.wizard, message);
         }
     }
 
@@ -463,30 +468,41 @@ public abstract class WizElabora implements WizRecipient {
      * Aggiunta import necessario in testa al file <br>
      */
     protected void fixBootImport() {
-        String testo = VUOTA;
+        String message;
+        String oldText = VUOTA;
+        String newText = VUOTA;
+        String nomeFileTextSorgente = "Boot";
         String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
-        String project = AEDir.nameTargetProject.get();
-        String pack = AEDir.nameTargetPackage.get();
-        String clazz = AEDir.nameTargetPackageUpper.get();
+        String project = AEWizCost.projectCurrentLower.get();
+        String pack = AEWizCost.nameTargetPackage.get();
+        String clazz = AEWizCost.nameTargetPackageUpper.get();
+        String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
+        pathFileBoot += AEWizCost.projectCurrent.get() + nomeFileTextSorgente + FlowCost.JAVA_SUFFIX;
         String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
-        String pathError = VUOTA;
+        String pathEntity = AEWizCost.pathTargetSingoloPackage.get() + text.primaMaiuscola(pack);
+        String pathBreveEntity = file.findPathBreve(pathEntity, DIR_PACKAGES);
+        String pathBreveBoot = file.findPathBreve(pathFileBoot, DIR_BACKEND);
 
-        String pathFileBoot = AEDir.fileTargetBoot.get();
-        testo = file.leggeFile(pathFileBoot);
-        pathError = file.findPathBreve(pathFileBoot, DIR_BACKEND);
-
-        if (testo.contains(tagOld)) {
-            if (!testo.contains(tagNew)) {
+        oldText = file.leggeFile(pathFileBoot);
+        if (oldText.contains(tagOld)) {
+            if (!oldText.contains(tagNew)) {
                 tagNew = tagOld + FlowCost.A_CAPO + tagNew;
-                testo = testo.replace(tagOld, tagNew);
-                file.sovraScriveFile(pathFileBoot, testo);
-                logger.info("Aggiunto import della Entity nel file " + pathError, this.getClass(), "fixBootImport");
+                newText = oldText.replace(tagOld, tagNew);
+                file.sovraScriveFile(pathFileBoot, newText);
+                message = String.format("Aggiunto l'import di %s nel file %s", pathBreveEntity, pathBreveBoot);
+                logger.log(AETypeLog.wizard, message);
+            }
+            else {
+                message = String.format("Esisteva già l'import di %s nel file %s", pathBreveEntity, pathBreveBoot);
+                logger.log(AETypeLog.wizard, message);
             }
         }
         else {
-            logger.warn("Nel file " + pathError + " manca un codice di riferimento essenziale", this.getClass(), "fixBootImport");
+            message = String.format("Nel file %s manca un codice di riferimento essenziale", pathBreveBoot);
+            logger.log(AETypeLog.wizard, message);
         }
     }
+
 
     /**
      * Modifica della documentazione dei files di un package <br>
@@ -500,6 +516,7 @@ public abstract class WizElabora implements WizRecipient {
         String message = VUOTA;
         String projectName = AEDir.nameTargetProject.get();
 
+        logger.log(AETypeLog.wizard, VUOTA);
         for (String packageName : wizService.getPackages()) {
             numFiles = 0;
             status = status && wizService.regolaAEToken(projectName, packageName);
@@ -549,8 +566,8 @@ public abstract class WizElabora implements WizRecipient {
 
         AEWizCost.nameTargetPackage.setValue(fileName);
         AEWizCost.nameTargetPackageUpper.setValue(upperName);
-        AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
-        pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + upperName + pack.getSuffix() + FlowCost.JAVA_SUFFIX;
+        AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
+        pathFileToBeWritten = AEWizCost.pathTargetSingoloPackage.get() + upperName + pack.getSuffix() + FlowCost.JAVA_SUFFIX;
 
         if (file.isEsisteFile(pathFileToBeWritten)) {
             wizService.regolaAEToken(AEWizCost.projectCurrent.get(), fileName);
@@ -584,7 +601,7 @@ public abstract class WizElabora implements WizRecipient {
         file.creaDirectory(AEDir.pathTargetData.get());
 
         //--crea subDirectory packages (empty) in backend
-        file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + FlowCost.DIR_PACKAGES);
+        file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_BACKEND + DIR_PACKAGES);
 
         //--crea subDirectory ui (empty)
         file.creaDirectory(AEDir.pathTargetModulo.get() + DIR_UI);

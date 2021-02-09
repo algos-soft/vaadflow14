@@ -27,8 +27,8 @@ import javax.validation.constraints.Size;
  * Not annotated with @SpringComponent (inutile).  <br>
  * Not annotated with @Scope (inutile). Le istanze 'prototype' vengono generate da xxxService.newEntity() <br>
  * Not annotated with @Qualifier (inutile) <br>
- * Annotated with @QueryEntity (facoltativo) per specificare che si tratta di una collection (DB Mongo) <br>
- * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
+ * Annotated with @QueryEntity per specificare che si tratta di una collection (DB Mongo) <br>
+ * Annotated with @Document per avere un nome della collection (DB Mongo) eventualmente diverso dal nome della Entity <br>
  * Annotated with @TypeAlias (facoltativo) to replace the fully qualified class name with a different value. <br>
  * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
  * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications <br>

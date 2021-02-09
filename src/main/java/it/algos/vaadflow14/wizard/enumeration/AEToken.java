@@ -18,6 +18,8 @@ public enum AEToken {
 
     nameTargetProject("PROJECT", true),
 
+    nameTargetProjectLower("PROJECTLOWER", true),
+
     pathTargetProject(VUOTA, true),
 
     projectNameUpper("PROJECTALLUPPER", true),
