@@ -1,27 +1,22 @@
 package it.algos.security.ui.springsecurity;
 
-import it.algos.vaadflow14.backend.packages.security.utente.Utente;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import it.algos.vaadflow14.ui.security.CustomRequestCache;
-import it.algos.vaadflow14.ui.security.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.security.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.context.annotation.*;
+import org.springframework.security.config.annotation.authentication.builders.*;
+import org.springframework.security.config.annotation.web.builders.*;
+import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.*;
+import org.springframework.security.crypto.password.*;
+import org.springframework.security.web.authentication.*;
 
-import javax.annotation.PostConstruct;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN;
-import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN_ERROR;
+import javax.annotation.*;
 
 /**
  * Configures spring security, doing the following:
@@ -30,7 +25,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_LOGIN_
  * <li>Set up the login form,</li>
  * <li>Configures the {@link SecurityUserDetailsService}.</li>
  */
-@EnableWebSecurity
+//@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_PROCESSING_URL = "/" + ROUTE_NAME_LOGIN;

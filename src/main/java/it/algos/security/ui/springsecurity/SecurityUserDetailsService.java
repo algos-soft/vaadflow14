@@ -1,21 +1,17 @@
 package it.algos.security.ui.springsecurity;
 
-import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.security.utente.Utente;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.context.annotation.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.password.*;
+import org.springframework.stereotype.*;
 
-import java.util.Collection;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Implements the {@link UserDetailsService}.
@@ -41,7 +37,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
      *
      * @param uniqueUserName User's uniqueUserName
      */
-    @Override
+//    @Override
     public UserDetails loadUserByUsername(String uniqueUserName) throws UsernameNotFoundException {
         String passwordHash = VUOTA;
         Utente utente;
