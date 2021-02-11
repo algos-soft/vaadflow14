@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -1848,6 +1849,7 @@ public class AFileService extends AAbstractService {
         if (text.isValid(pathCanonical)) {
             pathBreve = prefix + pathCanonical;
             pathBreve = text.levaCoda(pathBreve, FlowCost.SLASH);
+            pathBreve = text.levaCoda(pathBreve, JAVA_SUFFIX);
         }
 
         return pathBreve;
@@ -1879,6 +1881,7 @@ public class AFileService extends AAbstractService {
         if (text.isValid(pathCanonical)) {
             pathBreve = prefix + pathCanonical;
             pathBreve = text.levaCoda(pathBreve, FlowCost.SLASH);
+            pathBreve = text.levaCoda(pathBreve, JAVA_SUFFIX);
         }
 
         return pathBreve;
@@ -2070,8 +2073,8 @@ public class AFileService extends AAbstractService {
 
         if (array.isAllValid(listaPathNamesOnlyFiles)) {
             for (String pathName : listaPathNamesOnlyFiles) {
-                if (pathName.endsWith(FlowCost.JAVA_SUFFIX)) {
-                    canonicalName = text.levaCoda(pathName, FlowCost.JAVA_SUFFIX);
+                if (pathName.endsWith(JAVA_SUFFIX)) {
+                    canonicalName = text.levaCoda(pathName, JAVA_SUFFIX);
                     canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
                     canonicalName = findPathCanonical(canonicalName, tag);
                     canonicalName = canonicalName.substring(1);

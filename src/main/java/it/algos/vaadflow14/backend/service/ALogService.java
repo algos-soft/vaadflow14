@@ -1,29 +1,23 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.server.VaadinSession;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AELogLivello;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.interfaces.AILogType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.*;
+import com.vaadin.flow.server.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.backend.service.AConsoleColorService.RESET;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import static it.algos.vaadflow14.backend.service.AConsoleColorService.*;
+import org.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import javax.annotation.*;
+import java.time.*;
+import java.time.format.*;
 
 
 /**
@@ -302,12 +296,21 @@ public class ALogService extends AAbstractService {
 
     /**
      * Gestisce un log generico <br>
-     * Di default usa il livello 'info' <br>
      *
      * @param message da registrare
      */
     public void log(AILogType type, String message) {
         info(type, message);
+    }
+
+    /**
+     * Gestisce un log generico <br>
+     * Di default usa il livello 'info' <br>
+     *
+     * @param result col messaggio da registrare
+     */
+    public void log(AILogType type, AIResult result) {
+        info(type, result.getMessage());
     }
 
 

@@ -2,6 +2,8 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +22,8 @@ public class WizElaboraUpdateProject extends WizElabora {
 
     @Override
     public void esegue() {
+        super.esegue();
+        AIResult result = AResult.errato();
         String srcPath = AEWizCost.pathVaadFlow14Root.get();
         String destPath = AEWizCost.pathTargetProjectRoot.get();
         String value;
@@ -61,7 +65,7 @@ public class WizElaboraUpdateProject extends WizElabora {
                     case sourceCheckFlagSeEsiste:
                         sourcesName = aeWizCost.getSourcesName();
                         if (text.isValid(sourcesName)) {
-                            wizService.creaFile(copyWiz, sourcesName, destPath + value, directory);
+                            result = wizService.creaFile(copyWiz, sourcesName, destPath + value, directory);
                         }
                         else {
                             message = String.format("Manca il nome del file sorgente in AEWizCost.%s", aeWizCost.name());
@@ -72,12 +76,13 @@ public class WizElaboraUpdateProject extends WizElabora {
                         logger.warn("Switch - caso non definito", this.getClass(), "copyRoot");
                         break;
                 }
+                logger.log(AETypeLog.wizard, "Update: " + result.getMessage());
             }
         }
     }
 
     public void targetModulo() {
-       super.creaModuloProgetto();
+        super.creaModuloProgetto();
     }
 
 }

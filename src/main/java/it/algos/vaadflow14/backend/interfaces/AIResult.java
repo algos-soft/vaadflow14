@@ -18,9 +18,13 @@ public interface AIResult {
 
     String getMessage();
 
+    void setMessage(String message);
+
     String getErrorMessage();
 
     String getValidationMessage();
+
+    void setValidationMessage(String message);
 
     int getValore();
 

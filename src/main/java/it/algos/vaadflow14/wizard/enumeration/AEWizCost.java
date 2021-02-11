@@ -233,6 +233,12 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
+    dirBackend("Nome della directory backend del modulo target", "backend/"),
+
+    /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
     dirApplication("Nome della directory application del modulo target", "backend/application/"),
 
     /**
@@ -245,7 +251,7 @@ public enum AEWizCost {
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirUI("Nome della directory UI del modulo target", "backend/data/"),
+    dirUI("Nome della directory UI del modulo target", "ui/"),
 
 
     /**

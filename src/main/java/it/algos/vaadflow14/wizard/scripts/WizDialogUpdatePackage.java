@@ -71,7 +71,7 @@ public class WizDialogUpdatePackage extends WizDialog {
         this.add(selezioneLayout);
 
         List<String> packages = wizService.getPackages();
-
+        Collections.sort(packages);
         String label = "Packages esistenti nella directory di questo progetto";
 
         if (array.isAllValid(packages)) {

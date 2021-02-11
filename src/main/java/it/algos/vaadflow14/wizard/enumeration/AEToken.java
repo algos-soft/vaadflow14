@@ -39,6 +39,9 @@ public enum AEToken {
     user("USER"),
 
     today("TODAY"),
+    todayAnno("TODAYANNO"),
+    todayMese("TODAYMESE"),
+    todayGiorno("TODAYGIORNO"),
 
     time("TIME"),
 

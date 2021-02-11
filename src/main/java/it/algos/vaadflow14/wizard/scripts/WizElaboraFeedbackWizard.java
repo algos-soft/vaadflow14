@@ -1,11 +1,11 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.DIR_VAADFLOW;
 
 /**
  * Project vaadflow
@@ -20,11 +20,22 @@ public class WizElaboraFeedbackWizard extends WizElabora {
 
     @Override
     public void esegue() {
+        super.esegue();
         super.isNuovoProgetto = false;
+        String srcPath ;
+        String destPath;
 
         this.copiaFileWizard();
-        this.copiaDirectoryEnumeration();
-        this.copiaDirectoryScripts();
+
+        //--enumeration
+        srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardEnumeration.get();
+        destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardEnumeration.get();
+        this.copiaDirectories(srcPath,destPath,"enum");
+
+        //--scripts
+        srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardScripts.get();
+        destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardScripts.get();
+        this.copiaDirectories(srcPath,destPath,"scripts");
     }
 
 
@@ -35,10 +46,14 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * I termini 'src' e 'dest', sono invertiti <br>
      */
     protected void copiaFileWizard() {
+        String message;
+        AECopyWiz copyWiz = AECopyWiz.fileSovrascriveSempreAncheSeEsiste;
+        String type = text.setTonde(copyWiz.name());
         String dirWizard = AEWizCost.dirRootWizard.get();
         String pathFile = dirWizard + AEWizCost.nameWizard.get();
         String srcPath = AEWizCost.pathTargetProjectRoot.get() + pathFile;
         String destPath = AEWizCost.pathVaadFlow14Root.get() + pathFile;
+        String pathBreve = file.findPathBreveDa(destPath, DIR_ALGOS);
 
         if (!file.isEsisteFile(srcPath)) {
             logger.warn("Errato il path per il file Wizard locale da ricopiare", this.getClass(), "copiaFileWizard");
@@ -48,51 +63,38 @@ public class WizElaboraFeedbackWizard extends WizElabora {
             logger.warn("Errato il path per il file Wizard da sostituire su VaadFlow14", this.getClass(), "copiaFileWizard");
         }
 
-        wizService.copyFile(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyFile(copyWiz, srcPath, destPath, DIR_VAADFLOW);
+        message = String.format("Feedback del file %s %s che è stato completamente sostituito.", pathBreve, type);
+        logger.log(AETypeLog.wizard, message);
     }
 
 
     /**
-     * Directory Enumeration <br>
-     * Ricopia la directory Wizard/Enumeration da questo progetto a VaadFlow <br>
-     * Sovrascrive completamente la directory Wizard/Enumeration esistente su VaadFlow che viene persa <br>
+     * Directory enumeration e scripts <br>
+     * Ricopia le directory Wizard/Enumeration da questo progetto a VaadFlow <br>
+     * Sovrascrive completamente la directory wizard/Enumeration esistente su VaadFlow che viene persa <br>
+     * Sovrascrive completamente la directory wizard/Scripts esistente su VaadFlow che viene persa <br>
      * I termini 'src' e 'dest', sono invertiti <br>
      */
-    protected void copiaDirectoryEnumeration() {
-        String srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardEnumeration.get();
-        String destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardEnumeration.get();
+    protected void copiaDirectories(String srcPath, String destPath, String tag) {
+        String message;
+        AECopyWiz copyWiz = AECopyWiz.dirDeletingAll;
+        String type = text.setTonde(copyWiz.name());
+        String pathBreve = file.findPathBreveDa(destPath, DIR_ALGOS);
 
         if (!file.isEsisteDirectory(srcPath)) {
-            logger.warn("Errato il path per la directory enum locale da ricopiare", this.getClass(), "copiaDirectoryEnumeration");
+            message = String.format("Errato il path per la directory %s locale da ricopiare.", tag);
+            logger.warn(message, this.getClass(), "copiaDirectoryEnumeration");
         }
 
         if (!file.isEsisteDirectory(destPath)) {
-            logger.warn("Errato il path per la directory enum da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryEnumeration");
+            message = String.format("Errato il path per la directory %s da sostituire su VaadFlow14.", tag);
+            logger.warn(message, this.getClass(), "copiaDirectoryEnumeration");
         }
 
-        wizService.copyDir(AECopyWiz.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
-    }
-
-
-    /**
-     * Directory Scripts <br>
-     * Ricopia la directory Wizard/Scripts da questo progetto a VaadFlow <br>
-     * Sovrascrive completamente la directory Wizard/Scripts esistente su VaadFlow che viene persa <br>
-     * I termini 'src' e 'dest', sono invertiti <br>
-     */
-    protected void copiaDirectoryScripts() {
-        String srcPath = AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirRootWizardScripts.get();
-        String destPath = AEWizCost.pathVaadFlow14Root.get() + AEWizCost.dirRootWizardScripts.get();
-
-        if (!file.isEsisteDirectory(srcPath)) {
-            logger.warn("Errato il path per la directory scripts locale da ricopiare", this.getClass(), "copiaDirectoryScripts");
-        }
-
-        if (!file.isEsisteDirectory(destPath)) {
-            logger.warn("Errato il path per la directory scripts da sostituire su VaadFlow14", this.getClass(), "copiaDirectoryScripts");
-        }
-
-        wizService.copyDir(AECopyWiz.dirDeletingAll, srcPath, destPath, DIR_VAADFLOW);
+        wizService.copyDir(copyWiz, srcPath, destPath, DIR_VAADFLOW);
+        message = String.format("Feedback della directory %s %s che è stata completamente sostituita.", pathBreve, type);
+        logger.log(AETypeLog.wizard, message);
     }
 
 }

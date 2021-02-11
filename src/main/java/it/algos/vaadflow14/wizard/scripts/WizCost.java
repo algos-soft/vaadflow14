@@ -8,6 +8,7 @@ package it.algos.vaadflow14.wizard.scripts;
  * Time: 05:09
  */
 public abstract class WizCost {
+
     public static final String VALORE_MANCANTE = "ATTENZIONE - Manca un valore indispensabile";
 
     //--flag per stampare info di debug
@@ -128,10 +129,10 @@ public abstract class WizCost {
     public static final String TITOLO_NEW_PACKAGE = "Nuovo package";
 
     public static final String TITOLO_UPDATE_PACKAGE = "Update package";
+
     public static final String TITOLO_DOC_PACKAGES = "Doc packages";
 
     public static final String TITOLO_FEEDBACK_PROGETTO = "Feedback di wizard";
-
 
     public static final String DIR_APPLICATION = "application/";
 
@@ -139,7 +140,7 @@ public abstract class WizCost {
 
     public static final String DIR_DATA = "data/";
 
-    public static final String APP_NAME = "application";
+    public static final String APP_NAME = "Application";
 
     public static final String FILE_READ = "README";
 
@@ -195,7 +196,6 @@ public abstract class WizCost {
     //--parte dal livello di root del progetto
     //--valida SOLO per progetto vaadFlow
     public static final String DIR_VAADFLOW_SOURCES = ROOT_DIR_ALGOS + PROJECT_VAADFLOW + "wizard/sources/";
-
 
 
 }

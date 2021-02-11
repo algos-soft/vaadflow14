@@ -50,6 +50,7 @@ public class WizElaboraNewPackage extends WizElabora {
      */
     @Override
     public void esegue() {
+        super.esegue();
         this.creaDirectory();
         super.fixPackage();
     }

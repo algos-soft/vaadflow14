@@ -79,6 +79,21 @@ public class AResult implements AIResult {
     }
 
     @Override
+    public void setValidationMessage(String message) {
+        validationMessage = message;
+    }
+
+    @Override
+    public void setMessage(String message) {
+        if (isValido()) {
+            validationMessage = message;
+        }
+        else {
+            errorMessage = message;
+        }
+    }
+
+    @Override
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -102,4 +117,5 @@ public class AResult implements AIResult {
             logger.log(typeLog, getErrorMessage());
         }
     }
+
 }

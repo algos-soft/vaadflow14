@@ -82,6 +82,9 @@ public class WizService {
         reset();
 
         fixAEWizCost();
+
+        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
+
         //        fixAEFlag();
         fixAEDir();
     }
@@ -228,7 +231,7 @@ public class WizService {
                 logger.warn("Switch - caso non definito", this.getClass(), "copyDir");
                 break;
         }
-        logger.log(AETypeLog.wizard, message);
+        //        logger.log(AETypeLog.wizard, message);
     }
 
 
@@ -342,8 +345,8 @@ public class WizService {
      * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      */
-    public void creaFilePackage(AECopyWiz typeCopy, String nameSourceText, String pathFileToBeWritten) {
-        creaFile(typeCopy, nameSourceText, pathFileToBeWritten, FlowCost.DIR_PACKAGES);
+    public AIResult creaFilePackage(AECopyWiz typeCopy, String nameSourceText, String pathFileToBeWritten) {
+        return creaFile(typeCopy, nameSourceText, pathFileToBeWritten, FlowCost.DIR_PACKAGES);
     }
 
     /**
@@ -365,7 +368,8 @@ public class WizService {
      * @param pathFileToBeWritten nome completo di suffisso del file da creare
      * @param firstDir            prima directory per troncare il path nel messaggio di avviso
      */
-    public void creaFile(final AECopyWiz copyWiz, final String nameSourceText, final String pathFileToBeWritten, final String firstDir) {
+    public AIResult creaFile(final AECopyWiz copyWiz, final String nameSourceText, final String pathFileToBeWritten, final String firstDir) {
+        AIResult result;
         String message;
         String sourceTextGrezzo;
         String sourceTextElaborato;
@@ -382,29 +386,32 @@ public class WizService {
         if (!file.isEsisteFile(AEWizCost.pathVaadFlow14WizSources.get(), fileName)) {
             message = String.format("Non sono riuscito a trovare il file sorgente %s %s", pathSource, type);
             logger.log(AETypeLog.wizard, message);
-            return;
+            return AResult.errato(message);
         }
 
         sourceTextGrezzo = leggeFile(fileName);
         if (text.isEmpty(sourceTextGrezzo)) {
             message = String.format("Non sono riuscito ad elaborare il file sorgente %s %s", pathSource, type);
             logger.log(AETypeLog.wizard, message);
-            return;
+            return AResult.errato(message);
         }
 
         sourceTextElaborato = elaboraFileCreatoDaSource(sourceTextGrezzo);
-        if (sourceTextGrezzo.matches(tagToken)) {
+        if (sourceTextElaborato.matches(tagToken)) {
             message = String.format("Non sono riuscito ad elaborare i tokens del file sorgente %s %s", pathSource, type);
             logger.log(AETypeLog.wizard, message);
-            return;
+            return AResult.errato(message);
         }
 
-        copy(copyWiz, pathFileToBeWritten, sourceTextElaborato, firstDir, type);
+        result = copy(copyWiz, pathFileToBeWritten, sourceTextElaborato, firstDir, type);
+        return result;
     }
 
 
-    private void copy(final AECopyWiz copyWiz, final String pathFileToBeWritten, final String sourceTextElaborato, final String firstDir, String type) {
-        AIResult result;
+    private AIResult copy(final AECopyWiz copyWiz, final String pathFileToBeWritten, final String sourceTextElaborato, final String firstDir, String type) {
+        AIResult result = AResult.errato();
+        AIResult resultCheck = AResult.errato();
+        AIResult resultScrive = AResult.errato();
         String message = VUOTA;
         String messageFile = VUOTA;
         boolean esisteFileDest = false;
@@ -417,60 +424,45 @@ public class WizService {
             case fileSovrascriveSempreAncheSeEsiste:
             case sourceSovrascriveSempreAncheSeEsiste:
                 if (esisteFileDest) {
-                    message = String.format("Il file %s %s esisteva già ma è stato riscritto", pathBreve, type);
+                    message = String.format("il file %s %s esisteva già ma è stato riscritto", pathBreve, type);
                 }
                 else {
-                    message = String.format("Il file %s %s non esisteva ed è stato creato", pathBreve, type);
+                    message = String.format("il file %s %s non esisteva ed è stato creato", pathBreve, type);
                 }
                 file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
                 break;
             case fileSoloSeNonEsiste:
             case sourceSoloSeNonEsiste:
                 if (esisteFileDest) {
-                    message = String.format("Il file %s %s esisteva già e non è stato modificato", pathBreve, type);
+                    message = String.format("il file %s %s esisteva già e non è stato modificato", pathBreve, type);
                 }
                 else {
                     file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
-                    message = String.format("Il file %s %s non esisteva ed è stato creato.", pathBreve, type);
+                    message = String.format("il file %s %s non esisteva ed è stato creato.", pathBreve, type);
                 }
                 break;
             case fileCheckFlagSeEsiste:
             case sourceCheckFlagSeEsiste:
                 if (esisteFileDest) {
-                    result = checkFileCanBeModified(pathFileToBeWritten);
-                    if (result.isValido()) {
-                        messageFile = result.getMessage();
-                        result = file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
-                        if (result.isValido()) {
-                            message = String.format("Il file %s %s esisteva ", pathBreve, type) + messageFile;
-                        }
-                        else {
-                            result.print(logger, AETypeLog.wizard);
-                            return;
-                        }
+                    resultCheck = checkFileCanBeModified(pathFileToBeWritten, pathBreve);
+                    if (resultCheck.isValido()) {
+                        file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
                     }
-                    else {
-                        esistenza = result.isValido() ? "esisteva" : "esiste già";
-                        message = String.format("Il file %s %s %s ", pathBreve, type, esistenza);
-                        message += result.getMessage();
-                    }
+                    result = resultCheck;
                 }
                 else {
-                    message = String.format("Il file %s %s non esisteva ed è stato creato.", pathBreve, type);
                     result = file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
-                    if (result.isValido()) {
-                        message = String.format("Il file %s %s non esisteva ed è stato creato", pathBreve, type);
-                    }
-                    else {
-                        message = result.getErrorMessage();
-                    }
+                    message = String.format("il file %s %s non esisteva ed è stato creato.", pathBreve, type);
+                    result.setValidationMessage(message);
                 }
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "creaFile");
                 break;
         }
-        logger.log(AETypeLog.wizard, message);
+
+        //        logger.log(AETypeLog.wizard, message);
+        return result;
     }
 
 
@@ -795,8 +787,9 @@ public class WizService {
      * .       3 il flag sovraScrivibile esiste ed è sovrascrivibile=false
      * .       4 il flag sovraScrivibile esiste ma non è ne true ne false
      */
-    public AIResult checkFileCanBeModified(String pathFileToBeChecked) {
+    public AIResult checkFileCanBeModified(String pathFileToBeChecked, String pathBreve) {
         AIResult result = AResult.errato();
+        String message;
         int risultato = 0;
         String oldText = VUOTA;
 
@@ -809,19 +802,24 @@ public class WizService {
             risultato = checkFlagSovrascrivibile(oldText);
             switch (risultato) {
                 case 0:
-                    result = AResult.valido("ma è stato modificato perché mancava il flag sovraScrivibile");
+                    message = String.format("il file %s esisteva ma è stato modificato perché mancava il flag sovraScrivibile.", pathBreve);
+                    result = AResult.valido(message);
                     break;
                 case 1:
-                    result = AResult.errato("col flag sovraScrivibile incompleto e non accetta modifiche");
+                    message = String.format("il file %s esiste già col flag sovraScrivibile incompleto e non accetta modifiche.", pathBreve);
+                    result = AResult.errato(message);
                     break;
                 case 2:
-                    result = AResult.valido("col flag sovraScrivibile=true ed è stato modificato");
+                    message = String.format("il file %s esisteva col flag sovraScrivibile=true ed è stato modificato.", pathBreve);
+                    result = AResult.valido(message);
                     break;
                 case 3:
-                    result = AResult.errato("col flag sovraScrivibile=false e non accetta modifiche");
+                    message = String.format("il file %s esiste già col flag sovraScrivibile=false e non accetta modifiche.", pathBreve);
+                    result = AResult.errato(message);
                     break;
                 case 4:
-                    result = AResult.errato("col flag sovraScrivibile ne true ne false e non accetta modifiche");
+                    message = String.format("il file %s esiste già col flag sovraScrivibile ne true ne false e non accetta modifiche.", pathBreve);
+                    result = AResult.errato(message);
                     break;
                 default:
                     logger.warn("Switch - caso non definito", this.getClass(), "checkFileCanBeModified");
@@ -991,6 +989,9 @@ public class WizService {
         AEToken.packageName.setValue(packageName);
         AEToken.user.setValue(AEWizCost.nameUser.get());
         AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
+        AEToken.todayAnno.setValue(String.valueOf(LocalDate.now().getYear()));
+        AEToken.todayMese.setValue(String.valueOf(LocalDate.now().getMonthValue()));
+        AEToken.todayGiorno.setValue(String.valueOf(LocalDate.now().getDayOfMonth()));
         AEToken.time.setValue(date.getOrario());
         AEToken.versionDate.setValue(fixVersion());
         AEToken.usaCompany.setValue(usaCompany ? "true" : "false");

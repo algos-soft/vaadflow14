@@ -22,6 +22,7 @@ public class WizElaboraUpdatePackage extends WizElabora {
      */
     @Override
     public void esegue() {
+        super.esegue();
         if (AEFlag.isUpdatePackage.is()) {
             super.fixPackage();
         }
