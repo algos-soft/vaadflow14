@@ -43,9 +43,19 @@ public enum AEWizCost {
     projectCurrent("Nome del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
 
     /**
-     * Root del progetto target. Hardcoded su di un singolo computer. <br>
-     * Valore standard che verrà controllato in funzione di AEDIR.pathCurrent effettivo <br>
-     * Potrebbe essere diverso <br>
+     * Nome del progetto target. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetProject("Nome del progetto target", VALORE_MANCANTE),
+
+    /**
+     * Nome minuscolo del progetto target. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetProjectLower("Nome minuscolo del progetto target", VALORE_MANCANTE),
+
+    /**
+     * Root del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectRoot("Path root del progetto target", VALORE_MANCANTE),
@@ -122,13 +132,13 @@ public enum AEWizCost {
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootConfig(String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly),
+    dirRootConfig(String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly, "", ""),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootDoc(String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirDeletingAll),
+    dirRootDoc(String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
@@ -149,7 +159,7 @@ public enum AEWizCost {
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootSnippets(String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirSoloSeNonEsiste),
+    dirRootSnippets(String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di modulo. <br>
@@ -200,10 +210,10 @@ public enum AEWizCost {
     pathVaadFlow14WizSources("Directory vaadflow14.wizard.sources", pathVaadFlow14Root.value + dirVaadFlow14WizardSources.value),
 
     /**
-     * Modulo del progetto target. Hardcoded su di un singolo computer. <br>
+     * Modulo del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectModulo("Directory nuovo MODULO di questo progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
+    pathTargetProjectModulo("Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella. <br>
@@ -252,7 +262,6 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
     dirUI("Nome della directory UI del modulo target", "ui/"),
-
 
     /**
      * Nome della directory sources. <br>
@@ -342,6 +351,8 @@ public enum AEWizCost {
 
     private AECopyWiz copyWiz;
 
+    private boolean isValida;
+
     //    /**
     //     * Costruttore parziale <br>
     //     */
@@ -391,7 +402,72 @@ public enum AEWizCost {
         this.newProject = newProject;
         this.updateProject = updateProject;
         this.accesoInizialmenteNew = accesoInizialmenteNew;
+        this.accesoInizialmenteNew = false;
         this.accesoInizialmenteUpdate = accesoInizialmenteUpdate;
+    }
+
+
+    public static List<AEWizCost> getNewProject() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.isNewProject()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public static List<AEWizCost> getUpdateProject() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.isUpdateProject()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+
+    public static List<AEWizCost> getNewUpdateProject() {
+        List<AEWizCost> listaWizCost;
+        if (AEFlag.isBaseFlow.is()) {
+            listaWizCost = AEWizCost.getNewProject();
+        }
+        else {
+            listaWizCost = AEWizCost.getUpdateProject();
+        }
+
+        return listaWizCost;
+    }
+
+    public static List<AEWizCost> getValide() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.value != null && aeWizCost.value.length() > 0 && !aeWizCost.value.startsWith(VALORE_MANCANTE)) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public static List<AEWizCost> getVuote() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.value != null && aeWizCost.value.length() > 0 && !aeWizCost.value.startsWith(VALORE_MANCANTE)) {
+            }
+            else {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
     }
 
     //--metodo statico invocato da Wizard.initView()
@@ -410,43 +486,18 @@ public enum AEWizCost {
         System.out.println(FlowCost.VUOTA);
     }
 
-    public static List<AEWizCost> getNewProject() {
-        List<AEWizCost> listaCost = new ArrayList<>();
 
-        for (AEWizCost aeCheck : AEWizCost.values()) {
-            if (aeCheck.isNewProject()) {
-                listaCost.add(aeCheck);
-            }
+    //--metodo statico
+    public static void printVuote() {
+        System.out.println(FlowCost.VUOTA);
+        System.out.println("********************");
+        System.out.println("Costanti statiche a cui manca ancora il valore");
+        System.out.println("********************");
+        for (AEWizCost aeWizCost : AEWizCost.getVuote()) {
+            System.out.println("AEWizCost." + aeWizCost.name() + ": " + aeWizCost.descrizione);
         }
-
-        return listaCost;
+        System.out.println(FlowCost.VUOTA);
     }
-
-    public static List<AEWizCost> getUpdateProject() {
-        List<AEWizCost> listaCost = new ArrayList<>();
-
-        for (AEWizCost aeCheck : AEWizCost.values()) {
-            if (aeCheck.isUpdateProject()) {
-                listaCost.add(aeCheck);
-            }
-        }
-
-        return listaCost;
-    }
-
-
-    public static List<AEWizCost> getNewUpdateProject() {
-        List<AEWizCost> listaCost;
-        if (AEFlag.isBaseFlow.is()) {
-            listaCost = AEWizCost.getNewProject();
-        }
-        else {
-            listaCost = AEWizCost.getUpdateProject();
-        }
-
-        return listaCost;
-    }
-
 
     public String getDescrizione() {
         return descrizione;

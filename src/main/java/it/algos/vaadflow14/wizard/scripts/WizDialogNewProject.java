@@ -1,20 +1,18 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.io.File;
-import java.util.List;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.NORMAL_HEIGHT;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_NUOVO_PROGETTO;
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -54,7 +52,8 @@ public class WizDialogNewProject extends WizDialog {
 
         if (check()) {
             this.inizia();
-        } else {
+        }
+        else {
             super.esceDalDialogo(false);
         }
     }
@@ -175,6 +174,38 @@ public class WizDialogNewProject extends WizDialog {
         confirmButton.setEnabled(valueFromProject != null);
     }
 
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected boolean regolaAEWizCost() {
+        File pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;
+
+        if (pathProjectFile == null || text.isEmpty(pathProjectFile.getAbsolutePath())) {
+            return false;
+        }
+
+        String pathProject = pathProjectFile.getAbsolutePath();
+        String nameProject = file.estraeClasseFinale(pathProject);
+        AEWizCost.nameTargetProject.setValue(text.primaMaiuscola(nameProject));
+        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
+        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+
+        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+            if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
+                aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
+            }
+        }
+        AEWizCost.printVuote();
+        AEWizCost.printInfo();
+        return true;
+    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>

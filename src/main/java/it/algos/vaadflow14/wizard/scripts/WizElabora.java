@@ -384,14 +384,11 @@ public abstract class WizElabora implements WizRecipient {
 
     public void creaModuloProgetto() {
         AIResult result;
-        boolean status = false;
         String message = VUOTA;
         String path = VUOTA;
-        String pathFile = VUOTA;
-        String project = AEWizCost.projectCurrent.get();
-        String pathModulo = AEWizCost.pathTargetProjectModulo.get();
-        String firstDir = AEWizCost.projectCurrentLower.get();
-        String pathBreve = file.findPathBreve(pathModulo, DIR_ALGOS);
+        String projectUpper = AEWizCost.nameTargetProject.get();
+        String projectLower = AEWizCost.nameTargetProjectLower.get();
+        String pathBreve;
 
         //--crea directory principale del modulo target (empty)
         //--crea subDirectory backend (empty)
@@ -402,19 +399,24 @@ public abstract class WizElabora implements WizRecipient {
         //--crea subDirectory ui (empty)
         for (AEModulo mod : AEModulo.getDirectories()) {
             path = mod.getAbsolutePath();
-            pathBreve = file.findPathBreveDa(path, DIR_ALGOS);
+            pathBreve = file.findPathBreveDa(path, projectLower);
+            if (pathBreve.equals(path)) {
+                pathBreve = "..";
+            }
+            pathBreve += FlowCost.SLASH;
+
             if (text.isEmpty(path) || path.equals(VALORE_MANCANTE)) {
-                message = String.format("Nel modulo %s manca il path della directory %s", project, mod.getTag());
+                message = String.format("Nel target %s manca il path della directory %s", projectUpper, mod.getTag());
                 logger.log(AETypeLog.wizard, message);
             }
             else {
                 if (file.isEsisteDirectory(path)) {
-                    message = String.format("Nel modulo %s esisteva già la directory %s ", project, pathBreve);
+                    message = String.format("Nel target %s esisteva già la directory %s ", projectUpper, pathBreve);
                     logger.log(AETypeLog.wizard, message);
                 }
                 else {
                     file.creaDirectory(path);
-                    message = String.format("Nel modulo %s creata la directory %s", project, pathBreve);
+                    message = String.format("Nel target %s creata la directory %s", projectUpper, pathBreve);
                     logger.log(AETypeLog.wizard, message);
                 }
             }
@@ -426,42 +428,18 @@ public abstract class WizElabora implements WizRecipient {
         //--crea file Data
         for (AEModulo mod : AEModulo.getSourceFiles()) {
             path = mod.getAbsolutePath();
+            String firstDir = "algos/" + projectLower;
+            pathBreve = file.findPathBreve(path, mod.getDirectory());
             if (text.isEmpty(path) || path.equals(VALORE_MANCANTE)) {
-                message = String.format("Nel modulo %s manca il path del file %s", project, mod.getTag());
+                message = String.format("Nel target %s manca il path del file %s", projectUpper, mod.getTag());
                 logger.log(AETypeLog.wizard, message);
             }
             else {
-                result = wizService.creaFile(mod.getCopyWiz(), mod.getSourcesName(), mod.getAbsolutePath(), project);
-                message = String.format("Nel modulo %s il file %s ", project, pathBreve) + result.getMessage();
+                result = wizService.creaFile(mod.getCopyWiz(), mod.getSourcesName(), mod.getAbsolutePath(), firstDir);
+                message = String.format("Nel target %s ", projectUpper, pathBreve) + result.getMessage();
                 logger.log(AETypeLog.wizard, message);
             }
         }
     }
-
-    //    /**
-    //     * Crea il file principale con la MainClass <br>
-    //     */
-    //    public void creaFileApplicationMainClass() {
-    //        String nameSourceText = APP_NAME;
-    //        String destPathSuffix = AEDir.pathTargetModulo.get();
-    //        destPathSuffix += AEDir.nameTargetProjectUpper.get();
-    //        destPathSuffix += "Application";
-    //        destPathSuffix += WizCost.JAVA_SUFFIX;
-    //
-    //        wizService.creaFile(AECopyWiz.fileSovrascriveSempreAncheSeEsiste, nameSourceText, destPathSuffix, AEDir.nameTargetProject.get());
-    //    }
-
-    //    protected void creaFileCost() {
-    //        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_COST, AEDir.fileTargetCost.get(), AEDir.nameTargetProject.get());
-    //    }
-    //
-    //    public void creaFileBoot() {
-    //        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_BOOT, AEDir.fileTargetBoot.get(), AEDir.nameTargetProject.get());
-    //    }
-    //
-    //    public void creaFileData() {
-    //        wizService.creaFile(AECopyWiz.fileCheckFlagSeEsiste, FILE_DATA, AEDir.fileTargetData.get(), AEDir.nameTargetProject.get());
-    //    }
-
 
 }

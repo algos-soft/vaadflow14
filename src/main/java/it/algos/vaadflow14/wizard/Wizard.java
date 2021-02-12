@@ -1,27 +1,20 @@
 package it.algos.vaadflow14.wizard;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
-import it.algos.vaadflow14.wizard.scripts.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.dependency.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadflow14.wizard.scripts.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.*;
 
 
 /**
@@ -181,7 +174,6 @@ public class Wizard extends VerticalLayout {
 
         wizService.fixVariabiliIniziali();
         wizService.printStart();
-//        wizService.printInfo("Apertura iniziale della view Wizard");
 
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();

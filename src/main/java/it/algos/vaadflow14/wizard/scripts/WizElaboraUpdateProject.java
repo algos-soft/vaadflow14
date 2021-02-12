@@ -73,7 +73,7 @@ public class WizElaboraUpdateProject extends WizElabora {
                         }
                         break;
                     default:
-                        logger.warn("Switch - caso non definito", this.getClass(), "copyRoot");
+                        logger.warn("Switch - caso non definito", this.getClass(), "esegue");
                         break;
                 }
                 logger.log(AETypeLog.wizard, "Update: " + result.getMessage());

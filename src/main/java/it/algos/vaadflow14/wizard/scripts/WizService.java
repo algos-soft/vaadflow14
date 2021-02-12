@@ -83,7 +83,7 @@ public class WizService {
 
         fixAEWizCost();
 
-        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
+//        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
 
         //        fixAEFlag();
         fixAEDir();
@@ -109,12 +109,16 @@ public class WizService {
         AEWizCost.projectCurrent.setValue(project);
 
         //--isBaseFlow
-        String dirProject = file.estraeDirectoryFinale(pathCurrent);
-        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        AEFlag.isBaseFlow.set(dirProject.equals(AEWizCost.dirVaadFlow14.get()));
+        //--se siamo in baseFlow non hanno senso alcuni valori che verranno decisi dopo aver selezionato il progetto
+        String nameProject = file.estraeDirectoryFinale(pathCurrent);
+        AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.dirVaadFlow14.get()));
+        if (!AEFlag.isBaseFlow.is()) {
+            AEWizCost.nameTargetProject.setValue(nameProject);
+            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        }
     }
 
 
@@ -196,35 +200,37 @@ public class WizService {
      * @param destPath  nome completo della directory destinazione
      * @param directory da cui iniziare il pathBreve del messaggio
      */
-    public void copyDir(final AECopyWiz copyWiz, final String srcPath, final String destPath, final String directory) {
+    public AIResult copyDir(final AECopyWiz copyWiz, final String srcPath, final String destPath, final String directory) {
+        AIResult result = AResult.errato();
         String message = VUOTA;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
         String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrent.get().toLowerCase();
-        String pathBreve = file.findPathBreve(destPath, dirPath);
+        String pathBreve = file.findPathBreveDa(destPath, dirPath);
         String type = text.setTonde(copyWiz.name());
 
         switch (copyWiz) {
             case dirDeletingAll:
-                message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                message = String.format("la directory %s %s non esisteva ma è stata creata.", pathBreve, type);
                 if (file.isEsisteDirectory(destPath)) {
                     delete(destDir);
-                    message = String.format("La directory %s %s esisteva già ed è stata cancellata e completamente sostituita.", pathBreve, type);
+                    message = String.format("la directory %s %s esisteva già ed è stata cancellata e completamente sostituita.", pathBreve, type);
                 }
                 copy(srcDir, destDir);
                 break;
             case dirAddingOnly:
-                message = String.format("La directory %s %s esiste già ed è stata integrata.", pathBreve, type);
+                message = String.format("la directory %s %s esiste già ed è stata integrata.", pathBreve, type);
                 if (file.isNotEsisteDirectory(destPath)) {
-                    message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                    message = String.format("la directory %s %s non esisteva ma è stata creata.", pathBreve, type);
                 }
                 copy(srcDir, destDir);
+                result = AResult.valido(message);
                 break;
             case dirSoloSeNonEsiste:
-                message = String.format("La directory %s %s esiste già e non è stata modificata.", pathBreve, type);
+                message = String.format("la directory %s %s esiste già e non è stata modificata.", pathBreve, type);
                 if (file.isNotEsisteDirectory(destPath)) {
                     copy(srcDir, destDir);
-                    message = String.format("La directory %s %s non esisteva ma è stata creata.", pathBreve, type);
+                    message = String.format("la directory %s %s non esisteva ma è stata creata.", pathBreve, type);
                 }
                 break;
             default:
@@ -232,6 +238,8 @@ public class WizService {
                 break;
         }
         //        logger.log(AETypeLog.wizard, message);
+
+        return result;
     }
 
 
@@ -411,13 +419,10 @@ public class WizService {
     private AIResult copy(final AECopyWiz copyWiz, final String pathFileToBeWritten, final String sourceTextElaborato, final String firstDir, String type) {
         AIResult result = AResult.errato();
         AIResult resultCheck = AResult.errato();
-        AIResult resultScrive = AResult.errato();
         String message = VUOTA;
-        String messageFile = VUOTA;
         boolean esisteFileDest = false;
         String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrent.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(pathFileToBeWritten, dirPath);
-        String esistenza;
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
         switch (copyWiz) {
@@ -425,9 +430,11 @@ public class WizService {
             case sourceSovrascriveSempreAncheSeEsiste:
                 if (esisteFileDest) {
                     message = String.format("il file %s %s esisteva già ma è stato riscritto", pathBreve, type);
+                    result.setMessage(message);
                 }
                 else {
                     message = String.format("il file %s %s non esisteva ed è stato creato", pathBreve, type);
+                    result.setMessage(message);
                 }
                 file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
                 break;
@@ -435,10 +442,12 @@ public class WizService {
             case sourceSoloSeNonEsiste:
                 if (esisteFileDest) {
                     message = String.format("il file %s %s esisteva già e non è stato modificato", pathBreve, type);
+                    result.setMessage(message);
                 }
                 else {
                     file.scriveFile(pathFileToBeWritten, sourceTextElaborato, true, firstDir);
                     message = String.format("il file %s %s non esisteva ed è stato creato.", pathBreve, type);
+                    result.setMessage(message);
                 }
                 break;
             case fileCheckFlagSeEsiste:
@@ -461,7 +470,6 @@ public class WizService {
                 break;
         }
 
-        //        logger.log(AETypeLog.wizard, message);
         return result;
     }
 

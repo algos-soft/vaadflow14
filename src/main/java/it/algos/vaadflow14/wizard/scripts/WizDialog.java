@@ -278,6 +278,7 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAECheck();
         status = status && this.regolaAEPackage();
         status = status && this.regolaAEToken();
+        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProject.get());
 
         return status;
     }
@@ -338,7 +339,7 @@ public abstract class WizDialog extends Dialog {
         String packageName;
         AEToken.reset();
 
-        projectName = AEWizCost.projectCurrent.get();
+        projectName = AEWizCost.nameTargetProject.get();
         packageName = AEWizCost.nameTargetPackage.get();
         return wizService.regolaAEToken(projectName, packageName);
     }
