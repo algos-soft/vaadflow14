@@ -26,11 +26,12 @@ public class WizElaboraUpdateProject extends WizElabora {
         AIResult result = AResult.errato();
         String srcPath = AEWizCost.pathVaadFlow14Root.get();
         String destPath = AEWizCost.pathTargetProjectRoot.get();
+        String dir = AEWizCost.nameTargetProjectLower.get();
+        String nameProject = AEWizCost.nameTargetProject.get();
         String value;
         String message;
         AECopyWiz copyWiz;
         String sourcesName;
-        String directory;
 
         for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
@@ -42,7 +43,6 @@ public class WizElaboraUpdateProject extends WizElabora {
 
                 copyWiz = aeWizCost.getCopyWiz();
                 value = aeWizCost.get();
-                directory = aeWizCost.getPathBreve();
 
                 if (text.isEmpty(value)) {
                     logger.error(String.format("In AEWizCost.%s manca il valore del path", aeWizCost.name()));
@@ -53,19 +53,19 @@ public class WizElaboraUpdateProject extends WizElabora {
                     case dirDeletingAll:
                     case dirAddingOnly:
                     case dirSoloSeNonEsiste:
-                        wizService.copyDir(copyWiz, srcPath + value, destPath + value, directory);
+                        result = wizService.copyDir(copyWiz, srcPath + value, destPath + value, dir);
                         break;
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileSoloSeNonEsiste:
                     case fileCheckFlagSeEsiste:
-                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
+                         wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
                         break;
                     case sourceSovrascriveSempreAncheSeEsiste:
                     case sourceSoloSeNonEsiste:
                     case sourceCheckFlagSeEsiste:
                         sourcesName = aeWizCost.getSourcesName();
                         if (text.isValid(sourcesName)) {
-                            result = wizService.creaFile(copyWiz, sourcesName, destPath + value, directory);
+                            result = wizService.creaFile(copyWiz, sourcesName, destPath + value, dir);
                         }
                         else {
                             message = String.format("Manca il nome del file sorgente in AEWizCost.%s", aeWizCost.name());
@@ -76,7 +76,8 @@ public class WizElaboraUpdateProject extends WizElabora {
                         logger.warn("Switch - caso non definito", this.getClass(), "esegue");
                         break;
                 }
-                logger.log(AETypeLog.wizard, "Update: " + result.getMessage());
+                message = String.format("Update project (%s): ", nameProject);
+                logger.log(AETypeLog.wizard, message + result.getMessage());
             }
         }
     }

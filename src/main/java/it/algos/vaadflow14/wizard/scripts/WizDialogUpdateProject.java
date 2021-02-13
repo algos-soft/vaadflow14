@@ -4,6 +4,7 @@ import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
@@ -46,6 +47,7 @@ public class WizDialogUpdateProject extends WizDialog {
         String pathModuloBase;
         String pathModuloCorrente;
         String pathSorgenti;
+        String pathBreve = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), "vaadflow14");
 
         if (AEFlag.isBaseFlow.is()) {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
@@ -58,8 +60,9 @@ public class WizDialogUpdateProject extends WizDialog {
         if (AEFlag.isBaseFlow.is()) {
             topLayout.add(text.getLabelGreenBold("Update del progetto selezionato"));
             topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
-            topLayout.add(text.getLabelGreenBold("I sorgenti sono in  " + AEWizCost.pathVaadFlow14WizSources.get()));
             topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
+            topLayout.add(text.getLabelGreenBold("I sorgenti (che non vengono modificati) sono in  " + pathBreve));
+            topLayout.add(text.getLabelRedBold("Il progetto deve esistere nella enum AEProgetto"));
             topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
             topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
         }
@@ -97,7 +100,7 @@ public class WizDialogUpdateProject extends WizDialog {
             this.add(selezioneLayout);
 
             List<AEProgetto> progetti = AEProgetto.get();
-            String label = "Progetti esistenti (nella directory ../operativi)";
+            String label = "AEProgetti esistenti (nella directory ../operativi)";
 
             fieldComboProgetti = new ComboBox<>();
             // Choose which property from Department is the presentation value
@@ -108,10 +111,10 @@ public class WizDialogUpdateProject extends WizDialog {
 
             fieldComboProgetti.setItems(progetti);
             confirmButton.setEnabled(false);
-            if (progetti.contains(AEProgetto.alfa)) {
-                fieldComboProgetti.setValue(AEProgetto.alfa);
-                confirmButton.setEnabled(true);
-            }
+            //            if (progetti.contains(AEProgetto.alfa)) {
+            //                fieldComboProgetti.setValue(AEProgetto.alfa);
+            //                confirmButton.setEnabled(true);
+            //            }
 
             addListener();
             selezioneLayout.add(fieldComboProgetti);
@@ -177,14 +180,42 @@ public class WizDialogUpdateProject extends WizDialog {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
+        AEProgetto progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
+        String nameProject;
+        String nameUpper;
+        String pathProject;
+
+        if (progettoTarget == null) {
+            return false;
+        }
+
+        nameProject = progettoTarget.getNameProject();
+        nameUpper = progettoTarget.getNameUpper();
+        pathProject = progettoTarget.getPathCompleto();
+        if (text.isEmpty(pathProject)) {
+            pathProject = AEWizCost.pathRoot.get();
+            pathProject += AEWizCost.dirProjects.get();
+            pathProject += AEWizCost.dirOperativi.get();
+            pathProject += nameProject;
+        }
+
+        AEWizCost.nameTargetProject.setValue(nameUpper);
+        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
+        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+
         for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
-
+        AEWizCost.printVuote();
+        AEWizCost.printInfo();
         return true;
     }
+
 
     /**
      * Chiamato alla dismissione del dialogo <br>

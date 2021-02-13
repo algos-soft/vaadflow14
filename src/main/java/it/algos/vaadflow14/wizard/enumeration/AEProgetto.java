@@ -1,12 +1,9 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import it.algos.vaadflow14.backend.enumeration.AEColor;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -23,21 +20,21 @@ public enum AEProgetto {
 
     beta("beta", "beta","/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
 
-    alfa("alfa", "Alfa",VUOTA),
+    moneglia("moneglia", "Moneglia",VUOTA),
 
     ;
 
     private String nameProject;
 
-    private String nameShort;
+    private String nameUpper;
 
     //--path completo se diverso da /Users/gac/Documents/IdeaProjects/operativi/...
     private String pathCompleto;
 
 
-    AEProgetto(String nameProject, String nameShort,String pathCompleto) {
+    AEProgetto(String nameProject, String nameUpper, String pathCompleto) {
         this.setNameProject(nameProject);
-        this.setNameShort(nameShort);
+        this.setNameUpper(nameUpper);
         this.setPathCompleto(pathCompleto);
     }
 
@@ -82,7 +79,7 @@ public enum AEProgetto {
             System.out.println("Progetti della enumeration AEProgetto");
             System.out.println("********************");
             for (AEProgetto progetto : AEProgetto.values()) {
-                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getNameProject() + " - " + progetto.getNameShort());
+                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getNameProject() + " - " + progetto.getNameUpper());
             }
             System.out.println("");
         }
@@ -99,13 +96,13 @@ public enum AEProgetto {
     }
 
 
-    public String getNameShort() {
-        return nameShort;
+    public String getNameUpper() {
+        return nameUpper;
     }
 
 
-    public void setNameShort(String nameShort) {
-        this.nameShort = nameShort;
+    public void setNameUpper(String nameUpper) {
+        this.nameUpper = nameUpper;
     }
 
 
