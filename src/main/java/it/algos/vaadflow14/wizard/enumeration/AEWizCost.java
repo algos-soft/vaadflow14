@@ -204,6 +204,12 @@ public enum AEWizCost {
     dirVaadFlow14WizardSources("Directory sources", dirRootWizard.value + "sources/"),
 
     /**
+     * Cartella. <br>
+     * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
+     */
+    dirWizardSources("Directory wizard/sources",  "wizard/sources/"),
+
+    /**
      * Percorso della directory wizard sources di vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
@@ -238,6 +244,12 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectPackages("Directory target packages", pathTargetProjectModulo.value + dirPackages.value),
+
+    /**
+     * Percorso della directory target sources. <br>
+     * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
+     */
+    pathTargetProjectSources("Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/"),
 
     /**
      * Cartella. <br>

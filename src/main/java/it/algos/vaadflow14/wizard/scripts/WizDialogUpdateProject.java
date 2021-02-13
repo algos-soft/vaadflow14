@@ -213,9 +213,10 @@ public class WizDialogUpdateProject extends WizDialog {
         AEWizCost.nameTargetProject.setValue(nameUpper);
         AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
-        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);
+        AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);
         AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
 
         for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {

@@ -37,7 +37,7 @@ public class WizElaboraUpdateProject extends WizElabora {
             if (aeWizCost.isAcceso()) {
 
                 if (aeWizCost == AEWizCost.pathTargetProjectModulo) {
-                    targetModulo();
+                    super.creaModuloProgetto();
                     continue;
                 }
 
@@ -58,7 +58,7 @@ public class WizElaboraUpdateProject extends WizElabora {
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileSoloSeNonEsiste:
                     case fileCheckFlagSeEsiste:
-                         wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
+                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
                         break;
                     case sourceSovrascriveSempreAncheSeEsiste:
                     case sourceSoloSeNonEsiste:
@@ -80,10 +80,13 @@ public class WizElaboraUpdateProject extends WizElabora {
                 logger.log(AETypeLog.wizard, message + result.getMessage());
             }
         }
-    }
 
-    public void targetModulo() {
-        super.creaModuloProgetto();
+        //--cancella directory sources (se esiste)
+        if (file.isEsisteDirectory(AEWizCost.pathTargetProjectSources.get())) {
+            file.deleteDirectory(AEWizCost.pathTargetProjectSources.get());
+            message = String.format("Cancellata la directory 'sources'");
+            logger.log(AETypeLog.wizard, message);
+        }
     }
 
 }

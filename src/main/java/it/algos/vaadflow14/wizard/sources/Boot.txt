@@ -1,7 +1,8 @@
 package it.algos.@MODULELOWER@.backend.boot;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.@MODULELOWER@.backend.data.@MODULEUPPER@Data;
+import static it.algos.@MODULELOWER@.backend.application.@MODULEUPPER@Cost.*;
+import it.algos.@MODULELOWER@.backend.data.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
