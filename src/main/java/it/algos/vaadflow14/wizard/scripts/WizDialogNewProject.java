@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -74,7 +75,7 @@ public class WizDialogNewProject extends WizDialog {
         topLayout.add(text.getLabelGreenBold("Rimane il POM vuoto, ma verrà sovrascritto"));
         topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
         topLayout.add(text.getLabelRedBold("Spunta i checkBox di regolazione che vuoi attivare"));
-        topLayout.add(text.getLabelRedBold("Nel progetto vai su pom.xml, click destro -> Maven.Reload "));
+        //        topLayout.add(text.getLabelRedBold("Nel progetto vai su pom.xml, click destro -> Maven.Reload "));
         topLayout.add(text.getLabelRedBold("Aggiungi il nuovo progetto alla enumeration AEProgetto"));
     }
 
@@ -114,7 +115,10 @@ public class WizDialogNewProject extends WizDialog {
         buttonForzaDirectory.setEnabled(progetti.size() < 1);
 
         addListener();
-        selezioneLayout.add(fieldComboProgettiNuovi, buttonForzaDirectory);
+        HorizontalLayout rigaLayout = new HorizontalLayout();
+        rigaLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
+        rigaLayout.add(fieldComboProgettiNuovi, buttonForzaDirectory);
+        selezioneLayout.add(rigaLayout);
     }
 
 
@@ -151,7 +155,7 @@ public class WizDialogNewProject extends WizDialog {
         super.creaCheckBoxLayout();
 
         for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
-            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, aeCost.isAccesoInizialmenteNew()));
+            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, true));
         }
         super.addCheckBoxMap();
     }

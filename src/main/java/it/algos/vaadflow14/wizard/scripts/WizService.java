@@ -217,6 +217,8 @@ public class WizService {
                     message = String.format("la directory %s %s esisteva già ed è stata cancellata e completamente sostituita.", pathBreve, type);
                 }
                 copy(srcDir, destDir);
+                message = String.format("la directory %s %s è stata creata.", pathBreve, type);
+                result = AResult.valido(message);
                 break;
             case dirAddingOnly:
                 message = String.format("la directory %s %s esiste già ed è stata integrata.", pathBreve, type);

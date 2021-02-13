@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import java.util.List;
-import static it.algos.vaadwiki14.backend.application.Vaadwiki14Cost.*;
 
 /**
  * Project @MODULELOWER@

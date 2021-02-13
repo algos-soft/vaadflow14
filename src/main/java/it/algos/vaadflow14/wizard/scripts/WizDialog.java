@@ -379,6 +379,7 @@ public abstract class WizDialog extends Dialog {
     }
 
 
+
     protected VerticalLayout fixSezione(String titolo, String color) {
         VerticalLayout layoutTitolo = new VerticalLayout();
         H3 titoloH3 = new H3(text.primaMaiuscola(titolo));

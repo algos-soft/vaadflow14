@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
-import static it.algos.vaadwiki14.backend.application.Vaadwiki14Cost.*;
 
 /**
  * Project @MODULELOWER@
