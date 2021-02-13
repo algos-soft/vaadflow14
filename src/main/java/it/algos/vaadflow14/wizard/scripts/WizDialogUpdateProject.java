@@ -5,6 +5,7 @@ import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
@@ -244,6 +245,9 @@ public class WizDialogUpdateProject extends WizDialog {
     protected boolean checkProject(String projectName) {
         String pathOperativa = PATH_OPERATIVI_DIR_STANDARD + projectName;
         String pathProgetti = PATH_PROJECTS_DIR_STANDARD + projectName;
+        String message;
+        String projectNameUpper = text.primaMaiuscola(projectName);
+        String pathBreve = file.findPathBreve(pathOperativa, DIR_OPERATIVI);
 
         //--posizione standard corretta
         if (file.isEsisteDirectory(pathOperativa)) {
@@ -252,10 +256,12 @@ public class WizDialogUpdateProject extends WizDialog {
 
         //--prova a vedere se per caso è rimasto nella directory di creazione
         if (file.isEsisteDirectory(pathProgetti)) {
-            logger.warn("Il progetto " + projectName + " è rimasto nella directory IdeaProjects. Devi spostarlo in /operativi/", this.getClass(), "checkProject");
+            message = String.format("Update project (%s): è rimasto nella directory %s, devi spostarlo in %s", projectNameUpper, DIR_PROJECTS, DIR_OPERATIVI);
+            logger.log(AETypeLog.wizard, message);
         }
         else {
-            logger.warn("Il progetto " + projectName + " non è rintracciabile", this.getClass(), "checkProject");
+            message = String.format("Update project (%s): non rintracciabile nella directory %s", projectNameUpper, pathBreve);
+            logger.log(AETypeLog.wizard, message);
         }
 
         return false;

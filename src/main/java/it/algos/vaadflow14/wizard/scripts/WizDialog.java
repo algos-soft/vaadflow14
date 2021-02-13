@@ -404,9 +404,9 @@ public abstract class WizDialog extends Dialog {
             if (!regolazioniFinali()) {
                 if (AEFlag.isNewPackage.is()) {
                     logger.info("Manca il nome del nuovo package che non può quindi essere creato ", this.getClass(), "esceDalDialogo");
-                }
-                else {
-                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
+//                }
+//                else {
+//                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
                 }
                 this.close();
                 return;
