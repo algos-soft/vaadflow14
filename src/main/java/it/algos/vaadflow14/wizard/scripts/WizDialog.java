@@ -408,6 +408,7 @@ public abstract class WizDialog extends Dialog {
 //                else {
 //                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
                 }
+
                 this.close();
                 return;
             }

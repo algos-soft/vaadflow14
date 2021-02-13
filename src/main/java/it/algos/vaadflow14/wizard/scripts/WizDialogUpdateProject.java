@@ -4,7 +4,9 @@ import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -181,29 +183,37 @@ public class WizDialogUpdateProject extends WizDialog {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
-        AEProgetto progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
-        String nameProject;
-        String nameUpper;
-        String pathProject;
+        AEProgetto progettoTarget = null;
+        String nameProject = VUOTA;
+        String nameUpper = VUOTA;
+        String pathProject = VUOTA;
 
-        if (progettoTarget == null) {
-            return false;
+        if (AEFlag.isBaseFlow.is()) {
+            progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
+            if (progettoTarget == null) {
+                return false;
+            }
+            nameProject = progettoTarget.getNameProject();
+            nameUpper = progettoTarget.getNameUpper();
+            pathProject = progettoTarget.getPathCompleto();
+
+            if (text.isEmpty(pathProject)) {
+                pathProject = AEWizCost.pathRoot.get();
+                pathProject += AEWizCost.dirProjects.get();
+                pathProject += AEWizCost.dirOperativi.get();
+                pathProject += nameProject;
+            }
         }
-
-        nameProject = progettoTarget.getNameProject();
-        nameUpper = progettoTarget.getNameUpper();
-        pathProject = progettoTarget.getPathCompleto();
-        if (text.isEmpty(pathProject)) {
-            pathProject = AEWizCost.pathRoot.get();
-            pathProject += AEWizCost.dirProjects.get();
-            pathProject += AEWizCost.dirOperativi.get();
-            pathProject += nameProject;
+        else {
+            nameProject = AEWizCost.projectCurrentLower.get();
+            nameUpper = AEWizCost.projectCurrent.get();
+            pathProject = AEWizCost.pathCurrent.get();
         }
 
         AEWizCost.nameTargetProject.setValue(nameUpper);
         AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
-        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);
         AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
 
