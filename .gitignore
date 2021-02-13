@@ -24,3 +24,7 @@ src/main/resources/local.properties
 /classes/
 /out/
 /log/
+/package.json
+/pnpm-lock.yaml
+/pnpmfile.js
+/webpack.config.js
