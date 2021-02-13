@@ -202,6 +202,7 @@ public class WizDialogUpdateProject extends WizDialog {
                 pathProject += AEWizCost.dirProjects.get();
                 pathProject += AEWizCost.dirOperativi.get();
                 pathProject += nameProject;
+                pathProject += SLASH;
             }
         }
         else {
