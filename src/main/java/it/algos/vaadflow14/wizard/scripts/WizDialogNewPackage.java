@@ -133,6 +133,8 @@ public class WizDialogNewPackage extends WizDialog {
         }
 
 //                AEWizCost.printInfo();
+        AEWizCost.printVuote();
+        AEWizCost.printInfo();
 
         return true;
     }
