@@ -21,6 +21,7 @@ public enum AEProgetto {
     beta("beta", "beta","/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
 
     moneglia("moneglia", "Moneglia",VUOTA),
+    gestione("gestione", "Gestione",VUOTA),
 
     ;
 
