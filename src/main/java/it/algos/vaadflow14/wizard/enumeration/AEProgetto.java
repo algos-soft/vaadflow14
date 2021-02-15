@@ -14,7 +14,7 @@ import java.util.*;
  */
 public enum AEProgetto {
 
-    bio("vaadwiki", "Wiki",VUOTA),
+    bio("wikibio", "WikiBio",VUOTA),
 
     wam("vaadwam", "Wam",VUOTA),
 

@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloService;
 import it.algos.vaadflow14.ui.fields.AComboField;
+import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -117,6 +118,18 @@ public class DeltaLogic extends ALogic {
 //        return newEntity(VUOTA);
 //    }
 
+
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return wrapper per passaggio dati
+     */
+    @Override
+    protected AlertWrap getAlertWrapList() {
+        return super.getAlertWrapList();
+    }
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
