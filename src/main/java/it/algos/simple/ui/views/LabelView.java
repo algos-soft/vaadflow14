@@ -4,6 +4,9 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
 
 import javax.annotation.*;
 
@@ -18,17 +21,35 @@ import javax.annotation.*;
 public class LabelView extends VerticalLayout {
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    private ATextService text;
+
+
+    /**
      * Instantiates a new Delta view.
      */
     @PostConstruct
     private void postConstruct() {
-        this.labelNormale();
-        this.labelBold();
-        this.labelSmall();
-        this.divNormale();
-        this.divBoldSmall();
-        this.spanBoldSmall();
-        this.html();
+        this.add(text.getSpan("Testo semplice"));
+        this.add(text.getSpan("Testo nero", AETypeColor.nero));
+        this.add(text.getSpan("Testo verde", AETypeColor.verde));
+        this.add(text.getSpan("Testo blu", AETypeColor.blue));
+        this.add(text.getSpan("Testo rosso", AETypeColor.rosso));
+        this.add(text.getSpan("Testo verde bold", AETypeColor.verde, AETypeWeight.bold));
+        this.add(text.getSpan("Testo rosso small", AETypeColor.rosso, AETypeSize.small));
+        this.add(text.getSpan("Testo blu leggero molto grande", AETypeColor.blue, AETypeWeight.w200, AETypeSize.xLarge));
+
+        //        this.labelNormale();
+        //        this.labelBold();
+        //        this.labelSmall();
+        //        this.divNormale();
+        //        this.divBoldSmall();
+        //        this.spanBoldSmall();
+        //        this.html();
     }
 
     private void labelNormale() {

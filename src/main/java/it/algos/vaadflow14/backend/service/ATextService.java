@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import com.google.common.base.*;
 import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import org.apache.commons.lang3.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -293,6 +294,43 @@ public class ATextService extends AAbstractService {
 
 
     /**
+     * Span
+     *
+     * @param message da visualizzare
+     *
+     * @return elemento per html
+     */
+    public Span getSpan(final String message) {
+        return getSpan(message, null);
+    }
+
+    /**
+     * Span
+     *
+     * @param message da visualizzare
+     *
+     * @return elemento per html
+     */
+    public Span getSpan(final String message, final AIType... typeSpan) {
+        Span span = new Span();
+        String lineHeight = "8pt";
+
+        if (isValid(message)) {
+            span.setText(message);
+
+            if (typeSpan != null && typeSpan.length > 0) {
+                for (AIType type : typeSpan) {
+                    span.getElement().getStyle().set(type.getTag(), type.getValue());
+                }
+            }
+            span.getElement().getStyle().set("line-height", lineHeight);
+        }
+
+        return span;
+    }
+
+
+    /**
      * Div colorato
      *
      * @param message    da visualizzare
@@ -301,6 +339,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     private Div getDiv(String message, String labelColor, boolean smallBold) {
         Div div = null;
 
@@ -326,6 +365,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Div getDivBlack(String message) {
         return getDiv(message, "black", false);
     }
@@ -338,6 +378,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Div getDivGreen(String message) {
         return getDiv(message, "green", false);
     }
@@ -350,6 +391,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Div getDivBlue(String message) {
         return getDiv(message, "blue", false);
     }
@@ -362,6 +404,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Div getDivRed(String message) {
         return getDiv(message, "red", false);
     }
