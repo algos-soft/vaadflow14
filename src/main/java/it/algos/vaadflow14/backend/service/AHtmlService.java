@@ -29,6 +29,7 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AHtmlService extends AAbstractService {
 
+   private static final String LINE_HEIGHT = "14pt";//@todo Volendo si può mettere in preferenza
 
     /**
      * Span
@@ -50,7 +51,6 @@ public class AHtmlService extends AAbstractService {
      */
     public Span getSpan(final String message, final AIType... typeSpan) {
         Span span = new Span();
-        String lineHeight = "14pt";//@todo Volendo si può mettere in preferenza
 
         if (text.isValid(message)) {
             span.setText(message);
@@ -60,7 +60,7 @@ public class AHtmlService extends AAbstractService {
                     span.getElement().getStyle().set(type.getTag(), type.getValue());
                 }
             }
-            span.getElement().getStyle().set("line-height", lineHeight);
+            span.getElement().getStyle().set("line-height", LINE_HEIGHT);
         }
 
         return span;
@@ -73,7 +73,7 @@ public class AHtmlService extends AAbstractService {
      *
      * @return elemento per html
      */
-    private Span getSpanBase(final String message, AETypeColor typeColor,final AIType... typeSpan) {
+    private Span getSpanBase(final AETypeColor typeColor, final String message, final AIType... typeSpan) {
         List<AIType> typeList = new ArrayList(Arrays.asList(typeColor));
 
         if (typeSpan != null && typeSpan.length > 0) {
@@ -93,15 +93,7 @@ public class AHtmlService extends AAbstractService {
      * @return elemento per html
      */
     public Span getSpanVerde(final String message, final AIType... typeSpan) {
-        List<AIType> typeList = new ArrayList(Arrays.asList(AETypeColor.verde));
-
-        if (typeSpan != null && typeSpan.length > 0) {
-            for (AIType type : typeSpan) {
-                typeList.add(type);
-            }
-        }
-
-        return getSpan(message, typeList.toArray(new AIType[typeList.size()]));
+        return getSpanBase(AETypeColor.verde, message, typeSpan);
     }
 
 
@@ -124,15 +116,7 @@ public class AHtmlService extends AAbstractService {
      * @return elemento per html
      */
     public Span getSpanBlu(final String message, final AIType... typeSpan) {
-        List<AIType> typeList = new ArrayList(Arrays.asList(AETypeColor.blu));
-
-        if (typeSpan != null && typeSpan.length > 0) {
-            for (AIType type : typeSpan) {
-                typeList.add(type);
-            }
-        }
-
-        return getSpan(message, typeList.toArray(new AIType[typeList.size()]));
+        return getSpanBase(AETypeColor.blu, message, typeSpan);
     }
 
     /**
@@ -154,15 +138,7 @@ public class AHtmlService extends AAbstractService {
      * @return elemento per html
      */
     public Span getSpanRosso(final String message, final AIType... typeSpan) {
-        List<AIType> typeList = new ArrayList(Arrays.asList(AETypeColor.rosso));
-
-        if (typeSpan != null && typeSpan.length > 0) {
-            for (AIType type : typeSpan) {
-                typeList.add(type);
-            }
-        }
-
-        return getSpan(message, typeList.toArray(new AIType[typeList.size()]));
+        return getSpanBase(AETypeColor.rosso, message, typeSpan);
     }
 
     /**
@@ -174,6 +150,26 @@ public class AHtmlService extends AAbstractService {
      */
     public Span getSpanRosso(final String message) {
         return getSpanRosso(message, null);
+    }
+
+
+    /**
+     * Span html
+     *
+     * @param message da visualizzare
+     *
+     * @return elemento per html
+     */
+    public Span getSpanHtml(final String message) {
+        Span span = new Span();
+
+        if (text.isValid(message)) {
+            span.setText(message);
+            span.getElement().setProperty("innerHTML", message);
+            span.getElement().getStyle().set("line-height", LINE_HEIGHT);
+        }
+
+        return span;
     }
 
     /**

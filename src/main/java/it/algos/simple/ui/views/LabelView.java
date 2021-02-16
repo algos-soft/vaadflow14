@@ -27,6 +27,7 @@ public class LabelView extends VerticalLayout {
      */
     @Autowired
     private ATextService text;
+
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -45,18 +46,11 @@ public class LabelView extends VerticalLayout {
         this.add(html.getSpanVerde("Testo verde normale"));
         this.add(html.getSpanVerde("Testo verde bold", AETypeWeight.bold));
         this.add(html.getSpanVerde("Testo verde small", AETypeSize.small));
-        this.add(html.getSpanVerde("Testo verde small bold", AETypeSize.small,AETypeWeight.bold));
-        this.add(html.getSpanRosso("Testo rosso small bold", AETypeSize.small,AETypeWeight.bold));
+        this.add(html.getSpanVerde("Testo verde small bold", AETypeSize.small, AETypeWeight.bold));
+        this.add(html.getSpanRosso("Testo rosso small bold", AETypeSize.small, AETypeWeight.bold));
         this.add(html.getSpanBlu("Testo blu normale"));
         this.add(html.getSpan("Testo blu leggero molto grande", AETypeColor.blu, AETypeWeight.w200, AETypeSize.xLarge));
-
-        //        this.labelNormale();
-        //        this.labelBold();
-        //        this.labelSmall();
-        //        this.divNormale();
-        //        this.divBoldSmall();
-        //        this.spanBoldSmall();
-        //        this.html();
+        this.html();
     }
 
     private void labelNormale() {
@@ -251,21 +245,13 @@ public class LabelView extends VerticalLayout {
     }
 
     private void html() {
-        Span span;
         String message = VUOTA;
 
-        message = "SPAN:";
+        message += "SPAN:";
         message += "<small> dimensione piccola, </small>";
         message += "<span style=\"color:green\"> colore verde, </span>";
         message += "<b> peso bold, <b>";
-        span = new Span();
-        span.getElement().setProperty("innerHTML", message);
-        //        span.getElement().getStyle().set("color", "black");
-        //        span.getStyle().set("font-size", "small");
-        //        span.getStyle().set("font-weight", "bold");
-        span.setText(message);
-        this.add(span);
-
+        this.add(html.getSpanHtml(message));
     }
 
 }
