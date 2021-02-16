@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.service;
 import com.google.common.base.*;
 import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import org.apache.commons.lang3.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -293,121 +292,6 @@ public class ATextService extends AAbstractService {
     }
 
 
-    /**
-     * Span
-     *
-     * @param message da visualizzare
-     *
-     * @return elemento per html
-     */
-    public Span getSpan(final String message) {
-        return getSpan(message, null);
-    }
-
-    /**
-     * Span
-     *
-     * @param message da visualizzare
-     *
-     * @return elemento per html
-     */
-    public Span getSpan(final String message, final AIType... typeSpan) {
-        Span span = new Span();
-        String lineHeight = "8pt";
-
-        if (isValid(message)) {
-            span.setText(message);
-
-            if (typeSpan != null && typeSpan.length > 0) {
-                for (AIType type : typeSpan) {
-                    span.getElement().getStyle().set(type.getTag(), type.getValue());
-                }
-            }
-            span.getElement().getStyle().set("line-height", lineHeight);
-        }
-
-        return span;
-    }
-
-
-    /**
-     * Div colorato
-     *
-     * @param message    da visualizzare
-     * @param labelColor del messaggio
-     * @param smallBold  flag per il tipo di style
-     *
-     * @return etichetta visualizzata
-     */
-    @Deprecated
-    private Div getDiv(String message, String labelColor, boolean smallBold) {
-        Div div = null;
-
-        if (isValid(message)) {
-            div = new Div();
-            div.getElement().getStyle().set("color", labelColor);
-            div.setText(message);
-        }
-
-        if (smallBold) {
-            div.getStyle().set("font-size", "small");
-            div.getStyle().set("font-weight", "bold");
-        }
-
-        return div;
-    }
-
-
-    /**
-     * Div colorato
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
-    @Deprecated
-    public Div getDivBlack(String message) {
-        return getDiv(message, "black", false);
-    }
-
-
-    /**
-     * Div colorato
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
-    @Deprecated
-    public Div getDivGreen(String message) {
-        return getDiv(message, "green", false);
-    }
-
-
-    /**
-     * Div colorato
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
-    @Deprecated
-    public Div getDivBlue(String message) {
-        return getDiv(message, "blue", false);
-    }
-
-
-    /**
-     * Div colorato
-     *
-     * @param message da visualizzare
-     *
-     * @return etichetta visualizzata
-     */
-    @Deprecated
-    public Div getDivRed(String message) {
-        return getDiv(message, "red", false);
-    }
 
 
     /**
@@ -418,6 +302,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     private Label getLabel(String message, String labelColor) {
         return getLabel(message, labelColor, false);
     }
@@ -432,6 +317,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     private Label getLabel(String message, String labelColor, boolean smallBold) {
         Label label = null;
 
@@ -456,6 +342,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelUser(String message) {
         return getLabel(message, "green", false);
     }
@@ -480,6 +367,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelDev(String message) {
         return getLabel(message, "red", false);
     }
@@ -492,6 +380,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelUserSmall(String message) {
         return getLabel(message, "green", true);
     }
@@ -504,6 +393,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelAdminSmall(String message) {
         return getLabel(message, "blue", true);
     }
@@ -516,6 +406,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelDevSmall(String message) {
         return getLabel(message, "red", true);
     }
@@ -529,6 +420,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     private Label getLabelBold(String message, String labelColor) {
         Label label = null;
 
@@ -550,6 +442,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelRedBold(String message) {
         return getLabelBold(message, "red");
     }
@@ -562,6 +455,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelBlueBold(String message) {
         return getLabelBold(message, "blue");
     }
@@ -574,6 +468,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelGreenBold(String message) {
         return getLabelBold(message, "green");
     }
@@ -586,6 +481,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelRed(String message) {
         return getLabel(message, "red");
     }
@@ -598,6 +494,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelBlue(String message) {
         return getLabel(message, "blue");
     }
@@ -610,6 +507,7 @@ public class ATextService extends AAbstractService {
      *
      * @return etichetta visualizzata
      */
+    @Deprecated
     public Label getLabelGreen(String message) {
         return getLabel(message, "green");
     }
@@ -736,34 +634,6 @@ public class ATextService extends AAbstractService {
     }
 
 
-    /**
-     * Elimina un tag HTML in testa e coda della stringa. <br>
-     * Funziona solo se i tags sono esattamente in TESTA ed in CODA alla stringa <br>
-     * Se arriva una stringa vuota, restituisce una stringa vuota <br>
-     * Elimina spazi vuoti iniziali e finali <br>
-     *
-     * @param stringaIn in ingresso
-     * @param tag       html iniziale
-     *
-     * @return stringa con tags eliminati
-     */
-    public String setNoHtmlTag(String stringaIn, String tag) {
-        String stringaOut = stringaIn;
-        String tagIni = "<" + tag + ">";
-        String tagEnd = "</" + tag + ">";
-
-        if (isValid(stringaIn)) {
-            stringaIn = stringaIn.trim();
-
-            if (stringaIn.startsWith(tagIni) && stringaIn.endsWith(tagEnd)) {
-                stringaOut = stringaIn;
-                stringaOut = levaCoda(stringaOut, tagEnd);
-                stringaOut = levaTesta(stringaOut, tagIni);
-            }
-        }
-
-        return stringaOut.trim();
-    }
 
 
     /**

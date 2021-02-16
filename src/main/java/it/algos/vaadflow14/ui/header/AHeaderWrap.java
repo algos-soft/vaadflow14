@@ -59,25 +59,25 @@ public class AHeaderWrap extends AHeader {
     protected void fixView() {
         if (array.isAllValid(alertBlack)) {
             for (String alert : alertBlack) {
-                this.add(text.getDivBlack(alert));
+                this.add(html.getSpan(alert));
             }
         }
 
         if (array.isAllValid(alertGreen)) {
             for (String alert : alertGreen) {
-                this.add(text.getDivGreen(alert));
+                this.add(html.getSpanVerde(alert));
             }
         }
 
         if (array.isAllValid(alertBlue)) {
             for (String alert : alertBlue) {
-                this.add(text.getDivBlue(alert));
+                this.add(html.getSpanBlu(alert));
             }
         }
 
         if (array.isAllValid(alertRed)) {
             for (String alert : alertRed) {
-                this.add(text.getDivRed(alert));
+                this.add(html.getSpanRosso(alert));
             }
         }
 

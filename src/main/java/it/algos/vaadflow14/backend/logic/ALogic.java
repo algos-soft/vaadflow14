@@ -1,59 +1,40 @@
 package it.algos.vaadflow14.backend.logic;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.router.QueryParameters;
-import com.vaadin.flow.server.InputStreamFactory;
-import com.vaadin.flow.server.StreamResource;
-import de.codecamp.vaadin.components.messagedialog.MessageDialog;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.ACEntity;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import it.algos.vaadflow14.backend.wrapper.WrapSearch;
-import it.algos.vaadflow14.ui.button.ABottomLayout;
-import it.algos.vaadflow14.ui.button.AEAction;
-import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.button.WrapButtons;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.AGenericForm;
-import it.algos.vaadflow14.ui.form.WrapForm;
-import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.header.AHeaderList;
-import it.algos.vaadflow14.ui.header.AHeaderWrap;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import it.algos.vaadflow14.ui.list.AGrid;
-import it.algos.vaadflow14.ui.service.AFieldService;
-import it.algos.vaadflow14.ui.service.AImageService;
-import it.algos.vaadflow14.ui.service.ARouteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
-import org.vaadin.haijian.Exporter;
-
-import javax.annotation.PostConstruct;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.*;
-
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.notification.*;
+import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.data.provider.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.*;
+import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.form.*;
+import it.algos.vaadflow14.ui.header.*;
+import it.algos.vaadflow14.ui.list.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.query.*;
+import org.vaadin.haijian.*;
+
+import javax.annotation.*;
+import java.lang.reflect.Field;
+import java.time.*;
+import java.util.*;
 
 
 /**
@@ -432,6 +413,33 @@ public abstract class ALogic implements AILogic {
         this.formClazz = AGenericForm.class;
     }
 
+    /**
+     * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
+     * <p>
+     * Chiamato da AView.initView() <br>
+     * Nell'implementazione standard di default NON presenta nessun avviso <br>
+     * Recupera dal service specifico gli (eventuali) avvisi <br>
+     * Costruisce un'istanza dedicata con le liste di avvisi <br>
+     * Gli avvisi sono realizzati con tag html 'span' differenziati per colore anche in base all'utente collegato <br>
+     * Se l'applicazione non usa security, il colore è deciso dal service specifico <br<
+     * Se esiste, inserisce l'istanza (grafica) in alertPlacehorder della view <br>
+     * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
+     *
+     * @param typeVista in cui inserire gli avvisi
+     *
+     * @return componente grafico per il placeholder
+     */
+    @Override
+    public AIHeader getAlertLayout(AEVista typeVista) {
+        AIHeader headerSpan = null;
+        List<Span> spanHtmlList = getSpanList();
+
+        if (array.isAllValid(spanHtmlList)) {
+            headerSpan=  appContext.getBean(AHeaderSpan.class, spanHtmlList);
+        }
+
+        return headerSpan;
+    }
 
     /**
      * Costruisce un (eventuale) layout per avvisi aggiuntivi in alertPlacehorder della view <br>
@@ -456,6 +464,7 @@ public abstract class ALogic implements AILogic {
      * @return componente grafico per il placeHolder
      */
     @Override
+    @Deprecated
     public AHeader getAlertHeaderLayout(final AEVista typeVista) {
         AHeader header = null;
         AlertWrap wrap = null;
@@ -487,6 +496,17 @@ public abstract class ALogic implements AILogic {
         return header;
     }
 
+
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return una liste di 'span'
+     */
+    protected List<Span> getSpanList() {
+        return null;
+    }
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>

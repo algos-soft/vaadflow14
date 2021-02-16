@@ -27,6 +27,13 @@ public class LabelView extends VerticalLayout {
      */
     @Autowired
     private ATextService text;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    private AHtmlService html;
 
 
     /**
@@ -34,14 +41,14 @@ public class LabelView extends VerticalLayout {
      */
     @PostConstruct
     private void postConstruct() {
-        this.add(text.getSpan("Testo semplice"));
-        this.add(text.getSpan("Testo nero", AETypeColor.nero));
-        this.add(text.getSpan("Testo verde", AETypeColor.verde));
-        this.add(text.getSpan("Testo blu", AETypeColor.blue));
-        this.add(text.getSpan("Testo rosso", AETypeColor.rosso));
-        this.add(text.getSpan("Testo verde bold", AETypeColor.verde, AETypeWeight.bold));
-        this.add(text.getSpan("Testo rosso small", AETypeColor.rosso, AETypeSize.small));
-        this.add(text.getSpan("Testo blu leggero molto grande", AETypeColor.blue, AETypeWeight.w200, AETypeSize.xLarge));
+        this.add(html.getSpan("Testo semplice nero normale"));
+        this.add(html.getSpanVerde("Testo verde normale"));
+        this.add(html.getSpanVerde("Testo verde bold", AETypeWeight.bold));
+        this.add(html.getSpanVerde("Testo verde small", AETypeSize.small));
+        this.add(html.getSpanVerde("Testo verde small bold", AETypeSize.small,AETypeWeight.bold));
+        this.add(html.getSpanRosso("Testo rosso small bold", AETypeSize.small,AETypeWeight.bold));
+        this.add(html.getSpanBlu("Testo blu normale"));
+        this.add(html.getSpan("Testo blu leggero molto grande", AETypeColor.blu, AETypeWeight.w200, AETypeSize.xLarge));
 
         //        this.labelNormale();
         //        this.labelBold();

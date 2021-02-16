@@ -62,17 +62,16 @@ public class @ENTITY@Logic extends ALogic {
         super.usaBottoneResetList = false;
     }
 
-
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste d'informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
     @Override
-    protected AlertWrap getAlertWrapList() {
-        return new AlertWrap("Test.");
+    protected List<Span> getSpanList() {
+        return List.of(text.getSpanVerde("Test"));
     }
 
 

@@ -1,17 +1,16 @@
 package it.algos.vaadflow14.backend.packages.crono.mese;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.packages.crono.CronoLogic;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.header.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14

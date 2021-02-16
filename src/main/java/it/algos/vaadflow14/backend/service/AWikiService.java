@@ -1,20 +1,15 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
-import it.algos.vaadflow14.backend.wrapper.WrapQuattroStringhe;
-import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.net.URLEncoder;
-import java.util.*;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.json.simple.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.net.*;
+import java.util.*;
 
 
 /**
@@ -772,7 +767,7 @@ public class AWikiService extends AAbstractService {
                     seconda = text.setNoQuadre(seconda);
                     prima = fixCode(prima);
                     seconda = fixCode(seconda);
-                    prima = text.setNoHtmlTag(prima, "kbd");
+                    prima = html.setNoHtmlTag(prima, "kbd");
                     if (prima.contains(PIPE)) {
                         if (prima.contains(DOPPIE_GRAFFE_INI) && prima.contains(DOPPIE_GRAFFE_END)) {
                         }
@@ -999,8 +994,8 @@ public class AWikiService extends AAbstractService {
         }
 
         sigla = sigla.trim();
-        sigla = text.setNoHtmlTag(sigla, "kbd");
-        sigla = text.setNoHtmlTag(sigla, "code");
+        sigla = html.setNoHtmlTag(sigla, "kbd");
+        sigla = html.setNoHtmlTag(sigla, "code");
         sigla = text.levaCodaDa(sigla, "<ref");
 
         if (text.isValid(nome)) {

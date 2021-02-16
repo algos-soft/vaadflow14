@@ -1,16 +1,14 @@
 package it.algos.vaadflow14.ui.view;
 
 import com.vaadin.flow.router.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.ui.button.ABottomLayout;
-import it.algos.vaadflow14.ui.button.ATopLayout;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import it.algos.vaadflow14.ui.footer.AFooter;
-import it.algos.vaadflow14.ui.header.AHeader;
-import it.algos.vaadflow14.ui.service.Parametro;
-
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.footer.*;
+import it.algos.vaadflow14.ui.header.*;
+import it.algos.vaadflow14.ui.service.*;
 
 
 /**
@@ -267,9 +265,15 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      */
     protected void fixHeaderLayout() {
         AHeader header = entityLogic.getAlertHeaderLayout(typeVista);
+        AIHeader header2 = entityLogic.getAlertLayout(typeVista);
 
         if (alertPlaceholder != null && header != null) {
             alertPlaceholder.add(header);
+            this.add(alertPlaceholder);
+        }
+
+        if (alertPlaceholder != null && header2 != null) {
+            alertPlaceholder.add(header2.get());
             this.add(alertPlaceholder);
         }
     }

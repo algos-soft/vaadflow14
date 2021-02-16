@@ -1,8 +1,7 @@
 package it.algos.vaadflow14.ui.header;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import it.algos.vaadflow14.backend.service.AArrayService;
-import it.algos.vaadflow14.backend.service.ATextService;
+import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -55,6 +54,14 @@ public abstract class AHeader extends VerticalLayout {
      */
     @Autowired
     protected ATextService text;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected AHtmlService html;
 
 
     protected void initView() {

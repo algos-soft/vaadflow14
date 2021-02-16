@@ -11,7 +11,7 @@ public enum AETypeColor implements AIType {
 
     normale("black"),
     nero("black"),
-    blue("blue"),
+    blu("blue"),
     verde("green"),
     rosso("red");
 
