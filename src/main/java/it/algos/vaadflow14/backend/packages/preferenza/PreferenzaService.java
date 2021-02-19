@@ -1,9 +1,11 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
 /**
  * Project vaadflow14
@@ -29,13 +31,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class APreferenzaService extends AAbstractService {
+public class PreferenzaService extends AService {
 
     /**
      * versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Costruttore senza parametri <br>
+     * Regola la entityClazz (final) associata a questo service <br>
+     */
+    public PreferenzaService() {
+        super(Preferenza.class);
+    }
 
     /**
      * Retrieves an entity by its id.
@@ -89,6 +98,41 @@ public class APreferenzaService extends AAbstractService {
         }
 
         return status;
+    }
+
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+     * <p>
+     * 1) deve esistere lo specifico metodo sovrascritto
+     * 2) deve essere valida la entityClazz
+     * 3) deve esistere la collezione su mongoDB
+     * 4) la collezione non deve essere vuota
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult resetEmptyOnly() {
+        AIResult result = super.resetEmptyOnly();
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            return result;
+        }
+
+        //--da sostituire
+        String message;
+        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "@PACKAGE@", "@ENTITY@Service");
+        return AResult.errato(message);
+
+        // return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
 }

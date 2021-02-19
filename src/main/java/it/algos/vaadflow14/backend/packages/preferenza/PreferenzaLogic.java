@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.annotation.*;
@@ -47,7 +48,7 @@ public class PreferenzaLogic extends ALogic {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public APreferenzaService pref;
+    public PreferenzaService pref;
 
     /**
      * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
@@ -67,6 +68,19 @@ public class PreferenzaLogic extends ALogic {
         this(AEOperation.edit);
     }
 
+
+    /**
+     * Costruttore con parametri <br>
+     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+     *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
+     * @param operationForm tipologia di Form in uso
+     */
+    public PreferenzaLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
+    }
 
     /**
      * Costruttore con parametro <br>
@@ -176,7 +190,11 @@ public class PreferenzaLogic extends ALogic {
 
         //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
         if (entityBean != null) {
-            currentForm = appContext.getBean(PreferenzaForm.class, this, getWrapForm(entityBean));
+            try {
+                currentForm = appContext.getBean(PreferenzaForm.class, this, getWrapForm(entityBean));
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "getBodyFormLayout");
+            }
         }
 
         return currentForm;
@@ -190,8 +208,8 @@ public class PreferenzaLogic extends ALogic {
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(AIPreferenza aePref, boolean generale) {
-        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isCompanySpecifica(), generale, aePref.getNote());
+    public Preferenza creaIfNotExist(AIPreferenza aePref) {
+        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
     }
 
 
@@ -202,26 +220,16 @@ public class PreferenzaLogic extends ALogic {
      * @param descrizione  (obbligatoria)
      * @param type         (obbligatorio) per convertire in byte[] i valori
      * @param defaultValue (obbligatorio) memorizza tutto in byte[]
-     * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param generale     (obbligatorio) preferenza di vaadflow, di default true
+     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
      *
      * @return la nuova entity appena creata e salvata
      */
-    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean generale, String note) {
-        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, usaCompany, generale, note));
+    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
     }
-
-
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-//     * Usa il @Builder di Lombok <br>
-//     * Eventuali regolazioni iniziali delle property <br>
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Preferenza newEntity() {
-//        return newEntity(VUOTA, VUOTA, (AETypePref) null, (Object) null, FlowVar.usaCompany ? true : false, true, VUOTA);
-//    }
 
 
     /**
@@ -231,31 +239,28 @@ public class PreferenzaLogic extends ALogic {
      * <p>
      * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
      *
-     * @param code         codice di riferimento (obbligatorio)
-     * @param descrizione  (obbligatoria)
-     * @param type         (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
-     * @param usaCompany   (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param generale     (obbligatorio) preferenza di vaadflow, di default true
-     * @param note         (facoltativo)
+     * @param code          codice di riferimento (obbligatorio)
+     * @param descrizione   (obbligatoria)
+     * @param type          (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
+     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+     * @param note          (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean generale, String note) {
+    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
         Preferenza newEntityBean = Preferenza.builderPreferenza()
-
                 .code(text.isValid(code) ? code : null)
-
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
-
                 .type(type != null ? type : AETypePref.string)
-
                 .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
-
+                .vaadFlow(  vaadFlow)
                 .usaCompany(FlowVar.usaCompany ? usaCompany : false)
-
-                .generale(generale)
-
+                .needRiavvio(needRiavvio)
+                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
                 .build();
 
         if (text.isValid(note)) {
@@ -326,20 +331,19 @@ public class PreferenzaLogic extends ALogic {
         return (Preferenza) super.findById(keyID);
     }
 
-
-//    /**
-//     * Retrieves an entity by its keyProperty.
-//     *
-//     * @param keyValue must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    @Override
-//    public Preferenza findByKey(String keyValue) {
-//        return (Preferenza) super.findByKey(keyValue);
-//    }
+    //    /**
+    //     * Retrieves an entity by its keyProperty.
+    //     *
+    //     * @param keyValue must not be {@literal null}.
+    //     *
+    //     * @return the entity with the given id or {@literal null} if none found
+    //     *
+    //     * @throws IllegalArgumentException if {@code id} is {@literal null}
+    //     */
+    //    @Override
+    //    public Preferenza findByKey(String keyValue) {
+    //        return (Preferenza) super.findByKey(keyValue);
+    //    }
 
 
     public Object getValue(String keyID) {
@@ -385,45 +389,43 @@ public class PreferenzaLogic extends ALogic {
         return getString(keyID);
     }
 
-
-
-//    /**
-//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-//     * <p>
-//     * 1) deve esistere lo specifico metodo sovrascritto
-//     * 2) deve essere valida la entityClazz
-//     * 3) deve esistere la collezione su mongoDB
-//     * 4) la collezione non deve essere vuota
-//     * <p>
-//     * I dati possono essere: <br>
-//     * 1) recuperati da una Enumeration interna <br>
-//     * 2) letti da un file CSV esterno <br>
-//     * 3) letti da Wikipedia <br>
-//     * 4) creati direttamente <br>
-//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper col risultato ed eventuale messaggio di errore
-//     */
-//    @Override
-//    public AIResult resetEmptyOnly() {
-//        AIResult result = null;
-//        AIData dataClazz;
-//
-//        if (FlowVar.dataClazz != null) {
-//            if (FlowVar.dataClazz.equals(FlowData.class)) {
-//                result = dataInstance.resetPreferenze(this,true);
-//            }
-//            else {
-//                dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
-//                if (dataClazz != null) {
-//                    result = dataClazz.resetPreferenze(this,true);
-//                }
-//            }
-//        }
-//
-//        return result;
-//    }
+    //    /**
+    //     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+    //     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
+    //     * <p>
+    //     * 1) deve esistere lo specifico metodo sovrascritto
+    //     * 2) deve essere valida la entityClazz
+    //     * 3) deve esistere la collezione su mongoDB
+    //     * 4) la collezione non deve essere vuota
+    //     * <p>
+    //     * I dati possono essere: <br>
+    //     * 1) recuperati da una Enumeration interna <br>
+    //     * 2) letti da un file CSV esterno <br>
+    //     * 3) letti da Wikipedia <br>
+    //     * 4) creati direttamente <br>
+    //     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     *
+    //     * @return wrapper col risultato ed eventuale messaggio di errore
+    //     */
+    //    @Override
+    //    public AIResult resetEmptyOnly() {
+    //        AIResult result = null;
+    //        AIData dataClazz;
+    //
+    //        if (FlowVar.dataClazz != null) {
+    //            if (FlowVar.dataClazz.equals(FlowData.class)) {
+    //                result = dataInstance.resetPreferenze(this,true);
+    //            }
+    //            else {
+    //                dataClazz = (AIData) appContext.getBean(FlowVar.dataClazz);
+    //                if (dataClazz != null) {
+    //                    result = dataClazz.resetPreferenze(this,true);
+    //                }
+    //            }
+    //        }
+    //
+    //        return result;
+    //    }
 
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>

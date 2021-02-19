@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.interfaces;
 
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.enumeration.*;
 
 /**
  * Project vaadflow
@@ -13,17 +13,22 @@ public interface AIPreferenza {
 
     String getKeyCode();
 
-    String getDescrizione();
-
     AETypePref getType();
-
-    boolean isCompanySpecifica();
 
     Object getValue();
 
     Object getDefaultValue();
 
-    String getNote();
+     boolean isVaadFlow();
 
+     boolean isUsaCompany();
+
+     boolean isNeedRiavvio();
+
+     boolean isVisibileAdmin();
+
+    String getDescrizione();
+
+    String getNote();
 
 }// end of interface

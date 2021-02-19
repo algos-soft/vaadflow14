@@ -6,7 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.AEVista;
 import it.algos.vaadflow14.ui.service.ARouteService;
@@ -106,7 +106,7 @@ public abstract class AViewProperty extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public APreferenzaService pref;
+    public PreferenzaService pref;
 
     //    @Autowired
     //    public ABootService boot;

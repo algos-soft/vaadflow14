@@ -1,32 +1,20 @@
 package it.algos.vaadflow14.backend.data;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.enumeration.AECrono;
-import it.algos.vaadflow14.backend.enumeration.AEGeografia;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
-import it.algos.vaadflow14.backend.service.AClassService;
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import java.util.*;
+import java.util.function.*;
 
 /**
  * Project vaadflow
@@ -271,7 +259,7 @@ public class FlowData implements AIData {
 
         //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
         for (AIPreferenza aePref : AEPreferenza.values()) {
-            numRec = preferenzaLogic.creaIfNotExist(aePref, true) != null ? numRec + 1 : numRec;
+            numRec = preferenzaLogic.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
         }
 
         if (numRec == 0) {

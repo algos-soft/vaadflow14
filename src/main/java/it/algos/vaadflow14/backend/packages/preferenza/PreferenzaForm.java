@@ -1,22 +1,18 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.service.AEnumerationService;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.form.AForm;
-import it.algos.vaadflow14.ui.form.WrapForm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.ui.form.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import java.time.*;
 
 /**
  * Project vaadflow14

@@ -98,7 +98,7 @@ public class SimpleData extends FlowData {
 
         //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
         for (AIPreferenza aePref : AESimplePreferenza.values()) {
-            numRec = preferenzaLogic.creaIfNotExist(aePref,false) != null ? numRec + 1 : numRec;
+            numRec = preferenzaLogic.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
         }
 
         if (numRec == 0) {

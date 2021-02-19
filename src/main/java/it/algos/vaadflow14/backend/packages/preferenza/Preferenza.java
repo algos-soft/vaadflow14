@@ -1,22 +1,17 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.ACEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -40,8 +35,8 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
 @AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
-@AIList(fields = "code,type,value,usaCompany,generale,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,usaCompany,generale,descrizione,type,value")
+@AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
+@AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value")
 public class Preferenza extends ACEntity {
 
     /**
@@ -77,19 +72,41 @@ public class Preferenza extends ACEntity {
     @AIColumn(widthEM = 10)
     public byte[] value;
 
+
     /**
-     * usaCompany (facoltativo) usa un prefisso col codice della company
+     * generale (facoltativo, default true) se usata da vaadflow
+     * specifica se usata da progetto derivato (vaadwam, vaadwiki)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Preferenza standard")
+    @AIColumn(headerIcon = VaadinIcon.HOME)
+    public boolean vaadFlow;
+
+
+    /**
+     * usaCompany (facoltativo, default false) usa un prefisso col codice della company
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Specifica per ogni company")
     @AIColumn(headerIcon = VaadinIcon.FACTORY)
     public boolean usaCompany;
 
+
     /**
-     * generale (facoltativo) se usata da vaadflow
+     * necessita di riavvio per essere utilizzata (facoltativo, default false)
+     * alla partenza del programma viene acquisita nelle costanti di FlowCost
+     * per evitare inutili accessi al mongoDB
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.radioSiNo)
-    @AIColumn(headerIcon = VaadinIcon.HOME)
-    public boolean generale;
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Occorre riavviare")
+    @AIColumn(headerIcon = VaadinIcon.REFRESH)
+    public boolean needRiavvio;
+
+    /**
+     * visibile e modificabile da un admin (facoltativo, default false)
+     * per creare una lista di preferenze nella scheda utente dell'admin oppure
+     * nella scheda della company
+     */
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Visibile agli admin")
+    @AIColumn(headerIcon = VaadinIcon.USER)
+    public boolean visibileAdmin;
 
     /**
      * descrizione (obbligatoria)

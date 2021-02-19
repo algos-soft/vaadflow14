@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
  * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
+ * Vengono create istanze diverse per la List e per il Form <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>

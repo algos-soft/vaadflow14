@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.html.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -29,10 +30,10 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AHtmlService extends AAbstractService {
 
-   private static final String LINE_HEIGHT = "14pt";//@todo Volendo si può mettere in preferenza
+    private static final String LINE_HEIGHT = "14pt";//@todo Volendo si può mettere in preferenza
 
     /**
-     * Span
+     * Costruisce uno span
      *
      * @param message da visualizzare
      *
@@ -43,7 +44,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span
+     * Costruisce uno span
      *
      * @param message da visualizzare
      *
@@ -67,7 +68,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span
      *
      * @param message da visualizzare
      *
@@ -86,7 +87,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -98,7 +99,7 @@ public class AHtmlService extends AAbstractService {
 
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -109,7 +110,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -120,7 +121,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -131,7 +132,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -142,7 +143,7 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Span colorato
+     * Costruisce uno span colorato
      *
      * @param message da visualizzare
      *
@@ -154,7 +155,7 @@ public class AHtmlService extends AAbstractService {
 
 
     /**
-     * Span html
+     * Costruisce uno span html
      *
      * @param message da visualizzare
      *
@@ -170,6 +171,60 @@ public class AHtmlService extends AAbstractService {
         }
 
         return span;
+    }
+
+    /**
+     * Contorna il testo con uno span
+     *
+     * @param testoIn da regolare
+     *
+     * @return testo contornato da tag iniziale e finale
+     */
+    private String colore(final String colore, final String testoIn) {
+        String testoOut = VUOTA;
+        String tagIni = String.format("<span style=\"color:%s\">", colore);
+        String tagEnd = "</span>";
+
+        if (text.isValid(testoIn)) {
+            testoOut += tagIni;
+            testoOut += testoIn;
+            testoOut += tagEnd;
+        }
+
+        return testoOut;
+    }
+
+    /**
+     * Contorna il testo con uno span
+     *
+     * @param testoIn da regolare
+     *
+     * @return testo contornato da tag iniziale e finale
+     */
+    public String verde(final String testoIn) {
+        return colore("green", testoIn);
+    }
+
+    /**
+     * Contorna il testo con uno span
+     *
+     * @param testoIn da regolare
+     *
+     * @return testo contornato da tag iniziale e finale
+     */
+    public String blu(final String testoIn) {
+        return colore("blue", testoIn);
+    }
+
+    /**
+     * Contorna il testo con uno span
+     *
+     * @param testoIn da regolare
+     *
+     * @return testo contornato da tag iniziale e finale
+     */
+    public String rosso(final String testoIn) {
+        return colore("red", testoIn);
     }
 
     /**

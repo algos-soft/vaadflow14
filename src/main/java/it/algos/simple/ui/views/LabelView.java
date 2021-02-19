@@ -51,6 +51,8 @@ public class LabelView extends VerticalLayout {
         this.add(html.getSpanBlu("Testo blu normale"));
         this.add(html.getSpan("Testo blu leggero molto grande", AETypeColor.blu, AETypeWeight.w200, AETypeSize.xLarge));
         this.html();
+        this.html2();
+        this.html3();
     }
 
     private void labelNormale() {
@@ -251,6 +253,32 @@ public class LabelView extends VerticalLayout {
         message += "<small> dimensione piccola, </small>";
         message += "<span style=\"color:green\"> colore verde, </span>";
         message += "<b> peso bold, <b>";
+        this.add(html.getSpanHtml(message));
+    }
+
+    private void html2() {
+        String message = VUOTA;
+
+        message += "SPAN in riga:";
+        message += " dimensione normale, ";
+        message += html.verde("testo verde");
+        message += " seguito da un ";
+        message += html.rosso("testo rosso");
+        this.add(html.getSpanHtml(message));
+    }
+
+    private void html3() {
+        String message = VUOTA;
+
+        message += "SPAN multiplo:";
+        message += " dimensione normale, ";
+        message += html.rosso("testo rosso");
+        message += " all'interno di un testo verde bold";
+        this.add(html.getSpanVerde(message,AETypeWeight.bold));
+
+        message += html.verde("Questo funzione: dimensione normale, ");
+        message += html.rosso("testo rosso");
+        message += html.verde(" all'interno di un testo verde (non bold))");
         this.add(html.getSpanHtml(message));
     }
 

@@ -5,7 +5,7 @@ import it.algos.simple.backend.enumeration.AESimplePreferenza;
 import it.algos.unit.ATest;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
+import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
 import it.algos.vaadflow14.backend.service.ADateService;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import org.junit.Assert;
@@ -37,7 +37,7 @@ public class APreferenzaServiceTest extends ATest {
      * The Service.
      */
     @InjectMocks
-    APreferenzaService pref;
+    PreferenzaService pref;
 
     /**
      * The Service.

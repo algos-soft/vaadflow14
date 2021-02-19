@@ -205,6 +205,14 @@ public abstract class ALogic implements AILogic {
     @Autowired
     public ADataProviderService dataService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AHtmlService html;
+
 
     /**
      * Flag di preferenza per aprire il dialog di detail con un bottone Edit. Normalmente true. <br>
@@ -516,7 +524,8 @@ public abstract class ALogic implements AILogic {
      * @return wrapper per passaggio dati
      */
     protected AlertWrap getAlertWrapList() {
-        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+//        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+        return null;
     }
 
     /**

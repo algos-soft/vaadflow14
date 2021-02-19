@@ -1,23 +1,16 @@
 package it.algos.simple.backend.enumeration;
 
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.interfaces.AIEnum;
-import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
-import it.algos.vaadflow14.backend.packages.preferenza.APreferenzaService;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.service.ADateService;
-import it.algos.vaadflow14.backend.service.AEnumerationService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 import static it.algos.simple.backend.application.SimpleCost.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
+import javax.annotation.*;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -38,11 +31,8 @@ public enum AESimplePreferenza implements AIPreferenza {
 
     ;
 
-    //--codice di riferimento. Se è usaCompany = true, DEVE contenere anche il code della company come prefisso.
+    //--codice di riferimento. Se è usaCompany=true, DEVE contenere anche il code della company come prefisso.
     private String keyCode;
-
-    //--descrizione breve ma comprensibile. Ulteriori (eventuali) informazioni nel campo 'note'
-    private String descrizione;
 
     //--tipologia di dato da memorizzare.
     //--Serve per convertire (nei due sensi) il valore nel formato byte[] usato dal mongoDb
@@ -51,8 +41,26 @@ public enum AESimplePreferenza implements AIPreferenza {
     //--Valore java iniziale da convertire in byte[] a seconda del type
     private Object defaultValue;
 
+    //--preferenze singole per ogni company; usa un prefisso col codice della company
+    private boolean usaCompany;
+
+    //--preferenze generale del framework e NON specifica di un'applicazione
+    private boolean vaadFlow;
+
+    //--preferenze che necessita di un riavvio del programma per avere effetto
+    private boolean needRiavvio;
+
+    //--preferenze visibile agli admin se l'applicazione è usaSecurity=true
+    private boolean visibileAdmin;
+
+    //--descrizione breve ma comprensibile. Ulteriori (eventuali) informazioni nel campo 'note'
+    private String descrizione;
+
+    //--descrizione aggiuntiva eventuale
+    private String note;
+
     //--Link injettato da un metodo static
-    private APreferenzaService preferenzaService;
+    private PreferenzaService preferenzaService;
 
     //--Link injettato da un metodo static
     private ALogService logger;
@@ -63,29 +71,26 @@ public enum AESimplePreferenza implements AIPreferenza {
     //--Link injettato da un metodo static
     private AEnumerationService enumService;
 
-    //--usa un prefisso col codice della company
-    private boolean companySpecifica;
 
-    //--descrizione aggiuntiva
-    private String note;
-
-
-    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica) {
-        this(keyCode, descrizione, type, defaultValue, companySpecifica, VUOTA);
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
+        this(keyCode, descrizione, type, defaultValue, usaCompany, VUOTA);
     }// fine del costruttore
 
 
-    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean companySpecifica, String note) {
-        this.setKeyCode(keyCode);
-        this.setDescrizione(descrizione);
-        this.setType(type);
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+        this.keyCode = keyCode;
+        this.descrizione = descrizione;
+        this.type = type;
         this.setNote(note);
-        this.setCompanySpecifica(companySpecifica);
+        this.usaCompany = usaCompany;
+        this.vaadFlow = false;
+        this.needRiavvio = false;
+        this.visibileAdmin = false;
         this.setDefaultValue(defaultValue);
     }// fine del costruttore
 
 
-    public void setPreferenzaService(APreferenzaService preferenzaService) {
+    public void setPreferenzaService(PreferenzaService preferenzaService) {
         this.preferenzaService = preferenzaService;
     }
 
@@ -101,49 +106,45 @@ public enum AESimplePreferenza implements AIPreferenza {
         this.enumService = enumService;
     }
 
-
+    @Override
     public String getKeyCode() {
         return keyCode;
     }
 
-
-    public void setKeyCode(String keyCode) {
-        this.keyCode = keyCode;
-    }
-
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-
+    @Override
     public AETypePref getType() {
         return type;
     }
 
-
-    public void setType(AETypePref type) {
-        this.type = type;
-    }
-
     @Override
-    public boolean isCompanySpecifica() {
-        return companySpecifica;
-    }
-
-    public void setCompanySpecifica(boolean companySpecifica) {
-        this.companySpecifica = companySpecifica;
-    }
-
     public Object getDefaultValue() {
         return defaultValue;
     }
+    @Override
+    public boolean isVaadFlow() {
+        return vaadFlow;
+    }
 
+
+    @Override
+    public boolean isUsaCompany() {
+        return usaCompany;
+    }
+
+    @Override
+    public boolean isNeedRiavvio() {
+        return needRiavvio;
+    }
+
+    @Override
+    public boolean isVisibileAdmin() {
+        return visibileAdmin;
+    }
+
+    @Override
+    public String getDescrizione() {
+        return descrizione;
+    }
 
     public void setDefaultValue(Object defaultValue) {
         if (type == AETypePref.enumeration) {
@@ -174,10 +175,11 @@ public enum AESimplePreferenza implements AIPreferenza {
         return javaValue;
     }
 
+
     public String getStr() {
         String valore = VUOTA;
         Object value = defaultValue;
-        String message = VUOTA;
+        String message;
 
         switch (type) {
             case string:
@@ -186,12 +188,12 @@ public enum AESimplePreferenza implements AIPreferenza {
                 break;
             case bool:
                 valore = (boolean) getValue() ? VERO : FALSO;
-                message = String.format("La preferenza %s è di type boolean. Meglio chiamare is() invece di getStr()", name());
+                message = String.format("La preferenza %s è di type boolean. Meglio chiamare is() invece di getStr()", keyCode);
                 logger.warn(message);
                 break;
             case integer:
                 valore += getValue();
-                message = String.format("La preferenza %s è di type integer. Meglio chiamare getInt() invece di getStr()", name());
+                message = String.format("La preferenza %s è di type integer. Meglio chiamare getInt() invece di getStr()", keyCode);
                 logger.warn(message);
                 break;
             case lungo:
@@ -220,28 +222,30 @@ public enum AESimplePreferenza implements AIPreferenza {
     }
 
     public boolean is() {
-        boolean status = false;
-        Object javaValue;
+        String message;
 
         if (type == AETypePref.bool) {
-            javaValue = getValue();
-            status = javaValue instanceof Boolean && (boolean) javaValue;
+            return getValue() != null ? (boolean) getValue() : false;
         }
-
-        return status;
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare is()", keyCode, type);
+            logger.error(message);
+            return false;
+        }
     }
 
 
     public int getInt() {
-        int value = 0;
-        Object javaValue;
+        String message;
 
         if (type == AETypePref.integer) {
-            javaValue = getValue();
-            value = (javaValue instanceof Integer) ? (Integer) javaValue : 0;
+            return getValue() != null ? (int) getValue() : 0;
         }
-
-        return value;
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare getInt()", keyCode, type);
+            logger.error(message);
+            return 0;
+        }
     }
 
 
@@ -259,7 +263,7 @@ public enum AESimplePreferenza implements AIPreferenza {
     public static class APreferenzaServiceInjector {
 
         @Autowired
-        private APreferenzaService preferenzaService;
+        private PreferenzaService preferenzaService;
 
         @Autowired
         private ALogService logger;
@@ -272,7 +276,7 @@ public enum AESimplePreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
-            for (AESimplePreferenza pref : AESimplePreferenza.values()) {
+            for (AEPreferenza pref : AEPreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
                 pref.setLogger(logger);
                 pref.setDate(date);
@@ -281,6 +285,5 @@ public enum AESimplePreferenza implements AIPreferenza {
         }
 
     }
-
 
 }
