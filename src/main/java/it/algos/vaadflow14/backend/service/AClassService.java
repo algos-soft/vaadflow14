@@ -1,18 +1,13 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.logic.EntityLogic;
-import it.algos.vaadflow14.backend.logic.EntityService;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_ENTITY_LOGIC;
-import static it.algos.vaadflow14.backend.application.FlowCost.SUFFIX_ENTITY_SERVICE;
+import org.springframework.stereotype.*;
 
 
 /**
@@ -157,8 +152,8 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza di PreferenzaLogic associata alla Entity
      */
-    public PreferenzaLogic getPreferenzaLogic() {
-        return (PreferenzaLogic) getLogicFromEntityClazz(Preferenza.class);
+    public PreferenzaService getPreferenzaLogic() {
+        return (PreferenzaService) getServiceFromEntityClazz(Preferenza.class);
     }
 
 }

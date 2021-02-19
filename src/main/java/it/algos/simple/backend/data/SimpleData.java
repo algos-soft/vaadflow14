@@ -1,22 +1,18 @@
 package it.algos.simple.backend.data;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.simple.backend.enumeration.AESimplePreferenza;
-import it.algos.simple.backend.packages.GammaLogic;
-import it.algos.simple.backend.packages.LambdaLogic;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.data.FlowData;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.interfaces.AIPreferenza;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.simple.backend.application.SimpleCost.*;
+import it.algos.simple.backend.enumeration.*;
+import it.algos.simple.backend.packages.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
 
 /**
  * Project vaadflow14
@@ -88,8 +84,8 @@ public class SimpleData extends FlowData {
      *                <br>
      */
     @Override
-    public AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset) {
-        AIResult result = super.resetPreferenze(preferenzaLogic,isReset);
+    public AIResult resetPreferenze(PreferenzaService preferenzaService, boolean isReset) {
+        AIResult result = super.resetPreferenze(preferenzaService,isReset);
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -98,7 +94,7 @@ public class SimpleData extends FlowData {
 
         //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
         for (AIPreferenza aePref : AESimplePreferenza.values()) {
-            numRec = preferenzaLogic.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+            numRec = preferenzaService.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
         }
 
         if (numRec == 0) {

@@ -1,5 +1,8 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovraScrivibile = false)
 public class PreferenzaService extends AService {
 
     /**
@@ -46,6 +50,103 @@ public class PreferenzaService extends AService {
         super(Preferenza.class);
     }
 
+//    /**
+//     * Retrieves an entity by its id.
+//     *
+//     * @param keyID must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    public Preferenza findByKey(String keyCode) {
+//        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyCode);
+//    }
+//
+//
+//    /**
+//     * Retrieves an entity by its id.
+//     *
+//     * @param keyID must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    public Preferenza findById(String keyID) {
+//        return (Preferenza) mongo.findById(Preferenza.class, keyID);
+//    }
+
+
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param aePref: enumeration per la creazione-reset di tutte le entities
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    public Preferenza creaIfNotExist(AIPreferenza aePref) {
+        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
+    }
+
+
+    /**
+     * Crea e registra una entity solo se non esisteva <br>
+     *
+     * @param code         codice di riferimento (obbligatorio)
+     * @param descrizione  (obbligatoria)
+     * @param type         (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+     *
+     * @return la nuova entity appena creata e salvata
+     */
+    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * <p>
+     * @param code          codice di riferimento (obbligatorio)
+     * @param descrizione   (obbligatoria)
+     * @param type          (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
+     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+     * @param note          (facoltativo)
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+        Preferenza newEntityBean = Preferenza.builderPreferenza()
+                .code(text.isValid(code) ? code : null)
+                .descrizione(text.isValid(descrizione) ? descrizione : null)
+                .type(type != null ? type : AETypePref.string)
+                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
+                .vaadFlow(  vaadFlow)
+                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
+                .needRiavvio(needRiavvio)
+                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
+                .build();
+
+        if (text.isValid(note)) {
+            newEntityBean.note = note;
+        }
+
+        return (Preferenza) fixKey(newEntityBean);
+    }
+
     /**
      * Retrieves an entity by its id.
      *
@@ -55,49 +156,26 @@ public class PreferenzaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Preferenza findByKey(String keyCode) {
-        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyCode);
+    @Override
+    public Preferenza findById(final String keyID) {
+        //        return (Preferenza) mongo.findById(Preferenza.class, keyID);
+        return (Preferenza) super.findById(keyID);
     }
 
 
     /**
-     * Retrieves an entity by its id.
+     * Retrieves an entity by its keyProperty.
      *
-     * @param keyID must not be {@literal null}.
+     * @param keyValue must not be {@literal null}.
      *
      * @return the entity with the given id or {@literal null} if none found
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Preferenza findById(String keyID) {
-        return (Preferenza) mongo.findById(Preferenza.class, keyID);
-    }
-
-
-    public Object getValue(String keyCode) {
-        Object value = null;
-        Preferenza pref = findByKey(keyCode);
-
-        if (pref != null) {
-            value = pref.getType().bytesToObject(pref.value);
-        }
-
-        return value;
-    }
-
-
-    public Boolean isBool(String keyCode) {
-        boolean status = false;
-        Object objValue = getValue(keyCode);
-
-        if (objValue != null && objValue instanceof Boolean) {
-            status = (boolean) objValue;
-        }
-        else {
-            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
-        }
-
-        return status;
+    @Override
+    public Preferenza findByKey(final String keyValue) {
+        //        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
+        return (Preferenza) super.findByKey(keyValue);
     }
 
     /**
@@ -133,6 +211,33 @@ public class PreferenzaService extends AService {
         return AResult.errato(message);
 
         // return super.fixPostReset(AETypeReset.enumeration, numRec);
+    }
+
+
+    public Object getValue(String keyCode) {
+        Object value = null;
+        Preferenza pref = findByKey(keyCode);
+
+        if (pref != null) {
+            value = pref.getType().bytesToObject(pref.value);
+        }
+
+        return value;
+    }
+
+
+    public Boolean isBool(String keyCode) {
+        boolean status = false;
+        Object objValue = getValue(keyCode);
+
+        if (objValue != null && objValue instanceof Boolean) {
+            status = (boolean) objValue;
+        }
+        else {
+            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+        }
+
+        return status;
     }
 
 }

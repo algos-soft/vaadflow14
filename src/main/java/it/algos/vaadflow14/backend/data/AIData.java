@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.data;
 
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaLogic;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 
 /**
  * Project vbase
@@ -26,6 +26,6 @@ public interface AIData {
      *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
      *                <br>
      */
-    AIResult resetPreferenze(PreferenzaLogic preferenzaLogic, boolean isReset);
+    AIResult resetPreferenze(PreferenzaService preferenzaService, boolean isReset);
 
 }

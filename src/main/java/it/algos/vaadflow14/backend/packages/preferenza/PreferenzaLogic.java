@@ -3,11 +3,9 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.form.*;
@@ -201,74 +199,74 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param aePref: enumeration per la creazione-reset di tutte le entities
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Preferenza creaIfNotExist(AIPreferenza aePref) {
-        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
-    }
+//    /**
+//     * Crea e registra una entity solo se non esisteva <br>
+//     *
+//     * @param aePref: enumeration per la creazione-reset di tutte le entities
+//     *
+//     * @return la nuova entity appena creata e salvata
+//     */
+//    public Preferenza creaIfNotExist(AIPreferenza aePref) {
+//        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
+//    }
+//
+//
+//    /**
+//     * Crea e registra una entity solo se non esisteva <br>
+//     *
+//     * @param code         codice di riferimento (obbligatorio)
+//     * @param descrizione  (obbligatoria)
+//     * @param type         (obbligatorio) per convertire in byte[] i valori
+//     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+//     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+//     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+//     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+//     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+//     *
+//     * @return la nuova entity appena creata e salvata
+//     */
+//    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+//        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
+//    }
 
 
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param code         codice di riferimento (obbligatorio)
-     * @param descrizione  (obbligatoria)
-     * @param type         (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
-     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
-     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
-     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
-        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
-    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * <p>
-     * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-     *
-     * @param code          codice di riferimento (obbligatorio)
-     * @param descrizione   (obbligatoria)
-     * @param type          (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
-     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
-     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
-     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
-     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
-     * @param note          (facoltativo)
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
-        Preferenza newEntityBean = Preferenza.builderPreferenza()
-                .code(text.isValid(code) ? code : null)
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
-                .type(type != null ? type : AETypePref.string)
-                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
-                .vaadFlow(  vaadFlow)
-                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
-                .needRiavvio(needRiavvio)
-                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
-                .build();
-
-        if (text.isValid(note)) {
-            newEntityBean.note = note;
-        }
-
-        return (Preferenza) fixKey(newEntityBean);
-    }
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Usa il @Builder di Lombok <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     * <p>
+//     * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+//     *
+//     * @param code          codice di riferimento (obbligatorio)
+//     * @param descrizione   (obbligatoria)
+//     * @param type          (obbligatorio) per convertire in byte[] i valori
+//     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
+//     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+//     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+//     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+//     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+//     * @param note          (facoltativo)
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+//        Preferenza newEntityBean = Preferenza.builderPreferenza()
+//                .code(text.isValid(code) ? code : null)
+//                .descrizione(text.isValid(descrizione) ? descrizione : null)
+//                .type(type != null ? type : AETypePref.string)
+//                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
+//                .vaadFlow(  vaadFlow)
+//                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
+//                .needRiavvio(needRiavvio)
+//                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
+//                .build();
+//
+//        if (text.isValid(note)) {
+//            newEntityBean.note = note;
+//        }
+//
+//        return (Preferenza) fixKey(newEntityBean);
+//    }
 
 
     /**
@@ -317,19 +315,19 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-    /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Preferenza findById(String keyID) {
-        return (Preferenza) super.findById(keyID);
-    }
+//    /**
+//     * Retrieves an entity by its id.
+//     *
+//     * @param keyID must not be {@literal null}.
+//     *
+//     * @return the entity with the given id or {@literal null} if none found
+//     *
+//     * @throws IllegalArgumentException if {@code id} is {@literal null}
+//     */
+//    @Override
+//    public Preferenza findById(String keyID) {
+//        return (Preferenza) super.findById(keyID);
+//    }
 
     //    /**
     //     * Retrieves an entity by its keyProperty.
@@ -348,7 +346,7 @@ public class PreferenzaLogic extends ALogic {
 
     public Object getValue(String keyID) {
         Object value = null;
-        Preferenza pref = findById(keyID);
+        Preferenza pref = (Preferenza)findById(keyID);
 
         if (pref != null) {
             value = pref.getType().bytesToObject(pref.value);

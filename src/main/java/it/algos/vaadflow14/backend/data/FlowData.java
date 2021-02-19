@@ -232,9 +232,9 @@ public class FlowData implements AIData {
      */
     @Override
     public void fixPreferenze() {
-        PreferenzaLogic preferenzaLogic = classService.getPreferenzaLogic();
-        if (preferenzaLogic != null) {
-            resetPreferenze(preferenzaLogic, false);
+        PreferenzaService preferenzaService = classService.getPreferenzaLogic();
+        if (preferenzaService != null) {
+            resetPreferenze(preferenzaService, false);
         }
     }
 
@@ -249,7 +249,7 @@ public class FlowData implements AIData {
      *                <br>
      */
     @Override
-    public AIResult resetPreferenze(final PreferenzaLogic preferenzaLogic, final boolean isReset) {
+    public AIResult resetPreferenze(final PreferenzaService preferenzaService, final boolean isReset) {
         AIResult result;
         int numRec = 0;
 
@@ -259,7 +259,7 @@ public class FlowData implements AIData {
 
         //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
         for (AIPreferenza aePref : AEPreferenza.values()) {
-            numRec = preferenzaLogic.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+            numRec = preferenzaService.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
         }
 
         if (numRec == 0) {
