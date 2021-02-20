@@ -1,12 +1,13 @@
 package it.algos.vaadflow14.backend.application;
 
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadflow
@@ -172,6 +173,14 @@ public class FlowVar {
      * Usata da ALayoutService per conto di MainLayout allo start della UI-logic <br>
      */
     public static List<Class<?>> menuRouteList;
+
+
+    /**
+     * Lista delle enum di preferenze specifiche. <br>
+     * Quelle generali dell'applicazione sono in AEPreferenza.values() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     */
+    public static List<AIPreferenza> preferenzeSpecificheList;
 
     /**
      * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>

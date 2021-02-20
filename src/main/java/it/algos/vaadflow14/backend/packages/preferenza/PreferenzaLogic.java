@@ -3,14 +3,12 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -40,31 +38,31 @@ public class PreferenzaLogic extends ALogic {
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    public PreferenzaService pref;
+//    /**
+//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+//     */
+//    @Autowired
+//    public PreferenzaService pref;
 
-    /**
-     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
-     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-     */
-    public FlowData dataInstance;
+//    /**
+//     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+//     */
+//    public FlowData dataInstance;
 
-    /**
-     * Costruttore senza parametri <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    @Deprecated
-    public PreferenzaLogic() {
-        this(AEOperation.edit);
-    }
+//    /**
+//     * Costruttore senza parametri <br>
+//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Costruttore usato da AListView <br>
+//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
+//     */
+//    @Deprecated
+//    public PreferenzaLogic() {
+//        this(AEOperation.edit);
+//    }
 
 
     /**
@@ -80,19 +78,19 @@ public class PreferenzaLogic extends ALogic {
         super(entityService, operationForm);
     }
 
-    /**
-     * Costruttore con parametro <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
-     *
-     * @param operationForm tipologia di Form in uso
-     */
-    public PreferenzaLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Preferenza.class;
-        this.setDataInstance(dataInstance);
-    }
+//    /**
+//     * Costruttore con parametro <br>
+//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+//     * Costruttore usato da AFormView <br>
+//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+//     *
+//     * @param operationForm tipologia di Form in uso
+//     */
+//    public PreferenzaLogic(AEOperation operationForm) {
+//        super(operationForm);
+//        super.entityClazz = Preferenza.class;
+//        this.setDataInstance(dataInstance);
+//    }
 
 
     /**
@@ -269,50 +267,50 @@ public class PreferenzaLogic extends ALogic {
 //    }
 
 
-    /**
-     * Operazioni eseguite PRIMA di save o di insert <br>
-     * Regolazioni automatiche di property <br>
-     * Controllo della validità delle properties obbligatorie <br>
-     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
-     * Controlla se la entity registra le date di creazione e modifica <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     *
-     * @param entityBean da regolare prima del save
-     * @param operation  del dialogo (NEW, Edit)
-     *
-     * @return the modified entity
-     */
-    @Override
-    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
-        Preferenza entityPreferenza = (Preferenza) super.beforeSave(entityBean, operation);
+//    /**
+//     * Operazioni eseguite PRIMA di save o di insert <br>
+//     * Regolazioni automatiche di property <br>
+//     * Controllo della validità delle properties obbligatorie <br>
+//     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
+//     * Controlla se la entity registra le date di creazione e modifica <br>
+//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     *
+//     * @param entityBean da regolare prima del save
+//     * @param operation  del dialogo (NEW, Edit)
+//     *
+//     * @return the modified entity
+//     */
+//    @Override
+//    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+//        Preferenza entityPreferenza = (Preferenza) super.beforeSave(entityBean, operation);
+//
+//        return fixValue(entityPreferenza);
+//    }
 
-        return fixValue(entityPreferenza);
-    }
 
-
-    /**
-     * Regola il valore (obbligatorio) della entity prima di salvarla <br>
-     *
-     * @param entityPreferenza da regolare prima del save
-     *
-     * @return true se la entity è stata salvata
-     */
-    public Preferenza fixValue(Preferenza entityPreferenza) {
-        Object value;
-        //        Preferenza entity = setValue(keyCode, value, companyPrefix);
-        //
-        //        if (entity != null) {
-        //            entity = (Preferenza) this.save(entity);
-        //            salvata = entity != null;
-        //        }// end of if cycle
-
-        //        if (value == null) {
-        //            entityPreferenza = null;
-        //        }
-        //        entityPreferenza.value = AETypePref.string.objectToBytes(value);
-        //
-        return entityPreferenza;
-    }
+//    /**
+//     * Regola il valore (obbligatorio) della entity prima di salvarla <br>
+//     *
+//     * @param entityPreferenza da regolare prima del save
+//     *
+//     * @return true se la entity è stata salvata
+//     */
+//    public Preferenza fixValue(Preferenza entityPreferenza) {
+//        Object value;
+//        //        Preferenza entity = setValue(keyCode, value, companyPrefix);
+//        //
+//        //        if (entity != null) {
+//        //            entity = (Preferenza) this.save(entity);
+//        //            salvata = entity != null;
+//        //        }// end of if cycle
+//
+//        //        if (value == null) {
+//        //            entityPreferenza = null;
+//        //        }
+//        //        entityPreferenza.value = AETypePref.string.objectToBytes(value);
+//        //
+//        return entityPreferenza;
+//    }
 
 
 //    /**
@@ -344,48 +342,48 @@ public class PreferenzaLogic extends ALogic {
     //    }
 
 
-    public Object getValue(String keyID) {
-        Object value = null;
-        Preferenza pref = (Preferenza)findById(keyID);
-
-        if (pref != null) {
-            value = pref.getType().bytesToObject(pref.value);
-        }
-
-        return value;
-    }
-
-
-    public String getString(String keyID) {
-        String value = VUOTA;
-        Object objValue = getValue(keyID);
-
-        if (objValue != null && objValue instanceof String) {
-            value = (String) objValue;
-        }
-
-        return value;
-    }
+//    public Object getValue(String keyID) {
+//        Object value = null;
+//        Preferenza pref = (Preferenza)findById(keyID);
+//
+//        if (pref != null) {
+//            value = pref.getType().bytesToObject(pref.value);
+//        }
+//
+//        return value;
+//    }
 
 
-    public Boolean isBool(String keyCode) {
-        boolean status = false;
-        Object objValue = getValue(keyCode);
-
-        if (objValue != null && objValue instanceof Boolean) {
-            status = (boolean) objValue;
-        }
-        else {
-            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
-        }
-
-        return status;
-    }
+//    public String getString(String keyID) {
+//        String value = VUOTA;
+//        Object objValue = getValue(keyID);
+//
+//        if (objValue != null && objValue instanceof String) {
+//            value = (String) objValue;
+//        }
+//
+//        return value;
+//    }
 
 
-    public String getEnumRawValue(String keyID) {
-        return getString(keyID);
-    }
+//    public Boolean isBool(String keyCode) {
+//        boolean status = false;
+//        Object objValue = getValue(keyCode);
+//
+//        if (objValue != null && objValue instanceof Boolean) {
+//            status = (boolean) objValue;
+//        }
+//        else {
+//            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+//        }
+//
+//        return status;
+//    }
+
+
+//    public String getEnumRawValue(String keyID) {
+//        return getString(keyID);
+//    }
 
     //    /**
     //     * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -425,16 +423,16 @@ public class PreferenzaLogic extends ALogic {
     //        return result;
     //    }
 
-    /**
-     * Set con @Autowired di una property chiamata dal costruttore <br>
-     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
-     * Chiamata dal costruttore di questa classe con valore nullo <br>
-     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-     */
-    @Autowired
-    @Qualifier(TAG_FLOW_DATA)
-    public void setDataInstance(FlowData dataInstance) {
-        this.dataInstance = dataInstance;
-    }
+//    /**
+//     * Set con @Autowired di una property chiamata dal costruttore <br>
+//     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+//     * Chiamata dal costruttore di questa classe con valore nullo <br>
+//     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+//     */
+//    @Autowired
+//    @Qualifier(TAG_FLOW_DATA)
+//    public void setDataInstance(FlowData dataInstance) {
+//        this.dataInstance = dataInstance;
+//    }
 
 }

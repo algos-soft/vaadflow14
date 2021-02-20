@@ -5,7 +5,6 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -50,34 +49,32 @@ public class PreferenzaService extends AService {
         super(Preferenza.class);
     }
 
-//    /**
-//     * Retrieves an entity by its id.
-//     *
-//     * @param keyID must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    public Preferenza findByKey(String keyCode) {
-//        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyCode);
-//    }
-//
-//
-//    /**
-//     * Retrieves an entity by its id.
-//     *
-//     * @param keyID must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    public Preferenza findById(String keyID) {
-//        return (Preferenza) mongo.findById(Preferenza.class, keyID);
-//    }
-
-
+    //    /**
+    //     * Retrieves an entity by its id.
+    //     *
+    //     * @param keyID must not be {@literal null}.
+    //     *
+    //     * @return the entity with the given id or {@literal null} if none found
+    //     *
+    //     * @throws IllegalArgumentException if {@code id} is {@literal null}
+    //     */
+    //    public Preferenza findByKey(String keyCode) {
+    //        return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyCode);
+    //    }
+    //
+    //
+    //    /**
+    //     * Retrieves an entity by its id.
+    //     *
+    //     * @param keyID must not be {@literal null}.
+    //     *
+    //     * @return the entity with the given id or {@literal null} if none found
+    //     *
+    //     * @throws IllegalArgumentException if {@code id} is {@literal null}
+    //     */
+    //    public Preferenza findById(String keyID) {
+    //        return (Preferenza) mongo.findById(Preferenza.class, keyID);
+    //    }
 
 
     /**
@@ -88,17 +85,17 @@ public class PreferenzaService extends AService {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza creaIfNotExist(AIPreferenza aePref) {
-        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
+        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(), aePref.isVisibileAdmin(), aePref.getNote());
     }
 
 
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
-     * @param code         codice di riferimento (obbligatorio)
-     * @param descrizione  (obbligatoria)
-     * @param type         (obbligatorio) per convertire in byte[] i valori
-     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+     * @param code          codice di riferimento (obbligatorio)
+     * @param descrizione   (obbligatoria)
+     * @param type          (obbligatorio) per convertire in byte[] i valori
+     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
      * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
      * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
      * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
@@ -107,7 +104,7 @@ public class PreferenzaService extends AService {
      * @return la nuova entity appena creata e salvata
      */
     public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
-        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
+        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow, usaCompany, needRiavvio, visibileAdmin, note));
     }
 
 
@@ -116,6 +113,7 @@ public class PreferenzaService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      * <p>
+     *
      * @param code          codice di riferimento (obbligatorio)
      * @param descrizione   (obbligatoria)
      * @param type          (obbligatorio) per convertire in byte[] i valori
@@ -134,7 +132,7 @@ public class PreferenzaService extends AService {
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .type(type != null ? type : AETypePref.string)
                 .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
-                .vaadFlow(  vaadFlow)
+                .vaadFlow(vaadFlow)
                 .usaCompany(FlowVar.usaCompany ? usaCompany : false)
                 .needRiavvio(needRiavvio)
                 .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
@@ -199,18 +197,29 @@ public class PreferenzaService extends AService {
     @Override
     public AIResult resetEmptyOnly() {
         AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
+        int numRecGen = 0;
+        int numRecSpec = 0;
+        String message;
 
         if (result.isErrato()) {
             return result;
         }
 
-        //--da sostituire
-        String message;
-        message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "@PACKAGE@", "@ENTITY@Service");
-        return AResult.errato(message);
+        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
+        for (AIPreferenza aePref : AEPreferenza.values()) {
+            numRecGen = creaIfNotExist(aePref) != null ? numRecGen + 1 : numRecGen;
+        }
 
-        // return super.fixPostReset(AETypeReset.enumeration, numRec);
+        //-- specifiche (facoltative) dell'applicazione in uso prese da una enumeration apposita
+        if (FlowVar.preferenzeSpecificheList != null && FlowVar.preferenzeSpecificheList.size() > 0) {
+            for (AIPreferenza aePref : FlowVar.preferenzeSpecificheList) {
+                numRecSpec = creaIfNotExist(aePref) != null ? numRecSpec + 1 : numRecSpec;
+            }
+        }
+
+        result = super.fixPostReset(AETypeReset.enumeration, numRecGen + numRecSpec);
+        message = String.format("Sono state create %d preferenze generali e %d specifiche di questa applicazione", numRecGen, numRecSpec);
+        return result.setValidationMessage(message);
     }
 
 

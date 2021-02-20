@@ -1,23 +1,17 @@
 package it.algos.vaadflow14.backend.logic;
 
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.ACEntity;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeLog;
-import it.algos.vaadflow14.backend.enumeration.AETypeReset;
-import it.algos.vaadflow14.backend.interfaces.AIResult;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.backend.wrapper.AResult;
-import org.springframework.data.mongodb.core.query.Query;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.data.mongodb.core.query.*;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.FIELD_ORDINE;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.annotation.*;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -352,6 +346,7 @@ public abstract class AService extends AAbstractService implements AIService {
 
     protected AIResult fixPostReset(final AETypeReset type, final int numRec) {
         String collection;
+        String message;
 
         if (entityClazz == null) {
             return AResult.errato("Manca la entityClazz nella businessService specifica");
@@ -359,10 +354,12 @@ public abstract class AService extends AAbstractService implements AIService {
 
         collection = entityClazz.getSimpleName().toLowerCase();
         if (mongo.isValid(entityClazz)) {
-            return AResult.valido("La collezione " + collection + " era vuota e sono stati inseriti " + numRec + " elementi " + type.get());
+            message = String.format("La collezione %s era vuota e sono stati inseriti %d elementi %s", collection, numRec, type.get());
+            return AResult.valido(message);
         }
         else {
-            return AResult.errato("Non è stato possibile creare la collezione " + collection);
+            message = String.format("Non è stato possibile creare la collezione %s", collection);
+            return AResult.errato(message);
         }
     }
 

@@ -16,6 +16,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -443,7 +444,7 @@ public abstract class ALogic implements AILogic {
         List<Span> spanHtmlList = getSpanList();
 
         if (array.isAllValid(spanHtmlList)) {
-            headerSpan=  appContext.getBean(AHeaderSpan.class, spanHtmlList);
+            headerSpan = appContext.getBean(AHeaderSpan.class, spanHtmlList);
         }
 
         return headerSpan;
@@ -524,7 +525,7 @@ public abstract class ALogic implements AILogic {
      * @return wrapper per passaggio dati
      */
     protected AlertWrap getAlertWrapList() {
-//        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
+        //        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
         return null;
     }
 
@@ -1891,10 +1892,13 @@ public abstract class ALogic implements AILogic {
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
     private boolean resetDeletingAll() {
+        AIResult result;
         entityService.delete();
-        return entityService.resetEmptyOnly().isValido();
-    }
+        result = entityService.resetEmptyOnly();
 
+        logger.log(AETypeLog.reset, result.getMessage());
+        return result.isValido();
+    }
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>

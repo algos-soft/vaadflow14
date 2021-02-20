@@ -1,36 +1,31 @@
 package it.algos.vaadflow14.backend.boot;
 
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.data.FlowData;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
-import it.algos.vaadflow14.backend.packages.geografica.provincia.Provincia;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.packages.security.utente.Utente;
-import it.algos.vaadflow14.backend.packages.utility.versione.Versione;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import it.algos.vaadflow14.wizard.Wizard;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.wizard.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.env.Environment;
+import org.springframework.context.event.*;
+import org.springframework.core.env.*;
 
-import javax.servlet.ServletContextListener;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Objects;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.TAG_FLOW_DATA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.servlet.*;
+import java.time.*;
+import java.util.*;
 
 
 /**
@@ -103,6 +98,14 @@ public abstract class FlowBoot implements ServletContextListener {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     public FlowData dataInstance;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService preferenzaService;
 
     /**
      * Constructor with @Autowired on setter. Usato quando ci sono sottoclassi. <br>
@@ -272,6 +275,13 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList = new ArrayList<>();
 
         /**
+         * Lista delle enum di preferenze specifiche. <br>
+         * Quelle generali dell'applicazione sono in AEPreferenza.values() <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.preferenzeSpecificheList = null;
+
+        /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
          * Di default (per sicurezza) uguale a false <br>
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
@@ -306,13 +316,11 @@ public abstract class FlowBoot implements ServletContextListener {
      * Crea le preferenze standard e specifiche dell'applicazione <br>
      * Se non esistono, le crea <br>
      * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
+     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaService <br>
      * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(FlowData.class)) {
-            dataInstance.fixPreferenze();
-        }
+        preferenzaService.resetEmptyOnly();
     }
 
 

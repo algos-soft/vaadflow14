@@ -79,18 +79,25 @@ public class AResult implements AIResult {
     }
 
     @Override
-    public void setValidationMessage(String message) {
+    public AIResult setValidationMessage(String message) {
         validationMessage = message;
+        return this;
     }
 
     @Override
-    public void setMessage(String message) {
+    public AIResult setErrorMessage(String message) {
+        return this;
+    }
+
+    @Override
+    public AIResult setMessage(String message) {
         if (isValido()) {
             validationMessage = message;
         }
         else {
             errorMessage = message;
         }
+        return this;
     }
 
     @Override

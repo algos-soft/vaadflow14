@@ -8,7 +8,6 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -225,59 +224,47 @@ public class FlowData implements AIData {
     }
 
 
-    /**
-     * Ricostruisce le preferenze standard dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     */
-    @Override
-    public void fixPreferenze() {
-        PreferenzaService preferenzaService = classService.getPreferenzaLogic();
-        if (preferenzaService != null) {
-            resetPreferenze(preferenzaService, false);
-        }
-    }
 
-    /**
-     * Ricostruisce le preferenze standard dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     * <p>
-     *
-     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
-     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
-     *                <br>
-     */
-    @Override
-    public AIResult resetPreferenze(final PreferenzaService preferenzaService, final boolean isReset) {
-        AIResult result;
-        int numRec = 0;
-
-        if (Preferenza.class == null) {
-            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-        }
-
-        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
-        for (AIPreferenza aePref : AEPreferenza.values()) {
-            numRec = preferenzaService.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
-        }
-
-        if (numRec == 0) {
-            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
-        }
-        else {
-            if (numRec == 1) {
-                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
-            }
-            else {
-                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
-            }
-        }
-
-        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
-        return result;
-
-    }
+//    /**
+//     * Ricostruisce le preferenze standard dell'applicazione <br>
+//     * Se non esistono, le crea <br>
+//     * Se esistono, NON modifica i valori esistenti <br>
+//     * <p>
+//     *
+//     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
+//     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
+//     *                <br>
+//     */
+//    @Override
+//    public AIResult resetPreferenze(final PreferenzaService preferenzaService, final boolean isReset) {
+//        AIResult result;
+//        int numRec = 0;
+//
+//        if (Preferenza.class == null) {
+//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
+//        }
+//
+//        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
+//        for (AIPreferenza aePref : AEPreferenza.values()) {
+//            numRec = preferenzaService.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
+//        }
+//
+//        if (numRec == 0) {
+//            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
+//        }
+//        else {
+//            if (numRec == 1) {
+//                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
+//            }
+//            else {
+//                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
+//            }
+//        }
+//
+//        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
+//        return result;
+//
+//    }
 
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>

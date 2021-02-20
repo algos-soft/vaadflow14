@@ -1,21 +1,22 @@
 package it.algos.simple.backend.boot;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.simple.backend.data.SimpleData;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.simple.backend.application.SimpleCost.*;
+import it.algos.simple.backend.data.*;
+import it.algos.simple.backend.enumeration.*;
 import it.algos.simple.backend.packages.*;
-import it.algos.simple.ui.views.DeltaView;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.boot.FlowBoot;
-import it.algos.vaadflow14.backend.packages.anagrafica.address.Address;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.simple.ui.views.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import static it.algos.simple.backend.application.SimpleCost.TAG_SIMPLE_DATA;
+import java.util.*;
 
 
 /**
@@ -76,6 +77,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
+        FlowVar.preferenzeSpecificheList = Arrays.asList(AESimplePreferenza.values());
         FlowVar.usaCronoPackages = true;
         FlowVar.usaGeografiaPackages = true;
     }
@@ -95,20 +97,6 @@ public class SimpleBoot extends FlowBoot {
         }
     }
 
-
-    /**
-     * Crea le preferenze standard e specifiche dell'applicazione <br>
-     * Se non esistono, le crea <br>
-     * Se esistono, NON modifica i valori esistenti <br>
-     * Per un reset ai valori di default, c'è il metodo reset() chiamato da preferenzaLogic <br>
-     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(SimpleData.class)) {
-            dataInstance.fixPreferenze();
-        }
-    }
 
 
     /**

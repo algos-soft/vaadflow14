@@ -258,7 +258,7 @@ public class PreferenzaForm extends AForm {
                 case localtime:
                     break;
                 case enumeration:
-                    rawValue = ((PreferenzaLogic) entityLogic).getEnumRawValue(entityBean.id);
+//                    rawValue = ((PreferenzaLogic) entityLogic).getEnumRawValue(entityBean.id);
                     genericFieldValue = enumerationService.convertToModel(rawValue, newSelectedFieldValue);
                     //                    if (currentItem != null && text.isValid(currentItem.id)) {
                     //                        mongoEnumValue = (String) currentItem.getType().bytesToObject(currentItem.value);
