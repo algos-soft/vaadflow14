@@ -8,6 +8,7 @@ package it.algos.vaadflow14.backend.enumeration;
  * Time: 06:13
  */
 public enum AETypeReset {
+
     enumeration("da una Enumeration"),
     fileCSV("da un file CSV"),
     wikipedia("da Wikipedia"),

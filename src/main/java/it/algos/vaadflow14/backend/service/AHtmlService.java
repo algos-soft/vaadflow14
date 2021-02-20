@@ -58,7 +58,7 @@ public class AHtmlService extends AAbstractService {
 
             if (typeSpan != null && typeSpan.length > 0) {
                 for (AIType type : typeSpan) {
-                    span.getElement().getStyle().set(type.getTag(), type.getValue());
+                    span.getElement().getStyle().set(type.getTag(), type.get());
                 }
             }
             span.getElement().getStyle().set("line-height", LINE_HEIGHT);

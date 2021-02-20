@@ -15,12 +15,10 @@ import static it.algos.vaadflow14.backend.service.AConsoleColorService.PURPLE;
 public enum AELogLivello implements AIEnum {
 
     debug(GREEN),
-
     info(BLUE),
-
     warn(PURPLE),
-
-    error(RED);
+    error(RED),
+    ;
 
     public String color;
 

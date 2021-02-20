@@ -3,6 +3,8 @@ package it.algos.vaadflow14.backend.boot;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -320,7 +322,9 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        preferenzaService.resetEmptyOnly();
+        AIResult result = preferenzaService.resetEmptyOnly();
+        result.setErrorMessage("Le preferenze generali e specifiche esistono già e non c'è bisogno di modificarle");
+        logger.log(AETypeLog.preferenze, result);
     }
 
 

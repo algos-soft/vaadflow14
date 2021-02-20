@@ -18,29 +18,21 @@ import java.time.*;
  * Time: 15:41
  */
 public enum AEPreferenza implements AIPreferenza {
-    usaDebug(PREF_USA_DEBUG, "Flag generale di debug", AETypePref.bool, false, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
 
+    usaDebug(PREF_USA_DEBUG, "Flag generale di debug", AETypePref.bool, false, "Ce ne possono essere di specifici, validi solo se questo è vero"),
     usaSearchClearButton(PREF_USA_SEARCH_CLEAR, "Bottone per pulire il filtro di ricerca", AETypePref.bool, true, false),
-
     usaBandiereStati(PREF_USA_BANDIERE_STATI, "Bandierine nel combobox degli stati", AETypePref.bool, true, true),
-
     usaGridHeaderMaiuscola(PREF_USA_GRID_MAIUSCOLA, "Prima lettera maiuscola nell' header della Grid", AETypePref.bool, true, true),
-
     usaFormFieldMaiuscola(PREF_USA_FORM_MAIUSCOLA, "Prima lettera maiuscola nella label di un field", AETypePref.bool, true, true),
-
     usaSearchCaseSensitive(PREF_USA_SEARCH_SENSITIVE, "Search delle query sensibile alle maiuscole", AETypePref.bool, false, true),
-
     //    iconaDetail("iconaDetail", "VaadinIcon per aprire il Form", AETypePref.icona, "TRUCK"),
-
     iconaEdit(PREF_ICONA_EDIT, "Icona per il dettaglio della scheda", AETypePref.enumeration, AETypeIconaEdit.edit, true),
-
     mailTo(PREF_EMAIL, "Indirizzo email", AETypePref.email, "gac@algos.it", true, "Email di default a cui spedire i log di posta"),
-
-    maxRigheGrid(PREF_MAX_RIGHE_GRID, "Righe massime della griglia semplice", AETypePref.integer, 20, false, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
-
-    maxEnumRadio(PREF_MAX_RADIO, "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, false, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
-
+    maxRigheGrid(PREF_MAX_RIGHE_GRID, "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
+    maxEnumRadio(PREF_MAX_RADIO, "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
+    lineHeight(LINE_HEIGHT, "Altezza di una riga nelle View", AETypePref.enumeration, AETypeHeight.normal, false, true, false),
     ;
+
 
     //--codice di riferimento. Se è usaCompany=true, DEVE contenere anche il code della company come prefisso.
     private String keyCode;
@@ -83,21 +75,33 @@ public enum AEPreferenza implements AIPreferenza {
     private AEnumerationService enumService;
 
 
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, String note) {
+        this(keyCode, descrizione, type, defaultValue, false, false, false, note);
+    }// fine del costruttore
+
     AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
-        this(keyCode, descrizione, type, defaultValue, usaCompany, VUOTA);
+        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
+    }// fine del costruttore
+
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, note);
+    }// fine del costruttore
+
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin) {
+        this(keyCode, descrizione, type, defaultValue, usaCompany, needRiavvio, visibileAdmin, VUOTA);
     }// fine del costruttore
 
 
-    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+    AEPreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
         this.keyCode = keyCode;
         this.descrizione = descrizione;
         this.type = type;
-        this.setNote(note);
-        this.usaCompany = usaCompany;
-        this.vaadFlow = true;
-        this.needRiavvio = false;
-        this.visibileAdmin = false;
         this.setDefaultValue(defaultValue);
+        this.vaadFlow = true; //--vale per tutte le preferenze generali di vaadFlow
+        this.usaCompany = usaCompany;
+        this.needRiavvio = needRiavvio;
+        this.visibileAdmin = visibileAdmin;
+        this.setNote(note);
     }// fine del costruttore
 
 
@@ -131,11 +135,25 @@ public enum AEPreferenza implements AIPreferenza {
     public Object getDefaultValue() {
         return defaultValue;
     }
+
+    public void setDefaultValue(Object defaultValue) {
+        if (type == AETypePref.enumeration) {
+            if (defaultValue instanceof String) {
+                this.defaultValue = defaultValue;
+            }
+            else {
+                this.defaultValue = ((AIEnum) defaultValue).getPref();
+            }
+        }
+        else {
+            this.defaultValue = defaultValue;
+        }
+    }
+
     @Override
     public boolean isVaadFlow() {
         return vaadFlow;
     }
-
 
     @Override
     public boolean isUsaCompany() {
@@ -156,21 +174,6 @@ public enum AEPreferenza implements AIPreferenza {
     public String getDescrizione() {
         return descrizione;
     }
-
-    public void setDefaultValue(Object defaultValue) {
-        if (type == AETypePref.enumeration) {
-            if (defaultValue instanceof String) {
-                this.defaultValue = defaultValue;
-            }
-            else {
-                this.defaultValue = ((AIEnum) defaultValue).getPref();
-            }
-        }
-        else {
-            this.defaultValue = defaultValue;
-        }
-    }
-
 
     public Object getValue() {
         Object javaValue;
@@ -287,6 +290,7 @@ public enum AEPreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
+            Object alfa = AEPreferenza.values();
             for (AEPreferenza pref : AEPreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
                 pref.setLogger(logger);

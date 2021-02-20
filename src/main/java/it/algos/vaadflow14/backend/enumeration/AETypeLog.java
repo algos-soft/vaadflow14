@@ -1,9 +1,8 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import it.algos.vaadflow14.backend.interfaces.AILogType;
+import it.algos.vaadflow14.backend.interfaces.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow
@@ -15,51 +14,30 @@ import java.util.List;
 public enum AETypeLog implements AILogType {
 
     system("system"),
-
     setup("setup"),
-
     startup("startup"),
-
     checkData("checkData"),
-
+    preferenze("preferenze"),
     nuovo("newEntity"),
-
     edit("edit"),
-
     modifica("modifica"),
-
     delete("delete"),
-
     deleteAll("deleteAll"),
-
     debug("debug"),
-
     info("info"),
-
     warn("warn"),
-
     error("error"),
-
     wizard("wizard"),
-
     importo("import"),
-
     export("export"),
-
     download("download"),
-
     update("update"),
-
     elabora("elabora"),
-
     upload("upload"),
-
     reset("reset"),
-
     utente("utente"),
-
-    password("password");
-
+    password("password"),
+    ;
 
     private String tag;
 
@@ -95,7 +73,6 @@ public enum AETypeLog implements AILogType {
     public String getTag() {
         return tag;
     }
-
 
 }
 

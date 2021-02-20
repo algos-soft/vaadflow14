@@ -8,6 +8,7 @@ package it.algos.vaadflow14.backend.enumeration;
  * Time: 20:54
  */
 public enum AETypeSize implements AIType {
+
     medium("medium"),
     xxSmall("xx-small"),
     xSmall("x-small"),
@@ -34,9 +35,8 @@ public enum AETypeSize implements AIType {
     }
 
     @Override
-    public String getValue() {
+    public String get() {
         return value;
     }
-
 
 }

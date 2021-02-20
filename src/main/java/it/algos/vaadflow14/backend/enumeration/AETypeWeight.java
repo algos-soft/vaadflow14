@@ -8,6 +8,7 @@ package it.algos.vaadflow14.backend.enumeration;
  * Time: 20:46
  */
 public enum AETypeWeight implements AIType {
+
     normal("normal"),
     bold("bold"),
     bolder("bolder"),
@@ -39,7 +40,7 @@ public enum AETypeWeight implements AIType {
     }
 
     @Override
-    public String getValue() {
+    public String get() {
         return value;
     }
 

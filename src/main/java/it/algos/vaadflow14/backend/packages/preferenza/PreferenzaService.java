@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -201,10 +202,6 @@ public class PreferenzaService extends AService {
         int numRecSpec = 0;
         String message;
 
-        if (result.isErrato()) {
-            return result;
-        }
-
         //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
         for (AIPreferenza aePref : AEPreferenza.values()) {
             numRecGen = creaIfNotExist(aePref) != null ? numRecGen + 1 : numRecGen;
@@ -217,9 +214,16 @@ public class PreferenzaService extends AService {
             }
         }
 
-        result = super.fixPostReset(AETypeReset.enumeration, numRecGen + numRecSpec);
-        message = String.format("Sono state create %d preferenze generali e %d specifiche di questa applicazione", numRecGen, numRecSpec);
-        return result.setValidationMessage(message);
+        if ((numRecGen + numRecSpec) > 0) {
+            result = super.fixPostReset(AETypeReset.enumeration, numRecGen + numRecSpec);
+            message = String.format("Sono state create %d preferenze generali e %d specifiche di questa applicazione", numRecGen, numRecSpec);
+            result.setValidationMessage(message);
+        }
+        else {
+            result = AResult.errato();
+        }
+
+        return result;
     }
 
 

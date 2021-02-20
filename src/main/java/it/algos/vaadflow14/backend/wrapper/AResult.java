@@ -86,18 +86,18 @@ public class AResult implements AIResult {
 
     @Override
     public AIResult setErrorMessage(String message) {
+        errorMessage = message;
         return this;
     }
 
     @Override
     public AIResult setMessage(String message) {
         if (isValido()) {
-            validationMessage = message;
+            return setValidationMessage(message);
         }
         else {
-            errorMessage = message;
+            return setErrorMessage(message);
         }
-        return this;
     }
 
     @Override

@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -38,31 +39,31 @@ public class PreferenzaLogic extends ALogic {
      */
     private static final long serialVersionUID = 1L;
 
-//    /**
-//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-//     */
-//    @Autowired
-//    public PreferenzaService pref;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    public PreferenzaService pref;
 
-//    /**
-//     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
-//     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-//     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-//     */
-//    public FlowData dataInstance;
+    //    /**
+    //     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    public FlowData dataInstance;
 
-//    /**
-//     * Costruttore senza parametri <br>
-//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-//     * Costruttore usato da AListView <br>
-//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
-//     */
-//    @Deprecated
-//    public PreferenzaLogic() {
-//        this(AEOperation.edit);
-//    }
+    //    /**
+    //     * Costruttore senza parametri <br>
+    //     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+    //     * Costruttore usato da AListView <br>
+    //     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName)) <br>
+    //     */
+    //    @Deprecated
+    //    public PreferenzaLogic() {
+    //        this(AEOperation.edit);
+    //    }
 
 
     /**
@@ -78,19 +79,19 @@ public class PreferenzaLogic extends ALogic {
         super(entityService, operationForm);
     }
 
-//    /**
-//     * Costruttore con parametro <br>
-//     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-//     * Costruttore usato da AFormView <br>
-//     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
-//     *
-//     * @param operationForm tipologia di Form in uso
-//     */
-//    public PreferenzaLogic(AEOperation operationForm) {
-//        super(operationForm);
-//        super.entityClazz = Preferenza.class;
-//        this.setDataInstance(dataInstance);
-//    }
+    //    /**
+    //     * Costruttore con parametro <br>
+    //     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
+    //     * Costruttore usato da AFormView <br>
+    //     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+    //     *
+    //     * @param operationForm tipologia di Form in uso
+    //     */
+    //    public PreferenzaLogic(AEOperation operationForm) {
+    //        super(operationForm);
+    //        super.entityClazz = Preferenza.class;
+    //        this.setDataInstance(dataInstance);
+    //    }
 
 
     /**
@@ -197,135 +198,156 @@ public class PreferenzaLogic extends ALogic {
     }
 
 
-//    /**
-//     * Crea e registra una entity solo se non esisteva <br>
-//     *
-//     * @param aePref: enumeration per la creazione-reset di tutte le entities
-//     *
-//     * @return la nuova entity appena creata e salvata
-//     */
-//    public Preferenza creaIfNotExist(AIPreferenza aePref) {
-//        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
-//    }
-//
-//
-//    /**
-//     * Crea e registra una entity solo se non esisteva <br>
-//     *
-//     * @param code         codice di riferimento (obbligatorio)
-//     * @param descrizione  (obbligatoria)
-//     * @param type         (obbligatorio) per convertire in byte[] i valori
-//     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
-//     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
-//     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
-//     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
-//     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
-//     *
-//     * @return la nuova entity appena creata e salvata
-//     */
-//    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
-//        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
-//    }
+    /**
+     * Costruisce una lista ordinata di nomi delle properties della Grid. <br>
+     * Nell' ordine: <br>
+     * 1) Cerca nell' annotation @AIList della Entity e usa quella lista (con o senza ID) <br>
+     * 2) Utilizza tutte le properties della Entity (properties della classe e superclasse) <br>
+     * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * todo ancora da sviluppare
+     *
+     * @return lista di nomi di properties
+     */
+    @Override
+    public List<String> getGridPropertyNamesList() {
+        String matrice;
 
+        if (FlowVar.usaCompany) {
+            matrice = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione";
+        }
+        else {
+            matrice = "code,type,value,vaadFlow,needRiavvio,descrizione";
+        }
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-//     * Usa il @Builder di Lombok <br>
-//     * Eventuali regolazioni iniziali delle property <br>
-//     * <p>
-//     * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-//     *
-//     * @param code          codice di riferimento (obbligatorio)
-//     * @param descrizione   (obbligatoria)
-//     * @param type          (obbligatorio) per convertire in byte[] i valori
-//     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
-//     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
-//     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
-//     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
-//     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
-//     * @param note          (facoltativo)
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
-//        Preferenza newEntityBean = Preferenza.builderPreferenza()
-//                .code(text.isValid(code) ? code : null)
-//                .descrizione(text.isValid(descrizione) ? descrizione : null)
-//                .type(type != null ? type : AETypePref.string)
-//                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
-//                .vaadFlow(  vaadFlow)
-//                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
-//                .needRiavvio(needRiavvio)
-//                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
-//                .build();
-//
-//        if (text.isValid(note)) {
-//            newEntityBean.note = note;
-//        }
-//
-//        return (Preferenza) fixKey(newEntityBean);
-//    }
+        return array.fromStringa(matrice);
+    }
 
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     *
+    //     * @param aePref: enumeration per la creazione-reset di tutte le entities
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    public Preferenza creaIfNotExist(AIPreferenza aePref) {
+    //        return creaIfNotExist(aePref.getKeyCode(), aePref.getDescrizione(), aePref.getType(), aePref.getDefaultValue(), aePref.isVaadFlow(), aePref.isUsaCompany(), aePref.isNeedRiavvio(),aePref.isVisibileAdmin(),aePref.getNote());
+    //    }
+    //
+    //
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     *
+    //     * @param code         codice di riferimento (obbligatorio)
+    //     * @param descrizione  (obbligatoria)
+    //     * @param type         (obbligatorio) per convertire in byte[] i valori
+    //     * @param defaultValue (obbligatorio) memorizza tutto in byte[]
+    //     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+    //     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+    //     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+    //     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    public Preferenza creaIfNotExist(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+    //        return (Preferenza) checkAndSave(newEntity(code, descrizione, type, defaultValue, vaadFlow,usaCompany, needRiavvio, visibileAdmin, note));
+    //    }
 
-//    /**
-//     * Operazioni eseguite PRIMA di save o di insert <br>
-//     * Regolazioni automatiche di property <br>
-//     * Controllo della validità delle properties obbligatorie <br>
-//     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
-//     * Controlla se la entity registra le date di creazione e modifica <br>
-//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @param entityBean da regolare prima del save
-//     * @param operation  del dialogo (NEW, Edit)
-//     *
-//     * @return the modified entity
-//     */
-//    @Override
-//    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
-//        Preferenza entityPreferenza = (Preferenza) super.beforeSave(entityBean, operation);
-//
-//        return fixValue(entityPreferenza);
-//    }
+    //    /**
+    //     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+    //     * Usa il @Builder di Lombok <br>
+    //     * Eventuali regolazioni iniziali delle property <br>
+    //     * <p>
+    //     * //     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+    //     *
+    //     * @param code          codice di riferimento (obbligatorio)
+    //     * @param descrizione   (obbligatoria)
+    //     * @param type          (obbligatorio) per convertire in byte[] i valori
+    //     * @param defaultValue  (obbligatorio) memorizza tutto in byte[]
+    //     * @param vaadFlow      (obbligatorio) preferenza di vaadflow, di default true
+    //     * @param usaCompany    (obbligatorio) se FlowVar.usaCompany=false, sempre false
+    //     * @param needRiavvio   (obbligatorio) occorre riavviare per renderla efficace, di default false
+    //     * @param visibileAdmin (obbligatorio) visibile agli admin, di default false se FlowVar.usaCompany=true
+    //     * @param note          (facoltativo)
+    //     *
+    //     * @return la nuova entity appena creata (non salvata)
+    //     */
+    //    public Preferenza newEntity(String code, String descrizione, AETypePref type, Object defaultValue, boolean vaadFlow, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+    //        Preferenza newEntityBean = Preferenza.builderPreferenza()
+    //                .code(text.isValid(code) ? code : null)
+    //                .descrizione(text.isValid(descrizione) ? descrizione : null)
+    //                .type(type != null ? type : AETypePref.string)
+    //                .value(type != null ? type.objectToBytes(defaultValue) : (byte[]) null)
+    //                .vaadFlow(  vaadFlow)
+    //                .usaCompany(FlowVar.usaCompany ? usaCompany : false)
+    //                .needRiavvio(needRiavvio)
+    //                .visibileAdmin(FlowVar.usaCompany ? visibileAdmin : true)
+    //                .build();
+    //
+    //        if (text.isValid(note)) {
+    //            newEntityBean.note = note;
+    //        }
+    //
+    //        return (Preferenza) fixKey(newEntityBean);
+    //    }
 
+    //    /**
+    //     * Operazioni eseguite PRIMA di save o di insert <br>
+    //     * Regolazioni automatiche di property <br>
+    //     * Controllo della validità delle properties obbligatorie <br>
+    //     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
+    //     * Controlla se la entity registra le date di creazione e modifica <br>
+    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     *
+    //     * @param entityBean da regolare prima del save
+    //     * @param operation  del dialogo (NEW, Edit)
+    //     *
+    //     * @return the modified entity
+    //     */
+    //    @Override
+    //    public AEntity beforeSave(AEntity entityBean, AEOperation operation) {
+    //        Preferenza entityPreferenza = (Preferenza) super.beforeSave(entityBean, operation);
+    //
+    //        return fixValue(entityPreferenza);
+    //    }
 
-//    /**
-//     * Regola il valore (obbligatorio) della entity prima di salvarla <br>
-//     *
-//     * @param entityPreferenza da regolare prima del save
-//     *
-//     * @return true se la entity è stata salvata
-//     */
-//    public Preferenza fixValue(Preferenza entityPreferenza) {
-//        Object value;
-//        //        Preferenza entity = setValue(keyCode, value, companyPrefix);
-//        //
-//        //        if (entity != null) {
-//        //            entity = (Preferenza) this.save(entity);
-//        //            salvata = entity != null;
-//        //        }// end of if cycle
-//
-//        //        if (value == null) {
-//        //            entityPreferenza = null;
-//        //        }
-//        //        entityPreferenza.value = AETypePref.string.objectToBytes(value);
-//        //
-//        return entityPreferenza;
-//    }
+    //    /**
+    //     * Regola il valore (obbligatorio) della entity prima di salvarla <br>
+    //     *
+    //     * @param entityPreferenza da regolare prima del save
+    //     *
+    //     * @return true se la entity è stata salvata
+    //     */
+    //    public Preferenza fixValue(Preferenza entityPreferenza) {
+    //        Object value;
+    //        //        Preferenza entity = setValue(keyCode, value, companyPrefix);
+    //        //
+    //        //        if (entity != null) {
+    //        //            entity = (Preferenza) this.save(entity);
+    //        //            salvata = entity != null;
+    //        //        }// end of if cycle
+    //
+    //        //        if (value == null) {
+    //        //            entityPreferenza = null;
+    //        //        }
+    //        //        entityPreferenza.value = AETypePref.string.objectToBytes(value);
+    //        //
+    //        return entityPreferenza;
+    //    }
 
-
-//    /**
-//     * Retrieves an entity by its id.
-//     *
-//     * @param keyID must not be {@literal null}.
-//     *
-//     * @return the entity with the given id or {@literal null} if none found
-//     *
-//     * @throws IllegalArgumentException if {@code id} is {@literal null}
-//     */
-//    @Override
-//    public Preferenza findById(String keyID) {
-//        return (Preferenza) super.findById(keyID);
-//    }
+    //    /**
+    //     * Retrieves an entity by its id.
+    //     *
+    //     * @param keyID must not be {@literal null}.
+    //     *
+    //     * @return the entity with the given id or {@literal null} if none found
+    //     *
+    //     * @throws IllegalArgumentException if {@code id} is {@literal null}
+    //     */
+    //    @Override
+    //    public Preferenza findById(String keyID) {
+    //        return (Preferenza) super.findById(keyID);
+    //    }
 
     //    /**
     //     * Retrieves an entity by its keyProperty.
@@ -341,49 +363,45 @@ public class PreferenzaLogic extends ALogic {
     //        return (Preferenza) super.findByKey(keyValue);
     //    }
 
+    //    public Object getValue(String keyID) {
+    //        Object value = null;
+    //        Preferenza pref = (Preferenza)findById(keyID);
+    //
+    //        if (pref != null) {
+    //            value = pref.getType().bytesToObject(pref.value);
+    //        }
+    //
+    //        return value;
+    //    }
 
-//    public Object getValue(String keyID) {
-//        Object value = null;
-//        Preferenza pref = (Preferenza)findById(keyID);
-//
-//        if (pref != null) {
-//            value = pref.getType().bytesToObject(pref.value);
-//        }
-//
-//        return value;
-//    }
+    //    public String getString(String keyID) {
+    //        String value = VUOTA;
+    //        Object objValue = getValue(keyID);
+    //
+    //        if (objValue != null && objValue instanceof String) {
+    //            value = (String) objValue;
+    //        }
+    //
+    //        return value;
+    //    }
 
+    //    public Boolean isBool(String keyCode) {
+    //        boolean status = false;
+    //        Object objValue = getValue(keyCode);
+    //
+    //        if (objValue != null && objValue instanceof Boolean) {
+    //            status = (boolean) objValue;
+    //        }
+    //        else {
+    //            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
+    //        }
+    //
+    //        return status;
+    //    }
 
-//    public String getString(String keyID) {
-//        String value = VUOTA;
-//        Object objValue = getValue(keyID);
-//
-//        if (objValue != null && objValue instanceof String) {
-//            value = (String) objValue;
-//        }
-//
-//        return value;
-//    }
-
-
-//    public Boolean isBool(String keyCode) {
-//        boolean status = false;
-//        Object objValue = getValue(keyCode);
-//
-//        if (objValue != null && objValue instanceof Boolean) {
-//            status = (boolean) objValue;
-//        }
-//        else {
-//            logger.error("Algos - Preferenze. La preferenza: " + keyCode + " è del tipo sbagliato");
-//        }
-//
-//        return status;
-//    }
-
-
-//    public String getEnumRawValue(String keyID) {
-//        return getString(keyID);
-//    }
+    //    public String getEnumRawValue(String keyID) {
+    //        return getString(keyID);
+    //    }
 
     //    /**
     //     * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -423,16 +441,16 @@ public class PreferenzaLogic extends ALogic {
     //        return result;
     //    }
 
-//    /**
-//     * Set con @Autowired di una property chiamata dal costruttore <br>
-//     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
-//     * Chiamata dal costruttore di questa classe con valore nullo <br>
-//     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
-//     */
-//    @Autowired
-//    @Qualifier(TAG_FLOW_DATA)
-//    public void setDataInstance(FlowData dataInstance) {
-//        this.dataInstance = dataInstance;
-//    }
+    //    /**
+    //     * Set con @Autowired di una property chiamata dal costruttore <br>
+    //     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+    //     * Chiamata dal costruttore di questa classe con valore nullo <br>
+    //     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    @Autowired
+    //    @Qualifier(TAG_FLOW_DATA)
+    //    public void setDataInstance(FlowData dataInstance) {
+    //        this.dataInstance = dataInstance;
+    //    }
 
 }

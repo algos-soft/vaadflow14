@@ -1,10 +1,8 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import java.util.ArrayList;
-import java.util.List;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VIRGOLA;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 
 /**
@@ -17,17 +15,11 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 public enum AETypeProvincia {
 
     provincia("Provincia", VUOTA),
-
     autonoma("Provincia autonoma", "TAA"),
-
     metropolitana("Città metropolitana", VUOTA),
-
     friuli("Associazione di comuni", "FVG"),
-
     consorzio("Libero consorzio comunale", "SIC"),
-
     regione("Regione autonoma", "VAO"),
-
     ;
 
     private String tag;

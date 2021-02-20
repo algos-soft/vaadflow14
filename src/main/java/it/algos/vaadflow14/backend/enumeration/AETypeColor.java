@@ -33,7 +33,7 @@ public enum AETypeColor implements AIType {
     }
 
     @Override
-    public String getValue() {
+    public String get() {
         return value;
     }
 }

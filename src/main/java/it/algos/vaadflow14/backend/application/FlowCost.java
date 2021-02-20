@@ -357,7 +357,10 @@ public abstract class FlowCost {
     public static final String PREF_MAX_RIGHE_GRID = "maxRigheGrid";
 
     public static final String PREF_MAX_RADIO = "maxEnumRadio";
+    public static final String LINE_HEIGHT = "lineHeight";
 
     public static final double ICON_WIDTH = 3.0;
+
+
 
 }

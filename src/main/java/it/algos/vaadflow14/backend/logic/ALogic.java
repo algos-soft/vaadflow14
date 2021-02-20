@@ -1229,7 +1229,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return lista di nomi di properties
      */
-    //    @Override
+    @Override
     public List<String> getGridPropertyNamesList() {
         return annotation.getListaPropertiesGrid(entityClazz);
     }

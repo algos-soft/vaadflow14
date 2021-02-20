@@ -11,7 +11,7 @@ public interface AIType {
 
     public String getTag();
 
-    public String getValue();
+    public String get();
 
 }// end of interface
 

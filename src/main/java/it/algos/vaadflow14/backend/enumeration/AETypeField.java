@@ -1,29 +1,18 @@
 package it.algos.vaadflow14.backend.enumeration;
 
 public enum AETypeField {
-    //    id(),
+
     text(10, 14),
-
     phone(9, 14),
-
     password(10, 14),
-
     email(20, 24),
-
     cap(6, 6),
-
     textArea(8, 18),
-
     integer(5, 8),
-
     lungo(5, 8),
-
     booleano(4, 4),
-
     localDateTime(9, 0),
-
     localDate(8, 0),
-
     localTime(6, 0),
 
     //    meseShort(6, 0, AETypeData.meseShort),
@@ -52,7 +41,6 @@ public enum AETypeField {
     //    combolinkato,
 
     enumeration(8, 0),
-
     gridShowOnly(0, 20),
 
     //    dateNotEnabled,
