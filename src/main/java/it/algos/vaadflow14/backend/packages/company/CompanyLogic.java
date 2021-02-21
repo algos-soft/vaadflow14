@@ -1,12 +1,12 @@
 package it.algos.vaadflow14.backend.packages.company;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -89,21 +89,20 @@ public class CompanyLogic extends ALogic {
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
         if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
-            red.add("Di norma utilizzato solo in applicazioni con usaCompany=true");
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'"));
+            lista.add(html.getSpanRosso("Di norma utilizzato solo in applicazioni con usaCompany=true"));
         }
 
-        return new AlertWrap(null, null, red, false);
+        return lista;
     }
 
 

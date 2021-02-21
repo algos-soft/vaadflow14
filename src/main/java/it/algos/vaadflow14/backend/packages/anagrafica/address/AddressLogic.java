@@ -5,7 +5,6 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -61,16 +60,5 @@ public class AddressLogic extends ALogic {
     }
 
 
-    /**
-     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste d'informazioni per costruire l' istanza di AHeaderWrap <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return wrapper per passaggio dati
-     */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        return new AlertWrap("Test.");
-    }
 
 }

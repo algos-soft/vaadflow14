@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.ui.service.AImageService;
-import it.algos.vaadflow14.ui.service.ARouteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
+import org.springframework.core.env.*;
 
 /**
  * Project vaadflow
@@ -143,13 +143,20 @@ public abstract class AAbstractService {
     public ABeanService beanService;
 
     /**
-       * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-       * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-       * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-       */
-        @Autowired
-        public AHtmlService html;
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AHtmlService html;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService pref;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -159,7 +166,6 @@ public abstract class AAbstractService {
     //    @Autowired
     //    public AColumnService column;
 
-
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
@@ -167,7 +173,6 @@ public abstract class AAbstractService {
      */
     //    @Autowired
     //    public ADateService date;
-
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -208,7 +213,7 @@ public abstract class AAbstractService {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AGSonService gSonService ;
+    public AGSonService gSonService;
 
 
     @Autowired

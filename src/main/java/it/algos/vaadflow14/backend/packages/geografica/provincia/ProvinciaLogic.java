@@ -1,21 +1,20 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -97,29 +96,22 @@ public class ProvinciaLogic extends GeografiaLogic {
 
 
     /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
+     * DEVE essere sovrascritto <br>
      *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected List<String> getAlertList(AEVista typeVista) {
-        List<String> lista = super.getAlertList(typeVista);
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
-        if (typeVista == AEVista.list) {
-            lista.add("Province italiane. Codifica secondo ISO 3166-2.");
-            lista.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-            lista.add("Codice ISO, sigla abituale e 'status' normativo");
-            lista.add("Ordinamento alfabetico: prima le città metropolitane e poi le altre");
-        }
+        lista.add(html.getSpanBlu("Province italiane. Codifica secondo ISO 3166-2."));
+        lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));
+        lista.add(html.getSpanBlu("Codice ISO, sigla abituale e 'status' normativo"));
+        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima le città metropolitane e poi le altre"));
 
         return lista;
     }
-
 
     /**
      * Operazioni eseguite PRIMA di save o di insert <br>

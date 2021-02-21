@@ -1,22 +1,17 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.enumeration.AEStato;
-import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoService;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.backend.service.AWikiService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -59,14 +54,6 @@ public class RegioneLogic extends GeografiaLogic {
     @Autowired
     public AWikiService wiki;
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    public AResourceService resource;
-
     /**
      * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
@@ -101,28 +88,27 @@ public class RegioneLogic extends GeografiaLogic {
     }
 
 
+
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> blue = new ArrayList<>();
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
-        blue.add("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
-        blue.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-        blue.add("Codice ISO, sigla abituale e 'status' normativo");
-        blue.add("Ordinamento alfabetico: prima Italia poi altri stati europei");
+        lista.add(html.getSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2"));
+        lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));
+        lista.add(html.getSpanBlu("Codice ISO, sigla abituale e 'status' normativo"));
+        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei"));
         if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status' ");
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'"));
         }
-        return new AlertWrap(null, blue, red, false);
-    }
 
+        return lista;
+    }
 
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>

@@ -1,18 +1,16 @@
 package it.algos.vaadflow14.backend.packages.security.utente;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -87,23 +85,23 @@ public class UtenteLogic extends ALogic {
     }
 
 
+
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
         if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'");
-            red.add("Di norma utilizzato solo in applicazioni con usaSecurity=true");
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'"));
+            lista.add(html.getSpanRosso("Di norma utilizzato solo in applicazioni con usaSecurity=true"));
         }
 
-        return new AlertWrap(null, null, red, false);
+        return lista;
     }
 
 }

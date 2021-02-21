@@ -1,13 +1,15 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -65,14 +67,15 @@ public class ViaLogic extends ALogic {
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        return new AlertWrap("Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.");
+    protected List<Span> getSpanList() {
+        String message = "Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.";
+        return Collections.singletonList(html.getSpanVerde(message));
     }
+
 
 }// end of prototype class

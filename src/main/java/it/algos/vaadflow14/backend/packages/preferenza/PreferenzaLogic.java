@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.preferenza;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -9,7 +10,6 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.form.*;
-import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -118,28 +118,23 @@ public class PreferenzaLogic extends ALogic {
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> green = new ArrayList<>();
-        List<String> blue = new ArrayList<>();
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
-        if (AEPreferenza.usaDebug.is()) {
-            green.add("PreferenzaLogic è SCOPE_PROTOTYPE mentre APreferenzaService è SCOPE_SINGLETON");
-            green.add("PreferenzaLogic è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form");
-            green.add("APreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton");
-            green.add("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()");
-            green.add("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")");
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'");
-        }
-        return new AlertWrap(green, blue, red, false);
+        lista.add(html.getSpanVerde("PreferenzaLogic è SCOPE_PROTOTYPE mentre APreferenzaService è SCOPE_SINGLETON"));
+        lista.add(html.getSpanVerde("PreferenzaLogic è usato come normale classe del package di preferenze e viene ricreato per ogni Grid e Form"));
+        lista.add(html.getSpanVerde("APreferenzaService è usato per 'leggere' le preferenze da qualsiasi 'service' singleton"));
+        lista.add(html.getSpanVerde("Alcune preferenze sono Enumeration e possono essere lette direttamente: AEPreferenza.usaDebug.is()"));
+        lista.add(html.getSpanVerde("Altre preferenze sono inserite dall'utente e possono essere lette dal singleton APreferenzaService: pref.isBool(\"usaDebug\")"));
+        lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed il comboBox 'Type'"));
+
+        return lista;
     }
-
 
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>

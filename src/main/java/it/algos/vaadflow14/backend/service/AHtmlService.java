@@ -30,7 +30,6 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AHtmlService extends AAbstractService {
 
-    private static final String LINE_HEIGHT = "14pt";//@todo Volendo si può mettere in preferenza
 
     /**
      * Costruisce uno span
@@ -52,6 +51,7 @@ public class AHtmlService extends AAbstractService {
      */
     public Span getSpan(final String message, final AIType... typeSpan) {
         Span span = new Span();
+        String height = AEPreferenza.lineHeight.getStr();
 
         if (text.isValid(message)) {
             span.setText(message);
@@ -61,7 +61,7 @@ public class AHtmlService extends AAbstractService {
                     span.getElement().getStyle().set(type.getTag(), type.get());
                 }
             }
-            span.getElement().getStyle().set("line-height", LINE_HEIGHT);
+            span.getElement().getStyle().set("line-height", height);
         }
 
         return span;
@@ -163,11 +163,12 @@ public class AHtmlService extends AAbstractService {
      */
     public Span getSpanHtml(final String message) {
         Span span = new Span();
+        String height = AEPreferenza.lineHeight.getStr();
 
         if (text.isValid(message)) {
             span.setText(message);
             span.getElement().setProperty("innerHTML", message);
-            span.getElement().getStyle().set("line-height", LINE_HEIGHT);
+            span.getElement().getStyle().set("line-height", height);
         }
 
         return span;

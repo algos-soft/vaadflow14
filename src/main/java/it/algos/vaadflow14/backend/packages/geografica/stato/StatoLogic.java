@@ -1,20 +1,17 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.service.AIService;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -80,27 +77,24 @@ public class StatoLogic extends GeografiaLogic {
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste di informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> blue = new ArrayList<>();
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
-        blue.add("Stati del mondo. Codifica secondo ISO 3166-1");
-        blue.add("Recuperati dalla pagina wiki: " + wikiPageTitle);
-        blue.add("Codici: numerico, alfa-due, alfa-tre e ISO locale");
-        blue.add("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
+        lista.add(html.getSpanBlu("Stati del mondo. Codifica secondo ISO 3166-1"));
+        lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));
+        lista.add(html.getSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale"));
+        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri"));
         if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ");
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField"));
         }
 
-        return new AlertWrap(null, blue, red, false);
+        return lista;
     }
-
 
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>

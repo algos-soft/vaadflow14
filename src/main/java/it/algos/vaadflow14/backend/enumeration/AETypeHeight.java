@@ -15,6 +15,7 @@ public enum AETypeHeight implements AIType, AIEnum {
     normal("1"),
     number16("1.6"),
     number20("2"),
+    px6("6px"),
     px10("10px"),
     px14("14px"),
     px18("18px"),
@@ -55,7 +56,7 @@ public enum AETypeHeight implements AIType, AIEnum {
         String testo = VUOTA;
 
         for (AETypeHeight eaTypeHeight : AETypeHeight.values()) {
-            testo += eaTypeHeight.name();
+            testo += eaTypeHeight.get();
             testo += VIRGOLA;
         }
 

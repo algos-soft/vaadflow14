@@ -6,7 +6,6 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.crono.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.header.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -54,23 +53,21 @@ public class MeseLogic extends CronoLogic {
 
     /**
      * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
-     * Costruisce un wrapper di liste d'informazioni per costruire l' istanza di AHeaderWrap <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
      * DEVE essere sovrascritto <br>
      *
-     * @return wrapper per passaggio dati
+     * @return una liste di 'span'
      */
-    @Override
-    protected AlertWrap getAlertWrapList() {
-        List<String> blu = new ArrayList<>();
-        List<String> red = new ArrayList<>();
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
 
-        blu.add("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio.");
-        blu.add("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi.");
+        lista.add(html.getSpanBlu("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
+        lista.add(html.getSpanBlu("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
         if (AEPreferenza.usaDebug.is()) {
-            red.add("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'");
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'"));
         }
 
-        return new AlertWrap(null, blu, red, false);
+        return lista;
     }
 
 }

@@ -477,7 +477,7 @@ public abstract class ALogic implements AILogic {
     public AHeader getAlertHeaderLayout(final AEVista typeVista) {
         AHeader header = null;
         AlertWrap wrap = null;
-        List<String> alertHtmlList = getAlertList(typeVista);
+//        List<String> alertHtmlList = getAlertList(typeVista);
 
         switch (typeVista) {
             case list:
@@ -497,9 +497,9 @@ public abstract class ALogic implements AILogic {
             }
         }
         else {
-            if (alertHtmlList != null) {
-                header = appContext.getBean(AHeaderList.class, alertHtmlList);
-            }
+//            if (alertHtmlList != null) {
+//                header = appContext.getBean(AHeaderList.class, alertHtmlList);
+//            }
         }
 
         return header;
@@ -524,6 +524,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return wrapper per passaggio dati
      */
+    @Deprecated
     protected AlertWrap getAlertWrapList() {
         //        return new AlertWrap(new ArrayList(Arrays.asList("uno", "due", "tre")));
         return null;
@@ -542,20 +543,21 @@ public abstract class ALogic implements AILogic {
     }
 
 
-    /**
-     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-     * Informazioni (eventuali) specifiche di ogni modulo <br>
-     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-     *
-     * @param typeVista in cui inserire gli avvisi
-     *
-     * @return wrapper per passaggio dati
-     */
-    protected List<String> getAlertList(AEVista typeVista) {
-        String headerAlert = annotation.getHeaderAlert(entityClazz);
-        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
-    }
+//    /**
+//     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+//     * Informazioni (eventuali) specifiche di ogni modulo <br>
+//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+//     *
+//     * @param typeVista in cui inserire gli avvisi
+//     *
+//     * @return wrapper per passaggio dati
+//     */
+//    @Deprecated
+//    protected List<String> getAlertList(AEVista typeVista) {
+//        String headerAlert = annotation.getHeaderAlert(entityClazz);
+//        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
+//    }
 
 
     /**
