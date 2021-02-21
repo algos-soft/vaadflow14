@@ -1,10 +1,14 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -27,7 +31,6 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class LambdaLogic extends ALogic {
 
-
     /**
      * Versione della classe per la serializzazione
      */
@@ -35,82 +38,51 @@ public class LambdaLogic extends ALogic {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametri <br>
      * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AListView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
-     */
-    public LambdaLogic() {
-        this(AEOperation.edit);
-    }
-
-
-    /**
-     * Costruttore con parametro <br>
-     * Not annotated with @Autowired annotation, per creare l' istanza SOLO come SCOPE_PROTOTYPE <br>
-     * Costruttore usato da AFormView <br>
-     * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName), operationForm) <br>
+     * Costruttore usato da AView <br>
+     * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
      *
+     * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public LambdaLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Lambda.class;
+    public LambdaLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
 
 
     /**
-     * Preferenze standard <br>
+     * Preferenze usate da questo service <br>
      * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-//        this.formClazz = LambdaForm.class;
+
+        super.usaBottoneDelete = true;
+        super.usaBottoneResetList = true;
+        super.usaBottoneNew = true;
+        super.usaBottoneExport = true;
     }
 
 
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
+     * DEVE essere sovrascritto <br>
      *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entity appena creata e salvata
+     * @return una liste di 'span'
      */
-    public Lambda creaIfNotExist(String keyPropertyValue) {
-        return (Lambda) checkAndSave(newEntity(keyPropertyValue));
+    protected List<Span> getSpanList() {
+        List<Span> lista = new ArrayList<>();
+
+        lista.add(html.getSpanBlu("Vista per provare i menu/bottoni", AETypeWeight.bold));
+        lista.add(html.getSpanVerde("Prima riga standard: Delete, Reset, New, Search, ComboBox, Export", AETypeWeight.bold));
+        lista.add(html.getSpanVerde("Seconda riga specifici: Update, Upload, Download, Elabora, Check, Test, Modulo", AETypeWeight.bold));
+
+        return lista;
     }
 
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-//     * Usa il @Builder di Lombok <br>
-//     * Eventuali regolazioni iniziali delle property <br>
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Lambda newEntity() {
-//        return newEntity(VUOTA);
-//    }
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Lambda newEntity( String uno) {//@TODO: Le properties riportate sono INDICATIVE e debbono essere sostituite
-        Lambda newEntityBean = Lambda.builderLambda()
-
-                .uno(text.isValid(uno) ? uno : null)
-
-                .build();
-
-        return (Lambda) fixKey(newEntityBean);
-    }
-
-}
+}// end of prototype class

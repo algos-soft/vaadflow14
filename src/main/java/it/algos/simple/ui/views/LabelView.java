@@ -38,7 +38,7 @@ public class LabelView extends VerticalLayout {
 
 
     /**
-     * Instantiates a new Delta view.
+     * Instantiates a new LabelView.
      */
     @PostConstruct
     private void postConstruct() {

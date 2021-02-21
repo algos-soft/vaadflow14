@@ -287,6 +287,11 @@ public abstract class ALogic implements AILogic {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
+    protected boolean usaBottoneSearch;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
     protected boolean usaBottonePaginaWiki;
 
     /**
@@ -538,6 +543,7 @@ public abstract class ALogic implements AILogic {
      *
      * @return wrapper per passaggio dati
      */
+    @Deprecated
     protected AlertWrap getAlertWrapForm() {
         return null;
     }

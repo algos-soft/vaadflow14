@@ -26,9 +26,29 @@ public enum AEButton {
 
     resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
-    wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre la corrispondente pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
-
     nuovo("New", VaadinIcon.PLUS_CIRCLE, "secondary", AEAction.nuovo, true, "Crea una nuova entity", "plus", Key.KEY_N, KeyModifier.CONTROL),
+
+    searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
+
+    export("Export", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esporta la lista", "cross", null, null),
+
+    wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre una pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
+
+    update("Update", VaadinIcon.GLOBE_WIRE, "error", AEAction.update, true, "Update di una pagina", "cross", Key.KEY_R, null),
+
+    upload("Upload", VaadinIcon.GLOBE_WIRE, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
+
+    download("Download", VaadinIcon.GLOBE_WIRE, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
+
+    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
+
+    check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.elabora, true, "Controlla un documento", "cross", Key.KEY_R, null),
+
+    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
+
+    test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.test, true, "Test di una funzionalità", "cross", Key.KEY_R, null),
+
+    statistiche("Statistiche", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
 
     back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ARROW_LEFT, null),
 
@@ -38,11 +58,10 @@ public enum AEButton {
 
     registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.KEY_S, KeyModifier.CONTROL),
 
+
     delete("Delete", VaadinIcon.TRASH, "error", AEAction.delete, true, "Cancella la scheda", "cross", Key.KEY_D, KeyModifier.CONTROL),
 
-    searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
 
-    export("Esporta", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esportazione della lista", "cross", null, null),
 
     prima("Prima", VaadinIcon.ARROW_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
 
@@ -76,7 +95,7 @@ public enum AEButton {
     public boolean enabled;
 
     /**
-     * Flag di preferenza per l'attributo 'title' del bottone. <br>
+     * Flag di preferenza per l'attributo 'tooltip' del bottone. <br>
      */
     public String toolTip;
 

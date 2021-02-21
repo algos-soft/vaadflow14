@@ -113,6 +113,9 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
+        FlowVar.menuRouteList.add(LabelView.class);
+        FlowVar.menuRouteList.add(ButtonView.class);
+
         super.fixMenuRoutes();
 
         FlowVar.menuRouteList.add(Via.class);

@@ -1,13 +1,13 @@
 package it.algos.@MODULELOWER@.backend.packages.@PACKAGE@;
 
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.ui.header.AlertWrap;
-import it.algos.vaadflow14.backend.service.AIService;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+import java.util.*;
 
 /**
  * Project: @MODULELOWER@ <br>
@@ -72,7 +72,7 @@ public class @ENTITY@Logic extends ALogic {
      */
     @Override
     protected List<Span> getSpanList() {
-        return List.of(text.getSpanVerde("Test"));
+        return Collections.singletonList(html.getSpanVerde("Test"));
     }
 
 
