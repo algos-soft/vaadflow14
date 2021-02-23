@@ -47,7 +47,7 @@ public class ABottomLayout extends AButtonLayout {
      *
      * @param wrapButtons wrap di informazioni
      */
-    public ABottomLayout(WrapButtons wrapButtons) {
+    public ABottomLayout(WrapButtonsOld wrapButtons) {
         super(wrapButtons);
     }
 

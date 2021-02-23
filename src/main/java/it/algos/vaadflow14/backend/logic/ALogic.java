@@ -292,12 +292,53 @@ public abstract class ALogic implements AILogic {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
+    protected boolean usaBottoneExport;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
     protected boolean usaBottonePaginaWiki;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
-    protected boolean usaBottoneExport;
+    protected boolean usaBottoneUpdate;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneUpload;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneDownload;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneElabora;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneCheck;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneModulo;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneTest;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneStatistiche;
+
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -414,16 +455,28 @@ public abstract class ALogic implements AILogic {
         //        this.keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         this.searchType = AESearch.nonUsata;
         this.searchProperty = annotation.getSearchPropertyName(entityClazz);
+
         this.usaBottoneDelete = false;
         this.usaBottoneResetList = false;
         this.usaBottoneNew = true;
+        this.usaBottoneSearch = false;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
+        this.usaBottoneUpdate = false;
+        this.usaBottoneUpload = false;
+        this.usaBottoneDownload = false;
+        this.usaBottoneElabora = false;
+        this.usaBottoneCheck = false;
+        this.usaBottoneModulo = false;
+        this.usaBottoneTest = false;
+        this.usaBottoneStatistiche = false;
+
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = true;
         this.usaBottoneEdit = true;
         this.usaBottoneResetForm = false;
         this.usaBottoniSpostamentoForm = false;
+
         this.formClazz = AGenericForm.class;
     }
 
@@ -482,7 +535,7 @@ public abstract class ALogic implements AILogic {
     public AHeader getAlertHeaderLayout(final AEVista typeVista) {
         AHeader header = null;
         AlertWrap wrap = null;
-//        List<String> alertHtmlList = getAlertList(typeVista);
+        //        List<String> alertHtmlList = getAlertList(typeVista);
 
         switch (typeVista) {
             case list:
@@ -502,9 +555,9 @@ public abstract class ALogic implements AILogic {
             }
         }
         else {
-//            if (alertHtmlList != null) {
-//                header = appContext.getBean(AHeaderList.class, alertHtmlList);
-//            }
+            //            if (alertHtmlList != null) {
+            //                header = appContext.getBean(AHeaderList.class, alertHtmlList);
+            //            }
         }
 
         return header;
@@ -548,22 +601,21 @@ public abstract class ALogic implements AILogic {
         return null;
     }
 
-
-//    /**
-//     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
-//     * Informazioni (eventuali) specifiche di ogni modulo <br>
-//     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
-//     *
-//     * @param typeVista in cui inserire gli avvisi
-//     *
-//     * @return wrapper per passaggio dati
-//     */
-//    @Deprecated
-//    protected List<String> getAlertList(AEVista typeVista) {
-//        String headerAlert = annotation.getHeaderAlert(entityClazz);
-//        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
-//    }
+    //    /**
+    //     * Costruisce una lista di informazioni per costruire l' istanza di AHeaderList <br>
+    //     * Informazioni (eventuali) specifiche di ogni modulo <br>
+    //     * Deve essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     * Esempio:     return new ArrayList(Arrays.asList("uno", "due", "tre"));
+    //     *
+    //     * @param typeVista in cui inserire gli avvisi
+    //     *
+    //     * @return wrapper per passaggio dati
+    //     */
+    //    @Deprecated
+    //    protected List<String> getAlertList(AEVista typeVista) {
+    //        String headerAlert = annotation.getHeaderAlert(entityClazz);
+    //        return text.isValid(headerAlert) ? new ArrayList(Arrays.asList(headerAlert)) : new ArrayList<String>();
+    //    }
 
 
     /**
@@ -589,8 +641,8 @@ public abstract class ALogic implements AILogic {
      * @return componente grafico per il placeHolder
      */
     @Override
-    public ATopLayout getTopLayout() {
-        ATopLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+    public AButtonLayout getTopLayout() {
+        AButtonLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
         this.addTopListeners(topLayout);
         return topLayout;
     }
@@ -605,23 +657,22 @@ public abstract class ALogic implements AILogic {
      * @return wrapper di dati per la view
      */
     public WrapButtons getWrapButtonsTop() {
-        List<AEButton> iniziali = this.getListaBottoniIniziali();
-        WrapSearch wrapSearch = this.getWrapSearch();
-        List<AEButton> centrali = this.getListaBottoniCentrali();
+        List<AEButton> listaAEBottoni = this.getListaBottoni();
+        //        WrapSearch wrapSearch = this.getWrapSearch();
         List<Button> specifici = this.getListaBottoniSpecifici();
-        List<AEButton> finali = this.getListaBottoniFinali();
-        AEOperation operationForm = null;
+        //        AEOperation operationForm = null;
 
-        return new WrapButtons(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni);
+        //        return new WrapButtonsOld(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
     }
 
 
     /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo iniziale <br>
+     * Costruisce una lista di bottoni (enumeration) <br>
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
-    protected List<AEButton> getListaBottoniIniziali() {
+    protected List<AEButton> getListaBottoni() {
         List<AEButton> listaBottoni = new ArrayList<>();
 
         if (usaBottoneDelete) {
@@ -630,6 +681,54 @@ public abstract class ALogic implements AILogic {
 
         if (usaBottoneResetList) {
             listaBottoni.add(AEButton.resetList);
+        }
+
+        if (usaBottoneNew) {
+            listaBottoni.add(AEButton.nuovo);
+        }
+
+        if (usaBottoneSearch) {
+            listaBottoni.add(AEButton.searchDialog);
+        }
+
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
+
+        if (usaBottonePaginaWiki) {
+            listaBottoni.add(AEButton.wiki);
+        }
+
+        if (usaBottoneUpdate) {
+            listaBottoni.add(AEButton.update);
+        }
+
+        if (usaBottoneUpload) {
+            listaBottoni.add(AEButton.upload);
+        }
+
+        if (usaBottoneDownload) {
+            listaBottoni.add(AEButton.download);
+        }
+
+        if (usaBottoneElabora) {
+            listaBottoni.add(AEButton.elabora);
+        }
+
+        if (usaBottoneCheck) {
+            listaBottoni.add(AEButton.check);
+        }
+
+        if (usaBottoneModulo) {
+            listaBottoni.add(AEButton.modulo);
+        }
+
+        if (usaBottoneTest) {
+            listaBottoni.add(AEButton.test);
+        }
+
+        if (usaBottoneStatistiche) {
+            listaBottoni.add(AEButton.statistiche);
         }
 
         return listaBottoni;
@@ -653,48 +752,12 @@ public abstract class ALogic implements AILogic {
 
 
     /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo centrale <br>
-     * Di default costruisce (come da flag) solo il bottone 'new' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniCentrali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneNew) {
-            listaBottoni.add(AEButton.nuovo);
-        }
-
-        return listaBottoni;
-    }
-
-
-    /**
      * Costruisce una lista di bottoni specifici <br>
      * Di default non costruisce nulla <br>
      * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected List<Button> getListaBottoniSpecifici() {
         List<Button> listaBottoni = new ArrayList<>();
-
-        return listaBottoni;
-    }
-
-
-    /**
-     * Costruisce una lista di bottoni (enumeration) per il gruppo finale <br>
-     * Di default non costruisce nulla <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AEButton> getListaBottoniFinali() {
-        List<AEButton> listaBottoni = new ArrayList<>();
-
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
-        }
-
-        if (usaBottonePaginaWiki) {
-            listaBottoni.add(AEButton.wiki);
-        }
 
         return listaBottoni;
     }
@@ -827,11 +890,11 @@ public abstract class ALogic implements AILogic {
      *
      * @return wrapper di dati per la view
      */
-    public WrapButtons getWrapButtonsBottom(AEOperation operationForm) {
+    public WrapButtonsOld getWrapButtonsBottom(AEOperation operationForm) {
         List<AEButton> listaInizialiBottom = this.getListaInizialiBottom();
         List<Button> listaSpecificiBottom = this.getListaSpecificiBottom();
         List<AEButton> listaFinaliBottom = this.getListaFinaliBottom();
-        return new WrapButtons(listaInizialiBottom, listaSpecificiBottom, listaFinaliBottom, operationForm);
+        return new WrapButtonsOld(listaInizialiBottom, listaSpecificiBottom, listaFinaliBottom, operationForm);
     }
 
 
@@ -884,7 +947,7 @@ public abstract class ALogic implements AILogic {
      * Chiamato da AView.initView() <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
-    protected void addTopListeners(ATopLayout topLayout) {
+    protected void addTopListeners(AButtonLayout topLayout) {
         if (topLayout != null) {
             topLayout.setAllListener(this);
         }

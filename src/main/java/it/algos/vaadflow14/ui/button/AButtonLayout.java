@@ -140,7 +140,7 @@ public abstract class AButtonLayout extends HorizontalLayout {
      *
      * @param wrapButtons wrap di informazioni
      */
-    public AButtonLayout(WrapButtons wrapButtons) {
+    public AButtonLayout(WrapButtonsOld wrapButtons) {
         this.iniziali = wrapButtons.getIniziali();
         this.searchType = wrapButtons.getWrapSearch().getSearchType();
         this.searchProperty = wrapButtons.getWrapSearch().getSearchProperty();

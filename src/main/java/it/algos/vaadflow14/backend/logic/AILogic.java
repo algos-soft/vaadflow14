@@ -76,7 +76,7 @@ public interface AILogic {
      *
      * @return componente grafico per il placeHolder
      */
-    ATopLayout getTopLayout();
+    AButtonLayout getTopLayout();
 
 
     /**

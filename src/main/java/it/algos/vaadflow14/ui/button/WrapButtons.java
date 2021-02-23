@@ -1,13 +1,15 @@
 package it.algos.vaadflow14.ui.button;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.wrapper.WrapSearch;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.enumeration.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -15,108 +17,112 @@ import java.util.List;
  * User: gac
  * Date: sab, 09-mag-2020
  * Time: 14:20
- * Wrap di informazioni passato dalla Logic alla creazione del AButtonLayout <br>
- * La Logic mantiene lo stato ed elabora informazioni che verranno usate dal AButtonLayout <br>
- * <p>
- * - Un gruppo di bottoni iniziali
- * - Un gruppo di ricerca
- * - Un gruppo di bottoni centrali
- * - Un gruppo di combobox di selezione e filtro
- * - Un gruppo di bottoni finali
+ * Wrap di informazioni passato da ALogic alla creazione di AButtonLayout <br>
+ * La ALogic mantiene lo stato ed elabora informazioni che verranno usate dal AButtonLayout <br>
+ * Questo wrapper contiene:
+ * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
+ * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+ * C - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
+ * D - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
  */
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class WrapButtons {
 
+
     /**
-     * Property per l'enumeration di bottoni iniziali (facoltativa, può anche essere sostituita da listaBottoniIniziali)
+     * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
      */
-    private List<AEButton> iniziali;
+    private AILogic entityLogic;
+
+    /**
+     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+     */
+    private List<AEButton> listaAEBottoni;
+
+
+    /**
+     * C - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
+     */
+    private LinkedHashMap<String, ComboBox> mappaComboBox;
+
+    /**
+     * D - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
+     */
+    private List<Button> listaBottoni;
+
 
     /**
      * Property per le informazioni per la ricerca (facoltativa)
      */
     private WrapSearch wrapSearch;
 
-    /**
-     * Property per l'enumeration di bottoni centrali (facoltativa, può anche essere sostituita da listaBottoniCentrali)
-     */
-    private List<AEButton> centrali;
 
-    /**
-     * Property per la lista di bottoni non standard (facoltativa)
-     */
-    private List<Button> specifici;
-
-    /**
-     * Property con la mappa di combobox di selezione e filtro (facoltativa)
-     */
-    private LinkedHashMap<String, ComboBox> mappaComboBox;
+//    /**
+//     * Property per selezionare i bottoni standard in base al tipo di Form (usata solo in ABottomLayout)
+//     */
+//    private AEOperation operationForm;
 
 
     /**
-     * Property per l'enumeration di bottoni finali (facoltativa)
+     * Costruttore senza bottoni <br>
+     * La classe viene costruita con appContext.getBean(WrapButtons.class, entityLogic) in ALogic <br>
+     * Se l'istanza viene creata SENZA una lista di bottoni, presenta solo il bottone 'New' <br>
+     *
+     * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
-    private List<AEButton> finali;
+    public WrapButtons(final AILogic entityLogic) {
+        this(entityLogic, (List<AEButton>) Collections.singletonList(AEButton.nuovo));
+    }
 
 
     /**
-     * Property per selezionare i bottoni standard in base al tipo di Form (usata solo in ABottomLayout)
+     * Costruttore con una serie di bottoni standard, sotto forma di List<AEButton> <br>
+     * La classe viene costruita con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni) in ALogic <br>
+     *
+     * @param entityLogic    a cui rinviare l'evento/azione da eseguire
+     * @param listaAEBottoni una serie di bottoni standard
      */
-    private AEOperation operationForm;
-
-
-    public WrapButtons(List<AEButton> iniziali) {
-        this(iniziali, null, null, null, null, null, null);
+    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni) {
+        this.entityLogic = entityLogic;
+        this.listaAEBottoni = listaAEBottoni;
     }
 
+//    public WrapButtons(List<AEButton> iniziali) {
+//        this(iniziali, null, null, null, null, null, null);
+//    }
+//
+//
+//    public WrapButtons(List<AEButton> iniziali, List<Button> specifici, List<AEButton> finali, AEOperation operationForm) {
+//        this(iniziali, null, null, specifici, null, finali, operationForm);
+//    }
 
-    public WrapButtons(List<AEButton> iniziali, List<Button> specifici,List<AEButton> finali, AEOperation operationForm) {
-        this(iniziali, null, null, specifici, null, finali, operationForm);
+
+//    public WrapButtons(List<AEButton> iniziali, WrapSearch wrapSearch, List<AEButton> centrali, List<Button> specifici, LinkedHashMap<String, ComboBox> mappaComboBox, List<AEButton> finali, AEOperation operationForm) {
+//        this.iniziali = iniziali;
+//        this.wrapSearch = wrapSearch != null ? wrapSearch : new WrapSearch();
+//        this.centrali = centrali;
+//        this.specifici = specifici;
+//        this.mappaComboBox = mappaComboBox;
+//        this.finali = finali;
+//        this.operationForm = operationForm != null ? operationForm : AEOperation.edit;
+//    }
+
+
+    public AILogic getEntityLogic() {
+        return entityLogic;
     }
 
-
-    public WrapButtons(List<AEButton> iniziali, WrapSearch wrapSearch, List<AEButton> centrali, List<Button> specifici, LinkedHashMap<String, ComboBox> mappaComboBox, List<AEButton> finali, AEOperation operationForm) {
-        this.iniziali = iniziali;
-        this.wrapSearch = wrapSearch != null ? wrapSearch : new WrapSearch();
-        this.centrali = centrali;
-        this.specifici = specifici;
-        this.mappaComboBox = mappaComboBox;
-        this.finali = finali;
-        this.operationForm = operationForm != null ? operationForm : AEOperation.edit;
+    public List<AEButton> getListaAEBottoni() {
+        return listaAEBottoni;
     }
-
-
-    public List<AEButton> getIniziali() {
-        return iniziali;
-    }
-
-
-    public List<AEButton> getCentrali() {
-        return centrali;
-    }
-
-
-    public List<AEButton> getFinali() {
-        return finali;
-    }
-
-
-    public WrapSearch getWrapSearch() {
-        return wrapSearch;
-    }
-
-
-    public List<Button> getSpecifici() {
-        return specifici;
-    }
-
 
     public LinkedHashMap<String, ComboBox> getMappaComboBox() {
         return mappaComboBox;
     }
 
-
-    public AEOperation getOperationForm() {
-        return operationForm;
+    public List<Button> getListaBottoni() {
+        return listaBottoni;
     }
 
 }

@@ -1,22 +1,21 @@
 package it.algos.vaadflow14.ui.button;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.data.value.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.ui.enumeration.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.annotation.*;
+import java.util.*;
 
 
 /**
@@ -25,54 +24,122 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * User: gac
  * Date: sab, 09-mag-2020
  * Time: 11:27
- * Placeholder SOPRA la Grid <br>
- * Contenuto variabile in base ad una lista di componenti inviata con un wrapper nel costruttore. Nell'ordine: <br>
- * 1) Prima zona:
- * . con o senza un bottone per cancellare tutta la collezione (default senza) <br>
- * . con o senza un bottone di reset per ripristinare (se previsto in automatico) la collezione (default senza) <br>
- * 2) Seconda zona:
- * . con o senza gruppo di ricerca: <br>
- * --    campo EditSearch predisposto su un unica property, oppure (in alternativa) <br>
- * --    bottone per aprire un DialogSearch con diverse property selezionabili <br>
- * --    bottone per annullare la ricerca e riselezionare tutta la collezione <br>
- * 3) Terza zona
- * . con o senza bottone New, con testo regolato da preferenza o da parametro (default con) <br>
- * . altri eventuali bottoni <br>
- * 4) Quarta zona
- * . con o senza comboBox di selezione e filtro (numero variabile) <br>
- * 5) Quinta zona
- * . con eventuali altri bottoni specifici <br>
  * <p>
- * I bottoni vengono passati nel wrapper come enumeration standard. <br>
- * Se si usano bottoni non standard vengono inseriti al termine del gruppo centrale di bottoni <br>
- * I listeners dei bottoni non standard devono essere regolati singolarmente dalla Logic chiamante <br>
- * Se il costruttore arriva SENZA parametri, mostra solo quanto previsto nelle preferenze <br>
- * La classe viene costruita con appContext.getBean(ATopLayout.class, wrapButtons) in AEntityService <br>
+ * Costruisce un layout (grafico) con i bottoni di comando della view (List) <br>
+ * Creata da ALogic.getTopLayout() con appContext.getBean(ATopLayout.class,...); <br>
+ * L'istanza viene inserita in topPlacehorder della view (List) SOPRA la Grid <br>
+ * // * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
+ * <p>
+ * Il costruttore può avere 4 parametri:
+ * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
+ * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+ * C - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
+ * D - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
+ * <p>
+ * <p>
+ * <p>
+ * // * Se il costruttore è senza il service, i listener vengono regolati successivamente
+ * // * I listeners dei bottoni non standard devono essere regolati singolarmente dalla Logic chiamante <br>
+ * I listeners dei bottoni vengono regolati dalla AILogic chiamante <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ATopLayout extends AButtonLayout {
 
+    private AILogic entityLogic;
+
+    private List<AEButton> listaAEBottoni;
+
+    private WrapButtons wrapper;
 
     /**
-     * Costruttore base senza parametri <br>
-     * La classe viene costruita con appContext.getBean(AxxxLayout.class) in AEntityService <br>
+     * Costruttore senza parametri<br>
      */
-    @Deprecated
     public ATopLayout() {
+        this(null);
     }
+
+    /**
+     * Costruttore <br>
+     * La classe viene costruita con appContext.getBean(ATopLayout.class, wrapButtons) in ALogic <br>
+     *
+     * @param wrapper di informazioni tra 'logic' e 'view'
+     */
+    public ATopLayout(final WrapButtons wrapper) {
+        this.wrapper = wrapper;
+        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
+        this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
+    }
+
+    //    /**
+    //     * Costruttore senza bottoni <br>
+    //     * La classe viene costruita con appContext.getBean(ATopLayout.class, entityLogic) in ALogic <br>
+    //     * Se l'istanza viene creata SENZA una lista di bottoni, presenta solo il bottone 'New' <br>
+    //     *
+    //     * @param entityLogic a cui rinviare l'evento/azione da eseguire
+    //     */
+    //    public ATopLayout(final AILogic entityLogic) {
+    //        this(entityLogic, (List<AEButton>) Collections.singletonList(AEButton.nuovo));
+    //    }
+
+    //    /**
+    //     * Costruttore con una serie di bottoni standard, sotto forma di List<AEButton> <br>
+    //     * La classe viene costruita con appContext.getBean(ATopLayout.class, entityLogic, listaAEBottoni) in ALogic <br>
+    //     *
+    //     * @param entityLogic    a cui rinviare l'evento/azione da eseguire
+    //     * @param listaAEBottoni una serie di bottoni standard
+    //     */
+    //    public ATopLayout(final AILogic entityLogic, final List<AEButton> listaAEBottoni) {
+    //        this.entityLogic = entityLogic;
+    //        super.service = entityLogic;
+    //        this.listaAEBottoni = listaAEBottoni;
+    //    }
 
 
     /**
-     * Costruttore base con parametro wrapper di passaggio dati <br>
-     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in AEntityService <br>
-     *
-     * @param wrapButtons wrap di informazioni
+     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
+     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
+     * del costruttore e PRIMA di qualsiasi altro metodo <br>
+     * <p>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
      */
-    public ATopLayout(WrapButtons wrapButtons) {
-        super(wrapButtons);
+    @PostConstruct
+    protected void postConstruct() {
+        this.checkParametri();
+        this.creaBottoni();
     }
 
+    protected void checkParametri() {
+        String message;
+
+        if (wrapper == null) {
+            logger.error("Creazione di un TopLayout senza WrapButtons", this.getClass(), "checkParametri");
+        }
+
+        if (entityLogic == null) {
+            logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
+        }
+
+        if (listaAEBottoni == null) {
+            message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
+            logger.info(message, this.getClass(), "checkParametri");
+        }
+
+    }
+
+    protected void creaBottoni() {
+        Button button;
+
+        if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
+            for (AEButton bottone : listaAEBottoni) {
+                button = FactoryButton.get(bottone);
+                button.addClickListener(event -> performAction(bottone.action));
+                this.add(button);
+            }
+        }
+    }
 
     /**
      * Costruisce il gruppo di ricerca testuale <br>
@@ -147,7 +214,8 @@ public class ATopLayout extends AButtonLayout {
                 if (buttonClearFilter != null) {
                     if (searchField.getValue().isEmpty()) {
                         buttonClearFilter.setEnabled(false);
-                    } else {
+                    }
+                    else {
                         buttonClearFilter.setEnabled(true);
                     }
                 }

@@ -234,7 +234,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
         super.fixLayout();
 
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view
-        this.fixHeaderLayout();
+        this.fixAlertLayout();
 
         //--Costruisce un layout (obbligatorio) per i menu ed i bottoni di comando della view
         this.fixTopLayout();
@@ -263,7 +263,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Se esiste, inserisce l' istanza (grafica) in alertPlacehorder della view <br>
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
-    protected void fixHeaderLayout() {
+    protected void fixAlertLayout() {
         AHeader header = entityLogic.getAlertHeaderLayout(typeVista);
         AIHeader header2 = entityLogic.getAlertLayout(typeVista);
 
@@ -280,17 +280,15 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
 
 
     /**
-     * Costruisce un layout per i bottoni di comando in topPlacehorder della view <br>
+     * Costruisce i bottoni di comando della view (List) <br>
      * <p>
      * Chiamato da AView.initView() <br>
-     * Tipicamente usato SOLO nella List <br>
+     * L'istanza di ATopLayout viene costruita dal service 'entityLogic' <br>
+     * L'istanza (grafica) viene inserita in topPlacehorder della view (List) <br>
      * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
-     * Recupera dalla logica specifica i menu/bottoni previsti <br>
-     * Costruisce un' istanza dedicata con i bottoni <br>
-     * Inserisce l' istanza (grafica) in topPlacehorder della view <br>
      */
     protected void fixTopLayout() {
-        ATopLayout topLayout = entityLogic.getTopLayout();
+        AButtonLayout topLayout = entityLogic.getTopLayout();
 
         if (topPlaceholder != null && topLayout != null) {
             topPlaceholder.add(topLayout);
