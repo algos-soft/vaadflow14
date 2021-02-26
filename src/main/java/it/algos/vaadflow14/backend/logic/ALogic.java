@@ -1120,7 +1120,6 @@ public abstract class ALogic implements AILogic {
         }
     }
 
-
     /**
      * Azione proveniente dal click sul bottone Prima <br>
      * Recupera la lista FILTRATA e ORDINATA delle properties, ricevuta dalla Grid <br>@todo da realizzare
