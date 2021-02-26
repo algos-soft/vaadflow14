@@ -10,6 +10,7 @@ import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -46,11 +47,42 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ATopLayout extends AButtonLayout {
 
+
+    /**
+     * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
+     */
     private AILogic entityLogic;
 
+    /**
+     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+     */
     private List<AEButton> listaAEBottoni;
 
+    /**
+     * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
+     */
+    private WrapSearch wrapSearch;
+
+    /**
+     * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
+     */
+    private LinkedHashMap<String, ComboBox> mappaComboBox;
+
+    /**
+     * E - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
+     */
+    private List<Button> listaBottoniSpecifici;
+
+    /**
+     * Property per il numero di bottoni nella prima riga sopra la Grid (facoltativa)
+     */
+    private int maxNumeroBottoniPrimaRiga;
+
     private WrapButtons wrapper;
+
+    private HorizontalLayout primaRiga;
+
+    private HorizontalLayout secondaRiga;
 
     /**
      * Costruttore senza parametri<br>
@@ -69,6 +101,10 @@ public class ATopLayout extends AButtonLayout {
         this.wrapper = wrapper;
         this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
         this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
+        this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
+        this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
+        this.listaBottoniSpecifici = wrapper != null ? wrapper.getListaBottoniSpecifici() : null;
+        this.maxNumeroBottoniPrimaRiga = wrapper != null ? wrapper.getMaxNumeroBottoniPrimaRiga() : null;
     }
 
     //    /**
@@ -108,7 +144,29 @@ public class ATopLayout extends AButtonLayout {
     @PostConstruct
     protected void postConstruct() {
         this.checkParametri();
-        this.creaBottoni();
+        this.initView();
+        this.creaAllBottoni();
+        this.addAllToView();
+    }
+
+    /**
+     * Qui va tutta la logica iniziale della view <br>
+     */
+    protected void initView() {
+        mappaBottoni = new HashMap<AEButton, Button>();
+        this.setMargin(false);
+        this.setSpacing(false);
+        this.setPadding(false);
+
+        this.primaRiga = new HorizontalLayout();
+        this.primaRiga.setMargin(false);
+        this.primaRiga.setSpacing(true);
+        this.primaRiga.setPadding(false);
+
+        this.secondaRiga = new HorizontalLayout();
+        this.secondaRiga.setMargin(false);
+        this.secondaRiga.setSpacing(true);
+        this.secondaRiga.setPadding(false);
     }
 
     protected void checkParametri() {
@@ -129,16 +187,92 @@ public class ATopLayout extends AButtonLayout {
 
     }
 
-    protected void creaBottoni() {
-        Button button;
-
+    protected void creaAllBottoni() {
         if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-            for (AEButton bottone : listaAEBottoni) {
-                button = FactoryButton.get(bottone);
-                button.addClickListener(event -> performAction(bottone.action));
-                this.add(button);
+            for (AEButton bottone : AEButton.values()) {
+                if (bottone == AEButton.searchDialog) {
+                    //-- search
+                    if (listaAEBottoni.contains(bottone)) {
+                        addSearchGroup();
+                    }
+                    //-- tutti i combobox
+                    if (mappaComboBox != null && mappaComboBox.size() > 0) {
+                        for (Map.Entry<String, ComboBox> entry : mappaComboBox.entrySet()) {
+                            this.addCombo(entry.getValue());
+                        }
+                    }
+                }
+                //--tutti i bottoni enum
+                else {
+                    if (listaAEBottoni.contains(bottone)) {
+                        this.addBottoneEnum(bottone);
+                    }
+                }
             }
         }
+
+        if (listaBottoniSpecifici != null && listaBottoniSpecifici.size() > 0) {
+            for (Button bottone : listaBottoniSpecifici) {
+                this.addBottoneSpecifico(bottone);
+            }
+        }
+    }
+
+    protected void addBottoneEnum(AEButton bottone) {
+        Button button = FactoryButton.get(bottone);
+        button.addClickListener(event -> performAction(bottone.action));
+
+        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+            primaRiga.add(button);
+        }
+        else {
+            secondaRiga.add(button);
+        }
+    }
+
+    protected void addSearchGroup() {
+        HorizontalLayout layout = null;
+        layout = fixSearchGroup();
+        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+            primaRiga.add(layout);
+        }
+        else {
+            secondaRiga.add(layout);
+        }
+    }
+
+
+    protected void addBottoneSpecifico(Button bottone) {
+        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+            primaRiga.add(bottone);
+        }
+        else {
+            secondaRiga.add(bottone);
+        }
+    }
+
+    protected void addCombo(ComboBox combo) {
+        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+            primaRiga.add(combo);
+        }
+        else {
+            secondaRiga.add(combo);
+        }
+    }
+
+    protected void addAllToView() {
+        if (primaRiga.getComponentCount() > 0) {
+            this.add(primaRiga);
+        }
+        if (secondaRiga.getComponentCount() > 0) {
+            this.add(secondaRiga);
+        }
+    }
+
+    protected HorizontalLayout fixSearchAndCombo() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.add(new Button("Pippo"));
+        return layout;
     }
 
     /**
@@ -148,30 +282,35 @@ public class ATopLayout extends AButtonLayout {
      * 3) bottone per aprire un dialogo di selezione <br>
      * DEVE essere sovrascritto. <br>
      */
-    @Override
-    protected void fixSearch() {
+    protected HorizontalLayout fixSearchGroup() {
+        HorizontalLayout layout = null;
         Button button;
-        switch (searchType) {
-            case nonUsata:
-                break;
-            case editField:
-                this.fixSearchField();
-                break;
-            case dialog:
-                button = FactoryButton.get(AEButton.searchDialog);
-                this.mappaBottoni.put(AEButton.searchDialog, button);
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
-                break;
-        }
+
+        layout = this.fixSearchField();
+
+//        switch (searchType) {
+//            case nonUsata:
+//                break;
+//            case editField:
+//                layout = this.fixSearchField();
+//                break;
+//            case dialog:
+//                button = FactoryButton.get(AEButton.searchDialog);
+//                this.mappaBottoni.put(AEButton.searchDialog, button);
+//                break;
+//            default:
+//                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
+//                break;
+//        }
+
+        return layout;
     }
 
 
     /**
      * Campo EditSearch predisposto su un'unica property. <br>
      */
-    private void fixSearchField() {
+    private HorizontalLayout fixSearchField() {
         HorizontalLayout layout;
         String placeHolder = text.isValid(searchProperty) ? text.primaMaiuscola(searchProperty) + "..." : "Cerca...";
         String toolTip = "Caratteri iniziali della ricerca" + (text.isValid(searchProperty) ? " nel campo '" + searchProperty + "'" : VUOTA);
@@ -193,7 +332,7 @@ public class ATopLayout extends AButtonLayout {
             layout.add(buttonClearFilter);
         }
 
-        this.add(layout);
+        return layout;
     }
 
 

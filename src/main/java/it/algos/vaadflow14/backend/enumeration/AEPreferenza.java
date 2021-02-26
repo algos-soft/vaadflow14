@@ -31,6 +31,7 @@ public enum AEPreferenza implements AIPreferenza {
     maxRigheGrid(PREF_MAX_RIGHE_GRID, "Righe massime della griglia semplice", AETypePref.integer, 20, "Numero di elementi oltre il quale scatta la pagination automatica della Grid (se attiva)"),
     maxEnumRadio(PREF_MAX_RADIO, "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
     lineHeight(LINE_HEIGHT, "Altezza di una riga nelle View", AETypePref.enumeration, AETypeHeight.normal, false, false, false),
+    numeroBottoni(BUTTONS_NUMBER, "Numero di bottoni nella prima riga sopra la Grid", AETypePref.integer, 4, false, false, false),
     ;
 
 

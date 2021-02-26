@@ -1,10 +1,15 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -41,7 +46,7 @@ public class GammaLogic extends ALogic {
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
     public GammaLogic() {
-        this(AEOperation.edit);
+        //        this(AEOperation.edit);
     }
 
 
@@ -53,10 +58,14 @@ public class GammaLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public GammaLogic(AEOperation operationForm) {
-        super(operationForm);
-        super.entityClazz = Gamma.class;
+    public GammaLogic(AIService entityService, AEOperation operationForm) {
+        super(entityService, operationForm);
     }
+
+    //    public GammaLogic(AEOperation operationForm) {
+    //        super(operationForm);
+    //        super.entityClazz = Gamma.class;
+    //    }
 
 
     /**
@@ -68,78 +77,71 @@ public class GammaLogic extends ALogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        this.usaBottoneDelete = true;
+        this.usaBottoneResetList = true;
+        this.usaBottoneNew = true;
+        this.usaBottoneSearch = true;
+        this.usaBottoneExport = true;
+        this.usaBottonePaginaWiki = true;
+        //        this.usaBottoneUpdate = true;
+        //        this.usaBottoneUpload = true;
+        //        this.usaBottoneDownload = true;
+        //        this.usaBottoneElabora = true;
+        //        this.usaBottoneCheck = true;
+        //        this.usaBottoneModulo = true;
+        //        this.usaBottoneTest = true;
+        //        this.usaBottoneStatistiche = true;
+        this.maxNumeroBottoniPrimaRiga = 6;
     }
 
-
-    //    /**
-    //     * Costruisce un layout per il Form in bodyPlacehorder della view <br>
-    //     * <p>
-    //     * Chiamato da AView.initView() <br>
-    //     * Costruisce un' istanza dedicata <br>
-    //     * Passa all' istanza un wrapper di dati <br>
-    //     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-    //     *
-    //     * @param entityBean interessata
-    //     *
-    //     * @return componente grafico per il placeHolder
-    //     */
-    //    @Override
-    //    public AForm getBodyFormLayout(AEntity entityBean) {
-    //        form = null;
-    //
-    //        //--entityBean dovrebbe SEMPRE esistere (anche vuoto), ma meglio controllare
-    //        if (entityBean != null) {
-    //            form = appContext.getBean(GammaForm.class, getWrapForm(entityBean));
-    //        }
-    //
-    //        return form;
-    //    }
-
-
-//    /**
-//     * Crea e registra una entity solo se non esisteva <br>
-//     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entity <br>
-//     * solo col valore di un parametro da usare anche come keyID <br>
-//     * Controlla che non esista già una entity con lo stesso keyID <br>
-//     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-//     *
-//     * @param keyPropertyValue obbligatorio
-//     *
-//     * @return la nuova entity appena creata e salvata
-//     */
-//    @Override
-//    public Gamma creaIfNotExist(String keyPropertyValue) {
-//        return (Gamma) checkAndSave(newEntity(keyPropertyValue));
-//    }
-
-
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-//     * Usa il @Builder di Lombok <br>
-//     * Eventuali regolazioni iniziali delle property <br>
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Gamma newEntity() {
-//        return newEntity(VUOTA);
-//    }
+    /**
+     * Informazioni (eventuali) specifiche di ogni modulo, mostrate nella List <br>
+     * Costruisce una liste di 'span' per costruire l' istanza di AHeaderSpan <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return una liste di 'span'
+     */
+    protected List<Span> getSpanList() {
+        String message = "Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.";
+        return Collections.singletonList(html.getSpanVerde(message));
+    }
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @return la nuova entity appena creata (non salvata)
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
      */
-    public Gamma newEntity(String code) {
-        Gamma newEntityBean = Gamma.builderGamma()
-
-                .code(text.isValid(code) ? code : null)
-
-                .build();
-
-        return (Gamma) fixKey(newEntityBean);
+    @Override
+    protected void fixMappaComboBox() {
+        super.creaComboBox("mese");
+        super.creaComboBox("secolo");
     }
+
+    /**
+     * Costruisce una lista di bottoni specifici <br>
+     * Di default non costruisce nulla <br>
+     * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<Button> getListaBottoniSpecifici() {
+        return Collections.singletonList(new Button("Specifico"));
+    }
+
+    //    /**
+    //     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+    //     * Usa il @Builder di Lombok <br>
+    //     * Eventuali regolazioni iniziali delle property <br>
+    //     *
+    //     * @return la nuova entity appena creata (non salvata)
+    //     */
+    //    public Gamma newEntity(String code) {
+    //        Gamma newEntityBean = Gamma.builderGamma()
+    //
+    //                .code(text.isValid(code) ? code : null)
+    //
+    //                .build();
+    //
+    //        return (Gamma) fixKey(newEntityBean);
+    //    }
 
 }

@@ -355,6 +355,10 @@ public abstract class ALogic implements AILogic {
      */
     protected String wikiPageTitle;
 
+    /**
+     * Flag di preferenza per specificare il massimo numero di bottoni della prima riga <br>
+     */
+    protected int maxNumeroBottoniPrimaRiga;
 
     /**
      * Flag di preferenza per i messaggi di avviso in alertPlacehorder <br>
@@ -470,6 +474,7 @@ public abstract class ALogic implements AILogic {
         this.usaBottoneModulo = false;
         this.usaBottoneTest = false;
         this.usaBottoneStatistiche = false;
+        this.maxNumeroBottoniPrimaRiga = AEPreferenza.numeroBottoni.getInt();
 
         this.wikiPageTitle = VUOTA;
         this.usaHeaderWrap = true;
@@ -657,13 +662,13 @@ public abstract class ALogic implements AILogic {
      * @return wrapper di dati per la view
      */
     public WrapButtons getWrapButtonsTop() {
-        List<AEButton> listaAEBottoni = this.getListaBottoni();
-        //        WrapSearch wrapSearch = this.getWrapSearch();
-        List<Button> specifici = this.getListaBottoniSpecifici();
+        List<AEButton> listaAEBottoni = this.getListaAEBottoni();
+        WrapSearch wrapSearch = this.getWrapSearch();
+        LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
+        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
         //        AEOperation operationForm = null;
 
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni);
-        //        return new WrapButtonsOld(iniziali, wrapSearch, centrali, specifici, mappaComboBox, finali, operationForm);
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, wrapSearch, mappaComboBox, listaBottoniSpecifici, maxNumeroBottoniPrimaRiga);
     }
 
 
@@ -672,61 +677,48 @@ public abstract class ALogic implements AILogic {
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
-    protected List<AEButton> getListaBottoni() {
+    protected List<AEButton> getListaAEBottoni() {
         List<AEButton> listaBottoni = new ArrayList<>();
 
         if (usaBottoneDelete) {
             listaBottoni.add(AEButton.deleteAll);
         }
-
         if (usaBottoneResetList) {
             listaBottoni.add(AEButton.resetList);
         }
-
         if (usaBottoneNew) {
             listaBottoni.add(AEButton.nuovo);
         }
-
         if (usaBottoneSearch) {
             listaBottoni.add(AEButton.searchDialog);
         }
-
         if (usaBottoneExport) {
             listaBottoni.add(AEButton.export);
         }
-
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
         }
-
         if (usaBottoneUpdate) {
             listaBottoni.add(AEButton.update);
         }
-
         if (usaBottoneUpload) {
             listaBottoni.add(AEButton.upload);
         }
-
         if (usaBottoneDownload) {
             listaBottoni.add(AEButton.download);
         }
-
         if (usaBottoneElabora) {
             listaBottoni.add(AEButton.elabora);
         }
-
         if (usaBottoneCheck) {
             listaBottoni.add(AEButton.check);
         }
-
         if (usaBottoneModulo) {
             listaBottoni.add(AEButton.modulo);
         }
-
         if (usaBottoneTest) {
             listaBottoni.add(AEButton.test);
         }
-
         if (usaBottoneStatistiche) {
             listaBottoni.add(AEButton.statistiche);
         }
@@ -757,9 +749,7 @@ public abstract class ALogic implements AILogic {
      * Deve essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected List<Button> getListaBottoniSpecifici() {
-        List<Button> listaBottoni = new ArrayList<>();
-
-        return listaBottoni;
+        return new ArrayList<>();
     }
 
 
@@ -1931,7 +1921,7 @@ public abstract class ALogic implements AILogic {
         if (entityService.deleteAll()) {
             logger.deleteAll(entityClazz);
             this.refreshGrid();
-            UI.getCurrent().getPage().reload();
+            this.reloadList();
         }
     }
 

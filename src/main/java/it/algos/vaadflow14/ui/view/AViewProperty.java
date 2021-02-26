@@ -1,17 +1,15 @@
 package it.algos.vaadflow14.ui.view;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEColor;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
+import com.vaadin.flow.component.orderedlayout.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.enumeration.AEVista;
-import it.algos.vaadflow14.ui.service.ARouteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
 
 /**
@@ -207,7 +205,7 @@ public abstract class AViewProperty extends VerticalLayout {
     protected void fixLayout() {
         this.removeAll();
         this.setMargin(false);
-        this.setSpacing(true);
+        this.setSpacing(false);
         this.setPadding(true);
 
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
@@ -221,7 +219,7 @@ public abstract class AViewProperty extends VerticalLayout {
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
         this.topPlaceholder = new VerticalLayout();
         this.topPlaceholder.removeAll();
-        this.topPlaceholder.addClassName("view-toolbar");
+        //        this.topPlaceholder.addClassName("view-toolbar");
         this.topPlaceholder.setMargin(false);
         this.topPlaceholder.setSpacing(false);
         this.topPlaceholder.setPadding(false);
@@ -250,8 +248,8 @@ public abstract class AViewProperty extends VerticalLayout {
         if (AEPreferenza.usaDebug.is()) {
             this.getElement().getStyle().set("background-color", AEColor.yellow.getEsadecimale());
             alertPlaceholder.getElement().getStyle().set("background-color", AEColor.bisque.getEsadecimale());
-            topPlaceholder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());
-            bodyPlaceholder.getElement().getStyle().set("background-color", AEColor.lightgreen.getEsadecimale());
+            topPlaceholder.getElement().getStyle().set("background-color", AEColor.lightgreen.getEsadecimale());
+            bodyPlaceholder.getElement().getStyle().set("background-color", AEColor.lightpink.getEsadecimale());
             bottomPlaceholder.getElement().getStyle().set("background-color", AEColor.gainsboro.getEsadecimale());
             footerPlaceholder.getElement().getStyle().set("background-color", AEColor.silver.getEsadecimale());
         }

@@ -62,7 +62,6 @@ public enum AEButton {
     delete("Delete", VaadinIcon.TRASH, "error", AEAction.delete, true, "Cancella la scheda", "cross", Key.KEY_D, KeyModifier.CONTROL),
 
 
-
     prima("Prima", VaadinIcon.ARROW_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
 
     dopo("Dopo", VaadinIcon.ARROW_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null,true),

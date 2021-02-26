@@ -304,7 +304,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Costruisce un' istanza dedicata <br>
      * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
      */
-    protected void fixBodyLayout() {
+    public void fixBodyLayout() {
     }
 
 

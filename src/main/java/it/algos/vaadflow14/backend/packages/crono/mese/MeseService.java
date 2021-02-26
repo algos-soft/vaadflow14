@@ -108,17 +108,11 @@ public class MeseService extends AService {
      */
     public Mese newEntity(final String mese, final int giorni, final int giorniBisestile, final String sigla) {
         Mese newEntityBean = Mese.builderMese()
-
                 .ordine(getNewOrdine())
-
                 .mese(text.isValid(mese) ? mese : null)
-
                 .giorni(giorni)
-
                 .giorniBisestile(giorniBisestile)
-
                 .sigla(text.isValid(sigla) ? sigla : null)
-
                 .build();
 
         return (Mese) fixKey(newEntityBean);

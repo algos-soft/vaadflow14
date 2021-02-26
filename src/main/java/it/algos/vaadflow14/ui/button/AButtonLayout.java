@@ -1,24 +1,17 @@
 package it.algos.vaadflow14.ui.button;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AESearch;
-import it.algos.vaadflow14.backend.service.AArrayService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.ATextService;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.enumeration.*;
+import org.springframework.beans.factory.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -31,7 +24,7 @@ import java.util.Map;
  * <p>
  * Se il costruttore arriva SENZA parametri, mostra solo quanto previsto nelle preferenze <br>
  */
-public abstract class AButtonLayout extends HorizontalLayout {
+public abstract class AButtonLayout extends VerticalLayout {
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -159,12 +152,12 @@ public abstract class AButtonLayout extends HorizontalLayout {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
      * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
      */
-    @PostConstruct
+//    @PostConstruct
     protected void postConstruct() {
-        this.setMargin(false);
-        this.setSpacing(true);
-        this.setPadding(false);
-        mappaBottoni = new HashMap<AEButton, Button>();
+//        this.setMargin(false);
+//        this.setSpacing(false);
+//        this.setPadding(false);
+//        mappaBottoni = new HashMap<AEButton, Button>();
 
         this.fixProperties();
     }

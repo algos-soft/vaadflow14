@@ -110,15 +110,10 @@ public class AnnoService extends AService {
      */
     public Anno newEntity(final int ordine,final String anno,final boolean bisestile,final Secolo secolo) {
         Anno newEntityBean = Anno.builderAnno()
-
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-
                 .anno(text.isValid(anno) ? anno : null)
-
                 .bisestile(bisestile)
-
                 .secolo(secolo)
-
                 .build();
 
         return (Anno) fixKey(newEntityBean);
