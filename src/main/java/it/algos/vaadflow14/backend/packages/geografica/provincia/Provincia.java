@@ -9,9 +9,9 @@ import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.enumeration.AETypeProvincia;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogic;
+import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogicOld;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogicOld;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -90,7 +90,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneLogic.class, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
+    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneLogicOld.class, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
     @AIColumn(widthEM = 11)
     public Regione regione;
 
@@ -101,7 +101,7 @@ public class Provincia extends AEntity {
      */
 //    @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoLogic.class, usaComboMethod = true, methodName = "creaComboStati")
+    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoLogicOld.class, usaComboMethod = true, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 

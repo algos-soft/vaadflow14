@@ -18,7 +18,7 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
+import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogicOld;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
 import it.algos.vaadflow14.backend.packages.utility.versione.Versione;
@@ -74,7 +74,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     AMongoService service;
 
     @InjectMocks
-    MeseLogic meseLogic;
+    MeseLogicOld meseLogic;
 
     private Mese meseUno;
 
@@ -189,7 +189,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         ottenutoBooleano = service.isValid(Mese.class);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(MeseLogic.class);
+        ottenutoBooleano = service.isValid(MeseLogicOld.class);
         Assert.assertFalse(ottenutoBooleano);
     }
 
@@ -209,7 +209,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         ottenutoBooleano = service.isEmpty(Mese.class);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isEmpty(MeseLogic.class);
+        ottenutoBooleano = service.isEmpty(MeseLogicOld.class);
         Assert.assertTrue(ottenutoBooleano);
     }
 

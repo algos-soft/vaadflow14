@@ -1,16 +1,13 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import it.algos.vaadflow14.backend.service.AFileService;
-import it.algos.vaadflow14.backend.service.ALogService;
-import it.algos.vaadflow14.backend.service.ATextService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -401,7 +398,7 @@ public enum AEDir {
             String filePath = pathTargetPackage.get();
 
             filePath += text.primaMaiuscola(packageName);
-            filePath += SUFFIX_SERVICE;
+            filePath += FlowCost.SUFFIX_SERVICE;
             filePath += JAVA_SUFFIX;
 
             this.setValue(filePath);
@@ -417,7 +414,7 @@ public enum AEDir {
             String filePath = pathTargetPackage.get();
 
             filePath += text.primaMaiuscola(packageName);
-            filePath += SUFFIX_LOGIC;
+            filePath += FlowCost.SUFFIX_SERVICE;
             filePath += JAVA_SUFFIX;
 
             this.setValue(filePath);

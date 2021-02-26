@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.packages.utility.versione;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.service.AIService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class VersioneLogic extends ALogic {
+public class VersioneLogicOld extends ALogicOld {
 
 
     /**
@@ -43,7 +43,7 @@ public class VersioneLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public VersioneLogic(AIService entityService, AEOperation operationForm) {
+    public VersioneLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

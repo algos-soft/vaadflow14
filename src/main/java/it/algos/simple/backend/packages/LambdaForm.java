@@ -1,11 +1,9 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.ATextField;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import it.algos.vaadflow14.ui.validator.AStringBlankValidator;
@@ -31,7 +29,7 @@ public class LambdaForm extends AForm {
     TextField textField;
 
 
-    public LambdaForm(ALogic logic, WrapForm wrap) {
+    public LambdaForm(ALogicOld logic, WrapForm wrap) {
         super(logic,wrap);
     }
 

@@ -30,7 +30,7 @@ import it.algos.vaadflow14.ui.service.*;
  * Nella superclasse AViewProperty vengono riportate, per comodità, le properties ed i link ai services <br>
  */
 //@Route(value = ROUTE_NAME_GENERIC_VIEW, layout = MainLayout.class)
-public abstract class AView extends AViewProperty implements HasUrlParameter<String>, BeforeEnterObserver {
+public  class AView extends AViewProperty implements  HasUrlParameter<String>, BeforeEnterObserver {
 
     protected Parametro routeParameter;
 
@@ -264,12 +264,16 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
     protected void fixAlertLayout() {
-        AHeader header = entityLogic.getAlertHeaderLayout(typeVista);
-        AIHeader header2 = entityLogic.getAlertLayout(typeVista);
+        AHeader header = entityLogic != null ? entityLogic.getAlertHeaderLayout(typeVista) : null;
+        AIHeader header2 = entityLogic != null ? entityLogic.getAlertLayout(typeVista) : null;
 
         if (alertPlaceholder != null && header != null) {
             alertPlaceholder.add(header);
             this.add(alertPlaceholder);
+        }
+
+        if ( header2 == null) {
+            header2= null;
         }
 
         if (alertPlaceholder != null && header2 != null) {
@@ -288,7 +292,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      */
     protected void fixTopLayout() {
-        AButtonLayout topLayout = entityLogic.getTopLayout();
+        AButtonLayout topLayout = entityLogic != null ? entityLogic.getTopLayout() : null;
 
         if (topPlaceholder != null && topLayout != null) {
             topPlaceholder.add(topLayout);
@@ -319,7 +323,7 @@ public abstract class AView extends AViewProperty implements HasUrlParameter<Str
      * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
      */
     protected void fixBottomLayout() {
-        ABottomLayout bottomLayout = entityLogic.getBottomLayout(operationForm);
+        ABottomLayout bottomLayout = entityLogic != null ? entityLogic.getBottomLayout(operationForm):null;
 
         if (bottomPlaceholder != null && bottomLayout != null) {
             bottomPlaceholder.add(bottomLayout);

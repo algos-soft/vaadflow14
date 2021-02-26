@@ -20,17 +20,17 @@ import java.util.List;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EntityLogic extends ALogic {
+public class EntityLogicOld extends ALogicOld {
 
-    public EntityLogic() {
+    public EntityLogicOld() {
     }
 
 
-    public EntityLogic(Class<? extends AEntity> entityClazz) {
+    public EntityLogicOld(Class<? extends AEntity> entityClazz) {
         this(entityClazz, AEOperation.edit);
     }
 
-    public EntityLogic(Class<? extends AEntity> entityClazz, AEOperation operationForm) {
+    public EntityLogicOld(Class<? extends AEntity> entityClazz, AEOperation operationForm) {
         super.entityClazz = entityClazz;
         super.operationForm = operationForm;
     }

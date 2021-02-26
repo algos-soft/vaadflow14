@@ -29,7 +29,7 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class LambdaLogic extends ALogic {
+public class LambdaLogicOld extends ALogicOld {
 
     /**
      * Versione della classe per la serializzazione
@@ -46,7 +46,7 @@ public class LambdaLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public LambdaLogic(AIService entityService, AEOperation operationForm) {
+    public LambdaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

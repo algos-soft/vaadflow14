@@ -30,7 +30,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class CompanyLogic extends ALogic {
+public class CompanyLogicOld extends ALogicOld {
 
 
     /**
@@ -48,7 +48,7 @@ public class CompanyLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public CompanyLogic(AIService entityService, AEOperation operationForm) {
+    public CompanyLogicOld(AIService entityService, AEOperation operationForm) {
         super(operationForm);
         super.entityService = entityService;
         super.entityClazz = entityService.getEntityClazz();

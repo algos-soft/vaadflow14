@@ -1,10 +1,10 @@
-package it.algos.vaadflow14.backend.packages.crono.mese;
+package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.packages.crono.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -15,8 +15,8 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 31-lug-2020
- * Time: 22:07
+ * Date: gio, 10-set-2020
+ * Time: 11:30
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -28,7 +28,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class MeseLogic extends CronoLogic {
+public class ViaLogicOld extends ALogicOld {
 
 
     /**
@@ -46,8 +46,22 @@ public class MeseLogic extends CronoLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public MeseLogic(AIService entityService, AEOperation operationForm) {
+    public ViaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
+    }
+
+
+    /**
+     * Preferenze usate da questo service <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.usaBottoneDelete = true;
+        super.usaBottoneResetList = true;
     }
 
 
@@ -59,15 +73,9 @@ public class MeseLogic extends CronoLogic {
      * @return una liste di 'span'
      */
     protected List<Span> getSpanList() {
-        List<Span> lista = new ArrayList<>();
-
-        lista.add(html.getSpanBlu("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
-        lista.add(html.getSpanBlu("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'"));
-        }
-
-        return lista;
+        String message = "Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.";
+        return Collections.singletonList(html.getSpanVerde(message));
     }
 
-}
+
+}// end of prototype class

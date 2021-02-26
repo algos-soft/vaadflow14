@@ -1,24 +1,19 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.Location;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.QueryParameters;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.logic.ALogic;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.*;
-
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 
 /**
@@ -343,8 +338,8 @@ public class ARouteService extends AAbstractService {
      * Estrae un' istanza di classe AService dalla mappa di parametri arrivata dal browser. <br>
      * Costruisce l' istanza dal nome completo <br>
      */
-    public ALogic getService(Parametro parametro) {
-        ALogic entityLogic = null;
+    public ALogicOld getService(Parametro parametro) {
+        ALogicOld entityLogic = null;
         String canonicalName = VUOTA;
         Object istanza;
 
@@ -355,7 +350,7 @@ public class ARouteService extends AAbstractService {
         if (parametro.isMappa()) {
             if (parametro.containsKey(KEY_BEAN_CLASS)) {
                 canonicalName = parametro.get(KEY_BEAN_CLASS);
-                canonicalName += SUFFIX_ENTITY_LOGIC;
+                canonicalName += SUFFIX_LOGIC;
             }
 
             if (parametro.containsKey(KEY_SERVICE_CLASS)) {
@@ -366,8 +361,8 @@ public class ARouteService extends AAbstractService {
                 try {
                     istanza = appContext.getBean(Class.forName(canonicalName));
 
-                    if (istanza instanceof ALogic) {
-                        entityLogic = (ALogic) istanza;
+                    if (istanza instanceof ALogicOld) {
+                        entityLogic = (ALogicOld) istanza;
                     }
                 } catch (Exception unErrore) {
                     logger.error(unErrore);

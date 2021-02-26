@@ -4,11 +4,11 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
 import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneService;
 import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogic;
+import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogicOld;
 import it.algos.vaadflow14.ui.form.AForm;
 import it.algos.vaadflow14.ui.form.WrapForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +43,9 @@ public class ProvinciaForm extends AForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public StatoLogic statoLogic;
+    public StatoLogicOld statoLogic;
 
-    public ProvinciaForm(ALogic logic, WrapForm wrap) {
+    public ProvinciaForm(ALogicOld logic, WrapForm wrap) {
         super(logic,wrap);
     }
 

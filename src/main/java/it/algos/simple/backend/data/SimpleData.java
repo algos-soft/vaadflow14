@@ -43,8 +43,8 @@ public class SimpleData extends FlowData {
      */
     @Override
     public void fixData() {
-        super.fixData();
         super.fixData("simple");
+        super.fixData();
     }
 
 }

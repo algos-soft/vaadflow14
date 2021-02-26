@@ -62,6 +62,13 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
+    protected ATextService text;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
     protected AClassService classService;
 
     /**
@@ -71,8 +78,15 @@ public class FlowData implements AIData {
      */
     protected ALogService logger;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    protected AAnnotationService annotation;
 
     /**
+     * Controlla che la classe sia una Entity <br>
      * Alcune entities possono non essere usate direttamente nel programma <br>
      * Nella costruzione del menu FlowBoot.fixMenuRoutes() due flags regolano <br>
      * quali entities facoltative mostrare nel menu <br>
@@ -82,21 +96,27 @@ public class FlowData implements AIData {
      * Le preferenze vengono gestite a parte in fixPreferenze() <br>
      */
     protected Predicate<String> checkEntity = canonicalName -> {
-        String name = file.estraeClasseFinale(canonicalName).toLowerCase();
+        String className = file.estraeClasseFinale(canonicalName);
+        String simpleName = file.estraeClasseFinale(canonicalName).toLowerCase();
 
-        if (name.equals(Preferenza.class.getSimpleName().toLowerCase())) {
+        if (simpleName.equals(Preferenza.class.getSimpleName().toLowerCase())) {
             return false;
         }
 
-        if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(name)) {
+        if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(simpleName)) {
             return false;
         }
 
-        if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(name)) {
+        if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(simpleName)) {
             return false;
         }
 
-        return true;
+        if (className.endsWith(SUFFIX_ENTITY)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     };
 
     /**
@@ -108,12 +128,14 @@ public class FlowData implements AIData {
      * Controllo se esiste un metodo resetEmptyOnly() nella classe xxxService specifica <br>
      * Invoco il metodo API resetEmptyOnly() della interfaccia AIService <br>
      */
-    protected Consumer<String> resetEmptyOnly = canonicalEntityName -> {
+    protected Consumer<String> resetEmptyOnly = canonicalName -> {
         final AIResult result;
-        final String entityServicePrevista = file.estraeClasseFinale(canonicalEntityName) + SUFFIX_ENTITY_SERVICE;
+        final String canonicalEntityName = canonicalName.endsWith(SUFFIX_ENTITY) ? text.levaCoda(canonicalName, SUFFIX_ENTITY) : canonicalName;
+        final String classeFinale = file.estraeClasseFinale(canonicalEntityName);
+        final String entityServicePrevista = classeFinale + SUFFIX_SERVICE;
         final AIService entityService = classService.getServiceFromEntityName(canonicalEntityName);
-        final String nameService;
         final String packageName = file.estraeClasseFinale(canonicalEntityName).toLowerCase();
+        final String nameService;
         boolean methodExists = false;
         String message;
 
@@ -139,7 +161,7 @@ public class FlowData implements AIData {
         }
         else {
             if (!nameService.equals(TAG_GENERIC_SERVICE)) {
-                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName,entityServicePrevista);
+                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName, entityServicePrevista);
                 logger.log(AETypeLog.checkData, message);
             }
         }
@@ -170,8 +192,10 @@ public class FlowData implements AIData {
      */
     public FlowData() {
         this.setFile(file);
+        this.setText(text);
         this.setClassService(classService);
         this.setLogger(logger);
+        this.setAnnotation(annotation);
     }// end of constructor with @Autowired on setter
 
 
@@ -223,49 +247,6 @@ public class FlowData implements AIData {
         logger.log(AETypeLog.checkData, message);
     }
 
-
-
-//    /**
-//     * Ricostruisce le preferenze standard dell'applicazione <br>
-//     * Se non esistono, le crea <br>
-//     * Se esistono, NON modifica i valori esistenti <br>
-//     * <p>
-//     *
-//     * @param isReset true: invocato da xxxLogic.resetEmptyOnly(), con click sul bottone Reset di PreferenzaList
-//     *                false: invocato da xxxData.fixPreferenze(), in fase di Startup <br>
-//     *                <br>
-//     */
-//    @Override
-//    public AIResult resetPreferenze(final PreferenzaService preferenzaService, final boolean isReset) {
-//        AIResult result;
-//        int numRec = 0;
-//
-//        if (Preferenza.class == null) {
-//            return AResult.errato("Manca la entityClazz nella businessLogic specifica");
-//        }
-//
-//        //-- standard (obbligatorie) di Vaadflow14, prese dalla enumeration AEPreferenza
-//        for (AIPreferenza aePref : AEPreferenza.values()) {
-//            numRec = preferenzaService.creaIfNotExist(aePref) != null ? numRec + 1 : numRec;
-//        }
-//
-//        if (numRec == 0) {
-//            result = AResult.valido("Non ci sono nuove preferenze generali da aggiungere.");
-//        }
-//        else {
-//            if (numRec == 1) {
-//                result = AResult.valido("Mancava una preferenza generale che è stata aggiunta senza modificare i valori di quelle esistenti");
-//            }
-//            else {
-//                result = AResult.valido("Mancavano " + numRec + " preferenze generali che sono state aggiunte senza modificare i valori di quelle esistenti");
-//            }
-//        }
-//
-//        logger.log(isReset ? AETypeLog.reset : AETypeLog.checkData, result.getMessage());
-//        return result;
-//
-//    }
-
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -275,6 +256,18 @@ public class FlowData implements AIData {
     @Autowired
     void setFile(final AFileService file) {
         this.file = file;
+    }
+
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    void setText(final ATextService text) {
+        this.text = text;
     }
 
     /**
@@ -297,6 +290,17 @@ public class FlowData implements AIData {
     @Autowired
     void setLogger(final ALogService logger) {
         this.logger = logger;
+    }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    void setAnnotation(final AAnnotationService annotation) {
+        this.annotation = annotation;
     }
 
 }

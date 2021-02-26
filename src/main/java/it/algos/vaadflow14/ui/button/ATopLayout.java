@@ -51,7 +51,7 @@ public class ATopLayout extends AButtonLayout {
     /**
      * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
      */
-    private AILogic entityLogic;
+    private AILogicOld entityLogic;
 
     /**
      * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
@@ -345,7 +345,7 @@ public class ATopLayout extends AButtonLayout {
      * @param service a cui rinviare l'evento/azione da eseguire
      */
     @Override
-    public void setAllListener(AILogic service) {
+    public void setAllListener(AILogicOld service) {
         super.setAllListener(service);
 
         if (searchField != null) {

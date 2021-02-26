@@ -8,7 +8,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import it.algos.simple.backend.packages.Delta;
-import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogic;
+import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogicOld;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import it.algos.vaadflow14.backend.service.AResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class DeltaView extends VerticalLayout {
     public AResourceService resourceService;
 
     @Autowired
-    private SecoloLogic secoloLogic;
+    private SecoloLogicOld secoloLogic;
 
     @Autowired
     private AMongoService mongo;

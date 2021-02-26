@@ -30,7 +30,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class StatoLogic extends GeografiaLogic {
+public class StatoLogicOld extends GeografiaLogicOld {
 
     /**
      * Versione della classe per la serializzazione
@@ -47,7 +47,7 @@ public class StatoLogic extends GeografiaLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public StatoLogic(AIService entityService, AEOperation operationForm) {
+    public StatoLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

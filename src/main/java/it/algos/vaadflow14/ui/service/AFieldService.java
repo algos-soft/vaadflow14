@@ -6,7 +6,7 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.service.AAbstractService;
 import it.algos.vaadflow14.ui.exception.RangeException;
 import it.algos.vaadflow14.ui.fields.*;
@@ -404,17 +404,17 @@ public class AFieldService extends AAbstractService {
         ComboBox<T> combo = new ComboBox();
         boolean usaComboMethod;
         Class<AEntity> comboClazz;
-        Class<ALogic> logicClazz;
+        Class<ALogicOld> logicClazz;
         String methodName;
         Method metodo;
-        ALogic logicInstance;
+        ALogicOld logicInstance;
         List items = null;
 
         usaComboMethod = annotation.usaComboMethod(reflectionJavaField);
         comboClazz = annotation.getComboClass(reflectionJavaField);
         if (usaComboMethod) {
             logicClazz = annotation.getLogicClass(reflectionJavaField);
-            logicInstance = (ALogic) StaticContextAccessor.getBean(logicClazz);
+            logicInstance = (ALogicOld) StaticContextAccessor.getBean(logicClazz);
             methodName = annotation.getMethodName(reflectionJavaField);
             try {
                 metodo = logicClazz.getDeclaredMethod(methodName);

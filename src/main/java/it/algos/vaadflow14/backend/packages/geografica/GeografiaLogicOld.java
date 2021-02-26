@@ -3,7 +3,7 @@ package it.algos.vaadflow14.backend.packages.geografica;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.service.AIService;
 
 /**
@@ -13,7 +13,7 @@ import it.algos.vaadflow14.backend.service.AIService;
  * Date: sab, 15-ago-2020
  * Time: 11:36
  */
-public abstract class GeografiaLogic extends ALogic {
+public abstract class GeografiaLogicOld extends ALogicOld {
 
     /**
      * Costruttore con parametri <br>
@@ -24,7 +24,7 @@ public abstract class GeografiaLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public GeografiaLogic(AIService entityService, AEOperation operationForm) {
+    public GeografiaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

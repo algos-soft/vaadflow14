@@ -30,7 +30,7 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class GammaLogic extends ALogic {
+public class GammaLogicOld extends ALogicOld {
 
 
     /**
@@ -45,7 +45,7 @@ public class GammaLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
-    public GammaLogic() {
+    public GammaLogicOld() {
         //        this(AEOperation.edit);
     }
 
@@ -58,7 +58,7 @@ public class GammaLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public GammaLogic(AIService entityService, AEOperation operationForm) {
+    public GammaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

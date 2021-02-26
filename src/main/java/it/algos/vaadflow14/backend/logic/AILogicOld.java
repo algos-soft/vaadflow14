@@ -21,7 +21,7 @@ import java.util.*;
  * Contiene le API per fornire funzionalità alle Views ed altre classi <br>
  * L'implementazione astratta è ALogic <br>
  */
-public interface AILogic {
+public interface AILogicOld {
 
 
     /**

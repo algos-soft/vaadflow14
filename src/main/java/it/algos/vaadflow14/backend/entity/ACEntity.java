@@ -4,7 +4,7 @@ import it.algos.vaadflow14.backend.annotation.AIColumn;
 import it.algos.vaadflow14.backend.annotation.AIField;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.company.CompanyLogic;
+import it.algos.vaadflow14.backend.packages.company.CompanyLogicOld;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class ACEntity extends AEntity {
      * - Facoltativo od obbligatorio a seconda della sottoclasse, se FlowVar.usaCompany=true
      */
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Company.class, logicClazz = CompanyLogic.class)
+    @AIField(type = AETypeField.combo, comboClazz = Company.class, logicClazz = CompanyLogicOld.class)
     @AIColumn()
     public Company company;
 

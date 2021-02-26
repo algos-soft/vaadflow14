@@ -3,7 +3,7 @@ package it.algos.simple.backend.packages;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloService;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Scope;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class DeltaLogic extends ALogic {
+public class DeltaLogicOld extends ALogicOld {
 
     /**
      * Versione della classe per la serializzazione
@@ -62,7 +62,7 @@ public class DeltaLogic extends ALogic {
      * Costruttore usato da AListView <br>
      * L' istanza DEVE essere creata con (AILogic) appContext.getBean(Class.forName(canonicalName)) <br>
      */
-    public DeltaLogic() {
+    public DeltaLogicOld() {
         this(AEOperation.edit);
     }
 
@@ -75,7 +75,7 @@ public class DeltaLogic extends ALogic {
      *
      * @param operationForm tipologia di Form in uso
      */
-    public DeltaLogic(AEOperation operationForm) {
+    public DeltaLogicOld(AEOperation operationForm) {
         super(operationForm);
         super.entityClazz = Delta.class;
     }

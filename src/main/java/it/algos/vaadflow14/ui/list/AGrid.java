@@ -12,8 +12,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AEColor;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.logic.AILogic;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.AILogicOld;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.button.AEAction;
@@ -65,7 +65,7 @@ public class AGrid {
     @Autowired
     public AReflectionService reflection;
 
-    protected AILogic service;
+    protected AILogicOld service;
 
     protected List<String> gridPropertyNamesList;
 
@@ -107,7 +107,7 @@ public class AGrid {
     }
 
 
-    public AGrid(Class<? extends AEntity> beanType, ALogic service) {
+    public AGrid(Class<? extends AEntity> beanType, ALogicOld service) {
         super();
         this.grid = new Grid(beanType, false);
         this.service = service;
@@ -193,7 +193,7 @@ public class AGrid {
 
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come seconda colonna (dopo ordinamento)
         //--Apre il dialog di detail
-        if (((ALogic) service).usaBottoneEdit) {
+        if (((ALogicOld) service).usaBottoneEdit) {
             this.addDetailDialog();
         }
 
@@ -267,7 +267,7 @@ public class AGrid {
      *
      * @param service a cui rinviare l'evento/azione da eseguire
      */
-    public void setAllListener(AILogic service) {
+    public void setAllListener(AILogicOld service) {
         this.service = service;
 
         if (annotation.usaRowIndex(beanType)) {

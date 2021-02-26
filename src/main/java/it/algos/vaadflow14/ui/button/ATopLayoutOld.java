@@ -137,7 +137,7 @@ public class ATopLayoutOld extends AButtonLayout {
      * @param service a cui rinviare l'evento/azione da eseguire
      */
     @Override
-    public void setAllListener(AILogic service) {
+    public void setAllListener(AILogicOld service) {
         super.setAllListener(service);
 
         if (searchField != null) {

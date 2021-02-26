@@ -1,19 +1,19 @@
-package it.algos.vaadflow14.backend.packages.geografica.continente;
+package it.algos.vaadflow14.backend.packages.anagrafica.address;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.annotation.AIScript;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.packages.geografica.GeografiaLogic;
-import it.algos.vaadflow14.backend.service.AIService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: mar, 29-set-2020
- * Time: 15:41
+ * Date: sab, 06-feb-2021
+ * Time: 21:22
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Scope;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class ContinenteLogic extends GeografiaLogic {
+public class AddressLogicOld extends ALogicOld {
 
 
     /**
@@ -43,7 +43,7 @@ public class ContinenteLogic extends GeografiaLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public ContinenteLogic(AIService entityService, AEOperation operationForm) {
+    public AddressLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 
@@ -57,10 +57,8 @@ public class ContinenteLogic extends GeografiaLogic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        super.usaBottonePaginaWiki = true;
-        super.wikiPageTitle = "Continente";
-        super.formClazz = ContinenteForm.class;
     }
+
+
 
 }

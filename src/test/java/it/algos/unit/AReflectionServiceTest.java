@@ -4,7 +4,7 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.company.Company;
 import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogic;
+import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogicOld;
 import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
 import it.algos.vaadflow14.backend.packages.security.utente.Utente;
 import it.algos.vaadflow14.backend.service.AReflectionService;
@@ -43,7 +43,7 @@ public class AReflectionServiceTest extends ATest {
 
     protected static Class<? extends AEntity> SECOLO_CLASS = Secolo.class;
 
-    protected static Class<?> MESE_LOGIC_CLASS = MeseLogic.class;
+    protected static Class<?> MESE_LOGIC_CLASS = MeseLogicOld.class;
 
     /**
      * Classe principale di riferimento <br>

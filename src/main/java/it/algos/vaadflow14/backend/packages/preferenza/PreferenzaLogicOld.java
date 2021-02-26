@@ -32,7 +32,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class PreferenzaLogic extends ALogic {
+public class PreferenzaLogicOld extends ALogicOld {
 
     /**
      * Versione della classe per la serializzazione
@@ -75,7 +75,7 @@ public class PreferenzaLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public PreferenzaLogic(AIService entityService, AEOperation operationForm) {
+    public PreferenzaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

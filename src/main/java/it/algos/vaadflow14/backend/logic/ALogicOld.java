@@ -61,7 +61,7 @@ import java.util.*;
  * sono pertanto SCOPE_PROTOTYPE e ne viene creata un' istanza diversa per ogni view <br>
  * possono quindi mantenere delle property senza possibilità che si 'mischino' con altri utenti di altri browser <br>
  */
-public abstract class ALogic implements AILogic {
+public abstract class ALogicOld implements AILogicOld {
 
     protected static final String BLOCCATA = "Collezione bloccata. Non si può ne creare, ne modificare, ne cancellare la singola entity.";
 
@@ -393,15 +393,15 @@ public abstract class ALogic implements AILogic {
     /**
      * Costruttore senza parametri <br>
      */
-    public ALogic() {
+    public ALogicOld() {
     }
 
 
-    public ALogic(final AEOperation operationForm) {
+    public ALogicOld(final AEOperation operationForm) {
         this.operationForm = operationForm;
     }
 
-    public ALogic(final AEOperation operationForm, final AIService entityService) {
+    public ALogicOld(final AEOperation operationForm, final AIService entityService) {
         this.operationForm = operationForm;
         this.entityService = entityService;
     }
@@ -415,7 +415,7 @@ public abstract class ALogic implements AILogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public ALogic(AIService entityService, AEOperation operationForm) {
+    public ALogicOld(AIService entityService, AEOperation operationForm) {
         this.entityService = entityService;
         this.operationForm = operationForm;
         this.entityClazz = entityService != null ? entityService.getEntityClazz() : null;
@@ -1115,7 +1115,7 @@ public abstract class ALogic implements AILogic {
                 openWikiPage();
                 break;
             default:
-                logger.warn("Switch - caso non definito", ALogic.class, "performAction(azione, keyID)");
+                logger.warn("Switch - caso non definito", ALogicOld.class, "performAction(azione, keyID)");
                 break;
         }
     }
@@ -1849,7 +1849,7 @@ public abstract class ALogic implements AILogic {
         }
 
         if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
-            logger.error("operationForm errato in una nuova entity che NON è stata salvata", ALogic.class, "save");
+            logger.error("operationForm errato in una nuova entity che NON è stata salvata", ALogicOld.class, "save");
             return status;
         }
 

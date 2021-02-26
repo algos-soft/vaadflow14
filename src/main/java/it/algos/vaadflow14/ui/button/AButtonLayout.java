@@ -78,7 +78,7 @@ public abstract class AButtonLayout extends VerticalLayout {
     /**
      * Riferimento iniettato per la gestione degli eventi/azioni <br>
      */
-    protected AILogic service;
+    protected AILogicOld service;
 
 
     /**
@@ -300,7 +300,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      *
      * @param service a cui rinviare l'evento/azione da eseguire
      */
-    public void setAllListener(AILogic service) {
+    public void setAllListener(AILogicOld service) {
         this.service = service;
 
         if (array.isAllValid(mappaBottoni)) {
@@ -320,7 +320,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param service    a cui rinviare l'evento/azione da eseguire
      * @param entityBean da considerare
      */
-    public void setAllListener(AILogic service, AEntity entityBean) {
+    public void setAllListener(AILogicOld service, AEntity entityBean) {
         this.service = service;
 
         if (array.isAllValid(mappaBottoni)) {

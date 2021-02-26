@@ -1,10 +1,13 @@
-package it.algos.vaadflow14.backend.packages.geografica.regione;
+package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.notification.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.geografica.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -17,8 +20,8 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: sab, 12-set-2020
- * Time: 10:38
+ * Date: mar, 15-set-2020
+ * Time: 17:59
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -30,7 +33,11 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class RegioneLogic extends GeografiaLogic {
+public class ProvinciaLogicOld extends GeografiaLogicOld {
+
+    public static final String FIELD_REGIONE = "regione";
+
+    public static final String FIELD_STATO = "stato";
 
     /**
      * Versione della classe per la serializzazione
@@ -43,8 +50,7 @@ public class RegioneLogic extends GeografiaLogic {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public StatoService statoService;
-
+    public RegioneLogicOld regioneLogic;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -52,7 +58,8 @@ public class RegioneLogic extends GeografiaLogic {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AWikiService wiki;
+    public StatoLogicOld statoLogic;
+
 
     /**
      * Costruttore con parametri <br>
@@ -63,7 +70,7 @@ public class RegioneLogic extends GeografiaLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public RegioneLogic(AIService entityService, AEOperation operationForm) {
+    public ProvinciaLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 
@@ -78,15 +85,14 @@ public class RegioneLogic extends GeografiaLogic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDelete = AEPreferenza.usaDebug.is();
-        super.usaBottoneResetList = AEPreferenza.usaDebug.is();
-        super.usaBottoneNew = AEPreferenza.usaDebug.is();
+        super.usaBottoneDelete = false;
+        super.usaBottoneResetList = true;
+        super.usaBottoneNew = true;
         super.usaBottonePaginaWiki = true;
         super.searchType = AESearch.editField;
         super.wikiPageTitle = "ISO_3166-2";
+        super.formClazz = ProvinciaForm.class;
     }
-
 
 
     /**
@@ -99,32 +105,41 @@ public class RegioneLogic extends GeografiaLogic {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
-        lista.add(html.getSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2"));
+        lista.add(html.getSpanBlu("Province italiane. Codifica secondo ISO 3166-2."));
         lista.add(html.getSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));
         lista.add(html.getSpanBlu("Codice ISO, sigla abituale e 'status' normativo"));
-        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei"));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'"));
-        }
+        lista.add(html.getSpanBlu("Ordinamento alfabetico: prima le città metropolitane e poi le altre"));
 
         return lista;
     }
 
     /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
+     * Operazioni eseguite PRIMA di save o di insert <br>
+     * Regolazioni automatiche di property <br>
+     * Controllo della validità delle properties obbligatorie <br>
+     * Controllo per la presenza della company se FlowVar.usaCompany=true <br>
+     * Controlla se la entity registra le date di creazione e modifica <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param entityBean da regolare prima del save
+     * @param operation  del dialogo (NEW, Edit)
+     *
+     * @return the modified entity
      */
-    @Override
-    protected void fixMappaComboBox() {
+    //    @Override
+    public AEntity beforeSave2(AEntity entityBean, AEOperation operation) {
+        Provincia provincia = (Provincia) super.beforeSave(entityBean, operation);
 
-        if (AEPreferenza.usaBandiereStati.is()) {
-            mappaComboBox.put("stato", statoService.creaComboStati());//@todo con bandierine
+        //--controllla la congruità dei due comboBox: master e slave
+        //--dovrebbe già essere controllato nel Form, ma meglio ricontrollare
+        if (provincia.regione.stato.id.equals(provincia.stato.id)) {
+            return provincia;
         }
         else {
-            super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
+            Notification.show("La regione " + provincia.regione.divisione + " non appartiene allo stato " + provincia.stato.stato + " e non è stata registrata", 3000, Notification.Position.MIDDLE);
+            logger.error("La regione " + provincia.regione.divisione + " non appartiene allo stato " + provincia.stato.stato, this.getClass(), "beforeSave");
+            return null;
         }
-
-        super.creaComboBox("status", 14);
     }
 
 }

@@ -1,11 +1,10 @@
-package it.algos.vaadflow14.backend.packages.security.utente;
+package it.algos.vaadflow14.backend.packages.crono.giorno;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.crono.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -16,8 +15,8 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 20-ago-2020
- * Time: 12:55
+ * Date: ven, 14-ago-2020
+ * Time: 15:27
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -29,13 +28,14 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class UtenteLogic extends ALogic {
+public class GiornoLogicOld extends CronoLogicOld {
 
 
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
+
 
 
     /**
@@ -47,41 +47,8 @@ public class UtenteLogic extends ALogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public UtenteLogic(AIService entityService, AEOperation operationForm) {
+    public GiornoLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
-    }
-
-
-    /**
-     * Preferenze standard <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto <br>
-     * Invocare PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        if (FlowVar.usaSecurity) {
-            if (vaadinService.isDeveloper()) {
-                super.usaBottoneDelete = true;
-                super.usaBottoneResetList = true;
-
-            }
-            if (!vaadinService.isAdminOrDeveloper()) {
-                super.operationForm = AEOperation.showOnly;
-            }
-
-            super.usaBottoneNew = vaadinService.isAdminOrDeveloper();
-            super.usaBottoneExport = vaadinService.isAdminOrDeveloper();
-        }
-        else {
-            if (AEPreferenza.usaDebug.is()) {
-                super.usaBottoneDelete = true;
-                super.usaBottoneResetList = true;
-            }
-            super.usaBottoneNew = true;
-        }
     }
 
 
@@ -96,12 +63,22 @@ public class UtenteLogic extends ALogic {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
+        lista.add(html.getSpanBlu("Giorni dell' anno. 366 giorni per tenere conto dei 29 giorni di febbraio negli anni bisestili"));
         if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'New'"));
-            lista.add(html.getSpanRosso("Di norma utilizzato solo in applicazioni con usaSecurity=true"));
+            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'"));
         }
 
         return lista;
+    }
+
+
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+    @Override
+    protected void fixMappaComboBox() {
+        super.creaComboBox("mese");
     }
 
 }

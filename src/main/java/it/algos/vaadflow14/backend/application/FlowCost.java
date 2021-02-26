@@ -1,11 +1,9 @@
 package it.algos.vaadflow14.backend.application;
 
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.icon.*;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -95,9 +93,11 @@ public abstract class FlowCost {
 
     public static final String DOPPIO_PIPE_REGEX = PIPE_REGEX + PIPE_REGEX;
 
-    public static final String SUFFIX_ENTITY_LOGIC = "Logic";
+    public static final String SUFFIX_ENTITY = "Entity";
 
-    public static final String SUFFIX_ENTITY_SERVICE = "Service";
+    public static final String SUFFIX_LOGIC = "Logic";
+
+    public static final String SUFFIX_SERVICE = "Service";
 
     public static final String SUFFIX_FORM = "Form";
 
@@ -359,10 +359,10 @@ public abstract class FlowCost {
     public static final String PREF_MAX_RADIO = "maxEnumRadio";
 
     public static final String LINE_HEIGHT = "lineHeight";
+
     public static final String BUTTONS_NUMBER = "buttonsNumber";
 
     public static final double ICON_WIDTH = 3.0;
-
 
 
 }

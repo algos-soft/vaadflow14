@@ -1,31 +1,26 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.ui.view.AView;
+import it.algos.vaadflow14.ui.view.*;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.mapping.*;
+import org.springframework.stereotype.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import java.util.*;
 
 
 /**
@@ -688,7 +683,6 @@ public class AAnnotationService extends AAbstractService {
         org.springframework.data.mongodb.core.mapping.Field fieldAnnotation = null;
         Field reflectionJavaField = null;
 
-
         // Controlla che il parametro in ingresso non sia nullo
         if (entityClazz == null) {
             return VUOTA;
@@ -703,7 +697,6 @@ public class AAnnotationService extends AAbstractService {
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
             return VUOTA;
         }
-
 
         reflectionJavaField = reflection.getField(entityClazz, propertyName);
 
@@ -907,10 +900,12 @@ public class AAnnotationService extends AAbstractService {
             stringaMultipla = annotationEntity.fields();
             if (text.isValid(stringaMultipla)) {
                 listaNomi = text.getArray(stringaMultipla);
-            } else {
+            }
+            else {
                 listaNomi = reflection.getFieldsName(entityClazz);
             }
-        } else {
+        }
+        else {
             listaNomi = reflection.getFieldsName(entityClazz);
         }
 
@@ -940,10 +935,12 @@ public class AAnnotationService extends AAbstractService {
             stringaMultipla = annotationEntity.fields();
             if (text.isValid(stringaMultipla)) {
                 listaNomi = text.getArray(stringaMultipla);
-            } else {
+            }
+            else {
                 listaNomi = reflection.getFieldsName(entityClazz);
             }
-        } else {
+        }
+        else {
             listaNomi = reflection.getFieldsName(entityClazz);
         }
 
@@ -970,7 +967,8 @@ public class AAnnotationService extends AAbstractService {
         annotation = this.getAIField(reflectionJavaField);
         if (annotation != null) {
             type = annotation.type();
-        } else {
+        }
+        else {
             type = standard;
         }
 
@@ -1000,7 +998,8 @@ public class AAnnotationService extends AAbstractService {
             if (type != null && type == AETypeField.ugualeAlForm) {
                 type = getFormType(reflectionJavaField);
             }
-        } else {
+        }
+        else {
             type = getFormType(reflectionJavaField);
         }
 
@@ -1029,7 +1028,8 @@ public class AAnnotationService extends AAbstractService {
         if (annotation != null) {
             icon = annotation.headerIcon();
             icon = (icon == VaadinIcon.YOUTUBE) ? null : icon;
-        } else {
+        }
+        else {
             icon = null;
         }
 
@@ -1081,7 +1081,8 @@ public class AAnnotationService extends AAbstractService {
         annotation = this.getAIColumn(reflectionJavaField);
         if (annotation != null) {
             header = annotation.header();
-        } else {
+        }
+        else {
             header = reflectionJavaField.getName();
         }
 
@@ -1117,7 +1118,8 @@ public class AAnnotationService extends AAbstractService {
 
         if (widthDouble > 0) {
             widthTxt = widthDouble + TAG_EM;
-        } else {
+        }
+        else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {
                 widthTxt = type.getWidthColumn() + TAG_EM;
@@ -1151,7 +1153,6 @@ public class AAnnotationService extends AAbstractService {
         return status;
     }
 
-
     //    /**
     //     * Nomi delle properties del, estratti dalle @Annotation della Entity
     //     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
@@ -1181,7 +1182,6 @@ public class AAnnotationService extends AAbstractService {
     //        return lista;
     //    }// end of method
 
-
     //    /**
     //     * Nomi dei fields da considerare per estrarre i Java Reflected Field dalle @Annotation della Entity
     //     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
@@ -1206,7 +1206,6 @@ public class AAnnotationService extends AAbstractService {
     //        return lista;
     //    }// end of method
 
-
     //    /**
     //     * Get the status 'nonUsata, facoltativa, obbligatoria' of the class.
     //     *
@@ -1223,7 +1222,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return companyRequired;
     //    }// end of method
-
 
     //    /**
     //     * Get the roleTypeVisibility of the View class.
@@ -1246,7 +1244,6 @@ public class AAnnotationService extends AAbstractService {
     //        return roleTypeVisibility != null ? roleTypeVisibility : EARoleType.user;
     //    }// end of method
 
-
     //    /**
     //     * Get the accessibility status of the class for the developer login.
     //     *
@@ -1259,7 +1256,6 @@ public class AAnnotationService extends AAbstractService {
     //        EARoleType roleTypeVisibility = getViewRoleType(clazz);
     //        return (roleTypeVisibility != null && roleTypeVisibility == EARoleType.developer);
     //    }// end of method
-
 
     //    /**
     //     * Get the visibility of the columnService.
@@ -1311,7 +1307,6 @@ public class AAnnotationService extends AAbstractService {
     //        return visibile;
     //    }// end of method
 
-
     //    /**
     //     * Get the specific annotation of the field.
     //     *
@@ -1349,7 +1344,6 @@ public class AAnnotationService extends AAbstractService {
     //        return status;
     //    }// end of method
 
-
     //    /**
     //     * Get the status flexibility of the property.
     //     *
@@ -1367,7 +1361,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return status;
     //    }// end of method
-
 
     //    /**
     //     * Get the status sortable of the property.
@@ -1388,7 +1381,6 @@ public class AAnnotationService extends AAbstractService {
     //        return status;
     //    }// end of method
 
-
     //    /**
     //     * Get the status flexibility of the property.
     //     *
@@ -1406,7 +1398,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return status;
     //    }// end of method
-
 
     //    /**
     //     * Get the color of the property.
@@ -1427,7 +1418,6 @@ public class AAnnotationService extends AAbstractService {
     //        return color;
     //    }// end of method
 
-
     //    /**
     //     * Get the color of the property.
     //     *
@@ -1445,7 +1435,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return color;
     //    }// end of method
-
 
     //    /**
     //     * Get the items (String) of the enum.
@@ -1469,7 +1458,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return items;
     //    }// end of method
-
 
     //    /**
     //     * Get the clazz of the property.
@@ -1551,7 +1539,8 @@ public class AAnnotationService extends AAbstractService {
 
         if (widthDouble > 0) {
             widthTxt = widthDouble + TAG_EM;
-        } else {
+        }
+        else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {
                 widthTxt = type.getWidthField() > 0 ? type.getWidthField() + TAG_EM : VUOTA;
@@ -1586,7 +1575,8 @@ public class AAnnotationService extends AAbstractService {
 
         if (heightDouble > 0) {
             heightTxt = heightDouble + TAG_EM;
-        } else {
+        }
+        else {
             type = getColumnType(reflectionJavaField);
             if (type != null) {
                 heightTxt = type.getWidthField() > 0 ? type.getWidthField() + TAG_EM : VUOTA;
@@ -1848,7 +1838,8 @@ public class AAnnotationService extends AAbstractService {
             type = getFormType(reflectionJavaField);
             if (type == AETypeField.integer) {
                 message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
-            } else {
+            }
+            else {
                 message = text.primaMaiuscola(reflectionJavaField.getName()) + OBJECT_NULL;
             }
         }
@@ -1877,7 +1868,8 @@ public class AAnnotationService extends AAbstractService {
         annotation = this.getSize(reflectionJavaField);
         if (annotation == null) {
             message = this.getMessage(reflectionJavaField);
-        } else {
+        }
+        else {
             message = annotation.message();
             if (message.equals("{javax.validation.constraints.Size.message}")) {
                 min = annotation.min();
@@ -2315,7 +2307,6 @@ public class AAnnotationService extends AAbstractService {
     //        return status;
     //    }// end of method
 
-
     //    /**
     //     * Get the status required of the property.
     //     *
@@ -2326,7 +2317,6 @@ public class AAnnotationService extends AAbstractService {
     //    public boolean isNotNull(Field reflectionJavaField) {
     //        return getNotNull(reflectionJavaField) != null;
     //    }// end of method
-
 
     //    /**
     //     * Bottoni visibili nella toolbar
@@ -2347,7 +2337,6 @@ public class AAnnotationService extends AAbstractService {
     //        return listaNomiBottoni;
     //    }// end of method
 
-
     //    /**
     //     * Bottoni visibili nella toolbar
     //     *
@@ -2367,7 +2356,6 @@ public class AAnnotationService extends AAbstractService {
     //        return listaNomiBottoni;
     //    }// end of method
 
-
     //    /**
     //     * Bottoni visibili nella toolbar
     //     *
@@ -2386,7 +2374,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return listaNomiBottoni;
     //    }// end of method
-
 
     //    /**
     //     * Get the icon of the property.
@@ -2413,7 +2400,6 @@ public class AAnnotationService extends AAbstractService {
     //        return icon;
     //    }// end of method
 
-
     //    /**
     //     * Get the size of the icon of the property.
     //     *
@@ -2438,7 +2424,6 @@ public class AAnnotationService extends AAbstractService {
     //        return widthInt + TAG_PX;
     //    }// end of method
 
-
     //    /**
     //     * Get the color of the property.
     //     *
@@ -2458,7 +2443,6 @@ public class AAnnotationService extends AAbstractService {
     //        return color;
     //    }// end of method
 
-
     //    /**
     //     * Get the color of the property.
     //     *
@@ -2477,7 +2461,6 @@ public class AAnnotationService extends AAbstractService {
     //        return color;
     //    }// end of method
 
-
     //    /**
     //     * Get the method name for reflection.
     //     *
@@ -2495,7 +2478,6 @@ public class AAnnotationService extends AAbstractService {
     //
     //        return methodName;
     //    }// end of method
-
 
     //    /**
     //     * Get the method name for reflection.

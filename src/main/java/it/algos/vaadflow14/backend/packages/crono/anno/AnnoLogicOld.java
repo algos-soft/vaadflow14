@@ -28,7 +28,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class AnnoLogic extends CronoLogic {
+public class AnnoLogicOld extends CronoLogicOld {
 
 
     /**
@@ -47,7 +47,7 @@ public class AnnoLogic extends CronoLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public AnnoLogic(AIService entityService, AEOperation operationForm) {
+    public AnnoLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 

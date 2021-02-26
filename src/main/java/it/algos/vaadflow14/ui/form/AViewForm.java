@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.ui.form;
 
 import com.vaadin.flow.router.Route;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.ui.MainLayout;
 import it.algos.vaadflow14.ui.view.AView;
 
@@ -30,7 +30,7 @@ public class AViewForm extends AView {
         } else {
             entityBean = entityLogic.findById(keyID);
         }
-        ((ALogic)entityLogic).fixEntityBean(entityBean);
+        ((ALogicOld)entityLogic).fixEntityBean(entityBean);
     }
 
 

@@ -181,11 +181,6 @@ public abstract class WizCost {
     public static final String SOURCE_SERVICE = "Service";
 
 
-    public static final String SUFFIX_ENTITY = "";
-
-    public static final String SUFFIX_LOGIC = "Logic";
-
-    public static final String SUFFIX_SERVICE = "Service";
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)

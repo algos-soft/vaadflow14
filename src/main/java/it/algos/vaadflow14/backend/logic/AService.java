@@ -330,7 +330,7 @@ public abstract class AService extends AAbstractService implements AIService {
             return AResult.errato("Manca la entityClazz nella businessService specifica");
         }
 
-        collection = entityClazz.getSimpleName().toLowerCase();
+        collection = annotation.getCollectionName(entityClazz);
         if (mongo.isExists(collection)) {
             if (mongo.isValid(entityClazz)) {
                 return AResult.errato("La collezione " + collection + " esiste già e non c'è bisogno di crearla");

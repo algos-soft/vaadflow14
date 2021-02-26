@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.crono.secolo;
+package it.algos.vaadflow14.backend.packages.crono.mese;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
@@ -11,13 +11,12 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 
-
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: dom, 02-ago-2020
- * Time: 07:07
+ * Date: ven, 31-lug-2020
+ * Time: 22:07
  * <p>
  * Classe specifica di gestione della 'business logic' di una Entity e di un Package <br>
  * Collegamento tra le views (List, Form) e il 'backend'. Mantiene lo ''stato' <br>
@@ -29,7 +28,7 @@ import java.util.*;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class SecoloLogic extends CronoLogic {
+public class MeseLogicOld extends CronoLogicOld {
 
 
     /**
@@ -47,7 +46,7 @@ public class SecoloLogic extends CronoLogic {
      * @param entityService layer di collegamento tra il 'backend' e mongoDB
      * @param operationForm tipologia di Form in uso
      */
-    public SecoloLogic(AIService entityService, AEOperation operationForm) {
+    public MeseLogicOld(AIService entityService, AEOperation operationForm) {
         super(entityService, operationForm);
     }
 
@@ -62,8 +61,8 @@ public class SecoloLogic extends CronoLogic {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
-        lista.add(html.getSpanBlu("Secoli ante e post Cristo. Venti secoli AnteCristo e ventun secoli DopoCristo."));
-        lista.add(html.getSpanBlu("Sono indicati gli anni iniziali e finali di ogni secolo. L' anno 0 NON esiste nei calendari."));
+        lista.add(html.getSpanBlu("Mesi dell' anno, coi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
+        lista.add(html.getSpanBlu("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
         if (AEPreferenza.usaDebug.is()) {
             lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'"));
         }

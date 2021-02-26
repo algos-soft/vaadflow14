@@ -36,7 +36,7 @@ public class PreferenzaForm extends AForm {
     private AField valueField;
 
 
-    public PreferenzaForm(ALogic logic, WrapForm wrap) {
+    public PreferenzaForm(ALogicOld logic, WrapForm wrap) {
         super(logic,wrap);
     }
 

@@ -2,7 +2,7 @@ package it.algos.vaadflow14.backend.packages.geografica.continente;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEContinente;
-import it.algos.vaadflow14.backend.logic.ALogic;
+import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.ui.fields.AField;
 import it.algos.vaadflow14.ui.fields.AGridField;
 import it.algos.vaadflow14.ui.form.AForm;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ContinenteForm extends AForm {
 
 
-    public ContinenteForm(ALogic logic, WrapForm wrap) {
+    public ContinenteForm(ALogicOld logic, WrapForm wrap) {
         super(logic, wrap);
     }
 
