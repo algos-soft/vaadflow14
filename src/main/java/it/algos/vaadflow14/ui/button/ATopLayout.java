@@ -104,7 +104,7 @@ public class ATopLayout extends AButtonLayout {
         this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
         this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
         this.listaBottoniSpecifici = wrapper != null ? wrapper.getListaBottoniSpecifici() : null;
-        this.maxNumeroBottoniPrimaRiga = wrapper != null ? wrapper.getMaxNumeroBottoniPrimaRiga() : null;
+        this.maxNumeroBottoniPrimaRiga = wrapper != null ? wrapper.getMaxNumeroBottoniPrimaRiga() : 0;
     }
 
     //    /**
@@ -178,6 +178,7 @@ public class ATopLayout extends AButtonLayout {
 
         if (entityLogic == null) {
             logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
+            return;
         }
 
         if (listaAEBottoni == null) {
