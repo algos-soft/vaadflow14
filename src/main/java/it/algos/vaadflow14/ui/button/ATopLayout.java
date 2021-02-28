@@ -64,7 +64,7 @@ public class ATopLayout extends AButtonLayout {
      */
     @Override
     protected void initView() {
-       super.initView();
+        super.initView();
 
         super.primaRiga = new AHorizontalLayout();
         super.secondaRiga = new AHorizontalLayout();
@@ -103,8 +103,8 @@ public class ATopLayout extends AButtonLayout {
         }
     }
 
-    protected void addBottoneEnum(AEButton bottone) {
-        Button button = getButton(bottone);
+    protected void addBottoneEnum(AEButton aeButton) {
+        Button button = getButton(aeButton);
 
         if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
             primaRiga.add(button);
@@ -227,7 +227,7 @@ public class ATopLayout extends AButtonLayout {
      * Recupera le istanze concrete dei bottoni dalla mappa <AEButton, Button> <br>
      * Aggiunge il listener al bottone, specificando l'azione di ritorno associata al singolo bottone <br>
      *
-     * @param service a cui rinviare l'evento/azione da eseguire
+     * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
     @Override
     public void setAllListener(AILogic entityLogic) {
@@ -249,12 +249,6 @@ public class ATopLayout extends AButtonLayout {
 
         if (buttonClearFilter != null) {
             buttonClearFilter.addClickListener(event -> searchField.clear());
-        }
-
-        if (array.isAllValid(mappaComboBox)) {
-            for (Map.Entry<String, ComboBox> mappaEntry : mappaComboBox.entrySet()) {
-                mappaEntry.getValue().addValueChangeListener(event -> performAction(AEAction.valueChanged));
-            }
         }
     }
 

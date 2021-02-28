@@ -2,9 +2,9 @@ package it.algos.simple.backend.packages.fattura;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -52,9 +52,8 @@ public class FatturaService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    @Override
-    public FatturaEntity creaIfNotExist(final String keyPropertyValue) {
-        return (FatturaEntity) checkAndSave(newEntity(keyPropertyValue));
+    public FatturaEntity creaIfNotExist(final String keyPropertyValue,String descrizione) {
+        return (FatturaEntity) checkAndSave(newEntity(keyPropertyValue,descrizione));
     }
 
 
@@ -68,7 +67,7 @@ public class FatturaService extends AService {
      */
     @Override
     public FatturaEntity newEntity() {
-        return newEntity( VUOTA);
+        return newEntity( VUOTA,VUOTA);
     }
 
 
@@ -77,18 +76,13 @@ public class FatturaService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
-     * @param code   (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public FatturaEntity newEntity(final String code) {
+    public FatturaEntity newEntity(final String code,final String descrizione) {
         FatturaEntity newEntityBean = FatturaEntity.builderFattura()
-
-                .ordine(this.getNewOrdine())
-
                 .code(text.isValid(code) ? code : null)
-
+                .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .build();
 
         return (FatturaEntity) fixKey(newEntityBean);
@@ -144,18 +138,20 @@ public class FatturaService extends AService {
     @Override
     public AIResult resetEmptyOnly() {
         AIResult result = super.resetEmptyOnly();
-        int numRec = 0;
+        int numRec = 6;
 
         if (result.isErrato()) {
             return result;
         }
 
-        //--da sostituire
-        String message;
-        message = String.format("Nel package Fattura la classe FatturaService non ha ancora sviluppato il metodo resetEmptyOnly()");
-        return AResult.errato(message);
+        creaIfNotExist("alfa","finestra");
+        creaIfNotExist("beta","possibile");
+        creaIfNotExist("delta","Praga");
+        creaIfNotExist("gamma","determinante");
+        creaIfNotExist("epsilon","Antonio");
+        creaIfNotExist("omega","forse niente");
 
-        // return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostReset(AETypeReset.hardCoded, numRec);
     }
 
 }

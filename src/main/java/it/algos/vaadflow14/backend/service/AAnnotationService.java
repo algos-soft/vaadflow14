@@ -647,11 +647,11 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
-     * Get the name of the mongo collection.
+     * Get the name of the mongo collection. <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
      * 3) Cerca nella classe l'annotation @Document ed estrae il valore (minuscolo) di 'collection' <br>
-     * 4) Se non la trova, di default usa il nome (minuscolo) della classe AEntity
+     * 4) Se non la trova, di default usa il nome (minuscolo) della classe AEntity <br>
      *
      * @param entityClazz the class of type AEntity
      *

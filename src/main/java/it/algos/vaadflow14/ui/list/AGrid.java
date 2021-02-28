@@ -60,7 +60,7 @@ public class AGrid {
 
     protected List<String> gridPropertyNamesList;
 
-    protected Class<? extends AEntity> beanType;
+    protected Class<? extends AEntity> entityClazz;
 
     protected Label headerLabelPlaceHolder;
 
@@ -92,17 +92,17 @@ public class AGrid {
     }
 
 
-    public AGrid(Class<? extends AEntity> beanType) {
+    public AGrid(Class<? extends AEntity> entityClazz) {
         super();
-        this.grid = new Grid(beanType);
+        this.grid = new Grid(entityClazz);
     }
 
 
-    public AGrid(Class<? extends AEntity> beanType, AILogic entityLogic) {
+    public AGrid(Class<? extends AEntity> entityClazz, AILogic entityLogic) {
         super();
-        this.grid = new Grid(beanType, false);
+        this.grid = new Grid(entityClazz, false);
         this.entityLogic = entityLogic;
-        this.beanType = beanType;
+        this.entityClazz = entityClazz;
     }
 
 
@@ -124,7 +124,7 @@ public class AGrid {
     @PostConstruct
     protected void postConstruct() {
         grid.setHeightByRows(true);
-        this.grid.setDataProvider(dataProviderService.creaDataProvider(beanType));
+        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz));
         grid.setHeight("100%");
 
         if (AEPreferenza.usaDebug.is()) {
@@ -134,12 +134,16 @@ public class AGrid {
         //--Costruisce una lista di nomi delle properties della Grid
         gridPropertyNamesList = entityLogic != null ? entityLogic.getGridColumns() : null;
 
+        if (gridPropertyNamesList == null || gridPropertyNamesList.size() == 0) {
+            logger.error("Mancano le colonne della Grid", this.getClass(), "postConstruct");
+            return;
+        }
+
         //--Colonne normali indicate in @AIList(fields =... , aggiunte in automatico
         columnsMap = new HashMap<>();
         this.addColumnsGrid();
         this.creaGridHeader();
     }
-
 
     //    /**
     //     * Costruisce una lista di nomi delle properties <br>
@@ -163,17 +167,17 @@ public class AGrid {
         String indexWidth = VUOTA;
 
         //--se usa la numerazione automatica, questa occupa la prima colonna
-        if (annotation.usaRowIndex(beanType)) {
-            indexWidth = annotation.getIndexWith(beanType);
+        if (annotation.usaRowIndex(entityClazz)) {
+            indexWidth = annotation.getIndexWith(entityClazz);
             grid.addColumn(item -> VUOTA).setKey(FIELD_INDEX).setHeader("#").setWidth(indexWidth).setFlexGrow(0);
         }
 
         //--se esiste la colonna 'ordine', la posiziono prima di un eventuale colonna col bottone 'edit'
         //--ed elimino la property dalla lista gridPropertyNamesList
         if (true) {
-            if (reflection.isEsiste(beanType, FIELD_ORDINE)) {
+            if (reflection.isEsiste(entityClazz, FIELD_ORDINE)) {
                 if (gridPropertyNamesList.contains(FIELD_ORDINE)) {
-                    colonna = columnService.add(grid, beanType, FIELD_ORDINE);
+                    colonna = columnService.add(grid, entityClazz, FIELD_ORDINE);
                     if (colonna != null) {
                         columnsMap.put(FIELD_ORDINE, colonna);
                     }
@@ -185,14 +189,14 @@ public class AGrid {
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come seconda colonna (dopo ordinamento)
         //--Apre il dialog di detail
         //@todo PROVVISORIO
-//        if (((AILogic) entityLogic).usaBottoneEdit) {
-//            this.addDetailDialog();
-//        }
+        //        if (((AILogic) entityLogic).usaBottoneEdit) {
+        //            this.addDetailDialog();
+        //        }
 
         //--costruisce in automatico tutte le colonne dalla lista gridPropertyNamesList
         if (gridPropertyNamesList != null) {
             for (String propertyName : gridPropertyNamesList) {
-                colonna = columnService.add(grid, beanType, propertyName);
+                colonna = columnService.add(grid, entityClazz, propertyName);
                 if (colonna != null) {
                     columnsMap.put(propertyName, colonna);
                 }
@@ -220,7 +224,8 @@ public class AGrid {
 
             colonna.setWidth("2.5em");
             colonna.setFlexGrow(0);
-        } else {
+        }
+        else {
             grid.setSelectionMode(Grid.SelectionMode.NONE);
             //            grid.addItemDoubleClickListener(event -> apreDialogo((ItemDoubleClickEvent) event));
         }
@@ -235,7 +240,7 @@ public class AGrid {
         buttonEdit.addClassName("review__edit");
         buttonEdit.getElement().setAttribute("theme", "tertiary");
         buttonEdit.setHeight("1em");
-//        buttonEdit.addClickListener(event -> entityLogic.performAction(AEAction.doubleClick, entityBean));@//@todo PROVVISORIO
+        //        buttonEdit.addClickListener(event -> entityLogic.performAction(AEAction.doubleClick, entityBean));@//@todo PROVVISORIO
 
         return buttonEdit;
     }
@@ -243,10 +248,9 @@ public class AGrid {
 
     public void setItems(Collection items) {
 
-//        grid.deselectAll();
-//        grid.setItems(items);
+        //        grid.deselectAll();
+        //        grid.setItems(items);
         grid.setHeight("100%");
-
 
         fixGridHeader(items);
     }
@@ -262,7 +266,7 @@ public class AGrid {
     public void setAllListener(AILogic entityLogic) {
         this.entityLogic = entityLogic;
 
-        if (annotation.usaRowIndex(beanType)) {
+        if (annotation.usaRowIndex(entityClazz)) {
             grid.addAttachListener(event -> {
                 grid.getColumnByKey(FIELD_INDEX).getElement().executeJs("this.renderer = function(root, column, rowData) {root.textContent = rowData.index + 1}");
             });
@@ -291,7 +295,7 @@ public class AGrid {
         AEntity entityBean = (AEntity) event.getItem();
 
         if (entityLogic != null) {
-//            entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
+            //            entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
         }
     }
 
@@ -325,14 +329,16 @@ public class AGrid {
         String message = VUOTA;
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
-            message = annotation.getTitleList(beanType).toUpperCase() + SEP;
+            message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
             if (items != null && items.size() > 0) {
                 if (items.size() == 1) {
                     message += "Lista di un solo elemento";
-                } else {
+                }
+                else {
                     message += "Lista di " + items.size() + " elementi";
                 }
-            } else {
+            }
+            else {
                 message += "Al momento non ci sono elementi in questa collezione";
             }
 

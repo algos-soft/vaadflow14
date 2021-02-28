@@ -66,7 +66,7 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
         this.fixTopLayout();
 
         //--Corpo principale della Grid (obbligatorio) <br>
-        //        this.fixBodyLayout();
+        this.fixBodyLayout();
 
         //--Eventuali bottoni sotto la grid (eventuale) <br>
         this.fixBottomLayout();
@@ -102,17 +102,21 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
 
 
     /**
-     * Costruisce un layout (obbligatorio) per i bottoni di comando della view <br>
+     * Costruisce un layout (semi-obbligatorio) per i bottoni di comando della view <br>
      */
     @Override
     protected void fixTopLayout() {
         AButtonLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-        //                this.addTopListeners(topLayout);//@todo implementare
+
+        if (topLayout != null) {
+            topLayout.setAllListener(this);
+        }
 
         if (topPlaceHolder != null && topLayout != null) {
             topPlaceHolder.add(topLayout);
         }
     }
+
 
     /**
      * Costruisce un wrapper (obbligatorio) di dati <br>
@@ -178,6 +182,15 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
      */
     @Override
     protected void fixFooterLayout() {
+    }
+
+    /**
+     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     *
+     * @param azione selezionata da eseguire
+     */
+    public void performAction(AEAction azione) {
+        logger.log("Premuto bottone");
     }
 
 }

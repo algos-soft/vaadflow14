@@ -1,38 +1,28 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
+import com.google.gson.*;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.DeleteResult;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.mongodb.client.*;
+import com.mongodb.client.result.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.bson.*;
+import org.bson.conversions.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.*;
+import org.springframework.data.mongodb.core.query.*;
+import org.springframework.stereotype.*;
 
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
+import javax.annotation.*;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 
 /**
@@ -555,7 +545,7 @@ public class AMongoService<capture> extends AAbstractService {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
-        String clazzName = entityClazz.getSimpleName().toLowerCase();
+        String mongoClazzName = annotation.getCollectionName(entityClazz);
         AEntity entityBean = null;
         List<Field> listaRef = annotation.getDBRefFields(entityClazz);
         boolean esisteTagValue;
@@ -565,7 +555,7 @@ public class AMongoService<capture> extends AAbstractService {
         int ini = 0;
         int end = 0;
 
-        Collection<Document> documents = mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
+        Collection<Document> documents = mongoOp.getCollection(mongoClazzName).find().skip(offset).limit(limit).into(new ArrayList());
         if (documents != null && documents.size() > 0) {
             items = new ArrayList<>();
             for (Document doc : documents) {

@@ -34,7 +34,7 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Fattura", keyPropertyName = "code", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
-@AIList(fields = "code,descrizione", usaRowIndex = false)
+@AIList(fields = "code,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,descrizione")
 public class FatturaEntity extends AEntity {
 
@@ -43,14 +43,6 @@ public class FatturaEntity extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
-    public int ordine;
 
     /**
      * codice di riferimento (obbligatorio, unico)

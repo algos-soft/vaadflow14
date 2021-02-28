@@ -9,7 +9,6 @@ import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
-import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -30,16 +29,16 @@ public class FatturaLogicList extends LogicList {
     @Autowired
     public FatturaService fatturaService;
 
-    /**
-     * Instantiates a new ButtonView.
-     */
-    @PostConstruct
-    private void postConstruct() {
-        //        super.entityClazz = Fattura.class;
-        //        super.entityService = fatturaService;
-        //        super.initView();
 
-    }
+    /**
+     * Costruttore senza parametri <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     */
+    public FatturaLogicList() {
+        super.entityClazz = FatturaEntity.class;
+    }// end of Vaadin/@Route constructor
+
+
 
     /**
      * Preferenze usate da questa 'logica' <br>

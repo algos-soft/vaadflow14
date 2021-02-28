@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
+import it.algos.vaadflow14.ui.button.*;
+
 import java.util.*;
 
 /**
@@ -23,4 +25,14 @@ public interface AILogic {
      */
      List<String> getGridColumns();
 
-}
+
+    /**
+     * Esegue l'azione di un bottone. <br>
+     * <p>
+     * Passa a AEntityService.performAction(azione) <br>
+     *
+     * @param azione selezionata da eseguire
+     */
+     void performAction(AEAction azione) ;
+
+    }

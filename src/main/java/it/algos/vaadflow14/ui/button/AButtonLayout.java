@@ -181,7 +181,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      */
     public AButtonLayout(WrapButtons wrapper) {
         this.wrapper = wrapper;
-        //        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
+        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
         this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
         this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
         this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
@@ -252,128 +252,10 @@ public abstract class AButtonLayout extends VerticalLayout {
     protected void addAllToView() {
     }
 
-    //    /**
-    //     * Creazione iniziale di eventuali properties indispensabili per l'istanza <br>
-    //     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-    //     * Metodo private che NON può essere sovrascritto <br>
-    //     */
-    //    protected void fixProperties() {
-    //
-    //        this.fixPreferenze();
-    //        this.fixBottoniIniziali();
-    //        this.fixSearch();
-    //        this.fixBottoniCentrali();
-    //        this.fixBottoniSpecifici();
-    //        this.fixComboboxFiltri();
-    //        this.fixBottoniFinali();
-    //
-    //        this.fixMappaBottoni();
-    //    }
-
-    //    /**
-    //     * Preferenze standard di questa istanza <br>
-    //     * <p>
-    //     * Metodo chiamato dopo init() (implicito del costruttore),
-    //     * postConstruct() (facoltativo) e fixProperties() (facoltativo) <br>
-    //     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixPreferenze() {
-    //    }
-
-    //    /**
-    //     * Costruisce i bottoni del gruppo iniziale <br>
-    //     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-    //     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixBottoniIniziali() {
-    ////        this.creaBottoni(iniziali);
-    //    }
-
-    //    /**
-    //     * Costruisce il gruppo di ricerca testuale <br>
-    //     * 1) nessuna <br>
-    //     * 2) campo editText di selezione per una property specificata in searchProperty <br>
-    //     * 3) bottone per aprire un dialogo di selezione <br>
-    //     * DEVE essere sovrascritto. <br>
-    //     */
-    //    protected void fixSearch() {
-    //    }
-
-    //    /**
-    //     * Costruisce i bottoni del gruppo centrale <br>
-    //     * Di default costruisce (come da flag) solo il bottone 'new' <br>
-    //     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixBottoniCentrali() {
-    ////        this.creaBottoni(centrali);
-    //    }
-
-    //    /**
-    //     * Costruisce i bottoni specifici posti dopo il gruppo centrale <br>
-    //     * Di default non costruisce nessun bottone <br>
-    //     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixBottoniSpecifici() {
-    //        if (array.isAllValid(specifici)) {
-    //            for (Button button : specifici) {
-    //                this.add(button);
-    //            }
-    //        }
-    //
-    //    }
-
-    //    /**
-    //     * Costruisce il gruppo di combobox di selezione e filtro <br>
-    //     */
-    //    protected void fixComboboxFiltri() {
-    //        if (mappaComboBox != null) {
-    //            for (Map.Entry<String, ComboBox> mappaEntry : mappaComboBox.entrySet()) {
-    //                this.add(mappaEntry.getValue());
-    //            }
-    //        }
-    //    }
-
-    //    /**
-    //     * Costruisce i bottoni del gruppo finale <br>
-    //     * Di default non costruisce nessun bottone <br>
-    //     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-    //     */
-    //    protected void fixBottoniFinali() {
-    ////        this.creaBottoni(finali);
-    //    }
-
-    //    /**
-    //     * Viene creata una mappa interna di bottoni per poterli successivamente recuperare <br>
-    //     * Al bottone NON viene aggiunto il listener che viene regolato successivamente <br>
-    //     */
-    //    protected void fixMappaBottoni() {
-    //
-    //    }
-
-    //    /**
-    //     * Crea i bottoni partendo dalla enumeration standard <br>
-    //     * Prevede: text, icona, theme, title, class <br>
-    //     * Aggiunge alla GUI i bottoni creati <br>
-    //     * Aggiunge alla mappa i bottoni creati <br>
-    //     * Ai bottoni NON viene aggiunto il listener che viene regolato successivamente <br>
-    //     *
-    //     * @param listaEnumeration di bottoni da creare ed aggiungere alla parte grafica
-    //     */
-    //    protected void creaBottoni(List<AEButton> listaEnumeration) {
-    //        Button button;
-    //
-    //        if (listaEnumeration != null && mappaBottoni != null) {
-    //            for (AEButton aeButton : listaEnumeration) {
-    //                button = FactoryButton.get(aeButton);
-    //                this.add(button);
-    //                mappaBottoni.put(aeButton, button);
-    //            }
-    //        }
-    //    }
-
-    protected Button getButton(AEButton bottone) {
-        Button button = FactoryButton.get(bottone);
-        button.addClickListener(event -> performAction(bottone.action));
+    protected Button getButton(final AEButton aeButton) {
+        Button button = FactoryButton.get(aeButton);
+        button.addClickListener(event -> performAction(aeButton.action));
+        mappaBottoni.put(aeButton, button);
 
         return button;
     }
@@ -384,36 +266,16 @@ public abstract class AButtonLayout extends VerticalLayout {
      * Recupera le istanze concrete dei bottoni dalla mappa <AEButton, Button> <br>
      * Aggiunge il listener al bottone, specificando l'azione di ritorno associata al singolo bottone <br>
      *
-     * @param service a cui rinviare l'evento/azione da eseguire
+     * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
     public void setAllListener(AILogic entityLogic) {
-        this.entityLogic = entityLogic;
-
-        if (array.isAllValid(mappaBottoni)) {
-            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
-                mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action));
-            }
-        }
-    }
-
-
-    /**
-     * Aggiunta di tutti i listener <br>
-     * Chiamato da AEntityService <br>
-     * Recupera le istanze concrete dei bottoni dalla mappa <AEButton, Button> <br>
-     * Aggiunge il listener al bottone, specificando l'azione di ritorno associata al singolo bottone <br>
-     *
-     * @param service    a cui rinviare l'evento/azione da eseguire
-     * @param entityBean da considerare
-     */
-    public void setAllListener(AILogic entityLogic, AEntity entityBean) {
-        this.entityLogic = entityLogic;
-
-        if (array.isAllValid(mappaBottoni)) {
-            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
-                mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action, entityBean));
-            }
-        }
+        //        this.entityLogic = entityLogic;
+        //
+        //        if (array.isAllValid(mappaBottoni)) {
+        //            for (Map.Entry<AEButton, Button> mappaEntry : mappaBottoni.entrySet()) {
+        //                mappaEntry.getValue().addClickListener(event -> performAction(mappaEntry.getKey().action));
+        //            }
+        //        }
     }
 
 
@@ -425,7 +287,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param azione selezionata da eseguire
      */
     public void performAction(AEAction azione) {
-        //        entityLogic.performAction(azione);@//@todo PROVVISORIO
+        entityLogic.performAction(azione);
     }
 
 

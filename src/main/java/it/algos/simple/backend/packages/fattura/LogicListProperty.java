@@ -68,6 +68,14 @@ public abstract class LogicListProperty extends VerticalLayout {
     protected VerticalLayout alertPlaceHolder;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
+
+    /**
      * PlaceHolder per bottoni di comando SOPRA la Grid <br>
      * Contenuto semi-obbligatorio <br>
      */
@@ -267,6 +275,7 @@ public abstract class LogicListProperty extends VerticalLayout {
 
     /**
      * Costruisce un layout (semi-obbligatorio) per i bottoni di comando della view <br>
+     * Aggiunge tutti i listeners ai bottoni <br>
      * Eventualmente i bottoni potrebbero andare su due righe <br>
      * <p>
      * Chiamato da LogicList.initView() <br>

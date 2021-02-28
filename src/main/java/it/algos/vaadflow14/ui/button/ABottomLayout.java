@@ -63,8 +63,8 @@ public class ABottomLayout extends AButtonLayout {
         }
     }
 
-    protected void addBottoneEnum(AEButton bottone) {
-        Button button = getButton(bottone);
+    protected void addBottoneEnum(AEButton aeButton) {
+        Button button = getButton(aeButton);
         rigaUnica.add(button);
     }
 
