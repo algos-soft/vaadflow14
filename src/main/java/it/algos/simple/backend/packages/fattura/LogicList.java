@@ -66,7 +66,7 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
         this.fixTopLayout();
 
         //--Corpo principale della Grid (obbligatorio) <br>
-        this.fixBodyLayout();
+//        this.fixBodyLayout();
 
         //--Eventuali bottoni sotto la grid (eventuale) <br>
         //        this.fixBottomLayout();
