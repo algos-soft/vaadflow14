@@ -1,28 +1,20 @@
 package it.algos.simple.backend.packages;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaLogicOld;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import javax.validation.constraints.*;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -45,7 +37,7 @@ import java.time.LocalTime;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Delta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,secolo,via,immagine,uno,due,tre", headerAlert = "Esempio di comboBox con e senza valori personalizzati")
+@AIList(headerAlert = "Esempio di comboBox con e senza valori personalizzati")
 @AIForm(fields = "code,secolo,via,immagine,uno,due,tre")
 public class Delta extends AEntity {
 
