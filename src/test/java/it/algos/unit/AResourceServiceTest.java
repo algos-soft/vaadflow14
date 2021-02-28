@@ -212,7 +212,7 @@ public class AResourceServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("lista CON titoli");
         System.out.println(VUOTA);
-        print(listaStr);
+        printVuota(listaStr);
 
         listaStr = service.leggeListaConfig(sorgente, false);
         assertNotNull(listaStr);
@@ -220,7 +220,7 @@ public class AResourceServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("lista SENZA titoli");
         System.out.println(VUOTA);
-        print(listaStr);
+        printVuota(listaStr);
 
 
         listaStr = service.leggeListaConfig(sorgente);
@@ -229,7 +229,7 @@ public class AResourceServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("lista default");
         System.out.println(VUOTA);
-        print(listaStr);
+        printVuota(listaStr);
     }
 
 

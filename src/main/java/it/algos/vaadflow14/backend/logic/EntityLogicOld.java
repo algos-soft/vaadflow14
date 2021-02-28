@@ -67,7 +67,7 @@ public class EntityLogicOld extends ALogicOld {
      */
     @Override
     public List<String> getGridPropertyNamesList() {
-        return annotation.getListaPropertiesGrid(entityClazz);
+        return annotation.getGridColumns(entityClazz);
     }
 
     //    /**

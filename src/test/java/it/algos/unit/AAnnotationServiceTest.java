@@ -1,20 +1,18 @@
 package it.algos.unit;
 
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.service.AAnnotationService;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import static it.algos.vaadflow14.backend.service.AAnnotationService.*;
 import org.junit.jupiter.api.*;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.backend.service.AAnnotationService.INT_NULL;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.data.mongodb.core.mapping.*;
+
+import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -295,7 +293,6 @@ public class AAnnotationServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
     }// end of single test
 
-
     //    @SuppressWarnings("javadoc")
     //    /**
     //     * Get the status listShowsID of the class.
@@ -324,13 +321,33 @@ public class AAnnotationServiceTest extends ATest {
      * @return nomi dei fields, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     @Test
-    public void getGridPropertiesName() {
+    @Order(1)
+    @DisplayName("1 - getGridColumns")
+    public void getGridColumns() {
         String[] stringArray = {"ordine", "nome"};
         previstoArray = new ArrayList(Arrays.asList(stringArray));
 
-        ottenutoArray = annotation.getListaPropertiesGrid(VIA_ENTITY_CLASS);
+        ottenutoArray = annotation.getGridColumns(VIA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
-    }// end of single test
+        System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
+        print(ottenutoArray);
+
+        String[] stringArray2= {"code", "descrizione"};
+        previstoArray = new ArrayList(Arrays.asList(stringArray2));
+        ottenutoArray = annotation.getGridColumns(FATTURA_ENTITY_CLASS);
+        assertEquals(previstoArray, ottenutoArray);
+        System.out.println(VUOTA);
+        System.out.println("Colonne previste per la Entity " + FATTURA_ENTITY_CLASS.getSimpleName() + ":");
+        print(ottenutoArray);
+
+        String[] stringArray3= {"code", "descrizione"};
+        previstoArray = new ArrayList(Arrays.asList(stringArray3));
+        ottenutoArray = annotation.getGridColumns(OMEGA_ENTITY_CLASS);
+//        assertEquals(previstoArray, ottenutoArray);
+        System.out.println(VUOTA);
+        System.out.println("Colonne previste per la Entity " + OMEGA_ENTITY_CLASS.getSimpleName() + ":");
+        print(ottenutoArray);
+    }
 
 
     @SuppressWarnings("javadoc")

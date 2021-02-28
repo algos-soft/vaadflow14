@@ -1,20 +1,9 @@
 package it.algos.vaadflow14.ui.button;
 
-import com.vaadin.flow.component.button.*;
-import com.vaadin.flow.component.combobox.*;
-import com.vaadin.flow.component.icon.*;
-import com.vaadin.flow.component.orderedlayout.*;
-import com.vaadin.flow.component.textfield.*;
-import com.vaadin.flow.data.value.*;
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import java.util.*;
 
 
 /**
@@ -49,7 +38,7 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ATopLayoutOld extends AButtonLayout {
+public class ATopLayoutOld  {
 
 
     /**
@@ -57,19 +46,19 @@ public class ATopLayoutOld extends AButtonLayout {
      * La classe viene costruita con appContext.getBean(AxxxLayout.class) in AEntityService <br>
      */
     @Deprecated
-    public ATopLayoutOld() {
-    }
+//    public ATopLayoutOld() {
+//    }
 
 
-    /**
-     * Costruttore base con parametro wrapper di passaggio dati <br>
-     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in AEntityService <br>
-     *
-     * @param wrapButtons wrap di informazioni
-     */
-    public ATopLayoutOld(WrapButtonsOld wrapButtons) {
-        super(wrapButtons);
-    }
+//    /**
+//     * Costruttore base con parametro wrapper di passaggio dati <br>
+//     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in AEntityService <br>
+//     *
+//     * @param wrapButtons wrap di informazioni
+//     */
+//    public ATopLayoutOld(WrapButtons wrapButtons) {
+////        super(wrapButtons);@//@todo PROVVISORIO
+//    }
 
 
     /**
@@ -79,23 +68,22 @@ public class ATopLayoutOld extends AButtonLayout {
      * 3) bottone per aprire un dialogo di selezione <br>
      * DEVE essere sovrascritto. <br>
      */
-    @Override
     protected void fixSearch() {
-        Button button;
-        switch (searchType) {
-            case nonUsata:
-                break;
-            case editField:
-                this.fixSearchField();
-                break;
-            case dialog:
-                button = FactoryButton.get(AEButton.searchDialog);
-                this.mappaBottoni.put(AEButton.searchDialog, button);
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
-                break;
-        }
+//        Button button;
+//        switch (searchType) {
+//            case nonUsata:
+//                break;
+//            case editField:
+//                this.fixSearchField();
+//                break;
+//            case dialog:
+//                button = FactoryButton.get(AEButton.searchDialog);
+//                this.mappaBottoni.put(AEButton.searchDialog, button);
+//                break;
+//            default:
+//                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
+//                break;
+//        }
     }
 
 
@@ -103,28 +91,28 @@ public class ATopLayoutOld extends AButtonLayout {
      * Campo EditSearch predisposto su un'unica property. <br>
      */
     private void fixSearchField() {
-        HorizontalLayout layout;
-        String placeHolder = text.isValid(searchProperty) ? text.primaMaiuscola(searchProperty) + "..." : "Cerca...";
-        String toolTip = "Caratteri iniziali della ricerca" + (text.isValid(searchProperty) ? " nel campo '" + searchProperty + "'" : VUOTA);
-        searchField = new TextField(VUOTA, placeHolder);
-        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
-        searchField.getElement().setAttribute("title", toolTip);
-        searchField.addClassName("view-toolbar__search-field");
-        searchField.setValueChangeMode(ValueChangeMode.EAGER);
-
-        layout = new HorizontalLayout(searchField);
-        layout.setSpacing(false);
-
-        //--bottone piccolo per pulire il campo testo di ricerca
-        if (AEPreferenza.usaSearchClearButton.is()) {
-            //        buttonClearFilter = new Button(new Icon("lumo", "cross"));
-            buttonClearFilter = new Button(VaadinIcon.CLOSE_SMALL.create());
-            buttonClearFilter.setEnabled(false);
-            buttonClearFilter.getElement().setAttribute("title", "Pulisce il campo di ricerca");
-            layout.add(buttonClearFilter);
-        }
-
-        this.add(layout);
+//        HorizontalLayout layout;
+//        String placeHolder = text.isValid(searchProperty) ? text.primaMaiuscola(searchProperty) + "..." : "Cerca...";
+//        String toolTip = "Caratteri iniziali della ricerca" + (text.isValid(searchProperty) ? " nel campo '" + searchProperty + "'" : VUOTA);
+//        searchField = new TextField(VUOTA, placeHolder);
+//        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+//        searchField.getElement().setAttribute("title", toolTip);
+//        searchField.addClassName("view-toolbar__search-field");
+//        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+//
+//        layout = new HorizontalLayout(searchField);
+//        layout.setSpacing(false);
+//
+//        //--bottone piccolo per pulire il campo testo di ricerca
+//        if (AEPreferenza.usaSearchClearButton.is()) {
+//            //        buttonClearFilter = new Button(new Icon("lumo", "cross"));
+//            buttonClearFilter = new Button(VaadinIcon.CLOSE_SMALL.create());
+//            buttonClearFilter.setEnabled(false);
+//            buttonClearFilter.getElement().setAttribute("title", "Pulisce il campo di ricerca");
+//            layout.add(buttonClearFilter);
+//        }
+//
+//        this.add(layout);
     }
 
 
@@ -136,32 +124,31 @@ public class ATopLayoutOld extends AButtonLayout {
      *
      * @param service a cui rinviare l'evento/azione da eseguire
      */
-    @Override
-    public void setAllListener(AILogicOld service) {
-        super.setAllListener(service);
-
-        if (searchField != null) {
-            searchField.addValueChangeListener(event -> {
-                if (buttonClearFilter != null) {
-                    if (searchField.getValue().isEmpty()) {
-                        buttonClearFilter.setEnabled(false);
-                    } else {
-                        buttonClearFilter.setEnabled(true);
-                    }
-                }
-                performAction(AEAction.searchField, searchField.getValue());
-            });
-        }
-
-        if (buttonClearFilter != null) {
-            buttonClearFilter.addClickListener(event -> searchField.clear());
-        }
-
-        if (array.isAllValid(mappaComboBox)) {
-            for (Map.Entry<String, ComboBox> mappaEntry : mappaComboBox.entrySet()) {
-                mappaEntry.getValue().addValueChangeListener(event -> performAction(AEAction.valueChanged));
-            }
-        }
+    public void setAllListener(AILogic service) {
+//        super.setAllListener(service);
+//
+//        if (searchField != null) {
+//            searchField.addValueChangeListener(event -> {
+//                if (buttonClearFilter != null) {
+//                    if (searchField.getValue().isEmpty()) {
+//                        buttonClearFilter.setEnabled(false);
+//                    } else {
+//                        buttonClearFilter.setEnabled(true);
+//                    }
+//                }
+//                performAction(AEAction.searchField, searchField.getValue());
+//            });
+//        }
+//
+//        if (buttonClearFilter != null) {
+//            buttonClearFilter.addClickListener(event -> searchField.clear());
+//        }
+//
+//        if (array.isAllValid(mappaComboBox)) {
+//            for (Map.Entry<String, ComboBox> mappaEntry : mappaComboBox.entrySet()) {
+//                mappaEntry.getValue().addValueChangeListener(event -> performAction(AEAction.valueChanged));
+//            }
+//        }
     }
 
 }

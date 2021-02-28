@@ -891,7 +891,7 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
-    public List<String> getListaPropertiesGrid(final Class<? extends AEntity> entityClazz) {
+    public List<String> getGridColumns(final Class<? extends AEntity> entityClazz) {
         List listaNomi;
         String stringaMultipla;
         AIList annotationEntity = this.getAIList(entityClazz);

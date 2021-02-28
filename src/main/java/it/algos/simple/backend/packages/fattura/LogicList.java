@@ -66,13 +66,13 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
         this.fixTopLayout();
 
         //--Corpo principale della Grid (obbligatorio) <br>
-//        this.fixBodyLayout();
+        //        this.fixBodyLayout();
 
         //--Eventuali bottoni sotto la grid (eventuale) <br>
-        //        this.fixBottomLayout();
+        this.fixBottomLayout();
 
         //--Eventuali scritte in basso al video (eventuale) <br>
-        //        this.fixFooterLayout();
+        this.fixFooterLayout();
 
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
         super.addToLayout();
@@ -128,7 +128,7 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
         //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
         //        AEOperation operationForm = null;
 
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, 6);
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
     }
 
     /**
@@ -159,13 +159,25 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
      */
     @Override
     public List<String> getGridColumns() {
-        List<String> colonne = annotation.getListaPropertiesGrid(entityClazz);
+        return annotation.getGridColumns(entityClazz);
+    }
 
-        if (array.isEmpty(colonne)) {
-            //@todo da sviluppare
-        }
 
-        return colonne;
+    /**
+     * Costruisce un (eventuale) layout per i bottoni sotto la Grid <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixBottomLayout() {
+    }
+
+
+    /**
+     * Costruisce un (eventuale) layout per scritte in basso della pagina <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixFooterLayout() {
     }
 
 }

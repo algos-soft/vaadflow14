@@ -1,6 +1,8 @@
 package it.algos.unit;
 
 import com.mongodb.*;
+import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.fattura.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -71,7 +73,9 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
-    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Via.class;
+    protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
+
+    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = FatturaEntity.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
@@ -371,8 +375,12 @@ public abstract class ATest {
     }
 
 
-    protected void print(List<String> lista) {
+    protected void printVuota(List<String> lista) {
         System.out.println(VUOTA);
+        print(lista);
+    }
+
+    protected void print(List<String> lista) {
         if (array.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);
@@ -402,7 +410,7 @@ public abstract class ATest {
                 lista = mappa.get(key);
                 System.out.println(VUOTA);
                 if (array.isAllValid(lista)) {
-                    print(lista);
+                    printVuota(lista);
                 }
             }
         }

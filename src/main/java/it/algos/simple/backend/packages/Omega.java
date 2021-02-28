@@ -34,7 +34,7 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Omega", keyPropertyName = "testo",  usaCompany = false)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "testo")
-@AIList(fields = "testo,testoObbligatorio,testoObbligatorioMinimo,telefono,telefonoObbligatorio",headerAlert = "Tutti i fields di tipo 'testo'")
+@AIList(headerAlert = "Tutti i fields di tipo 'testo'")
 @AIForm(fields = "testo,testoObbligatorio,testoObbligatorioMinimo,telefono,telefonoObbligatorio")
 public class Omega extends AEntity {
 

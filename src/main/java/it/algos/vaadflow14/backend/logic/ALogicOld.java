@@ -939,7 +939,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     protected void addTopListeners(AButtonLayout topLayout) {
         if (topLayout != null) {
-            topLayout.setAllListener(this);
+//            topLayout.setAllListener(this);@//@todo PROVVISORIO
         }
     }
 
@@ -952,7 +952,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     protected void addBottomListeners(ABottomLayout bottomLayout) {
         if (bottomLayout != null) {
-            bottomLayout.setAllListener(this, entityBean);
+//            bottomLayout.setAllListener(this, entityBean);@//@todo PROVVISORIO
         }
     }
 
@@ -1291,7 +1291,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     @Override
     public List<String> getGridPropertyNamesList() {
-        return annotation.getListaPropertiesGrid(entityClazz);
+        return annotation.getGridColumns(entityClazz);
     }
 
 

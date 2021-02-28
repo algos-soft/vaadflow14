@@ -296,7 +296,7 @@ public class GSonTest extends ATest {
         Assert.assertNotNull(ottenutoArray);
         Assert.assertEquals(previstoIntero, ottenutoArray.size());
         Assert.assertEquals(previstoArray, ottenutoArray);
-        print(ottenutoArray);
+        printVuota(ottenutoArray);
 
         sorgente = "\"id\":\"1971\",\"ordine\":3971,\"anno\":\"1971\",\"bisestile\":false,\"secolo\":{\"id\":\"xxsecolo\",\"collectionName\":\"secolo\"},\"_class\":\"anno\"";
         ottenutoArray = gSonService.estraeGraffe(sorgente);
@@ -330,7 +330,7 @@ public class GSonTest extends ATest {
         Assert.assertNotNull(ottenutoArray);
         Assert.assertEquals(previstoIntero, ottenutoArray.size());
         Assert.assertEquals(previstoArray, ottenutoArray);
-        print(ottenutoArray);
+        printVuota(ottenutoArray);
 
         sorgente = "{\"id\":\"mario\",\"code\":\"mariolino\",\"secolo\":{\"testo\":\"manca\"},\"descrizione\":\"esiste\",\"mese\":{\"code\":\"mariolino\",\"testo\":\"manca\"},\"code\":\"mariolino\"}";
         previstoIntero = 3;
@@ -342,7 +342,7 @@ public class GSonTest extends ATest {
         Assert.assertNotNull(ottenutoArray);
         Assert.assertEquals(previstoIntero, ottenutoArray.size());
         Assert.assertEquals(previstoArray, ottenutoArray);
-        print(ottenutoArray);
+        printVuota(ottenutoArray);
     }
 
 

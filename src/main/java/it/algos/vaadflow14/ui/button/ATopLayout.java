@@ -10,13 +10,11 @@ import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.*;
 import java.util.*;
 
 
@@ -50,141 +48,30 @@ public class ATopLayout extends AButtonLayout {
 
 
     /**
-     * A - (obbligatorio) la AILogic con cui regolare i listener per l'evento/azione da eseguire
-     */
-    private AILogicOld entityLogic;
-
-    /**
-     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
-     */
-    private List<AEButton> listaAEBottoni;
-
-    /**
-     * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
-     */
-    private WrapSearch wrapSearch;
-
-    /**
-     * D - (facoltativo) una mappa di combobox di selezione e filtro, LinkedHashMap<String, ComboBox>
-     */
-    private LinkedHashMap<String, ComboBox> mappaComboBox;
-
-    /**
-     * E - (facoltativo) una serie di bottoni non-standard, sotto forma di List<Button>
-     */
-    private List<Button> listaBottoniSpecifici;
-
-    /**
-     * Property per il numero di bottoni nella prima riga sopra la Grid (facoltativa)
-     */
-    private int maxNumeroBottoniPrimaRiga;
-
-    private WrapButtons wrapper;
-
-    private HorizontalLayout primaRiga;
-
-    private HorizontalLayout secondaRiga;
-
-    /**
-     * Costruttore senza parametri<br>
-     */
-    public ATopLayout() {
-        this(null);
-    }
-
-    /**
      * Costruttore <br>
      * La classe viene costruita con appContext.getBean(ATopLayout.class, wrapButtons) in ALogic <br>
      *
      * @param wrapper di informazioni tra 'logic' e 'view'
      */
     public ATopLayout(final WrapButtons wrapper) {
-        this.wrapper = wrapper;
-//        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
-        this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
-        this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
-        this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
-        this.listaBottoniSpecifici = wrapper != null ? wrapper.getListaBottoniSpecifici() : null;
-        this.maxNumeroBottoniPrimaRiga = wrapper != null ? wrapper.getMaxNumeroBottoniPrimaRiga() : 0;
+        super(wrapper);
     }
 
-    //    /**
-    //     * Costruttore senza bottoni <br>
-    //     * La classe viene costruita con appContext.getBean(ATopLayout.class, entityLogic) in ALogic <br>
-    //     * Se l'istanza viene creata SENZA una lista di bottoni, presenta solo il bottone 'New' <br>
-    //     *
-    //     * @param entityLogic a cui rinviare l'evento/azione da eseguire
-    //     */
-    //    public ATopLayout(final AILogic entityLogic) {
-    //        this(entityLogic, (List<AEButton>) Collections.singletonList(AEButton.nuovo));
-    //    }
-
-    //    /**
-    //     * Costruttore con una serie di bottoni standard, sotto forma di List<AEButton> <br>
-    //     * La classe viene costruita con appContext.getBean(ATopLayout.class, entityLogic, listaAEBottoni) in ALogic <br>
-    //     *
-    //     * @param entityLogic    a cui rinviare l'evento/azione da eseguire
-    //     * @param listaAEBottoni una serie di bottoni standard
-    //     */
-    //    public ATopLayout(final AILogic entityLogic, final List<AEButton> listaAEBottoni) {
-    //        this.entityLogic = entityLogic;
-    //        super.service = entityLogic;
-    //        this.listaAEBottoni = listaAEBottoni;
-    //    }
-
-
-    /**
-     * La injection viene fatta da SpringBoot SOLO DOPO il metodo init() del costruttore <br>
-     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le (eventuali) istanze @Autowired <br>
-     * Questo metodo viene chiamato subito dopo che il framework ha terminato l' init() implicito <br>
-     * del costruttore e PRIMA di qualsiasi altro metodo <br>
-     * <p>
-     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
-     * ma l' ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
-     */
-    @PostConstruct
-    protected void postConstruct() {
-        this.checkParametri();
-        this.initView();
-        this.creaAllBottoni();
-        this.addAllToView();
-    }
-
-
-    protected void checkParametri() {
-        String message;
-
-        if (AEPreferenza.usaDebug.is()) {
-            if (wrapper == null) {
-                logger.warn("Creazione di un TopLayout senza WrapButtons", this.getClass(), "checkParametri");
-                return;
-            }
-
-            if (entityLogic == null) {
-                logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
-                return;
-            }
-
-            if (listaAEBottoni == null) {
-                message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
-                logger.info(message, this.getClass(), "checkParametri");
-            }
-        }
-    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected void initView() {
-        mappaBottoni = new HashMap<AEButton, Button>();
-        this.setMargin(false);
-        this.setSpacing(false);
-        this.setPadding(false);
+       super.initView();
 
-        this.primaRiga = new AHorizontalLayout();
-        this.secondaRiga = new AHorizontalLayout();
+        super.primaRiga = new AHorizontalLayout();
+        super.secondaRiga = new AHorizontalLayout();
     }
 
+
+    @Override
     protected void creaAllBottoni() {
         if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
             for (AEButton bottone : AEButton.values()) {
@@ -217,8 +104,7 @@ public class ATopLayout extends AButtonLayout {
     }
 
     protected void addBottoneEnum(AEButton bottone) {
-        Button button = FactoryButton.get(bottone);
-        button.addClickListener(event -> performAction(bottone.action));
+        Button button = getButton(bottone);
 
         if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
             primaRiga.add(button);
@@ -258,6 +144,7 @@ public class ATopLayout extends AButtonLayout {
         }
     }
 
+    @Override
     protected void addAllToView() {
         if (primaRiga.getComponentCount() > 0) {
             this.add(primaRiga);
@@ -343,8 +230,8 @@ public class ATopLayout extends AButtonLayout {
      * @param service a cui rinviare l'evento/azione da eseguire
      */
     @Override
-    public void setAllListener(AILogicOld service) {
-        super.setAllListener(service);
+    public void setAllListener(AILogic entityLogic) {
+        super.setAllListener(entityLogic);
 
         if (searchField != null) {
             searchField.addValueChangeListener(event -> {
