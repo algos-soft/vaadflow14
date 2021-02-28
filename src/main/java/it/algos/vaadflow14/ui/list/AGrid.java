@@ -1,34 +1,25 @@
 package it.algos.vaadflow14.ui.list;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.grid.ItemClickEvent;
-import com.vaadin.flow.component.grid.ItemDoubleClickEvent;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEColor;
-import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
-import it.algos.vaadflow14.backend.logic.AILogicOld;
-import it.algos.vaadflow14.backend.logic.ALogicOld;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.renderer.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.button.AEAction;
-import it.algos.vaadflow14.ui.service.AColumnService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -65,7 +56,7 @@ public class AGrid {
     @Autowired
     public AReflectionService reflection;
 
-    protected AILogicOld service;
+    protected AILogic entityLogic;
 
     protected List<String> gridPropertyNamesList;
 
@@ -107,10 +98,10 @@ public class AGrid {
     }
 
 
-    public AGrid(Class<? extends AEntity> beanType, ALogicOld service) {
+    public AGrid(Class<? extends AEntity> beanType, AILogic entityLogic) {
         super();
         this.grid = new Grid(beanType, false);
-        this.service = service;
+        this.entityLogic = entityLogic;
         this.beanType = beanType;
     }
 
@@ -141,7 +132,7 @@ public class AGrid {
         }
 
         //--Costruisce una lista di nomi delle properties della Grid
-        gridPropertyNamesList = service != null ? service.getGridPropertyNamesList() : null;
+        gridPropertyNamesList = entityLogic != null ? entityLogic.getGridColumns() : null;
 
         //--Colonne normali indicate in @AIList(fields =... , aggiunte in automatico
         columnsMap = new HashMap<>();
@@ -193,9 +184,10 @@ public class AGrid {
 
         //--Eventuale inserimento (se previsto nelle preferenze) del bottone Edit come seconda colonna (dopo ordinamento)
         //--Apre il dialog di detail
-        if (((ALogicOld) service).usaBottoneEdit) {
-            this.addDetailDialog();
-        }
+        //@todo PROVVISORIO
+//        if (((AILogic) entityLogic).usaBottoneEdit) {
+//            this.addDetailDialog();
+//        }
 
         //--costruisce in automatico tutte le colonne dalla lista gridPropertyNamesList
         if (gridPropertyNamesList != null) {
@@ -243,7 +235,7 @@ public class AGrid {
         buttonEdit.addClassName("review__edit");
         buttonEdit.getElement().setAttribute("theme", "tertiary");
         buttonEdit.setHeight("1em");
-        buttonEdit.addClickListener(event -> service.performAction(AEAction.doubleClick, entityBean));
+//        buttonEdit.addClickListener(event -> entityLogic.performAction(AEAction.doubleClick, entityBean));@//@todo PROVVISORIO
 
         return buttonEdit;
     }
@@ -265,10 +257,10 @@ public class AGrid {
      * Chiamato da AEntityService <br>
      * Aggiunge il listener alla riga, specificando l'azione di ritorno associata <br>
      *
-     * @param service a cui rinviare l'evento/azione da eseguire
+     * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
-    public void setAllListener(AILogicOld service) {
-        this.service = service;
+    public void setAllListener(AILogic entityLogic) {
+        this.entityLogic = entityLogic;
 
         if (annotation.usaRowIndex(beanType)) {
             grid.addAttachListener(event -> {
@@ -298,8 +290,8 @@ public class AGrid {
     public void performAction(ItemClickEvent event, AEAction azione) {
         AEntity entityBean = (AEntity) event.getItem();
 
-        if (service != null) {
-            service.performAction(azione, entityBean);
+        if (entityLogic != null) {
+//            entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
         }
     }
 

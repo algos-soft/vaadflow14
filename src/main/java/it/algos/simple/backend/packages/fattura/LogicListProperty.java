@@ -4,9 +4,12 @@ import com.vaadin.flow.component.orderedlayout.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -50,6 +53,14 @@ public abstract class LogicListProperty extends VerticalLayout {
     public AArrayService array;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
+    /**
      * PlaceHolder iniziale per avvisi <br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>
@@ -82,6 +93,13 @@ public abstract class LogicListProperty extends VerticalLayout {
      */
     protected VerticalLayout footerPlaceHolder;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    protected ADataProviderService dataService;
 
     /**
      * The entityClazz obbligatorio di tipo AEntity, per liste e form <br>
@@ -93,15 +111,103 @@ public abstract class LogicListProperty extends VerticalLayout {
      */
     protected AIService entityService;
 
-    //    /**
-    //     * The entityLogic obbligatorio, prototype di tipo xxxLogic <br>
-    //     */
-    //    protected AILogicOld entityLogic;
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneDelete;
 
-    //    /**
-    //     * The entityBean obbligatorio, istanza di entityClazz per liste e form <br>
-    //     */
-    //    protected AEntity entityBean;
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneResetList;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
+     */
+    protected boolean usaBottoneNew;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneSearch;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneExport;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottonePaginaWiki;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneUpdate;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneUpload;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneDownload;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneElabora;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneCheck;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneModulo;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneTest;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneStatistiche;
+
+    /**
+     * Flag di preferenza per specificare il massimo numero di bottoni della prima riga <br>
+     */
+    protected int maxNumeroBottoniPrimaRiga;
+
+    /**
+     * Preferenze usate da questa 'logica' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected void fixPreferenze() {
+        this.usaBottoneDelete = false;
+        this.usaBottoneResetList = false;
+        this.usaBottoneNew = true;
+        this.usaBottoneSearch = false;
+        this.usaBottoneExport = false;
+        this.usaBottonePaginaWiki = false;
+        this.usaBottoneUpdate = false;
+        this.usaBottoneUpload = false;
+        this.usaBottoneDownload = false;
+        this.usaBottoneElabora = false;
+        this.usaBottoneCheck = false;
+        this.usaBottoneModulo = false;
+        this.usaBottoneTest = false;
+        this.usaBottoneStatistiche = false;
+        this.maxNumeroBottoniPrimaRiga = AEPreferenza.numeroBottoni.getInt();
+    }
 
 
     /**
@@ -168,6 +274,61 @@ public abstract class LogicListProperty extends VerticalLayout {
      * Se esiste, inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      */
     protected void fixTopLayout() {
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaAEBottoni() {
+        List<AEButton> listaBottoni = new ArrayList<>();
+
+        if (usaBottoneDelete) {
+            listaBottoni.add(AEButton.deleteAll);
+        }
+        if (usaBottoneResetList) {
+            listaBottoni.add(AEButton.resetList);
+        }
+        if (usaBottoneNew) {
+            listaBottoni.add(AEButton.nuovo);
+        }
+        if (usaBottoneSearch) {
+            listaBottoni.add(AEButton.searchDialog);
+        }
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
+        if (usaBottonePaginaWiki) {
+            listaBottoni.add(AEButton.wiki);
+        }
+        if (usaBottoneUpdate) {
+            listaBottoni.add(AEButton.update);
+        }
+        if (usaBottoneUpload) {
+            listaBottoni.add(AEButton.upload);
+        }
+        if (usaBottoneDownload) {
+            listaBottoni.add(AEButton.download);
+        }
+        if (usaBottoneElabora) {
+            listaBottoni.add(AEButton.elabora);
+        }
+        if (usaBottoneCheck) {
+            listaBottoni.add(AEButton.check);
+        }
+        if (usaBottoneModulo) {
+            listaBottoni.add(AEButton.modulo);
+        }
+        if (usaBottoneTest) {
+            listaBottoni.add(AEButton.test);
+        }
+        if (usaBottoneStatistiche) {
+            listaBottoni.add(AEButton.statistiche);
+        }
+
+        return listaBottoni;
     }
 
 

@@ -50,6 +50,7 @@ public abstract class AButtonLayout extends VerticalLayout {
     @Autowired
     protected ALogService logger;
 
+
     /**
      * Flag di preferenza per selezionare la ricerca testuale:
      * 1) nessuna

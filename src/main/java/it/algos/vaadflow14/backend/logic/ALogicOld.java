@@ -785,7 +785,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     protected void addGridListeners() {
         if (grid != null && grid.getGrid() != null) {
-            grid.setAllListener(this);
+//            grid.setAllListener(this);
         }
     }
 

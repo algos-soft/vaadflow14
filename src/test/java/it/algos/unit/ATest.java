@@ -71,6 +71,8 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
+    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Via.class;
+
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
     protected static Field FIELD_ORDINE;

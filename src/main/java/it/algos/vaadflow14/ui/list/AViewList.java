@@ -58,6 +58,7 @@ public class AViewList extends AView {
 //        creaGrid();
     }
 
+
     private Grid creaGrid() {
         AGrid grid = entityLogic.getBodyGridLayout();
         DataProvider dataProvider = dataService.creaDataProvider(entityClazz);

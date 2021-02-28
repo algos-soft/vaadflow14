@@ -12,6 +12,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -99,7 +100,7 @@ public class ATopLayout extends AButtonLayout {
      */
     public ATopLayout(final WrapButtons wrapper) {
         this.wrapper = wrapper;
-        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
+//        this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
         this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
         this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
         this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
@@ -149,6 +150,28 @@ public class ATopLayout extends AButtonLayout {
         this.addAllToView();
     }
 
+
+    protected void checkParametri() {
+        String message;
+
+        if (AEPreferenza.usaDebug.is()) {
+            if (wrapper == null) {
+                logger.warn("Creazione di un TopLayout senza WrapButtons", this.getClass(), "checkParametri");
+                return;
+            }
+
+            if (entityLogic == null) {
+                logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
+                return;
+            }
+
+            if (listaAEBottoni == null) {
+                message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
+                logger.info(message, this.getClass(), "checkParametri");
+            }
+        }
+    }
+
     /**
      * Qui va tutta la logica iniziale della view <br>
      */
@@ -158,34 +181,8 @@ public class ATopLayout extends AButtonLayout {
         this.setSpacing(false);
         this.setPadding(false);
 
-        this.primaRiga = new HorizontalLayout();
-        this.primaRiga.setMargin(false);
-        this.primaRiga.setSpacing(true);
-        this.primaRiga.setPadding(false);
-
-        this.secondaRiga = new HorizontalLayout();
-        this.secondaRiga.setMargin(false);
-        this.secondaRiga.setSpacing(true);
-        this.secondaRiga.setPadding(false);
-    }
-
-    protected void checkParametri() {
-        String message;
-
-        if (wrapper == null) {
-            logger.error("Creazione di un TopLayout senza WrapButtons", this.getClass(), "checkParametri");
-        }
-
-        if (entityLogic == null) {
-            logger.error("Manca la entityLogic nel WrapButtons", this.getClass(), "checkParametri");
-            return;
-        }
-
-        if (listaAEBottoni == null) {
-            message = String.format("Non ci sono bottoni nella view (List) chiamata da %s", entityLogic.getClass().getSimpleName());
-            logger.info(message, this.getClass(), "checkParametri");
-        }
-
+        this.primaRiga = new AHorizontalLayout();
+        this.secondaRiga = new AHorizontalLayout();
     }
 
     protected void creaAllBottoni() {
@@ -289,20 +286,20 @@ public class ATopLayout extends AButtonLayout {
 
         layout = this.fixSearchField();
 
-//        switch (searchType) {
-//            case nonUsata:
-//                break;
-//            case editField:
-//                layout = this.fixSearchField();
-//                break;
-//            case dialog:
-//                button = FactoryButton.get(AEButton.searchDialog);
-//                this.mappaBottoni.put(AEButton.searchDialog, button);
-//                break;
-//            default:
-//                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
-//                break;
-//        }
+        //        switch (searchType) {
+        //            case nonUsata:
+        //                break;
+        //            case editField:
+        //                layout = this.fixSearchField();
+        //                break;
+        //            case dialog:
+        //                button = FactoryButton.get(AEButton.searchDialog);
+        //                this.mappaBottoni.put(AEButton.searchDialog, button);
+        //                break;
+        //            default:
+        //                logger.warn("Switch - caso non definito", this.getClass(), "creaSearch");
+        //                break;
+        //        }
 
         return layout;
     }
