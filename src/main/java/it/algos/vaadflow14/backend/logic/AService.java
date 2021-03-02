@@ -290,13 +290,13 @@ public abstract class AService extends AAbstractService implements AIService {
     @Override
     public boolean deleteAll() {
         String message;
-        String collection;
+        String collectionName;
 
         if (mongo.isValid(entityClazz)) {
             mongo.mongoOp.remove(new Query(), entityClazz);
 
-            collection = entityClazz != null ? entityClazz.getSimpleName().toLowerCase() : "collezione";
-            message = "La collezione " + collection + " è stata interamente cancellata";
+            collectionName = annotation.getCollectionName(entityClazz);
+            message = "La collezione " + collectionName + " è stata interamente cancellata";
             logger.log(AETypeLog.deleteAll, message);
             return true;
         }
@@ -324,41 +324,41 @@ public abstract class AService extends AAbstractService implements AIService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     public AIResult resetEmptyOnly() {
-        String collection;
+        String collectionName;
 
         if (entityClazz == null) {
             return AResult.errato("Manca la entityClazz nella businessService specifica");
         }
 
-        collection = annotation.getCollectionName(entityClazz);
-        if (mongo.isExists(collection)) {
+        collectionName = annotation.getCollectionName(entityClazz);
+        if (mongo.isExists(collectionName)) {
             if (mongo.isValid(entityClazz)) {
-                return AResult.errato("La collezione " + collection + " esiste già e non c'è bisogno di crearla");
+                return AResult.errato("La collezione " + collectionName + " esiste già e non c'è bisogno di crearla");
             }
             else {
                 return AResult.valido();
             }
         }
         else {
-            return AResult.errato("La collezione " + collection + " non esiste");
+            return AResult.errato("La collezione " + collectionName + " non esiste");
         }
     }
 
     protected AIResult fixPostReset(final AETypeReset type, final int numRec) {
-        String collection;
+        String collectionName;
         String message;
 
         if (entityClazz == null) {
             return AResult.errato("Manca la entityClazz nella businessService specifica");
         }
 
-        collection = entityClazz.getSimpleName().toLowerCase();
+        collectionName = annotation.getCollectionName(entityClazz);
         if (mongo.isValid(entityClazz)) {
-            message = String.format("La collezione %s era vuota e sono stati inseriti %d elementi %s", collection, numRec, type.get());
+            message = String.format("La collezione %s era vuota e sono stati inseriti %d elementi %s", collectionName, numRec, type.get());
             return AResult.valido(message);
         }
         else {
-            message = String.format("Non è stato possibile creare la collezione %s", collection);
+            message = String.format("Non è stato possibile creare la collezione %s", collectionName);
             return AResult.errato(message);
         }
     }

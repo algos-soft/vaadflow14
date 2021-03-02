@@ -212,7 +212,7 @@ public class ALogService extends AAbstractService {
         }
 
         if (entityBean == null) {
-            error("Non sono riuscito a modificare la entity");
+            error("Non sono riuscito a modificare la entity", this.getClass(), "modifica");
         }
 
         message += beanService.getModifiche(entityBean, entityBeanOld);
@@ -236,7 +236,7 @@ public class ALogService extends AAbstractService {
             info(AETypeLog.delete, message);
         }
         else {
-            error("Non sono riuscito a cancellare la entity");
+            error("Non sono riuscito a cancellare la entity", this.getClass(), "delete");
         }
     }
 
@@ -272,13 +272,14 @@ public class ALogService extends AAbstractService {
         String message = VUOTA;
 
         if (entityClazz != null) {
-            message += entityClazz.getSimpleName();
+            message = entityClazz.getSimpleName();
+            message = text.levaCoda(message, SUFFIX_ENTITY);
             message += SEP;
             message += "Cancellata completamente la collection";
             info(AETypeLog.deleteAll, message);
         }
         else {
-            error("Non trovo la entityClazz", this.getClass(), "reset");
+            error("Non trovo la entityClazz", this.getClass(), "deleteAll");
         }
     }
 

@@ -1,32 +1,24 @@
 package it.algos.vaadflow14.ui.form;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.customfield.CustomField;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.shared.Registration;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.logic.AILogicOld;
-import it.algos.vaadflow14.backend.logic.ALogicOld;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.customfield.*;
+import com.vaadin.flow.component.formlayout.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.shared.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.fields.AComboField;
-import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.fields.AIField;
-import it.algos.vaadflow14.ui.service.AFieldService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 
-import javax.annotation.PostConstruct;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import javax.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -189,9 +181,14 @@ public abstract class AForm extends VerticalLayout {
     protected List<AField> fieldsList;
 
     /**
-     * The Entity Logic (obbligatorio per liste e form)
+     * The Entity Service (obbligatorio)
      */
-    protected AILogicOld entityLogic;
+    protected AIService entityService;
+
+    /**
+     * The Entity Logic (obbligatorio)
+     */
+    protected AILogic entityLogic;
 
     protected WrapForm wrap;
 
@@ -214,13 +211,19 @@ public abstract class AForm extends VerticalLayout {
 
     private LinkedHashMap<String, List> enumMap;
 
+    @Deprecated
+    public AForm(ALogicOld logic, WrapForm wrap) {
+        System.err.println("È stato chiamato il costruttore AForm con parametri errati. Non può funzionare");
+    }
 
+    @Deprecated
     public AForm() {
         System.err.println("È stato chiamato il costruttore AForm senza parametri. Non può funzionare");
     }
 
 
-    public AForm(ALogicOld entityLogic, WrapForm wrap) {
+    public AForm(AIService entityService, AILogic entityLogic, WrapForm wrap) {
+        this.entityService = entityService;
         this.entityLogic = entityLogic;
         this.wrap = wrap;
     }
@@ -303,11 +306,11 @@ public abstract class AForm extends VerticalLayout {
         }
 
         if (entityClazz != null) {
-            entityLogic = entityLogic != null ? entityLogic : classService.getLogicFromEntityClazz(entityClazz);
+            //            entityLogic = entityLogic != null ? entityLogic : classService.getLogicFromEntityClazz(entityClazz); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         }
 
-        if (entityBean == null && entityLogic != null) {
-            entityBean = entityLogic.newEntity();
+        if (entityBean == null && entityService != null) {
+            entityBean = entityService.newEntity();
         }
 
         if (entityClazz == null) {

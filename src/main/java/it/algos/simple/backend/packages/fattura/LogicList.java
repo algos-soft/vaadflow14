@@ -1,14 +1,16 @@
 package it.algos.simple.backend.packages.fattura;
 
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.router.*;
+import de.codecamp.vaadin.components.messagedialog.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
-import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
-import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.list.*;
 
 import java.util.*;
@@ -20,89 +22,31 @@ import java.util.*;
  * Date: ven, 26-feb-2021
  * Time: 17:27
  */
-public abstract class LogicList extends LogicListProperty implements AILogic, BeforeEnterObserver {
+public abstract class LogicList extends Logic {
 
 
     /**
-     * The entityClazz obbligatorio di tipo AEntity, per liste e form <br>
+     * The Grid  (obbligatoria per ViewList)
      */
-    protected Class<? extends AEntity> entityClazz;
-
-    /**
-     * The entityService obbligatorio, singleton di tipo xxxService <br>
-     */
-    protected AIService entityService;
-
-    /**
-     * The entityLogic obbligatorio, prototype di tipo xxxLogic <br>
-     */
-    protected AILogicOld entityLogic;
-
-    /**
-     * The entityBean obbligatorio, istanza di entityClazz per liste e form <br>
-     */
-    protected AEntity entityBean;
-
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        this.fixPreferenze();
-        this.initView();
-    }
+    protected AGrid grid;
 
 
     /**
-     * Qui va tutta la logica iniziale della view <br>
-     */
-    protected void initView() {
-        //--Costruisce gli oggetti base (placeholder) di questa view
-        super.fixLayout();
-
-        //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
-        this.fixAlertLayout();
-
-        //--Costruisce un layout (obbligatorio) per i menu ed i bottoni di comando della view <br>
-        //--Eventualmente i bottoni potrebbero andare su due righe <br>
-        this.fixTopLayout();
-
-        //--Corpo principale della Grid (obbligatorio) <br>
-        this.fixBodyLayout();
-
-        //--Eventuali bottoni sotto la grid (eventuale) <br>
-        this.fixBottomLayout();
-
-        //--Eventuali scritte in basso al video (eventuale) <br>
-        this.fixFooterLayout();
-
-        //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
-        super.addToLayout();
-    }
-
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
+     * Controlla che esista il riferimento alla entityClazz <br>
+     * Se non esiste nella List, è un errore <br>
+     * Se non esiste nel Form, lo crea dall'url del browser <br>
+     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixAlertLayout() {
-        AIHeader headerSpan = appContext.getBean(AHeaderSpan.class, getSpanList());
-
-        if (alertPlaceHolder != null && headerSpan != null) {
-            alertPlaceHolder.add(headerSpan.get());
+    protected void fixEntityClazz() {
+        if (entityClazz == null) {
+            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
         }
     }
 
     /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
-     */
-    protected List<Span> getSpanList() {
-        return null;
-    }
-
-
-    /**
-     * Costruisce un layout (semi-obbligatorio) per i bottoni di comando della view <br>
+     * Costruisce un layout per i bottoni di comando superiori della view <br>
+     * Semi-obbligatorio per la List, facoltativo per il Form <br>
      */
     @Override
     protected void fixTopLayout() {
@@ -116,7 +60,6 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
             topPlaceHolder.add(topLayout);
         }
     }
-
 
     /**
      * Costruisce un wrapper (obbligatorio) di dati <br>
@@ -135,21 +78,32 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
         return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
     }
 
+
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>
      */
     @Override
     protected void fixBodyLayout() {
-        AGrid grid = appContext.getBean(AGrid.class, FatturaEntity.class, this);
+        grid = appContext.getBean(AGrid.class, FatturaEntity.class, this);
         DataProvider dataProvider = dataService.creaDataProvider(FatturaEntity.class);
         grid.getGrid().setDataProvider(dataProvider);
         grid.getGrid().setHeight("100%");
+        grid.fixGridHeader(dataProvider.size(null));
+        this.addGridListeners();
 
         if (bodyPlaceHolder != null && grid != null) {
             bodyPlaceHolder.add(grid.getGrid());
         }
     }
 
+    /**
+     * Aggiunge tutti i listeners alla Grid di 'bodyPlaceHolder' che è stata creata SENZA listeners <br>
+     */
+    protected void addGridListeners() {
+        if (grid != null && grid.getGrid() != null) {
+            grid.setAllListener(this);
+        }
+    }
 
     /**
      * Costruisce una lista ordinata di nomi delle properties della Grid. <br>
@@ -168,29 +122,184 @@ public abstract class LogicList extends LogicListProperty implements AILogic, Be
 
 
     /**
-     * Costruisce un (eventuale) layout per i bottoni sotto la Grid <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     *
+     * @param azione selezionata da eseguire
      */
     @Override
-    protected void fixBottomLayout() {
-    }
-
-
-    /**
-     * Costruisce un (eventuale) layout per scritte in basso della pagina <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixFooterLayout() {
+    public void performAction(AEAction azione) {
+        switch (azione) {
+            case deleteAll:
+                this.openConfirmDeleteAll();
+                break;
+            case resetList:
+                this.openConfirmReset();
+                break;
+            case doubleClick:
+                break;
+            case nuovo:
+                this.operationForm = AEOperation.addNew;
+                this.executeRoute();
+                break;
+            case edit:
+            case show:
+            case editNoDelete:
+            case searchField:
+                //                this.searchFieldValue = searchFieldValue;
+                //                refreshGrid();
+                break;
+            case searchDialog:
+                //                Notification.show("Not yet. Coming soon.", 3000, Notification.Position.MIDDLE);
+                //                logger.info("Not yet. Coming soon", this.getClass(), "performAction");
+                break;
+            case valueChanged:
+                //                refreshGrid();
+                break;
+            case export:
+                //                export();
+                break;
+            case showWiki:
+                //                openWikiPage();
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
+                break;
+        }
     }
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
-     * @param azione selezionata da eseguire
+     * @param azione     selezionata da eseguire
+     * @param entityBean selezionata
      */
-    public void performAction(AEAction azione) {
-        logger.log("Premuto bottone");
+    @Override
+    public void performAction(AEAction azione, AEntity entityBean) {
+        switch (azione) {
+            case doubleClick:
+                this.operationForm = AEOperation.edit;
+                this.executeRoute(entityBean);
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione, entityBean)");
+                break;
+        }
     }
+
+    /**
+     * Opens the confirmation dialog before deleting all items. <br>
+     * <p>
+     * The dialog will display the given title and message(s), then call <br>
+     * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
+     */
+    protected final void openConfirmDeleteAll() {
+        MessageDialog messageDialog;
+        String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
+        VaadinIcon icon = VaadinIcon.WARNING;
+
+        if (mongo.isValid(entityClazz)) {
+            messageDialog = new MessageDialog().setTitle("Delete").setMessage(message);
+            messageDialog.addButton().text("Cancella").icon(icon).error().onClick(e -> clickDeleteAll()).closeOnClick();
+            messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
+            messageDialog.open();
+        }
+    }
+
+    /**
+     * Cancellazione effettiva (dopo dialogo di conferma) di tutte le entities della collezione. <br>
+     * Azzera gli items <br>
+     * Ridisegna la GUI <br>
+     */
+    public void clickDeleteAll() {
+        entityService.deleteAll();
+        logger.deleteAll(entityClazz);
+        this.refreshGrid();
+        //            this.reloadList();//@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+    }
+
+    /**
+     * Opens the confirmation dialog before reset all items. <br>
+     * <p>
+     * The dialog will display the given title and message(s), then call <br>
+     * Può essere sovrascritto dalla classe specifica se servono avvisi diversi <br>
+     */
+    protected final void openConfirmReset() {
+        MessageDialog messageDialog;
+        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori successivamente aggiunti o modificati.";
+        VaadinIcon icon = VaadinIcon.WARNING;
+
+        if (mongo.isEmpty(entityClazz)) {
+            clickReset();
+        }
+        else {
+            messageDialog = new MessageDialog().setTitle("Reset").setMessage(message);
+            messageDialog.addButton().text("Continua").icon(icon).error().onClick(e -> clickReset()).closeOnClick();
+            messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
+            messageDialog.open();
+        }
+    }
+
+    /**
+     * Azione proveniente dal click sul bottone Reset <br>
+     * Creazione di alcuni dati iniziali <br>
+     * Rinfresca la griglia <br>
+     */
+    public void clickReset() {
+        if (resetDeletingAll()) {
+            this.refreshGrid();
+            //            this.reloadList();
+        }
+    }
+
+    /**
+     * Ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * Cancella la collection (parzialmente, se usaCompany=true) <br>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     *
+     * @return false se non esiste il metodo sovrascritto o se la collection
+     * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
+     */
+    private boolean resetDeletingAll() {
+        AIResult result;
+        entityService.delete();
+        result = entityService.resetEmptyOnly();
+
+        logger.log(AETypeLog.reset, result.getMessage());
+        return result.isValido();
+    }
+
+
+    /**
+     * Aggiorna gli items della Grid, utilizzando (anche) i filtri. <br>
+     * Chiamato inizialmente alla creazione della Grid <br>
+     * Chiamato per modifiche effettuate ai filtri, popup, newEntity, deleteEntity, ecc... <br>
+     */
+    public void refreshGrid() {
+        List<? extends AEntity> items;
+
+        if (grid != null && grid.getGrid() != null) {
+            //            updateFiltri();
+            items = mongo.findAll(entityClazz);
+            grid.getGrid().deselectAll();
+            grid.setItems(items);
+            grid.getGrid().getDataProvider().refreshAll();
+        }
+    }
+
+    protected final void executeRoute() {
+        final QueryParameters query = route.getQueryForm(entityClazz);
+        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
+    }
+
+    protected final void executeRoute(AEntity entityBean) {
+        final QueryParameters query = route.getQueryForm(entityClazz, entityBean.id, operationForm);
+        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
+    }
+
 
 }

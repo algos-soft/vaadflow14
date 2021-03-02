@@ -46,7 +46,7 @@ public class AClassService extends AAbstractService {
         AEntity entityBean;
 
         if (text.isValid(entityClazzCanonicalName)) {
-            serviceClazzCanonicalName = entityClazzCanonicalName + SUFFIX_SERVICE;
+            serviceClazzCanonicalName = text.levaCoda(entityClazzCanonicalName, SUFFIX_ENTITY) + SUFFIX_SERVICE;
             try {
                 entityService = (AIService) appContext.getBean(Class.forName(serviceClazzCanonicalName));
             } catch (Exception unErrore) {
@@ -97,9 +97,10 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogicOld getLogicFromEntityClazz(Class<? extends AEntity> entityClazz) {
-        return getLogicFromEntityClazz(entityClazz, null,AEOperation.listNoForm);
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz) {
+        return getLogicFromEntityClazz(entityClazz, null, AEOperation.listNoForm);
     }
+
     /**
      * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
      *
@@ -107,8 +108,8 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogicOld getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService) {
-        return getLogicFromEntityClazz(entityClazz, entityService,AEOperation.listNoForm);
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService) {
+        return getLogicFromEntityClazz(entityClazz, entityService, AEOperation.listNoForm);
     }
 
 
@@ -120,20 +121,20 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogicOld getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService, AEOperation operationForm) {
-        AILogicOld entityLogic = null;
+    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService, AEOperation operationForm) {
+        AILogic entityLogic = null;
         String canonicalName;
 
         if (entityClazz != null) {
-            canonicalName = entityClazz.getCanonicalName() + SUFFIX_LOGIC;
+            canonicalName = text.levaCoda(entityClazz.getCanonicalName(), SUFFIX_ENTITY) + SUFFIX_LOGIC;
             try {
-                entityLogic = (AILogicOld) appContext.getBean(Class.forName(canonicalName), entityService,operationForm);
+                entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm);
             } catch (Exception unErrore) {
                 try {
-                    entityLogic = (AILogicOld) appContext.getBean(Class.forName(canonicalName),entityService);
+                    entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService);
                 } catch (Exception unErrore2) {
                     try {
-                        entityLogic = (AILogicOld) appContext.getBean(EntityLogicOld.class, entityClazz, operationForm);
+                        entityLogic = (AILogic) appContext.getBean(EntityLogicOld.class, entityClazz, operationForm);
                     } catch (Exception unErrore3) {
                         logger.error("Non sono riuscito a creare la entityLogic", this.getClass(), "getLogicFromEntity");
                     }

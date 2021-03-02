@@ -295,7 +295,7 @@ public class AGrid {
         AEntity entityBean = (AEntity) event.getItem();
 
         if (entityLogic != null) {
-            //            entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
+            entityLogic.performAction(azione, entityBean);
         }
     }
 
@@ -325,7 +325,7 @@ public class AGrid {
      * Eventuale header text <br>
      * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
      */
-    protected void fixGridHeader(Collection items) {
+    public void fixGridHeader(Collection items) {
         String message = VUOTA;
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
@@ -336,6 +336,33 @@ public class AGrid {
                 }
                 else {
                     message += "Lista di " + items.size() + " elementi";
+                }
+            }
+            else {
+                message += "Al momento non ci sono elementi in questa collezione";
+            }
+
+            if (headerLabelPlaceHolder != null) {
+                headerLabelPlaceHolder.setText(message);
+            }
+        }
+    }
+
+    /**
+     * Eventuale header text <br>
+     * Se si usa una PaginatedGrid, il metodo DEVE essere sovrascritto nella classe APaginatedGridViewList <br>
+     */
+    public void fixGridHeader(int items) {
+        String message = VUOTA;
+
+        if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
+            message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;
+            if (items > 0) {
+                if (items == 1) {
+                    message += "Lista di un solo elemento";
+                }
+                else {
+                    message += "Lista di " + items + " elementi";
                 }
             }
             else {

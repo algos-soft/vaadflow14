@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
@@ -26,7 +27,7 @@ import java.util.*;
  * Alleggerisce la 'lettura' della sottoclasse principale. Non contiene 'business logic' <br>
  * Le property sono regolarmente disponibili in LogicList ed in tutte le sue (probabili) sottoclassi <br>
  */
-public abstract class LogicListProperty extends VerticalLayout {
+public abstract class LogicProperty extends VerticalLayout {
 
     /**
      * Istanza di una interfaccia SpringBoot <br>
@@ -61,11 +62,12 @@ public abstract class LogicListProperty extends VerticalLayout {
     public AAnnotationService annotation;
 
     /**
-     * PlaceHolder iniziale per avvisi <br>
-     * Label o altro per informazioni specifiche; di norma per il developer <br>
-     * Contenuto facoltativo, assente di default <br>
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
-    protected VerticalLayout alertPlaceHolder;
+    @Autowired
+    public AReflectionService reflection;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -74,6 +76,45 @@ public abstract class LogicListProperty extends VerticalLayout {
      */
     @Autowired
     public ALogService logger;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ARouteService route;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AClassService classService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ATextService text;
+
+    /**
+     * PlaceHolder iniziale per avvisi <br>
+     * Label o altro per informazioni specifiche; di norma per il developer <br>
+     * Contenuto facoltativo, assente di default <br>
+     */
+    protected VerticalLayout alertPlaceHolder;
 
     /**
      * PlaceHolder per bottoni di comando SOPRA la Grid <br>
@@ -115,9 +156,20 @@ public abstract class LogicListProperty extends VerticalLayout {
     protected Class<? extends AEntity> entityClazz;
 
     /**
+     * The entityBean, istanza di entityClazz obbligatorio solo per il form <br>
+     */
+    protected AEntity entityBean;
+
+    /**
      * The entityService obbligatorio, singleton di tipo xxxService <br>
      */
     protected AIService entityService;
+
+    /**
+     * Wrapper di dati recuperati dall'url del browser, obbligatorio per il form <br>
+     */
+    protected Parametro routeParameter;
+
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -130,7 +182,7 @@ public abstract class LogicListProperty extends VerticalLayout {
     protected boolean usaBottoneResetList;
 
     /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default true. <br>
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
     protected boolean usaBottoneNew;
 
@@ -190,9 +242,62 @@ public abstract class LogicListProperty extends VerticalLayout {
     protected boolean usaBottoneStatistiche;
 
     /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneResetForm;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneBack;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneAnnulla;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneConferma;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneRegistra;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneCancella;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottonePrima;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneDopo;
+
+
+    /**
      * Flag di preferenza per specificare il massimo numero di bottoni della prima riga <br>
      */
     protected int maxNumeroBottoniPrimaRiga;
+
+    /**
+     * The Type vista.
+     */
+    protected AEVista typeVista;
+
+    /**
+     * Tipologia di Form in uso <br>
+     * Si recupera nel metodo AView.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
+     */
+    protected AEOperation operationForm = AEOperation.listNoForm;
+
 
     /**
      * Preferenze usate da questa 'logica' <br>
@@ -202,7 +307,7 @@ public abstract class LogicListProperty extends VerticalLayout {
     protected void fixPreferenze() {
         this.usaBottoneDelete = false;
         this.usaBottoneResetList = false;
-        this.usaBottoneNew = true;
+        this.usaBottoneNew = false;
         this.usaBottoneSearch = false;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
@@ -214,6 +319,16 @@ public abstract class LogicListProperty extends VerticalLayout {
         this.usaBottoneModulo = false;
         this.usaBottoneTest = false;
         this.usaBottoneStatistiche = false;
+
+        this.usaBottoneResetForm = false;
+        this.usaBottoneBack = false;
+        this.usaBottoneAnnulla = false;
+        this.usaBottoneConferma = false;
+        this.usaBottoneRegistra = false;
+        this.usaBottoneCancella = false;
+        this.usaBottonePrima = false;
+        this.usaBottoneDopo = false;
+
         this.maxNumeroBottoniPrimaRiga = AEPreferenza.numeroBottoni.getInt();
     }
 
@@ -274,17 +389,51 @@ public abstract class LogicListProperty extends VerticalLayout {
 
 
     /**
-     * Costruisce un layout (semi-obbligatorio) per i bottoni di comando della view <br>
+     * Costruisce un layout per i bottoni di comando superiori della view <br>
+     * Semi-obbligatorio per la List, facoltativo per il Form <br>
      * Aggiunge tutti i listeners ai bottoni <br>
      * Eventualmente i bottoni potrebbero andare su due righe <br>
      * <p>
      * Chiamato da LogicList.initView() <br>
-     * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      * Se esiste, inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      */
     protected void fixTopLayout() {
     }
 
+
+
+
+    /**
+     * Costruisce il corpo principale (obbligatorio) della Grid <br>
+     * <p>
+     * Chiamato da LogicList.initView() <br>
+     * Costruisce un' istanza dedicata con la Grid <br>
+     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
+     */
+    protected void fixBodyLayout() {
+    }
+
+
+    /**
+     * Costruisce un layout per i bottoni di comando inferiori della view <br>
+     * Obbligatorio per il Form, facoltativo per la List <br>
+     * <p>
+     * Chiamato da LogicList.initView() <br>
+     * Se esiste, inserisce l' istanza (grafica) in bottomPlaceHolder della view <br>
+     */
+    protected void fixBottomLayout() {
+    }
+
+
+    /**
+     * Costruisce un (eventuale) layout per scritte in basso della pagina <br>
+     * <p>
+     * Chiamato da LogicList.initView() <br>
+     * Normalmente non usato <br>
+     * Se esiste, inserisce l' istanza (grafica) in footerPlaceHolder della view <br>
+     */
+    protected void fixFooterLayout() {
+    }
 
     /**
      * Costruisce una lista di bottoni (enumeration) <br>
@@ -337,42 +486,33 @@ public abstract class LogicListProperty extends VerticalLayout {
             listaBottoni.add(AEButton.statistiche);
         }
 
+        if (usaBottoneResetForm) {
+            listaBottoni.add(AEButton.resetForm);
+        }
+        if (usaBottoneBack) {
+            listaBottoni.add(AEButton.back);
+        }
+        if (usaBottoneAnnulla) {
+            listaBottoni.add(AEButton.annulla);
+        }
+        if (usaBottoneConferma) {
+            listaBottoni.add(AEButton.conferma);
+        }
+        if (usaBottoneRegistra) {
+            listaBottoni.add(AEButton.registra);
+        }
+        if (usaBottoneCancella) {
+            listaBottoni.add(AEButton.delete);
+        }
+        if (usaBottonePrima) {
+            listaBottoni.add(AEButton.prima);
+        }
+        if (usaBottoneDopo) {
+            listaBottoni.add(AEButton.dopo);
+        }
+
         return listaBottoni;
     }
-
-
-    /**
-     * Costruisce il corpo principale (obbligatorio) della Grid <br>
-     * <p>
-     * Chiamato da LogicList.initView() <br>
-     * Costruisce un' istanza dedicata con la Grid <br>
-     * Inserisce l' istanza (grafica) in bodyPlacehorder della view <br>
-     */
-    protected void fixBodyLayout() {
-    }
-
-
-    /**
-     * Costruisce un (eventuale) layout per i bottoni sotto la Grid <br>
-     * <p>
-     * Chiamato da LogicList.initView() <br>
-     * Normalmente non usato <br>
-     * Se esiste, inserisce l' istanza (grafica) in bottomPlaceHolder della view <br>
-     */
-    protected void fixBottomLayout() {
-    }
-
-
-    /**
-     * Costruisce un (eventuale) layout per scritte in basso della pagina <br>
-     * <p>
-     * Chiamato da LogicList.initView() <br>
-     * Normalmente non usato <br>
-     * Se esiste, inserisce l' istanza (grafica) in footerPlaceHolder della view <br>
-     */
-    protected void fixFooterLayout() {
-    }
-
 
     /**
      * Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>

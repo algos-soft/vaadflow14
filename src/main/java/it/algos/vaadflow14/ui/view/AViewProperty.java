@@ -175,7 +175,7 @@ public abstract class AViewProperty extends VerticalLayout {
     /**
      * The entityLogic obbligatorio, prototype di tipo xxxLogic <br>
      */
-    protected AILogicOld entityLogic;
+    protected AILogic entityLogic;
 
     /**
      * The entityBean obbligatorio, istanza di entityClazz per liste e form <br>

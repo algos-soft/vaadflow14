@@ -50,13 +50,13 @@ public enum AEButton {
 
     statistiche("Statistiche", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
 
-    back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ARROW_LEFT, null),
+    back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
 
-    annulla("Annulla", VaadinIcon.ARROW_LEFT, "secondary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.KEY_B, KeyModifier.CONTROL),
+    annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
 
     conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),
 
-    registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.KEY_S, KeyModifier.CONTROL),
+    registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.ENTER, null),
 
 
     delete("Delete", VaadinIcon.TRASH, "error", AEAction.delete, true, "Cancella la scheda", "cross", Key.KEY_D, KeyModifier.CONTROL),

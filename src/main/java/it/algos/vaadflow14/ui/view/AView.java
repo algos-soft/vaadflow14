@@ -4,10 +4,8 @@ import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.footer.*;
-import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.service.*;
 
 
@@ -264,22 +262,22 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
      * alertPlacehorder viene sempre aggiunto, per poter (eventualmente) essere utilizzato dalle sottoclassi <br>
      */
     protected void fixAlertLayout() {
-        AHeader header = entityLogic != null ? entityLogic.getAlertHeaderLayout(typeVista) : null;
-        AIHeader header2 = entityLogic != null ? entityLogic.getAlertLayout(typeVista) : null;
-
-        if (alertPlaceholder != null && header != null) {
-            alertPlaceholder.add(header);
-            this.add(alertPlaceholder);
-        }
-
-        if ( header2 == null) {
-            header2= null;
-        }
-
-        if (alertPlaceholder != null && header2 != null) {
-            alertPlaceholder.add(header2.get());
-            this.add(alertPlaceholder);
-        }
+//        AHeader header = entityLogic != null ? entityLogic.getAlertHeaderLayout(typeVista) : null;//@todo implementare
+//        AIHeader header2 = entityLogic != null ? entityLogic.getAlertLayout(typeVista) : null;//@todo implementare
+//
+//        if (alertPlaceholder != null && header != null) {
+//            alertPlaceholder.add(header);
+//            this.add(alertPlaceholder);
+//        }
+//
+//        if ( header2 == null) {
+//            header2= null;
+//        }
+//
+//        if (alertPlaceholder != null && header2 != null) {
+//            alertPlaceholder.add(header2.get());
+//            this.add(alertPlaceholder);
+//        }
     }
 
 
@@ -292,12 +290,12 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
      * Nell' implementazione standard di default presenta solo il bottone 'New' <br>
      */
     protected void fixTopLayout() {
-        AButtonLayout topLayout = entityLogic != null ? entityLogic.getTopLayout() : null;
-
-        if (topPlaceholder != null && topLayout != null) {
-            topPlaceholder.add(topLayout);
-            this.add(topPlaceholder);
-        }
+//        AButtonLayout topLayout = entityLogic != null ? entityLogic.getTopLayout() : null;
+//
+//        if (topPlaceholder != null && topLayout != null) {
+//            topPlaceholder.add(topLayout);
+//            this.add(topPlaceholder);
+//        }
     }
 
 
@@ -323,12 +321,12 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
      * Inserisce l'istanza (grafica) in bottomPlacehorder della view <br>
      */
     protected void fixBottomLayout() {
-        ABottomLayout bottomLayout = entityLogic != null ? entityLogic.getBottomLayout(operationForm):null;
-
-        if (bottomPlaceholder != null && bottomLayout != null) {
-            bottomPlaceholder.add(bottomLayout);
-            this.add(bottomPlaceholder);
-        }
+//        ABottomLayout bottomLayout = entityLogic != null ? entityLogic.getBottomLayout(operationForm):null;
+//
+//        if (bottomPlaceholder != null && bottomLayout != null) {
+//            bottomPlaceholder.add(bottomLayout);
+//            this.add(bottomPlaceholder);
+//        }
     }
 
 

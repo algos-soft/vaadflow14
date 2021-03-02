@@ -95,7 +95,7 @@ public abstract class FlowCost {
 
     public static final String SUFFIX_ENTITY = "Entity";
 
-    public static final String SUFFIX_LOGIC = "Logic";
+    public static final String SUFFIX_LOGIC = "LogicList";
 
     public static final String SUFFIX_SERVICE = "Service";
 

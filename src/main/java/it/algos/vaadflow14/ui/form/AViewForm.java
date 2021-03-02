@@ -1,11 +1,9 @@
 package it.algos.vaadflow14.ui.form;
 
-import com.vaadin.flow.router.Route;
-import it.algos.vaadflow14.backend.logic.ALogicOld;
-import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.ui.view.AView;
-
+import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.view.*;
 
 /**
  * Project vaadflow15
@@ -14,7 +12,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
  * Date: mer, 13-mag-2020
  * Time: 18:45
  */
-@Route(value = ROUTE_NAME_GENERIC_FORM, layout = MainLayout.class)
+@Route(value = "old", layout = MainLayout.class)
 public class AViewForm extends AView {
 
 
@@ -26,11 +24,10 @@ public class AViewForm extends AView {
 
         keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
         if (text.isEmpty(keyID) || keyID.equals(KEY_NULL)) {
-            entityBean = entityLogic.newEntity();
+            entityBean = entityService.newEntity();
         } else {
-            entityBean = entityLogic.findById(keyID);
+            entityBean = entityService.findById(keyID);
         }
-        ((ALogicOld)entityLogic).fixEntityBean(entityBean);
     }
 
 
@@ -69,15 +66,16 @@ public class AViewForm extends AView {
         }
 
         if (entityBean != null) {
-            form = entityLogic.getBodyFormLayout(entityBean);
+//            form = entityLogic.getBodyFormLayout(entityBean); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         } else {
             logger.warn("Manca entityBean", this.getClass(), "fixBody");
-            form = entityLogic.getBodyFormLayout(entityLogic.newEntity());
+//            form = entityLogic.getBodyFormLayout(entityLogic.newEntity()); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         }
 
-        if (bodyPlaceholder != null && form != null) {
-            bodyPlaceholder.add(form);
-        }
+         //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
+//        if (bodyPlaceholder != null && form != null) {
+//            bodyPlaceholder.add(form);
+//        }
 
         this.add(bodyPlaceholder);
     }

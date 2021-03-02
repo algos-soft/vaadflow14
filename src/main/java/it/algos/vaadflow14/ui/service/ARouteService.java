@@ -322,7 +322,8 @@ public class ARouteService extends AAbstractService {
                 parametro = new Parametro(array.semplificaMappa(multiParametersMap), primoSegmento);
                 parametro.setMappa(true);
                 parametro.setMultiMappa(false);
-            } else {
+            }
+            else {
                 parametro = new Parametro();
                 parametro.setMultiParametersMap(multiParametersMap);
                 parametro.setPrimoSegmento(primoSegmento);

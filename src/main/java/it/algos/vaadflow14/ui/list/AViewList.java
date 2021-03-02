@@ -1,14 +1,12 @@
 package it.algos.vaadflow14.ui.list;
 
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.router.Route;
-import it.algos.vaadflow14.backend.service.ADataProviderService;
-import it.algos.vaadflow14.ui.MainLayout;
-import it.algos.vaadflow14.ui.view.AView;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.ROUTE_NAME_GENERIC_LIST;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.router.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.view.*;
+import org.springframework.beans.factory.annotation.*;
 
 /**
  * Project vaadflow15
@@ -60,11 +58,12 @@ public class AViewList extends AView {
 
 
     private Grid creaGrid() {
-        AGrid grid = entityLogic.getBodyGridLayout();
-        DataProvider dataProvider = dataService.creaDataProvider(entityClazz);
-        grid.getGrid().setDataProvider(dataProvider);
-        grid.getGrid().setHeight("100%");
-        return grid.getGrid();
+//        AGrid grid = entityLogic.getBodyGridLayout();
+//        DataProvider dataProvider = dataService.creaDataProvider(entityClazz);
+//        grid.getGrid().setDataProvider(dataProvider);
+//        grid.getGrid().setHeight("100%");
+//        return grid.getGrid();
+        return null;
     }
 
 //    /**
