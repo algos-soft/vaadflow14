@@ -1,11 +1,9 @@
 package it.algos.vaadflow14.ui.enumeration;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.KeyModifier;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import it.algos.vaadflow14.ui.button.AEAction;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.icon.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.ui.button.*;
 
 /**
  * Project vaadflow15
@@ -60,9 +58,9 @@ public enum AEButton {
 
     delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
 
-    prima("Before", VaadinIcon.CARET_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
+    prima("Before", VaadinIcon.CARET_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null, false, true),
 
-    dopo("Next", VaadinIcon.CARET_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null,true),
+    dopo("Next", VaadinIcon.CARET_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null, false, true),
 
     ;
 
@@ -116,6 +114,11 @@ public enum AEButton {
      */
     public boolean iconaAfterText;
 
+    /**
+     * Flag di preferenza per mostrare solo l'icona del bottone, SENZA il testo. <br>
+     */
+    public boolean iconaOnly;
+
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action) {
         this(testo, vaadinIcon, theme, action, true, VUOTA, VUOTA);
@@ -123,16 +126,16 @@ public enum AEButton {
 
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon) {
-        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, (Key) null, (KeyModifier) null, false);
+        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, (Key) null, (KeyModifier) null, false, false);
     }
 
 
     AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier) {
-        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, keyShortCut, keyModifier, false);
+        this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, keyShortCut, keyModifier, false, false);
     }
 
 
-    AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText) {
+    AEButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText, boolean iconaOnly) {
         this.testo = testo;
         this.vaadinIcon = vaadinIcon;
         this.theme = theme;
@@ -143,6 +146,7 @@ public enum AEButton {
         this.keyShortCut = keyShortCut;
         this.keyModifier = keyModifier;
         this.iconaAfterText = iconaAfterText;
+        this.iconaOnly = iconaOnly;
     }
 
 }

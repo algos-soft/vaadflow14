@@ -32,7 +32,9 @@ public enum AEPreferenza implements AIPreferenza {
     maxEnumRadio(PREF_MAX_RADIO, "Massimo numero di 'radio' nelle Enum' ", AETypePref.integer, 3, "Numero massimo di items nella preferenza di tipo Enum da visualizzare con i radioBottoni; se superiore, usa un ComboBox"),
     lineHeight(LINE_HEIGHT, "Altezza di una riga nelle View", AETypePref.enumeration, AETypeHeight.normal, false, false, false),
     numeroBottoni(BUTTONS_NUMBER, "Numero di bottoni nella prima riga sopra la Grid", AETypePref.integer, 4, false, false, false),
-    usaLogVisibile(PREF_USA_LOG_VIDEO, "Visualizza il log nella finestra", AETypePref.bool, true, false),  ;
+    usaLogVisibile(PREF_USA_LOG_VIDEO, "Visualizza il log nella finestra", AETypePref.bool, true, false),
+    usaButtonOnlyIcon(PREF_USA_BUTTON_ONLY_ICON, "Usa solo l'icona del bottone e non il testo", AETypePref.bool, true, false),
+    ;
 
 
     //--codice di riferimento. Se è usaCompany=true, DEVE contenere anche il code della company come prefisso.

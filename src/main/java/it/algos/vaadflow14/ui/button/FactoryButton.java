@@ -1,14 +1,12 @@
 package it.algos.vaadflow14.ui.button;
 
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.KeyModifier;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.ui.enumeration.AEButton;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.icon.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 
 /**
  * Project vaadflow15
@@ -18,6 +16,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Time: 17:54
  */
 public abstract class FactoryButton {
+
 
     /**
      * Costruzione standard del bottone <br>
@@ -30,7 +29,8 @@ public abstract class FactoryButton {
     public static Button get(AEButton aeButton) {
         if (FlowVar.usaVaadinIcon) {
             return getVaadin(aeButton);
-        } else {
+        }
+        else {
             return getLumo(aeButton);
         }
     }
@@ -70,9 +70,10 @@ public abstract class FactoryButton {
      */
     private static Button get(AEButton aeButton, boolean vaadinIcon) {
         if (vaadinIcon) {
-            return get(aeButton.testo, aeButton.vaadinIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier,aeButton.iconaAfterText);
-        } else {
-            return get(aeButton.testo, aeButton.lumoIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier,aeButton.iconaAfterText);
+            return get(aeButton.testo, aeButton.vaadinIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier, aeButton.iconaAfterText, aeButton.iconaOnly);
+        }
+        else {
+            return get(aeButton.testo, aeButton.lumoIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier, aeButton.iconaAfterText);
         }
     }
 
@@ -99,7 +100,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button getPrimary(String testo, String lumoIcon) {
-        return get(testo, lumoIcon, "primary", VUOTA, true, (Key) null, (KeyModifier) null,false);
+        return get(testo, lumoIcon, "primary", VUOTA, true, (Key) null, (KeyModifier) null, false);
     }
 
 
@@ -125,7 +126,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button getSecondary(String testo, String lumoIcon) {
-        return get(testo, lumoIcon, "secondary", VUOTA, true, (Key) null, (KeyModifier) null,false);
+        return get(testo, lumoIcon, "secondary", VUOTA, true, (Key) null, (KeyModifier) null, false);
     }
 
 
@@ -140,7 +141,7 @@ public abstract class FactoryButton {
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
     public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip) {
-        return get(testo, vaadinIcon, theme, toolTip, true, (Key) null, (KeyModifier) null,false);
+        return get(testo, vaadinIcon, theme, toolTip, true, (Key) null, (KeyModifier) null, false, false);
     }
 
 
@@ -157,7 +158,7 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText) {
+    public static Button get(String testo, VaadinIcon vaadinIcon, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText, boolean onlyIcon) {
         Button bottone;
 
         bottone = new Button(testo, new Icon(vaadinIcon));
@@ -171,10 +172,15 @@ public abstract class FactoryButton {
             if (keyShortCut != null) {
                 if (keyModifier != null) {
                     bottone.addClickShortcut(keyShortCut, keyModifier);
-                } else {
+                }
+                else {
                     bottone.addClickShortcut(keyShortCut);
                 }
             }
+        }
+        if (onlyIcon && AEPreferenza.usaButtonOnlyIcon.is()) {
+            bottone.setText(VUOTA);
+            bottone.setWidth("2em");
         }
 
         return bottone;
@@ -194,7 +200,7 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(String testo, String iconType, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier,boolean iconaAfterText) {
+    public static Button get(String testo, String iconType, String theme, String toolTip, boolean enabled, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText) {
         Button bottone;
 
         bottone = new Button(testo, new Icon("lumo", iconType));
@@ -208,7 +214,8 @@ public abstract class FactoryButton {
             if (keyShortCut != null) {
                 if (keyModifier != null) {
                     bottone.addClickShortcut(keyShortCut, keyModifier);
-                } else {
+                }
+                else {
                     bottone.addClickShortcut(keyShortCut);
                 }
             }
@@ -216,7 +223,6 @@ public abstract class FactoryButton {
 
         return bottone;
     }
-
 
     //    public static ButtonWrap getDelete() {
     //        return new ButtonWrap(AEAction.deleteAll, KEY_BUTTON_DELETE_ALL, "Delete all", VaadinIcon.CLOSE_CIRCLE, true, "error", "Cancella tutta la collezione");

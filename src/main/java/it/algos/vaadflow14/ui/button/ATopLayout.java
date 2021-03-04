@@ -103,6 +103,7 @@ public class ATopLayout extends AButtonLayout {
         }
     }
 
+
     protected void addBottoneEnum(AEButton aeButton) {
         Button button = getButton(aeButton);
 

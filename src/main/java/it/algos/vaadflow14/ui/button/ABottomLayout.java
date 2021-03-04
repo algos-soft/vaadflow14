@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Scope;
  * Time: 07:21
  * <p>
  * Layer per eventuali bottoni sotto la Grid della List <br>
-
+ * <p>
  * I bottoni vengono passati nel wrapper come enumeration standard. <br>
  * Se si usano bottoni non standard vengono inseriti per ultimi <br>
  * I listeners dei bottoni non standard devono essere regolati singolarmente dalla Logic chiamante <br>
@@ -62,6 +62,7 @@ public class ABottomLayout extends AButtonLayout {
             }
         }
     }
+
 
     protected void addBottoneEnum(AEButton aeButton) {
         Button button = getButton(aeButton);
