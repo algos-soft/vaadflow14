@@ -4,6 +4,7 @@ import com.vaadin.flow.component.orderedlayout.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
@@ -281,11 +282,20 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected boolean usaBottoneDopo;
 
-
     /**
      * Flag di preferenza per specificare il massimo numero di bottoni della prima riga <br>
      */
     protected int maxNumeroBottoniPrimaRiga;
+
+    /**
+     * Riferimento al contenitore dei bottoni peer eventuali regolazioni <br>
+     */
+    protected ATopLayout topLayout;
+
+    /**
+     * Riferimento al contenitore dei bottoni peer eventuali regolazioni <br>
+     */
+    protected AButtonLayout bottomLayout;
 
     /**
      * The Type vista.
@@ -399,8 +409,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected void fixTopLayout() {
     }
-
-
 
 
     /**

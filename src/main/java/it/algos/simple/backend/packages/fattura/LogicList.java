@@ -47,7 +47,7 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixTopLayout() {
-        AButtonLayout topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+        topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
 
         if (topLayout != null) {
             topLayout.setAllListener(this);
@@ -287,7 +287,6 @@ public abstract class LogicList extends Logic {
             grid.getGrid().getDataProvider().refreshAll();
         }
     }
-
 
 
 }

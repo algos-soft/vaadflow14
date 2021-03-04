@@ -1,6 +1,7 @@
 package it.algos.simple.backend.packages.fattura;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.icon.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -147,7 +148,9 @@ public abstract class LogicForm extends Logic {
      */
     @Override
     protected void fixBottomLayout() {
-        AButtonLayout bottomLayout = appContext.getBean(ABottomLayout.class, getWrapButtonsBottom());
+        Button bottone;
+
+        bottomLayout = appContext.getBean(ABottomLayout.class, getWrapButtonsBottom());
 
         if (bottomLayout != null) {
             bottomLayout.setAllListener(this);
@@ -155,6 +158,18 @@ public abstract class LogicForm extends Logic {
 
         if (bottomPlaceHolder != null && bottomLayout != null) {
             bottomPlaceHolder.add(bottomLayout);
+        }
+
+        //--regola l'aspetto dei bottoni spostamento (se esistono)
+        if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
+            bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+            if (bottone != null) {
+                bottone.setEnabled(isNotPrimo());
+            }
+            bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+            if (bottone != null) {
+                bottone.setEnabled(isNotUltimo());
+            }
         }
     }
 
@@ -201,10 +216,10 @@ public abstract class LogicForm extends Logic {
                 this.back();
                 break;
             case prima:
-                this.prima(entityBean);
+                this.prima();
                 break;
             case dopo:
-                this.dopo(entityBean);
+                this.dopo();
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
@@ -273,9 +288,9 @@ public abstract class LogicForm extends Logic {
      * Si sposta alla precedente <br>
      * Carica il form relativo <br>
      */
-    protected void prima(AEntity currentEntityBean) {
+    protected void prima() {
         backSteps += -1;
-        AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
+        AEntity previousEntityBean = mongo.findPrevious(entityClazz, entityBean.id);
         executeRoute(previousEntityBean);
     }
 
@@ -286,10 +301,19 @@ public abstract class LogicForm extends Logic {
      * Si sposta alla successiva <br>
      * Carica il form relativo <br>
      */
-    protected void dopo(AEntity currentEntityBean) {
+    protected void dopo() {
         backSteps += -1;
-        AEntity nextEntityBean = mongo.findNext(entityClazz, currentEntityBean.id);
+        AEntity nextEntityBean = mongo.findNext(entityClazz, entityBean.id);
         executeRoute(nextEntityBean);
+    }
+
+    protected boolean isNotPrimo() {
+        return mongo.findPrevious(entityClazz, entityBean.id) != null;
+
+    }
+
+    protected boolean isNotUltimo() {
+        return mongo.findNext(entityClazz, entityBean.id) != null;
     }
 
 }

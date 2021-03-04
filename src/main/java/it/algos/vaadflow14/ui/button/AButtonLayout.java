@@ -316,6 +316,9 @@ public abstract class AButtonLayout extends VerticalLayout {
         //        entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
     }
 
+    public Map<AEButton, Button> getMappaBottoni() {
+        return mappaBottoni;
+    }
 
     /**
      * Recupera il bottone <br>
