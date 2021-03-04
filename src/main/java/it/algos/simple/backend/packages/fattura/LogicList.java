@@ -1,11 +1,8 @@
 package it.algos.simple.backend.packages.fattura;
 
-import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
-import com.vaadin.flow.router.*;
 import de.codecamp.vaadin.components.messagedialog.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -291,15 +288,6 @@ public abstract class LogicList extends Logic {
         }
     }
 
-    protected final void executeRoute() {
-        final QueryParameters query = route.getQueryForm(entityClazz);
-        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
-    }
-
-    protected final void executeRoute(AEntity entityBean) {
-        final QueryParameters query = route.getQueryForm(entityClazz, entityBean.id, operationForm);
-        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
-    }
 
 
 }

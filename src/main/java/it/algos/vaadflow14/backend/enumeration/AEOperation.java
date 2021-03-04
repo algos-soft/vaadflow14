@@ -1,6 +1,6 @@
 package it.algos.vaadflow14.backend.enumeration;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadflow
@@ -12,13 +12,13 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  * Delete is enabled when editing an already existing item.
  */
 public enum AEOperation {
-    listNoForm(VUOTA, VUOTA, false, false),
-    addNew("New", "add", true, false),
-    edit("Edit", "edit", true, true),
-    editProfile("Edit", "edit", true, false),
-    editNoDelete("Edit", "edit", true, false),
-    editDaLink("Edit", "edit", true, true),
-    showOnly("Mostra", "mostra", false, false);
+    listNoForm(VUOTA, VUOTA, false, false, false),
+    addNew("New", "add", true, false, false),
+    edit("Edit", "edit", true, true, true),
+    editProfile("Edit", "edit", true, false, false),
+    editNoDelete("Edit", "edit", true, false, false),
+    editDaLink("Edit", "edit", true, true, false),
+    showOnly("Mostra", "mostra", false, false, true);
 
     private final String nameInTitle;
 
@@ -28,12 +28,15 @@ public enum AEOperation {
 
     private final boolean deleteEnabled;
 
+    private final boolean usaFrecceSpostamento;
 
-    AEOperation(String nameInTitle, String nameInText, boolean saveEnabled, boolean deleteEnabled) {
+
+    AEOperation(String nameInTitle, String nameInText, boolean saveEnabled, boolean deleteEnabled, boolean usaFrecceSpostamento) {
         this.nameInTitle = nameInTitle;
         this.nameInText = nameInText;
         this.saveEnabled = saveEnabled;
         this.deleteEnabled = deleteEnabled;
+        this.usaFrecceSpostamento = usaFrecceSpostamento;
     }
 
     public static boolean contiene(String nome) {
@@ -67,5 +70,8 @@ public enum AEOperation {
         return deleteEnabled;
     }
 
+    public boolean isUsaFrecceSpostamento() {
+        return usaFrecceSpostamento;
+    }
 }
 

@@ -30,6 +30,7 @@ public abstract class LogicForm extends Logic {
 
     protected AForm currentForm;
 
+    protected int backSteps = -1;
 
     /**
      * Property per il tipo di view (List o Form) <br>
@@ -71,8 +72,14 @@ public abstract class LogicForm extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        this.usaBottoneBack = true;
-        this.usaBottoneRegistra = true;
+        super.usaBottoneBack = true;
+        super.usaBottoneRegistra = true;
+        super.usaBottoneCancella = operationForm.isDeleteEnabled();
+
+        if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
+            super.usaBottonePrima = true;
+            super.usaBottoneDopo = true;
+        }
     }
 
     /**
@@ -185,19 +192,19 @@ public abstract class LogicForm extends Logic {
             case registra:
                 this.back();
 
-//                if (saveDaForm()) {
-//                    this.back();
-//                }
+                //                if (saveDaForm()) {
+                //                    this.back();
+                //                }
                 break;
             case delete:
-                //                this.deleteForm();
-                //                this.back();
+                this.deleteForm();
+                this.back();
                 break;
             case prima:
-                //                this.prima(entityBean);
+                this.prima(entityBean);
                 break;
             case dopo:
-                //                this.dopo(entityBean);
+                this.dopo(entityBean);
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
@@ -205,6 +212,17 @@ public abstract class LogicForm extends Logic {
         }
     }
 
+    public boolean deleteForm() {
+        boolean status = false;
+        AEntity entityBean = (currentForm != null) ? currentForm.getValidBean() : null;
+
+        if (mongo.delete(entityBean)) {
+            status = true;
+            logger.delete(entityBean);
+        }
+
+        return status;
+    }
 
     /**
      * Opens the confirmation dialog before exiting form. <br>
@@ -231,8 +249,15 @@ public abstract class LogicForm extends Logic {
             }
         }
         else {
-            back();
+            backToList();
         }
+    }
+
+    /**
+     * Azione proveniente dal click sul bottone Annulla
+     */
+    protected void backToList() {
+        UI.getCurrent().getPage().getHistory().go(backSteps);
     }
 
     /**
@@ -240,6 +265,31 @@ public abstract class LogicForm extends Logic {
      */
     protected void back() {
         UI.getCurrent().getPage().getHistory().back();
+    }
+
+    /**
+     * Azione proveniente dal click sul bottone Before <br>
+     * Recupera la lista FILTRATA e ORDINATA delle entities, ricevuta dalla Grid <br> @todo da realizzare
+     * Si sposta alla precedente <br>
+     * Carica il form relativo <br>
+     */
+    protected void prima(AEntity currentEntityBean) {
+        backSteps += -1;
+        AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
+        executeRoute(previousEntityBean);
+    }
+
+
+    /**
+     * Azione proveniente dal click sul bottone Next <br>
+     * Recupera la lista FILTRATA e ORDINATA delle entities, ricevuta dalla Grid <br> @todo da realizzare
+     * Si sposta alla successiva <br>
+     * Carica il form relativo <br>
+     */
+    protected void dopo(AEntity currentEntityBean) {
+        backSteps += -1;
+        AEntity nextEntityBean = mongo.findNext(entityClazz, currentEntityBean.id);
+        executeRoute(nextEntityBean);
     }
 
 }

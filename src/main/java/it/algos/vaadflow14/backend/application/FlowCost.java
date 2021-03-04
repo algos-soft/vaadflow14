@@ -350,6 +350,8 @@ public abstract class FlowCost {
 
     public static final String PREF_USA_SEARCH_SENSITIVE = "usaSearchCaseSensitive";
 
+    public static final String PREF_USA_LOG_VIDEO = "usaLogVideo";
+
     public static final String PREF_ICONA_EDIT = "iconaEdit";
 
     public static final String PREF_EMAIL = "email";

@@ -174,7 +174,7 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
-    protected boolean usaBottoneDelete;
+    protected boolean usaBottoneDeleteAll;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -305,7 +305,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixPreferenze() {
-        this.usaBottoneDelete = false;
+        this.usaBottoneDeleteAll = false;
         this.usaBottoneResetList = false;
         this.usaBottoneNew = false;
         this.usaBottoneSearch = false;
@@ -443,7 +443,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected List<AEButton> getListaAEBottoni() {
         List<AEButton> listaBottoni = new ArrayList<>();
 
-        if (usaBottoneDelete) {
+        if (usaBottoneDeleteAll) {
             listaBottoni.add(AEButton.deleteAll);
         }
         if (usaBottoneResetList) {

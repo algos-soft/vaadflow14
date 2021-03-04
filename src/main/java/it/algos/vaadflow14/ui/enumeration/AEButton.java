@@ -20,9 +20,9 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 public enum AEButton {
 
-    deleteAll("Delete", VaadinIcon.TRASH, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
+    deleteAll("Delete", VaadinIcon.CLOSE, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
 
-    resetList("Reset", VaadinIcon.REFRESH, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
+    resetList("Reset", VaadinIcon.RECYCLE, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
     resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
 
@@ -38,7 +38,7 @@ public enum AEButton {
 
     upload("Upload", VaadinIcon.GLOBE_WIRE, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
 
-    download("Download", VaadinIcon.GLOBE_WIRE, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
+    download("Download", VaadinIcon.CLOUD_DOWNLOAD_O, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
 
     elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
 
@@ -50,7 +50,7 @@ public enum AEButton {
 
     statistiche("Statistiche", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
 
-    back("Back", VaadinIcon.ARROW_LEFT, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
+    back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
 
     annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
 
@@ -58,13 +58,11 @@ public enum AEButton {
 
     registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.ENTER, null),
 
+    delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
 
-    delete("Delete", VaadinIcon.TRASH, "error", AEAction.delete, true, "Cancella la scheda", "cross", Key.KEY_D, KeyModifier.CONTROL),
+    prima("Before", VaadinIcon.CARET_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
 
-
-    prima("Prima", VaadinIcon.ARROW_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", null, null),
-
-    dopo("Dopo", VaadinIcon.ARROW_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null,true),
+    dopo("Next", VaadinIcon.CARET_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", null, null,true),
 
     ;
 

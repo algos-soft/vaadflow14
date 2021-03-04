@@ -1,11 +1,8 @@
 package it.algos.vaadflow14.backend.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.annotation.*;
 
 
 /**
@@ -25,7 +22,7 @@ public @interface AIForm  {
 
 
     /**
-     * (Optional) List of visible fields on Grid
+     * (Optional) List of visible fields on Form
      * Presentati in successione e separati da virgola
      * Vengono poi convertiti in una List
      * Defaults to all.
@@ -44,5 +41,13 @@ public @interface AIForm  {
      */
     int widthIDEM() default 16;
 
+
+    /**
+     * (Optional) utilizzo delle frecce per spostarsi tra schede precedenti e successive
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaSpostamentoTraSchede() default false;
 
 }

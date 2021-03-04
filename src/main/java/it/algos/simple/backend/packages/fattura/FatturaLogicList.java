@@ -42,7 +42,7 @@ public class FatturaLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDelete = true;
+        super.usaBottoneDeleteAll = true;
         super.usaBottoneResetList = true;
         super.usaBottoneNew = true;
         super.usaBottoneSearch = false;

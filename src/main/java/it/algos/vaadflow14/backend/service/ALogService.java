@@ -227,13 +227,20 @@ public class ALogService extends AAbstractService {
      * @param entityBean da cancellare
      */
     public void delete(AEntity entityBean) {
-        String message = VUOTA;
+        String messageLog = VUOTA;
+        String messageVideo = VUOTA;
+        String entityClazz = text.levaCoda(entityBean.getClass().getSimpleName(), SUFFIX_ENTITY);
 
         if (entityBean != null) {
-            message += entityBean.getClass().getSimpleName();
-            message += SEP;
-            message += entityBean.toString();
-            info(AETypeLog.delete, message);
+            messageLog += entityClazz;
+            messageLog += SEP;
+            messageLog += entityBean.toString();
+            info(AETypeLog.delete, messageLog);
+
+            if (AEPreferenza.usaLogVisibile.is()) {
+                messageVideo = String.format("Cancellata la entity %s->%s", entityClazz, entityBean.toString());
+                Notification.show(messageVideo, 2000, Notification.Position.BOTTOM_START);
+            }
         }
         else {
             error("Non sono riuscito a cancellare la entity", this.getClass(), "delete");

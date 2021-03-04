@@ -21,14 +21,13 @@ import java.util.*;
 public class FatturaLogicForm extends LogicForm {
 
 
-
     /**
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
-    public FatturaLogicForm(@Qualifier("FatturaService") AIService fatturaService)  {
+    public FatturaLogicForm(@Qualifier("FatturaService") AIService fatturaService) {
         super.entityClazz = FatturaEntity.class;
-        super.entityService = fatturaService ;
+        super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
 
     /**
@@ -36,25 +35,9 @@ public class FatturaLogicForm extends LogicForm {
      * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
      * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-//    @Override
-    protected void fixPreferenze2() {
+    @Override
+    protected void fixPreferenze() {
         super.fixPreferenze();
-
-        super.usaBottoneDelete = true;
-        super.usaBottoneResetList = true;
-        super.usaBottoneNew = true;
-        super.usaBottoneSearch = false;
-        super.usaBottoneExport = true;
-        super.usaBottonePaginaWiki = false;
-        super.usaBottoneUpdate = true;
-        super.usaBottoneUpload = false;
-        super.usaBottoneDownload = true;
-        super.usaBottoneElabora = false;
-        super.usaBottoneCheck = false;
-        super.usaBottoneModulo = true;
-        super.usaBottoneTest = false;
-        super.usaBottoneStatistiche = false;
-        super.maxNumeroBottoniPrimaRiga = 7;
     }
 
 

@@ -1,5 +1,6 @@
 package it.algos.simple.backend.packages.fattura;
 
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -263,6 +264,16 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     @Override
     public List<String> getGridColumns() {
         return null;
+    }
+
+    protected final void executeRoute() {
+        final QueryParameters query = route.getQueryForm(entityClazz);
+        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
+    }
+
+    protected final void executeRoute(AEntity entityBean) {
+        final QueryParameters query = route.getQueryForm(entityClazz, entityBean.id, operationForm);
+        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 
 }

@@ -820,6 +820,17 @@ public class AAnnotationService extends AAbstractService {
         return annotation != null ? annotation.usaCompany() : FlowVar.usaCompany;
     }
 
+    /**
+     * Flag per usare lo scorrimento tra le schede. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaSpostamentoTraSchede(final Class<? extends AEntity> entityClazz) {
+        AIForm annotation = this.getAIForm(entityClazz);
+        return annotation != null ? annotation.usaSpostamentoTraSchede() : false;
+    }
 
     /**
      * Flag per usare il field della superclasse AEntity. <br>
