@@ -34,7 +34,7 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Bolla", keyPropertyName = "code", usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.COG, sortProperty = "ordine")
-@AIList(fields = "code,descrizione", usaRowIndex = false)
+@AIList(fields = "code,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,descrizione")
 public class BollaEntity extends AEntity {
 
@@ -47,13 +47,6 @@ public class BollaEntity extends AEntity {
     // Le properties riportate sono INDICATIVE e possono/debbono essere sostituite
     //@TODO
 
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
-    public int ordine;
 
     /**
      * codice di riferimento (obbligatorio, unico)

@@ -18,6 +18,14 @@ nelle quali vengono iniettati i riferimenti ad altre classi ove previsti
     @EventListener(ContextRefreshedEvent.class)
     public void onContextRefreshEvent() {
 
+###Catena
+- xxxApplication.main(String[] args);
+- FlowBoot.onContextRefreshEvent();
+- SimpleBoot.fixVariabili();
+- SimpleBoot.fixData();
+- SimpleBoot.fixMenuRoutes();
+- SimpleBoot.fixVersioni();
+
 ###Browser call
 
 

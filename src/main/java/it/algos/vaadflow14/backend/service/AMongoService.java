@@ -1008,6 +1008,18 @@ public class AMongoService<capture> extends AAbstractService {
         return findById(entityClazz, keyId) != null;
     }
 
+    /**
+     * Check the existence of a single entity. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return true if exist
+     */
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) {
+        return !isEsiste(entityClazz, keyId);
+    }
+
 
     /**
      * Registra una nuova entity. <br>
@@ -1212,7 +1224,7 @@ public class AMongoService<capture> extends AAbstractService {
      * Restituisce un generico database
      */
     public MongoDatabase getDB(String databaseName) {
-//        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        //        MongoClient mongoClient = new MongoClient("localhost", 27017);
 
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + databaseName);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()

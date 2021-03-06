@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.logic;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
-import it.algos.simple.backend.packages.fattura.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -82,8 +81,8 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixBodyLayout() {
-        grid = appContext.getBean(AGrid.class, FatturaEntity.class, this);
-        DataProvider dataProvider = dataService.creaDataProvider(FatturaEntity.class);
+        grid = appContext.getBean(AGrid.class, entityClazz, this);
+        DataProvider dataProvider = dataService.creaDataProvider(entityClazz);
         grid.getGrid().setDataProvider(dataProvider);
         grid.getGrid().setHeight("100%");
         grid.fixGridHeader(dataProvider.size(null));
