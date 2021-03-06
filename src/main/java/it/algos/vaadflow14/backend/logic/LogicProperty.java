@@ -1,4 +1,4 @@
-package it.algos.simple.backend.packages.fattura;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.orderedlayout.*;
 import it.algos.vaadflow14.backend.entity.*;

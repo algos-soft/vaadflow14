@@ -1,8 +1,9 @@
-package it.algos.simple.backend.packages.fattura;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
+import it.algos.simple.backend.packages.fattura.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -28,18 +29,18 @@ public abstract class LogicList extends Logic {
     protected AGrid grid;
 
 
-    /**
-     * Controlla che esista il riferimento alla entityClazz <br>
-     * Se non esiste nella List, è un errore <br>
-     * Se non esiste nel Form, lo crea dall'url del browser <br>
-     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixEntityClazz() {
-        if (entityClazz == null) {
-            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
-        }
-    }
+//    /**
+//     * Controlla che esista il riferimento alla entityClazz <br>
+//     * Se non esiste nella List, è un errore <br>
+//     * Se non esiste nel Form, lo crea dall'url del browser <br>
+//     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixEntityClazz() {
+//        if (entityClazz == null) {
+//            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
+//        }
+//    }
 
     /**
      * Costruisce un layout per i bottoni di comando superiori della view <br>

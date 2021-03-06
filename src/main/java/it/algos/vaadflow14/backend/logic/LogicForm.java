@@ -1,4 +1,4 @@
-package it.algos.simple.backend.packages.fattura;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.*;
@@ -205,11 +205,9 @@ public abstract class LogicForm extends Logic {
                 break;
             case conferma:
             case registra:
-                this.back();
-
-                //                if (saveDaForm()) {
-                //                    this.back();
-                //                }
+                if (saveDaForm()) {
+                    this.back();
+                }
                 break;
             case delete:
                 this.deleteForm();
@@ -314,6 +312,96 @@ public abstract class LogicForm extends Logic {
 
     protected boolean isNotUltimo() {
         return mongo.findNext(entityClazz, entityBean.id) != null;
+    }
+
+    /**
+     * Save proveniente da un click sul bottone 'registra' del Form. <br>
+     * La entityBean viene recuperare dal form <br>
+     *
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
+     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     */
+    public boolean saveDaForm() {
+        AEntity entityBean = null;
+        if (currentForm != null) {
+            entityBean = currentForm.getValidBean();
+        }
+
+        return entityBean != null ? save(entityBean) : false;
+    }
+
+
+    /**
+     * Saves a given entity.
+     * Use the returned instance for further operations as the save operation
+     * might have changed the entity instance completely.
+     *
+     * @return true se la entity è stata registrata o definitivamente scartata; esce dal dialogo
+     * .       false se manca qualche field e la situazione è recuperabile; resta nel dialogo
+     */
+    public boolean save(final AEntity entityToSave) {
+        boolean status = false;
+        AEntity oldEntityBean;
+        //        AEntity entityBean = beforeSave(entityToSave, operationForm);
+        AEntity entityBean = entityToSave;
+
+        if (entityBean == null) {
+            return status;
+        }
+
+        //        if (beanService.isModificata(entityBean)) {
+        //        }
+        //        else {
+        //            return true;
+        //        }
+
+        if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
+            logger.error("operationForm errato in una nuova entity che NON è stata salvata", LogicForm.class, "save");
+            return status;
+        }
+
+        if (entityBean != null) {
+            if (operationForm == AEOperation.addNew && entityBean.id == null) {
+                //                entityBean = fixKey(entityBean);//@todo implementare
+            }
+            oldEntityBean = mongo.find(entityBean);
+            entityBean = mongo.save(entityBean);
+            status = entityBean != null;
+            if (status) {
+                if (operationForm == AEOperation.addNew) {
+                    //                    ALogService.messageSuccess(entityBean.toString() + " è stato creato"); //@todo Creare una preferenza e sostituirla qui
+                    logger.nuovo(entityBean);
+                }
+                else {
+                    //                    ALogService.messageSuccess(entityBean.toString() + " è stato modificato"); //@todo Creare una preferenza e sostituirla qui
+                    logger.modifica(entityBean, oldEntityBean);
+                }
+            }
+        }
+        else {
+            logger.error("Object to save must not be null", this.getClass(), "save");
+        }
+
+        if (entityBean == null) {
+            if (operationForm != null) {
+                switch (operationForm) {
+                    case addNew:
+                        logger.warn("Non sono riuscito a creare la entity ", this.getClass(), "save");
+                        break;
+                    case edit:
+                        logger.warn("Non sono riuscito a modificare la entity ", this.getClass(), "save");
+                        break;
+                    default:
+                        logger.warn("Switch - caso non definito", this.getClass(), "save");
+                        break;
+                }
+            }
+            else {
+                logger.warn("Non sono riuscito a creare la entity ", this.getClass(), "save");
+            }
+        }
+
+        return status;
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.*;
  * Time: 19:00
  * Superclasse per visualizzare la Grid <br>
  */
-@Route(value = ROUTE_NAME_GENERIC_LIST, layout = MainLayout.class)
+@Route(value = ROUTE_NAME_GENERIC_LIST+"xyz", layout = MainLayout.class)
 public class AViewList extends AView {
 
     @Autowired

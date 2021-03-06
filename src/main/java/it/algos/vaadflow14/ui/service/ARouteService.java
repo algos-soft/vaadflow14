@@ -161,7 +161,7 @@ public class ARouteService extends AAbstractService {
      *
      * @return query da passare al Router di Vaadin
      */
-    public QueryParameters getQueryList(String entityClazzCanonicalName) {
+    public QueryParameters getQueryList(final String entityClazzCanonicalName) {
         if (text.isEmpty(entityClazzCanonicalName)) {
             return null;
         }

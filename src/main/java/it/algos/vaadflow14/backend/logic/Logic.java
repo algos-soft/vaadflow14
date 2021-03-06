@@ -1,11 +1,10 @@
-package it.algos.simple.backend.packages.fattura;
+package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
@@ -24,6 +23,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     /**
      * Regola i parametri del browser per una view costruita da @Route <br>
+     * Usato per costruire GenericLogicList e GenericLogicForm <br>
+     * Se c'è solo il primo segmento, routeParameter NON è valido (non serve) <br>
      * <p>
      * Chiamato da com.vaadin.flow.router.Router tramite l' interfaccia HasUrlParameter <br>
      * Chiamato DOPO @PostConstruct ma PRIMA di beforeEnter() <br>
@@ -36,6 +37,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         routeParameter = route.estraeParametri(beforeEvent, bodyTextUTF8);
 
         //--Regola le property indispensabili per gestire questa view
+        //--Se c'è solo il primo segmento, routeParameter NON è valido (non serve)
         if (routeParameter != null && routeParameter.isValido()) {
             fixProperty();
         }
