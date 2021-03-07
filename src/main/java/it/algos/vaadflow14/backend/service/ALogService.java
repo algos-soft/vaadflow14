@@ -304,6 +304,7 @@ public class ALogService extends AAbstractService {
 
     /**
      * Gestisce un log generico <br>
+     * Di default usa il livello 'info' <br>
      *
      * @param message da registrare
      */
@@ -318,7 +319,43 @@ public class ALogService extends AAbstractService {
      * @param result col messaggio da registrare
      */
     public void log(AILogType type, AIResult result) {
-        info(type, result.getMessage());
+        log(type, result.getMessage());
+    }
+
+
+    /**
+     * Gestisce un log generico valido solo in caso di debug <br>
+     * Di default usa il livello 'info' <br>
+     *
+     * @param message da registrare
+     */
+    public void logDebug(String message) {
+        if (AEPreferenza.usaDebug.is()) {
+            info(message);
+        }
+    }
+
+
+    /**
+     * Gestisce un log generico valido solo in caso di debug <br>
+     * Di default usa il livello 'info' <br>
+     *
+     * @param message da registrare
+     */
+    public void logDebug(AILogType type, String message) {
+        if (AEPreferenza.usaDebug.is()) {
+            info(type, message);
+        }
+    }
+
+    /**
+     * Gestisce un log generico valido solo in caso di debug <br>
+     * Di default usa il livello 'info' <br>
+     *
+     * @param result col messaggio da registrare
+     */
+    public void logDebug(AILogType type, AIResult result) {
+        log(type, result.getMessage());
     }
 
 

@@ -27,8 +27,18 @@ public abstract class LogicList extends Logic {
      */
     protected AGrid grid;
 
+    /**
+     * Preferenze usate da questa 'logica' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+        super.usaBottoneNew=true;
+    }
 
-//    /**
+    //    /**
 //     * Controlla che esista il riferimento alla entityClazz <br>
 //     * Se non esiste nella List, è un errore <br>
 //     * Se non esiste nel Form, lo crea dall'url del browser <br>

@@ -344,7 +344,7 @@ public abstract class AService extends AAbstractService implements AIService {
         }
     }
 
-    protected AIResult fixPostReset(final AETypeReset type, final int numRec) {
+    public AIResult fixPostReset(final AETypeReset type, final int numRec) {
         String collectionName;
         String message;
 

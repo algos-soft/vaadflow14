@@ -25,6 +25,10 @@ nelle quali vengono iniettati i riferimenti ad altre classi ove previsti
 - SimpleBoot.fixData();
 - SimpleBoot.fixMenuRoutes();
 - SimpleBoot.fixVersioni();
+- ....
+-  UI.getCurrent().navigate()
+- Logic.setParameter(final BeforeEvent beforeEvent, @OptionalParameter String bodyTextUTF8)
+- Logic.beforeEnter(BeforeEnterEvent beforeEnterEvent)
 
 ###Browser call
 

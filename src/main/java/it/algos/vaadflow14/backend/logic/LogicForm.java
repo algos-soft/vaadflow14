@@ -33,6 +33,7 @@ public abstract class LogicForm extends Logic {
 
     protected int backSteps = -1;
 
+
     /**
      * Property per il tipo di view (List o Form) <br>
      * Property per il tipo di operazione (solo Form) <br>
@@ -362,7 +363,7 @@ public abstract class LogicForm extends Logic {
 
         if (entityBean != null) {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
-                //                entityBean = fixKey(entityBean);//@todo implementare
+                entityBean = entityService.fixKey(entityBean);
             }
             oldEntityBean = mongo.find(entityBean);
             entityBean = mongo.save(entityBean);

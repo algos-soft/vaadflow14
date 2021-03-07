@@ -11,8 +11,8 @@ import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -80,8 +80,10 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
         FlowVar.preferenzeSpecificheList = Arrays.asList(AESimplePreferenza.values());
-        FlowVar.usaCronoPackages = true;
-        FlowVar.usaGeografiaPackages = true;
+        if (AEPreferenza.usaDebug.is()) {
+            FlowVar.usaCronoPackages = true;
+            FlowVar.usaGeografiaPackages = true;
+        }
     }
 
 
@@ -100,7 +102,6 @@ public class SimpleBoot extends FlowBoot {
     }
 
 
-
     /**
      * Aggiunge al menu le @Route (view) standard e specifiche <br>
      * <p>
@@ -115,24 +116,23 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
-        FlowVar.menuRouteList.add(FatturaLogicList.class);
+        FlowVar.menuRouteList.add(FatturaEntity.class);
         FlowVar.menuRouteList.add(BollaEntity.class);
-        FlowVar.menuRouteList.add(LabelView.class);
-        FlowVar.menuRouteList.add(ButtonView.class);
 
         super.fixMenuRoutes();
 
-        FlowVar.menuRouteList.add(Via.class);
-        FlowVar.menuRouteList.add(Address.class);
-//        FlowVar.menuRouteList.add(DeltaView.class);
-//        FlowVar.menuRouteList.add(Alfa.class);
-//        FlowVar.menuRouteList.add(Beta.class);
-        FlowVar.menuRouteList.add(Gamma.class);
-        FlowVar.menuRouteList.add(Delta.class);
-        FlowVar.menuRouteList.add(Omega.class);
-        FlowVar.menuRouteList.add(Lambda.class);
-        FlowVar.menuRouteList.add(PiView.class);
-        FlowVar.menuRouteList.add(Anno.class);
+        if (AEPreferenza.usaDebug.is()) {
+            FlowVar.menuRouteList.add(Address.class);
+            FlowVar.menuRouteList.add(PiService.class);
+            FlowVar.menuRouteList.add(Gamma.class);
+            FlowVar.menuRouteList.add(Delta.class);
+            FlowVar.menuRouteList.add(Omega.class);
+            FlowVar.menuRouteList.add(Lambda.class);
+            FlowVar.menuRouteList.add(PiView.class);
+            FlowVar.menuRouteList.add(Anno.class);
+            FlowVar.menuRouteList.add(LabelView.class);
+            FlowVar.menuRouteList.add(ButtonView.class);
+        }
     }
 
     /**

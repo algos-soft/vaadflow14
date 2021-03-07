@@ -16,6 +16,7 @@ public enum AETypeLog implements AILogType {
     system("system"),
     setup("setup"),
     startup("startup"),
+    checkMenu("checkMenu"),
     checkData("checkData"),
     preferenze("preferenze"),
     nuovo("newEntity"),

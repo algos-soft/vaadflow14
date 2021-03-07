@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -356,6 +357,7 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList.add(Preferenza.class);
         FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Versione.class);
+        FlowVar.menuRouteList.add(Via.class);
 
         if (FlowVar.usaGeografiaPackages) {
             FlowVar.menuRouteList.add(Continente.class);

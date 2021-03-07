@@ -128,19 +128,21 @@ public class FlowData implements AIData {
      * Controllo se esiste un metodo resetEmptyOnly() nella classe xxxService specifica <br>
      * Invoco il metodo API resetEmptyOnly() della interfaccia AIService <br>
      */
-    protected Consumer<String> resetEmptyOnly = canonicalName -> {
+    protected Consumer<Object> resetEmptyOnly = canonicalEntity -> {
         final AIResult result;
-        final String canonicalEntityName = canonicalName.endsWith(SUFFIX_ENTITY) ? text.levaCoda(canonicalName, SUFFIX_ENTITY) : canonicalName;
-        final String classeFinale = file.estraeClasseFinale(canonicalEntityName);
+        final String canonicalEntityName = (String) canonicalEntity;
+        final String canonicaName = canonicalEntityName.endsWith(SUFFIX_ENTITY) ? text.levaCoda(canonicalEntityName, SUFFIX_ENTITY) : canonicalEntityName;
+        final String classeFinale = file.estraeClasseFinale(canonicaName);
         final String entityServicePrevista = classeFinale + SUFFIX_SERVICE;
         final AIService entityService = classService.getServiceFromEntityName(canonicalEntityName);
-        final String packageName = file.estraeClasseFinale(canonicalEntityName).toLowerCase();
+        final String packageName = file.estraeClasseFinale(canonicaName).toLowerCase();
         final String nameService;
         boolean methodExists = false;
         String message;
 
         if (entityService == null) {
-            logger.error(String.format("Nel package %s manca la entityService specifica e non sono neanche riuscito a creare la EntityService generica", packageName));
+            message = String.format("Nel package %s manca la entityService specifica e non sono neanche riuscito a creare la EntityService generica", packageName);
+            logger.log(AETypeLog.checkData, message);
             return;
         }
 
@@ -148,6 +150,7 @@ public class FlowData implements AIData {
         if (nameService.equals(TAG_GENERIC_SERVICE)) {
             message = String.format("Nel package %s non esiste la classe %s e usa EntityService. Non esiste il metodo resetEmptyOnly()", packageName, entityServicePrevista);
             logger.log(AETypeLog.checkData, message);
+            return;
         }
 
         try {
@@ -227,22 +230,32 @@ public class FlowData implements AIData {
      * @since java 8
      */
     protected void fixData(final String moduleName) {
-        List<String> allEntities;
+        List<Object> allEntities;
+        List<String> allEntitiesGrezze;
         long entities;
         String message;
+        Object[] matrice = null;
 
         //--spazzola tutta la directory packages
-        allEntities = file.getModuleSubFilesEntity(moduleName);
+        allEntitiesGrezze = file.getModuleSubFilesEntity(moduleName);
 
         //--conta le collections valide
-        entities = checkFiles.apply(allEntities);
-        message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity da controllare", moduleName, entities);
+        //--inutile. Superato dopo aver diviso in due passaggi la successiva elaborazione
+        //--prima checkEntity (filter=selezione) e poi resetEmptyOnly (forEach=elaborazione)
+        //--potrebbero anche andare insieme
+        //        entities = checkFiles.apply(allEntitiesGrezze);
+        //        message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity da controllare", moduleName, entities);
+        //        logger.log(AETypeLog.checkData, message);
+
+        //--seleziona le collections valide
+        //--prima checkEntity (filter=selezione)
+        allEntities = Arrays.asList(allEntitiesGrezze.stream().filter(checkEntity).sorted().toArray());
+        message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity da controllare", moduleName, allEntities.size());
         logger.log(AETypeLog.checkData, message);
 
         //--elabora le collections valide
-        allEntities.stream()
-                .filter(checkEntity)
-                .forEach(resetEmptyOnly);
+        //--poi resetEmptyOnly (forEach=elaborazione)
+        allEntities.stream().forEach(resetEmptyOnly);
         message = String.format("Controllati i dati iniziali di %s", moduleName);
         logger.log(AETypeLog.checkData, message);
     }

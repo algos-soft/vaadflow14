@@ -2,7 +2,6 @@ package it.algos.simple.backend.packages.fattura;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -18,7 +17,7 @@ import java.util.*;
  * Date: lun, 01-mar-2021
  * Time: 18:41
  */
-@Route(value = ROUTE_NAME_GENERIC_FORM, layout = MainLayout.class)
+@Route(value = "fatturaForm", layout = MainLayout.class)
 public class FatturaLogicForm extends LogicForm {
 
 
@@ -31,15 +30,6 @@ public class FatturaLogicForm extends LogicForm {
         super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
 
-    /**
-     * Preferenze usate da questa 'logica' <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-    }
 
 
     /**

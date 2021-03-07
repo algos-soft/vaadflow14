@@ -1,9 +1,9 @@
 package it.algos.vaadflow14.backend.logic;
 
-import it.algos.vaadflow14.backend.entity.AEntity;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.entity.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
 /**
  * Project vaadflow14
@@ -32,6 +32,7 @@ public class EntityService extends AService {
         super(entityClazz);
     }
 
+
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
@@ -41,7 +42,14 @@ public class EntityService extends AService {
      */
     @Override
     public AEntity newEntity() {
-        return null;
+        AEntity newEntity = null;
+        try {
+            newEntity = entityClazz.newInstance();
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "newEntity");
+        }
+
+        return newEntity;
     }
 
 }

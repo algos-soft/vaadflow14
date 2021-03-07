@@ -5,9 +5,13 @@ import static it.algos.simple.backend.application.SimpleCost.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.data.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
+import org.springframework.context.*;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -42,13 +46,16 @@ public class SimpleData extends FlowData {
     @Autowired
     public AMongoService mongo;
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    public AService aService;
+    /**
+     * Istanza di una interfaccia <br>
+     * Iniettata automaticamente dal framework SpringBoot con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ApplicationContext appContext;
+
+    public EntityService entityService;
+
 
     /**
      * Check iniziale di alcune collections <br>
@@ -62,7 +69,7 @@ public class SimpleData extends FlowData {
      */
     @Override
     public void fixData() {
-        super.fixData();
+//        super.fixData();
         super.fixData("simple");
         this.fixDataPackageBolla();
     }
@@ -72,20 +79,37 @@ public class SimpleData extends FlowData {
      * Devo quindi 'sostituire' qui il metodo resetEmptyOnly() <br>
      */
     private void fixDataPackageBolla() {
-        creaBolla("uno", "prima riga");
-        creaBolla("due", "seconda riga");
-        creaBolla("tre", "terza riga");
-        creaBolla("quattro", "quarta riga");
+        entityService = appContext.getBean(EntityService.class, BollaEntity.class);
+        AIResult result = entityService.resetEmptyOnly();
+        int numRec = 0;
+
+        if (result.isErrato()) {
+            logger.log(AETypeLog.checkData, result.getMessage());
+            return;
+        }
+
+        numRec = creaBolla("uno", "prima riga") ? numRec + 1 : numRec;
+        numRec = creaBolla("due", "seconda riga") ? numRec + 1 : numRec;
+        numRec = creaBolla("tre", "terza riga") ? numRec + 1 : numRec;
+        numRec = creaBolla("quattro", "quarta riga") ? numRec + 1 : numRec;
+
+        result = entityService.fixPostReset(AETypeReset.hardCoded, numRec);
+        logger.log(AETypeLog.checkData, result.getMessage());
     }
 
-    private void creaBolla(final String code, final String descrizione) {
+
+    private boolean creaBolla(final String code, final String descrizione) {
+        boolean status = false;
         BollaEntity bolla;
 
         if (mongo.isNotEsiste(BollaEntity.class, code)) {
             bolla = BollaEntity.builderBolla().code(code).descrizione(descrizione).build();
             bolla.setId(code);
             mongo.save(bolla);
+            status = true;
         }
+
+        return status;
     }
 
 }

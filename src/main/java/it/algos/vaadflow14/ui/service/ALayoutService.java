@@ -8,7 +8,8 @@ import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.vaadflow14.backend.entity.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
@@ -103,25 +104,44 @@ public class ALayoutService extends AAbstractService {
     public Tab[] getAvailableMenu() {
         final List<Tab> tabs = new ArrayList<>();
         Tab tab = null;
+        LinkedHashMap<String, Tab> mappaTab;
+        String menuKey;
+        String message;
+        List<String> listaNomi = new ArrayList<>();
 
+        logger.logDebug(AETypeLog.checkMenu, VUOTA);
         if (array.isAllValid(FlowVar.menuRouteList)) {
             for (Class<?> menuClazz : FlowVar.menuRouteList) {
-                tab = createTab(menuClazz);
-                if (tab != null) {
+                mappaTab = createTab(menuClazz);
+                if (mappaTab != null && mappaTab.size() == 1) {
+                    menuKey = (String) mappaTab.keySet().toArray()[0];
+                    tab = mappaTab.get(menuKey);
                     tabs.add(tab);
+                    listaNomi.add(menuKey);
                 }
             }
         }
+        message = String.format("Ci sono %d righe di menu visibili", listaNomi.size());
+        logger.logDebug(AETypeLog.checkMenu, message);
+        logger.logDebug(AETypeLog.checkMenu, array.toStringa(listaNomi));
 
         return tabs.toArray(new Tab[tabs.size()]);
     }
 
 
-    private Tab createTab(Class<?> menuClazz) {
-        RouterLink routerLink = createMenuLink(menuClazz);
+    private LinkedHashMap<String, Tab> createTab(Class menuClazz) {
+        LinkedHashMap<String, Tab> mappaTab = new LinkedHashMap<>();
+        LinkedHashMap<String, RouterLink> mappaRouters = createMenuLink(menuClazz);
+        String menuKey;
+        RouterLink routerLink;
+        Tab tab;
 
-        if (routerLink != null) {
-            return new Tab(routerLink);
+        if (mappaRouters != null && mappaRouters.size() == 1) {
+            menuKey = (String) mappaRouters.keySet().toArray()[0];
+            routerLink = mappaRouters.get(menuKey);
+            tab = new Tab(routerLink);
+            mappaTab.put(menuKey, tab);
+            return mappaTab;
         }
         else {
             return null;
@@ -130,37 +150,70 @@ public class ALayoutService extends AAbstractService {
 
 
     /**
-     * Nel menu metto :
-     * 1) Tutte le classi che hanno un'annotation @Route (link diretto alla classe) <br>
-     * 2) Tutte le classi che hanno un'annotation @AIEntity (parametro riconoscibile da AView) <br>
-     * //     * 3) Tutte le classi che hanno un'annotation @AIView (parametro riconoscibile da AView) <br>
-     * //     * 4) Tutte le classi che estendono AEntityService (parametro riconoscibile da AView) <br>
+     * Nel menu metto tutte le classi che hanno un'annotation @Route <br>
+     * Le classi List specifiche; link diretto alla classe (tipo FatturaLogicList) <br>
+     * Le classi List implicite; link alla classe GenericLogicList con parametro canonicalName della AEntity <br>
+     * Altre classi grafiche; link diretto alla classe <br>
      *
      * @param menuClazz inserito da FlowBoot.fixMenuRoutes() e sue sottoclassi
      */
-    private RouterLink createMenuLink(Class<?> menuClazz) {
+    private LinkedHashMap<String, RouterLink> createMenuLink(Class menuClazz) {
+        LinkedHashMap<String, RouterLink> mappaRouter = new LinkedHashMap<>();
         RouterLink routerLink = null;
         QueryParameters query = null;
-        Icon icon = annotation.getMenuIcon((Class<AEntity>) menuClazz);
-        String menuName =  annotation.getMenuName(menuClazz);
+        String packageName;
+        Icon icon = annotation.getMenuIcon(menuClazz);
+        String menuName = annotation.getMenuName(menuClazz);
+        String message;
+        String canonicalName;
+        Class listClazz = null;
 
+        //--se è una route, va direttamente
         if (annotation.isRouteView(menuClazz) && Component.class.isAssignableFrom(menuClazz)) {
-            routerLink = new RouterLink(null, (Class<Component>) menuClazz);
+            routerLink = new RouterLink(null, menuClazz);
+            message = String.format("La classe %s è una @Route e viene inserita nel menu", menuClazz.getSimpleName());
+            logger.logDebug(AETypeLog.checkMenu, message);
         }
+        else {
+            //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
+            if (annotation.isEntityClass(menuClazz)) {
+                canonicalName = menuClazz.getCanonicalName();
+                packageName = fileService.estraeClasseFinale(canonicalName);
+                packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase(Locale.ROOT);
+                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC;
 
-        if (annotation.isEntityClass(menuClazz)) {
-            query = route.getQueryList(menuClazz);
-            routerLink = new RouterLink(null, GenericLogicList.class);
-            routerLink.setQueryParameters(query);
+                //--provo a creare la classe specifica xxxLogicList
+                try {
+                    listClazz = Class.forName(canonicalName);
+                } catch (Exception unErrore) {
+                }
+
+                //--controllo che la classe specifica xxxLogicList esista e che contenga @Route
+                if (listClazz != null) {
+                    if (annotation.isRouteView(listClazz)) {
+                        routerLink = new RouterLink(null, listClazz);
+                        message = String.format("Nel package %s esiste la classe %s che è una @Route", packageName, listClazz.getSimpleName());
+                        logger.logDebug(AETypeLog.checkMenu, message);
+                    }
+                    else {
+                        message = String.format("Nel package %s la classe %s non ha l'Annotation @Route e pertanto non viene inserita nel menu", packageName, listClazz.getSimpleName());
+                        logger.logDebug(AETypeLog.checkMenu, message);
+                    }
+                }
+                else {
+                    //--provo a creare la classe GenericLogicList
+                    query = route.getQueryList(menuClazz);
+                    routerLink = new RouterLink(null, GenericLogicList.class);
+                    routerLink.setQueryParameters(query);
+                    message = String.format("Nel package %s non esiste la classe %s e uso GenericLogicList", packageName, fileService.estraeClasseFinale(canonicalName));
+                    logger.logDebug(AETypeLog.checkMenu, message);
+                }
+            }
+            else {
+                message = String.format("La classe %s NON è ne una AEntity ne una @Route e pertanto non viene inserita nel menu", menuClazz.getSimpleName());
+                logger.logDebug(AETypeLog.checkMenu, message);
+            }
         }
-
-        //        if (AEntityService.class.isAssignableFrom(viewRouteClass)) {
-        //            query = route.getQuery(KEY_SERVICE_CLASS, viewRouteClass.getCanonicalName());
-        //            routerLink = new RouterLink(null, AGenericView.class);
-        //            routerLink.setQueryParameters(query);
-        //            icon = annotation.getMenuIcon((Class<AEntity>) viewRouteClass);
-        //            menuLabel = viewRouteClass.getSimpleName();
-        //        }
 
         if (routerLink == null) {
             return null;
@@ -173,13 +226,14 @@ public class ALayoutService extends AAbstractService {
         }
 
         if (text.isValid(menuName)) {
-            menuName = FlowCost.HTLM_SPAZIO + menuName;
+            menuName = text.primaMaiuscola(menuName);
             Span span = new Span();
-            span.getElement().setProperty("innerHTML", menuName);
+            span.getElement().setProperty("innerHTML", FlowCost.HTLM_SPAZIO + menuName);
             routerLink.add(span);
         }
 
-        return routerLink;
+        mappaRouter.put(menuName, routerLink);
+        return mappaRouter;
     }
 
 

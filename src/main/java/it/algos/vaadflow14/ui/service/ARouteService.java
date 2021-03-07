@@ -35,7 +35,7 @@ public class ARouteService extends AAbstractService {
 
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     * Novo record <br>
+     * Nuovo record <br>
      *
      * @param entityClazz verso cui navigare
      *

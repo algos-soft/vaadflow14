@@ -172,7 +172,7 @@ public class FlowVar {
      * Regolata dall' applicazione durante l' esecuzione del 'container startup' (non-UI logic) <br>
      * Usata da ALayoutService per conto di MainLayout allo start della UI-logic <br>
      */
-    public static List<Class<?>> menuRouteList;
+    public static List<Class> menuRouteList;
 
 
     /**
