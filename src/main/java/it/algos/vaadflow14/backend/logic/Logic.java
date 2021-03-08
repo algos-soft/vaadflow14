@@ -152,6 +152,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.fixEntityClazz();
+        this.fixEntityService();
         this.fixPreferenze();
         this.initView();
     }
