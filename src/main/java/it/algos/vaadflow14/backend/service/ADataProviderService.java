@@ -1,18 +1,17 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.data.provider.DataProvider;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.mongodb.*;
+import com.vaadin.flow.data.provider.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import org.bson.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -45,7 +44,7 @@ public class ADataProviderService extends AAbstractService {
     private AMongoService mongo;
 
 
-    public DataProvider<AEntity,Void> creaDataProvider(Class entityClazz) {
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject sort) {
 
         DataProvider dataProvider = DataProvider.fromCallbacks(
 
@@ -56,14 +55,15 @@ public class ADataProviderService extends AAbstractService {
 
                     // The number of items to load
                     int limit = query.getLimit();
-//                    limit = 50;//@todo Funzionalità ancora da implementare
-
-                    return mongo.findSet(entityClazz, offset, limit).stream();
+                    //                    limit = 50;//@todo Funzionalità ancora da implementare
+                    //                    BasicDBObject sort = new BasicDBObject("nome", -1);
+                    return mongo.findSet(entityClazz, offset, limit, sort).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz));
+                query -> mongo.count(entityClazz)
+        );
 
         return dataProvider;
     }
@@ -90,7 +90,8 @@ public class ADataProviderService extends AAbstractService {
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
                 //                query -> mongo.count(T);
-                query -> mongo.count(Mese.class));
+                query -> mongo.count(Mese.class)
+        );
 
         return dataProvider;
     }
@@ -137,7 +138,8 @@ public class ADataProviderService extends AAbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(Anno.class));
+                query -> mongo.count(Anno.class)
+        );
 
         return dataProvider;
     }

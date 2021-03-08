@@ -1,26 +1,21 @@
 package it.algos.vaadflow14.ui;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.server.WebBrowser;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.login.ALogin;
-import it.algos.vaadflow14.backend.service.AVaadinService;
-import it.algos.vaadflow14.ui.service.ALayoutService;
-import it.algos.vaadflow14.ui.topbar.TopbarComponent;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.component.applayout.*;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.dependency.*;
+import com.vaadin.flow.component.tabs.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.*;
+import com.vaadin.flow.theme.*;
+import com.vaadin.flow.theme.lumo.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.service.*;
+import it.algos.vaadflow14.ui.topbar.*;
+import org.springframework.beans.factory.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Project vaadflow15

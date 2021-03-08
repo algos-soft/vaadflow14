@@ -124,7 +124,7 @@ public class AGrid {
     @PostConstruct
     protected void postConstruct() {
         grid.setHeightByRows(true);
-        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz));
+        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz,null));
         grid.setHeight("100%");
 
         if (AEPreferenza.usaDebug.is()) {

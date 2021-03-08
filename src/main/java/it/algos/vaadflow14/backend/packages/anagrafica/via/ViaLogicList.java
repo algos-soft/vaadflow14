@@ -68,5 +68,3 @@ public class ViaLogicList extends LogicList {
     }
 
 }// end of Route class
-
-

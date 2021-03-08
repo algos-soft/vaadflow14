@@ -532,31 +532,51 @@ public class AMongoService<capture> extends AAbstractService {
         }
     }
 
+    /**
+     * Crea un set di entities da una collection. <br>
+     * Utilizzato da DataProvider <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param offset      da cui iniziare
+     * @param limit       numero di entityBeans da restituire
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
+        return findSet(entityClazz, offset, limit, (BasicDBObject) null);
+    }
 
     /**
      * Crea un set di entities da una collection. <br>
      * Utilizzato da DataProvider <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param offset      da cui iniziare
+     * @param limit       numero di entityBeans da restituire
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
-        String mongoClazzName = annotation.getCollectionName(entityClazz);
+        String mongoClazzName;
+        MongoCollection<Document> collection;
         AEntity entityBean = null;
-        List<Field> listaRef = annotation.getDBRefFields(entityClazz);
+        List<Field> listaRef;
         boolean esisteTagValue;
         String tag = "\"value\":{\"";
         String tag2;
         String tagEnd = "},";
         int ini = 0;
         int end = 0;
+        List<Document> documents;
 
-        Collection<Document> documents = mongoOp.getCollection(mongoClazzName).find().skip(offset).limit(limit).into(new ArrayList());
-        if (documents != null && documents.size() > 0) {
+        mongoClazzName = annotation.getCollectionName(entityClazz);
+        collection = mongoOp.getCollection(mongoClazzName);
+        documents = collection.find().sort(sort).skip(offset).limit(limit).into(new ArrayList());
+
+        if (documents.size() > 0) {
             items = new ArrayList<>();
             for (Document doc : documents) {
                 esisteTagValue = false;
@@ -590,6 +610,7 @@ public class AMongoService<capture> extends AAbstractService {
                     }
                 }
 
+                listaRef = annotation.getDBRefFields(entityClazz);
                 if (listaRef != null && listaRef.size() > 0) {
                     entityBean = fixDbRef(doc, gSon, entityBean, listaRef);
                 }

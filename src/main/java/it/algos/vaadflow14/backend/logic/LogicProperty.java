@@ -1,6 +1,8 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -109,6 +111,14 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     @Autowired
     public ATextService text;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ADateService date;
 
     /**
      * PlaceHolder iniziale per avvisi <br>
@@ -288,12 +298,12 @@ public abstract class LogicProperty extends VerticalLayout {
     protected int maxNumeroBottoniPrimaRiga;
 
     /**
-     * Riferimento al contenitore dei bottoni peer eventuali regolazioni <br>
+     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
      */
     protected ATopLayout topLayout;
 
     /**
-     * Riferimento al contenitore dei bottoni peer eventuali regolazioni <br>
+     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
      */
     protected AButtonLayout bottomLayout;
 
@@ -544,6 +554,25 @@ public abstract class LogicProperty extends VerticalLayout {
         if (footerPlaceHolder != null && footerPlaceHolder.getComponentCount() > 0) {
             this.add(footerPlaceHolder);
         }
+
+        this.addFooterCopyright();
+    }
+
+    /**
+     * Aggiunge il footer <br>
+     * //@todo Funzionalità ancora da implementare per andare in basso alla finestra
+     */
+    protected void addFooterCopyright() {
+        Span span;
+        String message;
+        String copy = "Algos®";
+        String project = FlowVar.projectName;
+        String version = String.valueOf(FlowVar.projectVersion);
+        String data = date.get(FlowVar.versionDate);
+
+        message = String.format("%s - %s %s del %s", copy, project, version, data);
+        span = html.getSpanBlu(message, AETypeWeight.bold, AETypeSize.small);
+        this.add(span);
     }
 
 }

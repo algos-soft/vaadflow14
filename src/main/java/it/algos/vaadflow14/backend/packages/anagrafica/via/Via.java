@@ -73,4 +73,4 @@ public class Via extends AEntity {
         return getNome();
     }
 
-}
+}// end of Bean

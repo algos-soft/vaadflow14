@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.logic;
 
+import com.mongodb.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
@@ -91,8 +92,14 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixBodyLayout() {
+        DataProvider dataProvider;
+        BasicDBObject sort = null;
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-        DataProvider dataProvider = dataService.creaDataProvider(entityClazz);
+        if (true) {
+            sort = new BasicDBObject("nome", -1);
+        }
+
+        dataProvider = dataService.creaDataProvider(entityClazz, sort);
         grid.getGrid().setDataProvider(dataProvider);
         grid.getGrid().setHeight("100%");
         grid.fixGridHeader(dataProvider.size(null));
