@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -13,20 +14,22 @@ import org.springframework.stereotype.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: lun, 21-dic-2020
- * Time: 07:12
+ * Date: lun, 08-mar-2021
+ * Time: 11:43
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di un'istanza entityBean <br>
+ * Non mantiene lo stato di una istanza entityBean <br>
  */
 @Service
+@Qualifier("ViaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = true)
 public class ViaService extends AService {
 
+
     /**
-     * versione della classe per la serializzazione
+     * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
 
@@ -37,23 +40,6 @@ public class ViaService extends AService {
      */
     public ViaService() {
         super(Via.class);
-    }
-
-
-    /**
-     * Crea e registra una entityBean solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entityBean con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entityBean appena creata e salvata
-     */
-    @Override
-    public Via creaIfNotExist(final String keyPropertyValue) {
-        return (Via) checkAndSave(newEntity(keyPropertyValue));
     }
 
 
@@ -79,6 +65,22 @@ public class ViaService extends AService {
      */
     private Via creaIfNotExist(final int ordine, final String nome) {
         return (Via) checkAndSave(newEntity(ordine, nome));
+    }
+
+
+    /**
+     * Crea e registra una entityBean solo se non esisteva <br>
+     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
+     * solo col valore di un parametro da usare anche come keyID <br>
+     * Controlla che non esista già una entityBean con lo stesso keyID <br>
+     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+     *
+     * @param keyPropertyValue obbligatorio
+     *
+     * @return la nuova entityBean appena creata e salvata
+     */
+    public Via creaIfNotExist(final String keyPropertyValue) {
+        return (Via) checkAndSave(newEntity(keyPropertyValue));
     }
 
 
@@ -109,7 +111,6 @@ public class ViaService extends AService {
         return newEntity(0, nome);
     }
 
-
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
@@ -122,16 +123,12 @@ public class ViaService extends AService {
      */
     public Via newEntity(final int ordine, final String nome) {
         Via newEntityBean = Via.builderVia()
-
                 .ordine(ordine > 0 ? ordine : this.getNewOrdine())
-
                 .nome(text.isValid(nome) ? nome : null)
-
                 .build();
 
         return (Via) fixKey(newEntityBean);
     }
-
 
     /**
      * Retrieves an entity by its id.
@@ -161,7 +158,6 @@ public class ViaService extends AService {
     public Via findByKey(final String keyValue) {
         return (Via) super.findByKey(keyValue);
     }
-
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -197,4 +193,4 @@ public class ViaService extends AService {
         return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
-}// end of singleton class
+}// end of Singleton class

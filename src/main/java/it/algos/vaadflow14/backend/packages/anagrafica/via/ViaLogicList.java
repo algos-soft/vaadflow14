@@ -63,11 +63,10 @@ public class ViaLogicList extends LogicList {
      */
     @Override
     protected List<Span> getSpanList() {
-        String message = "Test.";
+        String message = "Codifica delle più comuni tipologie di indirizzi. Presentate nelle anagrafiche in un popup di selezione.";
         return Collections.singletonList(html.getSpanVerde(message));
     }
 
-}
-
+}// end of Route class
 
 

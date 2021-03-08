@@ -35,21 +35,21 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.usaBottoneNew=true;
+        super.usaBottoneNew = true;
     }
 
     //    /**
-//     * Controlla che esista il riferimento alla entityClazz <br>
-//     * Se non esiste nella List, è un errore <br>
-//     * Se non esiste nel Form, lo crea dall'url del browser <br>
-//     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected void fixEntityClazz() {
-//        if (entityClazz == null) {
-//            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
-//        }
-//    }
+    //     * Controlla che esista il riferimento alla entityClazz <br>
+    //     * Se non esiste nella List, è un errore <br>
+    //     * Se non esiste nel Form, lo crea dall'url del browser <br>
+    //     * Deve essere sovrascritto, senza invocare il metodo della superclasse <br>
+    //     */
+    //    @Override
+    //    protected void fixEntityClazz() {
+    //        if (entityClazz == null) {
+    //            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
+    //        }
+    //    }
 
     /**
      * Costruisce un layout per i bottoni di comando superiori della view <br>

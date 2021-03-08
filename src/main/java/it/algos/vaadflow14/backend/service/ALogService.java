@@ -238,7 +238,7 @@ public class ALogService extends AAbstractService {
 
         if (entityBean != null) {
             messageLog += entityClazz;
-            messageLog += SEP;
+            messageLog += PUNTO;
             messageLog += entityBean.toString();
             info(AETypeLog.delete, messageLog);
 
@@ -605,7 +605,7 @@ public class ALogService extends AAbstractService {
      * @param message da visualizzare
      */
     private void sendVideo(String message) {
-        int duration = 2000;//@todo Creare una preferenza e sostituirla qui
+        int duration = AEPreferenza.durataAvviso.getInt();
         Notification.Position posizione = Notification.Position.BOTTOM_START; //@todo Creare una preferenza e sostituirla qui
 
         if (AEPreferenza.usaLogVisibile.is()) {

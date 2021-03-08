@@ -454,8 +454,11 @@ public abstract class LogicProperty extends VerticalLayout {
         if (usaBottoneDeleteAll) {
             listaBottoni.add(AEButton.deleteAll);
         }
-        if (usaBottoneResetList) {
-            listaBottoni.add(AEButton.resetList);
+        if (usaBottoneResetList && entityService != null) {
+            //--se manca la classe specifica il metodo è vuoto e il bottone non potrebbe funzionare
+            if (entityService.resetEmptyOnly().isErrato()) {
+                listaBottoni.add(AEButton.resetList);
+            }
         }
         if (usaBottoneNew) {
             listaBottoni.add(AEButton.nuovo);

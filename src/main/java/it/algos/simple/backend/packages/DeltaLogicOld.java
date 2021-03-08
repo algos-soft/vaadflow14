@@ -5,7 +5,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.enumeration.AEOperation;
 import it.algos.vaadflow14.backend.logic.ALogicOld;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService2;
 import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloService;
 import it.algos.vaadflow14.ui.fields.AComboField;
 import it.algos.vaadflow14.ui.header.*;
@@ -53,7 +53,7 @@ public class DeltaLogicOld extends ALogicOld {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ViaService viaService;
+    public ViaService2 viaService;
 
 
     /**

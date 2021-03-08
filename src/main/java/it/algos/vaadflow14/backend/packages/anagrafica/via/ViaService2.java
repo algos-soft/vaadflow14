@@ -1,11 +1,10 @@
-package it.algos.simple.backend.packages.fattura;
+package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -14,22 +13,20 @@ import org.springframework.stereotype.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 26-feb-2021
- * Time: 17:03
+ * Date: lun, 21-dic-2020
+ * Time: 07:12
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
-@Qualifier("FatturaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = true)
-public class FatturaService extends AService {
-
+@AIScript(sovraScrivibile = false)
+public class ViaService2 extends AService {
 
     /**
-     * Versione della classe per la serializzazione
+     * versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
 
@@ -38,8 +35,8 @@ public class FatturaService extends AService {
      * Costruttore senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public FatturaService() {
-        super(FatturaEntity.class);
+    public ViaService2() {
+        super(Via.class);
     }
 
 
@@ -54,8 +51,34 @@ public class FatturaService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public FatturaEntity creaIfNotExist(final String keyPropertyValue,String descrizione) {
-        return (FatturaEntity) checkAndSave(newEntity(keyPropertyValue,descrizione));
+    @Override
+    public Via creaIfNotExist(final String keyPropertyValue) {
+        return (Via) checkAndSave(newEntity(keyPropertyValue));
+    }
+
+
+    /**
+     * Crea e registra una entityBean solo se non esisteva <br>
+     *
+     * @param aeVia: enumeration per la creazione-reset di tutte le entities
+     *
+     * @return la nuova entityBean appena creata e salvata
+     */
+    private Via creaIfNotExist(final AEVia aeVia) {
+        return creaIfNotExist(aeVia.getPos(), aeVia.toString());
+    }
+
+
+    /**
+     * Crea e registra una entityBean solo se non esisteva <br>
+     *
+     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
+     * @param nome   completo (obbligatorio, unico)
+     *
+     * @return true se la nuova entityBean è stata creata e salvata
+     */
+    private Via creaIfNotExist(final int ordine, final String nome) {
+        return (Via) checkAndSave(newEntity(ordine, nome));
     }
 
 
@@ -68,8 +91,8 @@ public class FatturaService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     @Override
-    public FatturaEntity newEntity() {
-        return newEntity( VUOTA,VUOTA);
+    public Via newEntity() {
+        return newEntity(0, VUOTA);
     }
 
 
@@ -78,17 +101,37 @@ public class FatturaService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
+     * @param nome completo (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public FatturaEntity newEntity(final String code,final String descrizione) {
-        FatturaEntity newEntityBean = FatturaEntity.builderFattura()
-                .code(text.isValid(code) ? code : null)
-                .descrizione(text.isValid(descrizione) ? descrizione : null)
+    private Via newEntity(final String nome) {
+        return newEntity(0, nome);
+    }
+
+
+    /**
+     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+     * Usa il @Builder di Lombok <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     *
+     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
+     * @param nome   completo (obbligatorio, unico)
+     *
+     * @return la nuova entityBean appena creata (non salvata)
+     */
+    public Via newEntity(final int ordine, final String nome) {
+        Via newEntityBean = Via.builderVia()
+
+                .ordine(ordine > 0 ? ordine : this.getNewOrdine())
+
+                .nome(text.isValid(nome) ? nome : null)
+
                 .build();
 
-        return (FatturaEntity) fixKey(newEntityBean);
+        return (Via) fixKey(newEntityBean);
     }
+
 
     /**
      * Retrieves an entity by its id.
@@ -100,8 +143,8 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public FatturaEntity findById(final String keyID) {
-        return (FatturaEntity) super.findById(keyID);
+    public Via findById(final String keyID) {
+        return (Via) super.findById(keyID);
     }
 
 
@@ -115,9 +158,10 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public FatturaEntity findByKey(final String keyValue) {
-        return (FatturaEntity) super.findByKey(keyValue);
+    public Via findByKey(final String keyValue) {
+        return (Via) super.findByKey(keyValue);
     }
+
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
@@ -140,20 +184,17 @@ public class FatturaService extends AService {
     @Override
     public AIResult resetEmptyOnly() {
         AIResult result = super.resetEmptyOnly();
-        int numRec = 6;
+        int numRec = 0;
 
         if (result.isErrato()) {
             return result;
         }
 
-        creaIfNotExist("alfa","finestra");
-        creaIfNotExist("beta","possibile");
-        creaIfNotExist("delta","Praga");
-        creaIfNotExist("gamma","determinante");
-        creaIfNotExist("epsilon","Antonio");
-        creaIfNotExist("omega","forse niente");
+        for (AEVia aeVia : AEVia.values()) {
+            numRec = creaIfNotExist(aeVia) != null ? numRec + 1 : numRec;
+        }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostReset(AETypeReset.enumeration, numRec);
     }
 
-}// end of Singleton class
+}// end of singleton class

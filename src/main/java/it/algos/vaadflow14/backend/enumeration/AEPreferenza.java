@@ -34,6 +34,7 @@ public enum AEPreferenza implements AIPreferenza {
     numeroBottoni(BUTTONS_NUMBER, "Numero di bottoni nella prima riga sopra la Grid", AETypePref.integer, 4, false, false, false),
     usaLogVisibile(PREF_USA_LOG_VIDEO, "Visualizza il log nella finestra", AETypePref.bool, true, false),
     usaButtonOnlyIcon(PREF_USA_BUTTON_ONLY_ICON, "Usa solo l'icona del bottone e non il testo", AETypePref.bool, true, false),
+    durataAvviso(PREF_DURATA_AVVISO_VIDEO, "Durata in millisecondi dell'avviso a video", AETypePref.integer, 2000, false, false, false),
     ;
 
 

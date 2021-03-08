@@ -354,6 +354,7 @@ public abstract class FlowCost {
 
     public static final String PREF_USA_BUTTON_ONLY_ICON = "usaButtonOnlyIcon";
 
+    public static final String PREF_DURATA_AVVISO_VIDEO = "durataAvvisoVideo";
 
     public static final String PREF_ICONA_EDIT = "iconaEdit";
 

@@ -115,9 +115,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
                 logger.error("Non sono riuscito a creare la entityClazz", Logic.class, "fixEntityClazz");
             }
         }
-        else {
-            logger.info("Esisteva già la entityClazz", Logic.class, "fixEntityClazz");
-        }
     }
 
 
@@ -128,9 +125,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     protected void fixEntityService() {
         if (entityService == null) {
             entityService = classService.getServiceFromEntityClazz(entityClazz);
-        }
-        else {
-            logger.info("Esisteva già la entityService", Logic.class, "fixEntityService");
         }
     }
 
