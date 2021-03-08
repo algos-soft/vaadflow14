@@ -1,26 +1,21 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.vaadin.flow.data.binder.Binder;
-import it.algos.vaadflow14.backend.application.FlowVar;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.wrapper.WrapDueObject;
-import it.algos.vaadflow14.ui.fields.AField;
-import it.algos.vaadflow14.ui.service.AFieldService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.vaadin.flow.data.binder.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.fields.*;
+import it.algos.vaadflow14.ui.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.*;
+
+import java.lang.reflect.*;
+import java.util.*;
 
 
 /**
@@ -284,17 +279,17 @@ public class ABeanService extends AAbstractService {
         String message = VUOTA;
         Map<String, WrapDueObject> mappaModifiche = getMappaModifiche(entityBeanNew, entityBeanOld);
         WrapDueObject wrap;
-        String valori = VUOTA;
+        String valori;
 
         if (mappaModifiche != null && mappaModifiche.size() > 0) {
-            message += entityBeanNew.getClass().getSimpleName();
-            message += DUE_PUNTI;
+            message = annotation.getCollectionName(entityBeanNew.getClass());
+            message = text.primaMaiuscola(message);
+            message += PUNTO;
             message += entityBeanNew.id;
             message += SPAZIO;
             for (Map.Entry<String, WrapDueObject> mappa : mappaModifiche.entrySet()) {
                 wrap = mappa.getValue();
                 message += mappa.getKey();
-                message += DUE_PUNTI;
                 valori = text.isValid(wrap.getPrimo()) ? wrap.getPrimo() + FORWARD + wrap.getSecondo() : VUOTA + wrap.getSecondo();
                 message += text.setQuadre(valori);
                 message += SPAZIO;
