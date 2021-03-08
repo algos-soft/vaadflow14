@@ -199,7 +199,9 @@ public class ALogService extends AAbstractService {
      * @param entityBeanOld originaria preesistente
      */
     public void modifica(AEntity entityBean, AEntity entityBeanOld) {
-        String message = VUOTA;
+        String messageLog = VUOTA;
+        String messageVideo;
+        String entityClazz = text.levaCoda(entityBeanOld.getClass().getSimpleName(), SUFFIX_ENTITY);
 
         if (entityBeanOld == null && entityBean == null) {
             error("Non sono riuscito a modificare la entity");
@@ -215,8 +217,11 @@ public class ALogService extends AAbstractService {
             error("Non sono riuscito a modificare la entity", this.getClass(), "modifica");
         }
 
-        message += beanService.getModifiche(entityBean, entityBeanOld);
-        esegue(AETypeLog.modifica, message);
+        messageLog += beanService.getModifiche(entityBean, entityBeanOld);
+        esegue(AETypeLog.modifica, messageLog);
+
+        messageVideo = String.format("Modificata la entity %s", messageLog);
+        sendVideo(messageVideo);
     }
 
 
@@ -228,7 +233,7 @@ public class ALogService extends AAbstractService {
      */
     public void delete(AEntity entityBean) {
         String messageLog = VUOTA;
-        String messageVideo = VUOTA;
+        String messageVideo;
         String entityClazz = text.levaCoda(entityBean.getClass().getSimpleName(), SUFFIX_ENTITY);
 
         if (entityBean != null) {
@@ -237,10 +242,8 @@ public class ALogService extends AAbstractService {
             messageLog += entityBean.toString();
             info(AETypeLog.delete, messageLog);
 
-            if (AEPreferenza.usaLogVisibile.is()) {
-                messageVideo = String.format("Cancellata la entity %s->%s", entityClazz, entityBean.toString());
-                Notification.show(messageVideo, 2000, Notification.Position.BOTTOM_START);
-            }
+            messageVideo = String.format("Cancellata la entity %s.%s", entityClazz, entityBean.toString());
+            sendVideo(messageVideo);
         }
         else {
             error("Non sono riuscito a cancellare la entity", this.getClass(), "delete");
@@ -594,6 +597,20 @@ public class ALogService extends AAbstractService {
         message += descrizione;
         System.out.println(message);
         adminLogger.info(message.trim());
+    }
+
+    /**
+     * Mostra un messaggio a video <br>
+     *
+     * @param message da visualizzare
+     */
+    private void sendVideo(String message) {
+        int duration = 2000;//@todo Creare una preferenza e sostituirla qui
+        Notification.Position posizione = Notification.Position.BOTTOM_START; //@todo Creare una preferenza e sostituirla qui
+
+        if (AEPreferenza.usaLogVisibile.is()) {
+            Notification.show(message, duration, posizione);
+        }
     }
 
 }
