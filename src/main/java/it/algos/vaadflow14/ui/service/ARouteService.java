@@ -351,7 +351,7 @@ public class ARouteService extends AAbstractService {
         if (parametro.isMappa()) {
             if (parametro.containsKey(KEY_BEAN_CLASS)) {
                 canonicalName = parametro.get(KEY_BEAN_CLASS);
-                canonicalName += SUFFIX_LOGIC;
+                canonicalName += SUFFIX_SERVICE;
             }
 
             if (parametro.containsKey(KEY_SERVICE_CLASS)) {

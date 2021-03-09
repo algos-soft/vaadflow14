@@ -180,7 +180,7 @@ public class ALayoutService extends AAbstractService {
                 canonicalName = menuClazz.getCanonicalName();
                 packageName = fileService.estraeClasseFinale(canonicalName);
                 packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase(Locale.ROOT);
-                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC;
+                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
 
                 //--provo a creare la classe specifica xxxLogicList
                 try {

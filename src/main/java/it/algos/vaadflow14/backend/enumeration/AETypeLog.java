@@ -29,6 +29,7 @@ public enum AETypeLog implements AILogType {
     warn("warn"),
     error("error"),
     wizard("wizard"),
+    wizardDoc("wizardDoc"),
     importo("import"),
     export("export"),
     download("download"),

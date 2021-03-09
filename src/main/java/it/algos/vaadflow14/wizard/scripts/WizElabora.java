@@ -12,6 +12,8 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.util.*;
+
 
 /**
  * Project vaadflow
@@ -319,9 +321,11 @@ public abstract class WizElabora implements WizRecipient {
         String projectName = AEDir.nameTargetProject.get();
 
         for (String packageName : wizService.getPackages()) {
+            logger.log(AETypeLog.wizardDoc, VUOTA);
             numFiles = 0;
             status = status && wizService.regolaAEToken(projectName, packageName);
             if (status) {
+                List alfa = AEPackage.getFiles();
                 for (AEPackage pack : AEPackage.getFiles()) {
                     if (pack.is()) {
                         risultato = elaboraDoc(packageName, pack, inizioFile);
@@ -335,13 +339,13 @@ public abstract class WizElabora implements WizRecipient {
 
             if (numFiles > 0) {
                 if (numFiles > 1) {
-                    message = String.format("Documentazione - Controllati %d files standard nel package %s", numFiles, packageName);
+                    message = String.format("Nel package %s sono stati modificati %d files standard", packageName, numFiles);
                 }
             }
             else {
-                message = String.format("Documentazione - Nel package %s non è stato modificato nessun file", packageName);
+                message = String.format("Nel package %s non è stato modificato nessun file", packageName);
             }
-            logger.log(AETypeLog.wizard, message);
+            logger.log(AETypeLog.wizardDoc, message);
         }
     }
 
@@ -358,7 +362,9 @@ public abstract class WizElabora implements WizRecipient {
         AIResult risultato = AResult.errato();
         String fileName;
         String upperName;
-        String pathFileToBeWritten;
+        String suffisso=pack.getSuffix() ;
+        String nameSource = pack.getSourcesName();
+        String pathFileDaModificare;
         String message;
 
         fileName = packageName.contains("/") ? text.levaTestoPrimaDi(packageName, FlowCost.SLASH) : packageName;
@@ -368,15 +374,15 @@ public abstract class WizElabora implements WizRecipient {
         AEWizCost.nameTargetPackage.setValue(fileName);
         AEWizCost.nameTargetPackageUpper.setValue(upperName);
         AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
-        pathFileToBeWritten = AEWizCost.pathTargetSingoloPackage.get() + upperName + pack.getSuffix() + JAVA_SUFFIX;
+        pathFileDaModificare = AEWizCost.pathTargetSingoloPackage.get() + upperName + suffisso + JAVA_SUFFIX;
 
-        if (file.isEsisteFile(pathFileToBeWritten)) {
+        if (file.isEsisteFile(pathFileDaModificare)) {
             wizService.regolaAEToken(AEWizCost.projectCurrent.get(), fileName);
-            risultato = wizService.fixDocFile(packageName, text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", pathFileToBeWritten, inizioFile);
+            risultato = wizService.fixDocFile(packageName, nameSource, suffisso,pathFileDaModificare, inizioFile);
         }
         else {
-            message = String.format("Documentazione - Manca il file standard %s nel package %s", text.isValid(pack.getSuffix()) ? pack.getSuffix() : "Entity", packageName);
-            logger.log(AETypeLog.wizard, message);
+            message = String.format("Nel package %s manca il file %s", packageName, text.isValid(pack.getSuffix()) ? upperName + pack.getSuffix() : "Entity");
+            logger.log(AETypeLog.wizardDoc, message);
         }
 
         return risultato;

@@ -29,6 +29,7 @@ import static java.awt.image.ImageObserver.WIDTH;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
  */
 @SpringComponent
 @QueryEntity
@@ -41,9 +42,9 @@ import static java.awt.image.ImageObserver.WIDTH;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "@ENTITY@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
-@AIView(menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
+@AIView(menuName = "@ENTITY@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
-@AIForm(fields = @PROPERTIES@)
+@AIForm(fields = @PROPERTIES@, usaSpostamentoTraSchede = false)
 public class @ENTITY@ extends @SUPERCLASSENTITY@ {
 
 

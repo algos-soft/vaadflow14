@@ -6,7 +6,7 @@ import java.time.*;
 import java.util.*;
 
 /**
- * Project vaadflow15
+ * Project vaadflow1
  * Created by Algos
  * User: gac
  * Date: mar, 28-apr-2020
@@ -93,9 +93,11 @@ public abstract class FlowCost {
 
     public static final String DOPPIO_PIPE_REGEX = PIPE_REGEX + PIPE_REGEX;
 
-    public static final String SUFFIX_ENTITY = "Entity";
+    public static final String SUFFIX_ENTITY = VUOTA;
 
-    public static final String SUFFIX_LOGIC = "LogicList";
+    public static final String SUFFIX_LOGIC_LIST = "LogicList";
+
+    public static final String SUFFIX_LOGIC_FORM = "LogicForm";
 
     public static final String SUFFIX_SERVICE = "Service";
 

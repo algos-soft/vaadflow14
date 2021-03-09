@@ -543,7 +543,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return lista di entityBeans
      */
     public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
-        return findSet(entityClazz, offset, limit, (BasicDBObject) null);
+        return findSet(entityClazz, offset, limit,  new BasicDBObject());
     }
 
     /**
@@ -556,7 +556,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit,  BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -571,10 +571,11 @@ public class AMongoService<capture> extends AAbstractService {
         int ini = 0;
         int end = 0;
         List<Document> documents;
+        BasicDBObject query= new BasicDBObject();
 
         mongoClazzName = annotation.getCollectionName(entityClazz);
         collection = mongoOp.getCollection(mongoClazzName);
-        documents = collection.find().sort(sort).skip(offset).limit(limit).into(new ArrayList());
+        documents = collection.find(query).sort(sort).skip(offset).limit(limit).into(new ArrayList());
 
         if (documents.size() > 0) {
             items = new ArrayList<>();

@@ -32,9 +32,9 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderVia")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Via", keyPropertyName = "nome")
 @AIView(menuName = "Via", menuIcon = VaadinIcon.COG, sortProperty = "ordine")
+@AIScript(sovraScrivibile = false)
 @AIList(fields = "ordine,nome", usaRowIndex = false)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {

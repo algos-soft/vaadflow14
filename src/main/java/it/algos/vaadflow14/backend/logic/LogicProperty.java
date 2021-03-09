@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -565,12 +566,15 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void addFooterCopyright() {
         Span span;
         String message;
-        String copy = "Algos®";
+        String copy = DEVELOPER_COMPANY;
         String project = FlowVar.projectName;
         String version = String.valueOf(FlowVar.projectVersion);
         String data = date.get(FlowVar.versionDate);
 
         message = String.format("%s - %s %s del %s", copy, project, version, data);
+        if (AEPreferenza.usaDebug.is() && text.isValid(FlowVar.projectNote)) {
+            message += SEP + FlowVar.projectNote;
+        }
         span = html.getSpanBlu(message, AETypeWeight.bold, AETypeSize.small);
         this.add(span);
     }

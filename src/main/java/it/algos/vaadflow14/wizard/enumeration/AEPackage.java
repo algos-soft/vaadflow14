@@ -17,11 +17,9 @@ import java.util.*;
 public enum AEPackage {
 
     entity("Entity base del package", true, true, false, false, SOURCE_ENTITY, SUFFIX_ENTITY),
-
-    logic("Business logic del package", true, true, false, false, SOURCE_LOGIC, SUFFIX_LOGIC),
-
+    logicList("Business logic list (Grid) del package", true, true, false, false, SOURCE_LIST, SUFFIX_LOGIC_LIST),
+    logicForm("Business logic form (Form) del package", true, true, false, false, SOURCE_FORM, SUFFIX_LOGIC_FORM),
     service("Service specifico del package", true, true, false, false, SOURCE_SERVICE, SUFFIX_SERVICE),
-
     menu("Inserimento del package nel menu", true, false, false, false),
 
     //    list("List", false, "List specifico del package"),

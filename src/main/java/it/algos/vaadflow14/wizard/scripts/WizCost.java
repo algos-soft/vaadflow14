@@ -176,11 +176,11 @@ public abstract class WizCost {
 
     public static final String SOURCE_ENTITY = "Entity";
 
-    public static final String SOURCE_LOGIC = "Logic";
+    public static final String SOURCE_LIST = "List";
+
+    public static final String SOURCE_FORM = "LogicForm";
 
     public static final String SOURCE_SERVICE = "Service";
-
-
 
     //--parte dal livello di root del progetto
     //--contiene resources/ (sempre)

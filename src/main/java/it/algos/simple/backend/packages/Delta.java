@@ -73,7 +73,7 @@ public class Delta extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @DBRef
-    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class, logicClazz = ViaService2.class)
+    @AIField(type = AETypeField.combo, allowCustomValue = true, comboClazz = Via.class, logicClazz = ViaService.class)
     @AIColumn(widthEM = 8)
     public Via via;
 

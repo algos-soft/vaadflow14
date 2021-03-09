@@ -83,7 +83,7 @@ public class WizService {
 
         fixAEWizCost();
 
-//        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
+        //        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
 
         //        fixAEFlag();
         fixAEDir();
@@ -123,7 +123,6 @@ public class WizService {
             AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
             AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
         }
-
 
         AEWizCost.printVuote();
         AEWizCost.printInfo();
@@ -496,21 +495,23 @@ public class WizService {
      * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
      * Modifica il file col path e suffisso indicati <br>
      *
-     * @param packageName         nome della directory per il package in esame
-     * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
-     * @param pathFileToBeWritten nome completo di suffisso del file da creare
-     * @param inizioFile          per la modifica dell'header
+     * @param packageName          nome della directory per il package in esame
+     * @param nameSourceText       nome del file di testo presente nella directory wizard.sources di VaadFlow14
+     * @param suffisso             del file da modificare
+     * @param pathFileDaModificare nome completo del file da modificare
+     * @param inizioFile           per la modifica dell'header
      */
-    public AIResult fixDocFile(String packageName, String nameSourceText, String pathFileToBeWritten, boolean inizioFile) {
+    public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare, boolean inizioFile) {
         AIResult risultato = AResult.errato();
         String message = VUOTA;
         String tagIni = inizioFile ? "package" : "* <p>";
         String tagEnd = "@AIScript(";
         String oldHeader;
         String newHeader;
-        String realText = file.leggeFile(pathFileToBeWritten);
+        String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
-        String path = file.findPathBreve(pathFileToBeWritten, FlowCost.DIR_PACKAGES);
+        String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
+        String upperName = text.primaMaiuscola(packageName);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
@@ -523,7 +524,7 @@ public class WizService {
             return risultato;
         }
 
-        if (!file.isEsisteFile(pathFileToBeWritten)) {
+        if (!file.isEsisteFile(pathFileDaModificare)) {
             logger.warn("Non esiste il file " + path, this.getClass(), "fixDocFile");
             return risultato;
         }
@@ -533,26 +534,27 @@ public class WizService {
             newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 if (newHeader.trim().equals(oldHeader.trim())) {
-                    message = String.format("Documentazione - Non è stato modificato il file standard %s nel package %s", nameSourceText, packageName);
+                    message = String.format("Nel package %s non è stato modificato il file %s", packageName, upperName + suffisso);
+                    logger.log(AETypeLog.wizardDoc, message); //@todo PROVVISORIO
                     risultato = AResult.errato(message);
                 }
                 else {
                     realText = text.sostituisce(realText, oldHeader, newHeader);
-                    risultato = file.scriveFile(pathFileToBeWritten, realText, true, FlowCost.DIR_PACKAGES);
+                    risultato = file.scriveFile(pathFileDaModificare, realText, true, FlowCost.DIR_PACKAGES);
                     if (risultato.isValido()) {
-                        message = String.format("Documentazione - Il file standard %s nel package %s è stato aggiornato", nameSourceText, packageName);
+                        message = String.format("Nel package %s è stato modificato il file %s", packageName, upperName + suffisso);
                         risultato = AResult.valido(message);
                     }
                 }
             }
             else {
-                message = String.format("Documentazione - Non sono riuscito a elaborare il file %s" + path);
-                logger.log(AETypeLog.wizard, message);
+                message = String.format("Nel package %s non sono riuscito a elaborare il file %s", packageName, path);
+                logger.log(AETypeLog.wizardDoc, message);
             }
         }
         else {
-            message = String.format("Documentazione - Manca il tag @AIScript nel file %s che non è stato modificato", path);
-            logger.log(AETypeLog.wizard, message);
+            message = String.format("Nel package %s manca il tag @AIScript nel file %s che non è stato modificato", packageName, path);
+            logger.log(AETypeLog.wizardDoc, message);
         }
 
         return risultato;

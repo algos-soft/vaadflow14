@@ -1,16 +1,15 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.enumeration.AEOperation;
-import it.algos.vaadflow14.backend.logic.ALogicOld;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.ViaService2;
-import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloService;
-import it.algos.vaadflow14.ui.fields.AComboField;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.header.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -53,7 +52,7 @@ public class DeltaLogicOld extends ALogicOld {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public ViaService2 viaService;
+    public ViaService viaService;
 
 
     /**

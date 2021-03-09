@@ -75,7 +75,7 @@ public class AClassService extends AAbstractService {
         AEntity entityBean;
 
         if (text.isValid(entityClazzCanonicalName)) {
-            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_LOGIC;
+            logicClazzCanonicalName = entityClazzCanonicalName + SUFFIX_LOGIC_LIST;
             try {
                 entityLogic = (AILogicOld) appContext.getBean(Class.forName(logicClazzCanonicalName));
             } catch (Exception unErrore) {
@@ -126,7 +126,7 @@ public class AClassService extends AAbstractService {
         String canonicalName;
 
         if (entityClazz != null) {
-            canonicalName = text.levaCoda(entityClazz.getCanonicalName(), SUFFIX_ENTITY) + SUFFIX_LOGIC;
+            canonicalName = text.levaCoda(entityClazz.getCanonicalName(), SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
             try {
                 entityLogic = (AILogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm);
             } catch (Exception unErrore) {
