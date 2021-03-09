@@ -178,6 +178,8 @@ public class Wizard extends VerticalLayout {
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
             paragrafoUpdateProject();
+            paragrafoNewPackage();
+            paragrafoUpdatePackage();
             paragrafoDocPackages();
         }
         else {
@@ -219,7 +221,6 @@ public class Wizard extends VerticalLayout {
 
         layout.add(bottone);
         this.add(layout);
-        this.add(new H2());
     }
 
 
@@ -261,7 +262,6 @@ public class Wizard extends VerticalLayout {
 
         layout.add(bottone);
         this.add(layout);
-        this.add(new H2());
     }
 
 
@@ -289,7 +289,6 @@ public class Wizard extends VerticalLayout {
 
         layout.add(bottone);
         this.add(layout);
-        this.add(new H2());
     }
 
 
@@ -319,7 +318,6 @@ public class Wizard extends VerticalLayout {
 
         layout.add(bottone);
         this.add(layout);
-        this.add(new H2());
     }
 
     private void elaboraUpdatePackage() {
@@ -337,8 +335,9 @@ public class Wizard extends VerticalLayout {
 
         this.add(paragrafo);
 
-        layout.add(new Label("Documentation delle classi standard dei package esistenti"));
-        layout.add(new Label("Seleziona quali classi modificare"));
+        layout.add(new Label("Documentazione delle classi standard dei package esistenti"));
+        layout.add(new Label("Seleziona quali classi standard modificare"));
+        layout.add(new Label("Si applica a tutti i packages"));
 
         Button bottone = new Button("Doc packages");
         bottone.getElement().setAttribute("theme", "primary");
@@ -346,7 +345,6 @@ public class Wizard extends VerticalLayout {
 
         layout.add(bottone);
         this.add(layout);
-        this.add(new H2());
     }
 
 
