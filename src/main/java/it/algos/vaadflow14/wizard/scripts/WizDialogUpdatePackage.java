@@ -41,7 +41,6 @@ public class WizDialogUpdatePackage extends WizDialog {
         super.inizia();
     }
 
-
     /**
      * Legenda iniziale <br>
      * Viene sovrascritta nella sottoclasse che deve invocare PRIMA questo metodo <br>
