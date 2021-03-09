@@ -48,12 +48,7 @@ public class WizDialogUpdatePackage extends WizDialog {
      */
     @Override
     protected void creaTopLayout() {
-        if (AEFlag.isBaseFlow.is()) {
-            logger.error("Non dovrebbe arrivare qui", this.getClass(), "creaTopLayout");
-        }
-        else {
-            topLayout = fixSezione("Modifica di un package", "green");
-        }
+        topLayout = fixSezione("Modifica di un package", "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Update di un package esistente in questo progetto"));
