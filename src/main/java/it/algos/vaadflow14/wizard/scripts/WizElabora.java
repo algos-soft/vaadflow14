@@ -362,7 +362,7 @@ public abstract class WizElabora implements WizRecipient {
         AIResult risultato = AResult.errato();
         String fileName;
         String upperName;
-        String suffisso=pack.getSuffix() ;
+        String suffisso = pack.getSuffix();
         String nameSource = pack.getSourcesName();
         String pathFileDaModificare;
         String message;
@@ -378,7 +378,7 @@ public abstract class WizElabora implements WizRecipient {
 
         if (file.isEsisteFile(pathFileDaModificare)) {
             wizService.regolaAEToken(AEWizCost.projectCurrent.get(), fileName);
-            risultato = wizService.fixDocFile(packageName, nameSource, suffisso,pathFileDaModificare, inizioFile);
+            risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
         }
         else {
             message = String.format("Nel package %s manca il file %s", packageName, text.isValid(pack.getSuffix()) ? upperName + pack.getSuffix() : "Entity");

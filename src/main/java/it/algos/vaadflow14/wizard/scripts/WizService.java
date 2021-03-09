@@ -517,7 +517,7 @@ public class WizService {
         String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
-        String upperName = text.primaMaiuscola(packageName);
+        String fileName = file.estraeClasseFinaleSenzaJava(pathFileDaModificare);
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
@@ -540,7 +540,7 @@ public class WizService {
             newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 if (newHeader.trim().equals(oldHeader.trim())) {
-                    message = String.format("Nel package %s non è stato modificato il file %s", packageName, upperName + suffisso);
+                    message = String.format("Nel package %s non è stato modificato il file %s", packageName, fileName);
                     logger.log(AETypeLog.wizardDoc, message); //@todo PROVVISORIO
                     risultato = AResult.errato(message);
                 }
@@ -548,7 +548,7 @@ public class WizService {
                     realText = text.sostituisce(realText, oldHeader, newHeader);
                     risultato = file.scriveFile(pathFileDaModificare, realText, true, FlowCost.DIR_PACKAGES);
                     if (risultato.isValido()) {
-                        message = String.format("Nel package %s è stato modificato il file %s", packageName, upperName + suffisso);
+                        message = String.format("Nel package %s è stato modificato il file %s", packageName, fileName);
                         risultato = AResult.valido(message);
                     }
                 }

@@ -2,6 +2,7 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.*;
 
@@ -23,6 +24,7 @@ import java.util.*;
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
  */
 @Route(value = "via", layout = MainLayout.class)
+@AIScript(sovraScrivibile = false)
 public class ViaLogicList extends LogicList {
 
 

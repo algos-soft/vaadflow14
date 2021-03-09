@@ -22,6 +22,7 @@ import javax.validation.constraints.*;
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
  */
 @SpringComponent
 @QueryEntity

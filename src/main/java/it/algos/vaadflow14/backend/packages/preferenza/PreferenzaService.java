@@ -17,20 +17,9 @@ import org.springframework.stereotype.*;
  * Date: mer, 23-set-2020
  * Time: 10:44
  * <p>
- * Classe di libreria; NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * Estende la classe astratta AAbstractService che mantiene i riferimenti agli altri services <br>
- * L'istanza può essere richiamata con: <br>
- * 1) StaticContextAccessor.getBean(APreferenzaService.class); <br>
- * 3) @Autowired public APreferenzaService annotation; <br>
- * <p>
- * La ricerca di una preferenza può essere fatta:
- * 1) tramite la enumeration di AEPreferenza
- * 2) tramite la costante di FlowCost
- * 3) tramite il valore di 'code'
- * <p>
- * Annotated with @Service (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * NOT annotated with @SpringComponent (inutile, esiste già @Service) <br>
- * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) (obbligatorio) <br>
+ * Service di una entityClazz specifica e di un package <br>
+ * Garantisce i metodi di collegamento per accedere al database <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

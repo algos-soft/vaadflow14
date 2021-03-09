@@ -176,9 +176,9 @@ public abstract class WizCost {
 
     public static final String SOURCE_ENTITY = "Entity";
 
-    public static final String SOURCE_LIST = "List";
+    public static final String SOURCE_LIST = "LogicList";
 
-    public static final String SOURCE_FORM = "LogicForm";
+    public static final String SOURCE_FORM = "Form";
 
     public static final String SOURCE_SERVICE = "Service";
 

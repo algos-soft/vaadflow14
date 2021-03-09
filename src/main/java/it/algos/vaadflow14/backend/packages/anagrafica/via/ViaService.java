@@ -19,10 +19,9 @@ import org.springframework.stereotype.*;
  * <p>
  * Service di una entityClazz specifica e di un package <br>
  * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di una istanza entityBean <br>
+ * Non mantiene lo stato di un'istanza entityBean <br>
  */
 @Service
-@Qualifier("ViaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = true)
 public class ViaService extends AService {

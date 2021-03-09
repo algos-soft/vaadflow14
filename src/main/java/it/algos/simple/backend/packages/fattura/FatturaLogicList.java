@@ -29,6 +29,7 @@ public class FatturaLogicList extends LogicList {
      */
     private static final long serialVersionUID = 1L;
 
+
     /**
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>

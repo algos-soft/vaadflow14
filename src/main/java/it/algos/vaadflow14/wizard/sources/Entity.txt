@@ -30,6 +30,7 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
  * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @SpringComponent
 @QueryEntity
