@@ -1,12 +1,12 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * Project vaadwiki14
@@ -89,24 +89,25 @@ public class WizDialogDocPackages extends WizDialog {
         confirmButton.getElement().setAttribute("theme", "error");
     }
 
-//    /**
-//     * Chiamato alla dismissione del dialogo <br>
-//     * Regola i valori regolabili della Enumeration AEWizCost <br>
-//     * Verranno usati da: <br>
-//     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected boolean regolaAEWizCost() {
-//        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-//            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
-//            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
-//            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
-//        }
-//                AEWizCost.printInfo();
-//
-//        return true;
-//    }
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected boolean regolaAEWizCost() {
+        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
+        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
+            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
+            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
+            AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+        }
+        AEWizCost.printInfo();
+
+        return true;
+    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>

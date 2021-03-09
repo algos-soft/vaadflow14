@@ -124,6 +124,7 @@ public class WizDialogNewPackage extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Override
     protected boolean regolaAEWizCost() {
         //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
         if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
