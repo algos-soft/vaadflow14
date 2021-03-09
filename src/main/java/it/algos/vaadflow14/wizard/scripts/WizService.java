@@ -112,7 +112,13 @@ public class WizService {
         String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
         AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
         if (AEFlag.isBaseFlow.is()) {
-            //--se siamo in baseFlow non hanno senso alcuni valori che verranno decisi dopo aver selezionato il progetto
+            AEWizCost.nameTargetProject.setValue(nameProject);
+            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
         }
         else {
             AEWizCost.nameTargetProject.setValue(nameProject);

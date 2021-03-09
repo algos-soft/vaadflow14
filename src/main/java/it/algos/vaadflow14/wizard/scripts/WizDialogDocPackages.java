@@ -96,18 +96,25 @@ public class WizDialogDocPackages extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected boolean regolaAEWizCost() {
-        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
-        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
-            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
-            AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
-        }
-        AEWizCost.printInfo();
-
-        return true;
-    }
+//    @Override
+//    protected boolean regolaAEWizCost() {
+//        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati qui (gli altri non servono)
+//        String pathCurrent = System.getProperty("user.dir") + FlowCost.SLASH;
+//        String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+//        AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
+//
+//        if (AEFlag.isBaseFlow.is()) {
+//            AEWizCost.nameTargetProject.setValue(nameProject);
+//            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+//            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+//            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+//            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+//            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+//            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+//        }
+//
+//        return true;
+//    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>
