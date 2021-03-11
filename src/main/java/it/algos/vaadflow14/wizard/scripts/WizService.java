@@ -984,6 +984,20 @@ public class WizService {
     }
 
     /**
+     * Regola alcuni valori della Enumeration AEWizCost relativi al package selezionato <br>
+     */
+    public void regolaPackages(final String packName) {
+        String fileName;
+
+        AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packName));
+        AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packName));
+        fileName = text.levaTestoPrimaDi(text.fixPuntoToSlash(packName), SLASH);
+        AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
+        AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
+    }
+
+
+    /**
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
      * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
      */

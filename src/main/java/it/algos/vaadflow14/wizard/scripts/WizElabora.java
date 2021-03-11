@@ -209,7 +209,7 @@ public abstract class WizElabora implements WizRecipient {
         AIResult result;
         String suffix = pack.getSuffix() + JAVA_SUFFIX;
         String nameSourceText = pack.getSourcesName();
-        String pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetFileUpper.get();
+        String pathFileToBeWritten = AEWizCost.pathTargetPackageSlash.get() + AEWizCost.nameTargetFileUpper.get();
         pathFileToBeWritten += suffix;
 
         if (pack.is()) {
@@ -277,13 +277,13 @@ public abstract class WizElabora implements WizRecipient {
         String nomeFileTextSorgente = "Boot";
         String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
         String project = AEWizCost.projectCurrentLower.get();
-        String pack = AEWizCost.nameTargetPackage.get();
+        String pack = AEWizCost.nameTargetPackagePunto.get();
         String clazz = AEWizCost.nameTargetFileUpper.get();
         String packageName = AEWizCost.nameTargetFileUpper.get();
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
         pathFileBoot += AEWizCost.projectCurrentUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
         String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
-        String pathEntity = AEWizCost.pathTargetPackage.get() + text.primaMaiuscola(pack);
+        String pathEntity = AEWizCost.pathTargetPackageSlash.get() + text.primaMaiuscola(pack);
         String pathBreveEntity = file.findPathBreve(pathEntity, DIR_PACKAGES);
         String pathBreveBoot = file.findPathBreve(pathFileBoot, DIR_BACKEND);
 
@@ -371,10 +371,11 @@ public abstract class WizElabora implements WizRecipient {
         fileName = fileName.toLowerCase();
         upperName = text.primaMaiuscola(fileName);
 
-        AEWizCost.nameTargetPackage.setValue(fileName);
+        AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(fileName));
+        AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(fileName));
         AEWizCost.nameTargetFileUpper.setValue(upperName);
-        AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
-        pathFileDaModificare = AEWizCost.pathTargetPackage.get() + upperName + suffisso + JAVA_SUFFIX;
+        AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
+        pathFileDaModificare = AEWizCost.pathTargetPackageSlash.get() + upperName + suffisso + JAVA_SUFFIX;
 
         if (file.isEsisteFile(pathFileDaModificare)) {
             wizService.regolaAEToken(AEWizCost.projectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO

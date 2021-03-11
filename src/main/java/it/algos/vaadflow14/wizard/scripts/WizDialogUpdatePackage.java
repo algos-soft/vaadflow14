@@ -22,7 +22,7 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WizDialogUpdatePackage extends WizDialog {
+public class WizDialogUpdatePackage extends WizDialogPackage {
 
 
     /**
@@ -135,7 +135,7 @@ public class WizDialogUpdatePackage extends WizDialog {
      */
     private int leggeFieldsBaseEsistenti(String packageName) {
         int tot = 0;
-        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetFileUpper.get() + JAVA_SUFFIX;
+        String nameSourceText = AEWizCost.pathTargetPackageSlash.get() + AEWizCost.nameTargetFileUpper.get() + JAVA_SUFFIX;
         String sourceText = file.leggeFile(nameSourceText);
 
         tot = pack(sourceText, AETypeField.integer, "int", 1, AEPackage.ordine) ? tot + 1 : tot;
@@ -189,7 +189,7 @@ public class WizDialogUpdatePackage extends WizDialog {
         int tot = 0;
         String tag = "@AIField\\(type";
 
-        String nameSourceText = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetFileUpper.get() + JAVA_SUFFIX;
+        String nameSourceText = AEWizCost.pathTargetPackageSlash.get() + AEWizCost.nameTargetFileUpper.get() + JAVA_SUFFIX;
         String sourceText = file.leggeFile(nameSourceText);
 
         tot = sourceText.split(tag).length - 1;
@@ -247,9 +247,12 @@ public class WizDialogUpdatePackage extends WizDialog {
     private void sincroProject(String packageName) {
         int fields = 0;
         if (text.isValid(packageName)) {
-            AEWizCost.nameTargetPackage.setValue(packageName);
+            packageName = text.fixPuntoToSlash(packageName);
+            AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packageName));
+            AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packageName));
+            packageName = text.levaTestoPrimaDi(packageName, SLASH);
             AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(packageName));
-            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+            AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
         }
         fields = leggeFieldsBaseEsistenti(packageName);
 
@@ -266,6 +269,37 @@ public class WizDialogUpdatePackage extends WizDialog {
         confirmButton.setEnabled(text.isValid(packageName));
     }
 
+//    /**
+//     * Chiamato alla dismissione del dialogo <br>
+//     * Regola i valori regolabili della Enumeration AEWizCost <br>
+//     * Verranno usati da: <br>
+//     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected boolean regolaAEWizCost() {
+//        String packName;
+//        String fileName;
+//
+//        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
+//        if (fieldComboPackages != null) {
+//            packName = fieldComboPackages.getValue();
+//            if (text.isValid(packName)) {
+//                wizService.regolaPackages(packName);
+////                packName = text.fixPuntoToSlash(packName);
+////                AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packName));
+////                AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packName));
+////                fileName = text.levaTestoPrimaDi(packName, SLASH);
+////                AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
+////                AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
+//            }
+//        }
+//
+//        AEWizCost.printVuote();
+//        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
+//        return true;
+//    }
+
     /**
      * Chiamato alla dismissione del dialogo <br>
      * Regola i valori regolabili della Enumeration AEWizCost <br>
@@ -275,23 +309,10 @@ public class WizDialogUpdatePackage extends WizDialog {
      */
     @Override
     protected boolean regolaAEWizCost() {
-        String packName;
-        String fileName;
-
-        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
-        if (fieldComboPackages != null) {
-            packName = fieldComboPackages.getValue();
-            if (text.isValid(packName)) {
-                packName = text.fixPuntoToSlash(packName);
-                AEWizCost.nameTargetPackage.setValue(packName);
-                fileName = text.levaTestoPrimaDi(packName, SLASH);
-                AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
-                AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
-            }
+        if (fieldComboPackages != null && text.isValid(fieldComboPackages.getValue())) {
+            super.regolaPackages(fieldComboPackages.getValue());
         }
 
-        AEWizCost.printVuote();
-        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
         return true;
     }
 

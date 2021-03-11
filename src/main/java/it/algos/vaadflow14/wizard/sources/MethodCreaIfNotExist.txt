@@ -10,6 +10,6 @@
      * @return la nuova entityBean appena creata e salvata
      */
     @Override
-    public @ENTITY@ creaIfNotExist(final String keyPropertyValue) {
-        return (@ENTITY@) checkAndSave(newEntity(keyPropertyValue));
+    public @ENTITYUPPER@ creaIfNotExist(final String keyPropertyValue) {
+        return (@ENTITYUPPER@) checkAndSave(newEntity(keyPropertyValue));
     }

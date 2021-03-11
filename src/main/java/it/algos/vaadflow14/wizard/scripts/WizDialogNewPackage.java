@@ -3,7 +3,6 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -19,7 +18,7 @@ import org.springframework.context.annotation.Scope;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WizDialogNewPackage extends WizDialog {
+public class WizDialogNewPackage extends WizDialogPackage {
 
 
     /**
@@ -128,24 +127,11 @@ public class WizDialogNewPackage extends WizDialog {
      */
     @Override
     protected boolean regolaAEWizCost() {
-        String packName;
-        String fileName;
-
-        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
         if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            packName = fieldPackageName.getValue();
-            packName = text.fixPuntoToSlash(packName);
-            AEWizCost.nameTargetPackage.setValue(packName);
-            fileName = text.levaTestoPrimaDi(packName, SLASH);
-            AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
-            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
+            super.regolaPackages(fieldPackageName.getValue());
         }
 
-        AEWizCost.printVuote();
-        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
         return true;
     }
-
-
 
 }

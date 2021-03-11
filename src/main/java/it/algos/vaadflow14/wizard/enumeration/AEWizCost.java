@@ -329,7 +329,13 @@ public enum AEWizCost {
      * Nome del package da creare. Eventualmente con sub-directory <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetPackage(AETypeWiz.packages, "Nome del package da creare/modificare", VALORE_MANCANTE),
+    nameTargetPackagePunto(AETypeWiz.packages, "Nome del package da creare/modificare usando punto", VALORE_MANCANTE),
+
+    /**
+     * Nome del package da creare. Eventualmente con sub-directory <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetPackageSlash(AETypeWiz.packages, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE),
 
     /**
      * Nome del package da creare. <br>
@@ -341,7 +347,7 @@ public enum AEWizCost {
      * Percorso del package. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetPackage(AETypeWiz.packages, "Directory del package da creare/modificare", VALORE_MANCANTE),
+    pathTargetPackageSlash(AETypeWiz.packages, "Directory del package da creare/modificare", VALORE_MANCANTE),
 
     ;
 
