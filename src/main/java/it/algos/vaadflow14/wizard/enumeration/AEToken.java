@@ -17,140 +17,76 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
 public enum AEToken {
 
     nameTargetProject("PROJECT", true),
-
     nameTargetProjectLower("PROJECTLOWER", true),
-
     pathTargetProject(VUOTA, true),
-
     projectNameUpper("PROJECTALLUPPER", true),
-
     moduleNameMinuscolo("MODULELOWER", true),
-
     moduleNameMaiuscolo("MODULEUPPER", true),
-
     first("FIRSTCHARPROJECT", true),
-
     //    pathVaadFlowWizTxtSources(VUOTA, true),
-
-    packageName("PACKAGE", true),
-
+    packageNamePunti("PACKAGEPUNTI", true),
+    packageNameSlash("PACKAGESLASH", true),
     projectCost("COST"),
-
     user("USER"),
-
     today("TODAY"),
-    todayAnno("TODAYANNO"),
+    todayAnno("TDAYANNO"),
     todayMese("TODAYMESE"),
     todayGiorno("TODAYGIORNO"),
-
     time("TIME"),
-
     qualifier("QUALIFIER"),
-
     tagView("TAG_VIEW"),
-
-    entity("ENTITY"),
-
+    entityLower("ENTITYLOWER"),
+    entityUpper("ENTITYUPPER"),
     estendeEntity("ESTENDEENTITY"),
-
     superClassEntity("SUPERCLASSENTITY"),
-
     parametersFind("PARAMETERSFIND"),
-
     parameters("PARAMETERS"),
-
     parametersDoc("PARAMETERSDOC"),
-
     parametersNewEntity("PARAMETERSNEWENTITY"),
-
     methodFind("FIND"),
-
     methodNewOrdine("NEWORDINE"),
-
     creaIfNotExist("CREAIFNOTEXIST"),
-
     newEntityKeyUnica("NEWENTITYKEYUNICA"),
-
     builder("BUILDER"),
-
     query("QUERY"),
-
     findAll("FINDALL"),
-
     keyProperty("KEYPROPERTY"),
-
     searchProperty("SEARCHPROPERTY"),
-
     sortProperty("SORTPROPERTY"),
-
     rowIndex("ROWINDEX"),
-
     properties("PROPERTIES"),
-
     propertyOrdineName("ORDINENAME"),
-
     propertyOrdine("ORDINE"),
-
     propertyCodeName("CODENAME"),
-
     propertyCode("CODE"),
-
     propertyDescrizioneName("DESCRIZIONENAME"),
-
     propertyDescrizione("DESCRIZIONE"),
-
     propertyValidoName("VALIDONAME"),
-
     propertyValido("VALIDO"),
-
     propertiesRinvio("PROPERTIESRINVIO"),
-
     propertiesDoc("PROPERTIESDOC"),
-
     propertiesParams("PROPERTIESPARAMS"),
-
     propertiesBuild("PROPERTIESBUILD"),
-
     codeDoc("CODEDOC"),
-
     codeParams("CODEPARAMS"),
-
     codeRinvio("CODERINVIO"),
-
     toString("TOSTRING"),
-
     usaCompany("USACOMPANY"),
-
     usaSecurity("USASECURITY"),
-
     readCompany("READCOMPANY"),
-
     grid("GRID"),
-
     creaGrid("CREAGRID"),
-
     postConstruct("POSTCONSTRUCT"),
-
     setParameter("SETPARAMETER"),
-
     beforeEnter("BEFOREENTER"),
-
     fixPreferenze("FIXPREFERENZE"),
-
     fixLayout("FIXLAYOUT"),
-
     creaAlertLayout("CREAALERTLAYOUT"),
-
     creaTopLayout("CREATOPLAYOUT"),
-
     creaPopupFiltro("CREAPOPUPFILTRO"),
-
     creaFiltri("CREAFILTRI"),
-
     updateFiltri("UPDATEFILTRI"),
-
     addListeners("ADDLISTENERS"),
-
     versionDate("VERSIONDATE"),
     ;
 

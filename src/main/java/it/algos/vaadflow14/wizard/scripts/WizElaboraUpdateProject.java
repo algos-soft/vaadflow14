@@ -27,7 +27,7 @@ public class WizElaboraUpdateProject extends WizElabora {
         String srcPath = AEWizCost.pathVaadFlow14Root.get();
         String destPath = AEWizCost.pathTargetProjectRoot.get();
         String dir = AEWizCost.nameTargetProjectLower.get();
-        String nameProject = AEWizCost.nameTargetProject.get();
+        String nameProject = AEWizCost.nameTargetProjectUpper.get();
         String value;
         String message;
         AECopyWiz copyWiz;
@@ -58,7 +58,7 @@ public class WizElaboraUpdateProject extends WizElabora {
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileSoloSeNonEsiste:
                     case fileCheckFlagSeEsiste:
-                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
+                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrentUpper.get().toLowerCase());
                         break;
                     case sourceSovrascriveSempreAncheSeEsiste:
                     case sourceSoloSeNonEsiste:

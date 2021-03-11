@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.backend.packages.@PACKAGE@;
+package it.algos.@MODULELOWER@.backend.packages.@PACKAGEPUNTI@;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -40,19 +40,19 @@ import static java.awt.image.ImageObserver.WIDTH;
  */
 @SpringComponent
 @QueryEntity
-@Document(collection = "@PACKAGE@")
-@TypeAlias("@PACKAGE@")
+@Document(collection = "@ENTITYLOWER@")
+@TypeAlias("@ENTITYLOWER@")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builder@ENTITY@")
+@Builder(builderMethodName = "builder@ENTITYUPPER@")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "@ENTITY@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
-@AIView(menuName = "@ENTITY@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
+@AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
+@AIView(menuName = "@ENTITYUPPER@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
 @AIForm(fields = @PROPERTIES@, usaSpostamentoTraSchede = false)
-public class @ENTITY@ extends @SUPERCLASSENTITY@ {
+public class @ENTITYUPPER@ extends @SUPERCLASSENTITY@ {
 
 
     /**

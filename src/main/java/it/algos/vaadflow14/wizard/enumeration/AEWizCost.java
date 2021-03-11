@@ -1,6 +1,8 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
 import java.util.*;
@@ -22,43 +24,43 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathCurrent("Directory dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE),
+    pathCurrent(AETypeWiz.sistema, "Directory dove gira il programma in uso. Recuperata dal System", VALORE_MANCANTE),
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameUser("Programmatore. Ricavato dal path della directory corrente.", VALORE_MANCANTE),
+    nameUser(AETypeWiz.sistema, "Programmatore. Ricavato dal path della directory corrente.", VALORE_MANCANTE),
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    projectCurrentLower("Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+    projectCurrentLower(AETypeWiz.sistema, "Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    projectCurrent("Nome del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+    projectCurrentUpper(AETypeWiz.sistema, "Nome maiuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
 
     /**
      * Nome del progetto target. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetProject("Nome del progetto target", VALORE_MANCANTE),
+    nameTargetProjectUpper(AETypeWiz.nomeFile, "Nome maiuscolo del progetto target", VALORE_MANCANTE),
 
     /**
      * Nome minuscolo del progetto target. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetProjectLower("Nome minuscolo del progetto target", VALORE_MANCANTE),
+    nameTargetProjectLower(AETypeWiz.nomeFile, "Nome minuscolo del progetto target", VALORE_MANCANTE),
 
     /**
      * Root del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectRoot("Path root del progetto target", VALORE_MANCANTE),
+    pathTargetProjectRoot(AETypeWiz.path, "Path root del progetto target", VALORE_MANCANTE),
 
     /**
      * Root iniziale. Hardcoded su di un singolo computer. <br>
@@ -66,79 +68,79 @@ public enum AEWizCost {
      * Potrebbe essere diverso <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathRoot("Root iniziale del computer utilizzato", "/Users/gac/Documents/"),
+    pathRoot(AETypeWiz.directory, "Root iniziale del computer utilizzato", "/Users/gac/Documents/"),
 
     /**
      * Cartella base dei progetti. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirProjects("Cartella di partenza dei projects Idea", "IdeaProjects/"),
+    dirProjects(AETypeWiz.directory, "Cartella di partenza dei projects Idea", "IdeaProjects/"),
 
     /**
      * Percorso base dei progetti. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathProjectsDirStandard("Path base dei projects Idea", pathRoot.value + dirProjects.value),
+    pathProjectsDirStandard(AETypeWiz.directory, "Path base dei projects Idea", pathRoot.value + dirProjects.value),
 
     /**
      * Cartella dei progetti operativi. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirOperativi("Cartella dei projects operativi", "operativi/"),
+    dirOperativi(AETypeWiz.directory, "Cartella dei projects operativi", "operativi/"),
 
     /**
      * Percorso dei progetti operativi. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathOperativiDirStandard("Path dei projects operativi", pathProjectsDirStandard.value + dirOperativi.value),
+    pathOperativiDirStandard(AETypeWiz.directory, "Path dei projects operativi", pathProjectsDirStandard.value + dirOperativi.value),
 
     /**
      * Nome del progetto base vaadflow14. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameVaadFlow14("Nome del progetto base vaadflow14", "Vaadflow14"),
+    nameVaadFlow14(AETypeWiz.directory, "Nome del progetto base vaadflow14", "Vaadflow14"),
 
     /**
      * Cartella del progetto base vaadflow14. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirVaadFlow14("Cartella del progetto base vaadflow14", nameVaadFlow14.value.toLowerCase() + SLASH),
+    dirVaadFlow14(AETypeWiz.directory, "Cartella del progetto base vaadflow14", nameVaadFlow14.value.toLowerCase() + SLASH),
 
     /**
      * Percorso del progetto base vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathVaadFlow14Root("Path root del progetto base vaadflow14", pathOperativiDirStandard.value + dirVaadFlow14.value),
+    pathVaadFlow14Root(AETypeWiz.directory, "Path root del progetto base vaadflow14", pathOperativiDirStandard.value + dirVaadFlow14.value),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirMain("Directory files main", "src/main/"),
+    dirMain(AETypeWiz.directory, "Directory files main", "src/main/"),
 
     /**
      * Cartella a livello di modulo. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirModulo("Directory files modulo", dirMain.value + "java/it/algos/"),
+    dirModulo(AETypeWiz.directory, "Directory files modulo", dirMain.value + "java/it/algos/"),
 
     /**
      * Cartella a livello di resources. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirResources("Directory resources", dirMain.value + "resources/"),
+    dirResources(AETypeWiz.directory, "Directory resources", dirMain.value + "resources/"),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootConfig(String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly, "", ""),
+    dirRootConfig(AETypeWiz.directory, String.format("Directory root CONFIG di risorse on-line esterne al JAR (da %s)", nameVaadFlow14.value), "config/", AECopyWiz.dirAddingOnly, "", ""),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootDoc(String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirAddingOnly),
+    dirRootDoc(AETypeWiz.directory, String.format("Directory root DOC di documentazione (da %s)", nameVaadFlow14.value), "doc/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
@@ -147,201 +149,203 @@ public enum AEWizCost {
      * contiene styles/ (sempre)
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootFrontend(String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14.value), "frontend/", AECopyWiz.dirAddingOnly),
+    dirRootFrontend(AETypeWiz.directory, String.format("Directory root FRONTEND per il Client (da %s)", nameVaadFlow14.value), "frontend/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootLinks(String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14.value), "links/", AECopyWiz.dirAddingOnly),
+    dirRootLinks(AETypeWiz.directory, String.format("Directory root LINKS a siti web utili (da %s)", nameVaadFlow14.value), "links/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di root. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootSnippets(String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirAddingOnly),
+    dirRootSnippets(AETypeWiz.directory, String.format("Directory root SNIPPETS di codice suggerito (da %s)", nameVaadFlow14.value), "snippets/", AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella a livello di modulo. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirModuloVaadFlow14(String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll),
+    dirModuloVaadFlow14(AETypeWiz.directory, String.format("Directory modulo BASE %s (da %s, Wizard compreso)", nameVaadFlow14.value, nameVaadFlow14.value), dirModulo.value + dirVaadFlow14.value, AECopyWiz.dirDeletingAll,VUOTA,VUOTA,true,true,true,true),
 
     /**
      * Percorso del modulo base vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathVaadFlow14Modulo("Path del modulo base vaadflow14", pathVaadFlow14Root.value + dirModuloVaadFlow14.value),
+    pathVaadFlow14Modulo(AETypeWiz.directory, "Path del modulo base vaadflow14", pathVaadFlow14Root.value + dirModuloVaadFlow14.value),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootWizard("Directory wizard", dirModuloVaadFlow14.value + "wizard/"),
+    dirRootWizard(AETypeWiz.directory, "Directory wizard", dirModuloVaadFlow14.value + "wizard/"),
 
     /**
      * Percorso della directory wizard sources di vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathVaadFlow14Wizard("Directory vaadflow14.wizard", pathVaadFlow14Root.value + dirRootWizard.value),
+    pathVaadFlow14Wizard(AETypeWiz.directory, "Directory vaadflow14.wizard", pathVaadFlow14Root.value + dirRootWizard.value),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootWizardEnumeration("Directory wizard.enumeration", dirRootWizard.value + "enumeration/"),
+    dirRootWizardEnumeration(AETypeWiz.directory, "Directory wizard.enumeration", dirRootWizard.value + "enumeration/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirRootWizardScripts("Directory wizard.scripts", dirRootWizard.value + "scripts/"),
+    dirRootWizardScripts(AETypeWiz.directory, "Directory wizard.scripts", dirRootWizard.value + "scripts/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirVaadFlow14WizardSources("Directory sources", dirRootWizard.value + "sources/"),
+    dirVaadFlow14WizardSources(AETypeWiz.directory, "Directory sources", dirRootWizard.value + "sources/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirWizardSources("Directory wizard/sources",  "wizard/sources/"),
+    dirWizardSources(AETypeWiz.directory, "Directory wizard/sources", "wizard/sources/"),
 
     /**
      * Percorso della directory wizard sources di vaadflow14. Nei Documents di Gac <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathVaadFlow14WizSources("Directory vaadflow14.wizard.sources", pathVaadFlow14Root.value + dirVaadFlow14WizardSources.value),
+    pathVaadFlow14WizSources(AETypeWiz.directory, "Directory vaadflow14.wizard.sources", pathVaadFlow14Root.value + dirVaadFlow14WizardSources.value),
 
     /**
      * Modulo del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectModulo("Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
+    pathTargetProjectModulo(AETypeWiz.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirBoot("Nome della directory boot", "backend/boot/"),
+    dirBoot(AETypeWiz.directory, "Nome della directory boot", "backend/boot/"),
 
     /**
      * Percorso della directory boot. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectBoot("Directory target boot", pathTargetProjectModulo.value + dirBoot.value),
+    pathTargetProjectBoot(AETypeWiz.path, "Directory target boot", pathTargetProjectModulo.value + dirBoot.value),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirPackages("Nome della directory packages del modulo target", "backend/packages/"),
+    dirPackages(AETypeWiz.directory, "Nome della directory packages del modulo target", "backend/packages/"),
 
     /**
      * Percorso della directory packages. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectPackages("Directory target packages", pathTargetProjectModulo.value + dirPackages.value),
+    pathTargetProjectPackages(AETypeWiz.path, "Directory target packages", pathTargetProjectModulo.value + dirPackages.value),
 
     /**
      * Percorso della directory target sources. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectSources("Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/"),
+    pathTargetProjectSources(AETypeWiz.path, "Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirBackend("Nome della directory backend del modulo target", "backend/"),
+    dirBackend(AETypeWiz.directory, "Nome della directory backend del modulo target", "backend/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirApplication("Nome della directory application del modulo target", "backend/application/"),
+    dirApplication(AETypeWiz.directory, "Nome della directory application del modulo target", "backend/application/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirData("Nome della directory data del modulo target", "backend/data/"),
+    dirData(AETypeWiz.directory, "Nome della directory data del modulo target", "backend/data/"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirUI("Nome della directory UI del modulo target", "ui/"),
+    dirUI(AETypeWiz.directory, "Nome della directory UI del modulo target", "ui/"),
 
     /**
      * Nome della directory sources. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameSources("Nome della directory sources", "../vaadflow14/wizard/sources"),
+    nameSources(AETypeWiz.directory, "Nome della directory sources", "../vaadflow14/wizard/sources"),
 
     /**
      * Nome del file wizard. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameWizard("Nome del file wizard", "Wizard.java"),
+    nameWizard(AETypeWiz.directory, "Nome del file wizard", "Wizard.java"),
 
     /**
      * Cartella. <br>
      * Tutte le enums il cui nome inizia con 'dir', finiscono con uno SLASH <br>
      */
-    dirMetaInf(String.format("Directory META-INF (da %s)", nameVaadFlow14.value), dirResources.value + "META-INF", AECopyWiz.dirAddingOnly, "", "resources"),
+    dirMetaInf(AETypeWiz.directory, String.format("Directory META-INF (da %s)", nameVaadFlow14.value), dirResources.value + "META-INF", AECopyWiz.dirAddingOnly, "", "resources"),
 
     /**
      * File. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileProperties(String.format("File application.properties (da %s)", nameSources.value), dirResources.value + "application.properties", AECopyWiz.sourceCheckFlagSeEsiste, "properties", dirMain.value),
+    fileProperties(AETypeWiz.directory, String.format("File application.properties (da %s)", nameSources.value), dirResources.value + "application.properties", AECopyWiz.sourceCheckFlagSeEsiste, "properties", dirMain.value),
 
     /**
      * File. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileBanner(String.format("File banner (da %s)", nameSources.value), dirResources.value + "banner.txt", AECopyWiz.sourceSoloSeNonEsiste, "banner.txt"),
+    fileBanner(AETypeWiz.directory, String.format("File banner (da %s)", nameSources.value), dirResources.value + "banner.txt", AECopyWiz.sourceSoloSeNonEsiste, "banner.txt"),
 
     /**
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootGit(String.format("File root GIT di esclusione (da %s)", nameSources.value), ".gitignore", AECopyWiz.sourceSovrascriveSempreAncheSeEsiste),
+    fileRootGit(AETypeWiz.directory, String.format("File root GIT di esclusione (da %s)", nameSources.value), ".gitignore", AECopyWiz.sourceSovrascriveSempreAncheSeEsiste),
 
     /**
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootPOM(String.format("File root POM.xml di Maven (da %s)", nameSources.value), "pom.xml", AECopyWiz.sourceCheckFlagSeEsiste, "pom"),
+    fileRootPOM(AETypeWiz.directory, String.format("File root POM.xml di Maven (da %s)", nameSources.value), "pom.xml", AECopyWiz.sourceCheckFlagSeEsiste, "pom"),
 
     /**
      * File a livello di root. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    fileRootREAD(String.format("File root README con note di testo (da %s)", nameSources.value), "README.txt", AECopyWiz.sourceCheckFlagSeEsiste),
+    fileRootREAD(AETypeWiz.directory, String.format("File root README con note di testo (da %s)", nameSources.value), "README.txt", AECopyWiz.sourceCheckFlagSeEsiste),
+
+    /**
+     * Nome del package da creare. Eventualmente con sub-directory <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetPackage(AETypeWiz.packages, "Nome del package da creare/modificare", VALORE_MANCANTE),
 
     /**
      * Nome del package da creare. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetPackage("Nome del package da creare/modificare", VALORE_MANCANTE),
-
-    /**
-     * Nome del package da creare. <br>
-     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
-     */
-    nameTargetPackageUpper("Nome del package da creare/modificare iniziale maiuscola", VALORE_MANCANTE),
+    nameTargetFileUpper(AETypeWiz.packages, "Nome del file da creare/modificare con iniziale maiuscola", VALORE_MANCANTE),
 
     /**
      * Percorso del package. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetSingoloPackage("Directory del package da creare/modificare", VALORE_MANCANTE),
+    pathTargetPackage(AETypeWiz.packages, "Directory del package da creare/modificare", VALORE_MANCANTE),
 
     ;
+
+    private AETypeWiz type;
 
     private String descrizione;
 
@@ -375,37 +379,38 @@ public enum AEWizCost {
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(String descrizione, String value) {
-        this(descrizione, value, (AECopyWiz) null, FlowCost.VUOTA, FlowCost.VUOTA, false, false, true, false);
+    AEWizCost(AETypeWiz type, String descrizione, String value) {
+        this(type, descrizione, value, (AECopyWiz) null, VUOTA, VUOTA, false, false, true, false);
     }
 
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(String descrizione, String value, AECopyWiz copyWiz) {
-        this(descrizione, value, copyWiz, value, FlowCost.VUOTA, true, true, true, false);
+    AEWizCost(AETypeWiz type, String descrizione, String value, AECopyWiz copyWiz) {
+        this(type, descrizione, value, copyWiz, value, VUOTA, true, true, true, false);
     }
 
 
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue) {
-        this(descrizione, value, copyWiz, sourcesNameSeDiversoDaValue, FlowCost.VUOTA, true, true, true, false);
+    AEWizCost(AETypeWiz type, String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue) {
+        this(type, descrizione, value, copyWiz, sourcesNameSeDiversoDaValue, VUOTA, true, true, true, false);
     }
 
     /**
      * Costruttore parziale <br>
      */
-    AEWizCost(String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue, String pathBreve) {
-        this(descrizione, value, copyWiz, sourcesNameSeDiversoDaValue, pathBreve, true, true, true, false);
+    AEWizCost(AETypeWiz type, String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue, String pathBreve) {
+        this(type, descrizione, value, copyWiz, sourcesNameSeDiversoDaValue, pathBreve, true, true, true, false);
     }
 
 
     /**
      * Costruttore completo <br>
      */
-    AEWizCost(String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue, String pathBreve, boolean newProject, boolean updateProject, boolean accesoInizialmenteNew, boolean accesoInizialmenteUpdate) {
+    AEWizCost(AETypeWiz type, String descrizione, String value, AECopyWiz copyWiz, String sourcesNameSeDiversoDaValue, String pathBreve, boolean newProject, boolean updateProject, boolean accesoInizialmenteNew, boolean accesoInizialmenteUpdate) {
+        this.type = type;
         this.descrizione = descrizione;
         this.value = value;
         this.copyWiz = copyWiz;
@@ -418,6 +423,38 @@ public enum AEWizCost {
         this.accesoInizialmenteUpdate = accesoInizialmenteUpdate;
     }
 
+
+    private static List<AEWizCost> getTypeWiz(AETypeWiz type) {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.getType() == type) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public static List<AEWizCost> getSistema() {
+        return getTypeWiz(AETypeWiz.sistema);
+    }
+
+    public static List<AEWizCost> getDirectory() {
+        return getTypeWiz(AETypeWiz.directory);
+    }
+
+    public static List<AEWizCost> getNomeFile() {
+        return getTypeWiz(AETypeWiz.nomeFile);
+    }
+
+    public static List<AEWizCost> getPath() {
+        return getTypeWiz(AETypeWiz.path);
+    }
+
+    public static List<AEWizCost> getPackages() {
+        return getTypeWiz(AETypeWiz.packages);
+    }
 
     public static List<AEWizCost> getNewProject() {
         List<AEWizCost> listaWizCost = new ArrayList<>();
@@ -482,33 +519,59 @@ public enum AEWizCost {
         return listaWizCost;
     }
 
+
     //--metodo statico invocato da Wizard.initView()
-    public static void printInfo() {
-        System.out.println(FlowCost.VUOTA);
+    public static void printInfoBase(List<AEWizCost> lista, String titolo) {
+        System.out.println(VUOTA);
         System.out.println("********************");
-        System.out.println("Costanti statiche indipendenti dal progetto che sta girando");
+        System.out.println(titolo);
         System.out.println("********************");
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
+        for (AEWizCost aeWizCost : lista) {
             System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
             if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
                 System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
             }
-            System.out.println(FlowCost.VUOTA);
+            System.out.println(VUOTA);
         }
-        System.out.println(FlowCost.VUOTA);
+        System.out.println(VUOTA);
+    }
+
+    //--metodo statico invocato da Wizard.initView()
+    public static void printInfo() {
+        printInfoBase(getDirectory(), "Directory di percorso. Valori statici ed immutabili");
+        printInfoBase(getSistema(), "Variabili di sistema. Dipende dal programma in uso");
+        printInfoBase(getNomeFile(), "Nome e file di percorso. Dipende dal programma in uso");
+        printInfoBase(getPath(), "Path di percorso. Dipende dal programma in uso");
+        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
+        //        System.out.println(FlowCost.VUOTA);
+        //        System.out.println("********************");
+        //        System.out.println("Costanti statiche indipendenti dal progetto che sta girando");
+        //        System.out.println("********************");
+        //        for (AEWizCost aeWizCost : AEWizCost.values()) {
+        //            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
+        //            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
+        //                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
+        //            }
+        //            System.out.println(FlowCost.VUOTA);
+        //        }
+        //        System.out.println(FlowCost.VUOTA);
     }
 
 
     //--metodo statico
     public static void printVuote() {
-        System.out.println(FlowCost.VUOTA);
+        System.out.println(VUOTA);
         System.out.println("********************");
         System.out.println("Costanti statiche a cui manca ancora il valore");
         System.out.println("********************");
         for (AEWizCost aeWizCost : AEWizCost.getVuote()) {
             System.out.println("AEWizCost." + aeWizCost.name() + ": " + aeWizCost.descrizione);
         }
-        System.out.println(FlowCost.VUOTA);
+        System.out.println(VUOTA);
+    }
+
+    public AETypeWiz getType() {
+        return type;
     }
 
     public String getDescrizione() {

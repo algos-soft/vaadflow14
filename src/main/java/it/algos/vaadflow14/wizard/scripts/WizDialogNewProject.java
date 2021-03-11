@@ -194,7 +194,7 @@ public class WizDialogNewProject extends WizDialog {
 
         String pathProject = pathProjectFile.getAbsolutePath();
         String nameProject = file.estraeClasseFinale(pathProject);
-        AEWizCost.nameTargetProject.setValue(text.primaMaiuscola(nameProject));
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
         AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
         AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
         AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);

@@ -14,7 +14,7 @@ import java.util.*;
  * Fix date: @TODAY@ <br>
  * Fix time: @TIME@ <br>
  * <p>
- * Classe (facoltativa) di gestione della 'grafica' e della ''business logic' di un Package <br>
+ * Classe (facoltativa) di gestione della 'grafica' e della 'business logic' di un Package <br>
  * Mantiene lo ''stato' <br>
  * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>

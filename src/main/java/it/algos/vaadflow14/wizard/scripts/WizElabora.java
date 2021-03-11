@@ -209,7 +209,7 @@ public abstract class WizElabora implements WizRecipient {
         AIResult result;
         String suffix = pack.getSuffix() + JAVA_SUFFIX;
         String nameSourceText = pack.getSourcesName();
-        String pathFileToBeWritten = AEWizCost.pathTargetSingoloPackage.get() + AEWizCost.nameTargetPackageUpper.get();
+        String pathFileToBeWritten = AEWizCost.pathTargetPackage.get() + AEWizCost.nameTargetFileUpper.get();
         pathFileToBeWritten += suffix;
 
         if (pack.is()) {
@@ -238,10 +238,10 @@ public abstract class WizElabora implements WizRecipient {
         String newText;
         String tagIni = "super.fixMenuRoutes();";
         String nomeFileTextSorgente = "Boot";
-        String packageName = AEWizCost.nameTargetPackageUpper.get();
+        String packageName = AEWizCost.nameTargetFileUpper.get();
         String tagNew = "FlowVar.menuRouteList.add(" + packageName + ".class);";
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
-        pathFileBoot += AEWizCost.projectCurrent.get() + nomeFileTextSorgente;
+        pathFileBoot += AEWizCost.projectCurrentUpper.get() + nomeFileTextSorgente;
         String pathBreve = file.findPathBreve(pathFileBoot, DIR_BACKEND);
         pathFileBoot += JAVA_SUFFIX;
 
@@ -278,12 +278,12 @@ public abstract class WizElabora implements WizRecipient {
         String tagOld = "import it.algos.vaadflow14.backend.application.FlowVar;";
         String project = AEWizCost.projectCurrentLower.get();
         String pack = AEWizCost.nameTargetPackage.get();
-        String clazz = AEWizCost.nameTargetPackageUpper.get();
-        String packageName = AEWizCost.nameTargetPackageUpper.get();
+        String clazz = AEWizCost.nameTargetFileUpper.get();
+        String packageName = AEWizCost.nameTargetFileUpper.get();
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
-        pathFileBoot += AEWizCost.projectCurrent.get() + nomeFileTextSorgente + JAVA_SUFFIX;
+        pathFileBoot += AEWizCost.projectCurrentUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
         String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
-        String pathEntity = AEWizCost.pathTargetSingoloPackage.get() + text.primaMaiuscola(pack);
+        String pathEntity = AEWizCost.pathTargetPackage.get() + text.primaMaiuscola(pack);
         String pathBreveEntity = file.findPathBreve(pathEntity, DIR_PACKAGES);
         String pathBreveBoot = file.findPathBreve(pathFileBoot, DIR_BACKEND);
 
@@ -323,7 +323,7 @@ public abstract class WizElabora implements WizRecipient {
         for (String packageName : wizService.getPackages()) {
             logger.log(AETypeLog.wizardDoc, VUOTA);
             numFiles = 0;
-            status = status && wizService.regolaAEToken(projectName, packageName);
+            status = status && wizService.regolaAEToken(projectName, packageName,packageName);//@todo PROVVISORIO
             if (status) {
                 List alfa = AEPackage.getFiles();
                 for (AEPackage pack : AEPackage.getFiles()) {
@@ -372,12 +372,12 @@ public abstract class WizElabora implements WizRecipient {
         upperName = text.primaMaiuscola(fileName);
 
         AEWizCost.nameTargetPackage.setValue(fileName);
-        AEWizCost.nameTargetPackageUpper.setValue(upperName);
-        AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
-        pathFileDaModificare = AEWizCost.pathTargetSingoloPackage.get() + upperName + suffisso + JAVA_SUFFIX;
+        AEWizCost.nameTargetFileUpper.setValue(upperName);
+        AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
+        pathFileDaModificare = AEWizCost.pathTargetPackage.get() + upperName + suffisso + JAVA_SUFFIX;
 
         if (file.isEsisteFile(pathFileDaModificare)) {
-            wizService.regolaAEToken(AEWizCost.projectCurrent.get(), fileName);
+            wizService.regolaAEToken(AEWizCost.projectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
             risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
         }
         else {
@@ -392,7 +392,7 @@ public abstract class WizElabora implements WizRecipient {
         AIResult result;
         String message = VUOTA;
         String path = VUOTA;
-        String projectUpper = AEWizCost.nameTargetProject.get();
+        String projectUpper = AEWizCost.nameTargetProjectUpper.get();
         String projectLower = AEWizCost.nameTargetProjectLower.get();
         String pathBreve;
 

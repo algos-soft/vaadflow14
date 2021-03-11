@@ -56,7 +56,7 @@ public class WizDialogUpdateProject extends WizDialog {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
         }
         else {
-            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.projectCurrent.get()), "green");
+            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.projectCurrentUpper.get()), "green");
         }
         this.add(topLayout);
 
@@ -207,11 +207,11 @@ public class WizDialogUpdateProject extends WizDialog {
         }
         else {
             nameProject = AEWizCost.projectCurrentLower.get();
-            nameUpper = AEWizCost.projectCurrent.get();
+            nameUpper = AEWizCost.projectCurrentUpper.get();
             pathProject = AEWizCost.pathCurrent.get();
         }
 
-        AEWizCost.nameTargetProject.setValue(nameUpper);
+        AEWizCost.nameTargetProjectUpper.setValue(nameUpper);
         AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
         AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);

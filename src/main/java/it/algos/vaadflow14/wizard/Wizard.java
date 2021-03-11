@@ -241,7 +241,7 @@ public class Wizard extends VerticalLayout {
             titolo = WizCost.TITOLO_MODIFICA_PROGETTO;
         }
         else {
-            titolo = WizCost.TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.projectCurrent.get() + ")";
+            titolo = WizCost.TITOLO_MODIFICA_QUESTO_PROGETTO + " (" + AEWizCost.projectCurrentUpper.get() + ")";
         }
 
         paragrafo.setText(titolo);

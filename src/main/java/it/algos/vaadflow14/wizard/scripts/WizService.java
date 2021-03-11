@@ -106,33 +106,37 @@ public class WizService {
         String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
         AEWizCost.projectCurrentLower.setValue(project.toLowerCase());
         project = text.primaMaiuscola(project);
-        AEWizCost.projectCurrent.setValue(project);
+        AEWizCost.projectCurrentUpper.setValue(project);
 
         //--isBaseFlow
         String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
         AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
-        if (AEFlag.isBaseFlow.is()) {
-            AEWizCost.nameTargetProject.setValue(nameProject);
-            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-        }
-        else {
-            AEWizCost.nameTargetProject.setValue(nameProject);
-            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-        }
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
+        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+        //        if (AEFlag.isBaseFlow.is()) {
+        //            AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
+        //            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        //            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+        //            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        //            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+        //        }
+        //        else {
+        //            AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
+        //            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        //            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+        //            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+        //            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+        //        }
 
-        AEWizCost.printVuote();
-        AEWizCost.printInfo();
-        AEWizCost.printVuote();
         AEWizCost.printInfo();
     }
 
@@ -220,7 +224,7 @@ public class WizService {
         String message = VUOTA;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
-        String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrent.get().toLowerCase();
+        String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrentUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(destPath, dirPath);
         String type = text.setTonde(copyWiz.name());
 
@@ -438,7 +442,7 @@ public class WizService {
         AIResult resultCheck = AResult.errato();
         String message = VUOTA;
         boolean esisteFileDest = false;
-        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrent.get().toLowerCase();
+        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrentUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(pathFileToBeWritten, dirPath);
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);
@@ -983,7 +987,7 @@ public class WizService {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
      * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
      */
-    public boolean regolaAEToken(String projectName, String packageName) {
+    public boolean regolaAEToken(String projectName, String packageName, String fileName) {
         boolean status = true;
         boolean usaCompany = AECheck.company.is();
         String tagEntity = "AEntity";
@@ -1005,8 +1009,10 @@ public class WizService {
 
         if (text.isValid(packageName)) {
             AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
-            AEToken.packageName.setValue(packageName.toLowerCase());
-            AEToken.entity.setValue(text.primaMaiuscola(packageName));
+            AEToken.packageNamePunti.setValue(text.fixSlashToPunto(packageName));
+            AEToken.packageNameSlash.setValue(text.fixPuntoToSlash(packageName));
+            AEToken.entityLower.setValue(fileName.toLowerCase(Locale.ROOT));
+            AEToken.entityUpper.setValue(text.primaMaiuscola(fileName));
         }
         AEToken.nameTargetProject.setValue(projectName);
         AEToken.nameTargetProjectLower.setValue(projectName.toLowerCase());
@@ -1014,7 +1020,6 @@ public class WizService {
         AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
         AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
         AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
-        AEToken.packageName.setValue(packageName);
         AEToken.user.setValue(AEWizCost.nameUser.get());
         AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
         AEToken.todayAnno.setValue(String.valueOf(LocalDate.now().getYear()));

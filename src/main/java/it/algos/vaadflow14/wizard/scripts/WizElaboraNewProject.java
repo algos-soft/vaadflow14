@@ -27,12 +27,12 @@ public class WizElaboraNewProject extends WizElabora {
         AIResult result = AResult.errato();
         String srcPath = AEWizCost.pathVaadFlow14Root.get();
         String destPath = AEWizCost.pathTargetProjectRoot.get();
-        String nameProject = AEWizCost.nameTargetProject.get();
+        String nameProject = AEWizCost.nameTargetProjectUpper.get();
         String value;
         String message;
         AECopyWiz copyWiz;
         String sourcesName;
-        String directory = AEWizCost.nameTargetProject.get();
+        String directory = AEWizCost.nameTargetProjectUpper.get();
 
         for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
@@ -59,7 +59,7 @@ public class WizElaboraNewProject extends WizElabora {
                     case fileSoloSeNonEsiste:
                     case fileSovrascriveSempreAncheSeEsiste:
                     case fileCheckFlagSeEsiste:
-                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrent.get().toLowerCase());
+                        wizService.copyFile(copyWiz, value, destPath + value, AEWizCost.projectCurrentUpper.get().toLowerCase());
                         break;
                     case sourceSoloSeNonEsiste:
                     case sourceSovrascriveSempreAncheSeEsiste:

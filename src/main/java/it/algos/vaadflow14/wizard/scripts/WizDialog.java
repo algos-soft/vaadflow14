@@ -278,7 +278,7 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAECheck();
         status = status && this.regolaAEPackage();
         status = status && this.regolaAEToken();
-        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProject.get());
+        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProjectUpper.get());
 
         return status;
     }
@@ -337,11 +337,13 @@ public abstract class WizDialog extends Dialog {
     protected boolean regolaAEToken() {
         String projectName;
         String packageName;
+        String fileName;
         AEToken.reset();
 
-        projectName = AEWizCost.nameTargetProject.get();
+        projectName = AEWizCost.nameTargetProjectUpper.get();
         packageName = AEWizCost.nameTargetPackage.get();
-        return wizService.regolaAEToken(projectName, packageName);
+        fileName = AEWizCost.nameTargetFileUpper.get();
+        return wizService.regolaAEToken(projectName, packageName, fileName);
     }
 
     /**
@@ -379,7 +381,6 @@ public abstract class WizDialog extends Dialog {
     }
 
 
-
     protected VerticalLayout fixSezione(String titolo, String color) {
         VerticalLayout layoutTitolo = new VerticalLayout();
         H3 titoloH3 = new H3(text.primaMaiuscola(titolo));
@@ -404,9 +405,9 @@ public abstract class WizDialog extends Dialog {
             if (!regolazioniFinali()) {
                 if (AEFlag.isNewPackage.is()) {
                     logger.info("Manca il nome del nuovo package che non può quindi essere creato ", this.getClass(), "esceDalDialogo");
-//                }
-//                else {
-//                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
+                    //                }
+                    //                else {
+                    //                    logger.info("Mancano alcuni dati essenziali per l'elaborazione richiesta, che è stata quindi abortita", this.getClass(), "esceDalDialogo");
                 }
 
                 this.close();

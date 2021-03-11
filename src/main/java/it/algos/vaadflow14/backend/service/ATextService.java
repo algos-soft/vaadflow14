@@ -292,8 +292,6 @@ public class ATextService extends AAbstractService {
     }
 
 
-
-
     /**
      * Label colorata
      *
@@ -632,8 +630,6 @@ public class ATextService extends AAbstractService {
 
         return stringaOut.trim();
     }
-
-
 
 
     /**
@@ -1039,8 +1035,8 @@ public class ATextService extends AAbstractService {
      *
      * @return testo modificato
      */
-    public String sostituisce(final String testoIn, String oldTag, String newTag) {
-        String testoOut = VUOTA;
+    public String sostituisce(final String testoIn, final String oldTag, final String newTag) {
+        String testoOut = testoIn;
         String prima = VUOTA;
         String rimane = testoIn;
         int pos = 0;
@@ -1070,6 +1066,31 @@ public class ATextService extends AAbstractService {
         return testoOut.trim();
     }
 
+    /**
+     * Sostituisce nel testo tutti i 'punti' con gli 'slash' <br>
+     * Esegue solo se il testo è valido
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param testoIn ingresso da elaborare
+     *
+     * @return testo modificato
+     */
+    public String fixPuntoToSlash(final String testoIn) {
+        return sostituisce(testoIn, PUNTO, SLASH);
+    }
+
+    /**
+     * Sostituisce nel testo tutti gli 'slash' con i 'punti'  <br>
+     * Esegue solo se il testo è valido
+     * Elimina spazi vuoti iniziali e finali
+     *
+     * @param testoIn ingresso da elaborare
+     *
+     * @return testo modificato
+     */
+    public String fixSlashToPunto(final String testoIn) {
+        return sostituisce(testoIn, SLASH, PUNTO);
+    }
 
     /**
      * Elimina tutti i caratteri contenuti nella stringa.

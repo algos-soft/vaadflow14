@@ -1,15 +1,12 @@
 package it.algos.unit;
 
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.html.Label;
-import org.junit.jupiter.api.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.vaadin.flow.component.html.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.*;
 
 
 /**
@@ -931,9 +928,9 @@ class ATextServiceTest extends ATest {
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
 
-//        ottenuto = text.levaTesto(sorgente, sorgente2);
-//        assertNotNull(ottenuto);
-//        assertEquals(previsto, ottenuto);
+        //        ottenuto = text.levaTesto(sorgente, sorgente2);
+        //        assertNotNull(ottenuto);
+        //        assertEquals(previsto, ottenuto);
     }
 
 
@@ -941,9 +938,11 @@ class ATextServiceTest extends ATest {
     @Order(27)
     @DisplayName("27 - estraeDoppiaGraffa")
     public void estraeDoppiaGraffa() {
-        sorgente  = "{{Simbolo|Italian Province (Crown).svg|24}} {{IT-SU}}";
-        sorgente2 = " altro {{IT-SU}} pippo non mi interessa";;
-        sorgente3 = "{{IT-SU}}";;
+        sorgente = "{{Simbolo|Italian Province (Crown).svg|24}} {{IT-SU}}";
+        sorgente2 = " altro {{IT-SU}} pippo non mi interessa";
+        ;
+        sorgente3 = "{{IT-SU}}";
+        ;
         previsto = "IT-SU";
 
         ottenuto = text.estraeGraffaDoppia(sorgente);
@@ -957,6 +956,85 @@ class ATextServiceTest extends ATest {
         ottenuto = text.estraeGraffaDoppia(sorgente3);
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
+    }
+
+
+    @Test
+    @Order(28)
+    @DisplayName("28 - sostituisce")
+    public void sostituisce() {
+        sorgente = "{{Simbolo|Italian Province (Crown).svg|24}} {{IT-SU}}";
+        sorgente2 = "Province";
+        sorgente3 = "Regioni";
+        previsto = "{{Simbolo|Italian Regioni (Crown).svg|24}} {{IT-SU}}";
+
+        ottenuto = text.sostituisce(sorgente, sorgente2, sorgente3);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+    }
+
+
+    @Test
+    @Order(29)
+    @DisplayName("29 - fixPuntoToSlash")
+    public void fixPuntoToSlash() {
+        previsto = "it/algos/vaadflow14/wizard/enumeration";
+        sorgente = "it.algos.vaadflow14.wizard.enumeration";
+
+        ottenuto = text.sostituisce(sorgente, PUNTO, SLASH);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        ottenuto = text.fixPuntoToSlash(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "it.algos/vaadflow14.wizard/enumeration";
+        ottenuto = text.fixPuntoToSlash(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "magazzino";
+        previsto = "magazzino";
+        ottenuto = text.fixPuntoToSlash(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+    }
+
+    @Test
+    @Order(30)
+    @DisplayName("30 - fixSlashToPunto")
+    public void fixSlashToPunto() {
+        previsto  = "it.algos.vaadflow14.wizard.enumeration";
+        sorgente  = "it/algos/vaadflow14/wizard/enumeration";
+
+        ottenuto = text.sostituisce(sorgente, SLASH, PUNTO);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        ottenuto = text.fixSlashToPunto(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "it.algos/vaadflow14.wizard/enumeration";
+        ottenuto = text.fixSlashToPunto(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "magazzino";
+        previsto = "magazzino";
+        ottenuto = text.fixSlashToPunto(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
     }
 
     private void print(String sorgente, String ottenuto) {

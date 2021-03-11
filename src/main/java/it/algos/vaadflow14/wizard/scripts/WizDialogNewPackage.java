@@ -3,7 +3,7 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -109,11 +109,13 @@ public class WizDialogNewPackage extends WizDialog {
 
         if (text.isValid(value) && value.length() > 1) {
             confirmButton.setEnabled(true);
-            AEToken.packageName.setValue(value);
+            AEToken.packageNamePunti.setValue(text.fixSlashToPunto(value));
+            AEToken.packageNameSlash.setValue(text.fixPuntoToSlash(value));
         }
         else {
             confirmButton.setEnabled(false);
-            AEToken.packageName.setValue(VUOTA);
+            AEToken.packageNamePunti.setValue(VUOTA);
+            AEToken.packageNameSlash.setValue(VUOTA);
         }
     }
 
@@ -126,42 +128,24 @@ public class WizDialogNewPackage extends WizDialog {
      */
     @Override
     protected boolean regolaAEWizCost() {
+        String packName;
+        String fileName;
+
         //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
         if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-            AEWizCost.nameTargetPackage.setValue(fieldPackageName.getValue());
-            AEWizCost.nameTargetPackageUpper.setValue(text.primaMaiuscola(fieldPackageName.getValue()));
-            AEWizCost.pathTargetSingoloPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + FlowCost.SLASH);
+            packName = fieldPackageName.getValue();
+            packName = text.fixPuntoToSlash(packName);
+            AEWizCost.nameTargetPackage.setValue(packName);
+            fileName = text.levaTestoPrimaDi(packName, SLASH);
+            AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
+            AEWizCost.pathTargetPackage.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
         }
 
-//                AEWizCost.printInfo();
         AEWizCost.printVuote();
-        AEWizCost.printInfo();
-
+        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
         return true;
     }
 
 
-    /**
-     * Chiamato alla dismissione del dialogo <br>
-     * Resetta i valori regolabili della Enumeration AEDir <br>
-     * Elabora tutti i valori della Enumeration AEDir dipendenti dal nome del progetto <br>
-     * Verranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected boolean regolaAEDir() {
-        boolean status = true;
-        //        String packageName;
-        //        super.regolaAEDir();
-        //
-        //        if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
-        //            packageName = fieldPackageName.getValue().toLowerCase();
-        //            status = AEDir.modificaPackageAll(packageName);
-        //        }
-        //        else {
-        //            status = false;
-        //        }
-
-        return status;
-    }
 
 }

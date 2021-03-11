@@ -49,7 +49,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
 
         if (!AEFlag.isBaseFlow.is()) {
             pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.get(), "algos");
-            pathProject = file.findPathBreve(AEWizCost.projectCurrent.get(), "algos");
+            pathProject = file.findPathBreve(AEWizCost.projectCurrentUpper.get(), "algos");
             pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.get(), "operativi");
             topLayout.add(text.getLabelGreenBold(String.format("Ricopia la directory %s di %s su %s", pathWizard, pathProject, pathModuloBase)));
 
