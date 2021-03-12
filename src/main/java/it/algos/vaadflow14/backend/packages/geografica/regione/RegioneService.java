@@ -118,19 +118,12 @@ public class RegioneService extends AService {
      */
     public Regione newEntity(final String divisione,final Stato stato,final String iso,final String sigla,final AEStatus status) {
         Regione newEntityBean = Regione.builderRegione()
-
                 .ordine(this.getNewOrdine())
-
                 .divisione(text.isValid(divisione) ? divisione : null)
-
                 .stato(stato)
-
                 .iso(text.isValid(iso) ? iso : null)
-
                 .sigla(text.isValid(sigla) ? sigla : null)
-
                 .status(status)
-
                 .build();
 
         return (Regione) fixKey(newEntityBean);

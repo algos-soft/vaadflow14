@@ -120,21 +120,13 @@ public class UtenteService extends AService {
      */
     public Utente newEntity(final String username, final String password, final AERole role) {
         Utente newEntityBean = Utente.builderUtente()
-
                 .username(text.isValid(username) ? username : null)
-
                 .password(text.isValid(password) ? password : null)
-
                 .accountNonExpired(true)
-
                 .accountNonLocked(true)
-
                 .credentialsNonExpired(true)
-
                 .enabled(true)
-
                 .role(role != null ? role : AERole.user)
-
                 .build();
 
         return (Utente) fixKey(newEntityBean);

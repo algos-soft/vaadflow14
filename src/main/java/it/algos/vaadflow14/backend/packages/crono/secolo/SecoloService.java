@@ -115,17 +115,11 @@ public class SecoloService extends AService {
      */
     public Secolo newEntity(final String secolo, final boolean anteCristo, final int inizio, final int fine) {
         Secolo newEntityBean = Secolo.builderSecolo()
-
                 .ordine(getNewOrdine())
-
                 .secolo(text.isValid(secolo) ? secolo : null)
-
                 .anteCristo(anteCristo)
-
                 .inizio(inizio)
-
                 .fine(fine)
-
                 .build();
 
         return (Secolo) fixKey(newEntityBean);

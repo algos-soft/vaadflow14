@@ -93,13 +93,9 @@ public class ContinenteService extends AService {
      */
     public Continente newEntity(final int ordine, final String nome, final boolean abitato) {
         Continente newEntityBean = Continente.builderContinente()
-
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-
                 .nome(text.isValid(nome) ? nome : null)
-
                 .abitato(abitato)
-
                 .build();
 
         return (Continente) fixKey(newEntityBean);

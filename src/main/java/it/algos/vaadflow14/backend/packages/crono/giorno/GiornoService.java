@@ -103,13 +103,9 @@ public class GiornoService extends AService {
      */
     public Giorno newEntity(final int ordine,final String giorno,final Mese mese) {
         Giorno newEntityBean = Giorno.builderGiorno()
-
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-
                 .giorno(text.isValid(giorno) ? giorno : null)
-
                 .mese(mese)
-
                 .build();
 
         return (Giorno) fixKey(newEntityBean);

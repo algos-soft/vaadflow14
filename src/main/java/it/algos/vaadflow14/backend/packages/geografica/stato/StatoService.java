@@ -119,25 +119,15 @@ public class StatoService extends AService {
      */
     public Stato newEntity(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
         Stato newEntityBean = Stato.builderStato()
-
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-
                 .stato(text.isValid(stato) ? stato : null)
-
                 .ue(ue)
-
                 .numerico(text.isValid(numerico) ? numerico : null)
-
                 .alfatre(text.isValid(alfatre) ? alfatre : null)
-
                 .alfadue(text.isValid(alfadue) ? alfadue : null)
-
                 .locale(text.isValid(locale) ? locale : null)
-
                 .bandiera(text.isValid(bandiera) ? bandiera : null)
-
                 .continente(continente)
-
                 .build();
 
         return (Stato) fixKey(newEntityBean);

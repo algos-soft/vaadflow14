@@ -114,21 +114,13 @@ public class ProvinciaService extends AService {
      */
     public Provincia newEntity(final int ordine, final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
         Provincia newEntityBean = Provincia.builderProvincia()
-
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
-
                 .nome(text.isValid(nome) ? nome : null)
-
                 .sigla(text.isValid(sigla) ? sigla : null)
-
                 .regione(regione)
-
                 .stato(stato)
-
                 .iso(text.isValid(iso) ? iso : null)
-
                 .status(status != null ? status : AETypeProvincia.provincia)
-
                 .build();
 
         return (Provincia) fixKey(newEntityBean);

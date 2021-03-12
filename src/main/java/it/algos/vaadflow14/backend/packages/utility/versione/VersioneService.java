@@ -88,13 +88,9 @@ public class VersioneService extends AService {
      */
     public Versione newEntity(final String code, final LocalDate giorno, final String descrizione) {
         Versione newEntityBean = Versione.builderVersione()
-
                 .code(text.isValid(code) ? code : null)
-
                 .giorno(giorno != giorno ? giorno : LocalDate.now())
-
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
-
                 .build();
 
         return (Versione) fixKey(newEntityBean);
