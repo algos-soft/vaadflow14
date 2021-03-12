@@ -1,50 +1,39 @@
 package it.algos.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
+import com.fasterxml.jackson.databind.*;
+import com.google.gson.*;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import it.algos.simple.SimpleApplication;
-import it.algos.simple.backend.packages.Alfa;
-import it.algos.simple.backend.packages.Omega;
-import it.algos.unit.ATest;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.giorno.Giorno;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogicOld;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.utility.versione.Versione;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import it.algos.vaadflow14.backend.wrapper.AFiltro;
-import org.bson.Document;
-import org.junit.Assert;
+import com.mongodb.client.*;
+import it.algos.simple.*;
+import it.algos.simple.backend.packages.*;
+import it.algos.unit.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.bson.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.test.context.*;
+import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.*;
+import org.springframework.data.mongodb.core.query.*;
+import org.springframework.test.context.junit.jupiter.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.SEP;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static org.junit.Assert.assertEquals;
+import java.util.*;
 
 
 /**
@@ -74,7 +63,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     AMongoService service;
 
     @InjectMocks
-    MeseLogicOld meseLogic;
+    MeseService meseService;
 
     private Mese meseUno;
 
@@ -91,8 +80,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        MockitoAnnotations.initMocks(meseLogic);
-        Assertions.assertNotNull(meseLogic);
+        MockitoAnnotations.initMocks(meseService);
+        Assertions.assertNotNull(meseService);
         Assertions.assertNotNull(mongoOp);
 
         service.annotation = annotation;
@@ -101,7 +90,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         service.logger = logger;
         annotation.text = text;
         service.mongoOp = mongoOp;
-        meseLogic.mongo = service;
+        meseService.mongo = service;
         mongo.mongoOp = mongoOp;
         mongo.logger = logger;
 
@@ -189,7 +178,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         ottenutoBooleano = service.isValid(Mese.class);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(MeseLogicOld.class);
+        ottenutoBooleano = service.isValid(MeseService.class);
         Assert.assertFalse(ottenutoBooleano);
     }
 
@@ -209,7 +198,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         ottenutoBooleano = service.isEmpty(Mese.class);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isEmpty(MeseLogicOld.class);
+        ottenutoBooleano = service.isEmpty(MeseService.class);
         Assert.assertTrue(ottenutoBooleano);
     }
 
@@ -817,7 +806,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         sorgenteIntero = service.count(Mese.class);
         previstoIntero = sorgenteIntero + 1;
 
-        ottenutoIntero = meseLogic.getNewOrdine();
+        ottenutoIntero = meseService.getNewOrdine();
         Assert.assertEquals(previstoIntero, ottenutoIntero);
     }
 

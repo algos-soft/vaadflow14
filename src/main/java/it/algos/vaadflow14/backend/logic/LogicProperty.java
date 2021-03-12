@@ -122,6 +122,14 @@ public abstract class LogicProperty extends VerticalLayout {
     public ADateService date;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AVaadinService vaadinService;
+
+    /**
      * PlaceHolder iniziale per avvisi <br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>

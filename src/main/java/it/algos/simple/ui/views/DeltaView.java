@@ -1,23 +1,19 @@
 package it.algos.simple.ui.views;
 
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
-import it.algos.simple.backend.packages.Delta;
-import it.algos.vaadflow14.backend.packages.crono.secolo.SecoloLogicOld;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import it.algos.vaadflow14.backend.service.AResourceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.*;
+import it.algos.simple.backend.packages.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.util.Arrays;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import javax.annotation.*;
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -42,7 +38,7 @@ public class DeltaView extends VerticalLayout {
     public AResourceService resourceService;
 
     @Autowired
-    private SecoloLogicOld secoloLogic;
+    private SecoloService secoloLogic;
 
     @Autowired
     private AMongoService mongo;

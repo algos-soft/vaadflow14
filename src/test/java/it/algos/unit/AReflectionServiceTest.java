@@ -1,22 +1,19 @@
 package it.algos.unit;
 
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.mese.MeseLogicOld;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.security.utente.Utente;
-import it.algos.vaadflow14.backend.service.AReflectionService;
-import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import java.lang.reflect.Field;
-import java.util.List;
-
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.*;
+
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -43,7 +40,7 @@ public class AReflectionServiceTest extends ATest {
 
     protected static Class<? extends AEntity> SECOLO_CLASS = Secolo.class;
 
-    protected static Class<?> MESE_LOGIC_CLASS = MeseLogicOld.class;
+    protected static Class<?> MESE_LOGIC_CLASS = MeseService.class;
 
     /**
      * Classe principale di riferimento <br>

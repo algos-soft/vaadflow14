@@ -1,14 +1,10 @@
 package it.algos.vaadflow14.backend.entity;
 
-import it.algos.vaadflow14.backend.annotation.AIColumn;
-import it.algos.vaadflow14.backend.annotation.AIField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.packages.company.Company;
-import it.algos.vaadflow14.backend.packages.company.CompanyLogicOld;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import lombok.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
 /**
  * Project vaadflow14
@@ -36,7 +32,7 @@ public class ACEntity extends AEntity {
      * - Facoltativo od obbligatorio a seconda della sottoclasse, se FlowVar.usaCompany=true
      */
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Company.class, logicClazz = CompanyLogicOld.class)
+    @AIField(type = AETypeField.combo, comboClazz = Company.class, logicClazz = CompanyService.class)
     @AIColumn()
     public Company company;
 
