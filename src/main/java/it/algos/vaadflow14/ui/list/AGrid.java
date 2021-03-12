@@ -56,13 +56,21 @@ public class AGrid {
     @Autowired
     public AReflectionService reflection;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AHtmlService html;
+
     protected AILogic entityLogic;
 
     protected List<String> gridPropertyNamesList;
 
     protected Class<? extends AEntity> entityClazz;
 
-    protected Label headerLabelPlaceHolder;
+    protected Span headerLabelPlaceHolder;
 
     protected Map<String, Grid.Column<AEntity>> columnsMap;
 
@@ -305,7 +313,7 @@ public class AGrid {
      * Il PlaceHolder (una label) esiste SEMPRE. Il contenuto viene modificato da setItems() <br>
      */
     protected void creaGridHeader() {
-        this.headerLabelPlaceHolder = new Label();
+        this.headerLabelPlaceHolder = new Span();
 
         try {
             HeaderRow topRow = grid.prependHeaderRow();
@@ -344,6 +352,8 @@ public class AGrid {
 
             if (headerLabelPlaceHolder != null) {
                 headerLabelPlaceHolder.setText(message);
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
             }
         }
     }
@@ -371,6 +381,8 @@ public class AGrid {
 
             if (headerLabelPlaceHolder != null) {
                 headerLabelPlaceHolder.setText(message);
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
+                headerLabelPlaceHolder.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
             }
         }
     }
