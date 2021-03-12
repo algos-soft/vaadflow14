@@ -34,14 +34,10 @@ public enum AEPackage {
     //
     //    company("Entity subclass di Company", false),
 
-    rowIndex("Entity usa rowIndex", false, false, false, false),
-
+    rowIndex("Entity usa rowIndex", true, false, false, false),
     ordine("Entity usa property (int)", false, false, true, true, "PropertyOrdine", VUOTA, "ordine", "ordine"),
-
     code("Entity usa property (String)", true, false, true, true, "PropertyCode", VUOTA, "code", "code"),
-
     description("Entity usa property (String)", true, false, true, true, "PropertyDescrizione", VUOTA, "descrizione", "descrizione"),
-
     valido("Entity usa property (boolean)", false, false, true, true, "PropertyValido", VUOTA, "valido", "valido"),
     ;
 

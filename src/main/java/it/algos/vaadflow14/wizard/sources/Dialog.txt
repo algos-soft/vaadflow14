@@ -38,7 +38,7 @@ import static it.algos.@MODULELOWER@.application.@COST@.@QUALIFIER@;
 @Qualifier(@QUALIFIER@)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@Dialog extends AViewDialog<@ENTITY@> {
+public class @ENTITYUPPER@Dialog extends AViewDialog<@ENTITY@> {
 
     //--casting del Service per usarlo localmente
     private @ENTITY@Service service;

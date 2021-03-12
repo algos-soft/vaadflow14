@@ -63,7 +63,7 @@ public enum AECheck {
 
     company("Entity subclass di Company", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, false),
 
-    rowIndex("Entity usa rowIndex", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, false),
+    rowIndex("Entity usa rowIndex", false, false, true, true, FlowCost.VUOTA, FlowCost.VUOTA, true),
 
     ordine("Entity usa property (int)", false, false, true, true, "ordine", "PropertyOrdine", false, true, "ordine"),
 

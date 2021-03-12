@@ -12,21 +12,13 @@ import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
 public enum AEFlag {
 
     isBaseFlow(),
-
     isProject(),
-
     isPackage(),
-
     isNewProject(),
-
     isUpdateProject(),
-
     isNewPackage(),
-
     isUpdatePackage(),
-
     isDocPackages(),
-
     ;
 
     private boolean status;
