@@ -15,13 +15,15 @@ import java.util.*;
  * Date: dom, 07-mar-2021
  * Time: 21:57
  * <p>
- * Classe concreta specifica di gestione della 'business logic' di una Entity e di un Package <br>
- * NON deve essere astratta, altrimenti SpringBoot non la costruisce <br>
- * L' istanza DEVE essere creata con (ALogic) appContext.getBean(Class.forName(canonicalName), entityService, operationForm) <br>
- * Vengono create istanze diverse per la List e per il Form <br>
+ * Classe (facoltativa) di un package con personalizzazioni <br>
+ * Se manca, si usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'business logic' e della 'grafica' di @Route <br>
+ * Mantiene lo 'stato' <br>
+ * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
+ * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
  * <p>
- * Annotated with @SpringComponent (obbligatorio, se si usa la catena @Autowired di SpringBoot) <br>
- * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) (obbligatorio) <br>
+ * Annotated with @Route (obbligatorio) <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Route(value = "via", layout = MainLayout.class)
 @AIScript(sovraScrivibile = false)

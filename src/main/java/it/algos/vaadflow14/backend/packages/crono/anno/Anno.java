@@ -27,9 +27,17 @@ import javax.validation.constraints.NotNull;
  * Date: dom, 02-ago-2020
  * Time: 07:20
  * <p>
+ * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * Le properties sono PUBLIC per poter usare la Reflection <br>
  * Unica classe obbligatoria per un package. Le altre servono solo per personalizzare. <br>
+ * <p>
+ * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
+ * Annotated with Algos: @AIScript per controllare la ri-creazione di questo file dal Wizard <br>
+ * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
+ * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
+ * Annotated with Algos: @AIList per info sulle colonne della Grid <br>
+ * Annotated with Algos: @AIForm per info sulle properties del Form <br>
  */
 @SpringComponent
 @QueryEntity

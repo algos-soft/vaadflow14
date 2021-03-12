@@ -18,9 +18,15 @@ import org.springframework.stereotype.*;
  * Date: ven, 25-dic-2020
  * Time: 22:22
  * <p>
- * Service di una entityClazz specifica e di un package <br>
- * Garantisce i metodi di collegamento per accedere al database <br>
- * Non mantiene lo stato di un'istanza entityBean <br>
+ * Classe (facoltativa) di un package con personalizzazioni <br>
+ * Se manca, si usa la classe EntityService <br>
+ * Layer di collegamento tra il 'backend' e mongoDB <br>
+ * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
+ * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
+ * <p>
+ * Annotated with @Service (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
