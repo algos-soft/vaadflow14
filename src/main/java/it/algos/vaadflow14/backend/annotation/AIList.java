@@ -1,12 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.annotation.*;
 
 
 /**
@@ -47,6 +44,14 @@ public @interface AIList {
      * @return the status
      */
     boolean usaRowIndex() default false;
+
+    /**
+     * (Optional) ri-creazione automatica della lista
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaReset() default false;
 
     /**
      * (Optional) The width of the index.

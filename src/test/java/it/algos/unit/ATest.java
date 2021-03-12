@@ -79,6 +79,8 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
+    protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
+
     protected static Field FIELD_ORDINE;
 
     protected static Field FIELD_NOME;

@@ -44,7 +44,7 @@ import java.util.*;
 @Builder(builderMethodName = "builderContinente")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,abitato", usaRowIndex = false)
 @AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = false)

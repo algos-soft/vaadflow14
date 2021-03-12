@@ -14,6 +14,13 @@ import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -120,6 +127,20 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(BollaEntity.class);
 
         super.fixMenuRoutes();
+
+        if (AESimplePreferenza.usaMenuCrono.is()) {
+            FlowVar.menuRouteList.add(Secolo.class);
+            FlowVar.menuRouteList.add(Anno.class);
+            FlowVar.menuRouteList.add(Mese.class);
+            FlowVar.menuRouteList.add(Giorno.class);
+        }
+
+        if (AESimplePreferenza.usaMenuGeo.is()) {
+            FlowVar.menuRouteList.add(Continente.class);
+            FlowVar.menuRouteList.add(Stato.class);
+            FlowVar.menuRouteList.add(Regione.class);
+            FlowVar.menuRouteList.add(Provincia.class);
+        }
 
         if (AEPreferenza.usaDebug.is()) {
             FlowVar.menuRouteList.add(Address.class);

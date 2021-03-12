@@ -43,7 +43,7 @@ import java.time.*;
 @Builder(builderMethodName = "builderVersione")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false, usaCreazione = false)
 @AIView(menuName = "Versione", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,giorno,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,giorno,descrizione", usaSpostamentoTraSchede = false)

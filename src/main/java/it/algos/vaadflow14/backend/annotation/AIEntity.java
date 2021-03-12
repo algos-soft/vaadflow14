@@ -1,12 +1,9 @@
 package it.algos.vaadflow14.backend.annotation;
 
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.annotation.*;
 
 /**
  * Project vaadflow15
@@ -56,13 +53,20 @@ public @interface AIEntity {
 
 
     /**
-     * (Optional) registra la creazione e la modifica
-     * Di default false
+     * (Optional) possibilità di creazione di una nuova entity
+     * Di default true
      *
      * @return the status
      */
-    boolean usaCreazioneModifica() default false;
+    boolean usaCreazione() default true;
 
+    /**
+     * (Optional) possibilità di modifica di una entity
+     * Di default true
+     *
+     * @return the status
+     */
+    boolean usaModifica() default true;
 
 
 }

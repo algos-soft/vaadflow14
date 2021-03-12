@@ -332,7 +332,7 @@ public class AAnnotationServiceTest extends ATest {
         System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
-        String[] stringArray2= {"code", "descrizione"};
+        String[] stringArray2 = {"code", "descrizione"};
         previstoArray = new ArrayList(Arrays.asList(stringArray2));
         ottenutoArray = annotation.getGridColumns(FATTURA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
@@ -340,10 +340,10 @@ public class AAnnotationServiceTest extends ATest {
         System.out.println("Colonne previste per la Entity " + FATTURA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
-        String[] stringArray3= {"code", "descrizione"};
+        String[] stringArray3 = {"code", "descrizione"};
         previstoArray = new ArrayList(Arrays.asList(stringArray3));
         ottenutoArray = annotation.getGridColumns(OMEGA_ENTITY_CLASS);
-//        assertEquals(previstoArray, ottenutoArray);
+        //        assertEquals(previstoArray, ottenutoArray);
         System.out.println(VUOTA);
         System.out.println("Colonne previste per la Entity " + OMEGA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
@@ -968,6 +968,30 @@ public class AAnnotationServiceTest extends ATest {
         listaFields = service.getDBRefFields(ANNO_ENTITY_CLASS);
         assertNotNull(listaFields);
         assertEquals(previstoIntero, listaFields.size());
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - isEntityClass")
+    public void isEntityClass() {
+        String canonicalName = VUOTA;
+
+        ottenutoBooleano = service.isEntityClass((Class) null);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.isEntityClass(ANNO_ENTITY_CLASS);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.isEntityClass(ANNO_LOGIC_LIST);
+        assertFalse(ottenutoBooleano);
+
+        canonicalName = ANNO_ENTITY_CLASS.getCanonicalName();
+        ottenutoBooleano = service.isEntityClass(canonicalName);
+        assertTrue(ottenutoBooleano);
+
+        canonicalName = ANNO_LOGIC_LIST.getCanonicalName();
+        ottenutoBooleano = service.isEntityClass(canonicalName);
+        assertFalse(ottenutoBooleano);
     }
 
 }

@@ -36,7 +36,9 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.usaBottoneNew = true;
+        super.usaBottoneDeleteAll = annotation.usaReset(entityClazz);
+        super.usaBottoneResetList= annotation.usaReset(entityClazz);
+        super.usaBottoneNew = annotation.usaCreazione(entityClazz);
     }
 
     //    /**

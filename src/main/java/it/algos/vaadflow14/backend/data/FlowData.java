@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.data;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
@@ -103,20 +102,15 @@ public class FlowData implements AIData {
             return false;
         }
 
-        if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(simpleName)) {
-            return false;
-        }
+//        if (!FlowVar.usaCronoPackages && AECrono.getValue().contains(simpleName)) {
+//            return false;
+//        }
+//
+//        if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(simpleName)) {
+//            return false;
+//        }
 
-        if (!FlowVar.usaGeografiaPackages && AEGeografia.getValue().contains(simpleName)) {
-            return false;
-        }
-
-        if (className.endsWith(SUFFIX_ENTITY)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return annotation.isEntityClass(canonicalName);
     };
 
     /**
@@ -249,6 +243,7 @@ public class FlowData implements AIData {
 
         //--seleziona le collections valide
         //--prima checkEntity (filter=selezione)
+        logger.log(AETypeLog.checkData, VUOTA);
         allEntities = Arrays.asList(allEntitiesGrezze.stream().filter(checkEntity).sorted().toArray());
         message = String.format("In %s sono stati trovati %d packages con classi di tipo AEntity da controllare", moduleName, allEntities.size());
         logger.log(AETypeLog.checkData, message);

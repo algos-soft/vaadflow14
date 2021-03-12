@@ -43,7 +43,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderAnno")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "anno", sortProperty = "ordine")
 @AIList(fields = "ordine,anno,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "anno,bisestile,secolo", usaSpostamentoTraSchede = false)

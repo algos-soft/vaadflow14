@@ -46,20 +46,6 @@ public class ViaLogicList extends LogicList {
 
 
     /**
-     * Preferenze usate da questa 'logica' <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-
-        super.usaBottoneDeleteAll = true;
-        super.usaBottoneResetList = true;
-    }
-
-
-    /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto <br>
      *

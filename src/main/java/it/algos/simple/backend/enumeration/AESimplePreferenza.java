@@ -22,12 +22,11 @@ import java.time.*;
 public enum AESimplePreferenza implements AIPreferenza {
 
     datauno(PREF_DATA, "Data senza ora (pref di prova)", AETypePref.localdate, DATA, false),
-
     datadue(PREF_DATA_TIME, "Data e ora (pref di prova)", AETypePref.localdatetime, DATA_TIME, false),
-
     timeuno(PREF_TIME, "Solo orario (pref di prova)", AETypePref.localtime, TIME, false),
-
     testo("testo", "Testo (pref di prova)", AETypePref.string, "mariolino", false),
+    usaMenuCrono("menuCrono", "Usa i menu del gruppo crono", AETypePref.bool, false, false,true,false,VUOTA),
+    usaMenuGeo("menuGeo", "Usa i menu del gruppo geografia", AETypePref.bool, false, false,true,false,VUOTA),
 
     ;
 
@@ -73,19 +72,19 @@ public enum AESimplePreferenza implements AIPreferenza {
 
 
     AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
-        this(keyCode, descrizione, type, defaultValue, usaCompany, VUOTA);
+        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
     }// fine del costruttore
 
 
-    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
         this.keyCode = keyCode;
         this.descrizione = descrizione;
         this.type = type;
         this.setNote(note);
         this.usaCompany = usaCompany;
         this.vaadFlow = false;
-        this.needRiavvio = false;
-        this.visibileAdmin = false;
+        this.needRiavvio = needRiavvio;
+        this.visibileAdmin = visibileAdmin;
         this.setDefaultValue(defaultValue);
     }// fine del costruttore
 
@@ -120,11 +119,25 @@ public enum AESimplePreferenza implements AIPreferenza {
     public Object getDefaultValue() {
         return defaultValue;
     }
+
+    public void setDefaultValue(Object defaultValue) {
+        if (type == AETypePref.enumeration) {
+            if (defaultValue instanceof String) {
+                this.defaultValue = defaultValue;
+            }
+            else {
+                this.defaultValue = ((AIEnum) defaultValue).getPref();
+            }
+        }
+        else {
+            this.defaultValue = defaultValue;
+        }
+    }
+
     @Override
     public boolean isVaadFlow() {
         return vaadFlow;
     }
-
 
     @Override
     public boolean isUsaCompany() {
@@ -145,21 +158,6 @@ public enum AESimplePreferenza implements AIPreferenza {
     public String getDescrizione() {
         return descrizione;
     }
-
-    public void setDefaultValue(Object defaultValue) {
-        if (type == AETypePref.enumeration) {
-            if (defaultValue instanceof String) {
-                this.defaultValue = defaultValue;
-            }
-            else {
-                this.defaultValue = ((AIEnum) defaultValue).getPref();
-            }
-        }
-        else {
-            this.defaultValue = defaultValue;
-        }
-    }
-
 
     public Object getValue() {
         Object javaValue;
@@ -276,7 +274,7 @@ public enum AESimplePreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
-            for (AEPreferenza pref : AEPreferenza.values()) {
+            for (AESimplePreferenza pref : AESimplePreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
                 pref.setLogger(logger);
                 pref.setDate(date);

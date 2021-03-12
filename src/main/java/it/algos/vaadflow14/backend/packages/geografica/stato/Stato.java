@@ -45,7 +45,7 @@ import java.util.*;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
 @AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaRowIndex = false)
 @AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)

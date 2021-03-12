@@ -294,7 +294,6 @@ public enum AEPreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
-            Object alfa = AEPreferenza.values();
             for (AEPreferenza pref : AEPreferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
                 pref.setLogger(logger);

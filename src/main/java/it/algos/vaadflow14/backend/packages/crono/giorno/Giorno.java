@@ -43,7 +43,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderGiorno")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
 @AIList(fields = "ordine,giorno", usaRowIndex = false)
 @AIForm(fields = "ordine,giorno,mese", usaSpostamentoTraSchede = false)

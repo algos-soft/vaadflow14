@@ -302,8 +302,28 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return true if the class is of type AEntity
      */
-    public boolean isEntityClass(final Class<?> genericClazz) {
-        return (genericClazz != null) && (AEntity.class.isAssignableFrom(genericClazz));
+    public boolean isEntityClass(final Class genericClazz) {
+        return getAIEntity(genericClazz) != null;
+    }
+
+    /**
+     * Check if the class is an entityBean class.
+     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
+     *
+     * @param canonicalName of the class to be checked if is of type AEntity
+     *
+     * @return true if the class is of type AEntity
+     */
+    public boolean isEntityClass(final String canonicalName) {
+        Class clazz = null;
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "isEntityClass");
+        }
+
+        return isEntityClass(clazz);
     }
 
 
@@ -846,15 +866,39 @@ public class AAnnotationService extends AAbstractService {
 
 
     /**
-     * Flag per usare il field della superclasse AEntity. <br>
+     * Flag per la creazione di una nuova entity. <br>
      *
      * @param entityClazz the class of type AEntity
      *
      * @return the status
      */
-    public boolean usaCreazioneModifica(final Class<? extends AEntity> entityClazz) {
+    public boolean usaCreazione(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaCreazioneModifica() : false;
+        return annotation != null ? annotation.usaCreazione() : false;
+    }
+
+    /**
+     * Flag per la modifica di una entity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaModifica(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaModifica() : false;
+    }
+
+    /**
+     * Flag per la ri-creazione automatica della lista. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
+        AIList annotation = this.getAIList(entityClazz);
+        return annotation != null ? annotation.usaReset() : false;
     }
 
 

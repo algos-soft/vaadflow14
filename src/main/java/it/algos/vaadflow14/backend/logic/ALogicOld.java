@@ -1810,7 +1810,7 @@ public abstract class ALogicOld implements AILogicOld {
             }
         }
 
-        if (annotation.usaCreazioneModifica(entityClazz)) {
+        if (annotation.usaModifica(entityClazz)) {
             if (operation == AEOperation.addNew) {
                 entityBean.creazione = LocalDateTime.now();
             }

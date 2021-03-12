@@ -43,7 +43,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderRegione")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false, usaCreazioneModifica = false)
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false, usaCreazione = false, usaModifica = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
 @AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
 @AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = false)
