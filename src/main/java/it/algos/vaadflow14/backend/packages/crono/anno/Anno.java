@@ -1,24 +1,18 @@
 package it.algos.vaadflow14.backend.packages.crono.anno;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -49,11 +43,11 @@ import javax.validation.constraints.NotNull;
 @Builder(builderMethodName = "builderAnno")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.CALENDAR)
-@AIList(fields = "ordine,anno,bisestile,secolo")
-@AIForm(fields = "anno,bisestile,secolo")
-public class Anno extends AEntity  {
+@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "anno", sortProperty = "ordine")
+@AIList(fields = "ordine,anno,bisestile,secolo", usaRowIndex = false)
+@AIForm(fields = "anno,bisestile,secolo", usaSpostamentoTraSchede = false)
+public class Anno extends AEntity {
 
     /**
      * versione della classe per la serializzazione

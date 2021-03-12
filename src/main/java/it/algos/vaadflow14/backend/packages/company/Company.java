@@ -1,19 +1,17 @@
 package it.algos.vaadflow14.backend.packages.company;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -45,9 +43,9 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Company", keyPropertyName = "code", usaNote = true, usaCreazioneModifica = true)
-@AIView(menuIcon = VaadinIcon.FACTORY)
+@AIView(menuName = "Company", menuIcon = VaadinIcon.FACTORY,searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,descrizione,telefono,email", usaRowIndex = true)
-@AIForm(fields = "code,descrizione,telefono,email")
+@AIForm(fields = "code,descrizione,telefono,email", usaSpostamentoTraSchede = false)
 public class Company extends AEntity {
 
     /**

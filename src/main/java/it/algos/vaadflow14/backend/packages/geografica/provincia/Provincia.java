@@ -1,27 +1,19 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.enumeration.AETypeProvincia;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
-import it.algos.vaadflow14.backend.packages.geografica.regione.RegioneLogicOld;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogicOld;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -52,10 +44,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderProvincia")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,sigla,regione,iso,status")
-@AIForm(fields = "ordine,nome,sigla,regione,iso,status")
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
+@AIList(fields = "ordine,nome,sigla,regione,iso,status", usaRowIndex = false)
+@AIForm(fields = "ordine,nome,sigla,regione,iso,status", usaSpostamentoTraSchede = false)
 public class Provincia extends AEntity {
 
     /**
@@ -108,7 +100,7 @@ public class Provincia extends AEntity {
      * stato (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
-//    @NotNull
+    //    @NotNull
     @DBRef
     @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoLogicOld.class, usaComboMethod = true, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
 import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -41,6 +42,8 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderVia")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
+@AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazioneModifica = true)
+@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome", usaRowIndex = false)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {

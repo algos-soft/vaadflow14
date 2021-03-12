@@ -42,10 +42,10 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderPreferenza")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaNote = true)
-@AIView(menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
+@AIEntity(recordName = "Preferenza", keyPropertyName = "code", usaCompany = true, usaNote = true)
+@AIView(menuName = "Preferenza", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value")
+@AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value", usaSpostamentoTraSchede = false)
 public class Preferenza extends ACEntity {
 
     /**
@@ -86,7 +86,7 @@ public class Preferenza extends ACEntity {
      * generale (facoltativo, default true) se usata da vaadflow
      * specifica se usata da progetto derivato (vaadwam, vaadwiki)
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Preferenza standard")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Preferenza standard")
     @AIColumn(headerIcon = VaadinIcon.HOME)
     public boolean vaadFlow;
 
@@ -94,7 +94,7 @@ public class Preferenza extends ACEntity {
     /**
      * usaCompany (facoltativo, default false) usa un prefisso col codice della company
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Specifica per ogni company")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Specifica per ogni company")
     @AIColumn(headerIcon = VaadinIcon.FACTORY)
     public boolean usaCompany;
 
@@ -104,7 +104,7 @@ public class Preferenza extends ACEntity {
      * alla partenza del programma viene acquisita nelle costanti di FlowCost
      * per evitare inutili accessi al mongoDB
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Occorre riavviare")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Occorre riavviare")
     @AIColumn(headerIcon = VaadinIcon.REFRESH)
     public boolean needRiavvio;
 
@@ -113,7 +113,7 @@ public class Preferenza extends ACEntity {
      * per creare una lista di preferenze nella scheda utente dell'admin oppure
      * nella scheda della company
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox,caption = "Visibile agli admin")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Visibile agli admin")
     @AIColumn(headerIcon = VaadinIcon.USER)
     public boolean visibileAdmin;
 

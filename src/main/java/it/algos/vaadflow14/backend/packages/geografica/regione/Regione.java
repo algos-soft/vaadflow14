@@ -1,25 +1,18 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEStatus;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
-import it.algos.vaadflow14.backend.packages.geografica.stato.StatoLogicOld;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -50,10 +43,10 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderRegione")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
-@AIList(fields = "ordine,divisione,stato,iso,sigla,status",title = "divisione")
-@AIForm(fields = "ordine,divisione,stato,iso,sigla,status")
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
+@AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = false)
 public class Regione extends AEntity {
 
     /**
@@ -87,7 +80,7 @@ public class Regione extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoLogicOld.class, usaComboMethod = true,methodName = "creaComboStati")
+    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoLogicOld.class, usaComboMethod = true, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 
@@ -115,7 +108,7 @@ public class Regione extends AEntity {
      * statuto normativo (facoltativo) <br>
      */
     @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, widthEM = 19)
-    @AIColumn(widthEM = 18,flexGrow = true)
+    @AIColumn(widthEM = 18, flexGrow = true)
     public AEStatus status;
 
 

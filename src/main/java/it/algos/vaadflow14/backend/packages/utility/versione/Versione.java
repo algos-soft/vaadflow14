@@ -1,21 +1,18 @@
 package it.algos.vaadflow14.backend.packages.utility.versione;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeData;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import javax.validation.constraints.*;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -46,10 +43,10 @@ import java.time.LocalDate;
 @Builder(builderMethodName = "builderVersione")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.COG, sortProperty = "code")
+@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Versione", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,giorno,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,giorno,descrizione")
+@AIForm(fields = "code,giorno,descrizione", usaSpostamentoTraSchede = false)
 public class Versione extends AEntity {
 
     /**

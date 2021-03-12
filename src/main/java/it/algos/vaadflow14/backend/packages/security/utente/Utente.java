@@ -1,27 +1,21 @@
 package it.algos.vaadflow14.backend.packages.security.utente;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.ACEntity;
-import it.algos.vaadflow14.backend.enumeration.AERole;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
+import org.springframework.security.core.*;
+import org.springframework.security.core.authority.*;
+import org.springframework.security.core.userdetails.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -53,9 +47,9 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Utente", keyPropertyName = "username", usaCompany = true, usaCreazioneModifica = true)
-@AIView(menuIcon = VaadinIcon.USERS, sortProperty = "username")
+@AIView(menuName = "Utente", menuIcon = VaadinIcon.USERS, searchProperty = "username", sortProperty = "username")
 @AIList(fields = "username,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired", usaRowIndex = true)
-@AIForm(fields = "username,password,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired")
+@AIForm(fields = "username,password,enabled,role,accountNonExpired,accountNonLocked,credentialsNonExpired", usaSpostamentoTraSchede = true)
 public class Utente extends ACEntity implements UserDetails {
 
     private static final int WIDTH = 5;
@@ -73,7 +67,7 @@ public class Utente extends ACEntity implements UserDetails {
     @Size(min = 3)
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn( widthEM = 12)
+    @AIColumn(widthEM = 12)
     public String username;
 
     /**
@@ -100,8 +94,6 @@ public class Utente extends ACEntity implements UserDetails {
     public AERole role;
 
 
-
-
     /**
      * flag account valido (facoltativo, di default true)
      */
@@ -124,10 +116,6 @@ public class Utente extends ACEntity implements UserDetails {
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
     @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "Cexp", flexGrow = true)
     public boolean credentialsNonExpired;
-
-
-
-
 
 
     /**

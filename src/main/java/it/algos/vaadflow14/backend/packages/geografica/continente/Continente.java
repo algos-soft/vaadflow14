@@ -1,22 +1,19 @@
 package it.algos.vaadflow14.backend.packages.geografica.continente;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.packages.geografica.stato.Stato;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -47,10 +44,10 @@ import java.util.List;
 @Builder(builderMethodName = "builderContinente")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, sortProperty = "ordine")
+@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,abitato", usaRowIndex = false)
-@AIForm(fields = "ordine,nome,stati,abitato")
+@AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = false)
 public class Continente extends AEntity {
 
     /**

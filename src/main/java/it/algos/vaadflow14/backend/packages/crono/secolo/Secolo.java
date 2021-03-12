@@ -1,22 +1,18 @@
 package it.algos.vaadflow14.backend.packages.crono.secolo;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.FlowCost;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
+import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -47,10 +43,10 @@ import javax.validation.constraints.NotBlank;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.CALENDAR, sortProperty = "ordine")
-@AIList(fields = "ordine,secolo,anteCristo,inizio,fine")
-@AIForm(fields = "secolo,anteCristo,inizio,fine")
+@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Secolo", menuIcon = VaadinIcon.CALENDAR, searchProperty = "secolo", sortProperty = "ordine")
+@AIList(fields = "ordine,secolo,anteCristo,inizio,fine", usaRowIndex = false)
+@AIForm(fields = "secolo,anteCristo,inizio,fine", usaSpostamentoTraSchede = false)
 public class Secolo extends AEntity {
 
     /**

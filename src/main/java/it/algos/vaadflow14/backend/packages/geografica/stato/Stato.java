@@ -1,27 +1,20 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.packages.geografica.continente.Continente;
-import it.algos.vaadflow14.backend.packages.geografica.regione.Regione;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import lombok.*;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.List;
+import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -52,10 +45,10 @@ import java.util.List;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false)
-@AIView(menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
-@AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale")
-@AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale")
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazioneModifica = false)
+@AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
+@AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaRowIndex = false)
+@AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)
 public class Stato extends AEntity {
 
     /**
@@ -157,7 +150,6 @@ public class Stato extends AEntity {
     @AIField(type = AETypeField.text, widthEM = 10)
     @AIColumn(header = "ISO locale")
     public String locale;
-
 
 
     /**
