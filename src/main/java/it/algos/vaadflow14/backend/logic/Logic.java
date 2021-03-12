@@ -1,13 +1,11 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
-import it.algos.vaadflow14.ui.header.*;
 
 import java.util.*;
 
@@ -179,28 +177,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         super.addToLayout();
     }
 
-
-    /**
-     * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
-     */
-    @Override
-    protected void fixAlertLayout() {
-        AIHeader headerSpan = appContext.getBean(AHeaderSpan.class, getSpanList());
-
-        if (alertPlaceHolder != null && headerSpan != null) {
-            alertPlaceHolder.add(headerSpan.get());
-        }
-    }
-
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
-     */
-    protected List<Span> getSpanList() {
-        return null;
-    }
 
 
     /**

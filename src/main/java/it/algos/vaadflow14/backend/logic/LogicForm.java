@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.form.*;
+import it.algos.vaadflow14.ui.header.*;
 
 import java.util.*;
 
@@ -83,6 +84,38 @@ public abstract class LogicForm extends Logic {
             super.usaBottoneDopo = true;
         }
     }
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
+     */
+    @Override
+    protected void fixAlertLayout() {
+        AIHeader headerSpan = appContext.getBean(AHeaderSpanForm.class, getSpanForm());
+
+        if (alertPlaceHolder != null && headerSpan != null) {
+            alertPlaceHolder.add(headerSpan.get());
+        }
+    }
+
+
+    /**
+     * Costruisce una singola 'span' da mostrare come header della view <br>
+     * Puo essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     *
+     * @return una liste di 'span'
+     */
+    protected String getSpanForm() {
+        String titolo = "SCHEDA";
+        String sep = SEP;
+
+        if (entityBean != null) {
+            return String.format("%s %s %s.%s", titolo, sep, entityClazz.getSimpleName(), entityBean.toString());
+        }
+        else {
+            return String.format("%s %s %s", titolo, sep, entityClazz.getSimpleName());
+        }
+    }
+
 
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>

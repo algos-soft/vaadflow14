@@ -416,6 +416,35 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixAlertLayout() {
     }
 
+    /**
+     * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
+     *
+     * @param message da visualizzare
+     *
+     * @return un componente 'span' con property della lista
+     */
+    protected Span getSpan(final String message) {
+        return html.getSpanBlu(message, AETypeSize.small);
+    }
+
+    /**
+     * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
+     * Attivo SOLO in modalità debug <br>
+     *
+     * @param message da visualizzare
+     *
+     * @return un componente 'span' con property della condizione debug
+     */
+    protected Span getSpanDebug(final String message) {
+        Span span = new Span();
+
+        if (AEPreferenza.usaDebug.is()) {
+            span = html.getSpanRosso(message, AETypeWeight.bold, AETypeSize.small);
+        }
+
+        return span;
+    }
+
 
     /**
      * Costruisce un layout per i bottoni di comando superiori della view <br>

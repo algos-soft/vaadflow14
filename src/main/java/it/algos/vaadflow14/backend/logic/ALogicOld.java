@@ -507,7 +507,7 @@ public abstract class ALogicOld implements AILogicOld {
         List<Span> spanHtmlList = getSpanList();
 
         if (array.isAllValid(spanHtmlList)) {
-            headerSpan = appContext.getBean(AHeaderSpan.class, spanHtmlList);
+            headerSpan = appContext.getBean(AHeaderSpanList.class, spanHtmlList);
         }
 
         return headerSpan;

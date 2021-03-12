@@ -35,7 +35,7 @@ public enum AETypeWeight implements AIType {
     }
 
     @Override
-    public String getTag() {
+    public  String getTag() {
         return "font-weight";
     }
 

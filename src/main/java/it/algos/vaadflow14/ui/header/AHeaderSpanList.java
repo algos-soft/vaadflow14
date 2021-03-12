@@ -19,15 +19,15 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AHeaderSpan extends VerticalLayout implements AIHeader {
+public class AHeaderSpanList extends VerticalLayout implements AIHeader {
 
     private List<Span> spanList;
 
     /**
      * Costruttore base con parametro <br>
-     * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpan.class, spanList) <br>
+     * Non usa @Autowired perché l' istanza viene creata con appContext.getBean(AHeaderSpanList.class, spanList) <br>
      */
-    public AHeaderSpan(List<Span> spanList) {
+    public AHeaderSpanList(List<Span> spanList) {
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);

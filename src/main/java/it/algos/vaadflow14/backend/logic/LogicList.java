@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.mongodb.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
@@ -9,6 +10,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.list.*;
 
 import java.util.*;
@@ -37,7 +39,7 @@ public abstract class LogicList extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
         super.usaBottoneDeleteAll = annotation.usaReset(entityClazz);
-        super.usaBottoneResetList= annotation.usaReset(entityClazz);
+        super.usaBottoneResetList = annotation.usaReset(entityClazz);
         super.usaBottoneNew = annotation.usaCreazione(entityClazz);
     }
 
@@ -53,6 +55,29 @@ public abstract class LogicList extends Logic {
     //            logger.error("Non esiste la entityClazz", LogicList.class, "fixEntityClazz");
     //        }
     //    }
+
+
+    /**
+     * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
+     */
+    @Override
+    protected void fixAlertLayout() {
+        AIHeader headerSpan = appContext.getBean(AHeaderSpanList.class, getSpanList());
+
+        if (alertPlaceHolder != null && headerSpan != null) {
+            alertPlaceHolder.add(headerSpan.get());
+        }
+    }
+
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto <br>
+     *
+     * @return una liste di 'span'
+     */
+    protected List<Span> getSpanList() {
+        return null;
+    }
 
     /**
      * Costruisce un layout per i bottoni di comando superiori della view <br>

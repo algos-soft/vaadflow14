@@ -54,6 +54,19 @@ public class MeseLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        if (AEPreferenza.usaDebug.is()) {
+            super.usaBottoneNew = true;
+            super.usaBottoneDeleteAll = true;
+            super.usaBottoneResetList = true;
+        }
+        else {
+            super.usaBottoneNew = false;
+            super.usaBottoneDeleteAll = false;
+            super.usaBottoneResetList = false;
+        }
+
+        //                super.usaBottoneExport = true;//@todo Funzionalità ancora da implementare
     }
 
 
@@ -67,11 +80,9 @@ public class MeseLogicList extends LogicList {
     protected List<Span> getSpanList() {
         List<Span> lista = new ArrayList<>();
 
-        lista.add(html.getSpanBlu("Mesi dell' anno, coi relativi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
-        lista.add(html.getSpanBlu("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
-        if (AEPreferenza.usaDebug.is()) {
-            lista.add(html.getSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'"));
-        }
+        lista.add(getSpan("Mesi dell' anno, coi relativi giorni. Tiene conto degli anni bisestili per il mese di febbraio."));
+        lista.add(getSpan("Ci sono 12 mesi. Non si possono cancellare ne aggiungere elementi."));
+        lista.add(getSpanDebug("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta'."));
 
         return lista;
     }

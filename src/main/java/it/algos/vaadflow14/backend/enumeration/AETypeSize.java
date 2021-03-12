@@ -13,6 +13,7 @@ public enum AETypeSize implements AIType {
     xxSmall("xx-small"),
     xSmall("x-small"),
     small("small"),
+    smaller("smaller"),
     large("large"),
     xLarge("x-large"),
     xxLarge("xx-large"),
@@ -30,7 +31,7 @@ public enum AETypeSize implements AIType {
     }
 
     @Override
-    public String getTag() {
+    public  String getTag() {
         return "font-size";
     }
 
