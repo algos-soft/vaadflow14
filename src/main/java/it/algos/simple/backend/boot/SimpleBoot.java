@@ -80,8 +80,9 @@ public class SimpleBoot extends FlowBoot {
 
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
-        FlowVar.dataClazz = SimpleData.class;
         FlowVar.usaSecurity = false;
+        FlowVar.usaReset = false;
+        FlowVar.dataClazz = SimpleData.class;
         FlowVar.projectName = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";

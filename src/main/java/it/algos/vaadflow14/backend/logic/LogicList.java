@@ -5,6 +5,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -38,9 +39,10 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.usaBottoneDeleteAll = annotation.usaReset(entityClazz);
-        super.usaBottoneResetList = annotation.usaReset(entityClazz);
-        super.usaBottoneNew = annotation.usaCreazione(entityClazz);
+
+        super.usaBottoneDeleteAll = FlowVar.usaReset && annotation.usaReset(entityClazz);
+        super.usaBottoneResetList = FlowVar.usaReset && annotation.usaReset(entityClazz);
+        super.usaBottoneNew = FlowVar.usaReset && annotation.usaCreazione(entityClazz);
     }
 
     //    /**

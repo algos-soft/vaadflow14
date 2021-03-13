@@ -204,6 +204,14 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.usaSecurity = true;
 
         /**
+         * Controlla se l' applicazione può usare il bottone reset oppure no <br>
+         * Il singolo package decide se usarlo effettivamente <br>
+         * Di default (per sicurezza) uguale a false <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.usaReset = false;
+
+        /**
          * Nome identificativo dell' applicazione <br>
          * Usato (eventualmente) nella barra di menu in testa pagina <br>
          * Usato (eventualmente) nella barra di informazioni a piè di pagina <br>

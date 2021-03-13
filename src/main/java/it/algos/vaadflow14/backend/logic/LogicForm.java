@@ -76,8 +76,8 @@ public abstract class LogicForm extends Logic {
         super.fixPreferenze();
 
         super.usaBottoneBack = true;
-        super.usaBottoneRegistra = true;
-        super.usaBottoneCancella = operationForm.isDeleteEnabled();
+        super.usaBottoneCancella = FlowVar.usaReset && annotation.usaDelete(entityClazz);
+        super.usaBottoneRegistra = FlowVar.usaReset && annotation.usaModifica(entityClazz);
 
         if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
             super.usaBottonePrima = true;

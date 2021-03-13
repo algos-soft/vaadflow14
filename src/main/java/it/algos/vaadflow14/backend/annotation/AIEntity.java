@@ -68,5 +68,13 @@ public @interface AIEntity {
      */
     boolean usaModifica() default true;
 
+    /**
+     * (Optional) possibilità di cancellare una entity
+     * Di default true
+     *
+     * @return the status
+     */
+    boolean usaDelete() default true;
+
 
 }

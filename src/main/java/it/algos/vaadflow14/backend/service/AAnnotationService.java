@@ -890,6 +890,18 @@ public class AAnnotationService extends AAbstractService {
     }
 
     /**
+     * Flag per la cancellazione di una entity. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaDelete(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaDelete() : false;
+    }
+
+    /**
      * Flag per la ri-creazione automatica della lista. <br>
      *
      * @param entityClazz the class of type AEntity
