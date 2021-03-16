@@ -91,21 +91,31 @@ public class AClassService extends AAbstractService {
         return entityLogic;
     }
 
-
     /**
-     * Classe associata alla Entity inviata  <br>
+     * Controlla che esiste una classe xxxLogicList associata alla Entity inviata  <br>
      *
      * @param dovrebbeEssereUnaEntityClazz the entity class
      *
-     * @return classe xxxLogic associata alla Entity
+     * @return classe xxxLogicList associata alla Entity
+     */
+    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+        return getLogicListClassFromEntityClazz(dovrebbeEssereUnaEntityClazz) != null;
+    }
+
+    /**
+     * Classe xxxLogicList associata alla Entity inviata  <br>
+     *
+     * @param dovrebbeEssereUnaEntityClazz the entity class
+     *
+     * @return classe xxxLogicList associata alla Entity
      */
     public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
         Class listClazz = null;
         String canonicalNameEntity;
         String canonicalNameLogicList;
         String message;
-        String packageName = VUOTA;
-        String simpleNameEntity = VUOTA;
+        String packageName;
+        String simpleNameEntity;
         String simpleNameLogicList = VUOTA;
 
         if (dovrebbeEssereUnaEntityClazz == null) {
@@ -138,16 +148,74 @@ public class AClassService extends AAbstractService {
         return listClazz;
     }
 
+
     /**
-     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+     * Controlla che esiste una classe xxxLogicForm associata alla Entity inviata  <br>
      *
-     * @param entityClazz the entity class
+     * @param dovrebbeEssereUnaEntityClazz the entity class
      *
-     * @return istanza de xxxLogic associata alla Entity
+     * @return classe xxxLogicForm associata alla Entity
      */
-    public AILogic getLogicListFromEntityClazz(Class<? extends AEntity> entityClazz) {
-        return getLogicListFromEntityClazz(entityClazz, null, AEOperation.listNoForm);
+    public boolean isLogicFormClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+        return getLogicFormClassFromEntityClazz(dovrebbeEssereUnaEntityClazz) != null;
     }
+
+    /**
+     * Classe xxxLogicForm associata alla Entity inviata  <br>
+     *
+     * @param dovrebbeEssereUnaEntityClazz the entity class
+     *
+     * @return classe xxxLogicForm associata alla Entity
+     */
+    public Class getLogicFormClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+        Class listClazz = null;
+        String canonicalNameEntity;
+        String canonicalNameLogicForm;
+        String message;
+        String packageName;
+        String simpleNameEntity;
+        String simpleNameLogicForm = VUOTA;
+
+        if (dovrebbeEssereUnaEntityClazz == null) {
+            message = String.format("Manca la EntityClazz");
+            logger.error(message, this.getClass(), "getLogicFormClassFromEntityClazz");
+            return null;
+        }
+
+        canonicalNameEntity = dovrebbeEssereUnaEntityClazz.getCanonicalName();
+        simpleNameEntity = fileService.estraeClasseFinale(canonicalNameEntity);
+        packageName = text.levaCoda(simpleNameEntity, SUFFIX_ENTITY).toLowerCase();
+
+        if (!annotation.isEntityClass(dovrebbeEssereUnaEntityClazz)) {
+            message = String.format("La clazz ricevuta %s NON è una EntityClazz", simpleNameEntity);
+            logger.info(message, this.getClass(), "getLogicFormClassFromEntityClazz");
+            return null;
+        }
+
+        //--provo a creare la classe specifica xxxLogicForm (classe, non istanza)
+        try {
+            canonicalNameLogicForm = text.levaCoda(canonicalNameEntity, SUFFIX_ENTITY) + SUFFIX_LOGIC_FORM;
+            simpleNameLogicForm = fileService.estraeClasseFinale(canonicalNameLogicForm);
+
+            listClazz = Class.forName(canonicalNameLogicForm);
+        } catch (Exception unErrore) {
+            message = String.format("Nel package %s non esiste la classe %s", packageName, simpleNameLogicForm);
+            logger.info(message, this.getClass(), "getLogicFormClassFromEntityClazz");
+        }
+
+        return listClazz;
+    }
+
+    //    /**
+    //     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+    //     *
+    //     * @param entityClazz the entity class
+    //     *
+    //     * @return istanza de xxxLogic associata alla Entity
+    //     */
+    //    public AILogic getLogicListFromEntityClazz(Class<? extends AEntity> entityClazz) {
+    //        return getLogicListFromEntityClazz(entityClazz, null, AEOperation.listNoForm);
+    //    }
 
     /**
      * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
@@ -208,11 +276,26 @@ public class AClassService extends AAbstractService {
         return (PreferenzaService) getServiceFromEntityClazz(Preferenza.class);
     }
 
+    /**
+     *
+     */
+    public String getRouteNameForm(final Class<? extends AEntity> entityClazz) {
+        String routeName = ROUTE_NAME_GENERIC_FORM;
+        String entityName;
+
+        if (isLogicFormClassFromEntityClazz(entityClazz)) {
+            entityName = entityClazz.getSimpleName();
+            entityName = text.primaMinuscola(entityName);
+            routeName = entityName + SUFFIX_FORM;
+        }
+
+        return routeName;
+    }
 
     /**
      * @param menuClazz inserito da FlowBoot.fixMenuRoutes() e sue sottoclassi
      */
-    public String getRouteFormName(Class<? extends AEntity> entityClazz) {
+    public String getRouteFormName2(Class<? extends AEntity> entityClazz) {
         //        String packageName;
         //        String message;
         String routeName = VUOTA;

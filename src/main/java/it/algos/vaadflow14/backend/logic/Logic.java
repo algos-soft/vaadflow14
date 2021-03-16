@@ -64,10 +64,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * The entityBean obbligatorio, istanza di entityClazz per il Form <br>
      */
     protected void fixProperty() {
-        this.entityClazz = null;
-        this.entityService = null;
         this.entityBean = null;
-        this.routeFormName = VUOTA;
+        this.routeNameForm = VUOTA;
 
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
             logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
@@ -258,7 +256,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     protected final void executeRoute(final AEntity entityBean) {
         final QueryParameters query = route.getQueryForm(entityClazz, entityBean, operationForm);
-        UI.getCurrent().navigate(text.isValid(routeFormName) ? routeFormName : ROUTE_NAME_GENERIC_FORM, query);
+        UI.getCurrent().navigate(routeNameForm , query);
     }
 
 }

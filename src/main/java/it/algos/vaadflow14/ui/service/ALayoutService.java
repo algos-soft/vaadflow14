@@ -176,16 +176,6 @@ public class ALayoutService extends AAbstractService {
         else {
             //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
             if (annotation.isEntityClass(menuClazz)) {
-                //                packageName = fileService.estraeClasseFinale(canonicalName);
-                //                packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase(Locale.ROOT);
-                //                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
-                //
-                //                //--provo a creare la classe specifica xxxLogicList
-                //                try {
-                //                    listClazz = Class.forName(canonicalName);
-                //                } catch (Exception unErrore) {
-                //                }
-
                 listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
 
                 //--controllo che la classe specifica xxxLogicList esista e che contenga @Route

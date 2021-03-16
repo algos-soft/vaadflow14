@@ -121,7 +121,9 @@ public class ARouteService extends AAbstractService {
         }
 
         Map<String, List<String>> mappaQuery = new HashMap<>();
-        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazz.getCanonicalName()));
+        if (!classService.isLogicFormClassFromEntityClazz(entityClazz)) {
+            mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazz.getCanonicalName()));
+        }
         mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBean != null ? entityBean.id : KEY_NULL));
         mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
         return new QueryParameters(mappaQuery);

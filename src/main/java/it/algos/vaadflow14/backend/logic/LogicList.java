@@ -45,7 +45,7 @@ public abstract class LogicList extends Logic {
         super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
 
-        super.routeFormName = classService.getRouteFormName(entityClazz);
+        super.routeNameForm = classService.getRouteNameForm(entityClazz);
     }
 
     //    /**

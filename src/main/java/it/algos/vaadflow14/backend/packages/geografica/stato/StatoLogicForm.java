@@ -2,7 +2,9 @@ package it.algos.vaadflow14.backend.packages.geografica.stato;
 
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import org.springframework.beans.factory.annotation.*;
 
 /**
  * Project vaadflow14
@@ -21,8 +23,17 @@ public class StatoLogicForm extends LogicForm {
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Costruttore senza parametri <br>
+     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     */
+    public StatoLogicForm(@Qualifier("StatoService") AIService entityService) {
+        super.entityClazz = Stato.class;
+        super.entityService = entityService;
+    }// end of Vaadin/@Route constructor
 
-//    /**
+
+    //    /**
 //     * Costruttore senza parametri <br>
 //     * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
 //     */

@@ -188,7 +188,7 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * The @route() of xxxLogicForm facoltativo  <br>
      */
-    protected String routeFormName;
+    protected String routeNameForm;
 
     /**
      * Wrapper di dati recuperati dall'url del browser, obbligatorio per il form <br>

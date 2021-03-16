@@ -1,9 +1,9 @@
 package it.algos.integration;
 
 import it.algos.simple.*;
+import it.algos.simple.backend.packages.fattura.*;
 import it.algos.unit.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,6 @@ public class AClassServiceTest extends ATest {
     @Order(1)
     @DisplayName("getLogicListClassFromEntityClazz")
     void getLogicListClassFromEntityClazz() {
-        sorgente = "black";
         System.out.println(VUOTA);
         System.out.println(VUOTA);
 
@@ -71,17 +70,59 @@ public class AClassServiceTest extends ATest {
         ottenutoClasse = service.getLogicListClassFromEntityClazz(ANNO_LOGIC_LIST);
         Assert.assertNull(ottenutoClasse);
 
-        previstoClasse = ViaLogicList.class;
-        ottenutoClasse = service.getLogicListClassFromEntityClazz(VIA_ENTITY_CLASS);
+        previstoClasse = FatturaLogicList.class;
+        previsto = previstoClasse.getSimpleName();
+        ottenutoClasse = service.getLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
         Assert.assertNotNull(ottenutoClasse);
         Assert.assertEquals(previstoClasse, ottenutoClasse);
-        System.out.println("getLogicListClassFromEntityClazz: " + VIA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoClasse.getSimpleName());
+        Assert.assertEquals(previsto, ottenutoClasse.getSimpleName());
+        System.out.println("getLogicListClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoClasse.getSimpleName());
 
         ottenutoClasse = service.getLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
         Assert.assertNull(ottenutoClasse);
 
+        ottenutoBooleano = service.isLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        Assert.assertTrue(ottenutoBooleano);
+        System.out.println("isLogicListClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
 
-    System.out.println(VUOTA);
+        ottenutoBooleano = service.isLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        Assert.assertFalse(ottenutoBooleano);
+        System.out.println("isLogicListClassFromEntityClazz: " + BOLLA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
+
+        System.out.println(VUOTA);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("getLogicFormClassFromEntityClazz")
+    void getLogicFormClassFromEntityClazz() {
+        ottenutoClasse = service.getLogicFormClassFromEntityClazz(null);
+        Assert.assertNull(ottenutoClasse);
+
+        ottenutoClasse = service.getLogicFormClassFromEntityClazz(ANNO_LOGIC_LIST);
+        Assert.assertNull(ottenutoClasse);
+
+        previstoClasse = FatturaLogicForm.class;
+        previsto = previstoClasse.getSimpleName();
+        ottenutoClasse = service.getLogicFormClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        Assert.assertNotNull(ottenutoClasse);
+        Assert.assertEquals(previstoClasse, ottenutoClasse);
+        Assert.assertEquals(previsto, ottenutoClasse.getSimpleName());
+        System.out.println("getLogicFormClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoClasse.getSimpleName());
+//
+//        ottenutoClasse = service.getLogicFormClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+//        Assert.assertNull(ottenutoClasse);
+
+        ottenutoBooleano = service.isLogicFormClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        Assert.assertTrue(ottenutoBooleano);
+        System.out.println("isLogicFormClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
+
+        ottenutoBooleano = service.isLogicFormClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        Assert.assertFalse(ottenutoBooleano);
+        System.out.println("isLogicFormClassFromEntityClazz: " + BOLLA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
+
+        System.out.println(VUOTA);
     }
 
 
