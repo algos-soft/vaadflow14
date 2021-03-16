@@ -5,7 +5,7 @@ Github
 Per il merge di una branch:
 
 1) Eseguire un Commit
-2) Aprire Git:xxx in basso a destra nella finestra di IntelljIdea
+2) Aprire Git Branches in: xxx in basso a destra nella finestra di IntelljIdea
 3) posizionarsi su Local Branches
 4) selezionare Master
 5) premere Checkout per switchare sul master
