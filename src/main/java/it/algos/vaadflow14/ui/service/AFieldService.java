@@ -1,28 +1,25 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.validator.StringLengthValidator;
-import it.algos.vaadflow14.backend.annotation.StaticContextAccessor;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import com.vaadin.flow.component.combobox.*;
+import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.data.validator.*;
+import it.algos.vaadflow14.backend.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.ALogicOld;
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import it.algos.vaadflow14.ui.exception.RangeException;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.exception.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.*;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.apache.poi.ss.formula.functions.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -484,7 +481,7 @@ public class AFieldService extends AAbstractService {
         caption = AEPreferenza.usaFormFieldMaiuscola.is() ? text.primaMaiuscola(caption) : caption;
 
         field = appContext.getBean(AGridField.class, linkClazz, gridProperties, items);
-        field.setLabel(caption + items.size());
+        field.setLabel(caption + DUE_PUNTI_SPAZIO + items.size());
         return field;
     }
 

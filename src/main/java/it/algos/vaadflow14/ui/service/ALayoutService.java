@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
@@ -157,11 +156,11 @@ public class ALayoutService extends AAbstractService {
      *
      * @param menuClazz inserito da FlowBoot.fixMenuRoutes() e sue sottoclassi
      */
-    private LinkedHashMap<String, RouterLink> createMenuLink(Class menuClazz) {
+    private LinkedHashMap<String, RouterLink> createMenuLink(final Class menuClazz) {
         LinkedHashMap<String, RouterLink> mappaRouter = new LinkedHashMap<>();
         RouterLink routerLink = null;
         QueryParameters query = null;
-        String packageName;
+        String packageName = VUOTA;
         Icon icon = annotation.getMenuIcon(menuClazz);
         String menuName = annotation.getMenuName(menuClazz);
         String message;
@@ -177,16 +176,17 @@ public class ALayoutService extends AAbstractService {
         else {
             //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
             if (annotation.isEntityClass(menuClazz)) {
-                canonicalName = menuClazz.getCanonicalName();
-                packageName = fileService.estraeClasseFinale(canonicalName);
-                packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase(Locale.ROOT);
-                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
+                //                packageName = fileService.estraeClasseFinale(canonicalName);
+                //                packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase(Locale.ROOT);
+                //                canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
+                //
+                //                //--provo a creare la classe specifica xxxLogicList
+                //                try {
+                //                    listClazz = Class.forName(canonicalName);
+                //                } catch (Exception unErrore) {
+                //                }
 
-                //--provo a creare la classe specifica xxxLogicList
-                try {
-                    listClazz = Class.forName(canonicalName);
-                } catch (Exception unErrore) {
-                }
+                listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
 
                 //--controllo che la classe specifica xxxLogicList esista e che contenga @Route
                 if (listClazz != null) {
@@ -205,6 +205,7 @@ public class ALayoutService extends AAbstractService {
                     query = route.getQueryList(menuClazz);
                     routerLink = new RouterLink(null, GenericLogicList.class);
                     routerLink.setQueryParameters(query);
+                    canonicalName = menuClazz.getCanonicalName();
                     message = String.format("Nel package %s non esiste la classe %s e uso GenericLogicList", packageName, fileService.estraeClasseFinale(canonicalName));
                     logger.logDebug(AETypeLog.checkMenu, message);
                 }

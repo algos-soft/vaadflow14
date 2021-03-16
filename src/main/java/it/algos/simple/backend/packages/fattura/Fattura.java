@@ -36,7 +36,7 @@ import javax.validation.constraints.*;
 @AIView(menuName = "Fattura", menuIcon = VaadinIcon.COG, sortProperty = "ordine")
 @AIList(fields = "code,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,descrizione", usaSpostamentoTraSchede = true)
-public class FatturaEntity extends AEntity {
+public class Fattura extends AEntity {
 
     /**
      * versione della classe per la serializzazione

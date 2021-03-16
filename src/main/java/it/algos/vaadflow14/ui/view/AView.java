@@ -171,7 +171,7 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
      */
     protected void fixEntityLogic() {
         if (entityLogic == null) {
-            entityLogic = classService.getLogicFromEntityClazz(entityClazz, entityService, operationForm);
+            entityLogic = classService.getLogicListFromEntityClazz(entityClazz, entityService, operationForm);
         }
         else {
             logger.info("Esisteva già la entityLogic", AView.class, "fixEntityLogic");

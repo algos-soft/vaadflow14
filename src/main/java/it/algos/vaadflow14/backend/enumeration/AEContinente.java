@@ -10,19 +10,12 @@ package it.algos.vaadflow14.backend.enumeration;
 public enum AEContinente {
 
     europa("Europa", true),
-
     asia("Asia", true),
-
     africa("Africa", true),
-
     nordamerica("Nordamerica", true),
-
     sudamerica("Sudamerica", true),
-
     oceania("Oceania", true),
-
     antartide("Antartide", false),
-
     ;
 
     boolean abitato;

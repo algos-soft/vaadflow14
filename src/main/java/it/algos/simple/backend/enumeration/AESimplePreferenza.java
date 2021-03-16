@@ -25,8 +25,6 @@ public enum AESimplePreferenza implements AIPreferenza {
     datadue(PREF_DATA_TIME, "Data e ora (pref di prova)", AETypePref.localdatetime, DATA_TIME, false),
     timeuno(PREF_TIME, "Solo orario (pref di prova)", AETypePref.localtime, TIME, false),
     testo("testo", "Testo (pref di prova)", AETypePref.string, "mariolino", false),
-    usaMenuCrono("menuCrono", "Usa i menu del gruppo crono", AETypePref.bool, false, false,true,false,VUOTA),
-    usaMenuGeo("menuGeo", "Usa i menu del gruppo geografia", AETypePref.bool, false, false,true,false,VUOTA),
 
     ;
 

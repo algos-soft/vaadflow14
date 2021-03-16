@@ -55,7 +55,7 @@ public class ContinenteLogicList extends LogicList {
         super.fixPreferenze();
 
         super.usaBottonePaginaWiki = true;
-//        super.wikiPageTitle = "Continente";//@todo Funzionalità ancora da implementare
+        super.wikiPageTitle = "Continente";
 //        super.formClazz = ContinenteForm.class;//@todo Funzionalità ancora da implementare
     }
 
@@ -68,7 +68,7 @@ public class ContinenteLogicList extends LogicList {
      */
     @Override
     protected List<Span> getSpanList() {
-        return Collections.singletonList(html.getSpanVerde("Test"));
+        return Collections.singletonList(html.getSpanVerde("Ripartizione dei 249 stati censiti"));
     }
 
 

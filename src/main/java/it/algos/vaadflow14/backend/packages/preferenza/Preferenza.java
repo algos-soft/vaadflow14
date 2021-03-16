@@ -46,7 +46,7 @@ import javax.validation.constraints.*;
 @AIView(menuName = "Preferenza", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,type,value,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,vaadFlow,usaCompany,needRiavvio,visibileAdmin,descrizione,type,value", usaSpostamentoTraSchede = false)
-public class Preferenza extends ACEntity {
+public class Preferenza extends AEntity {
 
     /**
      * versione della classe per la serializzazione

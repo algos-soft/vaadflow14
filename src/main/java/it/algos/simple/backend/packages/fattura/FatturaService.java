@@ -39,7 +39,7 @@ public class FatturaService extends AService {
      * Regola la entityClazz (final) associata a questo service <br>
      */
     public FatturaService() {
-        super(FatturaEntity.class);
+        super(Fattura.class);
     }
 
 
@@ -54,8 +54,8 @@ public class FatturaService extends AService {
      *
      * @return la nuova entityBean appena creata e salvata
      */
-    public FatturaEntity creaIfNotExist(final String keyPropertyValue,String descrizione) {
-        return (FatturaEntity) checkAndSave(newEntity(keyPropertyValue,descrizione));
+    public Fattura creaIfNotExist(final String keyPropertyValue, String descrizione) {
+        return (Fattura) checkAndSave(newEntity(keyPropertyValue,descrizione));
     }
 
 
@@ -68,7 +68,7 @@ public class FatturaService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     @Override
-    public FatturaEntity newEntity() {
+    public Fattura newEntity() {
         return newEntity( VUOTA,VUOTA);
     }
 
@@ -81,13 +81,13 @@ public class FatturaService extends AService {
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public FatturaEntity newEntity(final String code,final String descrizione) {
-        FatturaEntity newEntityBean = FatturaEntity.builderFattura()
+    public Fattura newEntity(final String code, final String descrizione) {
+        Fattura newEntityBean = Fattura.builderFattura()
                 .code(text.isValid(code) ? code : null)
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
                 .build();
 
-        return (FatturaEntity) fixKey(newEntityBean);
+        return (Fattura) fixKey(newEntityBean);
     }
 
     /**
@@ -100,8 +100,8 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public FatturaEntity findById(final String keyID) {
-        return (FatturaEntity) super.findById(keyID);
+    public Fattura findById(final String keyID) {
+        return (Fattura) super.findById(keyID);
     }
 
 
@@ -115,8 +115,8 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public FatturaEntity findByKey(final String keyValue) {
-        return (FatturaEntity) super.findByKey(keyValue);
+    public Fattura findByKey(final String keyValue) {
+        return (Fattura) super.findByKey(keyValue);
     }
 
     /**

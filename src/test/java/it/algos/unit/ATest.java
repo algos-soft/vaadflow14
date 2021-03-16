@@ -2,6 +2,7 @@ package it.algos.unit;
 
 import com.mongodb.*;
 import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.simple.backend.packages.fattura.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -75,7 +76,9 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
 
-    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = FatturaEntity.class;
+    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
+
+    protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
@@ -187,6 +190,10 @@ public abstract class ATest {
     protected Field sorgenteField;
 
     protected Field ottenutoField;
+
+    protected Class previstoClasse;
+
+    protected Class ottenutoClasse;
 
     protected LocalDateTime previstoDataTime;
 

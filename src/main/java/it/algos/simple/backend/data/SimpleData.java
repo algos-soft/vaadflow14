@@ -79,7 +79,7 @@ public class SimpleData extends FlowData {
      * Devo quindi 'sostituire' qui il metodo resetEmptyOnly() <br>
      */
     private void fixDataPackageBolla() {
-        entityService = appContext.getBean(EntityService.class, BollaEntity.class);
+        entityService = appContext.getBean(EntityService.class, Bolla.class);
         AIResult result = entityService.resetEmptyOnly();
         int numRec = 0;
 
@@ -100,10 +100,10 @@ public class SimpleData extends FlowData {
 
     private boolean creaBolla(final String code, final String descrizione) {
         boolean status = false;
-        BollaEntity bolla;
+        Bolla bolla;
 
-        if (mongo.isNotEsiste(BollaEntity.class, code)) {
-            bolla = BollaEntity.builderBolla().code(code).descrizione(descrizione).build();
+        if (mongo.isNotEsiste(Bolla.class, code)) {
+            bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
             bolla.setId(code);
             mongo.save(bolla);
             status = true;

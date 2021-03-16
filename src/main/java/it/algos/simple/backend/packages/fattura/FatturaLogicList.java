@@ -35,7 +35,7 @@ public class FatturaLogicList extends LogicList {
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
     public FatturaLogicList(@Qualifier("FatturaService") AIService fatturaService)  {
-        super.entityClazz = FatturaEntity.class;
+        super.entityClazz = Fattura.class;
         super.entityService = fatturaService ;
     }// end of Vaadin/@Route constructor
 

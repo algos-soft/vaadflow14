@@ -33,6 +33,7 @@ public class AClassService extends AAbstractService {
         return getServiceFromEntityName(entityClazz.getCanonicalName());
     }
 
+
     /**
      * Istanza della sottoclasse xxxService (singleton) associata alla entity <br>
      *
@@ -90,15 +91,51 @@ public class AClassService extends AAbstractService {
         return entityLogic;
     }
 
+
     /**
-     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+     * Classe associata alla Entity inviata  <br>
      *
-     * @param entityClazz the entity class
+     * @param dovrebbeEssereUnaEntityClazz the entity class
      *
-     * @return istanza de xxxLogic associata alla Entity
+     * @return classe xxxLogic associata alla Entity
      */
-    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz) {
-        return getLogicFromEntityClazz(entityClazz, null, AEOperation.listNoForm);
+    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+        Class listClazz = null;
+        String canonicalNameEntity;
+        String canonicalNameLogicList;
+        String message;
+        String packageName = VUOTA;
+        String simpleNameEntity = VUOTA;
+        String simpleNameLogicList = VUOTA;
+
+        if (dovrebbeEssereUnaEntityClazz == null) {
+            message = String.format("Manca la EntityClazz");
+            logger.error(message, this.getClass(), "getLogicListClassFromEntityClazz");
+            return null;
+        }
+
+        canonicalNameEntity = dovrebbeEssereUnaEntityClazz.getCanonicalName();
+        simpleNameEntity = fileService.estraeClasseFinale(canonicalNameEntity);
+        packageName = text.levaCoda(simpleNameEntity, SUFFIX_ENTITY).toLowerCase();
+
+        if (!annotation.isEntityClass(dovrebbeEssereUnaEntityClazz)) {
+            message = String.format("La clazz ricevuta %s NON è una EntityClazz", simpleNameEntity);
+            logger.info(message, this.getClass(), "getLogicListClassFromEntityClazz");
+            return null;
+        }
+
+        //--provo a creare la classe specifica xxxLogicList (classe, non istanza)
+        try {
+            canonicalNameLogicList = text.levaCoda(canonicalNameEntity, SUFFIX_ENTITY) + SUFFIX_LOGIC_LIST;
+            simpleNameLogicList = fileService.estraeClasseFinale(canonicalNameLogicList);
+
+            listClazz = Class.forName(canonicalNameLogicList);
+        } catch (Exception unErrore) {
+            message = String.format("Nel package %s non esiste la classe %s", packageName, simpleNameLogicList);
+            logger.info(message, this.getClass(), "getLogicListClassFromEntityClazz");
+        }
+
+        return listClazz;
     }
 
     /**
@@ -108,20 +145,33 @@ public class AClassService extends AAbstractService {
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService) {
-        return getLogicFromEntityClazz(entityClazz, entityService, AEOperation.listNoForm);
+    public AILogic getLogicListFromEntityClazz(Class<? extends AEntity> entityClazz) {
+        return getLogicListFromEntityClazz(entityClazz, null, AEOperation.listNoForm);
+    }
+
+    /**
+     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+     *
+     * @param entityClazz the entity class
+     *
+     * @return istanza de xxxLogic associata alla Entity
+     */
+    @Deprecated
+    public AILogic getLogicListFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService) {
+        return getLogicListFromEntityClazz(entityClazz, entityService, AEOperation.listNoForm);
     }
 
 
     /**
-     * Istanza della sottoclasse xxxLogic associata alla Entity inviata  <br>
+     * Istanza della sottoclasse xxxLogicList associata alla Entity inviata  <br>
      *
      * @param entityClazz   the entity class
      * @param operationForm supported by dialog
      *
      * @return istanza de xxxLogic associata alla Entity
      */
-    public AILogic getLogicFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService, AEOperation operationForm) {
+    @Deprecated
+    public AILogic getLogicListFromEntityClazz(Class<? extends AEntity> entityClazz, AIService entityService, AEOperation operationForm) {
         AILogic entityLogic = null;
         String canonicalName;
 
@@ -148,6 +198,7 @@ public class AClassService extends AAbstractService {
         return entityLogic;
     }
 
+
     /**
      * Istanza di PreferenzaLogic associata alla Entity inviata  <br>
      *
@@ -155,6 +206,42 @@ public class AClassService extends AAbstractService {
      */
     public PreferenzaService getPreferenzaLogic() {
         return (PreferenzaService) getServiceFromEntityClazz(Preferenza.class);
+    }
+
+
+    /**
+     * @param menuClazz inserito da FlowBoot.fixMenuRoutes() e sue sottoclassi
+     */
+    public String getRouteFormName(Class<? extends AEntity> entityClazz) {
+        //        String packageName;
+        //        String message;
+        String routeName = VUOTA;
+        String simpleName = VUOTA;
+        String canonicalName;
+        Class listClazz = null;
+
+        //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
+        if (annotation.isEntityClass(entityClazz)) {
+            canonicalName = entityClazz.getCanonicalName();
+            //            packageName = fileService.estraeClasseFinale(canonicalName);
+            //            packageName = text.levaCoda(packageName, SUFFIX_ENTITY).toLowerCase();
+            canonicalName = text.levaCoda(canonicalName, SUFFIX_ENTITY) + SUFFIX_LOGIC_FORM;
+
+            //--provo a creare la classe specifica xxxLogicList
+            try {
+                listClazz = Class.forName(canonicalName);
+            } catch (Exception unErrore) {
+            }
+
+            //--controllo che la classe specifica xxxLogicList esista e che contenga @Route
+            if (listClazz != null) {
+                simpleName = listClazz.getSimpleName();
+                routeName = text.levaCoda(simpleName, SUFFIX_LOGIC_FORM) + SUFFIX_FORM;
+                routeName = text.primaMinuscola(routeName);
+            }
+        }
+
+        return routeName;
     }
 
 }

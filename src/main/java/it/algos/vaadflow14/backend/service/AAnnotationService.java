@@ -890,6 +890,18 @@ public class AAnnotationService extends AAbstractService {
     }
 
     /**
+     * Flag per l'utilizzo dei timestamps. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaTimeStamp(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaTimeStamp() : false;
+    }
+
+    /**
      * Flag per la cancellazione di una entity. <br>
      *
      * @param entityClazz the class of type AEntity

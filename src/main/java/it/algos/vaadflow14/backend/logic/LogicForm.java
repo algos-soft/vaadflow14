@@ -76,8 +76,8 @@ public abstract class LogicForm extends Logic {
         super.fixPreferenze();
 
         super.usaBottoneBack = true;
-        super.usaBottoneCancella = FlowVar.usaReset && annotation.usaDelete(entityClazz);
-        super.usaBottoneRegistra = FlowVar.usaReset && annotation.usaModifica(entityClazz);
+        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
+        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
 
         if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
             super.usaBottonePrima = true;
@@ -116,6 +116,27 @@ public abstract class LogicForm extends Logic {
         }
     }
 
+
+    /**
+     * Costruisce un wrapper (obbligatorio) di dati <br>
+     * I dati sono gestiti da questa 'logic' <br>
+     * I dati vengono passati alla View che li usa <br>
+     *
+     * @return wrapper di dati per la view
+     */
+    protected WrapButtons getWrapButtonsTop() {
+        List<AEButton> listaAEBottoni = this.getListaAEBottoniTop();
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
+    }
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaAEBottoniTop() {
+        return null;
+    }
 
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>

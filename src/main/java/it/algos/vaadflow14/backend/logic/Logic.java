@@ -67,12 +67,13 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         this.entityClazz = null;
         this.entityService = null;
         this.entityBean = null;
+        this.routeFormName = VUOTA;
 
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
             logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
         }
 
-        this.fixTypeView();
+//        this.fixTypeView();
         this.fixEntityClazz();
         this.fixEntityService();
         this.fixEntityBean();
@@ -84,6 +85,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Property per il tipo di operazione (solo Form) <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Deprecated
     protected void fixTypeView() {
         String typeVistaTxt;
 
@@ -142,13 +144,23 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         }
     }
 
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.fixEntityClazz();
         this.fixEntityService();
+//        this.fixLogicForm();
         this.fixPreferenze();
         this.initView();
     }
+
+//    /**
+//     *
+//     */
+//    protected void fixLogicForm() {
+//        if (text.isEmpty(logicFormRoute)) {
+//        }
+//    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
@@ -176,7 +188,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
         super.addToLayout();
     }
-
 
 
     /**
@@ -241,13 +252,13 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     }
 
     protected final void executeRoute() {
-        final QueryParameters query = route.getQueryForm(entityClazz);
-        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
+        executeRoute((AEntity) null);
     }
 
-    protected final void executeRoute(AEntity entityBean) {
-        final QueryParameters query = route.getQueryForm(entityClazz, entityBean.id, operationForm);
-        UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
+
+    protected final void executeRoute(final AEntity entityBean) {
+        final QueryParameters query = route.getQueryForm(entityClazz, entityBean, operationForm);
+        UI.getCurrent().navigate(text.isValid(routeFormName) ? routeFormName : ROUTE_NAME_GENERIC_FORM, query);
     }
 
 }

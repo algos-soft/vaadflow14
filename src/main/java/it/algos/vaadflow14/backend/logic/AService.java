@@ -182,7 +182,7 @@ public abstract class AService extends AAbstractService implements AIService {
             }
         }
 
-        if (annotation.usaModifica(entityClazz)) {
+        if (annotation.usaTimeStamp(entityClazz)) {
             if (operation == AEOperation.addNew) {
                 entityBeanWithID.creazione = LocalDateTime.now();
             }

@@ -543,7 +543,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return lista di entityBeans
      */
     public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
-        return findSet(entityClazz, offset, limit,  new BasicDBObject());
+        return findSet(entityClazz, offset, limit, new BasicDBObject());
     }
 
     /**
@@ -556,7 +556,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit,  BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -571,7 +571,7 @@ public class AMongoService<capture> extends AAbstractService {
         int ini = 0;
         int end = 0;
         List<Document> documents;
-        BasicDBObject query= new BasicDBObject();
+        BasicDBObject query = new BasicDBObject();
 
         mongoClazzName = annotation.getCollectionName(entityClazz);
         collection = mongoOp.getCollection(mongoClazzName);
@@ -588,7 +588,7 @@ public class AMongoService<capture> extends AAbstractService {
                     entityBean = gSon.fromJson(jsonString, entityClazz);
                 } catch (JsonSyntaxException unErrore) {
                     esisteTagValue = jsonString.contains(tag);
-                    if (jsonString.contains(tag)) {
+                    if (esisteTagValue) {
                         ini = jsonString.indexOf(tag);
                         end = jsonString.indexOf(tagEnd, ini) + tagEnd.length();
                         tag2 = jsonString.substring(ini, end);

@@ -35,6 +35,9 @@ public enum AEPreferenza implements AIPreferenza {
     usaLogVisibile(PREF_USA_LOG_VIDEO, "Visualizza il log nella finestra", AETypePref.bool, true, false),
     usaButtonOnlyIcon(PREF_USA_BUTTON_ONLY_ICON, "Usa solo l'icona del bottone e non il testo", AETypePref.bool, true, false),
     durataAvviso(PREF_DURATA_AVVISO_VIDEO, "Durata in millisecondi dell'avviso a video", AETypePref.integer, 2000, false, false, false),
+    usaMenuReset(PREF_USA_MENU_RESET, "Usa i bottoni deleteAll e reset nelle xxxLogicList (se previsto dal package)", AETypePref.bool, true, false, true, false, VUOTA),
+    usaMenuCrono(PREF_USA_MENU_CRONO, "Usa i menu del gruppo crono", AETypePref.bool, false, false, true, false, VUOTA),
+    usaMenuGeo(PREF_USA_MENU_GEO, "Usa i menu del gruppo geografia", AETypePref.bool, false, false, true, false, VUOTA),
     ;
 
 

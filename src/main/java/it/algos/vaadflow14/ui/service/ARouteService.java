@@ -32,112 +32,98 @@ public class ARouteService extends AAbstractService {
      */
     private static final String CODE = "UTF-8";
 
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     * Nuovo record <br>
+    //     *
+    //     * @param entityClazz verso cui navigare
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(Class<?> entityClazz) {
+    //        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), VUOTA, AEOperation.addNew) : null;
+    //    }
 
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     * Nuovo record <br>
-     *
-     * @param entityClazz verso cui navigare
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(Class<?> entityClazz) {
-        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), VUOTA, AEOperation.addNew) : null;
-    }
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     *
+    //     * @param entityClazz          verso cui navigare
+    //     * @param integerEntityBeanKey key ID della entityBean come intero
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(Class<?> entityClazz, int integerEntityBeanKey) {
+    //        return getQueryForm(entityClazz, integerEntityBeanKey + VUOTA, AEOperation.edit);
+    //    }
 
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     * Nuovo record <br>
+    //     *
+    //     * @param entityClazzCanonicalName verso cui navigare
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(String entityClazzCanonicalName) {
+    //        return getQueryForm(entityClazzCanonicalName, VUOTA, AEOperation.addNew);
+    //    }
 
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     *
-     * @param entityClazz          verso cui navigare
-     * @param integerEntityBeanKey key ID della entityBean come intero
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(Class<?> entityClazz, int integerEntityBeanKey) {
-        return getQueryForm(entityClazz, integerEntityBeanKey + VUOTA, AEOperation.edit);
-    }
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     *
+    //     * @param entityClazz   verso cui navigare
+    //     * @param entityBeanKey key ID della entityBean
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(Class<?> entityClazz, String entityBeanKey) {
+    //        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), entityBeanKey, AEOperation.edit) : null;
+    //    }
 
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     *
+    //     * @param entityClazz   verso cui navigare
+    //     * @param entityBeanKey key ID della entityBean
+    //     * @param operationForm tipologia di Form da usare
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(Class<?> entityClazz, String entityBeanKey, AEOperation operationForm) {
+    //        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), entityBeanKey, operationForm) : null;
+    //    }
 
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     * Nuovo record <br>
-     *
-     * @param entityClazzCanonicalName verso cui navigare
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(String entityClazzCanonicalName) {
-        return getQueryForm(entityClazzCanonicalName, VUOTA, AEOperation.addNew);
-    }
+    //    /**
+    //     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+    //     *
+    //     * @param entityClazzCanonicalName verso cui navigare
+    //     * @param entityBeanKey            key ID della entityBean
+    //     *
+    //     * @return query da passare al Router di Vaadin
+    //     */
+    //    public QueryParameters getQueryForm(String entityClazzCanonicalName, String entityBeanKey) {
+    //        return getQueryForm(entityClazzCanonicalName, entityBeanKey, AEOperation.edit);
+    //    }
+
 
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
      *
      * @param entityClazz   verso cui navigare
-     * @param entityBeanKey key ID della entityBean
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(Class<?> entityClazz, String entityBeanKey) {
-        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), entityBeanKey, AEOperation.edit) : null;
-    }
-
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     *
-     * @param entityClazz   verso cui navigare
-     * @param entityBeanKey key ID della entityBean
+     * @param entityBean    verso cui navigare
      * @param operationForm tipologia di Form da usare
      *
      * @return query da passare al Router di Vaadin
      */
-    public QueryParameters getQueryForm(Class<?> entityClazz, String entityBeanKey, AEOperation operationForm) {
-        return entityClazz != null ? getQueryForm(entityClazz.getCanonicalName(), entityBeanKey, operationForm) : null;
-    }
-
-
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     *
-     * @param entityClazzCanonicalName verso cui navigare
-     * @param entityBeanKey            key ID della entityBean
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(String entityClazzCanonicalName, String entityBeanKey) {
-        return getQueryForm(entityClazzCanonicalName, entityBeanKey, AEOperation.edit);
-    }
-
-
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
-     *
-     * @param entityClazzCanonicalName verso cui navigare
-     * @param entityBeanKey            key ID della entityBean
-     * @param operationForm            tipologia di Form da usare
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryForm(String entityClazzCanonicalName, String entityBeanKey, AEOperation operationForm) {
-        if (text.isEmpty(entityClazzCanonicalName)) {
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEntity entityBean, final AEOperation operationForm) {
+        if (entityClazz == null) {
             return null;
         }
 
-        // Se manca il parametro, uso quello più probabile
-        if (operationForm == null) {
-            operationForm = AEOperation.edit;
-        }
-
-        // Se entityBeanKey è vuoto, vuol dire che è un nuovo record
-        if (entityBeanKey.equals(VUOTA)) {
-            operationForm = AEOperation.addNew;
-        }
-
         Map<String, List<String>> mappaQuery = new HashMap<>();
-        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazzCanonicalName));
-        mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(text.isValid(entityBeanKey) ? entityBeanKey : KEY_NULL));
-        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name()));
+        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazz.getCanonicalName()));
+        mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBean != null ? entityBean.id : KEY_NULL));
+        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
         return new QueryParameters(mappaQuery);
     }
 
@@ -373,7 +359,6 @@ public class ARouteService extends AAbstractService {
         }
         return entityLogic;
     }
-
 
     public final void openList(Class<? extends AEntity> entityClazz) {
         openList(entityClazz.getCanonicalName());

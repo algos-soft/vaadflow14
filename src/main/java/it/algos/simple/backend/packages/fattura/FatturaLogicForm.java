@@ -22,13 +22,16 @@ public class FatturaLogicForm extends LogicForm {
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
     public FatturaLogicForm(@Qualifier("FatturaService") AIService fatturaService) {
-        super.entityClazz = FatturaEntity.class;
+        super.entityClazz = Fattura.class;
         super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        super.beforeEnter(beforeEnterEvent);
+    }
 
-
-//    /**
+    //    /**
 //     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
 //     * DEVE essere sovrascritto <br>
 //     *

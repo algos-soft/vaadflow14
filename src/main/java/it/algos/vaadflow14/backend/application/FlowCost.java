@@ -358,6 +358,12 @@ public abstract class FlowCost {
 
     public static final String PREF_DURATA_AVVISO_VIDEO = "durataAvvisoVideo";
 
+    public static final String PREF_USA_MENU_RESET = "usaMenuReset";
+
+    public static final String PREF_USA_MENU_CRONO = "usaMenuCrono";
+
+    public static final String PREF_USA_MENU_GEO = "usaMenuGeo";
+
     public static final String PREF_ICONA_EDIT = "iconaEdit";
 
     public static final String PREF_EMAIL = "email";

@@ -449,7 +449,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int limit = 0;
         Class<? extends AEntity> clazz;
 
-        clazz = Mese.class;
+        clazz = Via.class;
         offset = 0;
         limit = 12;
         previstoIntero = 12;

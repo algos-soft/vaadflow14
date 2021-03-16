@@ -181,9 +181,14 @@ public abstract class LogicProperty extends VerticalLayout {
     protected AEntity entityBean;
 
     /**
-     * The entityService obbligatorio, singleton di tipo xxxService <br>
+     * The entityService facoltativo, singleton di tipo xxxService <br>
      */
     protected AIService entityService;
+
+    /**
+     * The @route() of xxxLogicForm facoltativo  <br>
+     */
+    protected String routeFormName;
 
     /**
      * Wrapper di dati recuperati dall'url del browser, obbligatorio per il form <br>
@@ -307,6 +312,12 @@ public abstract class LogicProperty extends VerticalLayout {
     protected int maxNumeroBottoniPrimaRiga;
 
     /**
+     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
+     */
+    protected String wikiPageTitle;
+
+
+    /**
      * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
      */
     protected ATopLayout topLayout;
@@ -416,6 +427,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixAlertLayout() {
     }
 
+
     /**
      * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
      *
@@ -426,6 +438,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected Span getSpan(final String message) {
         return html.getSpanBlu(message, AETypeSize.small);
     }
+
 
     /**
      * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
@@ -456,6 +469,26 @@ public abstract class LogicProperty extends VerticalLayout {
      * Se esiste, inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      */
     protected void fixTopLayout() {
+        topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
+
+        if (topLayout != null) {
+            topLayout.setAllListener((AILogic) this);
+        }
+
+        if (topPlaceHolder != null && topLayout != null) {
+            topPlaceHolder.add(topLayout);
+        }
+    }
+
+    /**
+     * Costruisce un wrapper (obbligatorio) di dati <br>
+     * I dati sono gestiti da questa 'logic' <br>
+     * I dati vengono passati alla View che li usa <br>
+     *
+     * @return wrapper di dati per la view
+     */
+    protected WrapButtons getWrapButtonsTop() {
+        return null;
     }
 
 

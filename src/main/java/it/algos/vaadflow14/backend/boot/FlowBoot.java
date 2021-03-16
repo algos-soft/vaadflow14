@@ -203,13 +203,6 @@ public abstract class FlowBoot implements ServletContextListener {
          */
         FlowVar.usaSecurity = true;
 
-        /**
-         * Controlla se l' applicazione può usare il bottone reset oppure no <br>
-         * Il singolo package decide se usarlo effettivamente <br>
-         * Di default (per sicurezza) uguale a false <br>
-         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
-         */
-        FlowVar.usaReset = false;
 
         /**
          * Nome identificativo dell' applicazione <br>
@@ -350,7 +343,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixMenuRoutes() {
-        if (FlowVar.usaCronoPackages) {
+        if (AEPreferenza.usaMenuCrono.is()) {
             FlowVar.menuRouteList.add(Secolo.class);
             FlowVar.menuRouteList.add(Anno.class);
             FlowVar.menuRouteList.add(Mese.class);
@@ -367,7 +360,7 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.menuRouteList.add(Versione.class);
         FlowVar.menuRouteList.add(Via.class);
 
-        if (FlowVar.usaGeografiaPackages) {
+        if (AEPreferenza.usaMenuGeo.is()) {
             FlowVar.menuRouteList.add(Continente.class);
             FlowVar.menuRouteList.add(Stato.class);
             FlowVar.menuRouteList.add(Regione.class);

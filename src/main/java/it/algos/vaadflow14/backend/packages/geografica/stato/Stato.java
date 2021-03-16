@@ -45,7 +45,7 @@ import java.util.*;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazione = false, usaModifica = false)
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazione = false, usaModifica = false, usaDelete = false)
 @AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
 @AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaRowIndex = false)
 @AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)
@@ -88,7 +88,7 @@ public class Stato extends AEntity {
      * divisione amministrativa di secondo livello (facoltativa) <br>
      */
     @Transient()
-    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello: ", linkClazz = Regione.class, linkProperty = "stato", properties = "divisione,iso,sigla,status")
+    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di secondo livello", linkClazz = Regione.class, linkProperty = "stato", properties = "divisione,iso,sigla,status")
     @AIColumn(header = "Divisione")
     public List<Regione> regioni;
 

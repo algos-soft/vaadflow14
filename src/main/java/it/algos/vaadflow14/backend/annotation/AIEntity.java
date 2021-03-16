@@ -69,6 +69,14 @@ public @interface AIEntity {
     boolean usaModifica() default true;
 
     /**
+     * (Optional) uso di timestamps per memorizzare date di creazione e di modifica della entity
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaTimeStamp() default false;
+
+    /**
      * (Optional) possibilità di cancellare una entity
      * Di default true
      *

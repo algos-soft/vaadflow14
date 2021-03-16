@@ -55,18 +55,12 @@ public class StatoLogicList extends LogicList {
      */
     @Override
     protected void fixPreferenze() {
-        boolean debug = AEPreferenza.usaDebug.is();
         super.fixPreferenze();
 
-        super.operationForm = debug ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = debug;
-        super.usaBottoneResetList = debug;
-        super.usaBottoneNew = debug;
+        super.operationForm =   AEOperation.showOnly;
         super.usaBottonePaginaWiki = true;
 //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-        super.usaBottoneResetForm = debug;
-//        super.wikiPageTitle = "ISO_3166-1";//@todo Funzionalità ancora da implementare
-//        super.usaBottoniSpostamentoForm = true;//@todo Funzionalità ancora da implementare
+        super.wikiPageTitle = "ISO_3166-1";
     }
 
 

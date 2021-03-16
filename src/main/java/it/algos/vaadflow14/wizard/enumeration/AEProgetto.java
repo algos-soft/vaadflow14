@@ -15,11 +15,8 @@ import java.util.*;
 public enum AEProgetto {
 
     bio("wikibio", "WikiBio",VUOTA),
-
     wam("vaadwam", "Wam",VUOTA),
-
     beta("beta", "beta","/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
-
     moneglia("moneglia", "Moneglia",VUOTA),
     gestione("gestione", "Gestione",VUOTA),
 

@@ -1,11 +1,12 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.mongodb.*;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -40,9 +41,11 @@ public abstract class LogicList extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = FlowVar.usaReset && annotation.usaReset(entityClazz);
-        super.usaBottoneResetList = FlowVar.usaReset && annotation.usaReset(entityClazz);
-        super.usaBottoneNew = FlowVar.usaReset && annotation.usaCreazione(entityClazz);
+        super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
+        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
+        super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
+
+        super.routeFormName = classService.getRouteFormName(entityClazz);
     }
 
     //    /**
@@ -81,22 +84,6 @@ public abstract class LogicList extends Logic {
         return null;
     }
 
-    /**
-     * Costruisce un layout per i bottoni di comando superiori della view <br>
-     * Semi-obbligatorio per la List, facoltativo per il Form <br>
-     */
-    @Override
-    protected void fixTopLayout() {
-        topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-
-        if (topLayout != null) {
-            topLayout.setAllListener(this);
-        }
-
-        if (topPlaceHolder != null && topLayout != null) {
-            topPlaceHolder.add(topLayout);
-        }
-    }
 
     /**
      * Costruisce un wrapper (obbligatorio) di dati <br>
@@ -202,7 +189,7 @@ public abstract class LogicList extends Logic {
                 //                export();
                 break;
             case showWiki:
-                //                openWikiPage();
+                openWikiPage();
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
@@ -316,6 +303,13 @@ public abstract class LogicList extends Logic {
         return result.isValido();
     }
 
+    /**
+     * Apre una pagina di wikipedia. <br>
+     */
+    protected final void openWikiPage() {
+        String link = "\"" + PATH_WIKI + wikiPageTitle + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }
 
     /**
      * Aggiorna gli items della Grid, utilizzando (anche) i filtri. <br>
