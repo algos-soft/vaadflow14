@@ -327,10 +327,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected AButtonLayout bottomLayout;
 
-    /**
-     * The Type vista.
-     */
-    protected AEVista typeVista;
 
     /**
      * Tipologia di Form in uso <br>
@@ -370,6 +366,7 @@ public abstract class LogicProperty extends VerticalLayout {
         this.usaBottoneDopo = false;
 
         this.maxNumeroBottoniPrimaRiga = AEPreferenza.numeroBottoni.getInt();
+        this.routeNameForm = classService.getRouteNameForm(entityClazz);
     }
 
 

@@ -105,17 +105,31 @@ public class ARouteService extends AAbstractService {
     //        return getQueryForm(entityClazzCanonicalName, entityBeanKey, AEOperation.edit);
     //    }
 
+    /**
+     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+     *
+     * @param entityClazz    verso cui navigare
+     * @param operationForm  tipologia di Form da usare
+     * @param entityBean     da visualizzare
+     *
+     * @return query da passare al Router di Vaadin
+     */
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final AEntity entityBean) {
+   return getQueryForm(entityClazz,operationForm,entityBean,(AEntity)null,(AEntity)null);
+    }
 
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
      *
-     * @param entityClazz   verso cui navigare
-     * @param entityBean    verso cui navigare
-     * @param operationForm tipologia di Form da usare
+     * @param entityClazz    verso cui navigare
+     * @param operationForm  tipologia di Form da usare
+     * @param entityBean     da visualizzare
+     * @param entityBeanPrev (eventuale) precedente
+     * @param entityBeanNext (eventuale) successiva
      *
      * @return query da passare al Router di Vaadin
      */
-    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEntity entityBean, final AEOperation operationForm) {
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final AEntity entityBean, final AEntity entityBeanPrev, final AEntity entityBeanNext) {
         if (entityClazz == null) {
             return null;
         }
@@ -124,8 +138,24 @@ public class ARouteService extends AAbstractService {
         if (!classService.isLogicFormClassFromEntityClazz(entityClazz)) {
             mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazz.getCanonicalName()));
         }
-        mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBean != null ? entityBean.id : KEY_NULL));
-        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
+
+        if (entityBean != null) {
+            mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBean.id ));
+        }
+
+        if (entityBeanPrev != null) {
+            mappaQuery.put(KEY_BEAN_PREV_ID, array.creaArraySingolo(entityBeanPrev.id ));
+        }
+
+        if (entityBeanNext != null) {
+            mappaQuery.put(KEY_BEAN_NEXT_ID, array.creaArraySingolo(entityBeanNext.id ));
+        }
+
+        if (operationForm != null) {
+            mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name() ));
+        }
+
+//        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
         return new QueryParameters(mappaQuery);
     }
 
@@ -312,11 +342,7 @@ public class ARouteService extends AAbstractService {
                 parametro.setMultiMappa(false);
             }
             else {
-                parametro = new Parametro();
-                parametro.setMultiParametersMap(multiParametersMap);
-                parametro.setPrimoSegmento(primoSegmento);
-                parametro.setMappa(false);
-                parametro.setMultiMappa(true);
+                parametro = new Parametro(multiParametersMap, primoSegmento, true);
             }
         }
         return parametro;

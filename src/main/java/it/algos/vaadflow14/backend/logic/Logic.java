@@ -4,8 +4,8 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.button.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 
 import java.util.*;
 
@@ -71,7 +71,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
             logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
         }
 
-//        this.fixTypeView();
+        this.fixTypeView();
         this.fixEntityClazz();
         this.fixEntityService();
         this.fixEntityBean();
@@ -81,16 +81,15 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     /**
      * Property per il tipo di view (List o Form) <br>
      * Property per il tipo di operazione (solo Form) <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
      */
-    @Deprecated
     protected void fixTypeView() {
-        String typeVistaTxt;
+        String operationTxt;
 
-        if (routeParameter != null && text.isValid(routeParameter.getPrimoSegmento())) {
-            typeVistaTxt = routeParameter.getPrimoSegmento();
-            if (text.isValid(typeVistaTxt)) {
-                typeVista = AEVista.valueOf(typeVistaTxt);
+        if (routeParameter != null && text.isValid(routeParameter.get(KEY_FORM_TYPE))) {
+            operationTxt = routeParameter.get(KEY_FORM_TYPE);
+            if (text.isValid(operationTxt)) {
+                operationForm = AEOperation.valueOf(operationTxt);
             }
         }
     }
@@ -253,10 +252,35 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         executeRoute((AEntity) null);
     }
 
+    /**
+     * Apre una pagina di wikipedia. <br>
+     */
+    protected final void openWikiPage() {
+        String link = "\"" + PATH_WIKI + wikiPageTitle + "\"";
+        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+    }
 
-    protected final void executeRoute(final AEntity entityBean) {
-        final QueryParameters query = route.getQueryForm(entityClazz, entityBean, operationForm);
-        UI.getCurrent().navigate(routeNameForm , query);
+    /**
+     * Lancia una @route con la visualizzazione di una singola scheda. <br>
+     * Se il package usaSpostamentoTraSchede=true, costruisce una query
+     * con le keyIDs della scheda precedente e di quella successiva
+     * (calcolate secondo l'ordinamento previsto) <br>
+     */
+    protected void executeRoute(final AEntity entityBean) {
+        final QueryParameters query;
+        final AEntity entityBeanPrev;
+        final AEntity entityBeanNext;
+
+        if (annotation.usaSpostamentoTraSchede(entityClazz)) {
+            entityBeanPrev = entityBean != null ? mongo.findPrevious(entityClazz, entityBean.id) : null;
+            entityBeanNext = entityBean != null ? mongo.findNext(entityClazz, entityBean.id) : null;
+            query = route.getQueryForm(entityClazz, operationForm, entityBean, entityBeanPrev, entityBeanNext);
+        }
+        else {
+            query = route.getQueryForm(entityClazz, operationForm, entityBean);
+        }
+
+        UI.getCurrent().navigate(routeNameForm, query);
     }
 
 }

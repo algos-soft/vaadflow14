@@ -35,23 +35,6 @@ public abstract class LogicForm extends Logic {
     protected int backSteps = -1;
 
 
-    /**
-     * Property per il tipo di view (List o Form) <br>
-     * Property per il tipo di operazione (solo Form) <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixTypeView() {
-        String operationTxt;
-        super.fixTypeView();
-
-        if (routeParameter != null && text.isValid(routeParameter.get(KEY_FORM_TYPE))) {
-            operationTxt = routeParameter.get(KEY_FORM_TYPE);
-            if (text.isValid(operationTxt)) {
-                operationForm = AEOperation.valueOf(operationTxt);
-            }
-        }
-    }
 
     /**
      *
@@ -251,6 +234,9 @@ public abstract class LogicForm extends Logic {
     public void performAction(AEAction azione) {
 
         switch (azione) {
+            case showWiki:
+                openWikiPage();
+                break;
             case resetForm:
                 //                this.reloadForm(entityBean);
                 break;
@@ -334,6 +320,7 @@ public abstract class LogicForm extends Logic {
     protected void back() {
         UI.getCurrent().getPage().getHistory().back();
     }
+
 
     /**
      * Azione proveniente dal click sul bottone Before <br>

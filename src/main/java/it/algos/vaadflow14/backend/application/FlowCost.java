@@ -136,15 +136,15 @@ public abstract class FlowCost {
 
     public static final String KEY_ROUTE_TYPE = "type";
 
-    //    public static final String KEY_ROUTE_LIST = "list";
-    //
-    //    public static final String KEY_ROUTE_FORM = "form";
-
     public static final String KEY_BEAN_CLASS = "beanClass";
+
+    public static final String KEY_FORM_TYPE = "formType";
 
     public static final String KEY_BEAN_ENTITY = "beanID";
 
-    public static final String KEY_FORM_TYPE = "formType";
+    public static final String KEY_BEAN_PREV_ID = "beanPrevID";
+
+    public static final String KEY_BEAN_NEXT_ID = "beanNextID";
 
     public static final String KEY_SERVICE_CLASS = "serviceClass";
 

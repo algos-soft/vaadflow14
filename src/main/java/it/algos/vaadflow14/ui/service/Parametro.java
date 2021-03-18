@@ -1,9 +1,8 @@
 package it.algos.vaadflow14.ui.service;
 
-import java.util.List;
-import java.util.Map;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -29,10 +28,6 @@ public class Parametro {
     private boolean multiMappa;
 
     private String primoSegmento;
-
-
-    public Parametro() {
-    }
 
 
     public Parametro(String singleParameter) {
@@ -68,6 +63,14 @@ public class Parametro {
         this.setValido(parametersMap != null);
     }
 
+    public Parametro(Map<String, List<String>> multiParametersMap, String primoSegmento, boolean multiParameters) {
+        this.setMultiParametersMap(multiParametersMap);
+        this.setPrimoSegmento(primoSegmento);
+        this.setSingoloParametro(false);
+        this.setMappa(false);
+        this.setMultiMappa(true);
+        this.setValido(multiParametersMap != null);
+    }
 
     public String getSingleParameter() {
         return singleParameter;
@@ -110,7 +113,7 @@ public class Parametro {
 
 
     public String get(String key) {
-        return isMappa() ? getParametersMap().get(key) : VUOTA;
+        return isMappa() ? getParametersMap().get(key) : isMultiMappa()?getMultiParametersMap().get(key).get(0):VUOTA;
     }
 
 

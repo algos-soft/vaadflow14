@@ -2,6 +2,7 @@ package it.algos.integration;
 
 import com.fasterxml.jackson.databind.*;
 import com.google.gson.*;
+import static com.helger.commons.mock.CommonsAssert.*;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
@@ -16,12 +17,10 @@ import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
-import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
 import org.junit.*;
-import static org.junit.Assert.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -399,7 +398,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(10)
-    @DisplayName("findAllQueryProjection")
+    @DisplayName("10 - findAllQueryProjection")
     void findAllQueryProjection() {
         System.out.println("metodo base - la projection non si usa");
         System.out.println(VUOTA);
@@ -433,6 +432,12 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertTrue(array.isAllValid(listaBean));
         printLista(listaBean, "lista con query filtrata e ordinata e selezione dei campi");
 
+        query = new Query();
+        query.fields().include("mese");
+        listaBean = service.findAll(Mese.class, query, VUOTA);
+        Assert.assertTrue(array.isAllValid(listaBean));
+        printLista(listaBean, "lista con query filtrata e ordinata e selezione di un solo campo");
+
         String projection = "{'code': 1}";
         query = new Query();
         listaBean = service.findAll(Mese.class, query, projection);
@@ -456,7 +461,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities per Mese");
+        printLista(listaBean, "Set di entities per Via");
 
         offset = 4;
         limit = 5;
@@ -464,7 +469,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities per Mese");
+        printLista(listaBean, "Set di entities per Via");
 
         clazz = Anno.class;
         offset = 2850;
@@ -477,16 +482,18 @@ public class AMongoServiceIntegrationTest extends ATest {
         printLista(listaBean, "Set di entities per Anno");
         System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
 
-        clazz = Versione.class;
-        offset = 0;
-        limit = 1;
-        previstoIntero = 1;
-        listaBean = mongo.findSet(clazz, offset, limit);
-        Assert.assertNotNull(listaBean);
-        Assert.assertEquals(previstoIntero, listaBean.size());
-        Assert.assertNotNull(((Versione) listaBean.get(0)).id);
-        Assert.assertNotNull(((Versione) listaBean.get(0)).code);
-        Assert.assertNotNull(((Versione) listaBean.get(0)).descrizione);
+        //        clazz = Mese.class;
+        //        offset = 0;
+        //        limit = 1;
+        //        previstoIntero = 1;
+        //        listaBean = mongo.findSet(clazz, offset, limit);
+        //        Assert.assertNotNull(listaBean);
+        //        Assert.assertEquals(previstoIntero, listaBean.size());
+        //        Assert.assertNotNull(((Mese) listaBean.get(0)).id);
+        //        Assert.assertNotNull(((Mese) listaBean.get(0)).mese);
+        //        Assert.assertNotNull(((Mese) listaBean.get(0)).sigla);
+        //        printLista(listaBean, "Set di entities per Mese");
+        //        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
     }
 
 
@@ -870,31 +877,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(20)
-    @DisplayName("20 - find next")
-    void findNext() {
-        sorgente = "aruba";
-        previsto = "australia";
-        Stato statoOttenuto = (Stato) service.findNext(Stato.class, sorgente);
-        Assert.assertNotNull(statoOttenuto);
-        assertEquals(previsto, statoOttenuto.id);
-    }
-
-
-    @Test
-    @Order(21)
-    @DisplayName("21 - find previous")
-    void findPrevious() {
-        sorgente = "australia";
-        previsto = "aruba";
-        Stato statoOttenuto = (Stato) service.findPrevious(Stato.class, sorgente);
-        Assert.assertNotNull(statoOttenuto);
-        assertEquals(previsto, statoOttenuto.id);
-    }
-
-
-    @Test
-    @Order(22)
-    @DisplayName("22 - getCollection")
+    @DisplayName("20 - getCollection")
     void pippoz() {
         Gson gson;
         String json;
@@ -932,8 +915,8 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
     @Test
-    @Order(23)
-    @DisplayName("23 - execute")
+    @Order(21)
+    @DisplayName("21 - execute")
     void execute() {
         String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/" + "vaadflow14");
@@ -947,12 +930,74 @@ public class AMongoServiceIntegrationTest extends ATest {
         BasicDBObject command = new BasicDBObject("find", "mese");
         Document alfa = mongoOp.executeCommand(String.valueOf(command));
         //        String gamma = alfa.getString("cursor");
-//        ObjectId beta = alfa.getObjectId("cursor");
+        //        ObjectId beta = alfa.getObjectId("cursor");
         int a = 87;
         //        String jsonCommand = "db.getCollection('secolo').find({}, {\"_id\":0,\"ordine\": 1})";
         //        Object alfga = mongo.mongoOp.executeCommand(jsonCommand);
 
     }
+
+    @Test
+    @Order(22)
+    @DisplayName("22 - find next")
+    void findNext() {
+        String valuePropertyID = "australia";
+        previsto = "austria";
+        Stato statoOttenuto = (Stato) service.findNext(Stato.class, valuePropertyID);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.id);
+    }
+
+
+    @Test
+    @Order(23)
+    @DisplayName("23 - find next ordered")
+    void findNext2() {
+        Stato statoOttenuto = null;
+        String sortProperty;
+        String valueProperty = "australia";
+
+        sortProperty = "stato";
+        previsto = "austria";
+        statoOttenuto = (Stato) service.findNext(Stato.class, sortProperty, valueProperty);
+        Assert.assertNull(statoOttenuto);
+
+        sortProperty = "ordine";
+        previsto = "azerbaigian";
+        statoOttenuto = (Stato) service.findNext(Stato.class, sortProperty, valueProperty);
+        Assert.assertNull(statoOttenuto);
+    }
+
+
+    @Test
+    @Order(24)
+    @DisplayName("24 - find previous")
+    void findPrevious() {
+        String valuePropertyID = "burkinafaso";
+        previsto = "bulgaria";
+        Stato statoOttenuto = (Stato) service.findPrevious(Stato.class, valuePropertyID);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.id);
+    }
+
+//    @Test
+//    @Order(25)
+//    @DisplayName("25 - find previous ordered")
+//    void findPrevious2() {
+//        Stato statoOttenuto = null;
+//        String sortProperty;
+//        String valueProperty = "burkinafaso";;
+//
+//        sortProperty = "stato";
+//        previsto = "bulgaria";
+//        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, valueProperty);
+//        Assert.assertNull(statoOttenuto);
+//
+//        sortProperty = "ordine";
+//        previsto = "brunei";
+//        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, valueProperty);
+//        Assert.assertNull(statoOttenuto);
+//    }
 
     @Test
     @Order(94)

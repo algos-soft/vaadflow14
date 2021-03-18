@@ -4,7 +4,10 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -31,26 +34,26 @@ public class FatturaLogicForm extends LogicForm {
         super.beforeEnter(beforeEnterEvent);
     }
 
-    //    /**
-//     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-//     * DEVE essere sovrascritto <br>
-//     *
-//     * @return una liste di 'span'
-//     */
-//    @Override
-//    protected List<Span> getSpanList() {
-//        boolean singola = false;
-//
-//        //--Riga singola, oppure righe multiple
-//        if (singola) {
-//            return Collections.singletonList(html.getSpanVerde("Esempio verde."));
-//        }
-//        else {
-//            List<Span> lista = new ArrayList<>();
-//            lista.add(html.getSpanVerde("Siamo nel Form", AETypeWeight.bold));
-//            lista.add(html.getSpanRosso("Evviva"));
-//            return lista;
-//        }
-//    }
+    /**
+     * Preferenze usate da questa 'logica' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Puo essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+
+        super.wikiPageTitle = "Piozzano";
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     */
+    protected List<AEButton> getListaAEBottoniTop() {
+        return Collections.singletonList(AEButton.wiki);
+    }
 
 }

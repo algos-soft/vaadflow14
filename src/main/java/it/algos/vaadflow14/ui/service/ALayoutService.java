@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.ui.service;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;

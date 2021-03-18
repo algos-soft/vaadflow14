@@ -1185,13 +1185,13 @@ public abstract class ALogicOld implements AILogicOld {
 
 
     protected final void executeRoute() {
-        final QueryParameters query = route.getQueryForm(entityClazz, entityBean, operationForm);
+        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBean);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 
 
     protected final void executeRoute(AEntity entityBean) {
-        final QueryParameters query = route.getQueryForm(entityClazz, entityBean, operationForm);
+        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBean);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 

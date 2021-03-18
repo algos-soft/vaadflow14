@@ -769,11 +769,11 @@ public class AMongoService<capture> extends AAbstractService {
      * Cerca una singola entity di una collection con una determinata chiave. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
+     * @param keyIdValue  chiave ID identificativa
      *
      * @return the founded entity
      */
-    public AEntity findNext(Class<? extends AEntity> entityClazz, String keyId) {
+    public AEntity findNext(Class<? extends AEntity> entityClazz, String keyIdValue) {
         AEntity nextEntity = null;
         List<AEntity> listaOrdinata = null;
         Query query = new Query();
@@ -781,8 +781,8 @@ public class AMongoService<capture> extends AAbstractService {
             return null;
         }
 
-        if (text.isValid(keyId)) {
-            query.addCriteria(Criteria.where("_id").gt(keyId));
+        if (text.isValid(keyIdValue)) {
+            query.addCriteria(Criteria.where("_id").gt(keyIdValue));
             query.limit(1);
             listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
         }
@@ -794,6 +794,37 @@ public class AMongoService<capture> extends AAbstractService {
         return nextEntity;
     }
 
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param sortProperty  campo chiave di ordinamento
+     * @param valueProperty del campo chiave da cui partire
+     *
+     * @return the founded entity
+     */
+    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String sortProperty, final String valueProperty) {
+        AEntity nextEntity = null;
+        List<AEntity> listaOrdinata = null;
+        Query query = new Query();
+        if (entityClazz == null) {
+            return null;
+        }
+
+        if (text.isValid(sortProperty) && text.isValid(valueProperty)) {
+            query.addCriteria(Criteria.where(sortProperty).gt(valueProperty));
+            query.with(Sort.by(Sort.Direction.ASC, sortProperty));
+            query.limit(1);
+            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
+        }
+
+        if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
+            nextEntity = listaOrdinata.get(0);
+        }
+
+        return nextEntity;
+    }
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>
