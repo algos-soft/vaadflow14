@@ -869,7 +869,6 @@ public class AMongoService<capture> extends AAbstractService {
         switch (sortDir) {
             case ASC:
                 query.addCriteria(Criteria.where(sortProperty).gt(valueProperty));
-
                 break;
             case DESC:
                 query.addCriteria(Criteria.where(sortProperty).lt(valueProperty));

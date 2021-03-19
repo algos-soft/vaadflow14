@@ -106,11 +106,10 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixBodyLayout() {
         DataProvider dataProvider;
+        String sortProperty = annotation.getSortProperty(entityClazz);
         BasicDBObject sort = null;
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-        if (true) {
-            sort = new BasicDBObject("nome", -1);
-        }
+        sort = new BasicDBObject(sortProperty, 1);
 
         dataProvider = dataService.creaDataProvider(entityClazz, sort);
         grid.getGrid().setDataProvider(dataProvider);
