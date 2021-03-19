@@ -766,32 +766,82 @@ public class AMongoService<capture> extends AAbstractService {
 
 
     /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     * Cerca la entity successiva in una collection con un dato ordine. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
      * @param keyIdValue  chiave ID identificativa
      *
      * @return the founded entity
      */
-    public AEntity findNext(Class<? extends AEntity> entityClazz, String keyIdValue) {
-        AEntity nextEntity = null;
-        List<AEntity> listaOrdinata = null;
-        Query query = new Query();
-        if (entityClazz == null) {
-            return null;
-        }
+    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
+        return findNext(entityClazz, FIELD_ID, keyIdValue);
+    }
 
-        if (text.isValid(keyIdValue)) {
-            query.addCriteria(Criteria.where("_id").gt(keyIdValue));
-            query.limit(1);
-            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
-        }
 
-        if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
-            nextEntity = listaOrdinata.get(0);
-        }
+    /**
+     * Recupera l'ID della entity successiva in una collection con un dato ordine. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param sortProperty  campo chiave di ordinamento
+     * @param valueProperty del campo chiave da cui partire
+     *
+     * @return the founded entity
+     */
+    public String findNextID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+        AEntity nextEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
+        return nextEntity != null ? nextEntity.id : VUOTA;
+    }
 
-        return nextEntity;
+    /**
+     * Cerca la entity successiva in una collection con un dato ordine. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param sortProperty  campo chiave di ordinamento
+     * @param valueProperty del campo chiave da cui partire
+     *
+     * @return the founded entity
+     */
+    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+        return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
+    }
+
+    /**
+     * Cerca la entity precedente in una collection con un dato ordine. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyIdValue  chiave ID identificativa
+     *
+     * @return the founded entity
+     */
+    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
+        return findPrevious(entityClazz, FIELD_ID, keyIdValue);
+    }
+
+    /**
+     * Recupera l'ID della entity precedente in una collection con un dato ordine. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param sortProperty  campo chiave di ordinamento
+     * @param valueProperty del campo chiave da cui partire
+     *
+     * @return the founded entity
+     */
+    public String findPreviousID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+        AEntity previousEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
+        return previousEntity != null ? previousEntity.id : VUOTA;
+    }
+
+    /**
+     * Cerca la entity precedente in una collection con un dato ordine. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param sortProperty  campo chiave di ordinamento
+     * @param valueProperty del campo chiave da cui partire
+     *
+     * @return the founded entity
+     */
+    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+        return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
     }
 
 
@@ -804,20 +854,33 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String sortProperty, final String valueProperty) {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty, final Sort.Direction sortDir) {
         AEntity nextEntity = null;
         List<AEntity> listaOrdinata = null;
         Query query = new Query();
-        if (entityClazz == null) {
+
+        if (valueProperty == null) {
+            return null;
+        }
+        if (entityClazz == null || text.isEmpty(sortProperty)) {
             return null;
         }
 
-        if (text.isValid(sortProperty) && text.isValid(valueProperty)) {
-            query.addCriteria(Criteria.where(sortProperty).gt(valueProperty));
-            query.with(Sort.by(Sort.Direction.ASC, sortProperty));
-            query.limit(1);
-            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
+        switch (sortDir) {
+            case ASC:
+                query.addCriteria(Criteria.where(sortProperty).gt(valueProperty));
+
+                break;
+            case DESC:
+                query.addCriteria(Criteria.where(sortProperty).lt(valueProperty));
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "findBase");
+                break;
         }
+        query.with(Sort.by(sortDir, sortProperty));
+        query.limit(1);
+        listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
 
         if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
             nextEntity = listaOrdinata.get(0);
@@ -825,37 +888,6 @@ public class AMongoService<capture> extends AAbstractService {
 
         return nextEntity;
     }
-
-    /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
-     *
-     * @return the founded entity
-     */
-    public AEntity findPrevious(Class<? extends AEntity> entityClazz, String keyId) {
-        AEntity nextEntity = null;
-        List<AEntity> listaOrdinata = null;
-        Query query = new Query();
-        if (entityClazz == null) {
-            return null;
-        }
-
-        if (text.isValid(keyId)) {
-            query.addCriteria(Criteria.where("_id").lt(keyId));
-            query.with(Sort.by(Sort.Direction.DESC, "_id"));
-            query.limit(1);
-            listaOrdinata = (List<AEntity>) mongoOp.find(query, entityClazz);
-        }
-
-        if (array.isAllValid(listaOrdinata) && listaOrdinata.size() == 1) {
-            nextEntity = listaOrdinata.get(0);
-        }
-
-        return nextEntity;
-    }
-
 
     /**
      * Cerca una singola entity di una collection con un determinato valore di una property. <br>

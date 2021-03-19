@@ -937,6 +937,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     }
 
+
     @Test
     @Order(22)
     @DisplayName("22 - find next")
@@ -955,17 +956,22 @@ public class AMongoServiceIntegrationTest extends ATest {
     void findNext2() {
         Stato statoOttenuto = null;
         String sortProperty;
-        String valueProperty = "australia";
+        int sortIndex;
+        String valueProperty;
 
         sortProperty = "stato";
-        previsto = "austria";
+        valueProperty = "Australia";
+        previsto = "Austria";
         statoOttenuto = (Stato) service.findNext(Stato.class, sortProperty, valueProperty);
-        Assert.assertNull(statoOttenuto);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.stato);
 
         sortProperty = "ordine";
-        previsto = "azerbaigian";
-        statoOttenuto = (Stato) service.findNext(Stato.class, sortProperty, valueProperty);
-        Assert.assertNull(statoOttenuto);
+        sortIndex = 40;
+        previsto = "Azerbaigian";
+        statoOttenuto = (Stato) service.findNext(Stato.class, sortProperty, sortIndex);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.stato);
     }
 
 
@@ -980,24 +986,60 @@ public class AMongoServiceIntegrationTest extends ATest {
         assertEquals(previsto, statoOttenuto.id);
     }
 
-//    @Test
-//    @Order(25)
-//    @DisplayName("25 - find previous ordered")
-//    void findPrevious2() {
-//        Stato statoOttenuto = null;
-//        String sortProperty;
-//        String valueProperty = "burkinafaso";;
-//
-//        sortProperty = "stato";
-//        previsto = "bulgaria";
-//        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, valueProperty);
-//        Assert.assertNull(statoOttenuto);
-//
-//        sortProperty = "ordine";
-//        previsto = "brunei";
-//        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, valueProperty);
-//        Assert.assertNull(statoOttenuto);
-//    }
+    @Test
+    @Order(25)
+    @DisplayName("25 - find previous ordered")
+    void findPrevious2() {
+        Stato statoOttenuto = null;
+        String sortProperty;
+        int sortIndex;
+        String valueProperty;
+
+        sortProperty = "stato";
+        valueProperty = "Burkina Faso";
+        previsto = "Bulgaria";
+        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, valueProperty);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.stato);
+
+        sortProperty = "ordine";
+        sortIndex = 57;
+        previsto = "Brunei";
+        statoOttenuto = (Stato) service.findPrevious(Stato.class, sortProperty, sortIndex);
+        Assert.assertNotNull(statoOttenuto);
+        assertEquals(previsto, statoOttenuto.stato);
+    }
+
+    @Test
+    @Order(26)
+    @DisplayName("26 - next and previous ordered")
+    void findOrdered() {
+        Via viaOttenuta = null;
+        String sortProperty;
+        int sortIndex;
+        String valueProperty;
+
+        valueProperty = "largo";
+        previsto = "lungomare";
+        viaOttenuta = (Via) service.findNext(Via.class, valueProperty);
+        Assert.assertNotNull(viaOttenuta);
+        assertEquals(previsto, viaOttenuta.nome);
+
+        sortProperty = "ordine";
+        valueProperty = "largo";
+        sortIndex = 2;
+        previsto = "corso";
+        viaOttenuta = (Via) service.findNext(Via.class, sortProperty, sortIndex);
+        Assert.assertNotNull(viaOttenuta);
+        assertEquals(previsto, viaOttenuta.nome);
+
+        sortProperty = "nome";
+        valueProperty = "largo";
+        previsto = "lungomare";
+        viaOttenuta = (Via) service.findNext(Via.class, sortProperty, valueProperty);
+        Assert.assertNotNull(viaOttenuta);
+        assertEquals(previsto, viaOttenuta.nome);
+    }
 
     @Test
     @Order(94)

@@ -130,9 +130,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      *
      */
     protected void fixEntityBean() {
-        String keyID;
+        String keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
 
-        keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
         if (text.isEmpty(keyID) || keyID.equals(KEY_NULL)) {
             entityBean = entityService.newEntity();
         }
@@ -146,18 +145,18 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         this.fixEntityClazz();
         this.fixEntityService();
-//        this.fixLogicForm();
+        //        this.fixLogicForm();
         this.fixPreferenze();
         this.initView();
     }
 
-//    /**
-//     *
-//     */
-//    protected void fixLogicForm() {
-//        if (text.isEmpty(logicFormRoute)) {
-//        }
-//    }
+    //    /**
+    //     *
+    //     */
+    //    protected void fixLogicForm() {
+    //        if (text.isEmpty(logicFormRoute)) {
+    //        }
+    //    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
@@ -249,7 +248,16 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     }
 
     protected final void executeRoute() {
-        executeRoute((AEntity) null);
+        executeRoute(VUOTA);
+    }
+
+    /**
+     * Lancia una @route con la visualizzazione di una singola scheda. <br>
+     * Se il package usaSpostamentoTraSchede=true, costruisce una query
+     * con le keyIDs della scheda precedente e di quella successiva
+     * (calcolate secondo l'ordinamento previsto) <br>
+     */
+    protected void executeRoute(final String entityBeanID) {
     }
 
     /**
@@ -260,24 +268,21 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }
 
+
     /**
      * Lancia una @route con la visualizzazione di una singola scheda. <br>
      * Se il package usaSpostamentoTraSchede=true, costruisce una query
      * con le keyIDs della scheda precedente e di quella successiva
      * (calcolate secondo l'ordinamento previsto) <br>
      */
-    protected void executeRoute(final AEntity entityBean) {
+    protected void executeRoute(final String entityBeanID, final String entityBeanPrevID, final String entityBeanNextID) {
         final QueryParameters query;
-        final AEntity entityBeanPrev;
-        final AEntity entityBeanNext;
 
         if (annotation.usaSpostamentoTraSchede(entityClazz)) {
-            entityBeanPrev = entityBean != null ? mongo.findPrevious(entityClazz, entityBean.id) : null;
-            entityBeanNext = entityBean != null ? mongo.findNext(entityClazz, entityBean.id) : null;
-            query = route.getQueryForm(entityClazz, operationForm, entityBean, entityBeanPrev, entityBeanNext);
+            query = route.getQueryForm(entityClazz, operationForm, entityBeanID, entityBeanPrevID, entityBeanNextID);
         }
         else {
-            query = route.getQueryForm(entityClazz, operationForm, entityBean);
+            query = route.getQueryForm(entityClazz, operationForm, entityBeanID);
         }
 
         UI.getCurrent().navigate(routeNameForm, query);

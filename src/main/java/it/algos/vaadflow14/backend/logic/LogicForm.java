@@ -34,20 +34,24 @@ public abstract class LogicForm extends Logic {
 
     protected int backSteps = -1;
 
+    protected String sortProperty;
 
 
     /**
      *
      */
     protected void fixEntityBean() {
-        String keyID = routeParameter.get(KEY_BEAN_ENTITY) != null ? routeParameter.get(KEY_BEAN_ENTITY) : VUOTA;
-        if (text.isEmpty(keyID) || keyID.equals(KEY_NULL)) {
-            entityBean = entityService.newEntity();
+        super.fixEntityBean();
+
+        if (routeParameter.get(KEY_BEAN_PREV_ID) != null) {
+            entityBeanPrevID = routeParameter.get(KEY_BEAN_PREV_ID);
         }
-        else {
-            entityBean = entityService.findById(keyID);
+
+        if (routeParameter.get(KEY_BEAN_NEXT_ID) != null) {
+            entityBeanNextID = routeParameter.get(KEY_BEAN_NEXT_ID);
         }
     }
+
 
     /**
      * Preferenze usate da questa 'logica' <br>
@@ -66,6 +70,8 @@ public abstract class LogicForm extends Logic {
             super.usaBottonePrima = true;
             super.usaBottoneDopo = true;
         }
+
+        sortProperty = annotation.getSortProperty(entityClazz);
     }
 
     /**
@@ -255,10 +261,10 @@ public abstract class LogicForm extends Logic {
                 this.back();
                 break;
             case prima:
-                this.prima();
+                executeRoute(entityBeanPrevID);
                 break;
             case dopo:
-                this.dopo();
+                executeRoute(entityBeanNextID);
                 break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
@@ -323,33 +329,27 @@ public abstract class LogicForm extends Logic {
 
 
     /**
-     * Azione proveniente dal click sul bottone Before <br>
-     * Recupera la lista FILTRATA e ORDINATA delle entities, ricevuta dalla Grid <br> @todo da realizzare
-     * Si sposta alla precedente <br>
-     * Carica il form relativo <br>
+     * Lancia una @route con la visualizzazione di una singola scheda. <br>
+     * Se il package usaSpostamentoTraSchede=true, costruisce una query
+     * con le keyIDs della scheda precedente e di quella successiva
+     * (calcolate secondo l'ordinamento previsto) <br>
      */
-    protected void prima() {
+    protected void executeRoute(final String newEntityBeanID) {
+        if (entityBean == null) {
+            executeRoute(VUOTA, VUOTA, VUOTA);
+            return;
+        }
         backSteps += -1;
-        AEntity previousEntityBean = mongo.findPrevious(entityClazz, entityBean.id);
-        executeRoute(previousEntityBean);
-    }
+        final AEntity newEntityBean = mongo.findById(entityClazz, newEntityBeanID);
+        final Object valueProperty = reflection.getPropertyValue(newEntityBean, sortProperty);
+        final String beanPrevID = mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
+        final String beanNextID = mongo.findNextID(entityClazz, sortProperty, valueProperty);
 
-
-    /**
-     * Azione proveniente dal click sul bottone Next <br>
-     * Recupera la lista FILTRATA e ORDINATA delle entities, ricevuta dalla Grid <br> @todo da realizzare
-     * Si sposta alla successiva <br>
-     * Carica il form relativo <br>
-     */
-    protected void dopo() {
-        backSteps += -1;
-        AEntity nextEntityBean = mongo.findNext(entityClazz, entityBean.id);
-        executeRoute(nextEntityBean);
+        executeRoute(newEntityBeanID, beanPrevID, beanNextID);
     }
 
     protected boolean isNotPrimo() {
         return mongo.findPrevious(entityClazz, entityBean.id) != null;
-
     }
 
     protected boolean isNotUltimo() {

@@ -181,6 +181,16 @@ public abstract class LogicProperty extends VerticalLayout {
     protected AEntity entityBean;
 
     /**
+     * The entityBeanPrevID, keyID della entity precedente solo per il form (facoltativa) <br>
+     */
+    protected String entityBeanPrevID;
+
+    /**
+     * The entityBeanPrevID, keyID della entity successiva solo per il form (facoltativa) <br>
+     */
+    protected String entityBeanNextID;
+
+    /**
      * The entityService facoltativo, singleton di tipo xxxService <br>
      */
     protected AIService entityService;

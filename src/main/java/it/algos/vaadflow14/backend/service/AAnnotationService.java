@@ -665,6 +665,23 @@ public class AAnnotationService extends AAbstractService {
         return sort;
     }
 
+    /**
+     * Get the sort for the Grid Columns.
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return sort
+     */
+    public String getSortProperty(final Class<?> entityClazz) {
+        String sortPropertyTxt = VUOTA;
+        AIView annotation = this.getAIView(entityClazz);
+
+        if (annotation != null) {
+            sortPropertyTxt = annotation.sortProperty();
+        }
+
+        return sortPropertyTxt;
+    }
 
     /**
      * Get the name of the mongo collection. <br>

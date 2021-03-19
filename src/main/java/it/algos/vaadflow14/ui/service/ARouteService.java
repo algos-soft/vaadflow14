@@ -108,28 +108,28 @@ public class ARouteService extends AAbstractService {
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
      *
-     * @param entityClazz    verso cui navigare
-     * @param operationForm  tipologia di Form da usare
-     * @param entityBean     da visualizzare
+     * @param entityClazz   verso cui navigare
+     * @param operationForm tipologia di Form da usare
+     * @param entityBeanID     (obbligatorio) da visualizzare (eventualmente null)
      *
      * @return query da passare al Router di Vaadin
      */
-    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final AEntity entityBean) {
-   return getQueryForm(entityClazz,operationForm,entityBean,(AEntity)null,(AEntity)null);
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final String entityBeanID) {
+        return getQueryForm(entityClazz, operationForm, entityBeanID, VUOTA, VUOTA);
     }
 
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
      *
-     * @param entityClazz    verso cui navigare
-     * @param operationForm  tipologia di Form da usare
-     * @param entityBean     da visualizzare
-     * @param entityBeanPrev (eventuale) precedente
-     * @param entityBeanNext (eventuale) successiva
+     * @param entityClazz      verso cui navigare
+     * @param operationForm    tipologia di Form da usare
+     * @param entityBeanID     (obbligatorio) da visualizzare (eventualmente null)
+     * @param entityBeanPrevID (eventuale) ID della entity precedente
+     * @param entityBeanNextID (eventuale) ID della entity successiva
      *
      * @return query da passare al Router di Vaadin
      */
-    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final AEntity entityBean, final AEntity entityBeanPrev, final AEntity entityBeanNext) {
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm, final String entityBeanID, final String entityBeanPrevID, final String entityBeanNextID) {
         if (entityClazz == null) {
             return null;
         }
@@ -139,23 +139,23 @@ public class ARouteService extends AAbstractService {
             mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazz.getCanonicalName()));
         }
 
-        if (entityBean != null) {
-            mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBean.id ));
+        if (text.isValid(entityBeanID)) {
+            mappaQuery.put(KEY_BEAN_ENTITY, array.creaArraySingolo(entityBeanID));
         }
 
-        if (entityBeanPrev != null) {
-            mappaQuery.put(KEY_BEAN_PREV_ID, array.creaArraySingolo(entityBeanPrev.id ));
+        if (text.isValid(entityBeanPrevID)) {
+            mappaQuery.put(KEY_BEAN_PREV_ID, array.creaArraySingolo(entityBeanPrevID));
         }
 
-        if (entityBeanNext != null) {
-            mappaQuery.put(KEY_BEAN_NEXT_ID, array.creaArraySingolo(entityBeanNext.id ));
+        if (text.isValid(entityBeanNextID)) {
+            mappaQuery.put(KEY_BEAN_NEXT_ID, array.creaArraySingolo(entityBeanNextID));
         }
 
         if (operationForm != null) {
-            mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name() ));
+            mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name()));
         }
 
-//        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
+        //        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
         return new QueryParameters(mappaQuery);
     }
 

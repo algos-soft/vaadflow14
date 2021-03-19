@@ -1065,7 +1065,7 @@ public abstract class ALogicOld implements AILogicOld {
                 break;
             case doubleClick:
                 this.operationForm = AEOperation.edit;
-                this.executeRoute(entityBean);
+                this.executeRoute(entityBean.id);
                 break;
             case nuovo:
                 this.operationForm = AEOperation.addNew;
@@ -1128,7 +1128,7 @@ public abstract class ALogicOld implements AILogicOld {
      */
     protected void prima(AEntity currentEntityBean) {
         AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
-        executeRoute(previousEntityBean);
+        executeRoute(previousEntityBean.id);
     }
 
 
@@ -1142,7 +1142,7 @@ public abstract class ALogicOld implements AILogicOld {
         AEntity nextEntityBean;
 
         nextEntityBean = mongo.findNext(entityClazz, currentEntityBean.id);
-        executeRoute(nextEntityBean);
+        executeRoute(nextEntityBean.id);
     }
 
 
@@ -1185,13 +1185,13 @@ public abstract class ALogicOld implements AILogicOld {
 
 
     protected final void executeRoute() {
-        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBean);
+        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBean.id);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 
 
-    protected final void executeRoute(AEntity entityBean) {
-        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBean);
+    protected final void executeRoute(final String entityBeanID) {
+        final QueryParameters query = route.getQueryForm(entityClazz, operationForm,entityBeanID);
         UI.getCurrent().navigate(ROUTE_NAME_GENERIC_FORM, query);
     }
 

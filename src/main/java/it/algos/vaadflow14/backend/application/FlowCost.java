@@ -296,6 +296,8 @@ public abstract class FlowCost {
     public static final String DIR_PACKAGES = "packages/";
 
     //--fields tipici
+    public static final String FIELD_ID = "_id";
+
     public static final String FIELD_COMPANY = "company";
 
     public static final String FIELD_NOTE = "note";

@@ -135,7 +135,7 @@ public class StatoLogicList extends LogicList {
      */
     protected void prima(final AEntity currentEntityBean) {
         AEntity previousEntityBean = mongo.findPrevious(entityClazz, currentEntityBean.id);
-        executeRoute(previousEntityBean);
+        executeRoute(previousEntityBean.id);
     }
 
 }// end of Route class

@@ -5,6 +5,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -210,6 +211,27 @@ public abstract class LogicList extends Logic {
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione, entityBean)");
                 break;
         }
+    }
+
+
+    /**
+     * Lancia una @route con la visualizzazione di una singola scheda. <br>
+     * Se il package usaSpostamentoTraSchede=true, costruisce una query
+     * con le keyIDs della scheda precedente e di quella successiva
+     * (calcolate secondo l'ordinamento previsto) <br>
+     */
+    protected void executeRoute(final AEntity entityBean) {
+        if (entityBean == null) {
+            executeRoute(VUOTA, VUOTA, VUOTA);
+            return;
+        }
+
+        final String sortProperty = annotation.getSortProperty(entityClazz);
+        final Object valueProperty = reflection.getPropertyValue(entityBean, sortProperty);
+        final String beanPrevID = text.isValid(entityBeanPrevID) ? entityBeanPrevID : mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
+        final String beanNextID = text.isValid(entityBeanNextID) ? entityBeanPrevID : mongo.findNextID(entityClazz, sortProperty, valueProperty);
+
+        executeRoute(entityBean.id, beanPrevID, beanNextID);
     }
 
     /**
