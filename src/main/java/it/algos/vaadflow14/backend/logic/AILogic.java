@@ -43,11 +43,13 @@ public interface AILogic {
     List<String> getFormPropertyNamesList();
 
     /**
-     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Esegue l'azione del bottone, searchText o comboBox. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param azione selezionata da eseguire
      */
     void performAction(AEAction azione);
+
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>

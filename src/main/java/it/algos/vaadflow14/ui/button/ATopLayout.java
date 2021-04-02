@@ -11,6 +11,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -104,7 +105,7 @@ public class ATopLayout extends AButtonLayout {
     }
 
 
-    protected void addBottoneEnum(AEButton aeButton) {
+    protected void addBottoneEnum(AIButton aeButton) {
         Button button = getButton(aeButton);
 
         if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {

@@ -3,7 +3,6 @@ package it.algos.vaadflow14.ui.view;
 import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.footer.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -47,9 +46,9 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
         routeParameter = route.estraeParametri(beforeEvent, bodyTextUTF8);
 
         //--Regola le property indispensabili per gestire questa view
-        if (routeParameter != null && routeParameter.isValido()) {
-            fixProperty();
-        }
+//        if (routeParameter != null && routeParameter.isValido()) {
+//            fixProperty();
+//        }
     }
 
 
@@ -121,12 +120,12 @@ public  class AView extends AViewProperty implements  HasUrlParameter<String>, B
         }
 
         //--usata solo in AViewForm
-        if (routeParameter != null && text.isValid(routeParameter.get(KEY_FORM_TYPE))) {
-            operationTxt = routeParameter.get(KEY_FORM_TYPE);
-            if (text.isValid(operationTxt)) {
-                operationForm = AEOperation.valueOf(operationTxt);
-            }
-        }
+//        if (routeParameter != null && text.isValid(routeParameter.get(KEY_FORM_TYPE))) {
+//            operationTxt = routeParameter.get(KEY_FORM_TYPE);
+//            if (text.isValid(operationTxt)) {
+//                operationForm = AEOperation.valueOf(operationTxt);
+//            }
+//        }
 
     }
 

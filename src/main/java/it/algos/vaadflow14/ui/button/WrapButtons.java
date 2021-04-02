@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -38,9 +39,9 @@ public class WrapButtons {
     private AILogic entityLogic;
 
     /**
-     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
+     * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AIButton>
      */
-    private List<AEButton> listaAEBottoni;
+    private List<AIButton> listaABottoni;
 
     /**
      * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
@@ -76,7 +77,7 @@ public class WrapButtons {
      * @param entityLogic a cui rinviare l'evento/azione da eseguire
      */
     public WrapButtons(final AILogic entityLogic) {
-        this(entityLogic, (List<AEButton>) Collections.singletonList(AEButton.nuovo));
+        this(entityLogic, (List<AIButton>) Collections.singletonList((AIButton)AEButton.nuovo));
     }
 
 
@@ -85,10 +86,10 @@ public class WrapButtons {
      * Costruito con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni) <br>
      *
      * @param entityLogic    a cui rinviare l'evento/azione da eseguire
-     * @param listaAEBottoni una serie di bottoni standard
+     * @param listaABottoni una serie di bottoni standard
      */
-    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni) {
-        this(entityLogic, listaAEBottoni, (WrapSearch) null);
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni) {
+        this(entityLogic, listaABottoni, (WrapSearch) null);
     }
 
     /**
@@ -96,11 +97,11 @@ public class WrapButtons {
      * Costruito con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni, wrapSearch) <br>
      *
      * @param entityLogic               a cui rinviare l'evento/azione da eseguire
-     * @param listaAEBottoni            una serie di bottoni standard
+     * @param listaABottoni            una serie di bottoni standard
      * @param wrapSearch                wrapper di dati per la ricerca
      */
-    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni, final WrapSearch wrapSearch) {
-        this(entityLogic, listaAEBottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch) {
+        this(entityLogic, listaABottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
     }
 
     /**
@@ -108,12 +109,12 @@ public class WrapButtons {
      * Costruito con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni, wrapSearch, numBottoni) <br>
      *
      * @param entityLogic               a cui rinviare l'evento/azione da eseguire
-     * @param listaAEBottoni            una serie di bottoni standard
+     * @param listaABottoni            una serie di bottoni standard
      * @param wrapSearch                wrapper di dati per la ricerca
      * @param mappaComboBox             di selezione e filtro
      */
-    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox) {
-        this(entityLogic, listaAEBottoni, wrapSearch, mappaComboBox, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox) {
+        this(entityLogic, listaABottoni, wrapSearch, mappaComboBox, (List<Button>) null, NUMBER_BUTTONS_STANDARD);
     }
 
     /**
@@ -121,12 +122,12 @@ public class WrapButtons {
      * Costruito con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni, wrapSearch, numBottoni) <br>
      *
      * @param entityLogic               a cui rinviare l'evento/azione da eseguire
-     * @param listaAEBottoni            una serie di bottoni standard
+     * @param listaABottoni            una serie di bottoni standard
      * @param wrapSearch                wrapper di dati per la ricerca
      * @param listaBottoniSpecifici              non-standard
      */
-    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni, final WrapSearch wrapSearch, final List<Button> listaBottoniSpecifici) {
-        this(entityLogic, listaAEBottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, listaBottoniSpecifici, NUMBER_BUTTONS_STANDARD);
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final List<Button> listaBottoniSpecifici) {
+        this(entityLogic, listaABottoni, wrapSearch, (LinkedHashMap<String, ComboBox>) null, listaBottoniSpecifici, NUMBER_BUTTONS_STANDARD);
     }
 
     /**
@@ -134,15 +135,15 @@ public class WrapButtons {
      * Costruito con appContext.getBean(WrapButtons.class, entityLogic, listaAEBottoni, wrapSearch, numBottoni) <br>
      *
      * @param entityLogic               a cui rinviare l'evento/azione da eseguire
-     * @param listaAEBottoni            una serie di bottoni standard
+     * @param listaABottoni            una serie di bottoni standard
      * @param wrapSearch                wrapper di dati per la ricerca
      * @param mappaComboBox             di selezione e filtro
      * @param listaBottoniSpecifici              non-standard
      * @param maxNumeroBottoniPrimaRiga nella prima riga sopra la Grid
      */
-    public WrapButtons(final AILogic entityLogic, final List<AEButton> listaAEBottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
+    public WrapButtons(final AILogic entityLogic, final List<AIButton> listaABottoni, final WrapSearch wrapSearch, final LinkedHashMap<String, ComboBox> mappaComboBox, final List<Button> listaBottoniSpecifici, final int maxNumeroBottoniPrimaRiga) {
         this.entityLogic = entityLogic;
-        this.listaAEBottoni = listaAEBottoni;
+        this.listaABottoni = listaABottoni;
         this.wrapSearch = wrapSearch;
         this.mappaComboBox = mappaComboBox;
         this.listaBottoniSpecifici = listaBottoniSpecifici;
@@ -154,8 +155,8 @@ public class WrapButtons {
         return entityLogic;
     }
 
-    public List<AEButton> getListaAEBottoni() {
-        return listaAEBottoni;
+    public List<AIButton> getListaABottoni() {
+        return listaABottoni;
     }
 
     public LinkedHashMap<String, ComboBox> getMappaComboBox() {

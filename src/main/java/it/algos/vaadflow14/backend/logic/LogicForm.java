@@ -12,6 +12,7 @@ import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 
 import java.util.*;
 
@@ -114,7 +115,7 @@ public abstract class LogicForm extends Logic {
      * @return wrapper di dati per la view
      */
     protected WrapButtons getWrapButtonsTop() {
-        List<AEButton> listaAEBottoni = this.getListaAEBottoniTop();
+        List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
         return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
     }
 
@@ -123,7 +124,7 @@ public abstract class LogicForm extends Logic {
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
-    protected List<AEButton> getListaAEBottoniTop() {
+    protected List<AIButton> getListaAEBottoniTop() {
         return null;
     }
 
@@ -208,11 +209,13 @@ public abstract class LogicForm extends Logic {
         if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
             bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
             if (bottone != null) {
-                bottone.setEnabled(isNotPrimo());
+//                bottone.setEnabled(isNotPrimo());
+                bottone.setEnabled(text.isValid(entityBeanPrevID));
             }
             bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
             if (bottone != null) {
-                bottone.setEnabled(isNotUltimo());
+//                bottone.setEnabled(isNotUltimo());
+                bottone.setEnabled(text.isValid(entityBeanNextID));
             }
         }
     }
@@ -225,7 +228,7 @@ public abstract class LogicForm extends Logic {
      * @return wrapper di dati per la view
      */
     protected WrapButtons getWrapButtonsBottom() {
-        List<AEButton> listaAEBottoni = this.getListaAEBottoni();
+        List<AIButton> listaAEBottoni = this.getListaAEBottoni();
         //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
 
         return appContext.getBean(WrapButtons.class, this, listaAEBottoni);
@@ -241,7 +244,7 @@ public abstract class LogicForm extends Logic {
 
         switch (azione) {
             case showWiki:
-                openWikiPage();
+                openWikiPage(wikiPageTitle);
                 break;
             case resetForm:
                 //                this.reloadForm(entityBean);

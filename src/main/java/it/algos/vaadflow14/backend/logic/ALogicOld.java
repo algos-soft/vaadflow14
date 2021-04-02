@@ -698,29 +698,11 @@ public abstract class ALogicOld implements AILogicOld {
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
         }
-        if (usaBottoneUpdate) {
-            listaBottoni.add(AEButton.update);
-        }
         if (usaBottoneUpload) {
             listaBottoni.add(AEButton.upload);
         }
         if (usaBottoneDownload) {
             listaBottoni.add(AEButton.download);
-        }
-        if (usaBottoneElabora) {
-            listaBottoni.add(AEButton.elabora);
-        }
-        if (usaBottoneCheck) {
-            listaBottoni.add(AEButton.check);
-        }
-        if (usaBottoneModulo) {
-            listaBottoni.add(AEButton.modulo);
-        }
-        if (usaBottoneTest) {
-            listaBottoni.add(AEButton.test);
-        }
-        if (usaBottoneStatistiche) {
-            listaBottoni.add(AEButton.statistiche);
         }
 
         return listaBottoni;

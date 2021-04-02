@@ -132,6 +132,9 @@ public abstract class ATest {
     @InjectMocks
     protected AGSonService gSonService;
 
+    @InjectMocks
+    protected AClassService classService;
+
     protected Logger adminLogger;
 
     /**
@@ -345,6 +348,10 @@ public abstract class ATest {
         file.logger = logger;
         date.math = math;
         sort = null;
+        classService.fileService = file;
+        classService.text = text;
+        classService.logger = logger;
+        classService.annotation = annotation;
     }
 
 

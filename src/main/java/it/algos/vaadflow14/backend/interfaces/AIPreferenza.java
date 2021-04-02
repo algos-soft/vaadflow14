@@ -8,6 +8,11 @@ import it.algos.vaadflow14.backend.enumeration.*;
  * User: gac
  * Date: mer, 09-ott-2019
  * Time: 23:18
+ * <p>
+ * Interfaccia per la Enumeration di preferenze <br>
+ * Classi concrete di Enumeration:
+ * AEPreferenza (obbligatoria) di VaadFlow14 <br>
+ * AExxxPreferenza (facoltativa) specifica del progetto corrente <br>
  */
 public interface AIPreferenza {
 
@@ -19,13 +24,13 @@ public interface AIPreferenza {
 
     Object getDefaultValue();
 
-     boolean isVaadFlow();
+    boolean isVaadFlow();
 
-     boolean isUsaCompany();
+    boolean isUsaCompany();
 
-     boolean isNeedRiavvio();
+    boolean isNeedRiavvio();
 
-     boolean isVisibileAdmin();
+    boolean isVisibileAdmin();
 
     String getDescrizione();
 

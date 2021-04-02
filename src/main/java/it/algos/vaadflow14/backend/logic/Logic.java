@@ -27,16 +27,17 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Chiamato da com.vaadin.flow.router.Router tramite l' interfaccia HasUrlParameter <br>
      * Chiamato DOPO @PostConstruct ma PRIMA di beforeEnter() <br>
      *
-     * @param beforeEvent  con la location, ui, navigationTarget, source, ecc
-     * @param bodyTextUTF8 stringa del browser da decodificare
+     * @param beforeEvent        con stringa del browser (bodyTextUTF8) da decodificare: primoSegmento e queryParameters
+     * @param parametroOpzionale (poco usato) eventualmente presente DOPO il primoSegmento dell'URL e DOPO lo slash
      */
     @Override
-    public void setParameter(final BeforeEvent beforeEvent, @OptionalParameter String bodyTextUTF8) {
-        routeParameter = route.estraeParametri(beforeEvent, bodyTextUTF8);
+    public void setParameter(final BeforeEvent beforeEvent, @OptionalParameter String parametroOpzionale) {
+        //--routeParameter contiene sia il primoSegmento sia multiParametersMap sia singleParameter
+        routeParameter = route.estraeParametri(beforeEvent, parametroOpzionale);
 
         //--Regola le property indispensabili per gestire questa view
-        //--Se c'è solo il primo segmento, routeParameter NON è valido (non serve)
-        if (routeParameter != null && routeParameter.isValido()) {
+        //--Se c'è solo il primo segmento, non serve regolare le property (probabilmente perché siamo in una sottoclasse specifica)
+        if (routeParameter != null && routeParameter.getTypeParam() != AETypeParam.segmentOnly) {
             fixProperty();
         }
     }
@@ -64,12 +65,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * The entityBean obbligatorio, istanza di entityClazz per il Form <br>
      */
     protected void fixProperty() {
-        this.entityBean = null;
-        this.routeNameForm = VUOTA;
-
-        if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
-            logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
-        }
+        super.fixProperty();
 
         this.fixTypeView();
         this.fixEntityClazz();
@@ -84,14 +80,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Può essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
      */
     protected void fixTypeView() {
-        String operationTxt;
-
-        if (routeParameter != null && text.isValid(routeParameter.get(KEY_FORM_TYPE))) {
-            operationTxt = routeParameter.get(KEY_FORM_TYPE);
-            if (text.isValid(operationTxt)) {
-                operationForm = AEOperation.valueOf(operationTxt);
-            }
-        }
+        operationForm = routeParameter != null ? routeParameter.getOperationForm() : AEOperation.addNew;
     }
 
 
@@ -247,7 +236,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         return null;
     }
 
-    protected final void executeRoute() {
+    protected void executeRoute() {
         executeRoute(VUOTA);
     }
 
@@ -258,14 +247,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * (calcolate secondo l'ordinamento previsto) <br>
      */
     protected void executeRoute(final String entityBeanID) {
-    }
-
-    /**
-     * Apre una pagina di wikipedia. <br>
-     */
-    protected final void openWikiPage() {
-        String link = "\"" + PATH_WIKI + wikiPageTitle + "\"";
-        UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }
 
 
@@ -286,6 +267,20 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         }
 
         UI.getCurrent().navigate(routeNameForm, query);
+    }
+
+
+    /**
+     * Apre una pagina di wikipedia. <br>
+     */
+    protected final void openWikiPage(String wikiTitle) {
+        String link = "\"" + PATH_WIKI + wikiTitle + "\"";
+        if (text.isValid(wikiTitle)) {
+            UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
+        }
+        else {
+            logger.info("Manca il valore di wikiPageTitle", this.getClass(), "openWikiPage");
+        }
     }
 
 }

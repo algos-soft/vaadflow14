@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -54,15 +55,10 @@ public class FatturaLogicList extends LogicList {
         super.usaBottoneNew = true;
         super.usaBottoneSearch = false;
         super.usaBottoneExport = true;
-        super.usaBottonePaginaWiki = false;
-        super.usaBottoneUpdate = true;
-        super.usaBottoneUpload = false;
+        super.usaBottonePaginaWiki = true;
+        super.usaBottoneUpload = true;
         super.usaBottoneDownload = true;
-        super.usaBottoneElabora = false;
-        super.usaBottoneCheck = false;
-        super.usaBottoneModulo = true;
-        super.usaBottoneTest = false;
-        super.usaBottoneStatistiche = false;
+
         super.maxNumeroBottoniPrimaRiga = 7;
     }
 
@@ -96,7 +92,7 @@ public class FatturaLogicList extends LogicList {
      */
     @Override
     protected void fixBottomLayout() {
-        List<AEButton> listaAEBottoni = Collections.singletonList(AEButton.statistiche);
+        List<AIButton> listaAEBottoni = Collections.singletonList(AEButton.upload);
         List<Button> listaBottoniSpecifici = Collections.singletonList(new Button("Bottoni su un'unica riga sotto la Grid"));
         WrapButtons wrapper = appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, listaBottoniSpecifici);
         AButtonLayout bottomLayout = appContext.getBean(ABottomLayout.class, wrapper);

@@ -3,6 +3,7 @@ package it.algos.vaadflow14.ui.button;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +52,7 @@ public class ABottomLayout extends AButtonLayout {
     @Override
     protected void creaAllBottoni() {
         if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-            for (AEButton bottone : listaAEBottoni) {
+            for (AIButton bottone : listaAEBottoni) {
                 this.addBottoneEnum(bottone);
             }
         }
@@ -64,7 +65,7 @@ public class ABottomLayout extends AButtonLayout {
     }
 
 
-    protected void addBottoneEnum(AEButton aeButton) {
+    protected void addBottoneEnum(AIButton aeButton) {
         Button button = getButton(aeButton);
         rigaUnica.add(button);
     }

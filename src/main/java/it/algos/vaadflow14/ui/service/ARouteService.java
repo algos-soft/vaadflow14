@@ -105,12 +105,68 @@ public class ARouteService extends AAbstractService {
     //        return getQueryForm(entityClazzCanonicalName, entityBeanKey, AEOperation.edit);
     //    }
 
+
+    /**
+     * Costruisce una query di parametri per navigare verso una view di tipo 'list' <br>
+     *
+     * @param entityClazz verso cui navigare
+     *
+     * @return query da passare al Router di Vaadin
+     */
+    public QueryParameters getQueryList(final Class<?> entityClazz) {
+        return entityClazz != null ? getQueryList(entityClazz.getCanonicalName()) : null;
+    }
+
+
+    /**
+     * Costruisce una query di parametri per navigare verso una view di tipo 'list' <br>
+     *
+     * @param entityClazzCanonicalName verso cui navigare
+     *
+     * @return query da passare al Router di Vaadin
+     */
+    public QueryParameters getQueryList(final String entityClazzCanonicalName) {
+        if (text.isEmpty(entityClazzCanonicalName)) {
+            return null;
+        }
+
+        Map<String, String> mappaQuery = new HashMap<>();
+        mappaQuery.put(KEY_BEAN_CLASS, entityClazzCanonicalName);
+        return QueryParameters.simple(mappaQuery);
+    }
+
+
+    /**
+     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+     *
+     * @param entityClazz verso cui navigare
+     *
+     * @return query da passare al Router di Vaadin
+     */
+    public QueryParameters getQueryForm(final Class<?> entityClazz) {
+        return getQueryForm(entityClazz, AEOperation.addNew, VUOTA, VUOTA, VUOTA);
+    }
+
+
     /**
      * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
      *
      * @param entityClazz   verso cui navigare
      * @param operationForm tipologia di Form da usare
-     * @param entityBeanID     (obbligatorio) da visualizzare (eventualmente null)
+     *
+     * @return query da passare al Router di Vaadin
+     */
+    public QueryParameters getQueryForm(final Class<?> entityClazz, final AEOperation operationForm) {
+        return getQueryForm(entityClazz, operationForm, VUOTA, VUOTA, VUOTA);
+    }
+
+
+    /**
+     * Costruisce una query di parametri per navigare verso una view di tipo 'form' <br>
+     *
+     * @param entityClazz   verso cui navigare
+     * @param operationForm tipologia di Form da usare
+     * @param entityBeanID  (obbligatorio) da visualizzare (eventualmente null)
      *
      * @return query da passare al Router di Vaadin
      */
@@ -155,37 +211,6 @@ public class ARouteService extends AAbstractService {
             mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm.name()));
         }
 
-        //        mappaQuery.put(KEY_FORM_TYPE, array.creaArraySingolo(operationForm != null ? operationForm.name() : AEOperation.edit.name()));
-        return new QueryParameters(mappaQuery);
-    }
-
-
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'list' <br>
-     *
-     * @param entityClazz verso cui navigare
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryList(Class<?> entityClazz) {
-        return entityClazz != null ? getQueryList(entityClazz.getCanonicalName()) : null;
-    }
-
-
-    /**
-     * Costruisce una query di parametri per navigare verso una view di tipo 'list' <br>
-     *
-     * @param entityClazzCanonicalName verso cui navigare
-     *
-     * @return query da passare al Router di Vaadin
-     */
-    public QueryParameters getQueryList(final String entityClazzCanonicalName) {
-        if (text.isEmpty(entityClazzCanonicalName)) {
-            return null;
-        }
-
-        Map<String, List<String>> mappaQuery = new HashMap<>();
-        mappaQuery.put(KEY_BEAN_CLASS, array.creaArraySingolo(entityClazzCanonicalName));
         return new QueryParameters(mappaQuery);
     }
 
@@ -318,33 +343,38 @@ public class ARouteService extends AAbstractService {
      */
     public Parametro estraeParametri(BeforeEvent event, @OptionalParameter String parameter) {
         Location location = event.getLocation();
-        String primoSegmento = VUOTA;
+        String primoSegmento = location.getFirstSegment() != null ? location.getFirstSegment() : VUOTA;
         QueryParameters queryParameters = location.getQueryParameters();
         Map<String, List<String>> multiParametersMap = queryParameters.getParameters();
         Parametro parametro = null;
 
-        if (location.getFirstSegment() != null) {
-            primoSegmento = location.getFirstSegment();
-        }
+        //        if (location.getFirstSegment() != null) {
+        //            primoSegmento = location.getFirstSegment();
+        //        }
 
-        if (text.isEmpty(parameter) && text.isValid(primoSegmento)) {
-            parametro = new Parametro(VUOTA, primoSegmento);
-        }
+        //        if (text.isEmpty(parameter) && text.isValid(primoSegmento)) {
+        //            parametro = Parametro.segmento(primoSegmento);
+        //        }
 
-        if (text.isValid(parameter)) {
-            parametro = new Parametro(decodifica(parameter), primoSegmento);
+        //        if (text.isValid(parameter)) {
+        //            parametro = new Parametro(decodifica(parameter), primoSegmento);
+        //        }
+
+        if (text.isValid(primoSegmento)) {
+            parametro = Parametro.segmento(primoSegmento);
         }
 
         if (array.isAllValid(multiParametersMap)) {
             if (array.isMappaSemplificabile(multiParametersMap)) {
-                parametro = new Parametro(array.semplificaMappa(multiParametersMap), primoSegmento);
-                parametro.setMappa(true);
-                parametro.setMultiMappa(false);
+                parametro = Parametro.simple(primoSegmento, array.semplificaMappa(multiParametersMap));
+//                parametro = Parametro.simple(primoSegmento, multiParametersMap);
             }
             else {
-                parametro = new Parametro(multiParametersMap, primoSegmento, true);
+                parametro = Parametro.full(primoSegmento, multiParametersMap);
+//                parametro = Parametro.full(primoSegmento, array.semplificaMappa(multiParametersMap));
             }
         }
+
         return parametro;
     }
 
@@ -358,33 +388,33 @@ public class ARouteService extends AAbstractService {
         String canonicalName = VUOTA;
         Object istanza;
 
-        if ((parametro == null) || (parametro.isSingoloParametro())) {
-            return null;
-        }
+        //        if ((parametro == null) || (parametro.isSingoloParametro())) {
+        //            return null;
+        //        }
 
-        if (parametro.isMappa()) {
-            if (parametro.containsKey(KEY_BEAN_CLASS)) {
-                canonicalName = parametro.get(KEY_BEAN_CLASS);
-                canonicalName += SUFFIX_SERVICE;
-            }
-
-            if (parametro.containsKey(KEY_SERVICE_CLASS)) {
-                canonicalName = parametro.get(KEY_SERVICE_CLASS);
-            }
-
-            if (text.isValid(canonicalName)) {
-                try {
-                    istanza = appContext.getBean(Class.forName(canonicalName));
-
-                    if (istanza instanceof ALogicOld) {
-                        entityLogic = (ALogicOld) istanza;
-                    }
-                } catch (Exception unErrore) {
-                    logger.error(unErrore);
-                }
-            }
-
-        }
+        //        if (parametro.isMappa()) {
+        //            if (parametro.containsKey(KEY_BEAN_CLASS)) {
+        //                canonicalName = parametro.get(KEY_BEAN_CLASS);
+        //                canonicalName += SUFFIX_SERVICE;
+        //            }
+        //
+        //            if (parametro.containsKey(KEY_SERVICE_CLASS)) {
+        //                canonicalName = parametro.get(KEY_SERVICE_CLASS);
+        //            }
+        //
+        //            if (text.isValid(canonicalName)) {
+        //                try {
+        //                    istanza = appContext.getBean(Class.forName(canonicalName));
+        //
+        //                    if (istanza instanceof ALogicOld) {
+        //                        entityLogic = (ALogicOld) istanza;
+        //                    }
+        //                } catch (Exception unErrore) {
+        //                    logger.error(unErrore);
+        //                }
+        //            }
+        //
+        //        }
         return entityLogic;
     }
 

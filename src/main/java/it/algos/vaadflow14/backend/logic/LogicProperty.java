@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.annotation.*;
@@ -239,11 +240,6 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */
-    protected boolean usaBottoneUpdate;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
     protected boolean usaBottoneUpload;
 
     /**
@@ -251,30 +247,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected boolean usaBottoneDownload;
 
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneElabora;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneCheck;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneModulo;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneTest;
-
-    /**
-     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
-     */
-    protected boolean usaBottoneStatistiche;
 
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
@@ -326,6 +298,16 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected String wikiPageTitle;
 
+//    /**
+//     * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
+//     */
+//    protected String wikiModuloTitle;
+//
+//    /**
+//     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
+//     */
+//    protected String wikiStatisticheTitle;
+
 
     /**
      * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
@@ -345,6 +327,24 @@ public abstract class LogicProperty extends VerticalLayout {
     protected AEOperation operationForm = AEOperation.listNoForm;
 
 
+    protected void fixProperty() {
+        if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
+            logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
+        }
+
+//        this.entityClazz = null;
+        this.entityBean = null;
+        this.entityBeanPrevID = VUOTA;
+        this.entityBeanNextID = VUOTA;
+//        this.entityService = null;
+
+        this.wikiPageTitle = VUOTA;
+//        this.wikiModuloTitle = VUOTA;
+//        this.wikiStatisticheTitle = VUOTA;
+        this.topLayout = null;
+        this.bottomLayout = null;
+    }
+
     /**
      * Preferenze usate da questa 'logica' <br>
      * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
@@ -357,14 +357,14 @@ public abstract class LogicProperty extends VerticalLayout {
         this.usaBottoneSearch = false;
         this.usaBottoneExport = false;
         this.usaBottonePaginaWiki = false;
-        this.usaBottoneUpdate = false;
-        this.usaBottoneUpload = false;
         this.usaBottoneDownload = false;
-        this.usaBottoneElabora = false;
-        this.usaBottoneCheck = false;
-        this.usaBottoneModulo = false;
-        this.usaBottoneTest = false;
-        this.usaBottoneStatistiche = false;
+        this.usaBottoneUpload = false;
+//        this.usaBottoneUpdate = false;
+//        this.usaBottoneModulo = false;
+//        this.usaBottoneElabora = false;
+//        this.usaBottoneCheck = false;
+//        this.usaBottoneTest = false;
+//        this.usaBottoneStatistiche = false;
 
         this.usaBottoneResetForm = false;
         this.usaBottoneBack = false;
@@ -534,10 +534,10 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Costruisce una lista di bottoni (enumeration) <br>
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected List<AEButton> getListaAEBottoni() {
-        List<AEButton> listaBottoni = new ArrayList<>();
+    protected List<AIButton> getListaAEBottoni() {
+        List<AIButton> listaBottoni = new ArrayList<>();
 
         if (usaBottoneDeleteAll) {
             listaBottoni.add(AEButton.deleteAll);
@@ -560,31 +560,12 @@ public abstract class LogicProperty extends VerticalLayout {
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
         }
-        if (usaBottoneUpdate) {
-            listaBottoni.add(AEButton.update);
-        }
         if (usaBottoneUpload) {
             listaBottoni.add(AEButton.upload);
         }
         if (usaBottoneDownload) {
             listaBottoni.add(AEButton.download);
         }
-        if (usaBottoneElabora) {
-            listaBottoni.add(AEButton.elabora);
-        }
-        if (usaBottoneCheck) {
-            listaBottoni.add(AEButton.check);
-        }
-        if (usaBottoneModulo) {
-            listaBottoni.add(AEButton.modulo);
-        }
-        if (usaBottoneTest) {
-            listaBottoni.add(AEButton.test);
-        }
-        if (usaBottoneStatistiche) {
-            listaBottoni.add(AEButton.statistiche);
-        }
-
         if (usaBottoneResetForm) {
             listaBottoni.add(AEButton.resetForm);
         }

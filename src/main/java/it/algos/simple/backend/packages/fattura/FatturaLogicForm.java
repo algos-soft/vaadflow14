@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -52,7 +53,7 @@ public class FatturaLogicForm extends LogicForm {
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
-    protected List<AEButton> getListaAEBottoniTop() {
+    protected List<AIButton> getListaAEBottoniTop() {
         return Collections.singletonList(AEButton.wiki);
     }
 

@@ -6,7 +6,7 @@ import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 
 /**
  * Project vaadflow15
@@ -26,7 +26,7 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button get(AEButton aeButton) {
+    public static Button get(AIButton aeButton) {
         if (FlowVar.usaVaadinIcon) {
             return getVaadin(aeButton);
         }
@@ -43,7 +43,7 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button getVaadin(AEButton aeButton) {
+    public static Button getVaadin(AIButton aeButton) {
         return get(aeButton, true);
     }
 
@@ -55,7 +55,7 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    public static Button getLumo(AEButton aeButton) {
+    public static Button getLumo(AIButton aeButton) {
         return get(aeButton, false);
     }
 
@@ -68,12 +68,12 @@ public abstract class FactoryButton {
      *
      * @return nuovo bottone costruito coi parametri standard previsti e SENZA listener
      */
-    private static Button get(AEButton aeButton, boolean vaadinIcon) {
+    private static Button get(AIButton aeButton, boolean vaadinIcon) {
         if (vaadinIcon) {
-            return get(aeButton.testo, aeButton.vaadinIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier, aeButton.iconaAfterText, aeButton.iconaOnly);
+            return get(aeButton.getTesto(), aeButton.getVaadinIcon(), aeButton.getTheme(), aeButton.getToolTip(), aeButton.isEnabled(), aeButton.getKeyShortCut(), aeButton.getKeyModifier(), aeButton.isIconaAfterText(), aeButton.isIconaOnly());
         }
         else {
-            return get(aeButton.testo, aeButton.lumoIcon, aeButton.theme, aeButton.toolTip, aeButton.enabled, aeButton.keyShortCut, aeButton.keyModifier, aeButton.iconaAfterText);
+            return get(aeButton.getTesto(), aeButton.getLumoIcon(), aeButton.getTheme(), aeButton.getToolTip(), aeButton.isEnabled(), aeButton.getKeyShortCut(), aeButton.getKeyModifier(), aeButton.isIconaAfterText());
         }
     }
 

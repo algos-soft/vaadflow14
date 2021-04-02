@@ -10,8 +10,8 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.ui.button.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
 
 import java.util.*;
@@ -90,7 +90,7 @@ public abstract class LogicList extends Logic {
      * @return wrapper di dati per la view
      */
     protected WrapButtons getWrapButtonsTop() {
-        List<AEButton> listaAEBottoni = this.getListaAEBottoni();
+        List<AIButton> listaAEBottoni = this.getListaAEBottoni();
         //        WrapSearch wrapSearch = this.getWrapSearch();
         //        LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
         //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
@@ -185,8 +185,14 @@ public abstract class LogicList extends Logic {
                 //                export();
                 break;
             case showWiki:
-                openWikiPage();
+                openWikiPage(wikiPageTitle);
                 break;
+//            case modulo:
+//                openWikiPage(wikiModuloTitle);
+//                break;
+//            case statistiche:
+//                openWikiPage(wikiStatisticheTitle);
+//                break;
             default:
                 logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
                 break;
@@ -212,6 +218,9 @@ public abstract class LogicList extends Logic {
         }
     }
 
+    protected  void executeRoute() {
+        executeRoute(VUOTA, VUOTA, VUOTA);
+    }
 
     /**
      * Lancia una @route con la visualizzazione di una singola scheda. <br>

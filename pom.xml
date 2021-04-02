@@ -28,7 +28,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.4.10</vaadin.version>
+        <vaadin.version>14.5.1</vaadin.version>
     </properties>
 
 

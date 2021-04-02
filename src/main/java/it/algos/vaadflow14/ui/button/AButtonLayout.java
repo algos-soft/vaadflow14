@@ -9,7 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import it.algos.vaadflow14.ui.enumeration.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.annotation.*;
 
 import javax.annotation.*;
@@ -109,7 +109,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * Mappa dei bottoni standard (obbligatoria) <br>
      * La chiave è l'enumeration del bottone che contiene riferimenti per gli eventi <br>
      */
-    protected Map<AEButton, Button> mappaBottoni;
+    protected Map<AIButton, Button> mappaBottoni;
 
     /**
      * Property per selezionare i bottoni standard in base al tipo di Form (usata solo in ABottomLayout)
@@ -125,7 +125,7 @@ public abstract class AButtonLayout extends VerticalLayout {
     /**
      * B - (semi-obbligatorio) una serie di bottoni standard, sotto forma di List<AEButton>
      */
-    protected List<AEButton> listaAEBottoni;
+    protected List<AIButton> listaAEBottoni;
 
     /**
      * C - (facoltativo) wrapper di dati per il dialogo/campo di ricerca
@@ -182,7 +182,7 @@ public abstract class AButtonLayout extends VerticalLayout {
     public AButtonLayout(WrapButtons wrapper) {
         this.wrapper = wrapper;
         this.entityLogic = wrapper != null ? wrapper.getEntityLogic() : null;
-        this.listaAEBottoni = wrapper != null ? wrapper.getListaAEBottoni() : null;
+        this.listaAEBottoni = wrapper != null ? wrapper.getListaABottoni() : null;
         this.wrapSearch = wrapper != null ? wrapper.getWrapSearch() : null;
         this.mappaComboBox = wrapper != null ? wrapper.getMappaComboBox() : null;
         this.listaBottoniSpecifici = wrapper != null ? wrapper.getListaBottoniSpecifici() : null;
@@ -240,7 +240,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
      */
     protected void initView() {
-        mappaBottoni = new HashMap<AEButton, Button>();
+        mappaBottoni = new HashMap<AIButton, Button>();
         this.setMargin(false);
         this.setSpacing(false);
         this.setPadding(false);
@@ -252,9 +252,9 @@ public abstract class AButtonLayout extends VerticalLayout {
     protected void addAllToView() {
     }
 
-    protected Button getButton(final AEButton aeButton) {
+    protected Button getButton(final AIButton aeButton) {
         Button button = FactoryButton.get(aeButton);
-        button.addClickListener(event -> performAction(aeButton.action));
+        button.addClickListener(event -> performAction(aeButton.getAction()));
         mappaBottoni.put(aeButton, button);
 
         return button;
@@ -316,7 +316,7 @@ public abstract class AButtonLayout extends VerticalLayout {
         //        entityLogic.performAction(azione, entityBean);@//@todo PROVVISORIO
     }
 
-    public Map<AEButton, Button> getMappaBottoni() {
+    public Map<AIButton, Button> getMappaBottoni() {
         return mappaBottoni;
     }
 

@@ -18,6 +18,10 @@ import java.time.*;
  * User: gac
  * Date: ven, 18-set-2020
  * Time: 15:41
+ * <p>
+ * Classi concrete di Enumeration:
+ * AEPreferenza (obbligatoria) di VaadFlow14 <br>
+ * AESimplePreferenza (facoltativa) specifica del progetto corrente <br>
  */
 public enum AESimplePreferenza implements AIPreferenza {
 
