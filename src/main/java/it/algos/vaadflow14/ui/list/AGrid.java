@@ -12,7 +12,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.service.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;

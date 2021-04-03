@@ -175,7 +175,7 @@ public class FatturaLogicList extends LogicList {
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = super.performAction(iAzione);
-        AEAction azione = (AEAction)iAzione;
+        AESimpleAction azione = (AESimpleAction)iAzione;
 
         if (status) {
             return true;

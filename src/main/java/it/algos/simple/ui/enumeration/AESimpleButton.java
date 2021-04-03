@@ -3,7 +3,7 @@ package it.algos.simple.ui.enumeration;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 
 /**
@@ -19,12 +19,12 @@ import it.algos.vaadflow14.ui.interfaces.*;
  */
 public enum AESimpleButton implements AIButton {
 
-    update("Update", VaadinIcon.LIST, "error", AEAction.update, true, "Update di una pagina", "cross", Key.KEY_R, null),
-    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
-    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
-    check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.elabora, true, "Controlla un documento", "cross", Key.KEY_R, null),
-    test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.test, true, "Test di una funzionalità", "cross", Key.KEY_R, null),
-    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AEAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
+    update("Update", VaadinIcon.LIST, "error", AESimpleAction.update, true, "Update di una pagina", "cross", Key.KEY_R, null),
+    modulo("Modulo", VaadinIcon.GLOBE_WIRE, "secondary", AESimpleAction.modulo, true, "Modulo di Wikipedia", "cross", Key.KEY_R, null),
+    elabora("Elabora", VaadinIcon.GLOBE_WIRE, "secondary", AESimpleAction.elabora, true, "Elabora un documento", "cross", Key.KEY_R, null),
+    check("Check", VaadinIcon.GLOBE_WIRE, "secondary", AESimpleAction.elabora, true, "Controlla un documento", "cross", Key.KEY_R, null),
+    test("Test", VaadinIcon.GLOBE_WIRE, "secondary", AESimpleAction.test, true, "Test di una funzionalità", "cross", Key.KEY_R, null),
+    statistiche("Statistiche", VaadinIcon.TABLE, "secondary", AESimpleAction.statistiche, true, "Elaborazione statistiche", "cross", Key.KEY_R, null),
 
     ;
 

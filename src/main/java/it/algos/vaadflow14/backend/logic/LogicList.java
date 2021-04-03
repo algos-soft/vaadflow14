@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
@@ -160,7 +161,14 @@ public abstract class LogicList extends Logic {
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = true;
-        AEAction azione = (AEAction) iAzione;
+        AEAction azione;
+
+        if (iAzione instanceof AEAction) {
+            azione = (AEAction) iAzione;
+        }
+        else {
+            return false;
+        }
 
         switch (azione) {
             case deleteAll:
