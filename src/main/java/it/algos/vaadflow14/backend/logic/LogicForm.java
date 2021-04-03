@@ -209,12 +209,12 @@ public abstract class LogicForm extends Logic {
         if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
             bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
             if (bottone != null) {
-//                bottone.setEnabled(isNotPrimo());
+                //                bottone.setEnabled(isNotPrimo());
                 bottone.setEnabled(text.isValid(entityBeanPrevID));
             }
             bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
             if (bottone != null) {
-//                bottone.setEnabled(isNotUltimo());
+                //                bottone.setEnabled(isNotUltimo());
                 bottone.setEnabled(text.isValid(entityBeanNextID));
             }
         }
@@ -238,9 +238,13 @@ public abstract class LogicForm extends Logic {
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
      * @param azione selezionata da eseguire
+     *
+     * @return true se l'azione esiste nello Switch
+     * false -> Switch - caso non definito
      */
     @Override
-    public void performAction(AEAction azione) {
+    public boolean performAction(AEAction azione) {
+        boolean status = true;
 
         switch (azione) {
             case showWiki:
@@ -270,9 +274,12 @@ public abstract class LogicForm extends Logic {
                 executeRoute(entityBeanNextID);
                 break;
             default:
-                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
+                status = false;
+                //                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
                 break;
         }
+
+        return status;
     }
 
     public boolean deleteForm() {

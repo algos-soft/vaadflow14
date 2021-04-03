@@ -214,9 +214,12 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
      * @param azione selezionata da eseguire
+     * @return true se l'azione esiste nello Switch
+     *         false -> Switch - caso non definito
      */
     @Override
-    public void performAction(AEAction azione) {
+    public boolean performAction(AEAction azione) {
+        return false;
     }
 
     /**
@@ -224,8 +227,12 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      *
      * @param azione     selezionata da eseguire
      * @param entityBean selezionata
+     * @return true se l'azione esiste nello Switch
+     *         false -> Switch - caso non definito
      */
-    public void performAction(AEAction azione, AEntity entityBean) {
+    @Override
+    public boolean performAction(AEAction azione, AEntity entityBean) {
+        return false;
     }
 
     /**

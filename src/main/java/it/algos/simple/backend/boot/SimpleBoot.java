@@ -7,6 +7,7 @@ import it.algos.simple.backend.enumeration.*;
 import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.simple.backend.packages.fattura.*;
+import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -79,7 +80,10 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
+
         FlowVar.preferenzeSpecificheList = Arrays.asList(AESimplePreferenza.values());
+        FlowVar.bottoniSpecificiList = Arrays.asList(AESimpleButton.values());
+
         if (AEPreferenza.usaDebug.is()) {
             FlowVar.usaCronoPackages = true;
             FlowVar.usaGeografiaPackages = true;

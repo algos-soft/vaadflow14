@@ -33,6 +33,7 @@ public enum AEButton implements AIButton {
     wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre una pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
     download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
     upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
+
     back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
     annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
     conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),

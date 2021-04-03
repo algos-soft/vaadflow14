@@ -26,6 +26,7 @@ public interface AILogic {
      */
     List<String> getGridColumns();
 
+    
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
@@ -42,13 +43,14 @@ public interface AILogic {
      */
     List<String> getFormPropertyNamesList();
 
+
     /**
      * Esegue l'azione del bottone, searchText o comboBox. <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param azione selezionata da eseguire
      */
-    void performAction(AEAction azione);
+    boolean performAction(AEAction azione);
 
 
     /**
@@ -57,6 +59,6 @@ public interface AILogic {
      * @param azione     selezionata da eseguire
      * @param entityBean selezionata
      */
-    void performAction(AEAction azione, AEntity entityBean);
+    boolean performAction(AEAction azione, AEntity entityBean);
 
 }

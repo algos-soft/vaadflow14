@@ -287,7 +287,9 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param azione selezionata da eseguire
      */
     public void performAction(AEAction azione) {
-        entityLogic.performAction(azione);
+        if (!entityLogic.performAction(azione)) {
+            logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
+        }
     }
 
 

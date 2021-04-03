@@ -534,6 +534,7 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Costruisce una lista di bottoni (enumeration) <br>
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected List<AIButton> getListaAEBottoni() {
@@ -560,11 +561,11 @@ public abstract class LogicProperty extends VerticalLayout {
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
         }
-        if (usaBottoneUpload) {
-            listaBottoni.add(AEButton.upload);
-        }
         if (usaBottoneDownload) {
             listaBottoni.add(AEButton.download);
+        }
+        if (usaBottoneUpload) {
+            listaBottoni.add(AEButton.upload);
         }
         if (usaBottoneResetForm) {
             listaBottoni.add(AEButton.resetForm);

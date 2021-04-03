@@ -3,6 +3,7 @@ package it.algos.simple.backend.packages.fattura;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
+import it.algos.simple.ui.enumeration.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -24,20 +25,40 @@ import java.util.*;
 @Route(value = "fattura", layout = MainLayout.class)
 public class FatturaLogicList extends LogicList {
 
-
     /**
      * Versione della classe per la serializzazione
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneModulo;
+
+    /**
+     * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
+     */
+    protected boolean usaBottoneStatistiche;
+
+
+    /**
+     * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
+     */
+    protected String fatturaModuloTitle;
+
+
+    /**
+     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
+     */
+    protected String fatturaStatisticheTitle;
 
     /**
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
-    public FatturaLogicList(@Qualifier("FatturaService") AIService fatturaService)  {
+    public FatturaLogicList(@Qualifier("FatturaService") AIService fatturaService) {
         super.entityClazz = Fattura.class;
-        super.entityService = fatturaService ;
+        super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
 
 
@@ -56,10 +77,15 @@ public class FatturaLogicList extends LogicList {
         super.usaBottoneSearch = false;
         super.usaBottoneExport = true;
         super.usaBottonePaginaWiki = true;
-        super.usaBottoneUpload = true;
         super.usaBottoneDownload = true;
+        super.usaBottoneUpload = true;
 
-        super.maxNumeroBottoniPrimaRiga = 7;
+        super.maxNumeroBottoniPrimaRiga = 5;
+
+        this.usaBottoneModulo = true;
+        this.usaBottoneStatistiche = true;
+        this.fatturaModuloTitle = "Modulo:Bio/Plurale_attività";
+        this.fatturaStatisticheTitle = "Progetto:Biografie/Attività";
     }
 
     /**
@@ -84,6 +110,27 @@ public class FatturaLogicList extends LogicList {
             lista.add(html.getSpanRosso("Scritta rossa"));
             return lista;
         }
+    }
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) <br>
+     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected List<AIButton> getListaAEBottoni() {
+        List<AIButton> listaBottoni = super.getListaAEBottoni();
+
+        if (usaBottoneModulo) {
+            listaBottoni.add(AESimpleButton.modulo);
+        }
+
+        if (usaBottoneStatistiche) {
+            listaBottoni.add(AESimpleButton.statistiche);
+        }
+
+        return listaBottoni;
     }
 
     /**
@@ -113,6 +160,40 @@ public class FatturaLogicList extends LogicList {
         if (footerPlaceHolder != null && span != null) {
             footerPlaceHolder.add(span);
         }
+    }
+
+    /**
+     * Esegue l'azione del bottone, searchText o comboBox. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param azione selezionata da eseguire
+     *
+     * @return true se l'azione esiste nello Switch
+     * false -> Switch - caso non definito
+     */
+    @Override
+    public boolean performAction(AEAction azione) {
+        boolean status = super.performAction(azione);
+
+        if (status) {
+            return true;
+        }
+        else {
+            status = true;
+            switch (azione) {
+                case modulo:
+                    openWikiPage(fatturaModuloTitle);
+                    break;
+                case statistiche:
+                    openWikiPage(fatturaStatisticheTitle);
+                    break;
+                default:
+                    status = false;
+                    break;
+            }
+        }
+
+        return status;
     }
 
 }

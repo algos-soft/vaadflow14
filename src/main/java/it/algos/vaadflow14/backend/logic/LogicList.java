@@ -151,9 +151,14 @@ public abstract class LogicList extends Logic {
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
      * @param azione selezionata da eseguire
+     *
+     * @return true se l'azione esiste nello Switch
+     * false -> Switch - caso non definito
      */
     @Override
-    public void performAction(AEAction azione) {
+    public boolean performAction(AEAction azione) {
+        boolean status = true;
+
         switch (azione) {
             case deleteAll:
                 this.openConfirmDeleteAll();
@@ -187,16 +192,19 @@ public abstract class LogicList extends Logic {
             case showWiki:
                 openWikiPage(wikiPageTitle);
                 break;
-//            case modulo:
-//                openWikiPage(wikiModuloTitle);
-//                break;
-//            case statistiche:
-//                openWikiPage(wikiStatisticheTitle);
-//                break;
+            //            case modulo:
+            //                openWikiPage(wikiModuloTitle);
+            //                break;
+            //            case statistiche:
+            //                openWikiPage(wikiStatisticheTitle);
+            //                break;
             default:
-                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
+                status = false;
+                //                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
                 break;
         }
+
+        return status;
     }
 
     /**
@@ -204,21 +212,29 @@ public abstract class LogicList extends Logic {
      *
      * @param azione     selezionata da eseguire
      * @param entityBean selezionata
+     *
+     * @return true se l'azione esiste nello Switch
+     * false -> Switch - caso non definito
      */
     @Override
-    public void performAction(AEAction azione, AEntity entityBean) {
+    public boolean performAction(AEAction azione, AEntity entityBean) {
+        boolean status = true;
+
         switch (azione) {
             case doubleClick:
                 this.operationForm = AEOperation.edit;
                 this.executeRoute(entityBean);
                 break;
             default:
-                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione, entityBean)");
+                status = false;
+                //                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione, entityBean)");
                 break;
         }
+
+        return status;
     }
 
-    protected  void executeRoute() {
+    protected void executeRoute() {
         executeRoute(VUOTA, VUOTA, VUOTA);
     }
 

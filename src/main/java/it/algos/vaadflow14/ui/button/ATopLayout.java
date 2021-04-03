@@ -75,24 +75,18 @@ public class ATopLayout extends AButtonLayout {
     @Override
     protected void creaAllBottoni() {
         if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-            for (AEButton bottone : AEButton.values()) {
+            for (AIButton bottone : listaAEBottoni) {
                 if (bottone == AEButton.searchDialog) {
-                    //-- search
-                    if (listaAEBottoni.contains(bottone)) {
-                        addSearchGroup();
-                    }
-                    //-- tutti i combobox
+                    addSearchGroup();
+                    //-- tutti i combobox@todo cosi pero non mette i combobox se manca il campo search
                     if (mappaComboBox != null && mappaComboBox.size() > 0) {
                         for (Map.Entry<String, ComboBox> entry : mappaComboBox.entrySet()) {
                             this.addCombo(entry.getValue());
                         }
                     }
                 }
-                //--tutti i bottoni enum
                 else {
-                    if (listaAEBottoni.contains(bottone)) {
-                        this.addBottoneEnum(bottone);
-                    }
+                    this.addBottoneEnum(bottone);
                 }
             }
         }

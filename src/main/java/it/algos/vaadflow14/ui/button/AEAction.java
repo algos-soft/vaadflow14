@@ -8,5 +8,5 @@ package it.algos.vaadflow14.ui.button;
  * Time: 07:31
  */
 public enum AEAction {
-    nulla, deleteAll, resetList, resetForm, nuovo, edit, show, delete, editNoDelete, back, annulla, conferma, registra, click, doubleClick, prima, dopo, searchField, searchDialog, valueChanged, export, update, upload, download, showWiki, elabora, modulo, test, statistiche, check
+    nulla, deleteAll, resetList, resetForm, nuovo, edit, show, delete, editNoDelete, back, annulla, conferma, registra, click, doubleClick, prima, dopo, searchField, searchDialog, valueChanged, export, update, upload, download, showWiki, elabora, modulo, test, statistiche,statisticheDue, check
 }

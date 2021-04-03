@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.application;
 
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -182,6 +183,13 @@ public class FlowVar {
      * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
      */
     public static List<AIPreferenza> preferenzeSpecificheList;
+
+    /**
+     * Lista delle enum di bottoni specifici. <br>
+     * Quelli generali dell'applicazione sono in AEButton.values() <br>
+     * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+     */
+    public static List<AIButton> bottoniSpecificiList;
 
     /**
      * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>

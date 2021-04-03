@@ -286,6 +286,13 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.preferenzeSpecificheList = null;
 
         /**
+         * Lista delle enum di bottoni specifici. <br>
+         * Quelli generali dell'applicazione sono in AEButton.values() <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
+         */
+        FlowVar.bottoniSpecificiList = null;
+
+        /**
          * Mostra i quattro packages cronologici (secolo, anno, mese, giorno) <br>
          * Di default (per sicurezza) uguale a false <br>
          * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() <br>
