@@ -46,7 +46,7 @@ public enum AESimpleButton implements AIButton {
     /**
      * Flag di preferenza per l'azione del bottone. <br>
      */
-    public AEAction action;
+    public AIAction action;
 
     /**
      * Flag di preferenza per la property 'enabled' del bottone. <br>
@@ -84,22 +84,22 @@ public enum AESimpleButton implements AIButton {
     public boolean iconaOnly;
 
 
-    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action) {
+    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AIAction action) {
         this(testo, vaadinIcon, theme, action, true, VUOTA, VUOTA);
     }
 
 
-    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon) {
+    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AIAction action, boolean enabled, String toolTip, String lumoIcon) {
         this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, (Key) null, (KeyModifier) null, false, false);
     }
 
 
-    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier) {
+    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AIAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier) {
         this(testo, vaadinIcon, theme, action, enabled, toolTip, lumoIcon, keyShortCut, keyModifier, false, false);
     }
 
 
-    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AEAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText, boolean iconaOnly) {
+    AESimpleButton(String testo, VaadinIcon vaadinIcon, String theme, AIAction action, boolean enabled, String toolTip, String lumoIcon, Key keyShortCut, KeyModifier keyModifier, boolean iconaAfterText, boolean iconaOnly) {
         this.testo = testo;
         this.vaadinIcon = vaadinIcon;
         this.theme = theme;
@@ -130,7 +130,7 @@ public enum AESimpleButton implements AIButton {
     }
 
     @Override
-    public AEAction getAction() {
+    public AIAction getAction() {
         return action;
     }
 

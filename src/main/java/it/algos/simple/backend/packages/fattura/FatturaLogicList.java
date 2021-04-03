@@ -163,17 +163,19 @@ public class FatturaLogicList extends LogicList {
     }
 
     /**
-     * Esegue l'azione del bottone, searchText o comboBox. <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
      *
-     * @param azione selezionata da eseguire
+     * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch
-     * false -> Switch - caso non definito
+     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
      */
     @Override
-    public boolean performAction(AEAction azione) {
-        boolean status = super.performAction(azione);
+    public boolean performAction(AIAction iAzione) {
+        boolean status = super.performAction(iAzione);
+        AEAction azione = (AEAction)iAzione;
 
         if (status) {
             return true;

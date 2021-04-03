@@ -149,15 +149,18 @@ public abstract class LogicList extends Logic {
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
      *
-     * @param azione selezionata da eseguire
+     * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch
-     * false -> Switch - caso non definito
+     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
      */
     @Override
-    public boolean performAction(AEAction azione) {
+    public boolean performAction(AIAction iAzione) {
         boolean status = true;
+        AEAction azione = (AEAction) iAzione;
 
         switch (azione) {
             case deleteAll:
@@ -209,16 +212,19 @@ public abstract class LogicList extends Logic {
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
      *
-     * @param azione     selezionata da eseguire
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
      *
-     * @return true se l'azione esiste nello Switch
-     * false -> Switch - caso non definito
+     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
      */
     @Override
-    public boolean performAction(AEAction azione, AEntity entityBean) {
+    public boolean performAction(AIAction iAzione, AEntity entityBean) {
         boolean status = true;
+        AEAction azione = (AEAction) iAzione;
 
         switch (azione) {
             case doubleClick:
@@ -227,7 +233,6 @@ public abstract class LogicList extends Logic {
                 break;
             default:
                 status = false;
-                //                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione, entityBean)");
                 break;
         }
 

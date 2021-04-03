@@ -1,7 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import it.algos.vaadflow14.backend.entity.*;
-import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 
 import java.util.*;
 
@@ -47,17 +47,17 @@ public interface AILogic {
      * Esegue l'azione del bottone, searchText o comboBox. <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
-     * @param azione selezionata da eseguire
+     * @param iAzione interfaccia dell'azione selezionata da eseguire
      */
-    boolean performAction(AEAction azione);
+    boolean performAction(AIAction iAzione);
 
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
      *
-     * @param azione     selezionata da eseguire
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
      */
-    boolean performAction(AEAction azione, AEntity entityBean);
+    boolean performAction(AIAction iAzione, AEntity entityBean);
 
 }

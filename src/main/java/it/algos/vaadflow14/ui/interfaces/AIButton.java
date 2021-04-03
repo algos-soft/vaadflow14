@@ -2,7 +2,6 @@ package it.algos.vaadflow14.ui.interfaces;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.icon.*;
-import it.algos.vaadflow14.ui.button.*;
 
 /**
  * Project vaadflow14
@@ -28,7 +27,7 @@ public interface AIButton {
 
     public String getTheme();
 
-    public AEAction getAction();
+    public AIAction getAction();
 
     public boolean isEnabled();
 

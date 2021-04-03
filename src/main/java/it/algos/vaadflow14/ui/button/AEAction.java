@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.ui.button;
 
+import it.algos.vaadflow14.ui.interfaces.*;
+
 /**
  * Project vaadflow15
  * Created by Algos
@@ -7,6 +9,6 @@ package it.algos.vaadflow14.ui.button;
  * Date: dom, 10-mag-2020
  * Time: 07:31
  */
-public enum AEAction {
+public enum AEAction implements AIAction {
     nulla, deleteAll, resetList, resetForm, nuovo, edit, show, delete, editNoDelete, back, annulla, conferma, registra, click, doubleClick, prima, dopo, searchField, searchDialog, valueChanged, export, update, upload, download, showWiki, elabora, modulo, test, statistiche,statisticheDue, check
 }

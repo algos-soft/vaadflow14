@@ -6,6 +6,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.interfaces.*;
 
 import java.util.*;
 
@@ -212,26 +213,32 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
      *
-     * @param azione selezionata da eseguire
-     * @return true se l'azione esiste nello Switch
-     *         false -> Switch - caso non definito
+     * @param iAzione interfaccia dell'azione selezionata da eseguire
+     *
+     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
      */
     @Override
-    public boolean performAction(AEAction azione) {
+    public boolean performAction(AIAction iAzione) {
         return false;
     }
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Interfaccia utilizzata come parametro per poter sovrascrivere il metodo <br>
+     * Nella classe base eseguirà un casting a AEAction <br>
+     * Nella (eventuale) sottoclasse specifica del progetto eseguirà un casting a AExxxAction <br>
      *
-     * @param azione     selezionata da eseguire
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
-     * @return true se l'azione esiste nello Switch
-     *         false -> Switch - caso non definito
+     *
+     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
      */
     @Override
-    public boolean performAction(AEAction azione, AEntity entityBean) {
+    public boolean performAction(AIAction iAzione, AEntity entityBean) {
         return false;
     }
 
