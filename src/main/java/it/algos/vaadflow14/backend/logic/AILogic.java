@@ -26,7 +26,6 @@ public interface AILogic {
      */
     List<String> getGridColumns();
 
-    
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
