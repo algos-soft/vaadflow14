@@ -221,7 +221,7 @@ public class Parametro {
     //
 
     public AEOperation getOperationForm() {
-        AEOperation operationForm = AEOperation.showOnly;
+        AEOperation operationForm = AEOperation.edit;
         String operationTxt;
 
         operationTxt = this.get(KEY_FORM_TYPE);

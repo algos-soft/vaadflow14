@@ -149,7 +149,6 @@ public class ATopLayout extends AButtonLayout {
             this.add(secondaRiga);
         }
     }
-
     protected HorizontalLayout fixSearchAndCombo() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.add(new Button("Pippo"));

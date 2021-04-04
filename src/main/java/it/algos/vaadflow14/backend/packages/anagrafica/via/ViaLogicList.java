@@ -3,7 +3,6 @@ package it.algos.vaadflow14.backend.packages.anagrafica.via;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.ui.*;
 
@@ -54,7 +53,7 @@ public class ViaLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm= AEOperation.editDaLink;
+//        super.operationForm= AEOperation.editDaLink;
     }
 
     /**

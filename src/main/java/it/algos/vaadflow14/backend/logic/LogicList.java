@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.mongodb.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
@@ -8,7 +9,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -40,6 +40,7 @@ public abstract class LogicList extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        super.operationForm = annotation.getOperation(entityClazz);
         super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
@@ -75,22 +76,80 @@ public abstract class LogicList extends Logic {
         alertPlaceHolder.add(appContext.getBean(AHeaderSpanList.class, this.getSpanList()));
     }
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     *
+     * @return una lista di elementi html di tipo 'span'
+     */
+    protected List<Span> getSpanList() {
+        return null;
+    }
+
 
     /**
-     * Costruisce un wrapper (obbligatorio) di dati <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     *
-     * @return wrapper di dati per la view
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected WrapButtons getWrapButtonsTop() {
-        List<AIButton> listaAEBottoni = this.getListaAEBottoni();
-        //        WrapSearch wrapSearch = this.getWrapSearch();
-        //        LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
-        //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
-        //        AEOperation operationForm = null;
+    @Override
+    protected List<AIButton> getListaAEBottoniTop() {
+        List<AIButton> listaBottoni = super.getListaAEBottoniTop();
 
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
+        if (usaBottoneDeleteAll) {
+            listaBottoni.add(AEButton.deleteAll);
+        }
+        if (usaBottoneResetList && entityService != null) {
+            //--se manca la classe specifica il metodo è vuoto e il bottone non potrebbe funzionare
+            if (entityService.resetEmptyOnly().isErrato()) {
+                listaBottoni.add(AEButton.resetList);
+            }
+        }
+        if (usaBottoneNew) {
+            listaBottoni.add(AEButton.nuovo);
+        }
+        if (usaBottoneSearch) {
+            listaBottoni.add(AEButton.searchDialog);
+        }
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
+        }
+        if (usaBottonePaginaWiki) {
+            listaBottoni.add(AEButton.wiki);
+        }
+        if (usaBottoneDownload) {
+            listaBottoni.add(AEButton.download);
+        }
+        if (usaBottoneUpload) {
+            listaBottoni.add(AEButton.upload);
+        }
+        //        if (usaBottoneResetForm) {
+        //            listaBottoni.add(AEButton.resetForm);
+        //        }
+        //        if (usaBottoneBack) {
+        //            listaBottoni.add(AEButton.back);
+        //        }
+        //        if (usaBottoneAnnulla) {
+        //            listaBottoni.add(AEButton.annulla);
+        //        }
+        //        if (usaBottoneConferma) {
+        //            listaBottoni.add(AEButton.conferma);
+        //        }
+        //        if (usaBottoneRegistra) {
+        //            listaBottoni.add(AEButton.registra);
+        //        }
+        //        if (usaBottoneCancella) {
+        //            listaBottoni.add(AEButton.delete);
+        //        }
+        //        if (usaBottonePrima) {
+        //            listaBottoni.add(AEButton.prima);
+        //        }
+        //        if (usaBottoneDopo) {
+        //            listaBottoni.add(AEButton.dopo);
+        //        }
+
+        return listaBottoni;
     }
 
 
@@ -171,13 +230,13 @@ public abstract class LogicList extends Logic {
                 this.operationForm = AEOperation.addNew;
                 this.executeRoute();
                 break;
-            case searchField:
-                //                this.searchFieldValue = searchFieldValue;
-                //                refreshGrid();
-                break;
             case searchDialog:
                 //                Notification.show("Not yet. Coming soon.", 3000, Notification.Position.MIDDLE);
                 //                logger.info("Not yet. Coming soon", this.getClass(), "performAction");
+                break;
+            case searchField:
+                //                this.searchFieldValue = searchFieldValue;
+                //                refreshGrid();
                 break;
             case valueChanged:
                 //                refreshGrid();
@@ -185,19 +244,19 @@ public abstract class LogicList extends Logic {
             case export:
                 //                export();
                 break;
+            case showWiki:
+                openWikiPage(wikiPageTitle);
+                break;
             case download:
                 download();
                 break;
             case upload:
                 break;
-            case showWiki:
-                openWikiPage(wikiPageTitle);
-                break;
-            case edit:
-            case show:
-            case editNoDelete:
-            case doubleClick:
-                break;
+            //            case edit:
+            //            case show:
+            //            case editNoDelete:
+            //            case doubleClick:
+            //                break;
             default:
                 status = false;
                 break;

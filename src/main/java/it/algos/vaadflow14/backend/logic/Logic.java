@@ -150,17 +150,17 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
         this.fixAlertLayout();
 
-        //--Costruisce un layout (obbligatorio) per i menu ed i bottoni di comando della view <br>
+        //--Costruisce un layout (obbligatorio per la List) per i bottoni di comando della view al Top <br>
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
         this.fixTopLayout();
 
         //--Corpo principale della Grid (obbligatorio) <br>
         this.fixBodyLayout();
 
-        //--Eventuali bottoni sotto la grid (eventuale) <br>
+        //--Costruisce un layout (obbligatorio per il Form) per i bottoni di comando della view al Bottom <br>
         this.fixBottomLayout();
 
-        //--Eventuali scritte in basso al video (eventuale) <br>
+        //--Eventuali scritte in basso al video (eventuale) nel Footer <br>
         this.fixFooterLayout();
 
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
@@ -180,7 +180,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     @Override
-    public boolean performAction(AIAction iAzione) {
+    public boolean performAction(final AIAction iAzione) {
         return false;
     }
 
@@ -196,7 +196,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     @Override
-    public boolean performAction(AIAction iAzione, AEntity entityBean) {
+    public boolean performAction(final AIAction iAzione, final AEntity entityBean) {
         return false;
     }
 

@@ -44,14 +44,15 @@ public class FatturaLogicForm extends LogicForm {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.wikiPageTitle = "Piozzano";
+        super.wikiPageTitle = "Sarmato";
     }
 
 
     /**
-     * Costruisce una lista di bottoni (enumeration) <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected List<AIButton> getListaAEBottoniTop() {
         return Collections.singletonList(AEButton.wiki);

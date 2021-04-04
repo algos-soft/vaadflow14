@@ -8,7 +8,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.button.*;
-import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
@@ -417,20 +416,11 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
      * Chiamato da Logic.initView() <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixAlertLayout() {
     }
 
-
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
-     */
-    protected List<Span> getSpanList() {
-        return null;
-    }
 
     /**
      * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
@@ -462,33 +452,47 @@ public abstract class LogicProperty extends VerticalLayout {
         return span;
     }
 
-
     /**
-     * Costruisce un layout per i bottoni di comando superiori della view <br>
-     * Semi-obbligatorio per la List, facoltativo per il Form <br>
-     * Aggiunge tutti i listeners ai bottoni <br>
-     * I bottoni possono andare su due righe <br>
-     * <p>
+     * Costruisce un layout per i bottoni di comando al Top della view <br>
      * Chiamato da Logic.initView() <br>
-     * Se esiste, inserisce l' istanza (grafica) in topPlaceHolder della view <br>
+     * Aggiunge tutti i listeners ai bottoni <br>
+     * Obbligatorio per la List, facoltativo per il Form <br>
+     * Nella List i bottoni possono andare su due righe <br>
+     * Nel Form i bottoni vanno su una sola riga <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      */
     protected void fixTopLayout() {
-        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
-
-        if (topPlaceHolder != null && topLayout != null) {
-            topPlaceHolder.add(topLayout);
-        }
+        topPlaceHolder.add(appContext.getBean(ATopLayout.class, this.getWrapButtonsTop()));
     }
 
+
     /**
-     * Costruisce un wrapper (obbligatorio) di dati <br>
+     * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Top della view <br>
      * I dati sono gestiti da questa 'logic' <br>
      * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      *
      * @return wrapper di dati per la view
      */
     protected WrapButtons getWrapButtonsTop() {
-        return null;
+        List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
+        //        WrapSearch wrapSearch = this.getWrapSearch();
+        //        LinkedHashMap<String, ComboBox> mappaComboBox = this.mappaComboBox;
+        //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
+        //        AEOperation operationForm = null;
+
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
+    }
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected List<AIButton> getListaAEBottoniTop() {
+        return new ArrayList<>();
     }
 
 
@@ -502,6 +506,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixBodyLayout() {
     }
 
+
     /**
      *
      */
@@ -510,13 +515,41 @@ public abstract class LogicProperty extends VerticalLayout {
     }
 
     /**
-     * Costruisce un layout per i bottoni di comando inferiori della view <br>
+     * Costruisce un layout per i bottoni di comando al Bottom della view <br>
+     * Chiamato da Logic.initView() <br>
+     * Aggiunge tutti i listeners ai bottoni <br>
      * Obbligatorio per il Form, facoltativo per la List <br>
-     * <p>
-     * Chiamato da LogicList.initView() <br>
-     * Se esiste, inserisce l' istanza (grafica) in bottomPlaceHolder della view <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Inserisce l' istanza (grafica) in bottomPlaceHolder della view <br>
      */
     protected void fixBottomLayout() {
+        bottomPlaceHolder.add(appContext.getBean(ABottomLayout.class, this.getWrapButtonsBottom()));
+    }
+
+
+    /**
+     * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Bottom della view <br>
+     * I dati sono gestiti da questa 'logic' <br>
+     * I dati vengono passati alla View che li usa <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     *
+     * @return wrapper di dati per la view
+     */
+    protected WrapButtons getWrapButtonsBottom() {
+        List<AIButton> listaAEBottoni = this.getListaAEBottoniBottom();
+
+        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null);
+    }
+
+
+    /**
+     * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
+     * Costruisce i bottoni come previsto dal flag operationForm <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    protected List<AIButton> getListaAEBottoniBottom() {
+        return new ArrayList<>();
     }
 
 
@@ -530,69 +563,7 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixFooterLayout() {
     }
 
-    /**
-     * Costruisce una lista di bottoni (enumeration) <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected List<AIButton> getListaAEBottoni() {
-        List<AIButton> listaBottoni = new ArrayList<>();
 
-        if (usaBottoneDeleteAll) {
-            listaBottoni.add(AEButton.deleteAll);
-        }
-        if (usaBottoneResetList && entityService != null) {
-            //--se manca la classe specifica il metodo è vuoto e il bottone non potrebbe funzionare
-            if (entityService.resetEmptyOnly().isErrato()) {
-                listaBottoni.add(AEButton.resetList);
-            }
-        }
-        if (usaBottoneNew) {
-            listaBottoni.add(AEButton.nuovo);
-        }
-        if (usaBottoneSearch) {
-            listaBottoni.add(AEButton.searchDialog);
-        }
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
-        }
-        if (usaBottonePaginaWiki) {
-            listaBottoni.add(AEButton.wiki);
-        }
-        if (usaBottoneDownload) {
-            listaBottoni.add(AEButton.download);
-        }
-        if (usaBottoneUpload) {
-            listaBottoni.add(AEButton.upload);
-        }
-        if (usaBottoneResetForm) {
-            listaBottoni.add(AEButton.resetForm);
-        }
-        if (usaBottoneBack) {
-            listaBottoni.add(AEButton.back);
-        }
-        if (usaBottoneAnnulla) {
-            listaBottoni.add(AEButton.annulla);
-        }
-        if (usaBottoneConferma) {
-            listaBottoni.add(AEButton.conferma);
-        }
-        if (usaBottoneRegistra) {
-            listaBottoni.add(AEButton.registra);
-        }
-        if (usaBottoneCancella) {
-            listaBottoni.add(AEButton.delete);
-        }
-        if (usaBottonePrima) {
-            listaBottoni.add(AEButton.prima);
-        }
-        if (usaBottoneDopo) {
-            listaBottoni.add(AEButton.dopo);
-        }
-
-        return listaBottoni;
-    }
 
     /**
      * Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>

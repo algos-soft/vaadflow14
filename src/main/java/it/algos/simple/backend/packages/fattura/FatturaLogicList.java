@@ -82,6 +82,7 @@ public class FatturaLogicList extends LogicList {
 
         super.maxNumeroBottoniPrimaRiga = 5;
 
+        super.wikiPageTitle = "Piozzano";
         this.usaBottoneModulo = true;
         this.usaBottoneStatistiche = true;
         this.fatturaModuloTitle = "Modulo:Bio/Plurale_attività";
@@ -119,8 +120,8 @@ public class FatturaLogicList extends LogicList {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected List<AIButton> getListaAEBottoni() {
-        List<AIButton> listaBottoni = super.getListaAEBottoni();
+    protected List<AIButton> getListaAEBottoniTop() {
+        List<AIButton> listaBottoni = super.getListaAEBottoniTop();
 
         if (usaBottoneModulo) {
             listaBottoni.add(AESimpleButton.modulo);

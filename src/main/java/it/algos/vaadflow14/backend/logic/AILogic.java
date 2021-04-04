@@ -51,7 +51,7 @@ public interface AILogic {
      *
      * @return false se il parametro non è una enumeration valida o manca lo switch
      */
-    boolean performAction(AIAction iAzione);
+    boolean performAction(final AIAction iAzione);
 
 
     /**
@@ -63,7 +63,7 @@ public interface AILogic {
      *
      * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
-    boolean performAction(AIAction iAzione, AEntity entityBean);
+    boolean performAction(final AIAction iAzione, final AEntity entityBean);
 
 
     /**

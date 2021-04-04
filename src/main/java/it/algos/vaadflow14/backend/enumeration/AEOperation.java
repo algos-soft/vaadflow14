@@ -16,7 +16,7 @@ public enum AEOperation {
     addNew("New", "add", true, false, false),
     edit("Edit", "edit", true, true, true),
     editProfile("Edit", "edit", true, false, false),
-    editNoDelete("Edit", "edit", true, false, false),
+    editNoDelete("Edit", "edit", true, false, true),
     editDaLink("Edit", "edit", true, true, false),
     showOnly("Mostra", "mostra", false, false, true);
 
@@ -28,15 +28,15 @@ public enum AEOperation {
 
     private final boolean deleteEnabled;
 
-    private final boolean usaFrecceSpostamento;
+    private final boolean possibileUsoFrecce;
 
 
-    AEOperation(String nameInTitle, String nameInText, boolean saveEnabled, boolean deleteEnabled, boolean usaFrecceSpostamento) {
+    AEOperation(String nameInTitle, String nameInText, boolean saveEnabled, boolean deleteEnabled, boolean possibileUsoFrecce) {
         this.nameInTitle = nameInTitle;
         this.nameInText = nameInText;
         this.saveEnabled = saveEnabled;
         this.deleteEnabled = deleteEnabled;
-        this.usaFrecceSpostamento = usaFrecceSpostamento;
+        this.possibileUsoFrecce = possibileUsoFrecce;
     }
 
     public static boolean contiene(String nome) {
@@ -70,8 +70,8 @@ public enum AEOperation {
         return deleteEnabled;
     }
 
-    public boolean isUsaFrecceSpostamento() {
-        return usaFrecceSpostamento;
+    public boolean isPossibileUsoFrecce() {
+        return possibileUsoFrecce;
     }
 }
 

@@ -35,7 +35,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Bolla", keyPropertyName = "code", usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.COG, sortProperty = "code")
 @AIList(fields = "code,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,descrizione", usaSpostamentoTraSchede = true)
+@AIForm(fields = "code,descrizione", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
 public class Bolla extends AEntity {
 
     /**

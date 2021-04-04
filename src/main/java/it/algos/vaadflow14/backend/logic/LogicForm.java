@@ -1,14 +1,12 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.icon.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.header.*;
@@ -41,6 +39,7 @@ public abstract class LogicForm extends Logic {
     /**
      *
      */
+    @Override
     protected void fixEntityBean() {
         super.fixEntityBean();
 
@@ -64,10 +63,13 @@ public abstract class LogicForm extends Logic {
         super.fixPreferenze();
 
         super.usaBottoneBack = true;
-        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
-        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
+//        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
+//        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
 
-        if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
+        super.usaBottoneCancella = operationForm.isDeleteEnabled();
+        super.usaBottoneRegistra = operationForm.isSaveEnabled();
+
+        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
             super.usaBottonePrima = true;
             super.usaBottoneDopo = true;
         }
@@ -111,25 +113,16 @@ public abstract class LogicForm extends Logic {
 
 
     /**
-     * Costruisce un wrapper (obbligatorio) di dati <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     *
-     * @return wrapper di dati per la view
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected WrapButtons getWrapButtonsTop() {
-        List<AIButton> listaAEBottoni = this.getListaAEBottoniTop();
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null, null, maxNumeroBottoniPrimaRiga);
+    @Override
+    protected List<AIButton> getListaAEBottoniTop() {
+        return new ArrayList<>();
     }
 
-    /**
-     * Costruisce una lista di bottoni (enumeration) <br>
-     * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>
-     * Può essere sovrascritto. Invocare PRIMA il metodo della superclasse <br>
-     */
-    protected List<AIButton> getListaAEBottoniTop() {
-        return null;
-    }
 
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>
@@ -163,6 +156,7 @@ public abstract class LogicForm extends Logic {
         return new WrapForm(entityBean, operationForm);
     }
 
+
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
      * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
@@ -190,50 +184,60 @@ public abstract class LogicForm extends Logic {
         return fieldsNameList;
     }
 
+
     /**
-     * Costruisce un layout (semi-obbligatorio) per i bottoni di comando della view <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
+     * Costruisce i bottoni come previsto dal flag operationForm, regolato in fixPreferenze() <br>
+     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected void fixBottomLayout() {
-        Button bottone;
+    protected List<AIButton> getListaAEBottoniBottom() {
+        List<AIButton> listaBottoni = super.getListaAEBottoniTop();
 
-        bottomLayout = appContext.getBean(ABottomLayout.class, getWrapButtonsBottom());
-
-        if (bottomLayout != null) {
-            bottomLayout.setAllListener(this);
+        if (usaBottoneResetForm) {
+            listaBottoni.add(AEButton.resetForm);
+        }
+        if (usaBottoneBack) {
+            listaBottoni.add(AEButton.back);
+        }
+        if (usaBottoneAnnulla) {
+            listaBottoni.add(AEButton.annulla);
+        }
+        if (usaBottoneCancella) {
+            listaBottoni.add(AEButton.delete);
+        }
+        if (usaBottoneConferma) {
+            listaBottoni.add(AEButton.conferma);
+        }
+        if (usaBottoneRegistra) {
+            listaBottoni.add(AEButton.registra);
+        }
+        if (usaBottonePrima) {
+            listaBottoni.add(AEButton.prima);
+        }
+        if (usaBottoneDopo) {
+            listaBottoni.add(AEButton.dopo);
         }
 
-        if (bottomPlaceHolder != null && bottomLayout != null) {
-            bottomPlaceHolder.add(bottomLayout);
-        }
+//        //--regola l'aspetto dei bottoni spostamento (se esistono)
+//        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
+//            listaBottoni.add(AEButton.prima);
+//            listaBottoni.add(AEButton.dopo);
+//
+//            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+//            //                    if (bottone != null) {
+//            //                        bottone.setEnabled(text.isValid(entityBeanPrevID));
+//            //                    }
+//            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+//            //                    if (bottone != null) {
+//            //                        bottone.setEnabled(text.isValid(entityBeanNextID));
+//            //                    }
+//        }
 
-        //--regola l'aspetto dei bottoni spostamento (se esistono)
-        if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
-            bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
-            if (bottone != null) {
-                bottone.setEnabled(text.isValid(entityBeanPrevID));
-            }
-            bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
-            if (bottone != null) {
-                bottone.setEnabled(text.isValid(entityBeanNextID));
-            }
-        }
+        return listaBottoni;
     }
 
-    /**
-     * Costruisce un wrapper (obbligatorio) di dati <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    protected WrapButtons getWrapButtonsBottom() {
-        List<AIButton> listaAEBottoni = this.getListaAEBottoni();
-        //        List<Button> listaBottoniSpecifici = this.getListaBottoniSpecifici();
-
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni);
-    }
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
@@ -248,28 +252,36 @@ public abstract class LogicForm extends Logic {
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = true;
-        AEAction azione = (AEAction)iAzione;
+        AEAction azione = (AEAction) iAzione;
 
         switch (azione) {
-            case deleteAll:
-                openWikiPage(wikiPageTitle);
-                break;
             case resetForm:
                 //                this.reloadForm(entityBean);
+                break;
+            case export:
+                //                export();
+                break;
+            case showWiki:
+                openWikiPage(wikiPageTitle);
+                break;
+            case download:
+                download();
+                break;
+            case upload:
                 break;
             case back:
             case annulla:
                 this.openConfirmExitForm(entityBean);
+                break;
+            case delete:
+                this.deleteForm();
+                this.back();
                 break;
             case conferma:
             case registra:
                 if (saveDaForm()) {
                     this.back();
                 }
-                break;
-            case delete:
-                this.deleteForm();
-                this.back();
                 break;
             case prima:
                 executeRoute(entityBeanPrevID);

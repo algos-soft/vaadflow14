@@ -23,9 +23,9 @@ import it.algos.vaadflow14.ui.interfaces.*;
  */
 public enum AEButton implements AIButton {
 
+    //--List
     deleteAll("Delete", VaadinIcon.CLOSE, "error", AEAction.deleteAll, true, "Cancella tutta la collezione", "cross", Key.KEY_D, KeyModifier.CONTROL),
     resetList("Reset", VaadinIcon.RECYCLE, "error", AEAction.resetList, true, "Ripristina tutta la collezione", "cross", Key.KEY_R, KeyModifier.CONTROL),
-    resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
     nuovo("New", VaadinIcon.PLUS_CIRCLE, "secondary", AEAction.nuovo, true, "Crea una nuova entity", "plus", Key.KEY_N, KeyModifier.CONTROL),
     searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
     export("Export", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esporta la lista", "cross", null, null),
@@ -33,11 +33,13 @@ public enum AEButton implements AIButton {
     download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
     upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
 
+    //--Form
+    resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
     back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
     annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
+    delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
     conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),
     registra("Save", VaadinIcon.CHECK, "primary", AEAction.registra, true, "Registra le modifiche", "download", Key.ENTER, null),
-    delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
     prima("Before", VaadinIcon.CARET_LEFT, "secondary", AEAction.prima, true, "Va alla scheda precedente", "cross", Key.ARROW_LEFT, KeyModifier.CONTROL, false, true),
     dopo("Next", VaadinIcon.CARET_RIGHT, "secondary", AEAction.dopo, true, "Va alla scheda successiva", "cross", Key.ARROW_RIGHT, KeyModifier.CONTROL, false, true),
 
