@@ -90,9 +90,9 @@ public class FatturaLogicList extends LogicList {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      *
-     * @return una liste di 'span'
+     * @return una lista di elementi html di tipo 'span'
      */
     @Override
     protected List<Span> getSpanList() {
@@ -170,12 +170,16 @@ public class FatturaLogicList extends LogicList {
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = super.performAction(iAzione);
-        AESimpleAction azione = (AESimpleAction)iAzione;
+        AESimpleAction azione = iAzione instanceof AESimpleAction ? (AESimpleAction) iAzione : null;
+
+        if (azione == null) {
+            return false;
+        }
 
         if (status) {
             return true;

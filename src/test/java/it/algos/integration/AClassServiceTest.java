@@ -1,9 +1,11 @@
 package it.algos.integration;
 
 import it.algos.simple.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.simple.backend.packages.fattura.*;
-import it.algos.unit.*;
+import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,10 @@ import org.springframework.test.context.junit.jupiter.*;
 @DisplayName("Text Service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AClassServiceTest extends ATest {
+
+        protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
+
+        protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
     /**
      * The Service.

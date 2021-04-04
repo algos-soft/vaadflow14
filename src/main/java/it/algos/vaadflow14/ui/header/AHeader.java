@@ -14,6 +14,7 @@ import java.util.List;
  * Date: dom, 02-ago-2020
  * Time: 11:10
  */
+@Deprecated
 public abstract class AHeader extends VerticalLayout {
 
     protected AlertWrap alertWrap;

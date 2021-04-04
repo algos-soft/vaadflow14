@@ -325,6 +325,14 @@ public enum AEWizCost {
      */
     fileRootREAD(AETypeWiz.directory, String.format("File root README con note di testo (da %s)", nameSources.value), "README.txt", AECopyWiz.sourceCheckFlagSeEsiste),
 
+
+    /**
+     * File a livello di root. <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    fileRootTEST(AETypeWiz.directory, String.format("File root/test ATEST (da %s)", nameVaadFlow14.value), "src/test/java/it/algos/test/ATest.java", AECopyWiz.fileCheckFlagSeEsiste),
+
+
     /**
      * Nome del package da creare. Eventualmente con sub-directory <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>

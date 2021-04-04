@@ -43,6 +43,8 @@ public enum AECheck {
 
     read("File README con note di testo (sources)", true, true, false, false, FlowCost.VUOTA, FlowCost.VUOTA, false),
 
+    test("Directory Test (VaadFlow)", true, true, false, false, FlowCost.VUOTA, FlowCost.VUOTA, false),
+
     all("Abilita/disabilita tutti i checkBox", true, true, false, false, FlowCost.VUOTA, FlowCost.VUOTA, false),
 
     file("Sovrascrive il singolo FILE", false, false, false, false, FlowCost.VUOTA, FlowCost.VUOTA, false),

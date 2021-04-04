@@ -869,6 +869,20 @@ public class AAnnotationService extends AAbstractService {
         return annotation != null ? annotation.usaSpostamentoTraSchede() : false;
     }
 
+
+    /**
+     * Flag per la tipologia di operazioni ammesse sul Form. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public AEOperation getOperation(final Class<? extends AEntity> entityClazz) {
+        AIForm annotation = this.getAIForm(entityClazz);
+        return annotation != null ? annotation.operationForm() : AEOperation.edit;
+    }
+
+
     /**
      * Flag per usare il field della superclasse AEntity. <br>
      *

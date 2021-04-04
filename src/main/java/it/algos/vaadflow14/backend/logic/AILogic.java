@@ -14,6 +14,7 @@ import java.util.*;
  */
 public interface AILogic {
 
+
     /**
      * Costruisce una lista ordinata di colonne della Grid. <br>
      * Nell' ordine: <br>
@@ -36,7 +37,6 @@ public interface AILogic {
      * 3) Sovrascrive la lista nella sottoclasse specifica di xxxLogic <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * Se serve, modifica l' ordine della lista oppure esclude una property che non deve andare nel binder <br>
-     * todo ancora da sviluppare
      *
      * @return lista di nomi di properties
      */
@@ -48,16 +48,30 @@ public interface AILogic {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
+     *
+     * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     boolean performAction(AIAction iAzione);
 
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     boolean performAction(AIAction iAzione, AEntity entityBean);
+
+
+    /**
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    boolean download();
 
 }

@@ -170,5 +170,14 @@ public interface AIService {
      */
     Class<? extends AEntity> getEntityClazz();
 
+
+    /**
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    boolean download();
+
 }
 

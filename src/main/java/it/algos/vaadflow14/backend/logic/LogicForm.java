@@ -77,14 +77,17 @@ public abstract class LogicForm extends Logic {
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
+     * <p>
+     * Chiamato da Logic.initView() <br>
+     * Nell' implementazione standard di default presenta sempre avviso col nome della collezione e la scheda visualizzata <br>
+     * Recupera dal service specifico un (eventuale) avviso diverso <br>
+     * Costruisce un' istanza dedicata con un solo avviso <br>
+     * L'avviso è realizzato con tag html 'span' di colore fisso (verde) <br>
+     * Inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
      */
     @Override
     protected void fixAlertLayout() {
-        AIHeader headerSpan = appContext.getBean(AHeaderSpanForm.class, getSpanForm());
-
-        if (alertPlaceHolder != null && headerSpan != null) {
-            alertPlaceHolder.add(headerSpan.get());
-        }
+        alertPlaceHolder.add(appContext.getBean(AHeaderSpanForm.class, this.getSpanForm()));
     }
 
 
@@ -92,7 +95,7 @@ public abstract class LogicForm extends Logic {
      * Costruisce una singola 'span' da mostrare come header della view <br>
      * Puo essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      *
-     * @return una liste di 'span'
+     * @return un messaggio di 'span' col nome della collezione e la scheda visualizzata
      */
     protected String getSpanForm() {
         String titolo = "SCHEDA";
@@ -209,12 +212,10 @@ public abstract class LogicForm extends Logic {
         if (operationForm.isUsaFrecceSpostamento() && annotation.usaSpostamentoTraSchede(entityClazz)) {
             bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
             if (bottone != null) {
-                //                bottone.setEnabled(isNotPrimo());
                 bottone.setEnabled(text.isValid(entityBeanPrevID));
             }
             bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
             if (bottone != null) {
-                //                bottone.setEnabled(isNotUltimo());
                 bottone.setEnabled(text.isValid(entityBeanNextID));
             }
         }
@@ -242,7 +243,7 @@ public abstract class LogicForm extends Logic {
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione) {

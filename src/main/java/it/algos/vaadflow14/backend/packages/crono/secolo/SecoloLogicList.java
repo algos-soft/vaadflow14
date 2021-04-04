@@ -59,9 +59,9 @@ public class SecoloLogicList extends LogicList {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      *
-     * @return una liste di 'span'
+     * @return una lista di elementi html di tipo 'span'
      */
     @Override
     protected List<Span> getSpanList() {

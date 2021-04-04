@@ -1,17 +1,14 @@
 package it.algos.unit;
 
-import it.algos.vaadflow14.backend.service.AWikiService;
-import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
-import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
-import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -81,7 +78,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(1)
     @DisplayName("1 - legge testo grezzo html")
     public void getSorgente() {
@@ -92,7 +89,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(2)
     @DisplayName("2 - legge testo wiki")
     public void legge() {
@@ -105,7 +102,7 @@ public class AWikiServiceTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(3)
     @DisplayName("3 - legge una table wiki")
     public void leggeTable() {
@@ -134,10 +131,34 @@ public class AWikiServiceTest extends ATest {
         System.out.println(ottenuto);
     }
 
+    @Test
+    @Order(4)
+    @DisplayName("4 - legge un modulo")
+    public void leggeModulo() {
+        sorgente = "Modulo:Bio/Plurale_attività";
+        previsto = "{\n[\"abate\"] =";
+        ottenuto = service.leggeModulo(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        System.out.println("4 - Legge un modulo wiki. Non lo faccio vedere perché troppo lungo");
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - legge la mappa di un modulo")
+    public void leggeMappaModulo() {
+        sorgente = "Modulo:Bio/Plurale_attività";
+        previsto = "{\n[\"abate\"] =";
+        mappaOttenuta = service.leggeMappaModulo(sorgente);
+        assertNotNull(mappaOttenuta);
+        System.out.println("4 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+    }
+
 
     //    @Test
-    @Order(4)
-    @DisplayName("4 - legge un template")
+    @Order(5)
+    @DisplayName("5 - legge un template")
     public void getTemplateBandierina() {
         sorgente = "ES-AN";
         dueStringhe = service.getTemplateBandierina(sorgente);
@@ -782,7 +803,7 @@ public class AWikiServiceTest extends ATest {
         System.out.println("Stati con regioni errate: " + errate.size());
     }
 
-    @Test
+    //    @Test
     @Order(45)
     @DisplayName("45 - legge le province italiane")
     public void getTableProvinceItaliane() {

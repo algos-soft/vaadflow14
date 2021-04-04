@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 
 import java.lang.annotation.*;
 
@@ -43,11 +44,21 @@ public @interface AIForm  {
 
 
     /**
+     * (Optional) tipologia di operazioni ammesse sul Form da aprire
+     * Di default AEOperation.edit
+     *
+     * @return the status
+     */
+    AEOperation operationForm() default AEOperation.edit;
+
+
+    /**
      * (Optional) utilizzo delle frecce per spostarsi tra schede precedenti e successive
      * Di default false
      *
      * @return the status
      */
     boolean usaSpostamentoTraSchede() default false;
+
 
 }

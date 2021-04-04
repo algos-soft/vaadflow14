@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.mongodb.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
@@ -62,24 +61,18 @@ public abstract class LogicList extends Logic {
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
+     * <p>
+     * Chiamato da Logic.initView() <br>
+     * Nell' implementazione standard di default NON presenta nessun avviso <br>
+     * Recupera dal service specifico gli (eventuali) avvisi <br>
+     * Costruisce un' istanza dedicata con la lista degli avvisi <br>
+     * Gli avvisi sono realizzati con tag html 'span' differenziati per colore anche in base all'utente collegato <br>
+     * Se l'applicazione non usa security, il colore è deciso dal service specifico <br<
+     * Inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
      */
     @Override
     protected void fixAlertLayout() {
-        AIHeader headerSpan = appContext.getBean(AHeaderSpanList.class, getSpanList());
-
-        if (alertPlaceHolder != null && headerSpan != null) {
-            alertPlaceHolder.add(headerSpan.get());
-        }
-    }
-
-    /**
-     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
-     */
-    protected List<Span> getSpanList() {
-        return null;
+        alertPlaceHolder.add(appContext.getBean(AHeaderSpanList.class, this.getSpanList()));
     }
 
 
@@ -156,17 +149,14 @@ public abstract class LogicList extends Logic {
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione) {
         boolean status = true;
-        AEAction azione;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
 
-        if (iAzione instanceof AEAction) {
-            azione = (AEAction) iAzione;
-        }
-        else {
+        if (azione == null) {
             return false;
         }
 
@@ -177,15 +167,10 @@ public abstract class LogicList extends Logic {
             case resetList:
                 this.openConfirmReset();
                 break;
-            case doubleClick:
-                break;
             case nuovo:
                 this.operationForm = AEOperation.addNew;
                 this.executeRoute();
                 break;
-            case edit:
-            case show:
-            case editNoDelete:
             case searchField:
                 //                this.searchFieldValue = searchFieldValue;
                 //                refreshGrid();
@@ -200,18 +185,21 @@ public abstract class LogicList extends Logic {
             case export:
                 //                export();
                 break;
+            case download:
+                download();
+                break;
+            case upload:
+                break;
             case showWiki:
                 openWikiPage(wikiPageTitle);
                 break;
-            //            case modulo:
-            //                openWikiPage(wikiModuloTitle);
-            //                break;
-            //            case statistiche:
-            //                openWikiPage(wikiStatisticheTitle);
-            //                break;
+            case edit:
+            case show:
+            case editNoDelete:
+            case doubleClick:
+                break;
             default:
                 status = false;
-                //                logger.warn("Switch - caso non definito", this.getClass(), "performAction(azione)");
                 break;
         }
 
@@ -227,16 +215,20 @@ public abstract class LogicList extends Logic {
      * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione, AEntity entityBean) {
         boolean status = true;
-        AEAction azione = (AEAction) iAzione;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
+
+        if (azione == null) {
+            return false;
+        }
 
         switch (azione) {
             case doubleClick:
-                this.operationForm = AEOperation.edit;
+                this.fixOperation();
                 this.executeRoute(entityBean);
                 break;
             default:
@@ -246,6 +238,20 @@ public abstract class LogicList extends Logic {
 
         return status;
     }
+
+    /**
+     * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
+     * 1) Controlla il valore della property operationForm eventualmente regolato in fixPreferenze() della sottoclasse.
+     * - Se è stato modificato specificamente e non è quello standard previsto nella lista (listNoForm), lo usa. <br>
+     * - È possibile variare questo valore in base (ad esempio) all'utente connesso <br>
+     * 2) Controlla l'annotation @AIForm.operationForm() e, se esiste, la usa <br>
+     * - Valore fisso per tutto il programma <br>
+     * 3) Se mancano entrambe le possibilità di regolazione, usa il default standard AEOperation.edit <br>
+     */
+    protected void fixOperation() {
+        this.operationForm = operationForm != AEOperation.listNoForm ? operationForm : annotation.getOperation(entityClazz);
+    }
+
 
     protected void executeRoute() {
         executeRoute(VUOTA, VUOTA, VUOTA);

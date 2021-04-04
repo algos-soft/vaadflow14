@@ -1,8 +1,13 @@
 package it.algos.unit;
 
 import com.vaadin.flow.router.*;
+import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.bolla.*;
+import it.algos.simple.backend.packages.fattura.*;
+import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.AAnnotationService.*;
 import org.junit.jupiter.api.*;
@@ -31,6 +36,12 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AAnnotationServiceTest extends ATest {
 
+
+        protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
+
+        protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
+
+        protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
     AAnnotationService service;
 

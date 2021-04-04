@@ -1254,6 +1254,70 @@ public class AWikiService extends AAbstractService {
         return text.isValid(testoTable) ? testoTable.trim() : VUOTA;
     }
 
+    /**
+     * Legge un modulo di una pagina wiki <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return testo del modulo, comprensivo delle graffe iniziale e finale
+     */
+    public String leggeModulo(String wikiTitle) {
+        String testoModulo = VUOTA;
+        String testoPagina = legge(wikiTitle);
+        String tag = "return";
+
+        if (text.isValid(testoPagina)) {
+            if (testoPagina.contains(tag)) {
+                testoModulo = text.levaTestoPrimaDi(testoPagina, tag);
+            }
+        }
+
+        return text.isValid(testoModulo) ? testoModulo.trim() : VUOTA;
+    }
+
+
+    /**
+     * Legge la mappa dei valori di modulo di una pagina wiki <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return mappa chiave=valore
+     */
+    public Map<String, String> leggeMappaModulo(String wikiTitle) {
+        Map<String, String> mappa = null;
+        String tagRighe = VIRGOLA_CAPO;
+        String tagSezioni = UGUALE;
+        String[] righe = null;
+        String[] sezioni = null;
+        String key;
+        String value;
+        String testoModulo = leggeModulo(wikiTitle);
+
+        if (text.isValid(testoModulo)) {
+            testoModulo = text.setNoGraffe(testoModulo);
+            righe = testoModulo.split(tagRighe);
+        }
+
+        if (righe != null && righe.length > 0) {
+            mappa = new LinkedHashMap<>();
+            for (String riga : righe) {
+
+                sezioni = riga.split(tagSezioni);
+                if (sezioni != null && sezioni.length == 2) {
+                    key = sezioni[0];
+
+                    key = text.setNoQuadre(key);
+                    key = text.setNoDoppiApici(key);
+                    value = sezioni[1];
+                    value = text.setNoDoppiApici(value);
+                    mappa.put(key, value);
+                }
+            }
+        }
+
+        return mappa;
+    }
+
 
     /**
      * Legge dal server wiki <br>
@@ -1276,8 +1340,11 @@ public class AWikiService extends AAbstractService {
         }
         webUrl = WIKI_URL + wikiTitle;
 
-        contenutoCompletoPaginaWebInFormatoJSON = web.leggeWeb(webUrl);
-        testoPagina = estraeTestoPaginaWiki(contenutoCompletoPaginaWebInFormatoJSON);
+        contenutoCompletoPaginaWebInFormatoJSON = text.isValid(webUrl) ? web.leggeWeb(webUrl) : VUOTA;
+        testoPagina = text.isValid(contenutoCompletoPaginaWebInFormatoJSON) ? estraeTestoPaginaWiki(contenutoCompletoPaginaWebInFormatoJSON) : VUOTA;
+
+        //        contenutoCompletoPaginaWebInFormatoJSON = web.leggeWeb(webUrl);
+        //        testoPagina = estraeTestoPaginaWiki(contenutoCompletoPaginaWebInFormatoJSON);
 
         return testoPagina;
     }

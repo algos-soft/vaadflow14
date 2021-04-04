@@ -5,7 +5,6 @@ import com.vaadin.flow.router.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 
 import java.util.*;
@@ -140,20 +139,13 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         this.initView();
     }
 
-    //    /**
-    //     *
-    //     */
-    //    protected void fixLogicForm() {
-    //        if (text.isEmpty(logicFormRoute)) {
-    //        }
-    //    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
      */
     protected void initView() {
         //--Costruisce gli oggetti base (placeholder) di questa view
-        super.fixLayout();
+        this.fixLayout();
 
         //--Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
         this.fixAlertLayout();
@@ -172,44 +164,10 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         this.fixFooterLayout();
 
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
-        super.addToLayout();
+        this.addToLayout();
     }
 
 
-    /**
-     * Costruisce un wrapper (obbligatorio) di dati <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    protected WrapButtons getWrapButtonsTop() {
-        return null;
-    }
-
-
-    /**
-     * Costruisce il corpo principale (obbligatorio) della Grid <br>
-     */
-    @Override
-    protected void fixBodyLayout() {
-    }
-
-
-    /**
-     * Costruisce un (eventuale) layout per scritte in basso della pagina <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixFooterLayout() {
-    }
-
-    /**
-     *
-     */
-    public List<String> getFormPropertyNamesList() {
-        return null;
-    }
 
     /**
      * Esegue l'azione del bottone, textEdit o comboBox. <br>
@@ -219,7 +177,7 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione) {
@@ -235,10 +193,20 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * @param iAzione    interfaccia dell'azione selezionata da eseguire
      * @param entityBean selezionata
      *
-     * @return true se l'azione esiste nello Switch, false -> Switch - caso non definito
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     @Override
     public boolean performAction(AIAction iAzione, AEntity entityBean) {
+        return false;
+    }
+
+    /**
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    public boolean download() {
         return false;
     }
 

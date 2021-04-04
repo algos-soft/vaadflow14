@@ -1,9 +1,6 @@
-package it.algos.unit;
+package it.algos.test;
 
 import com.mongodb.*;
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
-import it.algos.simple.backend.packages.fattura.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -28,6 +25,7 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:18
+ * @AIScript(sovraScrivibile = false)
  */
 public abstract class ATest {
 
@@ -74,12 +72,6 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
-    protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
-
-    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
-
-    protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
-
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
@@ -122,6 +114,9 @@ public abstract class ATest {
 
     @InjectMocks
     protected AWebService web;
+
+    @InjectMocks
+    protected AWikiService wiki;
 
     @InjectMocks
     protected AFileService file;
@@ -318,6 +313,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(web);
         Assertions.assertNotNull(web);
 
+        MockitoAnnotations.initMocks(wiki);
+        Assertions.assertNotNull(wiki);
+
         MockitoAnnotations.initMocks(file);
         Assertions.assertNotNull(file);
 
@@ -343,6 +341,10 @@ public abstract class ATest {
         mongo.text = text;
         mongo.annotation = annotation;
         web.text = text;
+        web.logger = logger;
+        wiki.text = text;
+        wiki.web = web;
+        wiki.logger = logger;
         file.text = text;
         file.array = array;
         file.logger = logger;

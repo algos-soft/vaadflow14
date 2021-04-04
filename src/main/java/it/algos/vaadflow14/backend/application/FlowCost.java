@@ -41,11 +41,15 @@ public abstract class FlowCost {
 
     public static final String VUOTA = "";
 
+    public static final String SPAZIO = " ";
+
+    public static final String A_CAPO = "\n";
+
     public static final String VIRGOLA = ",";
 
-    public static final String VIRGOLA_SPAZIO = ", ";
+    public static final String VIRGOLA_SPAZIO = VIRGOLA + SPAZIO;
 
-    public static final String SPAZIO = " ";
+    public static final String VIRGOLA_CAPO = VIRGOLA + A_CAPO;
 
     public static final String HTLM_SPAZIO = "&nbsp;";
 
@@ -80,8 +84,6 @@ public abstract class FlowCost {
     public static final String DUE_PUNTI_SPAZIO = DUE_PUNTI + SPAZIO;
 
     public static final String TRE_PUNTI = "...";
-
-    public static final String A_CAPO = "\n";
 
     public static final String TAB = "\t";
 

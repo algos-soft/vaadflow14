@@ -386,4 +386,15 @@ public abstract class AService extends AAbstractService implements AIService {
         return entityClazz;
     }
 
+    /**
+     * Esegue un azione di download, specifica del programma/package in corso <br>
+     * Deve essere sovrascritto <br>
+     *
+     * @return true se l'azione è stata eseguita
+     */
+    @Override
+    public boolean download() {
+        return false;
+    }
+
 }

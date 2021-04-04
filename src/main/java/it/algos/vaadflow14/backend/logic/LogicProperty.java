@@ -298,15 +298,15 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected String wikiPageTitle;
 
-//    /**
-//     * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
-//     */
-//    protected String wikiModuloTitle;
-//
-//    /**
-//     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
-//     */
-//    protected String wikiStatisticheTitle;
+    //    /**
+    //     * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
+    //     */
+    //    protected String wikiModuloTitle;
+    //
+    //    /**
+    //     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
+    //     */
+    //    protected String wikiStatisticheTitle;
 
 
     /**
@@ -332,15 +332,15 @@ public abstract class LogicProperty extends VerticalLayout {
             logger.error("Qualcosa non quadra", Logic.class, "fixProperty");
         }
 
-//        this.entityClazz = null;
+        //        this.entityClazz = null;
         this.entityBean = null;
         this.entityBeanPrevID = VUOTA;
         this.entityBeanNextID = VUOTA;
-//        this.entityService = null;
+        //        this.entityService = null;
 
         this.wikiPageTitle = VUOTA;
-//        this.wikiModuloTitle = VUOTA;
-//        this.wikiStatisticheTitle = VUOTA;
+        //        this.wikiModuloTitle = VUOTA;
+        //        this.wikiStatisticheTitle = VUOTA;
         this.topLayout = null;
         this.bottomLayout = null;
     }
@@ -359,12 +359,6 @@ public abstract class LogicProperty extends VerticalLayout {
         this.usaBottonePaginaWiki = false;
         this.usaBottoneDownload = false;
         this.usaBottoneUpload = false;
-//        this.usaBottoneUpdate = false;
-//        this.usaBottoneModulo = false;
-//        this.usaBottoneElabora = false;
-//        this.usaBottoneCheck = false;
-//        this.usaBottoneTest = false;
-//        this.usaBottoneStatistiche = false;
 
         this.usaBottoneResetForm = false;
         this.usaBottoneBack = false;
@@ -422,18 +416,21 @@ public abstract class LogicProperty extends VerticalLayout {
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
-     * <p>
-     * Chiamato da LogicList.initView() <br>
-     * Nell' implementazione standard di default NON presenta nessun avviso <br>
-     * Recupera dal service specifico gli (eventuali) avvisi <br>
-     * Costruisce un' istanza dedicata con le liste di avvisi <br>
-     * Gli avvisi sono realizzati con tag html 'span' differenziati per colore anche in base all'utente collegato <br>
-     * Se l'applicazione non usa security, il colore è deciso dal service specifico <br<
-     * Se esiste, inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
+     * Chiamato da Logic.initView() <br>
      */
     protected void fixAlertLayout() {
     }
 
+
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     *
+     * @return una lista di elementi html di tipo 'span'
+     */
+    protected List<Span> getSpanList() {
+        return null;
+    }
 
     /**
      * Costruisce un singolo componente 'span' da mostrare nella header della view <br>
@@ -470,17 +467,13 @@ public abstract class LogicProperty extends VerticalLayout {
      * Costruisce un layout per i bottoni di comando superiori della view <br>
      * Semi-obbligatorio per la List, facoltativo per il Form <br>
      * Aggiunge tutti i listeners ai bottoni <br>
-     * Eventualmente i bottoni potrebbero andare su due righe <br>
+     * I bottoni possono andare su due righe <br>
      * <p>
-     * Chiamato da LogicList.initView() <br>
+     * Chiamato da Logic.initView() <br>
      * Se esiste, inserisce l' istanza (grafica) in topPlaceHolder della view <br>
      */
     protected void fixTopLayout() {
-        topLayout = appContext.getBean(ATopLayout.class, getWrapButtonsTop());
-
-        if (topLayout != null) {
-            topLayout.setAllListener((AILogic) this);
-        }
+        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
 
         if (topPlaceHolder != null && topLayout != null) {
             topPlaceHolder.add(topLayout);
@@ -509,6 +502,12 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixBodyLayout() {
     }
 
+    /**
+     *
+     */
+    public List<String> getFormPropertyNamesList() {
+        return null;
+    }
 
     /**
      * Costruisce un layout per i bottoni di comando inferiori della view <br>

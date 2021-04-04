@@ -2,7 +2,7 @@ package it.algos.integration;
 
 import it.algos.simple.SimpleApplication;
 import it.algos.simple.backend.enumeration.AESimplePreferenza;
-import it.algos.unit.ATest;
+import it.algos.test.ATest;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
