@@ -44,6 +44,36 @@ public abstract class LogicList extends Logic {
         super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
+
+        fixOperationForm();
+    }
+
+
+    /**
+     * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
+     * 1) Usa l'annotation @AIForm.operationForm() nella AEntity del package <br>
+     * - nel package la classe AEntity esiste sempre <br>
+     * - se esiste l'annotation, la usa <br>
+     * - valore fisso per tutto il programma <br>
+     * - se non esiste l'annotation, viene comunque gestito un valore di default <br>
+     * 2) Si può modificare il valore di operationForm in xxxLogicList.fixOperationForm(); <br>
+     * - nel package la classe xxxLogicList è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicList, può regolare il valore <br>
+     * - per differenziarlo ad esempio in base all'utente collegato <br>
+     * - se manca la classe specifica xxxLogicList nel package, usa il valore della AEntity <br>
+     * 3) Il valore viene usato da executeRoute() di questa xxxLogicList <br>
+     * - viene passato alla @Route come parametro KEY_FORM_TYPE <br>
+     * - viene estratto da routeParameter in setParameter() della xxxLogicForm <br>
+     * - viene recepito in fixTypeView() della xxxLogicForm <br>
+     * 4) Potrebbe eventualmente essere modificato anche in xxxLogicForm.fixPreferenze(); <br>
+     * - nel package la classe xxxLogicForm è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicForm, può regolare il valore <br>
+     * - se manca la classe specifica xxxLogicForm nel package, usa il valore della @Route <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     */
+    protected void fixOperationForm() {
+//        this.operationForm = operationForm != AEOperation.listNoForm ? operationForm : annotation.getOperation(entityClazz);
+        this.operationForm =  annotation.getOperation(entityClazz);
     }
 
     //    /**
@@ -287,7 +317,6 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case doubleClick:
-                this.fixOperation();
                 this.executeRoute(entityBean);
                 break;
             default:
@@ -298,18 +327,6 @@ public abstract class LogicList extends Logic {
         return status;
     }
 
-    /**
-     * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
-     * 1) Controlla il valore della property operationForm eventualmente regolato in fixPreferenze() della sottoclasse.
-     * - Se è stato modificato specificamente e non è quello standard previsto nella lista (listNoForm), lo usa. <br>
-     * - È possibile variare questo valore in base (ad esempio) all'utente connesso <br>
-     * 2) Controlla l'annotation @AIForm.operationForm() e, se esiste, la usa <br>
-     * - Valore fisso per tutto il programma <br>
-     * 3) Se mancano entrambe le possibilità di regolazione, usa il default standard AEOperation.edit <br>
-     */
-    protected void fixOperation() {
-        this.operationForm = operationForm != AEOperation.listNoForm ? operationForm : annotation.getOperation(entityClazz);
-    }
 
 
     protected void executeRoute() {

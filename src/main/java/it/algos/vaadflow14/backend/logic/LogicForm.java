@@ -35,6 +35,15 @@ public abstract class LogicForm extends Logic {
 
     protected String sortProperty;
 
+    /**
+     * Property per il tipo di view (List o Form) <br>
+     * Property per il tipo di operazione (solo Form) <br>
+     * Può essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixTypeView() {
+        operationForm = routeParameter != null ? routeParameter.getOperationForm() : AEOperation.addNew;
+    }
 
     /**
      *

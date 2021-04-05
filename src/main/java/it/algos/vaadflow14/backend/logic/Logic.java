@@ -80,7 +80,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      * Può essere sovrascritto, SENZA invocare prima il metodo della superclasse <br>
      */
     protected void fixTypeView() {
-        operationForm = routeParameter != null ? routeParameter.getOperationForm() : AEOperation.addNew;
     }
 
 
