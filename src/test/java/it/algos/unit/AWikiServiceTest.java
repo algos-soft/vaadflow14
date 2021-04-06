@@ -156,6 +156,18 @@ public class AWikiServiceTest extends ATest {
     }
 
 
+    @Test
+    @Order(6)
+    @DisplayName("6 - legge la mappa di un altro modulo")
+    public void leggeMappaModulo2() {
+        sorgente = "Modulo:Bio/Plurale_attività_genere";
+        previsto = "{\n[\"abate\"] =";
+        mappaOttenuta = service.leggeMappaModulo(sorgente);
+        assertNotNull(mappaOttenuta);
+        System.out.println("4 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+    }
+
+
     //    @Test
     @Order(5)
     @DisplayName("5 - legge un template")

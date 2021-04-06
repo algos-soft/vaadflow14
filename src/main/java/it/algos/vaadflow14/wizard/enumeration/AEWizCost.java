@@ -541,7 +541,7 @@ public enum AEWizCost {
         System.out.println(titolo);
         System.out.println("********************");
         for (AEWizCost aeWizCost : lista) {
-            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
+            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.value);
             if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
                 System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
             }

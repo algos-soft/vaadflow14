@@ -1007,6 +1007,10 @@ public class WizService {
         String tagEntity = "AEntity";
         String tagCompany = "AECompany";
         AEToken.reset();
+        String codeName = text.primaMinuscola(AEPackage.code.getFieldName());
+        String ordineName = text.primaMinuscola(AEPackage.ordine.getFieldName());
+        String descrizioneName = text.primaMinuscola(AEPackage.description.getFieldName());
+        String validoName = text.primaMinuscola(AEPackage.valido.getFieldName());
 
         if (text.isEmpty(projectName) && text.isEmpty(packageName)) {
             logger.warn("Manca sia projectName che packageName.", this.getClass(), "regolaAEToken");
@@ -1044,18 +1048,18 @@ public class WizService {
         AEToken.usaCompany.setValue(usaCompany ? "true" : "false");
         AEToken.superClassEntity.setValue(usaCompany ? tagCompany : tagEntity);
         AEToken.usaSecurity.setValue(AECheck.security.is() ? ")" : ", exclude = {SecurityAutoConfiguration.class}");
-        AEToken.keyProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
-        AEToken.searchProperty.setValue(AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
-        AEToken.sortProperty.setValue(AEPackage.ordine.is() ? AEPackage.ordine.getFieldName().toLowerCase() : AEPackage.code.is() ? AEPackage.code.getFieldName().toLowerCase() : VUOTA);
+        AEToken.keyProperty.setValue(AEPackage.code.is() ? codeName : VUOTA);
+        AEToken.searchProperty.setValue(AEPackage.code.is() ? codeName : VUOTA);
+        AEToken.sortProperty.setValue(AEPackage.ordine.is() ? ordineName : AEPackage.code.is() ? codeName : VUOTA);
         AEToken.rowIndex.setValue(AEPackage.rowIndex.is() ? "true" : "false");
         AEToken.properties.setValue(fixProperties());
-        AEToken.propertyOrdineName.setValue(AEPackage.ordine.getFieldName().toLowerCase());
+        AEToken.propertyOrdineName.setValue(ordineName);
         AEToken.propertyOrdine.setValue(fixProperty(AEPackage.ordine));
-        AEToken.propertyCodeName.setValue(AEPackage.code.getFieldName().toLowerCase());
+        AEToken.propertyCodeName.setValue(codeName);
         AEToken.propertyCode.setValue(fixProperty(AEPackage.code));
-        AEToken.propertyDescrizioneName.setValue(AEPackage.description.getFieldName().toLowerCase());
+        AEToken.propertyDescrizioneName.setValue(descrizioneName);
         AEToken.propertyDescrizione.setValue(fixProperty(AEPackage.description));
-        AEToken.propertyValidoName.setValue(AEPackage.valido.getFieldName().toLowerCase());
+        AEToken.propertyValidoName.setValue(validoName);
         AEToken.propertyValido.setValue(fixProperty(AEPackage.valido));
         AEToken.propertiesRinvio.setValue(fixPropertiesRinvio());
         AEToken.propertiesDoc.setValue(fixPropertiesDoc());

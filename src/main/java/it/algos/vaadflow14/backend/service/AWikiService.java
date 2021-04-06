@@ -1286,7 +1286,7 @@ public class AWikiService extends AAbstractService {
     public Map<String, String> leggeMappaModulo(String wikiTitle) {
         Map<String, String> mappa = null;
         String tagRighe = VIRGOLA_CAPO;
-        String tagSezioni = UGUALE;
+        String tagSezioni = UGUALE_SEMPLICE;
         String[] righe = null;
         String[] sezioni = null;
         String key;
@@ -1310,6 +1310,7 @@ public class AWikiService extends AAbstractService {
                     key = text.setNoDoppiApici(key);
                     value = sezioni[1];
                     value = text.setNoDoppiApici(value);
+                    value = text.setNoGraffe(value);
                     mappa.put(key, value);
                 }
             }

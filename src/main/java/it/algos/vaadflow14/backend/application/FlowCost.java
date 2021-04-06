@@ -71,7 +71,9 @@ public abstract class FlowCost {
 
     public static final String SEP = " - ";
 
-    public static final String UGUALE = " = ";
+    public static final String UGUALE_SEMPLICE = "=";
+
+    public static final String UGUALE_SPAZIATO = SPAZIO + UGUALE_SEMPLICE + SPAZIO;
 
     public static final String FORWARD = " -> ";
 

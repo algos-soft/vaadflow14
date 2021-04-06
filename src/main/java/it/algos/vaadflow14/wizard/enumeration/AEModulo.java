@@ -132,7 +132,7 @@ public enum AEModulo {
         System.out.println("Directory e files del modulo da creare/modificare");
         System.out.println("********************");
         for (AEModulo sub : AEModulo.values()) {
-            System.out.print("AEModulo." + sub.name() + ": \"" + sub.descrizione + "\" " + FlowCost.UGUALE + sub.getAbsolutePath());
+            System.out.print("AEModulo." + sub.name() + ": \"" + sub.descrizione + "\" " + FlowCost.UGUALE_SPAZIATO + sub.getAbsolutePath());
             System.out.println(FlowCost.VUOTA);
         }
         System.out.println(FlowCost.VUOTA);
