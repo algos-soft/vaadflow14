@@ -71,11 +71,14 @@ public abstract class LogicForm extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneBack = true;
-//        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
-//        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
+        //        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
+        //        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
 
-        super.usaBottoneCancella = operationForm.isDeleteEnabled();
+        super.usaBottoneResetForm = false;
+        super.usaBottoneBack = true;
+        super.usaBottoneAnnulla = false;
+        super.usaBottoneCancella = operationForm.isSaveEnabled();
+        super.usaBottoneConferma = false;
         super.usaBottoneRegistra = operationForm.isSaveEnabled();
 
         if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
@@ -84,7 +87,34 @@ public abstract class LogicForm extends Logic {
         }
 
         sortProperty = annotation.getSortProperty(entityClazz);
+        this.fixOperationForm();
     }
+
+    /**
+     * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
+     * 1) Usa l'annotation @AIForm.operationForm() nella AEntity del package <br>
+     * - nel package la classe AEntity esiste sempre <br>
+     * - se esiste l'annotation, la usa <br>
+     * - valore fisso per tutto il programma <br>
+     * - se non esiste l'annotation, viene comunque gestito un valore di default <br>
+     * 2) Si può modificare il valore di operationForm in xxxLogicList.fixOperationForm(); <br>
+     * - nel package la classe xxxLogicList è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicList, può regolare il valore <br>
+     * - per differenziarlo ad esempio in base all'utente collegato <br>
+     * - se manca la classe specifica xxxLogicList nel package, usa il valore della AEntity <br>
+     * 3) Il valore viene usato da executeRoute() di questa xxxLogicList <br>
+     * - viene passato alla @Route come parametro KEY_FORM_TYPE <br>
+     * - viene estratto da routeParameter in setParameter() della xxxLogicForm <br>
+     * - viene recepito in fixTypeView() della xxxLogicForm <br>
+     * 4) Potrebbe eventualmente essere modificato anche in xxxLogicForm.fixPreferenze(); <br>
+     * - nel package la classe xxxLogicForm è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicForm, può regolare il valore <br>
+     * - se manca la classe specifica xxxLogicForm nel package, usa il valore della @Route <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     */
+    protected void fixOperationForm() {
+    }
+
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
@@ -229,20 +259,20 @@ public abstract class LogicForm extends Logic {
             listaBottoni.add(AEButton.dopo);
         }
 
-//        //--regola l'aspetto dei bottoni spostamento (se esistono)
-//        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
-//            listaBottoni.add(AEButton.prima);
-//            listaBottoni.add(AEButton.dopo);
-//
-//            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
-//            //                    if (bottone != null) {
-//            //                        bottone.setEnabled(text.isValid(entityBeanPrevID));
-//            //                    }
-//            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
-//            //                    if (bottone != null) {
-//            //                        bottone.setEnabled(text.isValid(entityBeanNextID));
-//            //                    }
-//        }
+        //        //--regola l'aspetto dei bottoni spostamento (se esistono)
+        //        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
+        //            listaBottoni.add(AEButton.prima);
+        //            listaBottoni.add(AEButton.dopo);
+        //
+        //            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+        //            //                    if (bottone != null) {
+        //            //                        bottone.setEnabled(text.isValid(entityBeanPrevID));
+        //            //                    }
+        //            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+        //            //                    if (bottone != null) {
+        //            //                        bottone.setEnabled(text.isValid(entityBeanNextID));
+        //            //                    }
+        //        }
 
         return listaBottoni;
     }

@@ -45,7 +45,7 @@ public abstract class LogicList extends Logic {
         super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaReset(entityClazz);
         super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
 
-        fixOperationForm();
+        this.fixOperationForm();
     }
 
 
@@ -72,9 +72,9 @@ public abstract class LogicList extends Logic {
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixOperationForm() {
-//        this.operationForm = operationForm != AEOperation.listNoForm ? operationForm : annotation.getOperation(entityClazz);
         this.operationForm =  annotation.getOperation(entityClazz);
     }
+
 
     //    /**
     //     * Controlla che esista il riferimento alla entityClazz <br>

@@ -90,6 +90,33 @@ public class FatturaLogicList extends LogicList {
     }
 
     /**
+     * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
+     * 1) Usa l'annotation @AIForm.operationForm() nella AEntity del package <br>
+     * - nel package la classe AEntity esiste sempre <br>
+     * - se esiste l'annotation, la usa <br>
+     * - valore fisso per tutto il programma <br>
+     * - se non esiste l'annotation, viene comunque gestito un valore di default <br>
+     * 2) Si può modificare il valore di operationForm in xxxLogicList.fixOperationForm(); <br>
+     * - nel package la classe xxxLogicList è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicList, può regolare il valore <br>
+     * - per differenziarlo ad esempio in base all'utente collegato <br>
+     * - se manca la classe specifica xxxLogicList nel package, usa il valore della AEntity <br>
+     * 3) Il valore viene usato da executeRoute() di questa xxxLogicList <br>
+     * - viene passato alla @Route come parametro KEY_FORM_TYPE <br>
+     * - viene estratto da routeParameter in setParameter() della xxxLogicForm <br>
+     * - viene recepito in fixTypeView() della xxxLogicForm <br>
+     * 4) Potrebbe eventualmente essere modificato anche in xxxLogicForm.fixPreferenze(); <br>
+     * - nel package la classe xxxLogicForm è facoltativa <br>
+     * - se esiste la classe specifica xxxLogicForm, può regolare il valore <br>
+     * - se manca la classe specifica xxxLogicForm nel package, usa il valore della @Route <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixOperationForm() {
+        this.operationForm=AEOperation.editProfile;
+    }
+
+    /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      *

@@ -246,7 +246,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected boolean usaBottoneDownload;
 
-
     /**
      * Flag di preferenza per l' utilizzo del bottone. Di default false. <br>
      */

@@ -32,7 +32,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderBolla")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Bolla", keyPropertyName = "code", usaCompany = false)
+@AIEntity(recordName = "Bolla", keyPropertyName = "code", usaCreazione = false, usaDelete = false, usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.COG, sortProperty = "code")
 @AIList(fields = "code,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,descrizione", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = true)
