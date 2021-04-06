@@ -30,6 +30,7 @@ public class FatturaLogicForm extends LogicForm {
         super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
 
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         super.beforeEnter(beforeEnterEvent);

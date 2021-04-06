@@ -153,17 +153,20 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Eventualmente i bottoni potrebbero andare su due righe <br>
         this.fixTopLayout();
 
-        //--Corpo principale della Grid (obbligatorio) <br>
+        //--Corpo principale della Grid/Form (obbligatorio) <br>
         this.fixBodyLayout();
 
         //--Costruisce un layout (obbligatorio per il Form) per i bottoni di comando della view al Bottom <br>
         this.fixBottomLayout();
 
-        //--Eventuali scritte in basso al video (eventuale) nel Footer <br>
+        //--Scritte in basso al video (eventuale) nel Footer <br>
         this.fixFooterLayout();
 
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
         this.addToLayout();
+
+        //--Regolazioni finali di alcuni oggetti <br>
+        this.regolazioniFinali();
     }
 
 

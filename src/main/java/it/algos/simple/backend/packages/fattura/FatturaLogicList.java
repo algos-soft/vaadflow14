@@ -113,7 +113,7 @@ public class FatturaLogicList extends LogicList {
      */
     @Override
     protected void fixOperationForm() {
-        this.operationForm=AEOperation.editProfile;
+        this.operationForm = AEOperation.editProfile;
     }
 
     /**
@@ -170,7 +170,7 @@ public class FatturaLogicList extends LogicList {
         List<AIButton> listaAEBottoni = Collections.singletonList(AEButton.upload);
         List<Button> listaBottoniSpecifici = Collections.singletonList(new Button("Bottoni su un'unica riga sotto la Grid"));
         WrapButtons wrapper = appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, listaBottoniSpecifici);
-        AButtonLayout bottomLayout = appContext.getBean(ABottomLayout.class, wrapper);
+        bottomLayout = appContext.getBean(ABottomLayout.class, wrapper);
 
         if (bottomPlaceHolder != null && bottomLayout != null) {
             bottomPlaceHolder.add(bottomLayout);

@@ -72,9 +72,8 @@ public abstract class LogicList extends Logic {
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixOperationForm() {
-        this.operationForm =  annotation.getOperation(entityClazz);
+        this.operationForm = annotation.getOperation(entityClazz);
     }
-
 
     //    /**
     //     * Controlla che esista il riferimento alla entityClazz <br>
@@ -99,11 +98,12 @@ public abstract class LogicList extends Logic {
      * Costruisce un' istanza dedicata con la lista degli avvisi <br>
      * Gli avvisi sono realizzati con tag html 'span' differenziati per colore anche in base all'utente collegato <br>
      * Se l'applicazione non usa security, il colore è deciso dal service specifico <br<
-     * Inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
+     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
      */
     @Override
     protected void fixAlertLayout() {
-        alertPlaceHolder.add(appContext.getBean(AHeaderSpanList.class, this.getSpanList()));
+        headerSpan = appContext.getBean(AHeaderSpanList.class, this.getSpanList());
+        super.fixAlertLayout();
     }
 
     /**
@@ -326,7 +326,6 @@ public abstract class LogicList extends Logic {
 
         return status;
     }
-
 
 
     protected void executeRoute() {

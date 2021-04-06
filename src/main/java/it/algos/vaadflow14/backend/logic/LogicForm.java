@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.icon.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -81,12 +82,6 @@ public abstract class LogicForm extends Logic {
         super.usaBottoneConferma = false;
         super.usaBottoneRegistra = operationForm.isSaveEnabled();
 
-        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
-            super.usaBottonePrima = true;
-            super.usaBottoneDopo = true;
-        }
-
-        sortProperty = annotation.getSortProperty(entityClazz);
         this.fixOperationForm();
     }
 
@@ -110,11 +105,25 @@ public abstract class LogicForm extends Logic {
      * - nel package la classe xxxLogicForm è facoltativa <br>
      * - se esiste la classe specifica xxxLogicForm, può regolare il valore <br>
      * - se manca la classe specifica xxxLogicForm nel package, usa il valore della @Route <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixOperationForm() {
-    }
+        //--regola l'aspetto dei bottoni spostamento (se esistono)
+        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
+            sortProperty = annotation.getSortProperty(entityClazz);
+            super.usaBottonePrima = true;
+            super.usaBottoneDopo = true;
 
+            //            bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+            //            if (bottone != null) {
+            //                bottone.setEnabled(text.isValid(entityBeanPrevID));
+            //            }
+            //            bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+            //            if (bottone != null) {
+            //                bottone.setEnabled(text.isValid(entityBeanNextID));
+            //            }
+        }
+    }
 
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
@@ -124,11 +133,12 @@ public abstract class LogicForm extends Logic {
      * Recupera dal service specifico un (eventuale) avviso diverso <br>
      * Costruisce un' istanza dedicata con un solo avviso <br>
      * L'avviso è realizzato con tag html 'span' di colore fisso (verde) <br>
-     * Inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
+     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
      */
     @Override
     protected void fixAlertLayout() {
-        alertPlaceHolder.add(appContext.getBean(AHeaderSpanForm.class, this.getSpanForm()));
+        headerSpan = appContext.getBean(AHeaderSpanForm.class, this.getSpanForm());
+        super.fixAlertLayout();
     }
 
 
@@ -150,7 +160,6 @@ public abstract class LogicForm extends Logic {
         }
     }
 
-
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>
      * Costruisce i bottoni come dai Flag regolati di default o nella sottoclasse <br>
@@ -161,7 +170,6 @@ public abstract class LogicForm extends Logic {
     protected List<AIButton> getListaAEBottoniTop() {
         return new ArrayList<>();
     }
-
 
     /**
      * Costruisce il corpo principale (obbligatorio) della Grid <br>
@@ -195,7 +203,6 @@ public abstract class LogicForm extends Logic {
         return new WrapForm(entityBean, operationForm);
     }
 
-
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
      * La lista viene usata per la costruzione automatica dei campi e l' inserimento nel binder <br>
@@ -222,7 +229,6 @@ public abstract class LogicForm extends Logic {
 
         return fieldsNameList;
     }
-
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
@@ -259,22 +265,25 @@ public abstract class LogicForm extends Logic {
             listaBottoni.add(AEButton.dopo);
         }
 
-        //        //--regola l'aspetto dei bottoni spostamento (se esistono)
-        //        if (annotation.usaSpostamentoTraSchede(entityClazz) && operationForm.isPossibileUsoFrecce()) {
-        //            listaBottoni.add(AEButton.prima);
-        //            listaBottoni.add(AEButton.dopo);
-        //
-        //            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
-        //            //                    if (bottone != null) {
-        //            //                        bottone.setEnabled(text.isValid(entityBeanPrevID));
-        //            //                    }
-        //            //                    bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
-        //            //                    if (bottone != null) {
-        //            //                        bottone.setEnabled(text.isValid(entityBeanNextID));
-        //            //                    }
-        //        }
-
         return listaBottoni;
+    }
+
+    /**
+     * Regolazioni finali di alcuni oggetti <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     */
+    protected void regolazioniFinali() {
+        Button bottone;
+
+        //--regola l'aspetto dei bottoni spostamento (se esistono)
+        bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+        if (bottone != null) {
+            bottone.setEnabled(text.isValid(entityBeanPrevID));
+        }
+        bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+        if (bottone != null) {
+            bottone.setEnabled(text.isValid(entityBeanNextID));
+        }
     }
 
 
@@ -391,7 +400,6 @@ public abstract class LogicForm extends Logic {
         UI.getCurrent().getPage().getHistory().back();
     }
 
-
     /**
      * Lancia una @route con la visualizzazione di una singola scheda. <br>
      * Se il package usaSpostamentoTraSchede=true, costruisce una query
@@ -435,7 +443,6 @@ public abstract class LogicForm extends Logic {
 
         return entityBean != null ? save(entityBean) : false;
     }
-
 
     /**
      * Saves a given entity.

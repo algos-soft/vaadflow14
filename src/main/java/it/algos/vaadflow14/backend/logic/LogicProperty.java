@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.wrapper.*;
@@ -130,37 +131,57 @@ public abstract class LogicProperty extends VerticalLayout {
     public AVaadinService vaadinService;
 
     /**
-     * PlaceHolder iniziale per avvisi <br>
+     * PlaceHolder iniziale per avvisi sopra la Grid (o Form) <br><br>
      * Label o altro per informazioni specifiche; di norma per il developer <br>
      * Contenuto facoltativo, assente di default <br>
      */
     protected VerticalLayout alertPlaceHolder;
 
     /**
-     * PlaceHolder per bottoni di comando SOPRA la Grid <br>
+     * Avvisi SOPRA la Grid (o Form) <br>
+     */
+    protected AHeaderSpan headerSpan;
+
+    /**
+     * PlaceHolder per bottoni di comando SOPRA la Grid (o Form) <br>
      * Contenuto semi-obbligatorio <br>
      */
     protected VerticalLayout topPlaceHolder;
 
     /**
-     * PlaceHolder principale per la GRID <br>
+     * Bottoni di comando SOPRA la Grid (o Form) <br>
+     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
+     */
+    protected ATopLayout topLayout;
+
+    /**
+     * PlaceHolder principale per la Grid (o Form) <br>
      * Alcune regolazioni da preferenza o da parametro (bottone Edit, ad esempio) <br>
      * Contenuto obbligatorio <br>
      */
     protected VerticalLayout bodyPlaceHolder;
 
     /**
-     * PlaceHolder per bottoni di comando SOTTO la Grid <br>
+     * PlaceHolder per bottoni di comando SOTTO la Grid (o Form) <br>
      * Contenuto facoltativo, assente di default <br>
      */
     protected VerticalLayout bottomPlaceHolder;
 
+
     /**
-     * PlaceHolder finale per messaggi <br>
+     * Bottoni di comando SOTTO la Grid (o Form) <br>
+     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
+     */
+    protected ABottomLayout bottomLayout;
+
+
+    /**
+     * PlaceHolder finale per messaggi sotto la Grid (o Form) <br>
      * Barra inferiore di messaggi per l'utilizzatore <br>
      * Contenuto facoltativo, assente di default <br>
      */
     protected VerticalLayout footerPlaceHolder;
+
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -296,28 +317,6 @@ public abstract class LogicProperty extends VerticalLayout {
      */
     protected String wikiPageTitle;
 
-    //    /**
-    //     * Flag di preferenza per specificare il titolo del modulo wiki da mostrare in lettura <br>
-    //     */
-    //    protected String wikiModuloTitle;
-    //
-    //    /**
-    //     * Flag di preferenza per specificare il titolo della pagina wiki da mostrare in lettura <br>
-    //     */
-    //    protected String wikiStatisticheTitle;
-
-
-    /**
-     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
-     */
-    protected ATopLayout topLayout;
-
-    /**
-     * Riferimento al contenitore dei bottoni per eventuali regolazioni <br>
-     */
-    protected AButtonLayout bottomLayout;
-
-
     /**
      * Tipologia di Form in uso <br>
      * Si recupera nel metodo AView.setParameter(), chiamato dall'interfaccia HasUrlParameter <br>
@@ -415,9 +414,13 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Costruisce un (eventuale) layout per informazioni aggiuntive come header della view <br>
      * Chiamato da Logic.initView() <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+     * Inserisce l' istanza (grafica) in alertPlaceHolder della view <br>
+     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
      */
     protected void fixAlertLayout() {
+        if (alertPlaceHolder != null && headerSpan != null) {
+            alertPlaceHolder.add(headerSpan);
+        }
     }
 
 
@@ -458,11 +461,14 @@ public abstract class LogicProperty extends VerticalLayout {
      * Obbligatorio per la List, facoltativo per il Form <br>
      * Nella List i bottoni possono andare su due righe <br>
      * Nel Form i bottoni vanno su una sola riga <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      * Inserisce l' istanza (grafica) in topPlaceHolder della view <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixTopLayout() {
-        topPlaceHolder.add(appContext.getBean(ATopLayout.class, this.getWrapButtonsTop()));
+        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
+        if (topPlaceHolder != null && topLayout != null) {
+            topPlaceHolder.add(topLayout);
+        }
     }
 
 
@@ -518,11 +524,14 @@ public abstract class LogicProperty extends VerticalLayout {
      * Chiamato da Logic.initView() <br>
      * Aggiunge tutti i listeners ai bottoni <br>
      * Obbligatorio per il Form, facoltativo per la List <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      * Inserisce l' istanza (grafica) in bottomPlaceHolder della view <br>
+     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixBottomLayout() {
-        bottomPlaceHolder.add(appContext.getBean(ABottomLayout.class, this.getWrapButtonsBottom()));
+        bottomLayout = appContext.getBean(ABottomLayout.class, this.getWrapButtonsBottom());
+        if (bottomPlaceHolder != null && bottomLayout != null) {
+            bottomPlaceHolder.add(bottomLayout);
+        }
     }
 
 
@@ -562,6 +571,13 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void fixFooterLayout() {
     }
 
+
+    /**
+     * Regolazioni finali di alcuni oggetti <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     */
+    protected void regolazioniFinali() {
+    }
 
 
     /**
