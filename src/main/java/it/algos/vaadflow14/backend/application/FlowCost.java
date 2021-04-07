@@ -111,6 +111,21 @@ public abstract class FlowCost {
 
     public static final String SUFFIX_VIEW = "View";
 
+
+    /**
+     * Nomi delle properties.
+     */
+    public final static String FIELD_NAME_ID = "id";
+
+    public final static String FIELD_NAME_ORDINE = "ordine";
+
+    public final static String FIELD_NAME_CODE = "code";
+
+    public final static String FIELD_NAME_DESCRIZIONE = "descrizione";
+
+    public final static String FIELD_NAME_COMPANY = "company";
+
+
     /**
      * The constant ROUTE_NAME.
      */

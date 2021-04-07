@@ -8,10 +8,12 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.*;
 
 import javax.annotation.*;
 import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -196,6 +198,59 @@ public abstract class AService extends AAbstractService implements AIService {
         return entityBeanWithID;
     }
 
+    /**
+     * Fetches all entities of the type <br>
+     * <p>
+     * Ordinate secondo l'annotation @AIView(sortProperty) della entityClazz <br>
+     * Ordinate secondo la property 'ordine', se esiste <br>
+     * Ordinate secondo la property 'code', se esiste <br>
+     * Ordinate secondo la property 'descrizione', se esiste <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB mongo <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
+     *
+     * @return all ordered entities
+     */
+    public List<? extends AEntity> fetch() {
+        List<? extends AEntity> lista = null;
+        Sort sort;
+
+        if (entityClazz == null) {
+            return null;
+        }
+
+        //--Ordinate secondo l'annotation @AIView(sortProperty) della entityClazz
+        sort = annotation.getSort(entityClazz);
+
+        //--Ordinate secondo la property 'ordine', se esiste
+        if (sort == null) {
+            if (reflection.isEsiste(entityClazz, FIELD_NAME_ORDINE)) {
+                sort = Sort.by(Sort.Direction.ASC, FIELD_NAME_ORDINE);
+            }
+        }
+
+        //--Ordinate secondo la property 'code', se esiste
+        if (sort == null) {
+            if (reflection.isEsiste(entityClazz, FIELD_NAME_CODE)) {
+                sort = Sort.by(Sort.Direction.ASC, FIELD_NAME_CODE);
+            }
+        }
+
+        //--Ordinate secondo la property 'descrizione', se esiste
+        if (sort == null) {
+            if (reflection.isEsiste(entityClazz, FIELD_NAME_DESCRIZIONE)) {
+                sort = Sort.by(Sort.Direction.ASC, FIELD_NAME_DESCRIZIONE);
+            }
+        }
+
+        if (sort != null) {
+            lista = mongo.findAll(entityClazz, sort);
+        }
+        else {
+            lista = mongo.findAll(entityClazz, (Sort) null);
+        }
+
+        return lista;
+    }
 
     /**
      * Regola la chiave se esiste il campo keyPropertyName. <br>
@@ -292,7 +347,7 @@ public abstract class AService extends AAbstractService implements AIService {
         String message;
         String collectionName;
 
-        if (mongo.isValid(entityClazz)) {
+        if (mongo.isExists(annotation.getCollectionName(entityClazz))) {
             mongo.mongoOp.remove(new Query(), entityClazz);
 
             collectionName = annotation.getCollectionName(entityClazz);

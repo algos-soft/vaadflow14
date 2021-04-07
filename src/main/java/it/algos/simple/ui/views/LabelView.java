@@ -53,6 +53,7 @@ public class LabelView extends VerticalLayout {
         this.html();
         this.html2();
         this.html3();
+        this.html4();
     }
 
     private void labelNormale() {
@@ -276,10 +277,22 @@ public class LabelView extends VerticalLayout {
         message += " all'interno di un testo verde bold";
         this.add(html.getSpanVerde(message,AETypeWeight.bold));
 
-        message += html.verde("Questo funzione: dimensione normale, ");
+        message += html.verde("Questo funziona: dimensione normale, ");
         message += html.rosso("testo rosso");
         message += html.verde(" all'interno di un testo verde (non bold))");
         this.add(html.getSpanHtml(message));
+    }
+
+    private void html4() {
+        String message = VUOTA;
+
+        message += "SPAN multiplo:";
+        message += " usando un nuovo metodo,";
+        message += html.rosso(" testo rosso");
+        message += " testo normale,";
+        message += html.bold(html.blu(" testo blue e bold"));
+        message += " all'interno di un testo verde";
+        this.add(html.getSpanVerde(message));
     }
 
 }

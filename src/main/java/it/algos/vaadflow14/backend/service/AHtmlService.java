@@ -32,25 +32,27 @@ public class AHtmlService extends AAbstractService {
 
 
     /**
-     * Costruisce uno span
+     * Costruisce uno span semplice <br>
      *
      * @param message da visualizzare
      *
-     * @return elemento per html
+     * @return elemento Span per html
      */
     public Span getSpan(final String message) {
-        return getSpan(message, null);
+        return getSpan(message, (AIType[]) null);
     }
 
     /**
-     * Costruisce uno span
+     * Costruisce uno span con eventuali property html specifiche <br>
      *
-     * @param message da visualizzare
+     * @param message  da visualizzare
+     * @param typeSpan property html da regolare: Color, Height, Size, Weight...
      *
-     * @return elemento per html
+     * @return elemento Span per html
      */
     public Span getSpan(final String message, final AIType... typeSpan) {
-        Span span = new Span();
+        //        Span span = new Span();
+        Span span = getSpanHtml(message);
         String height = AEPreferenza.lineHeight.getStr();
 
         if (text.isValid(message)) {
@@ -58,7 +60,9 @@ public class AHtmlService extends AAbstractService {
 
             if (typeSpan != null && typeSpan.length > 0) {
                 for (AIType type : typeSpan) {
-                    span.getElement().getStyle().set(type.getTag(), type.get());
+                    if (type != null) {
+                        span.getElement().getStyle().set(type.getTag(), type.get());
+                    }
                 }
             }
             span.getElement().getStyle().set("line-height", height);
@@ -87,11 +91,12 @@ public class AHtmlService extends AAbstractService {
     }
 
     /**
-     * Costruisce uno span colorato
+     * Costruisce uno span colorato verde <br>
      *
-     * @param message da visualizzare
+     * @param message  da visualizzare
+     * @param typeSpan property html da regolare: Color, Height, Size, Weight...
      *
-     * @return elemento per html
+     * @return elemento Span per html
      */
     public Span getSpanVerde(final String message, final AIType... typeSpan) {
         return getSpanBase(AETypeColor.verde, message, typeSpan);
@@ -99,14 +104,14 @@ public class AHtmlService extends AAbstractService {
 
 
     /**
-     * Costruisce uno span colorato
+     * Costruisce uno span colorato verde <br>
      *
      * @param message da visualizzare
      *
-     * @return elemento per html
+     * @return elemento Span per html
      */
     public Span getSpanVerde(final String message) {
-        return getSpanVerde(message, null);
+        return getSpanVerde(message, (AIType[]) null);
     }
 
     /**
@@ -252,6 +257,28 @@ public class AHtmlService extends AAbstractService {
                 stringaOut = text.levaCoda(stringaOut, tagEnd);
                 stringaOut = text.levaTesta(stringaOut, tagIni);
             }
+        }
+
+        return stringaOut.trim();
+    }
+
+
+    /**
+     * Contorna il testo con un uno span bold. <br>
+     *
+     * @param stringaIn in ingresso
+     *
+     * @return stringa regolata secondo la property html
+     */
+    public String bold(String stringaIn) {
+        String stringaOut = VUOTA;
+        String tagIni = String.format("<span style=\"weight:%s\">", "bold");
+        String tagEnd = "</span>";
+
+        if (text.isValid(stringaIn)) {
+            stringaOut = tagIni;
+            stringaOut += stringaIn;
+            stringaOut += tagEnd;
         }
 
         return stringaOut.trim();
