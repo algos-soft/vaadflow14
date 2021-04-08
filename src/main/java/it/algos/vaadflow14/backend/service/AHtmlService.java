@@ -272,7 +272,7 @@ public class AHtmlService extends AAbstractService {
      */
     public String bold(String stringaIn) {
         String stringaOut = VUOTA;
-        String tagIni = String.format("<span style=\"weight:%s\">", "bold");
+        String tagIni = String.format("<span style=\"font-weight:%s\">", AETypeWeight.bold.get());
         String tagEnd = "</span>";
 
         if (text.isValid(stringaIn)) {
