@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PiView extends Div {
 
+
     @Autowired
     ApplicationContext context;
 
