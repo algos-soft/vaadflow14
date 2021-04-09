@@ -9,5 +9,4 @@ package it.algos.vaadflow14.wizard.enumeration;
  */
 public enum AECopyType {
     directory, file, source
-
-    }
+}

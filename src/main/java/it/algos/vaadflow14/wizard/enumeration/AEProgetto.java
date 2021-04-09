@@ -11,29 +11,36 @@ import java.util.*;
  * User: gac
  * Date: gio, 08-mar-2018
  * Time: 08:23
+ * <p>
+ * Enumeration dei progetti gestiti da Wizard <br>
+ * Di default stanno nel path -> /Users/gac/Documents/IdeaProjects/operativi/ <br>
+ * Altrimenti usare la property pathCompleto <br>
  */
 public enum AEProgetto {
 
-    bio("wikibio", "WikiBio",VUOTA),
-    wam("vaadwam", "Wam",VUOTA),
-    beta("beta", "beta","/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
-    moneglia("moneglia", "Moneglia",VUOTA),
-    gestione("gestione", "Gestione",VUOTA),
+    bio("vaadwiki", "Wiki", "vaadwiki", VUOTA),
+    wam("vaadwam", "Wam", "vaadwam", VUOTA),
+    beta("beta", "beta", "beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
+    moneglia("moneglia", "Moneglia", "", VUOTA),
+    gestione("gestione", "Gestione", "", VUOTA),
 
     ;
 
-    private String nameProject;
+    private String projectLocation;
 
-    private String nameUpper;
+    private String projectNameUpper;
+
+    private String projectNameModuloLower;
 
     //--path completo se diverso da /Users/gac/Documents/IdeaProjects/operativi/...
     private String pathCompleto;
 
 
-    AEProgetto(String nameProject, String nameUpper, String pathCompleto) {
-        this.setNameProject(nameProject);
-        this.setNameUpper(nameUpper);
-        this.setPathCompleto(pathCompleto);
+    AEProgetto(String projectLocation, String projectNameUpper, String projectNameModuloLower, String pathCompleto) {
+        this.projectLocation = projectLocation;
+        this.projectNameUpper = projectNameUpper;
+        this.projectNameModuloLower = projectNameModuloLower;
+        this.pathCompleto = pathCompleto;
     }
 
     public static List<AEProgetto> get() {
@@ -50,16 +57,16 @@ public enum AEProgetto {
         List<String> nomi = new ArrayList<>();
 
         for (AEProgetto progetto : AEProgetto.values()) {
-            nomi.add(progetto.nameProject);
+            nomi.add(progetto.projectLocation);
         }
 
         return nomi;
     }
 
 
-    public static AEProgetto getProgetto(String nameProject) {
+    public static AEProgetto getProgetti(String nameProject) {
         for (AEProgetto progetto : AEProgetto.values()) {
-            if (progetto.getNameProject().equals(nameProject)) {
+            if (progetto.getProjectLocation().equals(nameProject)) {
                 return progetto;
             }
         }
@@ -77,40 +84,30 @@ public enum AEProgetto {
             System.out.println("Progetti della enumeration AEProgetto");
             System.out.println("********************");
             for (AEProgetto progetto : AEProgetto.values()) {
-                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getNameProject() + " - " + progetto.getNameUpper());
+                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getProjectLocation() + " - " + progetto.getProjectNameUpper());
             }
             System.out.println("");
         }
     }
 
 
-    public String getNameProject() {
-        return nameProject;
+    public String getProjectLocation() {
+        return projectLocation;
     }
 
 
-    public void setNameProject(String nameProject) {
-        this.nameProject = nameProject;
+    public String getProjectNameUpper() {
+        return projectNameUpper;
     }
 
 
-    public String getNameUpper() {
-        return nameUpper;
-    }
-
-
-    public void setNameUpper(String nameUpper) {
-        this.nameUpper = nameUpper;
+    public String getProjectNameModuloLower() {
+        return projectNameModuloLower;
     }
 
 
     public String getPathCompleto() {
         return pathCompleto;
-    }
-
-
-    public void setPathCompleto(String pathCompleto) {
-        this.pathCompleto = pathCompleto;
     }
 
 }// end of enumeration class

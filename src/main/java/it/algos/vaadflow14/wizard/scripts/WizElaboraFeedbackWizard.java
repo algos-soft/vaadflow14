@@ -50,7 +50,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
         AECopyWiz copyWiz = AECopyWiz.fileSovrascriveSempreAncheSeEsiste;
         String type = text.setTonde(copyWiz.name());
         String dirWizard = AEWizCost.dirRootWizard.get();
-        String pathFile = dirWizard + AEWizCost.nameWizard.get();
+        String pathFile = dirWizard + AEWizCost.fileWizard.get();
         String srcPath = AEWizCost.pathTargetProjectRoot.get() + pathFile;
         String destPath = AEWizCost.pathVaadFlow14Root.get() + pathFile;
         String pathBreve = file.findPathBreveDa(destPath, DIR_ALGOS);

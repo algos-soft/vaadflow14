@@ -104,9 +104,9 @@ public class WizService {
         AEWizCost.nameUser.setValue(user);
 
         String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        AEWizCost.projectCurrentLower.setValue(project.toLowerCase());
+        AEWizCost.nameProjectCurrentLower.setValue(project.toLowerCase());
         project = text.primaMaiuscola(project);
-        AEWizCost.projectCurrentUpper.setValue(project);
+        AEWizCost.nameProjectCurrentUpper.setValue(project);
 
         //--isBaseFlow
         String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
@@ -136,8 +136,6 @@ public class WizService {
         //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
         //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
         //        }
-
-        AEWizCost.printInfo();
     }
 
 
@@ -184,13 +182,13 @@ public class WizService {
     }
 
 
-    /**
-     * Visualizzazione iniziale di controllo <br>
-     */
-    public void printStart() {
-        AEWizCost.printInfo();
-        //        AEProgetto.printInfo();
-    }
+//    /**
+//     * Visualizzazione iniziale di controllo <br>
+//     */
+//    public void printStart() {
+//        AEWizCost.printInfo();
+//        //        AEProgetto.printInfo();
+//    }
 
 
     /**
@@ -224,7 +222,7 @@ public class WizService {
         String message = VUOTA;
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
-        String dirPath = text.isValid(directory) ? directory : AEWizCost.projectCurrentUpper.get().toLowerCase();
+        String dirPath = text.isValid(directory) ? directory : AEWizCost.nameProjectCurrentUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(destPath, dirPath);
         String type = text.setTonde(copyWiz.name());
 
@@ -442,7 +440,7 @@ public class WizService {
         AIResult resultCheck = AResult.errato();
         String message = VUOTA;
         boolean esisteFileDest = false;
-        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.projectCurrentUpper.get().toLowerCase();
+        String dirPath = text.isValid(firstDir) ? firstDir : AEWizCost.nameProjectCurrentUpper.get().toLowerCase();
         String pathBreve = file.findPathBreveDa(pathFileToBeWritten, dirPath);
 
         esisteFileDest = file.isEsisteFile(pathFileToBeWritten);

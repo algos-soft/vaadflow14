@@ -56,7 +56,7 @@ public class WizDialogUpdateProject extends WizDialog {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
         }
         else {
-            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.projectCurrentUpper.get()), "green");
+            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.nameProjectCurrentUpper.get()), "green");
         }
         this.add(topLayout);
 
@@ -185,7 +185,7 @@ public class WizDialogUpdateProject extends WizDialog {
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget = null;
         String nameProject = VUOTA;
-        String nameUpper = VUOTA;
+        String nameModulo = VUOTA;
         String pathProject = VUOTA;
 
         if (AEFlag.isBaseFlow.is()) {
@@ -193,8 +193,8 @@ public class WizDialogUpdateProject extends WizDialog {
             if (progettoTarget == null) {
                 return false;
             }
-            nameProject = progettoTarget.getNameProject();
-            nameUpper = progettoTarget.getNameUpper();
+            nameProject = progettoTarget.getProjectLocation();
+            nameModulo = progettoTarget.getProjectNameModuloLower();
             pathProject = progettoTarget.getPathCompleto();
 
             if (text.isEmpty(pathProject)) {
@@ -206,12 +206,12 @@ public class WizDialogUpdateProject extends WizDialog {
             }
         }
         else {
-            nameProject = AEWizCost.projectCurrentLower.get();
-            nameUpper = AEWizCost.projectCurrentUpper.get();
+            nameProject = AEWizCost.nameProjectCurrentLower.get();
+            nameModulo = AEWizCost.nameProjectCurrentUpper.get();
             pathProject = AEWizCost.pathCurrent.get();
         }
 
-        AEWizCost.nameTargetProjectUpper.setValue(nameUpper);
+        AEWizCost.nameTargetProjectUpper.setValue(nameModulo);
         AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
         AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);
@@ -224,8 +224,10 @@ public class WizDialogUpdateProject extends WizDialog {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
-        AEWizCost.printVuote();
-        AEWizCost.printInfo();
+        AEWizCost.printInfoBase(AEWizCost.getVuoteProject(), "Costanti del progetto a cui manca ancora il valore");
+//        AEWizCost.printInfoBase(AEWizCost.getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
+//        AEWizCost.printInfoBase(AEWizCost.getPath(), "Path di percorso. Dipende dal progetto selezionato");
+
         return true;
     }
 
@@ -243,7 +245,7 @@ public class WizDialogUpdateProject extends WizDialog {
         super.regolaAEDir();
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-            projectName = fieldComboProgetti.getValue().getNameProject();
+            projectName = fieldComboProgetti.getValue().getProjectLocation();
             status = status && checkProject(projectName);
             status = status && AEDir.modificaProjectAll(projectName);
         }

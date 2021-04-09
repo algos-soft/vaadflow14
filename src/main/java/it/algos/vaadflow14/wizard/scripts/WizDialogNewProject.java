@@ -207,7 +207,7 @@ public class WizDialogNewProject extends WizDialog {
             }
         }
         AEWizCost.printVuote();
-        AEWizCost.printInfo();
+//        AEWizCost.printInfo();
         return true;
     }
 
