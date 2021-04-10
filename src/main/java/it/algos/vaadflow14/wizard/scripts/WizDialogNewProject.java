@@ -6,7 +6,8 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
@@ -154,7 +155,7 @@ public class WizDialogNewProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-        for (AEWizCost aeCost : wizService.getAll()) {
+        for (AEWizCost aeCost : wizService.getWizUsoProject()) {
             mappaWizBox.put(aeCost.name(), new WizBox(aeCost, true));
         }
         super.addCheckBoxMap();
@@ -180,27 +181,43 @@ public class WizDialogNewProject extends WizDialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * <p>
+     * Estrae il valore del combobox di selezione a video <br>
+     * Inserisce il valore base di nameTargetProjectUpper <br>
+     * Elabora, con AEWizCost.set() tutti i valori 'derivati' di AEWizCost <br>
+     * Regola il flag acceso=true/false della Enumeration AEWizCost <br>
+     * <p>
      * Verranno usati da: <br>
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
-        File pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;
+        File pathProjectFile = null;
+        String pathProject = VUOTA;
+        String targetProject = VUOTA;
 
+        //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
+        pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;
         if (pathProjectFile == null || text.isEmpty(pathProjectFile.getAbsolutePath())) {
             return false;
         }
 
-        String pathProject = pathProjectFile.getAbsolutePath();
-        String nameProject = file.estraeClasseFinale(pathProject);
-        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
-        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        //--inserisce il path completo del progetto selezionato nella Enumeration
+        pathProject = pathProjectFile.getAbsolutePath();
+        targetProject = file.estraeClasseFinale(pathProject);
+//        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(targetProject));
         AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
-        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
 
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+
+        //        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+//        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
+//        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
+//        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+//        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+
+        //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
@@ -208,7 +225,7 @@ public class WizDialogNewProject extends WizDialog {
         }
 
         wizService.printProgetto();
-        return true;
+        return false;
     }
 
     /**

@@ -8,9 +8,9 @@ package it.algos.vaadflow14.wizard.enumeration;
  * Time: 16:36
  */
 public enum AEWizUso {
-    nullo("Nessuno", "Nome usato nelle dir e nei path."),
-    project("Project", "Costante per un name/file/directory usato per selezionare i flag di un progetto."),
-    packages("Package", "Costante per un name/file/directory usato per selezionare i flag di un package."),
+    nullo("Nessuno", "AEWizUso.nullo - Nome usato nelle dir e nei path."),
+    flagProject("Project", "AEWizUso.flagProject - Costante per un name/file/directory usato per selezionare i flag di un progetto."),
+    flagPackages("Package", "AEWizUso.flagPackages - Costante per un name/file/directory usato per selezionare i flag di un package."),
     ;
 
     private String tag;

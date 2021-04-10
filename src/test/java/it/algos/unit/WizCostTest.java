@@ -1,6 +1,7 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -86,30 +87,9 @@ public class WizCostTest extends ATest {
         }
     }
 
-
     @Test
     @Order(2)
-    @DisplayName("2 - Enumeration AEWizCopy")
-    void AEWizCopy() {
-        String message = VUOTA;
-        int pos = 1;
-        System.out.println("Enumeration AEWizCopy");
-        System.out.println(VUOTA);
-        for (AEWizCopy wiz : AEWizCopy.values()) {
-            message = pos + ") ";
-            message += wiz.getTag();
-            message += SEP;
-            message += wiz.getDescrizione();
-            message += SEP;
-            message += "Copia: "+wiz.getType().toString();
-            System.out.println(message);
-            pos++;
-        }
-    }
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - Enumeration AEWizUso")
+    @DisplayName("2 - Enumeration AEWizUso")
     void AEWizUso() {
         String message = VUOTA;
         int pos = 1;
@@ -126,59 +106,97 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(12)
-    @DisplayName("1 - Tutte")
+    @Order(3)
+    @DisplayName("3 - Enumeration AEWizCopy")
+    void AEWizCopy() {
+        String message = VUOTA;
+        int pos = 1;
+        System.out.println("Enumeration AEWizCopy");
+        System.out.println(VUOTA);
+        for (AEWizCopy wiz : AEWizCopy.values()) {
+            message = pos + ") ";
+            message += wiz.getTag();
+            message += SEP;
+            message += wiz.getDescrizione();
+            message += SEP;
+            message += "Copia: " + wiz.getType().toString();
+            System.out.println(message);
+            pos++;
+        }
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - Tutte le costanti AEWizCost")
     void getAll33() {
         listaWiz = service.getAll();
-        printAll("Enumeration completa con tutte i valori (validi oppure mancanti)", listaWiz);
-    }
-
-
-    @Test
-    @Order(13)
-    @DisplayName("1 - Tutte")
-    void getAl2l() {
-        listaWiz = service.getAll();
-        printAll("Enumeration completa con tutte i valori (validi oppure mancanti)", listaWiz);
-    }
-
-    @Test
-    @Order(24)
-    @DisplayName("2 - getWizCostanti")
-    void getWizCostanti() {
-        listaWiz = service.getWizCostanti();
-        print(AEWizValue.costante.getDescrizione(), listaWiz);
-    }
-
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - getWizCalcolati")
-    void getWizCalcolati() {
-        service.fixAEWizCost();
-        listaWiz = service.getWizCalcolati();
-        print(AEWizValue.calcolato.getDescrizione(), listaWiz);
+        printAll("Enumeration completa con tutti i valori di AEWizCost (costanti, calcolati, inseriti, derivati)", listaWiz);
     }
 
 
     @Test
     @Order(5)
-    @DisplayName("5 - getWizInseriti")
+    @DisplayName("5 - service.getWizCostanti")
+    void getWizCostanti() {
+        listaWiz = service.getWizValueCostanti();
+        print(AEWizValue.costante.getDescrizione(), listaWiz);
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - service.getWizCalcolati")
+    void getWizCalcolati() {
+        service.fixAEWizCost();
+        listaWiz = service.getWizValueCalcolati();
+        print(AEWizValue.calcolato.getDescrizione(), listaWiz);
+    }
+
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - service.getWizInseriti")
     void getWizInseriti() {
-        listaWiz = service.getWizInseriti();
+        listaWiz = service.getWizValueInseriti();
         print(AEWizValue.inserito.getDescrizione(), listaWiz);
     }
 
     @Test
-    @Order(6)
-    @DisplayName("6 - getWizDerivati")
+    @Order(8)
+    @DisplayName("8 - service.getWizDerivati")
     void getWizDerivati() {
-        listaWiz = service.getWizDerivati();
+        listaWiz = service.getWizValueDerivati();
         print(AEWizValue.derivato.getDescrizione(), listaWiz);
     }
 
     @Test
-    @Order(4)
+    @Order(9)
+    @DisplayName("9 - service.getWizUsoNullo")
+    void getWizUsoNullo() {
+        listaWiz = service.getWizUsoNullo();
+        print(AEWizUso.nullo.getDescrizione(), listaWiz);
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("10 - service.getWizUsoProject")
+    void getWizUsoProject() {
+        listaWiz = service.getWizUsoProject();
+        print(AEWizUso.flagProject.getDescrizione(), listaWiz);
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("11 - service.getWizUsoPackage")
+    void getWizUsoPackage() {
+        listaWiz = service.getWizUsoPackage();
+        print(AEWizUso.flagPackages.getDescrizione(), listaWiz);
+    }
+
+
+    @Test
+    @Order(47)
     @DisplayName("4 - reset")
     void reset() {
         previstoBooleano = false;
@@ -209,7 +227,7 @@ public class WizCostTest extends ATest {
 
 
     @Test
-    @Order(7)
+    @Order(77)
     @DisplayName("7 - getNecessitanoValore")
     void getNecessitanoValore() {
         listaWiz = service.getNecessitanoInserimentoValore();
@@ -217,7 +235,7 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(8)
+    @Order(87)
     @DisplayName("8 - All tipo AETypeFile.nome")
     void getNome() {
         listaWiz = service.getNome();
@@ -225,7 +243,7 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(9)
+    @Order(99)
     @DisplayName("9 - All tipo AETypeFile.file")
     void getFile() {
         //        listaWiz = service.getFile();
@@ -233,7 +251,7 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(10)
+    @Order(109)
     @DisplayName("10 - All tipo AETypeFile.source")
     void getSource() {
         //        listaWiz = service.getSource();
@@ -241,7 +259,7 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(11)
+    @Order(119)
     @DisplayName("11 - All tipo AETypeFile.dir")
     void getDir() {
         //        listaWiz = service.getDir();
@@ -249,7 +267,7 @@ public class WizCostTest extends ATest {
     }
 
     @Test
-    @Order(12)
+    @Order(129)
     @DisplayName("12 - All tipo AETypeFile.path")
     void getPath() {
         listaWiz = service.getPath();
@@ -296,6 +314,26 @@ public class WizCostTest extends ATest {
     void getVuote() {
         listaWiz = service.getVuote();
         print("Costanti a cui manca un valore indispensabile", listaWiz);
+    }
+
+    @Test
+    @Order(99)
+    @DisplayName("99 - untitled")
+    void check() {
+        String target = "/Users/gac/Documents/IdeaProjects/untitled/";
+        int len = target.length();
+        int pos = 0;
+        previsto = "untitled";
+
+        target = target.trim();
+        if (target.contains(FlowCost.SLASH)) {
+            target = target.substring(0, target.length() - 1);
+            pos = target.lastIndexOf(FlowCost.SLASH);
+            pos = pos + 1;
+            target = target.substring(pos);
+        }
+        ottenuto = target;
+        assertEquals(previsto, ottenuto);
     }
 
     //    @Test
