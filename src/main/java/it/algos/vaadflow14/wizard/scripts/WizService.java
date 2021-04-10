@@ -2,12 +2,14 @@ package it.algos.vaadflow14.wizard.scripts;
 
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -80,11 +82,8 @@ public class WizService {
     public void fixVariabiliIniziali() {
         //--reset di tutte le enumeration
         reset();
-
         fixAEWizCost();
-
         //        AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.projectCurrent.get());
-
         //        fixAEFlag();
         fixAEDir();
     }
@@ -95,29 +94,34 @@ public class WizService {
      * Chiamato da Wizard.initView() <br>
      */
     public void fixAEWizCost() {
-        String pathCurrent = System.getProperty("user.dir") + FlowCost.SLASH;
+        String pathCurrent = System.getProperty("user.dir") + SLASH;
         AEWizCost.pathCurrent.setValue(pathCurrent);
 
         String user = pathCurrent.substring(1);
-        user = text.levaTestoPrimaDi(user, FlowCost.SLASH);
-        user = user.substring(0, user.indexOf(FlowCost.SLASH));
+        user = text.levaTestoPrimaDi(user, SLASH);
+        user = user.substring(0, user.indexOf(SLASH));
         AEWizCost.nameUser.setValue(user);
 
         String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        AEWizCost.nameProjectCurrentLower.setValue(project.toLowerCase());
         project = text.primaMaiuscola(project);
         AEWizCost.nameProjectCurrentUpper.setValue(project);
 
+        AEWizCost.fixValue();
+
+        //        AEWizCost.nameProjectCurrentLower.setValue(project.toLowerCase());
+        //        AEWizCost.nameProjectCurrentUpper.setValue(project);
+
         //--isBaseFlow
-        String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
-        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
-        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+        //        String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+        //        AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
+        //        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
+        //        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        //        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
+        //        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + SLASH);
+        //        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
+        //        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
+        //        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
+
         //        if (AEFlag.isBaseFlow.is()) {
         //            AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
         //            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
@@ -135,7 +139,6 @@ public class WizService {
         //            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
         //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-        //        }
     }
 
 
@@ -148,22 +151,22 @@ public class WizService {
         String projectName;
 
         //--regola i valori elaborabili di AEDir
-        pathCurrent = System.getProperty("user.dir") + FlowCost.SLASH;
+        pathCurrent = System.getProperty("user.dir") + SLASH;
         AEDir.elaboraAll(pathCurrent);
 
         //--se è un progetto specifico, ne conosco il nome e lo inserisco nelle enumeration AEDir modificabili
         if (AEFlag.isBaseFlow.is()) {
             projectName = file.estraeDirectoryFinale(pathCurrent);
-            if (projectName.endsWith(FlowCost.SLASH)) {
-                projectName = text.levaCoda(projectName, FlowCost.SLASH);
+            if (projectName.endsWith(SLASH)) {
+                projectName = text.levaCoda(projectName, SLASH);
             }
 
             AEDir.modificaProjectAll(projectName);
         }
         else {
             projectName = file.estraeDirectoryFinale(pathCurrent);
-            if (projectName.endsWith(FlowCost.SLASH)) {
-                projectName = text.levaCoda(projectName, FlowCost.SLASH);
+            if (projectName.endsWith(SLASH)) {
+                projectName = text.levaCoda(projectName, SLASH);
             }
 
             AEDir.modificaProjectAll(projectName);
@@ -181,14 +184,13 @@ public class WizService {
         AECheck.reset();
     }
 
-
-//    /**
-//     * Visualizzazione iniziale di controllo <br>
-//     */
-//    public void printStart() {
-//        AEWizCost.printInfo();
-//        //        AEProgetto.printInfo();
-//    }
+    //    /**
+    //     * Visualizzazione iniziale di controllo <br>
+    //     */
+    //    public void printStart() {
+    //        AEWizCost.printInfo();
+    //        //        AEProgetto.printInfo();
+    //    }
 
 
     /**
@@ -1299,6 +1301,289 @@ public class WizService {
         versione = tag + anno + FlowCost.VIRGOLA + mese + FlowCost.VIRGOLA + giorno + ")";
 
         return versione;
+    }
+
+    public List<AEWizCost> getAll() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            listaWizCost.add(aeWizCost);
+        }
+
+        return listaWizCost;
+    }
+
+
+    private List<AEWizCost> getAllTypeWiz(final List<AETypeWiz> listaType) {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            for (AETypeWiz type : listaType) {
+                if (aeWizCost.getTypeWiz() == type) {
+                    listaWizCost.add(aeWizCost);
+                }
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getNonModificabile() {
+        return getAllTypeWiz(Collections.singletonList(AETypeWiz.nonModificabile));
+    }
+
+    public List<AEWizCost> getRegolatoSistema() {
+        List<AETypeWiz> listaType = new ArrayList<>();
+        listaType.add(AETypeWiz.regolatoSistema);
+        listaType.add(AETypeWiz.regolatoSistemaAutomatico);
+
+        return getAllTypeWiz(listaType);
+    }
+
+    public List<AEWizCost> getNecessarioEntrambi() {
+        List<AETypeWiz> listaType = new ArrayList<>();
+        listaType.add(AETypeWiz.necessarioEntrambi);
+        listaType.add(AETypeWiz.necessarioEntrambiAutomatico);
+
+        return getAllTypeWiz(listaType);
+    }
+
+    public List<AEWizCost> getNecessarioProgetto() {
+        List<AETypeWiz> listaType = new ArrayList<>();
+        listaType.add(AETypeWiz.necessarioProgetto);
+        listaType.add(AETypeWiz.necessarioProgettoAutomatico);
+
+        return getAllTypeWiz(listaType);
+    }
+
+    public List<AEWizCost> getNecessarioPackage() {
+        List<AETypeWiz> listaType = new ArrayList<>();
+        listaType.add(AETypeWiz.necessarioPackage);
+        listaType.add(AETypeWiz.necessarioPackageAutomatico);
+
+        return getAllTypeWiz(listaType);
+    }
+
+    public List<AEWizCost> getNecessitanoInserimentoValore() {
+        List<AETypeWiz> listaType = new ArrayList<>();
+        listaType.add(AETypeWiz.regolatoSistema);
+        listaType.add(AETypeWiz.necessarioEntrambi);
+        listaType.add(AETypeWiz.necessarioProgetto);
+        listaType.add(AETypeWiz.necessarioPackage);
+
+        return getAllTypeWiz(listaType);
+    }
+
+    private List<AEWizCost> getAllTypeFile(final AETypeFile type) {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.getTypeFile() == type) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+
+    public List<AEWizCost> getNome() {
+        return getAllTypeFile(AETypeFile.nome);
+    }
+
+    public List<AEWizCost> getFile() {
+        return getAllTypeFile(AETypeFile.file);
+    }
+
+    public List<AEWizCost> getSource() {
+        return getAllTypeFile(AETypeFile.source);
+    }
+
+    public List<AEWizCost> getDir() {
+        return getAllTypeFile(AETypeFile.dir);
+    }
+
+    public List<AEWizCost> getPath() {
+        return getAllTypeFile(AETypeFile.path);
+    }
+
+
+    public List<AEWizCost> getNewProject() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.isNewProject()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getUpdateProject() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.isUpdateProject()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+
+    public List<AEWizCost> getNewUpdateProject() {
+        List<AEWizCost> listaWizCost;
+        if (AEFlag.isBaseFlow.is()) {
+            listaWizCost = getNewProject();
+        }
+        else {
+            listaWizCost = getUpdateProject();
+        }
+
+        return listaWizCost;
+    }
+
+
+    public List<AEWizCost> getInseritoValore() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : getNecessitanoInserimentoValore()) {
+            if (aeWizCost.getValue() != null && aeWizCost.getValue().length() > 0 && !aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getVuote() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : getNecessitanoInserimentoValore()) {
+            if (aeWizCost.getValue() == null || aeWizCost.getValue().length() < 1 || aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getHannoValore() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : AEWizCost.values()) {
+            if (aeWizCost.getTypeWiz().isServeValore()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getHannoValoreVuoto() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : getHannoValore()) {
+            if (aeWizCost.getValue() == null || aeWizCost.getValue().length() < 1 || aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getHannoValoreValido() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : getHannoValore()) {
+            if (aeWizCost.getValue() != null && aeWizCost.getValue().length() > 0 && !aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+                if (aeWizCost.isValida()) {
+                    listaWizCost.add(aeWizCost);
+                }
+                else {
+                    logger.adminLogger.info("Manca il flag 'valida' a "+aeWizCost.name());
+                }
+            }
+        }
+
+        return listaWizCost;
+    }
+
+    public List<AEWizCost> getVuoteProject() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+        for (AEWizCost aeWizCost : getVuote()) {
+            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
+                listaWizCost.add(aeWizCost);
+            }
+        }
+
+        return listaWizCost;
+    }
+
+
+    //--metodo statico invocato da Wizard.initView()
+    public void printInfoBase(List<AEWizCost> lista, String titolo) {
+        System.out.println(VUOTA);
+        System.out.println("********************");
+        System.out.println(titolo + " (" + lista.size() + ")");
+        System.out.println("********************");
+        for (AEWizCost aeWizCost : lista) {
+            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.getValue());
+            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
+                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.getCopyWiz().name());
+            }
+            System.out.println(VUOTA);
+        }
+        System.out.println(VUOTA);
+    }
+
+    //--metodo statico invocato da Wizard.initView()
+    public void printInfoStart() {
+        printInfoBase(getNecessitanoInserimentoValore(), "Tutte le costanti a cui bisogna inserire il valore in runtime.");
+        printInfoBase(getInseritoValore(), "Costanti a cui è già stato inserito un valore in runtime.");
+        printInfoBase(getVuote(), "Costanti a cui manca ancora l'inserimento del valore.");
+        printInfoBase(getHannoValoreVuoto(), "Costanti a cui manca ancora un valore o inserito o calcolato");
+        printInfoBase(getHannoValoreValido(), "Costanti con un valore valido o inserito o calcolato");
+
+        //        printInfoBase(getDirectory(), "Directory di percorso. Valori statici ed immutabili");
+        //        printInfoBase(getSistema(), "Variabili di sistema. Dipende dal programma in uso");
+        //        printInfoBase(getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
+        //        printInfoBase(getPath(), "Path di percorso. Dipende dal progetto selezionato");
+        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
+        //
+        //        System.out.println(FlowCost.VUOTA);
+        //        System.out.println("********************");
+        //        System.out.println("Costanti statiche indipendenti dal progetto che sta girando");
+        //        System.out.println("********************");
+        //        for (AEWizCost aeWizCost : AEWizCost.values()) {
+        //            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
+        //            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
+        //                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
+        //            }
+        //            System.out.println(FlowCost.VUOTA);
+        //        }
+        //        System.out.println(FlowCost.VUOTA);
+    }
+
+
+    //--metodo statico invocato da Wizard.initView()
+    public void printInfoPackage() {
+        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
+    }
+
+    //--metodo statico
+    public void printVuote() {
+        System.out.println(VUOTA);
+        System.out.println("********************");
+        System.out.println("Costanti statiche a cui manca ancora il valore");
+        System.out.println("********************");
+        for (AEWizCost aeWizCost : getNecessitanoInserimentoValore()) {
+            System.out.println("AEWizCost." + aeWizCost.name() + ": " + aeWizCost.getDescrizione());
+        }
+        System.out.println(VUOTA);
     }
 
 }

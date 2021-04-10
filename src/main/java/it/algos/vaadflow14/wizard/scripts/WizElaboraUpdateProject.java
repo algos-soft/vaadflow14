@@ -33,7 +33,7 @@ public class WizElaboraUpdateProject extends WizElabora {
         AECopyWiz copyWiz;
         String sourcesName;
 
-        for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeWizCost : wizService.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
 
                 if (aeWizCost == AEWizCost.pathTargetProjectModulo) {

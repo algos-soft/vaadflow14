@@ -154,7 +154,7 @@ public class WizDialogNewProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
             mappaWizBox.put(aeCost.name(), new WizBox(aeCost, true));
         }
         super.addCheckBoxMap();
@@ -201,12 +201,12 @@ public class WizDialogNewProject extends WizDialog {
         AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
 
-        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
-        AEWizCost.printVuote();
+        wizService.printVuote();
 //        AEWizCost.printInfo();
         return true;
     }

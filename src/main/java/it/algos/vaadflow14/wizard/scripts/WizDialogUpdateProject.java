@@ -139,7 +139,7 @@ public class WizDialogUpdateProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
             mappaWizBox.put(aeCost.name(), new WizBox(aeCost, aeCost.isAccesoInizialmenteUpdate()));
         }
         super.addCheckBoxMap();
@@ -219,12 +219,12 @@ public class WizDialogUpdateProject extends WizDialog {
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
         AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
 
-        for (AEWizCost aeCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
-        AEWizCost.printInfoBase(AEWizCost.getVuoteProject(), "Costanti del progetto a cui manca ancora il valore");
+        wizService.printInfoBase(wizService.getVuoteProject(), "Costanti del progetto a cui manca ancora il valore");
 //        AEWizCost.printInfoBase(AEWizCost.getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
 //        AEWizCost.printInfoBase(AEWizCost.getPath(), "Path di percorso. Dipende dal progetto selezionato");
 

@@ -19,7 +19,7 @@ public abstract class WizDialogPackage extends WizDialog {
     protected boolean regolaPackages(final String packName) {
         wizService.regolaPackages(packName);
 
-        AEWizCost.printVuote();
+        wizService.printVuote();
 //        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
         return true;
     }

@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import static it.algos.vaadflow14.wizard.enumeration.AEWizCost.*;
 import it.algos.vaadflow14.wizard.scripts.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
@@ -174,9 +173,8 @@ public class Wizard extends VerticalLayout {
         this.titolo();
 
         wizService.fixVariabiliIniziali();
-//        wizService.printStart();
+        wizService.printInfoStart();
 
-        printInfoStart();
         if (AEFlag.isBaseFlow.is()) {
             paragrafoNewProject();
             paragrafoUpdateProject();

@@ -3,6 +3,7 @@ package it.algos.unit;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import it.algos.vaadflow14.wizard.scripts.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -25,6 +26,12 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WizCostTest extends ATest {
 
+    /**
+     * Classe principale di riferimento <br>
+     */
+    @InjectMocks
+    WizService service;
+
     private List<AEWizCost> listaWiz;
 
     /**
@@ -37,6 +44,10 @@ public class WizCostTest extends ATest {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(service);
+        Assertions.assertNotNull(service);
+        service.text = text;
+        service.array = array;
     }
 
 
@@ -56,7 +67,7 @@ public class WizCostTest extends ATest {
     @Order(1)
     @DisplayName("1 - Tutte")
     void getAll() {
-        listaWiz = AEWizCost.getAll();
+        listaWiz = service.getAll();
         printAll("Enumeration completa con tutte le costanti", listaWiz);
     }
 
@@ -64,7 +75,7 @@ public class WizCostTest extends ATest {
     @Order(2)
     @DisplayName("2 - getNonModificabile")
     void getNonModificabile() {
-        listaWiz = AEWizCost.getNonModificabile();
+        listaWiz = service.getNonModificabile();
         print(AETypeWiz.nonModificabile.getDescrizione(), listaWiz);
     }
 
@@ -73,7 +84,7 @@ public class WizCostTest extends ATest {
     @Order(3)
     @DisplayName("3 - getRegolatoSistema")
     void getRegolatoSistema() {
-        listaWiz = AEWizCost.getRegolatoSistema();
+        listaWiz = service.getRegolatoSistema();
         print(AETypeWiz.regolatoSistema.getDescrizione(), listaWiz);
     }
 
@@ -82,7 +93,7 @@ public class WizCostTest extends ATest {
     @Order(4)
     @DisplayName("4 - getNecessarioEntrambi")
     void getNecessarioEntrambi() {
-        listaWiz = AEWizCost.getNecessarioEntrambi();
+        listaWiz = service.getNecessarioEntrambi();
         print(AETypeWiz.necessarioEntrambi.getDescrizione(), listaWiz);
     }
 
@@ -90,7 +101,7 @@ public class WizCostTest extends ATest {
     @Order(5)
     @DisplayName("5 - getNecessarioProgetto")
     void getNecessarioProgetto() {
-        listaWiz = AEWizCost.getNecessarioProgetto();
+        listaWiz = service.getNecessarioProgetto();
         print(AETypeWiz.necessarioProgetto.getDescrizione(), listaWiz);
     }
 
@@ -98,7 +109,7 @@ public class WizCostTest extends ATest {
     @Order(6)
     @DisplayName("6 - getNecessarioPackage")
     void getNecessarioPackage() {
-        listaWiz = AEWizCost.getNecessarioPackage();
+        listaWiz = service.getNecessarioPackage();
         print(AETypeWiz.necessarioPackage.getDescrizione(), listaWiz);
     }
 
@@ -106,7 +117,7 @@ public class WizCostTest extends ATest {
     @Order(7)
     @DisplayName("7 - getNecessitanoValore")
     void getNecessitanoValore() {
-        listaWiz = AEWizCost.getNecessitanoValore();
+        listaWiz = service.getNecessitanoInserimentoValore();
         print("Costanti che hanno bisogno di un valore in runtime", listaWiz);
     }
 
@@ -114,7 +125,7 @@ public class WizCostTest extends ATest {
     @Order(8)
     @DisplayName("8 - All tipo AETypeFile.nome")
     void getNome() {
-        listaWiz = AEWizCost.getNome();
+        listaWiz = service.getNome();
         print(AETypeFile.nome.name(), listaWiz);
     }
 
@@ -122,7 +133,7 @@ public class WizCostTest extends ATest {
     @Order(9)
     @DisplayName("9 - All tipo AETypeFile.file")
     void getFile() {
-        listaWiz = AEWizCost.getFile();
+        listaWiz = service.getFile();
         print(AETypeFile.file.name(), listaWiz);
     }
 
@@ -130,7 +141,7 @@ public class WizCostTest extends ATest {
     @Order(10)
     @DisplayName("10 - All tipo AETypeFile.source")
     void getSource() {
-        listaWiz = AEWizCost.getSource();
+        listaWiz = service.getSource();
         print(AETypeFile.source.name(), listaWiz);
     }
 
@@ -138,7 +149,7 @@ public class WizCostTest extends ATest {
     @Order(11)
     @DisplayName("11 - All tipo AETypeFile.dir")
     void getDir() {
-        listaWiz = AEWizCost.getDir();
+        listaWiz = service.getDir();
         print(AETypeFile.dir.name(), listaWiz);
     }
 
@@ -146,7 +157,7 @@ public class WizCostTest extends ATest {
     @Order(12)
     @DisplayName("12 - All tipo AETypeFile.path")
     void getPath() {
-        listaWiz = AEWizCost.getPath();
+        listaWiz = service.getPath();
         print(AETypeFile.path.name(), listaWiz);
     }
 
@@ -155,7 +166,7 @@ public class WizCostTest extends ATest {
     @Order(13)
     @DisplayName("13 - getNewProject")
     void getNewProject() {
-        listaWiz = AEWizCost.getNewProject();
+        listaWiz = service.getNewProject();
         print("Soluzioni possibili (nel dialogo) per un nuovo progetto", listaWiz);
     }
 
@@ -163,7 +174,7 @@ public class WizCostTest extends ATest {
     @Order(14)
     @DisplayName("14 - getUpdateProject")
     void getUpdateProject() {
-        listaWiz = AEWizCost.getUpdateProject();
+        listaWiz = service.getUpdateProject();
         print("Soluzioni possibili (nel dialogo) per un Update del progetto", listaWiz);
     }
 
@@ -171,7 +182,7 @@ public class WizCostTest extends ATest {
     @Order(15)
     @DisplayName("15 - getNewUpdateProject")
     void getNewUpdateProject() {
-        listaWiz = AEWizCost.getNewUpdateProject();
+        listaWiz = service.getNewUpdateProject();
         print("Soluzioni possibili (nel dialogo) per un progetto sia nuovo sia update", listaWiz);
     }
 
@@ -180,7 +191,7 @@ public class WizCostTest extends ATest {
     @Order(16)
     @DisplayName("16 - getValide")
     void getValorizzate() {
-        listaWiz = AEWizCost.getValide();
+        listaWiz = service.getHannoValore();
         print("Costanti che hanno un valore valido tra quelle che dovrebbero averlo", listaWiz);
     }
 
@@ -189,7 +200,7 @@ public class WizCostTest extends ATest {
     @Order(17)
     @DisplayName("17 - getVuote")
     void getVuote() {
-        listaWiz = AEWizCost.getVuote();
+        listaWiz = service.getVuote();
         print("Costanti a cui manca un valore indispensabile", listaWiz);
     }
 

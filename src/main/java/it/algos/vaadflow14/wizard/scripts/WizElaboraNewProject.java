@@ -34,7 +34,7 @@ public class WizElaboraNewProject extends WizElabora {
         String sourcesName;
         String directory = AEWizCost.nameTargetProjectUpper.get();
 
-        for (AEWizCost aeWizCost : AEWizCost.getNewUpdateProject()) {
+        for (AEWizCost aeWizCost : wizService.getNewUpdateProject()) {
             if (aeWizCost.isAcceso()) {
 
                 if (aeWizCost == AEWizCost.pathTargetProjectModulo) {

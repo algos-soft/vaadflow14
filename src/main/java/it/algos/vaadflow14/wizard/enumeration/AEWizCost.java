@@ -1,11 +1,8 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
-
-import java.util.*;
 
 /**
  * Project vaadwiki14
@@ -286,15 +283,24 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameProjectCurrentLower(AETypeWiz.regolatoSistema
-            , AETypeFile.nome, "Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+    nameProjectCurrentUpper(AETypeWiz.regolatoSistema
+            , AETypeFile.nome, "Nome maiuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE) {
+    },
 
     /**
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameProjectCurrentUpper(AETypeWiz.regolatoSistema
-            , AETypeFile.nome, "Nome maiuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE),
+    nameProjectCurrentLower(AETypeWiz.regolatoSistemaAutomatico
+            , AETypeFile.nome, "Nome minuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE) {
+        @Override
+        public void setValue() {
+            if (nameProjectCurrentUpper.valida) {
+                this.value = nameProjectCurrentUpper.getValue().toLowerCase();
+                this.setValida(true);
+            }
+        }
+    },
 
     /////////////////
 
@@ -308,37 +314,60 @@ public enum AEWizCost {
      * Nome minuscolo del progetto target. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetProjectLower(AETypeWiz.necessarioEntrambi, AETypeFile.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE),
+    nameTargetProjectLower(AETypeWiz.necessarioEntrambiAutomatico, AETypeFile.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE) {
+        @Override
+        public void setValue() {
+            if (nameTargetProjectUpper.valida) {
+                this.value = nameTargetProjectUpper.getValue().toLowerCase();
+                this.setValida(true);
+            }
+        }
+    },
 
     /**
      * Root del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectRoot(AETypeWiz.necessarioEntrambi, AETypeFile.path, "Path root del progetto target", VALORE_MANCANTE),
+    pathTargetProjectRoot(AETypeWiz.necessarioEntrambiAutomatico, AETypeFile.path, "Path root del progetto target", VALORE_MANCANTE) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Modulo del progetto target. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectModulo(AETypeWiz.necessarioEntrambi, AETypeFile.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly),
+    pathTargetProjectModulo(AETypeWiz.necessarioEntrambiAutomatico, AETypeFile.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Percorso della directory boot. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectBoot(AETypeWiz.necessarioProgetto, AETypeFile.path, "Directory target boot", pathTargetProjectModulo.value + dirBoot.value),
+    pathTargetProjectBoot(AETypeWiz.necessarioProgettoAutomatico, AETypeFile.path, "Directory target boot", pathTargetProjectModulo.value + dirBoot.value) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Percorso della directory packages. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectPackages(AETypeWiz.necessarioEntrambi, AETypeFile.path, "Directory target packages", pathTargetProjectModulo.value + dirPackages.value),
+    pathTargetProjectPackages(AETypeWiz.necessarioEntrambiAutomatico, AETypeFile.path, "Directory target packages", pathTargetProjectModulo.value + dirPackages.value) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Percorso della directory target sources. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetProjectSources(AETypeWiz.necessarioProgetto, AETypeFile.path, "Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/"),
+    pathTargetProjectSources(AETypeWiz.necessarioProgettoAutomatico, AETypeFile.path, "Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/") {
+        public void setValue() {
+        }
+    },
 
     /**
      * Nome del package da creare. Eventualmente con sub-directory <br>
@@ -350,30 +379,39 @@ public enum AEWizCost {
      * Nome del package da creare. Eventualmente con sub-directory <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetPackageSlash(AETypeWiz.necessarioPackage, AETypeFile.nome, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE),
+    nameTargetPackageSlash(AETypeWiz.necessarioPackageAutomatico, AETypeFile.nome, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Nome del package da creare. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetFileUpper(AETypeWiz.necessarioPackage, AETypeFile.nome, "Nome del file da creare/modificare con iniziale maiuscola", VALORE_MANCANTE),
+    nameTargetFileUpper(AETypeWiz.necessarioPackageAutomatico, AETypeFile.nome, "Nome del file da creare/modificare con iniziale maiuscola", VALORE_MANCANTE) {
+        public void setValue() {
+        }
+    },
 
     /**
      * Percorso del package. <br>
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
-    pathTargetPackageSlash(AETypeWiz.necessarioPackage, AETypeFile.path, "Directory del package da creare/modificare", VALORE_MANCANTE),
+    pathTargetPackageSlash(AETypeWiz.necessarioPackageAutomatico, AETypeFile.path, "Directory del package da creare/modificare", VALORE_MANCANTE) {
+        public void setValue() {
+        }
+    },
 
     ;
 
+
+    protected String value;
 
     private AETypeWiz typeWiz;
 
     private AETypeFile typeFile;
 
     private String descrizione;
-
-    private String value;
 
     private String sourcesName;
 
@@ -391,14 +429,7 @@ public enum AEWizCost {
 
     private AECopyWiz copyWiz;
 
-    private boolean isValida;
-
-    //    /**
-    //     * Costruttore parziale <br>
-    //     */
-    //    AEWizCost(String descrizione) {
-    //        this(descrizione, WizCost.VALORE_MANCANTE);
-    //    }
+    private boolean valida;
 
 
     /**
@@ -407,6 +438,7 @@ public enum AEWizCost {
     AEWizCost(AETypeWiz typeWiz, AETypeFile typeFile, String descrizione, String value) {
         this(typeWiz, typeFile, descrizione, value, (AECopyWiz) null, VUOTA, VUOTA, false, false, false, false);
     }
+
     /**
      * Costruttore parziale <br>
      */
@@ -421,6 +453,7 @@ public enum AEWizCost {
     AEWizCost(AETypeWiz typeWiz, AETypeFile typeFile, String descrizione, String value, AECopyWiz copyWiz) {
         this(typeWiz, typeFile, descrizione, value, copyWiz, value, VUOTA, true, true, true, false);
     }
+
     /**
      * Costruttore parziale <br>
      */
@@ -459,231 +492,17 @@ public enum AEWizCost {
         this.accesoInizialmenteNew = accesoInizialmenteNew;
         this.accesoInizialmenteNew = false;
         this.accesoInizialmenteUpdate = accesoInizialmenteUpdate;
+        this.valida = !value.startsWith(VALORE_MANCANTE);
     }
 
-
-    public static List<AEWizCost> getAll() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
+    public static void fixValue() {
         for (AEWizCost aeWizCost : AEWizCost.values()) {
-            listaWizCost.add(aeWizCost);
+            aeWizCost.setValue();
         }
-
-        return listaWizCost;
     }
 
-
-    private static List<AEWizCost> getAllTypeWiz(final AETypeWiz type) {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.getTypeWiz() == type) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
+    public void setValue() {
     }
-
-    public static List<AEWizCost> getNonModificabile() {
-        return getAllTypeWiz(AETypeWiz.nonModificabile);
-    }
-
-
-    public static List<AEWizCost> getRegolatoSistema() {
-        return getAllTypeWiz(AETypeWiz.regolatoSistema);
-    }
-
-    public static List<AEWizCost> getNecessarioEntrambi() {
-        return getAllTypeWiz(AETypeWiz.necessarioEntrambi);
-    }
-
-    public static List<AEWizCost> getNecessarioProgetto() {
-        return getAllTypeWiz(AETypeWiz.necessarioProgetto);
-    }
-
-    public static List<AEWizCost> getNecessarioPackage() {
-        return getAllTypeWiz(AETypeWiz.necessarioPackage);
-    }
-    public static List<AEWizCost> getNecessitanoValore() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.getTypeWiz().isServeValore()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-
-    private static List<AEWizCost> getAllTypeFile(final AETypeFile type) {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.getTypeFile() == type) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-
-    public static List<AEWizCost> getNome() {
-        return getAllTypeFile(AETypeFile.nome);
-    }
-
-    public static List<AEWizCost> getFile() {
-        return getAllTypeFile(AETypeFile.file);
-    }
-
-    public static List<AEWizCost> getSource() {
-        return getAllTypeFile(AETypeFile.source);
-    }
-
-    public static List<AEWizCost> getDir() {
-        return getAllTypeFile(AETypeFile.dir);
-    }
-
-    public static List<AEWizCost> getPath() {
-        return getAllTypeFile(AETypeFile.path);
-    }
-
-
-    public static List<AEWizCost> getNewProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.isNewProject()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-    public static List<AEWizCost> getUpdateProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.isUpdateProject()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-
-    public static List<AEWizCost> getNewUpdateProject() {
-        List<AEWizCost> listaWizCost;
-        if (AEFlag.isBaseFlow.is()) {
-            listaWizCost = AEWizCost.getNewProject();
-        }
-        else {
-            listaWizCost = AEWizCost.getUpdateProject();
-        }
-
-        return listaWizCost;
-    }
-
-
-
-    public static List<AEWizCost> getValide() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : getNecessitanoValore()) {
-            if (aeWizCost.value != null && aeWizCost.value.length() > 0 && !aeWizCost.value.startsWith(VALORE_MANCANTE)) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-    public static List<AEWizCost> getVuote() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : getNecessitanoValore()) {
-            if (aeWizCost.value != null || aeWizCost.value.length() > 0 || aeWizCost.value.startsWith(VALORE_MANCANTE)) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-    public static List<AEWizCost> getVuoteProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : getVuote()) {
-            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-
-    //--metodo statico invocato da Wizard.initView()
-    public static void printInfoBase(List<AEWizCost> lista, String titolo) {
-        System.out.println(VUOTA);
-        System.out.println("********************");
-        System.out.println(titolo);
-        System.out.println("********************");
-        for (AEWizCost aeWizCost : lista) {
-            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.value);
-            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
-            }
-            System.out.println(VUOTA);
-        }
-        System.out.println(VUOTA);
-    }
-
-    //--metodo statico invocato da Wizard.initView()
-    public static void printInfoStart() {
-        //        printInfoBase(getDirectory(), "Directory di percorso. Valori statici ed immutabili");
-        //        printInfoBase(getSistema(), "Variabili di sistema. Dipende dal programma in uso");
-        //        printInfoBase(getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
-        //        printInfoBase(getPath(), "Path di percorso. Dipende dal progetto selezionato");
-        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
-
-        //        System.out.println(FlowCost.VUOTA);
-        //        System.out.println("********************");
-        //        System.out.println("Costanti statiche indipendenti dal progetto che sta girando");
-        //        System.out.println("********************");
-        //        for (AEWizCost aeWizCost : AEWizCost.values()) {
-        //            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.descrizione + "\" " + FlowCost.UGUALE + aeWizCost.value);
-        //            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-        //                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.copyWiz.name());
-        //            }
-        //            System.out.println(FlowCost.VUOTA);
-        //        }
-        //        System.out.println(FlowCost.VUOTA);
-    }
-
-
-    //--metodo statico invocato da Wizard.initView()
-    public static void printInfoPackage() {
-        //        printInfoBase(getPackages(), "Variabili del package. Dipende dal package selezionato");
-    }
-
-    //--metodo statico
-    public static void printVuote() {
-        System.out.println(VUOTA);
-        System.out.println("********************");
-        System.out.println("Costanti statiche a cui manca ancora il valore");
-        System.out.println("********************");
-        for (AEWizCost aeWizCost : AEWizCost.getVuote()) {
-            System.out.println("AEWizCost." + aeWizCost.name() + ": " + aeWizCost.descrizione);
-        }
-        System.out.println(VUOTA);
-    }
-
 
     public AETypeWiz getTypeWiz() {
         return typeWiz;
@@ -705,8 +524,13 @@ public enum AEWizCost {
         return value;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public void setValue(String value) {
         this.value = value;
+        this.valida = true;
     }
 
     public String getSourcesName() {
@@ -745,4 +569,11 @@ public enum AEWizCost {
         return copyWiz;
     }
 
+    public boolean isValida() {
+        return valida;
+    }
+
+    public void setValida(boolean valida) {
+        this.valida = valida;
+    }
 }

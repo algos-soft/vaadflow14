@@ -11,9 +11,13 @@ public enum AETypeWiz {
 
     nonModificabile("Costanti", false, "Valori statici e sempre immutabili."),
     regolatoSistema("Finali", true,  "Dipende dal programma in uso. Regolato alla partenza di Wizard e poi statiche."),
+    regolatoSistemaAutomatico("Finali", true,  "Dipende dal programma in uso. Regolato da un precedente valore."),
     necessarioProgetto("Variabili", true, "Dipende dal project selezionato. Regolato all'uscita del dialogo."),
+    necessarioProgettoAutomatico("Variabili", true, "Dipende dal project selezionato. Regolato da un precedente valore."),
     necessarioPackage("Variabili", true, "Dipende dal package selezionato. Regolato all'uscita del dialogo."),
+    necessarioPackageAutomatico("Variabili", true, "Dipende dal package selezionato. Regolato da un precedente valore."),
     necessarioEntrambi("Variabili", true, "Dipende dal project e/o dal package selezionato. Regolato all'uscita del dialogo."),
+    necessarioEntrambiAutomatico("Variabili", true, "Dipende dal project e/o dal package selezionato. Regolato da un precedente valore."),
     ;
 
     private String tag;
