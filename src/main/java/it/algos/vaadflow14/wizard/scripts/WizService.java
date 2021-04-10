@@ -71,7 +71,7 @@ public class WizService {
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
-    protected AFileService file;
+    public AFileService file;
 
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
@@ -94,26 +94,28 @@ public class WizService {
      * Chiamato da Wizard.initView() <br>
      */
     public void fixAEWizCost() {
+        //--directory di lavoro
         String pathCurrent = System.getProperty("user.dir") + SLASH;
         AEWizCost.pathCurrent.setValue(pathCurrent);
 
+        //--programmatore (magari serve)
         String user = pathCurrent.substring(1);
         user = text.levaTestoPrimaDi(user, SLASH);
         user = user.substring(0, user.indexOf(SLASH));
         AEWizCost.nameUser.setValue(user);
 
-        String project = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        project = text.primaMaiuscola(project);
-        AEWizCost.nameProjectCurrentUpper.setValue(project);
+        //--progetto in esecuzione
+        String projectCurrent = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
+        projectCurrent = text.primaMaiuscola(projectCurrent);
+        AEWizCost.nameProjectCurrentUpper.setValue(projectCurrent);
 
+        //--differenziazione tra progetto base (vaadflow14) e progetti derivati
+        AEFlag.isBaseFlow.set(projectCurrent.toLowerCase().equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValue();
 
-        //        AEWizCost.nameProjectCurrentLower.setValue(project.toLowerCase());
-        //        AEWizCost.nameProjectCurrentUpper.setValue(project);
-
         //--isBaseFlow
-        //        String nameProject = file.estraeDirectoryFinaleSenzaSlash(pathCurrent);
-        //        AEFlag.isBaseFlow.set(nameProject.equals(AEWizCost.nameVaadFlow14.get().toLowerCase()));
         //        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
         //        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
         //        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
@@ -1314,12 +1316,12 @@ public class WizService {
     }
 
 
-    private List<AEWizCost> getAllTypeWiz(final List<AETypeWiz> listaType) {
+    private List<AEWizCost> getAllTypeWiz(final List<AEWizValue> listaType) {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : AEWizCost.values()) {
-            for (AETypeWiz type : listaType) {
-                if (aeWizCost.getTypeWiz() == type) {
+            for (AEWizValue type : listaType) {
+                if (aeWizCost.getWizValue() == type) {
                     listaWizCost.add(aeWizCost);
                 }
             }
@@ -1328,53 +1330,42 @@ public class WizService {
         return listaWizCost;
     }
 
-    public List<AEWizCost> getNonModificabile() {
-        return getAllTypeWiz(Collections.singletonList(AETypeWiz.nonModificabile));
+    public List<AEWizCost> getWizCostanti() {
+        return getAllTypeWiz(Collections.singletonList(AEWizValue.costante));
     }
 
-    public List<AEWizCost> getRegolatoSistema() {
-        List<AETypeWiz> listaType = new ArrayList<>();
-        listaType.add(AETypeWiz.regolatoSistema);
-        listaType.add(AETypeWiz.regolatoSistemaAutomatico);
-
-        return getAllTypeWiz(listaType);
+    public List<AEWizCost> getWizCalcolati() {
+        return getAllTypeWiz(Collections.singletonList(AEWizValue.calcolato));
     }
 
-    public List<AEWizCost> getNecessarioEntrambi() {
-        List<AETypeWiz> listaType = new ArrayList<>();
-        listaType.add(AETypeWiz.necessarioEntrambi);
-        listaType.add(AETypeWiz.necessarioEntrambiAutomatico);
+    //    public List<AEWizCost> getNecessarioEntrambi() {
+    //        List<AETypeWiz> listaType = new ArrayList<>();
+    //        listaType.add(AETypeWiz.necessarioEntrambi);
+    //        listaType.add(AETypeWiz.necessarioEntrambiAutomatico);
+    //
+    //        return getAllTypeWiz(listaType);
+    //    }
 
-        return getAllTypeWiz(listaType);
+
+    public List<AEWizCost> getWizInseriti() {
+        return getAllTypeWiz(Collections.singletonList(AEWizValue.inserito));
     }
 
-    public List<AEWizCost> getNecessarioProgetto() {
-        List<AETypeWiz> listaType = new ArrayList<>();
-        listaType.add(AETypeWiz.necessarioProgetto);
-        listaType.add(AETypeWiz.necessarioProgettoAutomatico);
-
-        return getAllTypeWiz(listaType);
-    }
-
-    public List<AEWizCost> getNecessarioPackage() {
-        List<AETypeWiz> listaType = new ArrayList<>();
-        listaType.add(AETypeWiz.necessarioPackage);
-        listaType.add(AETypeWiz.necessarioPackageAutomatico);
-
-        return getAllTypeWiz(listaType);
+    public List<AEWizCost> getWizDerivati() {
+        return getAllTypeWiz(Collections.singletonList(AEWizValue.derivato));
     }
 
     public List<AEWizCost> getNecessitanoInserimentoValore() {
-        List<AETypeWiz> listaType = new ArrayList<>();
-        listaType.add(AETypeWiz.regolatoSistema);
-        listaType.add(AETypeWiz.necessarioEntrambi);
-        listaType.add(AETypeWiz.necessarioProgetto);
-        listaType.add(AETypeWiz.necessarioPackage);
+        List<AEWizValue> listaType = new ArrayList<>();
+        listaType.add(AEWizValue.calcolato);
+        //        listaType.add(AETypeWiz.necessarioEntrambi);
+        listaType.add(AEWizValue.inserito);
+        listaType.add(AEWizValue.derivato);
 
         return getAllTypeWiz(listaType);
     }
 
-    private List<AEWizCost> getAllTypeFile(final AETypeFile type) {
+    private List<AEWizCost> getAllTypeFile(final AEWizCopy type) {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : AEWizCost.values()) {
@@ -1388,62 +1379,60 @@ public class WizService {
 
 
     public List<AEWizCost> getNome() {
-        return getAllTypeFile(AETypeFile.nome);
+        return getAllTypeFile(AEWizCopy.nome);
     }
 
-    public List<AEWizCost> getFile() {
-        return getAllTypeFile(AETypeFile.file);
-    }
-
-    public List<AEWizCost> getSource() {
-        return getAllTypeFile(AETypeFile.source);
-    }
-
-    public List<AEWizCost> getDir() {
-        return getAllTypeFile(AETypeFile.dir);
-    }
+//    public List<AEWizCost> getFile() {
+//        return getAllTypeFile(AEWizCopy.file);
+//    }
+//
+//    public List<AEWizCost> getSource() {
+//        return getAllTypeFile(AEWizCopy.source);
+//    }
+//
+//    public List<AEWizCost> getDir() {
+//        return getAllTypeFile(AEWizCopy.dir);
+//    }
 
     public List<AEWizCost> getPath() {
-        return getAllTypeFile(AETypeFile.path);
+        return getAllTypeFile(AEWizCopy.path);
     }
 
+    //    public List<AEWizCost> getNewProject() {
+    //        List<AEWizCost> listaWizCost = new ArrayList<>();
+    //
+    //        for (AEWizCost aeWizCost : AEWizCost.values()) {
+    //            if (aeWizCost.isNewProject()) {
+    //                listaWizCost.add(aeWizCost);
+    //            }
+    //        }
+    //
+    //        return listaWizCost;
+    //    }
+    //
+    //    public List<AEWizCost> getUpdateProject() {
+    //        List<AEWizCost> listaWizCost = new ArrayList<>();
+    //
+    //        for (AEWizCost aeWizCost : AEWizCost.values()) {
+    //            if (aeWizCost.isUpdateProject()) {
+    //                listaWizCost.add(aeWizCost);
+    //            }
+    //        }
+    //
+    //        return listaWizCost;
+    //    }
 
-    public List<AEWizCost> getNewProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.isNewProject()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-    public List<AEWizCost> getUpdateProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
-
-        for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.isUpdateProject()) {
-                listaWizCost.add(aeWizCost);
-            }
-        }
-
-        return listaWizCost;
-    }
-
-
-    public List<AEWizCost> getNewUpdateProject() {
-        List<AEWizCost> listaWizCost;
-        if (AEFlag.isBaseFlow.is()) {
-            listaWizCost = getNewProject();
-        }
-        else {
-            listaWizCost = getUpdateProject();
-        }
-
-        return listaWizCost;
-    }
+    //    public List<AEWizCost> getNewUpdateProject() {
+    //        List<AEWizCost> listaWizCost;
+    //        if (AEFlag.isBaseFlow.is()) {
+    //            listaWizCost = getNewProject();
+    //        }
+    //        else {
+    //            listaWizCost = getUpdateProject();
+    //        }
+    //
+    //        return listaWizCost;
+    //    }
 
 
     public List<AEWizCost> getInseritoValore() {
@@ -1470,11 +1459,23 @@ public class WizService {
         return listaWizCost;
     }
 
+    public List<AEWizCost> getVuoteProgetto() {
+        List<AEWizCost> listaWizCost = new ArrayList<>();
+
+//        for (AEWizCost aeWizCost : getNecessarioProgetto()) {
+//            if (aeWizCost.getValue() == null || aeWizCost.getValue().length() < 1 || aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+//                listaWizCost.add(aeWizCost);
+//            }
+//        }
+
+        return listaWizCost;
+    }
+
     public List<AEWizCost> getHannoValore() {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : AEWizCost.values()) {
-            if (aeWizCost.getTypeWiz().isServeValore()) {
+            if (aeWizCost.getWizValue().isServeInserireValore()) {
                 listaWizCost.add(aeWizCost);
             }
         }
@@ -1503,7 +1504,7 @@ public class WizService {
                     listaWizCost.add(aeWizCost);
                 }
                 else {
-                    logger.adminLogger.info("Manca il flag 'valida' a "+aeWizCost.name());
+                    logger.adminLogger.info("Manca il flag 'valida' a " + aeWizCost.name());
                 }
             }
         }
@@ -1511,18 +1512,28 @@ public class WizService {
         return listaWizCost;
     }
 
-    public List<AEWizCost> getVuoteProject() {
-        List<AEWizCost> listaWizCost = new ArrayList<>();
+    //    public List<AEWizCost> getVuoteProject() {
+    //        List<AEWizCost> listaWizCost = new ArrayList<>();
+    //
+    //        for (AEWizCost aeWizCost : getVuote()) {
+    //            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
+    //                listaWizCost.add(aeWizCost);
+    //            }
+    //        }
+    //
+    //        return listaWizCost;
+    //    }
 
-        for (AEWizCost aeWizCost : getVuote()) {
-            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-                listaWizCost.add(aeWizCost);
-            }
+    public void printProgetto() {
+        List<AEWizCost> vuoteProgetto = getVuoteProgetto();
+
+        if (array.isEmpty(vuoteProgetto)) {
+            printInfoBase(vuoteProgetto, "Costanti del progetto a cui manca ancora un valore indispensabile");
         }
-
-        return listaWizCost;
+        else {
+            printInfoBase(getHannoValoreValido(), "Costanti del progetto con i valori utilizzabili");
+        }
     }
-
 
     //--metodo statico invocato da Wizard.initView()
     public void printInfoBase(List<AEWizCost> lista, String titolo) {
@@ -1532,9 +1543,7 @@ public class WizService {
         System.out.println("********************");
         for (AEWizCost aeWizCost : lista) {
             System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.getValue());
-            if (aeWizCost.isNewProject() || aeWizCost.isUpdateProject()) {
-                System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.getCopyWiz().name());
-            }
+//            System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.getCopyWiz().name());
             System.out.println(VUOTA);
         }
         System.out.println(VUOTA);

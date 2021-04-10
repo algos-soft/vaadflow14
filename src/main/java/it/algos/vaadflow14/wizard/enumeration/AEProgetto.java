@@ -26,7 +26,7 @@ public enum AEProgetto {
 
     ;
 
-    private String projectLocation;
+    private String directory;
 
     private String projectNameUpper;
 
@@ -36,8 +36,8 @@ public enum AEProgetto {
     private String pathCompleto;
 
 
-    AEProgetto(String projectLocation, String projectNameUpper, String projectNameModuloLower, String pathCompleto) {
-        this.projectLocation = projectLocation;
+    AEProgetto(String directory, String projectNameUpper, String projectNameModuloLower, String pathCompleto) {
+        this.directory = directory;
         this.projectNameUpper = projectNameUpper;
         this.projectNameModuloLower = projectNameModuloLower;
         this.pathCompleto = pathCompleto;
@@ -57,7 +57,7 @@ public enum AEProgetto {
         List<String> nomi = new ArrayList<>();
 
         for (AEProgetto progetto : AEProgetto.values()) {
-            nomi.add(progetto.projectLocation);
+            nomi.add(progetto.directory);
         }
 
         return nomi;
@@ -66,7 +66,7 @@ public enum AEProgetto {
 
     public static AEProgetto getProgetti(String nameProject) {
         for (AEProgetto progetto : AEProgetto.values()) {
-            if (progetto.getProjectLocation().equals(nameProject)) {
+            if (progetto.getDirectory().equals(nameProject)) {
                 return progetto;
             }
         }
@@ -84,15 +84,15 @@ public enum AEProgetto {
             System.out.println("Progetti della enumeration AEProgetto");
             System.out.println("********************");
             for (AEProgetto progetto : AEProgetto.values()) {
-                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getProjectLocation() + " - " + progetto.getProjectNameUpper());
+                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getDirectory() + " - " + progetto.getProjectNameUpper());
             }
             System.out.println("");
         }
     }
 
 
-    public String getProjectLocation() {
-        return projectLocation;
+    public String getDirectory() {
+        return directory;
     }
 
 

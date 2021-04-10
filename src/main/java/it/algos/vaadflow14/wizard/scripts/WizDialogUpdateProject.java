@@ -139,9 +139,9 @@ public class WizDialogUpdateProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
-            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, aeCost.isAccesoInizialmenteUpdate()));
-        }
+//        for (AEWizCost aeCost : wizService.getNecessarioProgetto()) {
+//            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, true));
+//        }
         super.addCheckBoxMap();
     }
 
@@ -184,16 +184,19 @@ public class WizDialogUpdateProject extends WizDialog {
      */
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget = null;
-        String nameProject = VUOTA;
+        String nameDirectory = VUOTA;
         String nameModulo = VUOTA;
         String pathProject = VUOTA;
 
         if (AEFlag.isBaseFlow.is()) {
+
+            //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
             progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
             if (progettoTarget == null) {
                 return false;
             }
-            nameProject = progettoTarget.getProjectLocation();
+
+            nameDirectory = progettoTarget.getDirectory();
             nameModulo = progettoTarget.getProjectNameModuloLower();
             pathProject = progettoTarget.getPathCompleto();
 
@@ -201,32 +204,33 @@ public class WizDialogUpdateProject extends WizDialog {
                 pathProject = AEWizCost.pathRoot.get();
                 pathProject += AEWizCost.dirProjects.get();
                 pathProject += AEWizCost.dirOperativi.get();
-                pathProject += nameProject;
+                pathProject += nameDirectory;
                 pathProject += SLASH;
             }
         }
         else {
-            nameProject = AEWizCost.nameProjectCurrentLower.get();
+            nameDirectory = AEWizCost.nameProjectCurrentLower.get();
             nameModulo = AEWizCost.nameProjectCurrentUpper.get();
             pathProject = AEWizCost.pathCurrent.get();
         }
 
         AEWizCost.nameTargetProjectUpper.setValue(nameModulo);
-        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
+        AEWizCost.nameTargetProjectLower.setValue(nameDirectory.toLowerCase());
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
-        AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + SLASH);
+        AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameDirectory.toLowerCase(Locale.ROOT) + SLASH);
         AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
         AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
         AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
 
-        for (AEWizCost aeCost : wizService.getNewUpdateProject()) {
+        for (AEWizCost aeCost : wizService.getAll()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
-        wizService.printInfoBase(wizService.getVuoteProject(), "Costanti del progetto a cui manca ancora il valore");
-//        AEWizCost.printInfoBase(AEWizCost.getNomeFile(), "Nome e file di percorso. Dipende dal progetto selezionato");
-//        AEWizCost.printInfoBase(AEWizCost.getPath(), "Path di percorso. Dipende dal progetto selezionato");
+
+        wizService.printProgetto();
+//        wizService.getAll();
+//        wizService.printInfoBase(wizService.getAll(), "Tutti i valori (per controllo solamente)");
 
         return true;
     }
@@ -245,7 +249,7 @@ public class WizDialogUpdateProject extends WizDialog {
         super.regolaAEDir();
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-            projectName = fieldComboProgetti.getValue().getProjectLocation();
+            projectName = fieldComboProgetti.getValue().getDirectory();
             status = status && checkProject(projectName);
             status = status && AEDir.modificaProjectAll(projectName);
         }

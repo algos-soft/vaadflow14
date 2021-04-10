@@ -1,10 +1,13 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import it.algos.vaadflow14.wizard.scripts.*;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.*;
 
 import java.util.*;
@@ -48,6 +51,7 @@ public class WizCostTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.file = file;
     }
 
 
@@ -60,58 +64,149 @@ public class WizCostTest extends ATest {
     void setUpEach() {
         super.setUp();
         listaWiz = null;
+        AEWizCost.reset();
     }
 
 
     @Test
     @Order(1)
-    @DisplayName("1 - Tutte")
-    void getAll() {
-        listaWiz = service.getAll();
-        printAll("Enumeration completa con tutte le costanti", listaWiz);
+    @DisplayName("1 - Enumeration AEWizValue")
+    void AEWizValue() {
+        String message = VUOTA;
+        int pos = 1;
+        System.out.println("Enumeration AEWizValue");
+        System.out.println(VUOTA);
+        for (AEWizValue wiz : AEWizValue.values()) {
+            message = pos + ") ";
+            message += wiz.getTag();
+            message += SEP;
+            message += wiz.getDescrizione();
+            System.out.println(message);
+            pos++;
+        }
     }
+
 
     @Test
     @Order(2)
-    @DisplayName("2 - getNonModificabile")
-    void getNonModificabile() {
-        listaWiz = service.getNonModificabile();
-        print(AETypeWiz.nonModificabile.getDescrizione(), listaWiz);
+    @DisplayName("2 - Enumeration AEWizCopy")
+    void AEWizCopy() {
+        String message = VUOTA;
+        int pos = 1;
+        System.out.println("Enumeration AEWizCopy");
+        System.out.println(VUOTA);
+        for (AEWizCopy wiz : AEWizCopy.values()) {
+            message = pos + ") ";
+            message += wiz.getTag();
+            message += SEP;
+            message += wiz.getDescrizione();
+            message += SEP;
+            message += "Copia: "+wiz.getType().toString();
+            System.out.println(message);
+            pos++;
+        }
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Enumeration AEWizUso")
+    void AEWizUso() {
+        String message = VUOTA;
+        int pos = 1;
+        System.out.println("Enumeration AEWizUso");
+        System.out.println(VUOTA);
+        for (AEWizUso wiz : AEWizUso.values()) {
+            message = pos + ") ";
+            message += wiz.getTag();
+            message += SEP;
+            message += wiz.getDescrizione();
+            System.out.println(message);
+            pos++;
+        }
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("1 - Tutte")
+    void getAll33() {
+        listaWiz = service.getAll();
+        printAll("Enumeration completa con tutte i valori (validi oppure mancanti)", listaWiz);
+    }
+
+
+    @Test
+    @Order(13)
+    @DisplayName("1 - Tutte")
+    void getAl2l() {
+        listaWiz = service.getAll();
+        printAll("Enumeration completa con tutte i valori (validi oppure mancanti)", listaWiz);
+    }
+
+    @Test
+    @Order(24)
+    @DisplayName("2 - getWizCostanti")
+    void getWizCostanti() {
+        listaWiz = service.getWizCostanti();
+        print(AEWizValue.costante.getDescrizione(), listaWiz);
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - getRegolatoSistema")
-    void getRegolatoSistema() {
-        listaWiz = service.getRegolatoSistema();
-        print(AETypeWiz.regolatoSistema.getDescrizione(), listaWiz);
+    @DisplayName("3 - getWizCalcolati")
+    void getWizCalcolati() {
+        service.fixAEWizCost();
+        listaWiz = service.getWizCalcolati();
+        print(AEWizValue.calcolato.getDescrizione(), listaWiz);
     }
 
-
-    @Test
-    @Order(4)
-    @DisplayName("4 - getNecessarioEntrambi")
-    void getNecessarioEntrambi() {
-        listaWiz = service.getNecessarioEntrambi();
-        print(AETypeWiz.necessarioEntrambi.getDescrizione(), listaWiz);
-    }
 
     @Test
     @Order(5)
-    @DisplayName("5 - getNecessarioProgetto")
-    void getNecessarioProgetto() {
-        listaWiz = service.getNecessarioProgetto();
-        print(AETypeWiz.necessarioProgetto.getDescrizione(), listaWiz);
+    @DisplayName("5 - getWizInseriti")
+    void getWizInseriti() {
+        listaWiz = service.getWizInseriti();
+        print(AEWizValue.inserito.getDescrizione(), listaWiz);
     }
 
     @Test
     @Order(6)
-    @DisplayName("6 - getNecessarioPackage")
-    void getNecessarioPackage() {
-        listaWiz = service.getNecessarioPackage();
-        print(AETypeWiz.necessarioPackage.getDescrizione(), listaWiz);
+    @DisplayName("6 - getWizDerivati")
+    void getWizDerivati() {
+        listaWiz = service.getWizDerivati();
+        print(AEWizValue.derivato.getDescrizione(), listaWiz);
     }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - reset")
+    void reset() {
+        previstoBooleano = false;
+        previsto = VALORE_MANCANTE;
+        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
+        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        assertEquals(previsto, ottenuto);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        service.fixAEWizCost();
+
+        previstoBooleano = true;
+        previsto = NAME_VAADFLOW;
+        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
+        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        assertEquals(previsto, ottenuto);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        AEWizCost.reset();
+
+        previstoBooleano = false;
+        previsto = VALORE_MANCANTE;
+        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
+        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        assertEquals(previsto, ottenuto);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+    }
+
 
     @Test
     @Order(7)
@@ -126,31 +221,31 @@ public class WizCostTest extends ATest {
     @DisplayName("8 - All tipo AETypeFile.nome")
     void getNome() {
         listaWiz = service.getNome();
-        print(AETypeFile.nome.name(), listaWiz);
+        print(AEWizCopy.nome.name(), listaWiz);
     }
 
     @Test
     @Order(9)
     @DisplayName("9 - All tipo AETypeFile.file")
     void getFile() {
-        listaWiz = service.getFile();
-        print(AETypeFile.file.name(), listaWiz);
+        //        listaWiz = service.getFile();
+        //        print(AEWizCopy.file.name(), listaWiz);
     }
 
     @Test
     @Order(10)
     @DisplayName("10 - All tipo AETypeFile.source")
     void getSource() {
-        listaWiz = service.getSource();
-        print(AETypeFile.source.name(), listaWiz);
+        //        listaWiz = service.getSource();
+        //        print(AEWizCopy.source.name(), listaWiz);
     }
 
     @Test
     @Order(11)
     @DisplayName("11 - All tipo AETypeFile.dir")
     void getDir() {
-        listaWiz = service.getDir();
-        print(AETypeFile.dir.name(), listaWiz);
+        //        listaWiz = service.getDir();
+        //        print(AEWizCopy.dir.name(), listaWiz);
     }
 
     @Test
@@ -158,33 +253,32 @@ public class WizCostTest extends ATest {
     @DisplayName("12 - All tipo AETypeFile.path")
     void getPath() {
         listaWiz = service.getPath();
-        print(AETypeFile.path.name(), listaWiz);
+        print(AEWizCopy.path.name(), listaWiz);
     }
 
-
-    @Test
-    @Order(13)
-    @DisplayName("13 - getNewProject")
-    void getNewProject() {
-        listaWiz = service.getNewProject();
-        print("Soluzioni possibili (nel dialogo) per un nuovo progetto", listaWiz);
-    }
-
-    @Test
-    @Order(14)
-    @DisplayName("14 - getUpdateProject")
-    void getUpdateProject() {
-        listaWiz = service.getUpdateProject();
-        print("Soluzioni possibili (nel dialogo) per un Update del progetto", listaWiz);
-    }
-
-    @Test
-    @Order(15)
-    @DisplayName("15 - getNewUpdateProject")
-    void getNewUpdateProject() {
-        listaWiz = service.getNewUpdateProject();
-        print("Soluzioni possibili (nel dialogo) per un progetto sia nuovo sia update", listaWiz);
-    }
+    //    @Test
+    //    @Order(13)
+    //    @DisplayName("13 - getNewProject")
+    //    void getNewProject() {
+    //        listaWiz = service.getNewProject();
+    //        print("Soluzioni possibili (nel dialogo) per un nuovo progetto", listaWiz);
+    //    }
+    //
+    //    @Test
+    //    @Order(14)
+    //    @DisplayName("14 - getUpdateProject")
+    //    void getUpdateProject() {
+    //        listaWiz = service.getUpdateProject();
+    //        print("Soluzioni possibili (nel dialogo) per un Update del progetto", listaWiz);
+    //    }
+    //
+    //    @Test
+    //    @Order(15)
+    //    @DisplayName("15 - getNewUpdateProject")
+    //    void getNewUpdateProject() {
+    //        listaWiz = service.getNewUpdateProject();
+    //        print("Soluzioni possibili (nel dialogo) per un progetto sia nuovo sia update", listaWiz);
+    //    }
 
 
     @Test
@@ -204,14 +298,13 @@ public class WizCostTest extends ATest {
         print("Costanti a cui manca un valore indispensabile", listaWiz);
     }
 
-//    @Test
-//    @Order(19)
-//    @DisplayName("19 - getVuoteProject")
-//    void getVuoteProject() {
-//        listaWiz = AEWizCost.getVuoteProject();
-//        print("Quelle di project a cui manca un valore da inserire", listaWiz);
-//    }
-
+    //    @Test
+    //    @Order(19)
+    //    @DisplayName("19 - getVuoteProject")
+    //    void getVuoteProject() {
+    //        listaWiz = AEWizCost.getVuoteProject();
+    //        print("Quelle di project a cui manca un valore da inserire", listaWiz);
+    //    }
 
 
     private void printAll(String titolo, List<AEWizCost> lista) {
@@ -228,7 +321,7 @@ public class WizCostTest extends ATest {
         if (array.isAllValid(lista)) {
             for (AEWizCost wiz : lista) {
                 riga = VUOTA;
-                riga += wiz.getTypeWiz();
+                riga += wiz.getWizValue();
                 riga += sep3;
                 riga += wiz.name();
                 riga += sep;
