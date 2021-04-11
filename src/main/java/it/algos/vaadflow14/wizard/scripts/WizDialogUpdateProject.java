@@ -222,7 +222,7 @@ public class WizDialogUpdateProject extends WizDialog {
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
-        
+
         //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
