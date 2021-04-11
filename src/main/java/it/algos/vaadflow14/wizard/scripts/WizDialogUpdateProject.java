@@ -139,10 +139,11 @@ public class WizDialogUpdateProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-//        for (AEWizCost aeCost : wizService.getNecessarioProgetto()) {
-//            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, true));
-//        }
+        for (AEWizCost aeCost : wizService.getWizUsoProject()) {
+            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, false));
+        }
         super.addCheckBoxMap();
+        mappaWizBox.get(AEWizCost.dirModuloVaadFlow14.name()).getBox().setValue(true);
     }
 
 
@@ -232,6 +233,7 @@ public class WizDialogUpdateProject extends WizDialog {
 //        wizService.getAll();
 //        wizService.printInfoBase(wizService.getAll(), "Tutti i valori (per controllo solamente)");
 
+        AEWizCost.print("Test uscita update project");
         return true;
     }
 

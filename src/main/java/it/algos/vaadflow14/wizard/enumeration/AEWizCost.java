@@ -528,6 +528,20 @@ public enum AEWizCost {
         }
     }
 
+    /**
+     * Visualizzazione di controllo <br>
+     */
+    public static void print(String titolo) {
+        System.out.println(VUOTA);
+        System.out.println("********************");
+        System.out.println("AEWizCost  - " + titolo);
+        System.out.println("********************");
+        for (AEWizCost wiz : AEWizCost.values()) {
+            System.out.println("AEDir." + wiz.name() + " \"" + wiz.getDescrizione() + "\" = " + wiz.get());
+        }
+        System.out.println(VUOTA);
+    }
+
     public void fixValue() {
     }
 

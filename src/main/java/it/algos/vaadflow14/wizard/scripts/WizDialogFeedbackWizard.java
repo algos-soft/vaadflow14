@@ -99,6 +99,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
+        AEWizCost.print("Test uscita feedback");
         return true;
     }
 
