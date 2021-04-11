@@ -6,7 +6,6 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -179,6 +178,7 @@ public class WizDialogNewProject extends WizDialog {
         confirmButton.setEnabled(valueFromProject != null);
     }
 
+
     /**
      * Chiamato alla dismissione del dialogo <br>
      * <p>
@@ -192,9 +192,8 @@ public class WizDialogNewProject extends WizDialog {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
-        File pathProjectFile = null;
-        String pathProject = VUOTA;
-        String targetProject = VUOTA;
+        File pathProjectFile ;
+        String pathProject ;
 
         //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
         pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;
@@ -204,18 +203,10 @@ public class WizDialogNewProject extends WizDialog {
 
         //--inserisce il path completo del progetto selezionato nella Enumeration
         pathProject = pathProjectFile.getAbsolutePath();
-        targetProject = file.estraeClasseFinale(pathProject);
-//        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(targetProject));
         AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
-
-        //        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-//        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
-//        AEWizCost.pathTargetProjectModulo.setValue(pathProject + SLASH + AEWizCost.dirModulo.get() + nameProject.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-//        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-//        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
 
         //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
@@ -225,7 +216,7 @@ public class WizDialogNewProject extends WizDialog {
         }
 
         wizService.printProgetto();
-        return false;
+        return true;
     }
 
     /**

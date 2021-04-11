@@ -3,7 +3,12 @@ package it.algos.vaadflow14.wizard.enumeration;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
+import javax.annotation.*;
 
 /**
  * Project vaadwiki14
@@ -133,7 +138,13 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.flagProject, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
+        @Override
         public void fixValue() {
+            nameTargetProjectLower.fixValue();
+            if (nameTargetProjectLower.valida) {
+                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirModulo.get() + nameTargetProjectLower.getValue() + FlowCost.SLASH;
+                this.setValida(true);
+            }
         }
     },
 
@@ -327,23 +338,12 @@ public enum AEWizCost {
     nameTargetProjectUpper(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            String target = VUOTA;
-            int pos;
-            String primoCarattere;
+            String targetProject;
 
             if (pathTargetProjectRoot.valida) {
-                target = pathTargetProjectRoot.getValue();
-
-                target = target.trim();
-                target = target.substring(0, target.length() - 1);
-                pos = target.lastIndexOf(FlowCost.SLASH);
-                pos = pos + 1;
-                target = target.substring(pos);
-
-                primoCarattere = target.substring(0, 1).toUpperCase();
-                target = primoCarattere + target.substring(1);
-
-                this.value = target;
+                targetProject = file.estraeClasseFinale(pathTargetProjectRoot.getValue());
+                targetProject = text.primaMaiuscola(targetProject);
+                this.value = targetProject;
                 this.setValida(true);
             }
         }
@@ -356,6 +356,7 @@ public enum AEWizCost {
     nameTargetProjectLower(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
+            nameTargetProjectUpper.fixValue();
             if (nameTargetProjectUpper.valida) {
                 this.value = nameTargetProjectUpper.getValue().toLowerCase();
                 this.setValida(true);
@@ -368,7 +369,13 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectBoot(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory target boot", pathTargetProjectModulo.value + dirBoot.value) {
-        public void setValue() {
+        @Override
+        public void fixValue() {
+            pathTargetProjectModulo.fixValue();
+            if (pathTargetProjectModulo.valida) {
+                this.value = pathTargetProjectModulo.getValue() + AEWizCost.dirBoot.get();
+                this.setValida(true);
+            }
         }
     },
 
@@ -377,7 +384,13 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectPackages(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory target packages", pathTargetProjectModulo.value + dirPackages.value) {
-        public void setValue() {
+        @Override
+        public void fixValue() {
+            pathTargetProjectModulo.fixValue();
+            if (pathTargetProjectModulo.valida) {
+                this.value = pathTargetProjectModulo.getValue() + AEWizCost.dirPackages.get();
+                this.setValida(true);
+            }
         }
     },
 
@@ -386,7 +399,13 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetProjectSources(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory target sources (da cancellare)", pathTargetProjectModulo.value + "wizard/sources/") {
-        public void setValue() {
+        @Override
+        public void fixValue() {
+            pathTargetProjectRoot.fixValue();
+            if (pathTargetProjectRoot.valida) {
+                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirVaadFlow14WizardSources.get();
+                this.setValida(true);
+            }
         }
     },
 
@@ -429,6 +448,10 @@ public enum AEWizCost {
     protected String value;
 
     protected String valoreIniziale;
+
+    protected AFileService file;
+
+    protected ATextService text;
 
     private AEWizValue wizValue;
 
@@ -568,4 +591,33 @@ public enum AEWizCost {
     public void setValida(boolean valida) {
         this.valida = valida;
     }
+
+    public void setFile(AFileService file) {
+        this.file = file;
+    }
+
+    public void setText(ATextService text) {
+        this.text = text;
+    }
+
+    @Component
+    public static class WizCostServiceInjector {
+
+        @Autowired
+        private AFileService file;
+
+        @Autowired
+        private ATextService text;
+
+
+        @PostConstruct
+        public void postConstruct() {
+            for (AEWizCost aeWizCost : AEWizCost.values()) {
+                aeWizCost.setFile(file);
+                aeWizCost.setText(text);
+            }
+        }
+
+    }
+
 }
