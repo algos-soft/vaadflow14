@@ -182,18 +182,18 @@ public class WizDialogNewProject extends WizDialog {
     /**
      * Chiamato alla dismissione del dialogo <br>
      * <p>
-     * Estrae il valore del combobox di selezione a video <br>
+     * Recupera il nome del progetto selezionato dal combobox <br>
      * Inserisce il valore base di nameTargetProjectUpper <br>
-     * Elabora, con AEWizCost.set() tutti i valori 'derivati' di AEWizCost <br>
-     * Regola il flag acceso=true/false della Enumeration AEWizCost <br>
      * <p>
+     * Elabora, con AEWizCost.set() tutti i valori 'derivati' di AEWizCost <br>
+     * Regola i flag acceso=true/false della Enumeration AEWizCost <br>
      * Verranno usati da: <br>
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
-        File pathProjectFile ;
-        String pathProject ;
+        File pathProjectFile;
+        String pathProject;
 
         //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
         pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;

@@ -286,10 +286,7 @@ public abstract class WizDialog extends Dialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola i valori regolabili della Enumeration AEWizCost <br>
-     * Verranno usati da: <br>
-     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
         return true;

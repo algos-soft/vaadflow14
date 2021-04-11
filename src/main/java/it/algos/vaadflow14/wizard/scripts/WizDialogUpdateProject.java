@@ -178,10 +178,15 @@ public class WizDialogUpdateProject extends WizDialog {
 
     /**
      * Chiamato alla dismissione del dialogo <br>
-     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * <p>
+     * Se AEFlag.isBaseFlow.is()=true, recupera il nome del progetto selezionato dal combobox <br>
+     * Inserisce il valore base di nameTargetProjectUpper <br>
+     * <p>
+     * Elabora, con AEWizCost.set() tutti i valori 'derivati' di AEWizCost <br>
+     * Regola i flag acceso=true/false della Enumeration AEWizCost <br>
      * Verranno usati da: <br>
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget = null;
@@ -210,19 +215,15 @@ public class WizDialogUpdateProject extends WizDialog {
             }
         }
         else {
-            nameDirectory = AEWizCost.nameProjectCurrentLower.get();
-            nameModulo = AEWizCost.nameProjectCurrentUpper.get();
-            pathProject = AEWizCost.pathCurrent.get();
+            //--inserisce il path completo del progetto in esecuzione
+            pathProject = AEWizCost.pathCurrent.getValue();
+            AEWizCost.pathTargetProjectRoot.setValue(pathProject);
         }
 
-        AEWizCost.nameTargetProjectUpper.setValue(nameModulo);
-        AEWizCost.nameTargetProjectLower.setValue(nameDirectory.toLowerCase());
-        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
-        AEWizCost.pathTargetProjectModulo.setValue(pathProject + AEWizCost.dirModulo.get() + nameDirectory.toLowerCase(Locale.ROOT) + SLASH);
-        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+        
+        //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
             if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
@@ -230,10 +231,6 @@ public class WizDialogUpdateProject extends WizDialog {
         }
 
         wizService.printProgetto();
-//        wizService.getAll();
-//        wizService.printInfoBase(wizService.getAll(), "Tutti i valori (per controllo solamente)");
-
-        AEWizCost.print("Test uscita update project");
         return true;
     }
 
