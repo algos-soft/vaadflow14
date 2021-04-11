@@ -3,10 +3,6 @@ package it.algos.@MODULELOWER@.backend.boot;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import static it.algos.@MODULELOWER@.backend.application.@MODULEUPPER@Cost.*;
 import it.algos.@MODULELOWER@.backend.data.*;
-import it.algos.@MODULELOWER@.backend.enumeration.*;
-import it.algos.@MODULELOWER@.backend.packages.*;
-import it.algos.@MODULELOWER@.ui.enumeration.*;
-import it.algos.@MODULELOWER@.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
 import it.algos.vaadflow14.backend.boot.FlowBoot;
@@ -43,6 +39,7 @@ import java.time.LocalDate;
  * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file da wizard/scripts di algos <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

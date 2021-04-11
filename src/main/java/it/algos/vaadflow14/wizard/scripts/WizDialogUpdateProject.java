@@ -4,8 +4,8 @@ import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
-import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -189,36 +189,27 @@ public class WizDialogUpdateProject extends WizDialog {
      * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
     protected boolean regolaAEWizCost() {
-        AEProgetto progettoTarget = null;
-        String nameDirectory = VUOTA;
-        String nameModulo = VUOTA;
-        String pathProject = VUOTA;
+        AEProgetto progettoTarget;
+        String pathProject;
 
         if (AEFlag.isBaseFlow.is()) {
-
             //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
             progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
             if (progettoTarget == null) {
                 return false;
             }
-
-            nameDirectory = progettoTarget.getDirectory();
-            nameModulo = progettoTarget.getProjectNameModuloLower();
             pathProject = progettoTarget.getPathCompleto();
-
             if (text.isEmpty(pathProject)) {
-                pathProject = AEWizCost.pathRoot.get();
-                pathProject += AEWizCost.dirProjects.get();
-                pathProject += AEWizCost.dirOperativi.get();
-                pathProject += nameDirectory;
-                pathProject += SLASH;
+                pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectory() + FlowCost.SLASH;
             }
         }
         else {
-            //--inserisce il path completo del progetto in esecuzione
+            //--recupera il path completo del progetto in esecuzione
             pathProject = AEWizCost.pathCurrent.getValue();
-            AEWizCost.pathTargetProjectRoot.setValue(pathProject);
         }
+
+        //--inserisce il path completo del progetto in esecuzione
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
@@ -260,11 +251,24 @@ public class WizDialogUpdateProject extends WizDialog {
      * Controlla che il progetto selezionato esista nella directory deputata <br>
      */
     protected boolean checkProject(String projectName) {
-        String pathOperativa = PATH_OPERATIVI_DIR_STANDARD + projectName;
+        AEProgetto progetto;
+        String pathOperativa = VUOTA;
         String pathProgetti = PATH_PROJECTS_DIR_STANDARD + projectName;
         String message;
         String projectNameUpper = text.primaMaiuscola(projectName);
         String pathBreve = file.findPathBreve(pathOperativa, DIR_OPERATIVI);
+
+        //--percorso (eventuale) fuori standard
+        progetto = AEProgetto.getProgetto(projectName);
+        if (progetto != null) {
+            pathOperativa = progetto.getPathCompleto();
+            pathOperativa = text.isValid(pathOperativa) ? pathOperativa : PATH_OPERATIVI_DIR_STANDARD + projectName;
+        }
+        else {
+            message = String.format("Manca il progetto %s in nella Enumeration AEProgetto", text.primaMaiuscola(projectName));
+            logger.log(AETypeLog.wizard, message);
+            return false;
+        }
 
         //--posizione standard corretta
         if (file.isEsisteDirectory(pathOperativa)) {
@@ -275,13 +279,13 @@ public class WizDialogUpdateProject extends WizDialog {
         if (file.isEsisteDirectory(pathProgetti)) {
             message = String.format("Update project (%s): è rimasto nella directory %s, devi spostarlo in %s", projectNameUpper, DIR_PROJECTS, DIR_OPERATIVI);
             logger.log(AETypeLog.wizard, message);
+            return false;
         }
         else {
             message = String.format("Update project (%s): non rintracciabile nella directory %s", projectNameUpper, pathBreve);
             logger.log(AETypeLog.wizard, message);
+            return false;
         }
-
-        return false;
     }
 
 }

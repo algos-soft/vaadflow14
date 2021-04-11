@@ -21,6 +21,7 @@ public enum AEProgetto {
     bio("vaadwiki", "Wiki", "vaadwiki", VUOTA),
     wam("vaadwam", "Wam", "vaadwam", VUOTA),
     beta("beta", "beta", "beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
+    untitled("untitled", "Untitled", "untitled", "/Users/gac/Documents/IdeaProjects/untitled/"),
     moneglia("moneglia", "Moneglia", "", VUOTA),
     gestione("gestione", "Gestione", "", VUOTA),
 
@@ -64,7 +65,7 @@ public enum AEProgetto {
     }
 
 
-    public static AEProgetto getProgetti(String nameProject) {
+    public static AEProgetto getProgetto(String nameProject) {
         for (AEProgetto progetto : AEProgetto.values()) {
             if (progetto.getDirectory().equals(nameProject)) {
                 return progetto;

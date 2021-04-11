@@ -542,6 +542,12 @@ public class WizService {
         }
 
         if (realText.contains(tagIni) && realText.contains(tagEnd)) {
+            if (realText.indexOf(tagIni) >= realText.indexOf(tagEnd)) {
+                message = String.format("Il file originale %s ha qualche problema. Probabilmente manca il tag %s.", path, tagIni);
+                logger.log(AETypeLog.wizardDoc, message);
+                risultato = AResult.errato(message);
+                return risultato;
+            }
             oldHeader = realText.substring(realText.indexOf(tagIni), realText.indexOf(tagEnd));
             newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
@@ -992,10 +998,10 @@ public class WizService {
         String fileName;
 
         AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packName));
-        AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packName));
+        AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(packName));
         fileName = text.levaTestoPrimaDi(text.fixPuntoToSlash(packName), SLASH);
         AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
-        AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
+        AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
     }
 
 
@@ -1559,18 +1565,17 @@ public class WizService {
         listaType.add(AEWizValue.inserito);
         listaType.add(AEWizValue.derivato);
 
-        listaWiz= getAllTypeWiz(listaType);
+        listaWiz = getAllTypeWiz(listaType);
         printInfoBase(listaWiz, "Valori correnti per un nuovo progetto");
 
         return listaWiz;
 
-
         //        if (array.isEmpty(vuoteProgetto)) {
-//            printInfoBase(vuoteProgetto, "Costanti del progetto a cui manca ancora un valore indispensabile");
-//        }
-//        else {
-//            printInfoBase(getHannoValoreValido(), "Costanti del progetto con i valori utilizzabili");
-//        }
+        //            printInfoBase(vuoteProgetto, "Costanti del progetto a cui manca ancora un valore indispensabile");
+        //        }
+        //        else {
+        //            printInfoBase(getHannoValoreValido(), "Costanti del progetto con i valori utilizzabili");
+        //        }
     }
 
     //--metodo statico invocato da Wizard.initView()

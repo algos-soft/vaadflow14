@@ -372,7 +372,7 @@ public abstract class WizElabora implements WizRecipient {
         upperName = text.primaMaiuscola(fileName);
 
         AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(fileName));
-        AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(fileName));
+        AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(fileName));
         AEWizCost.nameTargetFileUpper.setValue(upperName);
         AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
         pathFileDaModificare = AEWizCost.pathTargetPackageSlash.get() + upperName + suffisso + JAVA_SUFFIX;

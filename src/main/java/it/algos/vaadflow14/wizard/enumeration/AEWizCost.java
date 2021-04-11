@@ -410,26 +410,40 @@ public enum AEWizCost {
     },
 
     /**
-     * Nome del package da creare. Eventualmente con sub-directory <br>
+     * Nome del package da creare. Eventualmente con sub-directory (separatore punto) <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
     nameTargetPackagePunto(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando punto", VALORE_MANCANTE),
 
     /**
-     * Nome del package da creare. Eventualmente con sub-directory <br>
+     * Nome del package da creare. Eventualmente con sub-directory (separatore slash) <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetPackageSlash(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE) {
-        public void setValue() {
+    nameTargetPackage(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome del package da creare/modificare usando slash", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            if (nameTargetPackagePunto.valida) {
+                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.getValue());
+                this.setValida(true);
+            }
         }
     },
 
     /**
-     * Nome del package da creare. <br>
+     * Nome del file da creare. Singolo file. Senza sub-directory. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
     nameTargetFileUpper(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome del file da creare/modificare con iniziale maiuscola", VALORE_MANCANTE) {
-        public void setValue() {
+        @Override
+        public void fixValue() {
+            String fileName;
+
+            nameTargetPackage.fixValue();
+            if (nameTargetPackage.valida) {
+                fileName = text.levaTestoPrimaDi(nameTargetPackage.getValue(), SLASH);
+                this.value = text.primaMaiuscola(fileName);
+                this.setValida(true);
+            }
         }
     },
 
@@ -438,7 +452,14 @@ public enum AEWizCost {
      * Tutte le enums il cui nome inizia con 'path', iniziano e finiscono con uno SLASH <br>
      */
     pathTargetPackageSlash(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.path, "Directory del package da creare/modificare", VALORE_MANCANTE) {
-        public void setValue() {
+        @Override
+        public void fixValue() {
+            pathTargetProjectPackages.fixValue();
+            nameTargetPackage.fixValue();
+            if (pathTargetProjectPackages.valida && nameTargetPackage.valida) {
+                this.value = pathTargetProjectPackages.getValue() + AEWizCost.nameTargetPackage.getValue() + SLASH;
+                this.setValida(true);
+            }
         }
     },
 

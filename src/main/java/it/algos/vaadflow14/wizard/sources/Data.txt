@@ -5,10 +5,13 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
 import it.algos.vaadflow14.backend.interfaces.AIResult;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.AResult;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 

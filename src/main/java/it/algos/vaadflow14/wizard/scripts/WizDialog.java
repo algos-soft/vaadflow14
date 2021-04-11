@@ -339,7 +339,7 @@ public abstract class WizDialog extends Dialog {
         AEToken.reset();
 
         projectName = AEWizCost.nameTargetProjectUpper.get();
-        packageName = AEWizCost.nameTargetPackageSlash.get();
+        packageName = AEWizCost.nameTargetPackage.get();
         fileName = AEWizCost.nameTargetFileUpper.get();
         return wizService.regolaAEToken(projectName, packageName, fileName);
     }

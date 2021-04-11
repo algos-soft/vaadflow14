@@ -5,16 +5,16 @@
 server.port=${PORT:8080}
 
 # versione di vaadin
-vaadin.version=14.4.10
+vaadin.version=14.5.2
 
 # versione del framework
-algos.vaadflow.version=0.52
+algos.vaadflow.version=0.54
 
 # data del framework
 algos.vaadflow.version.date=@TODAY@
 algos.vaadflow.version.date.anno=2021
-algos.vaadflow.version.date.mese=3
-algos.vaadflow.version.date.giorno=16
+algos.vaadflow.version.date.mese=4
+algos.vaadflow.version.date.giorno=12
 
 # versione del progetto
 algos.@PROJECTLOWER@.version=0.1

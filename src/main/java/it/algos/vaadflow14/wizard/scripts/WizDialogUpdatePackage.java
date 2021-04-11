@@ -30,6 +30,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      */
     protected HorizontalLayout propertyLayout;
 
+
     /**
      * Apertura del dialogo <br>
      */
@@ -39,8 +40,21 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         AEFlag.isUpdatePackage.set(true);
 
         super.inizia();
+        this.regolazioniIniziali();
     }
 
+    protected void regolazioniIniziali() {
+        String pathProject = VUOTA;
+
+        //--recupera il path completo del progetto in esecuzione
+        pathProject = AEWizCost.pathCurrent.getValue();
+
+        //--inserisce il path completo del progetto in esecuzione
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+    }
 
     /**
      * Legenda iniziale <br>
@@ -249,10 +263,10 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         if (text.isValid(packageName)) {
             packageName = text.fixPuntoToSlash(packageName);
             AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packageName));
-            AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packageName));
+            AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(packageName));
             packageName = text.levaTestoPrimaDi(packageName, SLASH);
             AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(packageName));
-            AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
+            AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
         }
         fields = leggeFieldsBaseEsistenti(packageName);
 
@@ -269,36 +283,6 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         confirmButton.setEnabled(text.isValid(packageName));
     }
 
-//    /**
-//     * Chiamato alla dismissione del dialogo <br>
-//     * Regola i valori regolabili della Enumeration AEWizCost <br>
-//     * Verranno usati da: <br>
-//     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected boolean regolaAEWizCost() {
-//        String packName;
-//        String fileName;
-//
-//        //--ci sono diversi VALORE_MANCANTE di cui 7 regolati all'ingresso del dialogo
-//        if (fieldComboPackages != null) {
-//            packName = fieldComboPackages.getValue();
-//            if (text.isValid(packName)) {
-//                wizService.regolaPackages(packName);
-////                packName = text.fixPuntoToSlash(packName);
-////                AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packName));
-////                AEWizCost.nameTargetPackageSlash.setValue(text.fixPuntoToSlash(packName));
-////                fileName = text.levaTestoPrimaDi(packName, SLASH);
-////                AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
-////                AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackageSlash.get() + SLASH);
-//            }
-//        }
-//
-//        AEWizCost.printVuote();
-//        AEWizCost.printInfoBase(AEWizCost.getPackages(), "Variabili del package. Dipende dal package selezionato");
-//        return true;
-//    }
 
     /**
      * Chiamato alla dismissione del dialogo <br>
@@ -309,11 +293,21 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      */
     @Override
     protected boolean regolaAEWizCost() {
-        if (fieldComboPackages != null && text.isValid(fieldComboPackages.getValue())) {
-            super.regolaPackages(fieldComboPackages.getValue());
+        String pathProject = VUOTA;
+        String packageName = VUOTA;
+
+        if (AEFlag.isBaseFlow.is()) {
+        }
+        else {
+            //--recupera il path completo del progetto in esecuzione
+            pathProject = AEWizCost.pathCurrent.getValue();
         }
 
-        return true;
+        if (fieldComboPackages != null && text.isValid(fieldComboPackages.getValue())) {
+            packageName = fieldComboPackages.getValue();
+        }
+
+        return super.regolaPackages(pathProject, packageName);
     }
 
     /**

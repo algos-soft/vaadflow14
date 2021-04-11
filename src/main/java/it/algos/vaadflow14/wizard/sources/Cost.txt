@@ -15,7 +15,7 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
  * <p>
  * Not annotated with @SpringComponent (astratta, inutile) <br>
  * Not annotated with @Scope (astratta, inutile) <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file da wizard/scripts di algos <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file da wizard/scripts di algos <br>
  */
 @AIScript(sovraScrivibile = false)
 public abstract class @MODULEUPPER@Cost {
