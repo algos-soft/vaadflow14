@@ -18,6 +18,9 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class WizElaboraFeedbackWizard extends WizElabora {
 
+    /**
+     * I termini 'srcPath' e 'destPath', sono invertiti <br>
+     */
     @Override
     public void esegue() {
         super.esegue();
@@ -43,7 +46,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * File Wizard <br>
      * Ricopia il file Wizard da questo progetto a VaadFlow <br>
      * Sovrascrive completamente il file Wizard esistente su VaadFlow che viene perso <br>
-     * I termini 'src' e 'dest', sono invertiti <br>
+     * I termini 'srcPath' e 'destPath', sono invertiti <br>
      */
     protected void copiaFileWizard() {
         String message;
@@ -74,7 +77,7 @@ public class WizElaboraFeedbackWizard extends WizElabora {
      * Ricopia le directory Wizard/Enumeration da questo progetto a VaadFlow <br>
      * Sovrascrive completamente la directory wizard/Enumeration esistente su VaadFlow che viene persa <br>
      * Sovrascrive completamente la directory wizard/Scripts esistente su VaadFlow che viene persa <br>
-     * I termini 'src' e 'dest', sono invertiti <br>
+     * I termini 'srcPath' e 'destPath', sono invertiti <br>
      */
     protected void copiaDirectories(String srcPath, String destPath, String tag) {
         String message;
@@ -84,12 +87,12 @@ public class WizElaboraFeedbackWizard extends WizElabora {
 
         if (!file.isEsisteDirectory(srcPath)) {
             message = String.format("Errato il path per la directory %s locale da ricopiare.", tag);
-            logger.warn(message, this.getClass(), "copiaDirectoryEnumeration");
+            logger.warn(message, this.getClass(), "copiaDirectories");
         }
 
         if (!file.isEsisteDirectory(destPath)) {
             message = String.format("Errato il path per la directory %s da sostituire su VaadFlow14.", tag);
-            logger.warn(message, this.getClass(), "copiaDirectoryEnumeration");
+            logger.warn(message, this.getClass(), "copiaDirectories");
         }
 
         wizService.copyDir(copyWiz, srcPath, destPath, DIR_VAADFLOW);

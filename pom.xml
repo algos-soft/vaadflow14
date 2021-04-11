@@ -9,7 +9,6 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
-
     <parent>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>

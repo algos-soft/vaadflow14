@@ -280,6 +280,7 @@ public abstract class WizDialog extends Dialog {
         status = status && this.regolaAEToken();
         AEModulo.fixValues(AEWizCost.pathTargetProjectModulo.get(), AEWizCost.nameTargetProjectUpper.get());
 
+        wizService.printInfoStart();
         return status;
     }
 

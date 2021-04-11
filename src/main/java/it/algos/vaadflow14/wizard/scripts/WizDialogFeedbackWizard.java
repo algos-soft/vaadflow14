@@ -1,13 +1,12 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.wizard.enumeration.AEFlag;
-import it.algos.vaadflow14.wizard.enumeration.AEWizCost;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.wizard.scripts.WizCost.TITOLO_FEEDBACK_PROGETTO;
 
 /**
  * Project provider
@@ -46,7 +45,6 @@ public class WizDialogFeedbackWizard extends WizDialog {
         topLayout = fixSezione(TITOLO_FEEDBACK_PROGETTO, "green");
         this.add(topLayout);
 
-
         if (!AEFlag.isBaseFlow.is()) {
             pathWizard = file.findPathBreve(AEWizCost.pathVaadFlow14Wizard.get(), "algos");
             pathProject = file.findPathBreve(AEWizCost.nameProjectCurrentUpper.get(), "algos");
@@ -80,6 +78,27 @@ public class WizDialogFeedbackWizard extends WizDialog {
      */
     @Override
     protected boolean regolazioniFinali() {
+        return this.regolaAEWizCost();
+    }
+
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected boolean regolaAEWizCost() {
+        String pathProject = VUOTA;
+
+        //--inserisce il path completo del progetto in esecuzione
+        pathProject = AEWizCost.pathCurrent.getValue();
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+
         return true;
     }
 
