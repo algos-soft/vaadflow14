@@ -13,6 +13,8 @@ import it.algos.vaadflow14.wizard.enumeration.*;
  */
 public abstract class WizDialogPackage extends WizDialog {
 
+
+
     /**
      * Chiamato alla dismissione del dialogo <br>
      * Regola i valori regolabili della Enumeration AEWizCost <br>
@@ -20,7 +22,7 @@ public abstract class WizDialogPackage extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected boolean regolaPackages(final String pathProject,final String packageName) {
+    protected boolean regolaPackages(final String pathProject, final String packageName) {
         String message;
 
         if (text.isEmpty(pathProject)) {
@@ -44,7 +46,8 @@ public abstract class WizDialogPackage extends WizDialog {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
-        return true;
+        wizService.printProgetto();
+        return false;
     }
 
 }

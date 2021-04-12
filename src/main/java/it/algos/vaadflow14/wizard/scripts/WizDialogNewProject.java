@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -214,12 +215,12 @@ public class WizDialogNewProject extends WizDialog {
             return false;
         }
 
-        //--inserisce il path completo del progetto selezionato nella Enumeration
-        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
-        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
-        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
-        pathProject = pathProjectFile.getAbsolutePath();
-        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
+        //        //--inserisce il path completo del progetto selezionato nella Enumeration
+        //        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
+        //        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
+        //        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
+        pathProject = pathProjectFile.getAbsolutePath() + SLASH;
+        //        AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
 
         //--recupera il nome (maiuscolo) del progetto presente nel textEditField (obbligatorio)
         projectNameUpper = fieldProjectNameUpper != null ? fieldProjectNameUpper.getValue() : null;
@@ -227,12 +228,12 @@ public class WizDialogNewProject extends WizDialog {
             return false;
         }
 
-        //--inserisce  il nome (maiuscolo) del progetto
-        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
-        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
+        //        //--inserisce  il nome (maiuscolo) del progetto
+        //        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
+        //        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
 
-        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        AEWizCost.fixValoriDerivati();
+        //        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        //        AEWizCost.fixValoriDerivati();
 
         //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
@@ -240,6 +241,9 @@ public class WizDialogNewProject extends WizDialog {
                 aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
             }
         }
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
 
         wizService.printProgetto();
         return true;

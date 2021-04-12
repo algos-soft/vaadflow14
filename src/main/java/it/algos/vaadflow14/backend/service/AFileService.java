@@ -2274,5 +2274,50 @@ public class AFileService extends AAbstractService {
         return status;
     }
 
+    /**
+     * Recupera una lista di files (sub-directory escluse) dalla directory <br>
+     *
+     * @param pathDirectory da spazzolare
+     *
+     * @return lista di files
+     */
+    public List<File> getFiles(String pathDirectory) {
+        List<File> lista = new ArrayList();
+        File unaDirectory = new File(pathDirectory);
+        File[] array = unaDirectory.listFiles();
+
+        for (File unFile : array) {
+            if (unFile.isFile()) {
+                lista.add(unFile);
+            }
+        }
+
+        return lista;
+    }
+
+
+    /**
+     * Recupera una lista di nomi di files (sub-directory escluse) dalla directory <br>
+     * Elimina il suffisso '.java' finale <br>
+     *
+     * @param pathDirectory da spazzolare
+     *
+     * @return lista di files
+     */
+    public List<String> getFilesNames(String pathDirectory) {
+        List<String> lista = new ArrayList();
+        List<File> listaFiles = getFiles(pathDirectory);
+        String nome;
+
+        for (File unFile : listaFiles) {
+            if (unFile.isFile()) {
+                nome = unFile.getName();
+                nome = text.levaCoda(nome, JAVA_SUFFIX);
+                lista.add(nome);
+            }
+        }
+
+        return lista;
+    }
 
 }

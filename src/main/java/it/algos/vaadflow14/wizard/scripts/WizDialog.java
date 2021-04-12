@@ -277,7 +277,7 @@ public abstract class WizDialog extends Dialog {
         boolean status = true;
 
         status = status && this.regolaAEWizCost();
-//        status = status && this.regolaAEDir();
+        //        status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
         status = status && this.regolaAEPackage();
         status = status && this.regolaAEToken();
@@ -397,6 +397,44 @@ public abstract class WizDialog extends Dialog {
         return layoutTitolo;
     }
 
+    /**
+     * Chiamato alla dismissione del dialogo <br>
+     * Regola i valori regolabili della Enumeration AEWizCost <br>
+     * Verranno usati da: <br>
+     * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
+     * Metodo che NON può essere sovrascritto <br>
+     *
+     * @param pathProject      (obbligatorio) completo
+     * @param projectNameUpper (obbligatorio) nome maiuscolo del progetto
+     * @param packageName      (eventuale) da creare/modificare
+     */
+    protected boolean fixValoriDerivati(final String pathProject, final String projectNameUpper, final String packageName) {
+
+        if (text.isEmpty(pathProject) || text.isEmpty(projectNameUpper)) {
+            return false;
+        }
+
+        //--inserisce il path completo del progetto selezionato nella Enumeration
+        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
+        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
+        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
+        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+
+        //--inserisce  il nome (maiuscolo) del progetto
+        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
+
+        //--inserisce il nome (eventuale) del package da creare/modificare
+        if (text.isValid(packageName)) {
+            AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packageName));
+        }
+
+        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
+        AEWizCost.fixValoriDerivati();
+
+        wizService.printProgetto();
+        return false;
+    }
 
     /**
      * Esce dal dialogo con due possibilità (a seconda del flag) <br>

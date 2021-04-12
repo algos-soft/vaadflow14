@@ -29,8 +29,11 @@ public class WizDialogNewPackage extends WizDialogPackage {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
         super.titoloCorrente = new H3();
+
+        AEFlag.isProject.set(false);
         AEFlag.isPackage.set(true);
         AEFlag.isNewPackage.set(true);
+        AEFlag.isUpdatePackage.set(false);
 
         super.inizia();
     }
