@@ -63,9 +63,19 @@ public enum AEProgetto {
     }
 
 
-    public static AEProgetto getProgetto(String nameProject) {
+    public static AEProgetto getProgettoByName(String nameProject) {
         for (AEProgetto progetto : AEProgetto.values()) {
             if (progetto.getProjectNameUpper().equalsIgnoreCase(nameProject)) {
+                return progetto;
+            }
+        }
+
+        return null;
+    }
+
+    public static AEProgetto getProgettoByDirectory(String directory) {
+        for (AEProgetto progetto : AEProgetto.values()) {
+            if (progetto.getDirectoryAndProjectModuloLower().equalsIgnoreCase(directory)) {
                 return progetto;
             }
         }

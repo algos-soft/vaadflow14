@@ -179,7 +179,7 @@ public enum AEDir {
 //                }
 
                 if (!file.isEsisteDirectory(path)) {
-                    path = AEProgetto.getProgetto(projectName).getPathCompleto();
+                    path = AEProgetto.getProgettoByName(projectName).getPathCompleto();
                     if (text.isValid(path)) {
                         if (!file.isEsisteDirectory(path)) {
                             logger.error("Errato il path del progetto selezionato: " + projectName);

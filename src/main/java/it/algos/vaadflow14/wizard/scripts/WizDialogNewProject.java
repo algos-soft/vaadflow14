@@ -47,6 +47,7 @@ public class WizDialogNewProject extends WizDialog {
         super.isNuovoProgetto = true;
         super.isStartThisProgetto = false;
         super.titoloCorrente = new H3(TITOLO_NUOVO_PROGETTO);
+
         AEFlag.isProject.set(true);
         AEFlag.isNewProject.set(true);
         AEFlag.isUpdateProject.set(false);

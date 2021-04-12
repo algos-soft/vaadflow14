@@ -44,7 +44,7 @@ import it.algos.vaadflow14.backend.annotation.AIScript;
 @EnableVaadin({"it.algos"})
 @EntityScan({"it.algos"})
 @AIScript(sovraScrivibile = false)
-public class @MODULEUPPER@Application extends SpringBootServletInitializer {
+public class @PROJECT@Application extends SpringBootServletInitializer {
 
     /**
      * Constructor
@@ -52,7 +52,7 @@ public class @MODULEUPPER@Application extends SpringBootServletInitializer {
      * @param args eventuali parametri in ingresso
      */
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(@MODULEUPPER@Application.class, args);
+        ApplicationContext context = SpringApplication.run(@PROJECT@Application.class, args);
     }// end of SpringBoot constructor
 
 

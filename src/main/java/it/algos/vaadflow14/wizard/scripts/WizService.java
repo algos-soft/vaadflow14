@@ -73,6 +73,7 @@ public class WizService {
     @Autowired
     public AFileService file;
 
+
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
      * Chiamato da Wizard.initView() <br>
@@ -87,7 +88,6 @@ public class WizService {
         //        fixAEFlag();
         fixAEDir();
     }
-
 
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
@@ -115,7 +115,6 @@ public class WizService {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
     }
-
 
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
@@ -226,7 +225,6 @@ public class WizService {
         return result;
     }
 
-
     private boolean delete(final File destDir) {
         try {
             FileUtils.deleteDirectory(destDir);
@@ -237,7 +235,6 @@ public class WizService {
         }
     }
 
-
     private boolean copy(final File srcDir, final File destDir) {
         try {
             FileUtils.copyDirectory(srcDir, destDir);
@@ -247,7 +244,6 @@ public class WizService {
             return false;
         }
     }
-
 
     /**
      * Copia un file <br>
@@ -353,7 +349,6 @@ public class WizService {
         return result;
     }
 
-
     private AIResult copy(final AECopyWiz copyWiz, final String pathFileToBeWritten, final String sourceTextElaborato, final String firstDir, String type) {
         AIResult result = AResult.errato();
         AIResult resultCheck = AResult.errato();
@@ -410,7 +405,6 @@ public class WizService {
 
         return result;
     }
-
 
     /**
      * Sostituisce l'header di un file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
@@ -493,7 +487,6 @@ public class WizService {
         return risultato;
     }
 
-
     public String leggeFile(String nomeFileTextSorgente) {
         String nomeFileTxt = nomeFileTextSorgente;
 
@@ -503,7 +496,6 @@ public class WizService {
 
         return file.leggeFile(AEWizCost.pathVaadFlow14WizSources.get() + nomeFileTxt);
     }
-
 
     /**
      * Elabora un nuovo file <br>
@@ -529,7 +521,6 @@ public class WizService {
         return testoFinaleElaborato;
     }
 
-
     /**
      * Prepara la data attuale in forma 'text' per la sostituzione <br>
      *
@@ -549,7 +540,6 @@ public class WizService {
 
         return testoData;
     }
-
 
     /**
      * Esamina un file per controllare lo stato del flag 'sovraScrivibile' (se esiste) <br>
@@ -611,7 +601,6 @@ public class WizService {
 
         return result;
     }
-
 
     /**
      * Controlla lo stato del flag 'sovraScrivibile' (se esiste) <br>
@@ -679,7 +668,6 @@ public class WizService {
         return risultato;
     }
 
-
     /**
      * Lista dei packages esistenti nel target project <br>
      * Controlla che non sia una directory di raggruppamento. Nel caso entra nelle sub-directories <br>
@@ -699,7 +687,6 @@ public class WizService {
 
         return packages;
     }
-
 
     /**
      * Estrae l'ultimo livello di sub-directories da una directory <br>
@@ -742,7 +729,6 @@ public class WizService {
         AEWizCost.nameTargetFileUpper.setValue(text.primaMaiuscola(fileName));
         AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH);
     }
-
 
     /**
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
@@ -845,7 +831,6 @@ public class WizService {
 
         return testo;
     }
-
 
     protected String fixProperties() {
         String testo = VUOTA;
@@ -974,7 +959,6 @@ public class WizService {
         return testo;
     }
 
-
     protected String fixCodeDoc() {
         String testo = VUOTA;
 
@@ -1071,7 +1055,6 @@ public class WizService {
         return listaWizCost;
     }
 
-
     @Deprecated
     private List<AEWizCost> getAllTypeWiz(final List<AEWizValue> listaType) {
         List<AEWizCost> listaWizCost = new ArrayList<>();
@@ -1139,7 +1122,6 @@ public class WizService {
         return getAllWizUso(AEWizUso.flagPackages);
     }
 
-
     public List<AEWizCost> getNecessitanoInserimentoValore() {
         List<AEWizValue> listaType = new ArrayList<>();
         listaType.add(AEWizValue.calcolato);
@@ -1162,11 +1144,6 @@ public class WizService {
         return listaWizCost;
     }
 
-
-    public List<AEWizCost> getNome() {
-        return getAllTypeFile(AEWizCopy.nome);
-    }
-
     //    public List<AEWizCost> getFile() {
     //        return getAllTypeFile(AEWizCopy.file);
     //    }
@@ -1179,8 +1156,8 @@ public class WizService {
     //        return getAllTypeFile(AEWizCopy.dir);
     //    }
 
-    public List<AEWizCost> getPath() {
-        return getAllTypeFile(AEWizCopy.path);
+    public List<AEWizCost> getNome() {
+        return getAllTypeFile(AEWizCopy.nome);
     }
 
     //    public List<AEWizCost> getNewProject() {
@@ -1219,6 +1196,9 @@ public class WizService {
     //        return listaWizCost;
     //    }
 
+    public List<AEWizCost> getPath() {
+        return getAllTypeFile(AEWizCopy.path);
+    }
 
     public List<AEWizCost> getInseritoValore() {
         List<AEWizCost> listaWizCost = new ArrayList<>();
@@ -1280,6 +1260,7 @@ public class WizService {
         return listaWizCost;
     }
 
+
     public List<AEWizCost> getHannoValoreValido() {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
@@ -1295,6 +1276,33 @@ public class WizService {
         }
 
         return listaWizCost;
+    }
+
+
+    /**
+     * Recupera il nome dell'applicazione principale (main) di un progetto <br>
+     * Può coincider col nome della directory/modulo oppure essere diverso <br>
+     * Cerco tutti i file nella directory/modulo che è l'ultima del path <br>
+     * Dovrebbe essercene solo uno che termina con 'xxxApplication' <br>
+     * Se ce n'è più di uno, prende il primo. <br>
+     * Estraggo il testo prima del tag 'Application' <br>
+     *
+     * @return nome maiuscolo del progetto, indipendente dalla directory/modulo
+     */
+    public String estraeProjectFromApplication() {
+        String projectNameUpper = VUOTA;
+        String tag = "Application";
+        String pathModulo = AEWizCost.pathTargetProjectModulo.get();
+        List<String> lista = file.getFilesNames(pathModulo);
+
+        for (String nome : lista) {
+            if (nome.endsWith(tag)) {
+                projectNameUpper = text.levaCoda(nome, tag);
+                break;
+            }
+        }
+
+        return projectNameUpper;
     }
 
     //    public List<AEWizCost> getVuoteProject() {

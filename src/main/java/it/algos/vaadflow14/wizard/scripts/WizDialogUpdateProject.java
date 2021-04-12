@@ -34,8 +34,11 @@ public class WizDialogUpdateProject extends WizDialog {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
         super.titoloCorrente = new H3();
+
         AEFlag.isProject.set(true);
+        AEFlag.isNewProject.set(false);
         AEFlag.isUpdateProject.set(true);
+        AEFlag.isPackage.set(false);
 
         super.inizia();
     }
@@ -191,30 +194,54 @@ public class WizDialogUpdateProject extends WizDialog {
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget;
         String pathProject;
-        String projectNameUpper;
+        String projectNameUpper=VUOTA;
+        String directoryAndProjectModuloLower;
 
+        //--se siamo nel progetto base vaadFlow, si deve selezionare un progetto esistente nel combobox
+        //--i progetti sono solo quelli definiti nella Enumeration AEProgetto
         if (AEFlag.isBaseFlow.is()) {
-            //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
+            //--recupera il progetto selezionato dal combobox (obbligatorio)
             progettoTarget = fieldComboProgetti != null ? fieldComboProgetti.getValue() : null;
             if (progettoTarget == null) {
                 return false;
             }
+
+            //--recupera il path del progetto selezionato dall'elemento della enumeration AEProgetto
             pathProject = progettoTarget.getPathCompleto();
             if (text.isEmpty(pathProject)) {
                 pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectoryAndProjectModuloLower() + SLASH;
             }
+
+            //--recupera il nome del progetto selezionato dall'elemento della enumeration AEProgetto
+            //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
             projectNameUpper = progettoTarget.getProjectNameUpper();
         }
+        //--se siamo in un progetto specifico, recupera il path da quello corrente
         else {
             //--recupera il path completo del progetto in esecuzione
             pathProject = AEWizCost.pathCurrent.getValue();
-            projectNameUpper = file.estraeClasseFinale(pathProject);
+
+            //--recupera la directory del progetto in esecuzione
+            directoryAndProjectModuloLower = file.estraeClasseFinale(pathProject);
+
+            //--recupera un progetto della enumeration AEProgetto
+            //--tramite il valore di directoryAndProjectModuloLower
+            progettoTarget = AEProgetto.getProgettoByDirectory(directoryAndProjectModuloLower);
+            if (progettoTarget != null) {
+                projectNameUpper = progettoTarget.getProjectNameUpper();
+            }
+
+            //--se non ha trovato un progetto (possibile), usa il valore del file xxxApplication
+            //--estraendo la parte del nome precedente il tag 'Application'
+            if (text.isEmpty(projectNameUpper)) {
+                projectNameUpper = wizService.estraeProjectFromApplication();
+            }
         }
-        if (text.isEmpty(pathProject)||text.isEmpty(projectNameUpper)) {
+        if (text.isEmpty(pathProject) || text.isEmpty(projectNameUpper)) {
             return false;
         }
 
-        //--inserisce il path completo del progetto selezionato nella Enumeration
+        //--inserisce il path completo del progetto selezionato nella Enumeration AEProgetto
         //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
         //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
         //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
@@ -272,7 +299,7 @@ public class WizDialogUpdateProject extends WizDialog {
         String pathBreve = file.findPathBreve(pathOperativa, DIR_OPERATIVI);
 
         //--percorso (eventuale) fuori standard
-        progetto = AEProgetto.getProgetto(projectName);
+        progetto = AEProgetto.getProgettoByName(projectName);
         if (progetto != null) {
             pathOperativa = progetto.getPathCompleto();
             pathOperativa = text.isValid(pathOperativa) ? pathOperativa : PATH_OPERATIVI_DIR_STANDARD + projectName;
