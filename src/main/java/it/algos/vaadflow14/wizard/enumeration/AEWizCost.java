@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import javax.annotation.*;
+import java.util.*;
 
 /**
  * Project vaadwiki14
@@ -140,9 +141,9 @@ public enum AEWizCost {
     pathTargetProjectModulo(AEWizValue.derivato, AEWizUso.flagProject, AEWizCopy.path, "Directory MODULO del progetto", VALORE_MANCANTE, AECopyWiz.dirAddingOnly) {
         @Override
         public void fixValue() {
-            nameTargetProjectLower.fixValue();
-            if (nameTargetProjectLower.valida) {
-                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirModulo.get() + nameTargetProjectLower.getValue() + FlowCost.SLASH;
+            nameTargetProjectModulo.fixValue();
+            if (nameTargetProjectModulo.valida) {
+                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirModulo.get() + nameTargetProjectModulo.getValue() + FlowCost.SLASH;
                 this.setValida(true);
             }
         }
@@ -332,33 +333,45 @@ public enum AEWizCost {
     pathTargetProjectRoot(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.path, "Path root del progetto target", VALORE_MANCANTE),
 
     /**
-     * Nome del progetto target. <br>
+     * Nome della directory e del modulo del progetto target. Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki) <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameTargetProjectUpper(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE) {
+    nameTargetProjectModulo(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo della directory e del modulo target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            String targetProject;
-
             if (pathTargetProjectRoot.valida) {
-                targetProject = file.estraeClasseFinale(pathTargetProjectRoot.getValue());
-                targetProject = text.primaMaiuscola(targetProject);
-                this.value = targetProject;
+                this.value = file.estraeClasseFinale(pathTargetProjectRoot.getValue()).toLowerCase(Locale.ROOT);
                 this.setValida(true);
             }
         }
     },
 
     /**
-     * Nome minuscolo del progetto target. <br>
+     * Nome minuscolo del progetto target. Di norma ( e sempre per i nuovi progetti) è uguale a nameTargetProjectModulo. <br>
+     * Può differire nella enumeration AEProgetto <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
     nameTargetProjectLower(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            nameTargetProjectUpper.fixValue();
-            if (nameTargetProjectUpper.valida) {
-                this.value = nameTargetProjectUpper.getValue().toLowerCase();
+            nameTargetProjectModulo.fixValue();
+            if (nameTargetProjectModulo.valida) {
+                this.value = nameTargetProjectModulo.getValue();
+                this.setValida(true);
+            }
+        }
+    },
+
+    /**
+     * Nome del progetto target. Di norma ( e sempre per i nuovi progetti) è uguale a <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetProjectUpper(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE) {
+        @Override
+        public void fixValue() {
+            nameTargetProjectLower.fixValue();
+            if (nameTargetProjectLower.valida) {
+                this.value = text.primaMaiuscola(nameTargetProjectLower.getValue());
                 this.setValida(true);
             }
         }

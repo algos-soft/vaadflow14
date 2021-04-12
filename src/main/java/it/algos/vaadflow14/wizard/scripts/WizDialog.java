@@ -10,6 +10,7 @@ import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.notification.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
@@ -98,6 +99,8 @@ public abstract class WizDialog extends Dialog {
     protected Button buttonForzaDirectory;
 
     protected TextField fieldPackageName;
+
+    protected TextField fieldProjectNameUpper;
 
     /**
      * Sezione superiore,coi titoli e le info <br>
@@ -338,10 +341,10 @@ public abstract class WizDialog extends Dialog {
         String fileName;
         AEToken.reset();
 
-        projectName = AEWizCost.nameTargetProjectUpper.get();
-        packageName = AEWizCost.nameTargetPackage.get();
+        projectName = AEWizCost.nameTargetProjectUpper.isValida() ? AEWizCost.nameTargetProjectUpper.get() : VUOTA;
+        packageName = AEWizCost.nameTargetPackage.isValida() ? AEWizCost.nameTargetPackage.get() : VUOTA;
         fileName = AEWizCost.nameTargetFileUpper.get();
-        return wizService.regolaAEToken(projectName, packageName, fileName);
+        return wizService.regolaAEToken(projectName, "pippoz", packageName, fileName);
     }
 
     /**

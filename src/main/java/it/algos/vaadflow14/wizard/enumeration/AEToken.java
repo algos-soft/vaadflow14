@@ -1,10 +1,10 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
 
-import java.util.Map;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.FLAG_DEBUG_WIZ;
+import java.util.*;
 
 
 /**

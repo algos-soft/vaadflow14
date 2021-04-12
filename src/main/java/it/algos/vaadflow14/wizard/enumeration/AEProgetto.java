@@ -18,29 +18,27 @@ import java.util.*;
  */
 public enum AEProgetto {
 
-    bio("vaadwiki", "Wiki", "vaadwiki", VUOTA),
-    wam("vaadwam", "Wam", "vaadwam", VUOTA),
-    beta("beta", "beta", "beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
-    untitled("untitled", "Untitled", "untitled", "/Users/gac/Documents/IdeaProjects/untitled/"),
-    moneglia("moneglia", "Moneglia", "", VUOTA),
-    gestione("gestione", "Gestione", "", VUOTA),
+    bio("Wiki", "vaadwiki", VUOTA),
+    wam("Wam", "vaadwam", VUOTA),
+    beta("Beta", "beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
+    untitled("Untitled", "untitled", "/Users/gac/Documents/IdeaProjects/untitled/"),
+    moneglia("Moneglia", "moneglia", VUOTA),
+    gestione("Gestione", "gestione", VUOTA),
 
     ;
 
-    private String directory;
 
     private String projectNameUpper;
 
-    private String projectNameModuloLower;
+    private String directoryAndProjectModuloLower;
 
     //--path completo se diverso da /Users/gac/Documents/IdeaProjects/operativi/...
     private String pathCompleto;
 
 
-    AEProgetto(String directory, String projectNameUpper, String projectNameModuloLower, String pathCompleto) {
-        this.directory = directory;
+    AEProgetto(String projectNameUpper, String directoryAndProjectModuloLower, String pathCompleto) {
         this.projectNameUpper = projectNameUpper;
-        this.projectNameModuloLower = projectNameModuloLower;
+        this.directoryAndProjectModuloLower = directoryAndProjectModuloLower;
         this.pathCompleto = pathCompleto;
     }
 
@@ -58,7 +56,7 @@ public enum AEProgetto {
         List<String> nomi = new ArrayList<>();
 
         for (AEProgetto progetto : AEProgetto.values()) {
-            nomi.add(progetto.directory);
+            nomi.add(progetto.getProjectNameUpper());
         }
 
         return nomi;
@@ -67,7 +65,7 @@ public enum AEProgetto {
 
     public static AEProgetto getProgetto(String nameProject) {
         for (AEProgetto progetto : AEProgetto.values()) {
-            if (progetto.getDirectory().equals(nameProject)) {
+            if (progetto.getProjectNameUpper().equalsIgnoreCase(nameProject)) {
                 return progetto;
             }
         }
@@ -85,30 +83,22 @@ public enum AEProgetto {
             System.out.println("Progetti della enumeration AEProgetto");
             System.out.println("********************");
             for (AEProgetto progetto : AEProgetto.values()) {
-                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getDirectory() + " - " + progetto.getProjectNameUpper());
+                System.out.println("AEProgetto." + progetto.name() + " -> " + progetto.getProjectNameUpper()
+                        + " - " + progetto.getDirectoryAndProjectModuloLower());
             }
             System.out.println("");
         }
     }
 
-
-    public String getDirectory() {
-        return directory;
-    }
-
-
     public String getProjectNameUpper() {
         return projectNameUpper;
     }
 
-
-    public String getProjectNameModuloLower() {
-        return projectNameModuloLower;
+    public String getDirectoryAndProjectModuloLower() {
+        return directoryAndProjectModuloLower;
     }
-
 
     public String getPathCompleto() {
         return pathCompleto;
     }
-
 }// end of enumeration class

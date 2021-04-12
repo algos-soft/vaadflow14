@@ -114,33 +114,6 @@ public class WizService {
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
-
-        //--isBaseFlow
-        //        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
-        //        AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-        //        AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-        //        AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + SLASH);
-        //        AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        //        AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        //        AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-
-        //        if (AEFlag.isBaseFlow.is()) {
-        //            AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
-        //            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-        //            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-        //            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-        //            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
-        //        }
-        //        else {
-        //            AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameProject));
-        //            AEWizCost.nameTargetProjectLower.setValue(nameProject.toLowerCase());
-        //            AEWizCost.pathTargetProjectRoot.setValue(pathCurrent);
-        //            AEWizCost.pathTargetProjectModulo.setValue(pathCurrent + AEWizCost.dirModulo.get() + project.toLowerCase(Locale.ROOT) + FlowCost.SLASH);
-        //            AEWizCost.pathTargetProjectBoot.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirBoot.get());
-        //            AEWizCost.pathTargetProjectPackages.setValue(AEWizCost.pathTargetProjectModulo.get() + AEWizCost.dirPackages.get());
-        //            AEWizCost.pathTargetProjectSources.setValue(AEWizCost.pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get());
     }
 
 
@@ -173,9 +146,7 @@ public class WizService {
 
             AEDir.modificaProjectAll(projectName);
         }
-
     }
-
 
     /**
      * Reset delle enumeration <br>
@@ -185,15 +156,6 @@ public class WizService {
         AEFlag.reset();
         AECheck.reset();
     }
-
-    //    /**
-    //     * Visualizzazione iniziale di controllo <br>
-    //     */
-    //    public void printStart() {
-    //        AEWizCost.printInfo();
-    //        //        AEProgetto.printInfo();
-    //    }
-
 
     /**
      * Visualizzazione iniziale di controllo <br>
@@ -260,7 +222,6 @@ public class WizService {
                 logger.warn("Switch - caso non definito", this.getClass(), "copyDir");
                 break;
         }
-        //        logger.log(AETypeLog.wizard, message);
 
         return result;
     }
@@ -287,24 +248,6 @@ public class WizService {
         }
     }
 
-    //    /**
-    //     * Copia un file <br>
-    //     * <p>
-    //     * Controlla che siano validi i path di riferimento <br>
-    //     * Controlla che esista il path del file sorgente  <br>
-    //     * Se manca il file sorgente, non fa nulla <br>
-    //     * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
-    //     * Se esiste il file di destinazione ed è AECopyDir.sovrascriveSempreAncheSeEsiste, lo sovrascrive <br>
-    //     * Se esiste il file di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
-    //     * Nei messaggi di avviso, accorcia il destPath eliminando i livelli precedenti alla directory indicata <br>
-    //     *
-    //     * @param typeCopy modalità di comportamento se esiste il file di destinazione
-    //     * @param srcPath  nome completo di suffisso del file sorgente
-    //     * @param destPath nome completo di suffisso del file da creare
-    //     */
-    //    public void copyFile(AECopyWiz typeCopy, String srcPath, String destPath) {
-    //        copyFile(typeCopy, srcPath, destPath, DIR_PROJECTS);
-    //    }
 
     /**
      * Copia un file <br>
@@ -329,34 +272,6 @@ public class WizService {
         sourceTextElaborato = file.leggeFile(srcPath);
         copy(copyWiz, destPath, sourceTextElaborato, firstDir, type);
     }
-
-    //    @Deprecated
-    //    public boolean copyDirectory(AECopy typeCopy, String srcPath, String destPath) {
-    //        return file.copyDirectory(typeCopy, srcPath, destPath, DIR_PROJECTS);
-    //    }
-
-    //    /**
-    //     * Crea un nuovo file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
-    //     * <p>
-    //     * Controlla che sia valido il path di riferimento <br>
-    //     * Controlla che nella directory wizard.sources di VaadFlow14 esista il file sorgente da copiare <br>
-    //     * Se manca il file sorgente, non fa nulla <br>
-    //     * Se non esiste la directory di destinazione, la crea <br>
-    //     * Se esiste il file di destinazione ed è AECopyFile.soloSeNonEsiste, non fa nulla <br>
-    //     * Se esiste la directory di destinazione ed è AECopyDir.deletingAll, la cancella e poi la copia <br>
-    //     * Se esiste la directory di destinazione ed è AECopyFile.checkFlagSeEsiste, controlla il flag sovraScrivibile <br>
-    //     * Nei messaggi di avviso, accorcia il pathFileToBeWritten eliminando i primi 4 livelli (/Users/gac/Documents/IdeaProjects) <br>
-    //     * Elabora il testo sostituendo i 'tokens' coi valori attuali <br>
-    //     * Scrive il file col path e suffisso indicati <br>
-    //     *
-    //     * @param typeCopy            modalità di comportamento se esiste il file di destinazione
-    //     * @param nameSourceText      nome del file di testo presente nella directory wizard.sources di VaadFlow14
-    //     * @param pathFileToBeWritten nome completo di suffisso del file da creare
-    //     */
-    //    @Deprecated
-    //    public void creaFileProject(AECopyWiz typeCopy, String nameSourceText, String pathFileToBeWritten) {
-    //        creaFile(typeCopy, nameSourceText, pathFileToBeWritten, DIR_PROJECTS);
-    //    }
 
     /**
      * Crea un nuovo file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
@@ -578,109 +493,6 @@ public class WizService {
         return risultato;
     }
 
-    //    /**
-    //     * Crea un nuovo file <br>
-    //     * <p>
-    //     * Costruisce il testo prendendolo dalla directory wizard/sources di VaadFlow14 <br>
-    //     * Elabora il testo sostituendo i 'token' coi valori attuali <br>
-    //     * Scrive il file col path designato <br>
-    //     *
-    //     * @param nomeFileSrc         nome del file presente in wizard/sources
-    //     * @param pathFileToBeWritten nome completo del file da scrivere
-    //     */
-    //    @Deprecated
-    //    public void sovraScriveNewFileCreatoDaSource(String nomeFileSrc, String pathFileToBeWritten) {
-    //        String sourceText = leggeFile(nomeFileSrc);
-    //
-    //        if (text.isEmpty(sourceText)) {
-    //            logger.warn("Non sono riuscito a leggere il file dai sorgenti di VaadFlow14", this.getClass(), "scriveNewFileCreatoDaSource");
-    //            return;
-    //        }
-    //
-    //        sourceText = elaboraFileCreatoDaSource(sourceText);
-    //        if (text.isEmpty(sourceText)) {
-    //            logger.warn("Non sono riuscito a elaborare il file", this.getClass(), "scriveNewFileCreatoDaSource");
-    //            return;
-    //        }
-    //
-    //        file.scriveFile(pathFileToBeWritten, sourceText, true, DIR_PROJECTS);
-    //    }// end of method
-
-    //    /**
-    //     * Crea un nuovo file <br>
-    //     * <p>
-    //     * Costruisce il testo prendendolo dalla directory wiz.sources del VaadFlow <br>
-    //     * Elabora il testo sostituendo i 'tag' coi valori attuali <br>
-    //     * Scrive il file col path della directory designata <br>
-    //     * Scrive il file col nome finale (potrebbe esser diverso dal nome del file presente in wiz.sources) <br>
-    //     * Scrive il file col suffisso indicato <br>
-    //     *
-    //     * @param nomeFileSrc nome del file presente in wiz.sources
-    //     * @param destPath    directory in cui costruire il file
-    //     * @param suffix      nome del file destinazione che potrebbe essere diverso da .java o .text
-    //     */
-    //    @Deprecated
-    //    public void scriveNewFileCreatoDaSource(String nomeFileSrc, String destPath, String suffix) {
-    //        scriveNewFileCreatoDaSource(nomeFileSrc, destPath, nomeFileSrc, suffix);
-    //    }// end of method
-
-    //    /**
-    //     * Crea un nuovo file <br>
-    //     * <p>
-    //     * Costruisce il testo prendendolo dalla directory wiz.sources del VaadFlow <br>
-    //     * Elabora il testo sostituendo i 'tag' coi valori attuali <br>
-    //     * Scrive il file col path della directory designata <br>
-    //     * Scrive il file col nome finale (potrebbe esser diverso dal nome del file presente in wiz.sources) <br>
-    //     * Scrive il file col suffisso indicato <br>
-    //     *
-    //     * @param nomeFileSrc  nome del file presente in wiz.sources
-    //     * @param destPath     directory in cui costruire il file
-    //     * @param nomeFileDest nome del file destinazione che potrebbe essere diverso da nomeFileSrc
-    //     * @param suffix       nome del file destinazione che potrebbe essere diverso da .java o .text
-    //     */
-    //    @Deprecated
-    //    public void scriveNewFileCreatoDaSource(String nomeFileSrc, String destPath, String nomeFileDest, String suffix) {
-    //        String sourceText = leggeFile(nomeFileSrc);
-    //
-    //        if (text.isEmpty(sourceText)) {
-    //            logger.warn("Non sono riuscito a leggere il file dai sorgenti di VaadFlow14", this.getClass(), "scriveNewFileCreatoDaSource");
-    //            return;
-    //        }
-    //
-    //        sourceText = elaboraFileCreatoDaSource(sourceText);
-    //        if (text.isEmpty(sourceText)) {
-    //            logger.warn("Non sono riuscito a elaborare il file", this.getClass(), "scriveNewFileCreatoDaSource");
-    //            return;
-    //        }
-    //
-    //        suffix = text.isValid(suffix) ? suffix : ".java";
-    //        String pathFileToBeWritten = destPath + nomeFileDest + suffix;
-    //        file.scriveFile(pathFileToBeWritten, sourceText, true);
-    //    }// end of method
-
-    //    /**
-    //     * Crea un nuovo file <br>
-    //     * <p>
-    //     * Costruisce il testo prendendolo dalla directory wiz.sources del VaadFlow <br>
-    //     * Elabora il testo sostituendo i 'tag' coi valori attuali <br>
-    //     * Scrive il file col path della directory designata <br>
-    //     * Scrive il file col nome finale (potrebbe esser diverso dal nome del file presente in wiz.sources) <br>
-    //     * Scrive il file col suffisso indicato <br>
-    //     *
-    //     * @param nomeFileSrc  nome del file presente in wiz.sources
-    //     * @param destPath     directory in cui costruire il file
-    //     * @param nomeFileDest nome del file destinazione che potrebbe essere diverso da nomeFileSrc
-    //     */
-    //    @Deprecated
-    //    public void scriveFileCreatoDaSource(String nomeFileSrc, String destPath, String nomeFileDest) {
-    //        String suffix = ".java";
-    //        String sourceText = leggeFile(nomeFileSrc);
-    //        sourceText = elaboraFileCreatoDaSource(sourceText);
-    //
-    //        String pathFileToBeWritten = destPath + nomeFileDest + suffix;
-    //        file.scriveFile(pathFileToBeWritten, sourceText, true);
-    //    }
-
 
     public String leggeFile(String nomeFileTextSorgente) {
         String nomeFileTxt = nomeFileTextSorgente;
@@ -737,79 +549,6 @@ public class WizService {
 
         return testoData;
     }
-
-    //    /**
-    //     * Copia una cartella a livello di root da VaadFlow al progetto <br>
-    //     * //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-    //     * //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-    //     *
-    //     * @param typeCopy modalità di comportamento se esiste la directory di destinazione
-    //     * @param dirName  della cartella da copiare che DEVE essere presente, come srcPath, a livello di ROOT
-    //     *
-    //     * @return true se la directory  è stata copiata
-    //     */
-    //    public boolean copyDirectoryProjectRoot(AECopyWiz typeCopy, String dirName) {
-    //        String srcPath = AEDir.pathVaadFlowRoot.get() + dirName;
-    //        String destPath = AEDir.pathTargetRoot.get() + dirName;
-    //
-    //        return copyDirectoryProject(typeCopy, srcPath, destPath);
-    //    }
-
-    //    /**
-    //     * Copia una cartella da VaadFlow al progetto <br>
-    //     * //     * Se è isNewProject()=true, la crea nuova o la sovrascrive se esisteva già <br>
-    //     * //     * Se è isUpdateProject()=true, controlla il flagDirectory del dialogo <br>
-    //     *
-    //     * @param typeCopy modalità di comportamento se esiste la directory di destinazione
-    //     * @param srcPath  nome completo della directory sorgente
-    //     * @param destPath nome completo della directory destinazione
-    //     *
-    //     * @return true se la directory  è stata copiata
-    //     */
-    //    @Deprecated
-    //    public boolean copyDirectoryProject(AECopyWiz typeCopy, String srcPath, String destPath) {
-    //        boolean copiata = false;
-    //        int numLivelli = 4;
-    //
-    //        switch (typeCopy) {//@todo Funzionalità ancora da implementare
-    //            case dirSoloSeNonEsiste:
-    //                copiata = copyDirectory(AECopy.dirSoloSeNonEsiste, srcPath, destPath);
-    //                break;
-    //            case dirDeletingAll:
-    //                copiata = copyDirectory(AECopy.dirDeletingAll, srcPath, destPath);
-    //                break;
-    //            case dirAddingOnly:
-    //                copiata = copyDirectory(AECopy.dirAddingOnly, srcPath, destPath);
-    //                break;
-    //            default:
-    //                logger.warn("Switch - caso non definito", this.getClass(), "copyDirectoryProject");
-    //                break;
-    //        }
-    //
-    //        //        if (AEFlag.isNewProject.is()) {
-    //        //            file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
-    //        //        } else {
-    //        //            if (AECheck.directory.isAbilitato()) {
-    //        //                file.copyDirectory(AECopyDir.deletingAll, srcPath, destPath, numLivelli);
-    //        //            } else {
-    //        //                file.copyDirectory(AECopyDir.addingOnly, srcPath, destPath, numLivelli);
-    //        //            }
-    //        //        }
-    //
-    //        return copiata;
-    //    }
-
-    //    /**
-    //     * Crea o modifica a seconda del flag 'flagSovrascriveFile' <br>
-    //     */
-    //    @Deprecated
-    //    public void copyFileRootProject(String fileName) {
-    //        //        String srcPath = AEDir.pathVaadFlow.get() + fileName;
-    //        String srcPath = FlowCost.VUOTA;
-    //        String destPath = AEDir.pathTargetRoot.get() + fileName;
-    //
-    //        file.copyFileDeletingAll(srcPath, destPath);
-    //    }
 
 
     /**
@@ -1009,7 +748,7 @@ public class WizService {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
      * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
      */
-    public boolean regolaAEToken(String projectName, String packageName, String fileName) {
+    public boolean regolaAEToken(String projectName, String projectModulo, String packageName, String fileName) {
         boolean status = true;
         boolean usaCompany = AECheck.company.is();
         String tagEntity = "AEntity";
@@ -1025,7 +764,11 @@ public class WizService {
             return false;
         }
         if (AEFlag.isProject.is() && text.isEmpty(projectName)) {
-            logger.warn("Stiamo modificando il progetto e manca projectName.", this.getClass(), "regolaAEToken");
+            logger.warn("Stiamo modificando un progetto e manca projectName.", this.getClass(), "regolaAEToken");
+            return false;
+        }
+        if (AEFlag.isProject.is() && text.isEmpty(projectModulo)) {
+            logger.warn("Stiamo modificando un progetto e manca projectModulo.", this.getClass(), "regolaAEToken");
             return false;
         }
         if (AEFlag.isPackage.is() && !AECheck.docFile.is() && text.isEmpty(packageName)) {
@@ -1037,6 +780,8 @@ public class WizService {
             AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
             AEToken.packageNamePunti.setValue(text.fixSlashToPunto(packageName));
             AEToken.packageNameSlash.setValue(text.fixPuntoToSlash(packageName));
+        }
+        if (text.isValid(fileName)) {
             AEToken.entityLower.setValue(fileName.toLowerCase(Locale.ROOT));
             AEToken.entityUpper.setValue(text.primaMaiuscola(fileName));
         }

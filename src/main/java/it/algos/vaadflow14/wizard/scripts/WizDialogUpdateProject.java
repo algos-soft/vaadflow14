@@ -200,7 +200,7 @@ public class WizDialogUpdateProject extends WizDialog {
             }
             pathProject = progettoTarget.getPathCompleto();
             if (text.isEmpty(pathProject)) {
-                pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectory() + FlowCost.SLASH;
+                pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectoryAndProjectModuloLower() + FlowCost.SLASH;
             }
         }
         else {
@@ -239,7 +239,7 @@ public class WizDialogUpdateProject extends WizDialog {
         super.regolaAEDir();
 
         if (fieldComboProgetti != null && fieldComboProgetti.getValue() != null) {
-            projectName = fieldComboProgetti.getValue().getDirectory();
+            projectName = fieldComboProgetti.getValue().getDirectoryAndProjectModuloLower();
             status = status && checkProject(projectName);
             status = status && AEDir.modificaProjectAll(projectName);
         }

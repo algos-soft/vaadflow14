@@ -5,6 +5,7 @@ import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -69,14 +70,13 @@ public class WizDialogNewProject extends WizDialog {
         topLayout = fixSezione("Nuovo progetto", "green");
         this.add(topLayout);
 
-        topLayout.add(text.getLabelGreenBold("Creazione di un nuovo project"));
-        topLayout.add(text.getLabelGreenBold("Devi prima creare un new project IntelliJIdea"));
-        topLayout.add(text.getLabelGreenBold("Di tipo 'MAVEN' senza selezionare archetype"));
-        topLayout.add(text.getLabelGreenBold("Rimane il POM vuoto, ma verrà sovrascritto"));
-        topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
-        topLayout.add(text.getLabelRedBold("Spunta i checkBox di regolazione che vuoi attivare"));
+        topLayout.add(text.getLabelGreenBold("Creazione di un nuovo project. Devi prima creare un new project IntelliJIdea"));
+        topLayout.add(text.getLabelGreenBold("Di tipo 'MAVEN' senza selezionare archetype. Rimane il POM vuoto, ma verrà sovrascritto"));
+        topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante. Spunta i checkBox di regolazione che vuoi attivare"));
         //        topLayout.add(text.getLabelRedBold("Nel progetto vai su pom.xml, click destro -> Maven.Reload "));
         topLayout.add(text.getLabelRedBold("Aggiungi il nuovo progetto alla enumeration AEProgetto"));
+        topLayout.add(text.getLabelBlueBold("Per i nuovi progetti directory/modulo coincidono col nome del progetto."));
+        topLayout.add(text.getLabelBlueBold("Possono essere differenziati nella enumeration AEProgetto."));
     }
 
 
@@ -114,10 +114,13 @@ public class WizDialogNewProject extends WizDialog {
         buttonForzaDirectory.setVisible(true);
         buttonForzaDirectory.setEnabled(progetti.size() < 1);
 
+        fieldProjectNameUpper = new TextField("Nome progetto (se diverso)");
+        fieldProjectNameUpper.setVisible(false);
+
         addListener();
         HorizontalLayout rigaLayout = new HorizontalLayout();
         rigaLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
-        rigaLayout.add(fieldComboProgettiNuovi, buttonForzaDirectory);
+        rigaLayout.add(fieldComboProgettiNuovi, buttonForzaDirectory, fieldProjectNameUpper);
         selezioneLayout.add(rigaLayout);
     }
 
@@ -170,12 +173,14 @@ public class WizDialogNewProject extends WizDialog {
 
 
     private void addListener() {
-        fieldComboProgettiNuovi.addValueChangeListener(event -> sincroProject(event.getValue()));
+        fieldComboProgettiNuovi.addValueChangeListener(event -> sincroProjectNuovi(event.getValue()));
     }
 
 
-    private void sincroProject(File valueFromProject) {
+    private void sincroProjectNuovi(File valueFromProject) {
         confirmButton.setEnabled(valueFromProject != null);
+        fieldProjectNameUpper.setValue(text.primaMaiuscola(valueFromProject.getName()));
+        fieldProjectNameUpper.setVisible(valueFromProject != null);
     }
 
 
