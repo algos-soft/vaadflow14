@@ -1,7 +1,7 @@
 package it.algos.@MODULELOWER@.backend.boot;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import static it.algos.@MODULELOWER@.backend.application.@MODULEUPPER@Cost.*;
+import static it.algos.@MODULELOWER@.backend.application.@PROJECT@Cost.*;
 import it.algos.@MODULELOWER@.backend.data.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.application.FlowVar;
@@ -44,7 +44,7 @@ import java.time.LocalDate;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = false)
-public class @MODULEUPPER@Boot extends FlowBoot {
+public class @PROJECT@Boot extends FlowBoot {
 
 
     /**
@@ -69,10 +69,10 @@ public class @MODULEUPPER@Boot extends FlowBoot {
 
         FlowVar.usaDebug = false;
         FlowVar.usaCompany = false;
-        FlowVar.dataClazz = @MODULEUPPER@Data.class;
+        FlowVar.dataClazz = @PROJECT@Data.class;
         FlowVar.usaSecurity = false;
         FlowVar.projectName = "@MODULEUPPER@";
-        FlowVar.projectDescrizione = "Cambia questa descrizione nel file @MODULEUPPER@Boot";
+        FlowVar.projectDescrizione = "Cambia questa descrizione nel file @PROJECT@Boot";
         FlowVar.projectVersion = Double.parseDouble(environment.getProperty("algos.@PROJECTLOWER@.version"));
         FlowVar.versionDate = @VERSIONDATE@;
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
@@ -92,7 +92,7 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      * @since java 8
      */
     protected void fixData() {
-        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(@MODULEUPPER@Data.class)) {
+        if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(@PROJECT@Data.class)) {
             dataInstance.fixData();
         }
     }
@@ -146,7 +146,7 @@ public class @MODULEUPPER@Boot extends FlowBoot {
      */
     @Autowired
     @Qualifier(TAG_@PROJECTALLUPPER@_DATA)
-    public void setDataInstance(@MODULEUPPER@Data dataInstance) {
+    public void setDataInstance(@PROJECT@Data dataInstance) {
         this.dataInstance = dataInstance;
     }
 

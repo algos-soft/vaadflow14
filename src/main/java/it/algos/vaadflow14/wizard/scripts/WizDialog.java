@@ -277,7 +277,7 @@ public abstract class WizDialog extends Dialog {
         boolean status = true;
 
         status = status && this.regolaAEWizCost();
-        status = status && this.regolaAEDir();
+//        status = status && this.regolaAEDir();
         status = status && this.regolaAECheck();
         status = status && this.regolaAEPackage();
         status = status && this.regolaAEToken();
@@ -336,15 +336,17 @@ public abstract class WizDialog extends Dialog {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da WizElaboraNewProject e WizElaboraUpdateProject <br>
      */
     protected boolean regolaAEToken() {
-        String projectName;
+        String projectNameUpper;
+        String projectModuloLower;
         String packageName;
         String fileName;
         AEToken.reset();
 
-        projectName = AEWizCost.nameTargetProjectUpper.isValida() ? AEWizCost.nameTargetProjectUpper.get() : VUOTA;
+        projectNameUpper = AEWizCost.nameTargetProjectUpper.isValida() ? AEWizCost.nameTargetProjectUpper.get() : VUOTA;
+        projectModuloLower = AEWizCost.nameTargetProjectModulo.isValida() ? AEWizCost.nameTargetProjectModulo.get() : VUOTA;
         packageName = AEWizCost.nameTargetPackage.isValida() ? AEWizCost.nameTargetPackage.get() : VUOTA;
         fileName = AEWizCost.nameTargetFileUpper.get();
-        return wizService.regolaAEToken(projectName, "pippoz", packageName, fileName);
+        return wizService.regolaAEToken(projectNameUpper, projectModuloLower, packageName, fileName);
     }
 
     /**

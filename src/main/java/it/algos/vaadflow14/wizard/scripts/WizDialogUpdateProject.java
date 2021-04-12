@@ -4,8 +4,8 @@ import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
+import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -191,6 +191,7 @@ public class WizDialogUpdateProject extends WizDialog {
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget;
         String pathProject;
+        String projectNameUpper;
 
         if (AEFlag.isBaseFlow.is()) {
             //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
@@ -200,16 +201,28 @@ public class WizDialogUpdateProject extends WizDialog {
             }
             pathProject = progettoTarget.getPathCompleto();
             if (text.isEmpty(pathProject)) {
-                pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectoryAndProjectModuloLower() + FlowCost.SLASH;
+                pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectoryAndProjectModuloLower() + SLASH;
             }
+            projectNameUpper = progettoTarget.getProjectNameUpper();
         }
         else {
             //--recupera il path completo del progetto in esecuzione
             pathProject = AEWizCost.pathCurrent.getValue();
+            projectNameUpper = file.estraeClasseFinale(pathProject);
+        }
+        if (text.isEmpty(pathProject)||text.isEmpty(projectNameUpper)) {
+            return false;
         }
 
-        //--inserisce il path completo del progetto in esecuzione
+        //--inserisce il path completo del progetto selezionato nella Enumeration
+        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
+        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
+        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+
+        //--inserisce  il nome (maiuscolo) del progetto
+        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();

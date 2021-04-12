@@ -115,7 +115,13 @@ public class WizDialogNewProject extends WizDialog {
         buttonForzaDirectory.setEnabled(progetti.size() < 1);
 
         fieldProjectNameUpper = new TextField("Nome progetto (se diverso)");
-        fieldProjectNameUpper.setVisible(false);
+        if (progetti.size() == 1) {
+            fieldProjectNameUpper.setValue(text.primaMaiuscola(progetti.get(0).getName()));
+            fieldProjectNameUpper.setVisible(true);
+        }
+        else {
+            fieldProjectNameUpper.setVisible(false);
+        }
 
         addListener();
         HorizontalLayout rigaLayout = new HorizontalLayout();
@@ -199,6 +205,7 @@ public class WizDialogNewProject extends WizDialog {
     protected boolean regolaAEWizCost() {
         File pathProjectFile;
         String pathProject;
+        String projectNameUpper;
 
         //--recupera il nome del progetto selezionato dal combobox (obbligatorio)
         pathProjectFile = fieldComboProgettiNuovi != null ? fieldComboProgettiNuovi.getValue() : null;
@@ -207,8 +214,21 @@ public class WizDialogNewProject extends WizDialog {
         }
 
         //--inserisce il path completo del progetto selezionato nella Enumeration
+        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
+        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
+        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
         pathProject = pathProjectFile.getAbsolutePath();
         AEWizCost.pathTargetProjectRoot.setValue(pathProject + SLASH);
+
+        //--recupera il nome (maiuscolo) del progetto presente nel textEditField (obbligatorio)
+        projectNameUpper = fieldProjectNameUpper != null ? fieldProjectNameUpper.getValue() : null;
+        if (text.isEmpty(projectNameUpper)) {
+            return false;
+        }
+
+        //--inserisce  il nome (maiuscolo) del progetto
+        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();

@@ -747,8 +747,13 @@ public class WizService {
     /**
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
      * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
+     *
+     * @param nameTargetProjectUpper  Nome del progetto target. Di norma è uguale a nameTargetProjectModulo
+     * @param nameTargetProjectModulo Nome della directory e del modulo del progetto target. Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki)
+     * @param packageName             Nome del package da creare. Eventualmente con sub-directory (separatore slash)
+     * @param fileName                Nome del file da creare. Singolo file. Senza sub-directory.
      */
-    public boolean regolaAEToken(String projectName, String projectModulo, String packageName, String fileName) {
+    public boolean regolaAEToken(String nameTargetProjectUpper, String nameTargetProjectModulo, String packageName, String fileName) {
         boolean status = true;
         boolean usaCompany = AECheck.company.is();
         String tagEntity = "AEntity";
@@ -759,16 +764,16 @@ public class WizService {
         String descrizioneName = text.primaMinuscola(AEPackage.description.getFieldName());
         String validoName = text.primaMinuscola(AEPackage.valido.getFieldName());
 
-        if (text.isEmpty(projectName) && text.isEmpty(packageName)) {
-            logger.warn("Manca sia projectName che packageName.", this.getClass(), "regolaAEToken");
+        if (text.isEmpty(nameTargetProjectUpper) && text.isEmpty(packageName)) {
+            logger.warn("Manca sia nameTargetProjectUpper che packageName.", this.getClass(), "regolaAEToken");
             return false;
         }
-        if (AEFlag.isProject.is() && text.isEmpty(projectName)) {
-            logger.warn("Stiamo modificando un progetto e manca projectName.", this.getClass(), "regolaAEToken");
+        if (AEFlag.isProject.is() && text.isEmpty(nameTargetProjectUpper)) {
+            logger.warn("Stiamo modificando un progetto e manca nameTargetProjectUpper.", this.getClass(), "regolaAEToken");
             return false;
         }
-        if (AEFlag.isProject.is() && text.isEmpty(projectModulo)) {
-            logger.warn("Stiamo modificando un progetto e manca projectModulo.", this.getClass(), "regolaAEToken");
+        if (AEFlag.isProject.is() && text.isEmpty(nameTargetProjectModulo)) {
+            logger.warn("Stiamo modificando un progetto e manca nameTargetProjectModulo.", this.getClass(), "regolaAEToken");
             return false;
         }
         if (AEFlag.isPackage.is() && !AECheck.docFile.is() && text.isEmpty(packageName)) {
@@ -785,12 +790,12 @@ public class WizService {
             AEToken.entityLower.setValue(fileName.toLowerCase(Locale.ROOT));
             AEToken.entityUpper.setValue(text.primaMaiuscola(fileName));
         }
-        AEToken.nameTargetProject.setValue(projectName);
-        AEToken.nameTargetProjectLower.setValue(projectName.toLowerCase());
-        AEToken.projectNameUpper.setValue(projectName.toUpperCase());
-        AEToken.moduleNameMinuscolo.setValue(projectName.toLowerCase());
-        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(projectName));
-        AEToken.first.setValue(projectName.substring(0, 1).toUpperCase());
+        AEToken.nameTargetProject.setValue(nameTargetProjectUpper);
+        AEToken.nameTargetProjectLower.setValue(nameTargetProjectUpper.toLowerCase());
+        AEToken.projectNameUpper.setValue(nameTargetProjectUpper.toUpperCase());
+        AEToken.moduleNameMinuscolo.setValue(nameTargetProjectModulo.toLowerCase());
+        AEToken.moduleNameMaiuscolo.setValue(text.primaMaiuscola(nameTargetProjectModulo));
+        AEToken.first.setValue(nameTargetProjectUpper.substring(0, 1).toUpperCase());
         AEToken.user.setValue(AEWizCost.nameUser.get());
         AEToken.today.setValue(date.getCompletaShort(LocalDate.now()));
         AEToken.todayAnno.setValue(String.valueOf(LocalDate.now().getYear()));

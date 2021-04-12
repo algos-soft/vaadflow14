@@ -1,6 +1,6 @@
 package it.algos.@MODULELOWER@.backend.data;
 
-import static it.algos.@MODULELOWER@.backend.application.@MODULEUPPER@Cost.*;
+import static it.algos.@MODULELOWER@.backend.application.@PROJECT@Cost.*;
 import it.algos.vaadflow14.backend.annotation.AIScript;
 import it.algos.vaadflow14.backend.data.FlowData;
 import it.algos.vaadflow14.backend.enumeration.AETypeLog;
@@ -36,7 +36,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 @Qualifier(TAG_@PROJECTALLUPPER@_DATA)
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
-public class @MODULEUPPER@Data extends FlowData {
+public class @PROJECT@Data extends FlowData {
 
 
     /**

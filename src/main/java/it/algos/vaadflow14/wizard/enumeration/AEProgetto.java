@@ -18,27 +18,27 @@ import java.util.*;
  */
 public enum AEProgetto {
 
-    bio("Wiki", "vaadwiki", VUOTA),
-    wam("Wam", "vaadwam", VUOTA),
-    beta("Beta", "beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
-    untitled("Untitled", "untitled", "/Users/gac/Documents/IdeaProjects/untitled/"),
-    moneglia("Moneglia", "moneglia", VUOTA),
-    gestione("Gestione", "gestione", VUOTA),
+    bio("vaadwiki", "Wiki", VUOTA),
+    wam("vaadwam", "Wam", VUOTA),
+    beta("beta", "Beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
+    untitled("untitled", "Torino", "/Users/gac/Documents/IdeaProjects/untitled/"),
+    moneglia("moneglia", "Moneglia", VUOTA),
+    gestione("gestione", "Gestione", VUOTA),
 
     ;
 
 
-    private String projectNameUpper;
-
     private String directoryAndProjectModuloLower;
+
+    private String projectNameUpper;
 
     //--path completo se diverso da /Users/gac/Documents/IdeaProjects/operativi/...
     private String pathCompleto;
 
 
-    AEProgetto(String projectNameUpper, String directoryAndProjectModuloLower, String pathCompleto) {
-        this.projectNameUpper = projectNameUpper;
+    AEProgetto(String directoryAndProjectModuloLower, String projectNameUpper, String pathCompleto) {
         this.directoryAndProjectModuloLower = directoryAndProjectModuloLower;
+        this.projectNameUpper = projectNameUpper;
         this.pathCompleto = pathCompleto;
     }
 

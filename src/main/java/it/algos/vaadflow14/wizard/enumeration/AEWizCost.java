@@ -305,7 +305,7 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameProjectCurrentUpper(AEWizValue.calcolato
+    nameProjectCurrentUpper(AEWizValue.inserito
             , AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del programma in uso. Ricavato dal path della directory corrente", VALORE_MANCANTE) {
     },
 
@@ -347,6 +347,12 @@ public enum AEWizCost {
     },
 
     /**
+     * Nome del progetto target. Di norma è uguale a nameTargetProjectModulo <br>
+     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
+     */
+    nameTargetProjectUpper(AEWizValue.inserito, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE),
+
+    /**
      * Nome minuscolo del progetto target. Di norma ( e sempre per i nuovi progetti) è uguale a nameTargetProjectModulo. <br>
      * Può differire nella enumeration AEProgetto <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
@@ -354,24 +360,9 @@ public enum AEWizCost {
     nameTargetProjectLower(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome minuscolo del progetto target", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
-            nameTargetProjectModulo.fixValue();
-            if (nameTargetProjectModulo.valida) {
-                this.value = nameTargetProjectModulo.getValue();
-                this.setValida(true);
-            }
-        }
-    },
-
-    /**
-     * Nome del progetto target. Di norma ( e sempre per i nuovi progetti) è uguale a <br>
-     * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
-     */
-    nameTargetProjectUpper(AEWizValue.derivato, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo del progetto target", VALORE_MANCANTE) {
-        @Override
-        public void fixValue() {
-            nameTargetProjectLower.fixValue();
-            if (nameTargetProjectLower.valida) {
-                this.value = text.primaMaiuscola(nameTargetProjectLower.getValue());
+            nameTargetProjectUpper.fixValue();
+            if (nameTargetProjectUpper.valida) {
+                this.value = text.primaMinuscola(nameTargetProjectUpper.getValue());
                 this.setValida(true);
             }
         }
