@@ -29,6 +29,7 @@ import org.springframework.context.event.EventListener;
 @EntityScan({"it.algos.vaadflow14","it.algos.simple"})
 public class SimpleApplication extends SpringBootServletInitializer {
 
+
     /**
      * The main method makes it possible to run the application as a plain Java
      * application which starts embedded web server via Spring Boot.
