@@ -236,12 +236,13 @@ public abstract class WizElabora implements WizRecipient {
         String message;
         String oldText;
         String newText;
+        wizService.printProgetto();
         String tagIni = "super.fixMenuRoutes();";
         String nomeFileTextSorgente = "Boot";
         String packageName = AEWizCost.nameTargetFileUpper.get();
         String tagNew = "FlowVar.menuRouteList.add(" + packageName + ".class);";
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
-        pathFileBoot += AEWizCost.nameProjectCurrentUpper.get() + nomeFileTextSorgente;
+        pathFileBoot += AEWizCost.nameTargetProjectUpper.get() + nomeFileTextSorgente;
         String pathBreve = file.findPathBreve(pathFileBoot, DIR_BACKEND);
         pathFileBoot += JAVA_SUFFIX;
 
@@ -281,7 +282,7 @@ public abstract class WizElabora implements WizRecipient {
         String clazz = AEWizCost.nameTargetFileUpper.get();
         String packageName = AEWizCost.nameTargetFileUpper.get();
         String pathFileBoot = AEWizCost.pathTargetProjectBoot.get();
-        pathFileBoot += AEWizCost.nameProjectCurrentUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
+        pathFileBoot += AEWizCost.nameTargetProjectUpper.get() + nomeFileTextSorgente + JAVA_SUFFIX;
         String tagNew = "import it.algos." + project + ".backend.packages." + pack + "." + clazz + ";";
         String pathEntity = AEWizCost.pathTargetPackageSlash.get() + text.primaMaiuscola(pack);
         String pathBreveEntity = file.findPathBreve(pathEntity, DIR_PACKAGES);
@@ -371,15 +372,19 @@ public abstract class WizElabora implements WizRecipient {
         fileName = fileName.toLowerCase();
         upperName = text.primaMaiuscola(fileName);
 
+        wizService.printInfoCompleto("Da levare");
+
         AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(fileName));
         AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(fileName));
         AEWizCost.nameTargetFileUpper.setValue(upperName);
         AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
         pathFileDaModificare = AEWizCost.pathTargetPackageSlash.get() + upperName + suffisso + JAVA_SUFFIX;
 
+        wizService.printInfoCompleto("Da levare");
+
         if (file.isEsisteFile(pathFileDaModificare)) {
 //            wizService.regolaAEToken(AEWizCost.nameProjectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
-//            risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
+            risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
         }
         else {
             message = String.format("Nel package %s manca il file %s", packageName, text.isValid(pack.getSuffix()) ? upperName + pack.getSuffix() : "Entity");

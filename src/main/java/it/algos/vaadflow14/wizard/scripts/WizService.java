@@ -734,10 +734,10 @@ public class WizService {
      * Regola alcuni valori della Enumeration EAToken che saranno usati da: <br>
      * WizElaboraNewPackage e WizElaboraUpdatePackage <br>
      *
-     * @param nameTargetProjectUpper  Nome del progetto target. Di norma è uguale a nameTargetProjectModulo
+     * @param nameTargetProjectUpper  Nome del progetto target. Può essere diverso dal valore di nameTargetProjectModulo (Es. vaadwiki e Wiki)
      * @param nameTargetProjectModulo Nome della directory e del modulo del progetto target. Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki)
-     * @param packageName             Nome del package da creare. Eventualmente con sub-directory (separatore slash)
-     * @param fileName                Nome del file da creare. Singolo file. Senza sub-directory.
+     * @param packageName             Nome del package da creare/modificare. Eventualmente con sub-directory (separatore slash)
+     * @param fileName                Nome maiuscolo del file da creare. Singolo file. Senza sub-directory.
      */
     public boolean regolaAEToken(String nameTargetProjectUpper, String nameTargetProjectModulo, String packageName, String fileName) {
         boolean status = true;
@@ -925,22 +925,22 @@ public class WizService {
 
     protected String fixPropertiesBuild() {
         String testo = VUOTA;
-        String sep = FlowCost.A_CAPO + FlowCost.A_CAPO + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB;
+        String sep = FlowCost.A_CAPO + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB + FlowCost.TAB;
 
         if (AEPackage.ordine.is()) {
-            testo += String.format(".%1$s(%1$s > 0 ? %1$s : this.getNewOrdine())" + sep, AEPackage.ordine.getFieldName());
+            testo += String.format(".%1$s(%1$s > 0 ? %1$s : this.getNewOrdine())", AEPackage.ordine.getFieldName()) + sep;
         }
 
         if (AEPackage.code.is()) {
-            testo += String.format(".%1$s(text.isValid(%1$s) ? %s : null)" + sep, AEPackage.code.getFieldName());
+            testo += String.format(".%1$s(text.isValid(%1$s) ? %s : null)", AEPackage.code.getFieldName()) + sep;
         }
 
         if (AEPackage.description.is()) {
-            testo += String.format(".%1$s(text.isValid(%1$s) ? %1$s : null)" + sep, AEPackage.description.getFieldName());
+            testo += String.format(".%1$s(text.isValid(%1$s) ? %1$s : null)", AEPackage.description.getFieldName()) + sep;
         }
 
         if (AEPackage.valido.is()) {
-            testo += String.format(".%s(%s)" + sep, AECheck.valido.getFieldName(), AEPackage.valido.getFieldName());
+            testo += String.format(".%s(%s)", AECheck.valido.getFieldName(), AEPackage.valido.getFieldName()) + sep;
         }
 
         return testo.trim();

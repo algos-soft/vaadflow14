@@ -404,13 +404,15 @@ public abstract class WizDialog extends Dialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Metodo che NON può essere sovrascritto <br>
      *
-     * @param pathProject      (obbligatorio) completo
-     * @param projectNameUpper (obbligatorio) nome maiuscolo del progetto
-     * @param packageName      (eventuale) da creare/modificare
+     * @param pathProject            (obbligatorio) path completo del progetto target. Da cui si ricava nameTargetProjectModulo (file.estraeClasseFinale).
+     * @param nameTargetProjectUpper (obbligatorio) nome maiuscolo del progetto. Può essere diverso da nameTargetProjectModulo (Es. vaadwiki e Wiki)
+     * @param packageName            (facoltativo) nome del package da creare/modificare. Eventualmente con sub-directory (separatore slash)
+     *
+     * @return false se manca uno dei due parametri obbligatori
      */
-    protected boolean fixValoriDerivati(final String pathProject, final String projectNameUpper, final String packageName) {
+    protected boolean fixValoriDerivati(final String pathProject, final String nameTargetProjectUpper, final String packageName) {
 
-        if (text.isEmpty(pathProject) || text.isEmpty(projectNameUpper)) {
+        if (text.isEmpty(pathProject) || text.isEmpty(nameTargetProjectUpper)) {
             return false;
         }
 
@@ -422,7 +424,7 @@ public abstract class WizDialog extends Dialog {
 
         //--inserisce  il nome (maiuscolo) del progetto
         //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
-        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
+        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(nameTargetProjectUpper));
 
         //--inserisce il nome (eventuale) del package da creare/modificare
         if (text.isValid(packageName)) {
@@ -433,8 +435,9 @@ public abstract class WizDialog extends Dialog {
         AEWizCost.fixValoriDerivati();
 
         wizService.printProgetto();
-        return false;
+        return true;
     }
+
 
     /**
      * Esce dal dialogo con due possibilità (a seconda del flag) <br>

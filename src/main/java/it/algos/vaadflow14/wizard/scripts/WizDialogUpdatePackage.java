@@ -39,21 +39,30 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
         AEFlag.isPackage.set(true);
         AEFlag.isUpdatePackage.set(true);
 
-        super.inizia();
+        AEFlag.isProject.set(false);
+        AEFlag.isPackage.set(true);
+        AEFlag.isNewPackage.set(false);
+        AEFlag.isUpdatePackage.set(true);
+
         this.regolazioniIniziali();
+        super.inizia();
     }
 
     protected void regolazioniIniziali() {
         String pathProject = VUOTA;
+        String projectNameUpper = VUOTA;
+        String packageName = VUOTA;
 
         //--recupera il path completo del progetto in esecuzione
+        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
         pathProject = AEWizCost.pathCurrent.getValue();
 
-        //--inserisce il path completo del progetto in esecuzione
-        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
+        //--recupera il nome (maiuscolo) del progetto in esecuzione
+        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+        projectNameUpper = AEWizCost.nameProjectCurrentUpper.getValue();
 
-        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        AEWizCost.fixValoriDerivati();
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+         super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
     }
 
     /**
@@ -294,20 +303,24 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
     @Override
     protected boolean regolaAEWizCost() {
         String pathProject = VUOTA;
+        String projectNameUpper = VUOTA;
         String packageName = VUOTA;
 
-        if (AEFlag.isBaseFlow.is()) {
-        }
-        else {
-            //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.getValue();
-        }
+        //--recupera il path completo del progetto in esecuzione
+        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
+        pathProject = AEWizCost.pathCurrent.getValue();
+
+        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
+        //--estraendo la parte del nome precedente il tag 'Application'
+        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+        projectNameUpper = wizService.estraeProjectFromApplication();
 
         if (fieldComboPackages != null && text.isValid(fieldComboPackages.getValue())) {
             packageName = fieldComboPackages.getValue();
         }
 
-        return super.regolaPackages(pathProject, packageName);
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+        return super.fixValoriDerivati(pathProject, projectNameUpper, packageName);
     }
 
     /**

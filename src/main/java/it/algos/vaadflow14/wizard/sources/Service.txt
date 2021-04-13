@@ -83,7 +83,6 @@ public class @ENTITYUPPER@Service extends AService {
         return (@ENTITYUPPER@) fixKey(newEntityBean);
     }
 
-
     /**
      * Retrieves an entity by its id.
      *

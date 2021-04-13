@@ -4,7 +4,6 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
@@ -35,9 +34,26 @@ public class WizDialogNewPackage extends WizDialogPackage {
         AEFlag.isNewPackage.set(true);
         AEFlag.isUpdatePackage.set(false);
 
+        this.regolazioniIniziali();
         super.inizia();
     }
 
+    protected void regolazioniIniziali() {
+        String pathProject = VUOTA;
+        String projectNameUpper = VUOTA;
+        String packageName = VUOTA;
+
+        //--recupera il path completo del progetto in esecuzione
+        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
+        pathProject = AEWizCost.pathCurrent.getValue();
+
+        //--recupera il nome (maiuscolo) del progetto in esecuzione
+        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+        projectNameUpper = AEWizCost.nameProjectCurrentUpper.getValue();
+
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+        super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
+    }
 
     /**
      * Legenda iniziale <br>
@@ -132,43 +148,28 @@ public class WizDialogNewPackage extends WizDialogPackage {
     @Override
     protected boolean regolaAEWizCost() {
         String pathProject = VUOTA;
+        String projectNameUpper = VUOTA;
         String packageName = VUOTA;
 
-        if (AEFlag.isBaseFlow.is()) {
-        }
-        else {
-            //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.getValue();
-        }
+        //--recupera il path completo del progetto in esecuzione
+        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
+        pathProject = AEWizCost.pathCurrent.getValue();
+
+//        //--recupera il nome (maiuscolo) del progetto in esecuzione
+//        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+//        projectNameUpper = AEWizCost.nameProjectCurrentUpper.getValue();
+
+        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
+        //--estraendo la parte del nome precedente il tag 'Application'
+        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+        projectNameUpper = wizService.estraeProjectFromApplication();
 
         if (fieldPackageName != null && text.isValid(fieldPackageName.getValue())) {
             packageName = fieldPackageName.getValue();
         }
 
-        return super.regolaPackages(pathProject,packageName);
-
-//        if (text.isEmpty(pathProject)) {
-//            message = String.format("Non è stato selezionato il progetto di riferimento.");
-//            logger.log(AETypeLog.wizard, message);
-//            return false;
-//        }
-//
-//        if (text.isEmpty(packageName)) {
-//            message = String.format("Manca il nome del package da creare/modificare.");
-//            logger.log(AETypeLog.wizard, message);
-//            return false;
-//        }
-//
-//        //--inserisce il path completo del progetto in esecuzione
-//        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
-//
-//        //--inserisce il nome del package da creare/modificare
-//        AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(packageName));
-//
-//        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-//        AEWizCost.fixValoriDerivati();
-//
-//        return true;
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+        return super.fixValoriDerivati(pathProject, projectNameUpper, packageName);
     }
 
 }

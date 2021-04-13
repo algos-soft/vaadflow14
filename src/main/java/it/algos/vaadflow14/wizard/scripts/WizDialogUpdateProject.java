@@ -191,10 +191,11 @@ public class WizDialogUpdateProject extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, SENZA invocare il metodo della superclasse <br>
      */
+    @Override
     protected boolean regolaAEWizCost() {
         AEProgetto progettoTarget;
         String pathProject;
-        String projectNameUpper=VUOTA;
+        String projectNameUpper = VUOTA;
         String directoryAndProjectModuloLower;
 
         //--se siamo nel progetto base vaadFlow, si deve selezionare un progetto esistente nel combobox
@@ -237,22 +238,6 @@ public class WizDialogUpdateProject extends WizDialog {
                 projectNameUpper = wizService.estraeProjectFromApplication();
             }
         }
-        if (text.isEmpty(pathProject) || text.isEmpty(projectNameUpper)) {
-            return false;
-        }
-
-        //--inserisce il path completo del progetto selezionato nella Enumeration AEProgetto
-        //--dal path completo deriva il valore di directory/modulo -> nameTargetProjectModulo
-        //--mentre il nome (maiuscolo) del progetto deve essere inserito -> nameTargetProjectUpper
-        //--perché potrebbe essere diverso (Es. vaadwiki -> Wiki)
-        AEWizCost.pathTargetProjectRoot.setValue(pathProject);
-
-        //--inserisce  il nome (maiuscolo) del progetto
-        //--perché potrebbe essere diverso dal valore di directory/modulo (Es. vaadwiki -> Wiki)
-        AEWizCost.nameTargetProjectUpper.setValue(text.primaMaiuscola(projectNameUpper));
-
-        //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
-        AEWizCost.fixValoriDerivati();
 
         //--recupera i flag selezionati a video
         for (AEWizCost aeCost : wizService.getAll()) {
@@ -261,8 +246,8 @@ public class WizDialogUpdateProject extends WizDialog {
             }
         }
 
-        wizService.printProgetto();
-        return true;
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+        return super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
     }
 
 
