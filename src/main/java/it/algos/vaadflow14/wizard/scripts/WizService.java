@@ -737,7 +737,7 @@ public class WizService {
      * @param nameTargetProjectUpper  Nome del progetto target. Può essere diverso dal valore di nameTargetProjectModulo (Es. vaadwiki e Wiki)
      * @param nameTargetProjectModulo Nome della directory e del modulo del progetto target. Può essere diverso dal valore di nameTargetProjectUpper (Es. vaadwiki e Wiki)
      * @param packageName             Nome del package da creare/modificare. Eventualmente con sub-directory (separatore slash)
-     * @param fileName                Nome maiuscolo del file da creare. Singolo file. Senza sub-directory.
+     * @param fileName                Nome maiuscolo del file da creare con suffisso. Singolo file. Senza sub-directory.
      */
     public boolean regolaAEToken(String nameTargetProjectUpper, String nameTargetProjectModulo, String packageName, String fileName) {
         boolean status = true;
@@ -771,6 +771,7 @@ public class WizService {
             AEToken.first.setValue(packageName.substring(0, 1).toUpperCase());
             AEToken.packageNamePunti.setValue(text.fixSlashToPunto(packageName));
             AEToken.packageNameSlash.setValue(text.fixPuntoToSlash(packageName));
+            AEToken.packageNameLower.setValue(text.levaTestoPrimaDi(AEToken.packageNameSlash.getValue(), SLASH));
         }
         if (text.isValid(fileName)) {
             AEToken.entityLower.setValue(fileName.toLowerCase(Locale.ROOT));
@@ -816,6 +817,7 @@ public class WizService {
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
 
+        AEToken.printInfo("levare");
         return status;
     }
 
@@ -1204,7 +1206,7 @@ public class WizService {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : getNecessitanoInserimentoValore()) {
-            if (aeWizCost.getValue() != null && aeWizCost.getValue().length() > 0 && !aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+            if (aeWizCost.get() != null && aeWizCost.get().length() > 0 && !aeWizCost.get().startsWith(VALORE_MANCANTE)) {
                 listaWizCost.add(aeWizCost);
             }
         }
@@ -1216,7 +1218,7 @@ public class WizService {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : getNecessitanoInserimentoValore()) {
-            if (aeWizCost.getValue() == null || aeWizCost.getValue().length() < 1 || aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+            if (aeWizCost.get() == null || aeWizCost.get().length() < 1 || aeWizCost.get().startsWith(VALORE_MANCANTE)) {
                 listaWizCost.add(aeWizCost);
             }
         }
@@ -1252,7 +1254,7 @@ public class WizService {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : getHannoValore()) {
-            if (aeWizCost.getValue() == null || aeWizCost.getValue().length() < 1 || aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+            if (aeWizCost.get() == null || aeWizCost.get().length() < 1 || aeWizCost.get().startsWith(VALORE_MANCANTE)) {
                 listaWizCost.add(aeWizCost);
             }
         }
@@ -1265,7 +1267,7 @@ public class WizService {
         List<AEWizCost> listaWizCost = new ArrayList<>();
 
         for (AEWizCost aeWizCost : getHannoValore()) {
-            if (aeWizCost.getValue() != null && aeWizCost.getValue().length() > 0 && !aeWizCost.getValue().startsWith(VALORE_MANCANTE)) {
+            if (aeWizCost.get() != null && aeWizCost.get().length() > 0 && !aeWizCost.get().startsWith(VALORE_MANCANTE)) {
                 if (aeWizCost.isValida()) {
                     listaWizCost.add(aeWizCost);
                 }
@@ -1292,7 +1294,9 @@ public class WizService {
     public String estraeProjectFromApplication() {
         String projectNameUpper = VUOTA;
         String tag = "Application";
-        String pathModulo = AEWizCost.pathTargetProjectModulo.get();
+        String pathModulo = System.getProperty("user.dir") + SLASH;
+        String nameModulo = file.estraeDirectoryFinaleSenzaSlash(pathModulo);
+        pathModulo = pathModulo + AEWizCost.dirModulo.get() + nameModulo + FlowCost.SLASH;
         List<String> lista = file.getFilesNames(pathModulo);
 
         for (String nome : lista) {
@@ -1343,7 +1347,7 @@ public class WizService {
         System.out.println(titolo + " (" + lista.size() + ")");
         System.out.println("********************");
         for (AEWizCost aeWizCost : lista) {
-            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.getValue());
+            System.out.print("AEWizCost." + aeWizCost.name() + ": \"" + aeWizCost.getDescrizione() + "\" " + FlowCost.UGUALE_SPAZIATO + aeWizCost.get());
             //            System.out.print(FlowCost.FORWARD + "AECopyWiz." + aeWizCost.getCopyWiz().name());
             System.out.println(VUOTA);
         }

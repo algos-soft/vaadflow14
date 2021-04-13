@@ -12,8 +12,6 @@ import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.annotation.*;
 
-import java.util.*;
-
 
 /**
  * Project vaadflow
@@ -236,7 +234,6 @@ public abstract class WizElabora implements WizRecipient {
         String message;
         String oldText;
         String newText;
-        wizService.printProgetto();
         String tagIni = "super.fixMenuRoutes();";
         String nomeFileTextSorgente = "Boot";
         String packageName = AEWizCost.nameTargetFileUpper.get();
@@ -319,21 +316,24 @@ public abstract class WizElabora implements WizRecipient {
         boolean status = true;
         int numFiles = 0;
         String message = VUOTA;
-        String projectName = AEDir.nameTargetProject.get();
+        AEWizCost.print("Levare");
+        String nameTargetProjectUpper = AEWizCost.nameTargetProjectUpper.get();
+        String nameTargetProjectModulo = AEWizCost.nameTargetProjectModulo.get();
+        String suffix;
+        String fileName;
 
         for (String packageName : wizService.getPackages()) {
             logger.log(AETypeLog.wizardDoc, VUOTA);
             numFiles = 0;
-//            status = status && wizService.regolaAEToken(projectName, packageName,packageName);//@todo PROVVISORIO
-            if (status) {
-                List alfa = AEPackage.getFiles();
-                for (AEPackage pack : AEPackage.getFiles()) {
-                    if (pack.is()) {
-                        risultato = elaboraDoc(packageName, pack, inizioFile);
-                        if (risultato.isValido()) {
-                            message = risultato.getValidationMessage();
-                            numFiles++;
-                        }
+            for (AEPackage pack : AEPackage.getFiles()) {
+                if (pack.is()) {
+                    suffix = pack.getSuffix();
+                    fileName = text.primaMaiuscola(packageName) + suffix;
+                    wizService.regolaAEToken(nameTargetProjectUpper, nameTargetProjectModulo, packageName, fileName);
+                    risultato = elaboraDoc(packageName, pack, inizioFile);
+                    if (risultato.isValido()) {
+                        message = risultato.getValidationMessage();
+                        numFiles++;
                     }
                 }
             }
@@ -372,7 +372,6 @@ public abstract class WizElabora implements WizRecipient {
         fileName = fileName.toLowerCase();
         upperName = text.primaMaiuscola(fileName);
 
-        wizService.printInfoCompleto("Da levare");
 
         AEWizCost.nameTargetPackagePunto.setValue(text.fixSlashToPunto(fileName));
         AEWizCost.nameTargetPackage.setValue(text.fixPuntoToSlash(fileName));
@@ -380,10 +379,8 @@ public abstract class WizElabora implements WizRecipient {
         AEWizCost.pathTargetPackageSlash.setValue(AEWizCost.pathTargetProjectPackages.get() + packageName + FlowCost.SLASH);
         pathFileDaModificare = AEWizCost.pathTargetPackageSlash.get() + upperName + suffisso + JAVA_SUFFIX;
 
-        wizService.printInfoCompleto("Da levare");
-
         if (file.isEsisteFile(pathFileDaModificare)) {
-//            wizService.regolaAEToken(AEWizCost.nameProjectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
+            //            wizService.regolaAEToken(AEWizCost.nameProjectCurrentUpper.get(), packageName,fileName);//@todo PROVVISORIO
             risultato = wizService.fixDocFile(packageName, nameSource, suffisso, pathFileDaModificare, inizioFile);
         }
         else {

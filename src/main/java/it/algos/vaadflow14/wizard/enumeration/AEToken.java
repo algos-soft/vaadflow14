@@ -26,6 +26,7 @@ public enum AEToken {
     //    pathVaadFlowWizTxtSources(VUOTA, true),
     packageNamePunti("PACKAGEPUNTI", true),
     packageNameSlash("PACKAGESLASH", true),
+    packageNameLower("PACKAGENAMELOWER", true),
     projectCost("COST"),
     user("USER"),
     today("TODAY"),

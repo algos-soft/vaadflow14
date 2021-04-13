@@ -220,7 +220,7 @@ public class WizDialogUpdateProject extends WizDialog {
         //--se siamo in un progetto specifico, recupera il path da quello corrente
         else {
             //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.getValue();
+            pathProject = AEWizCost.pathCurrent.get();
 
             //--recupera la directory del progetto in esecuzione
             directoryAndProjectModuloLower = file.estraeClasseFinale(pathProject);

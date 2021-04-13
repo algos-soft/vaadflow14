@@ -93,7 +93,7 @@ public class WizDialogFeedbackWizard extends WizDialog {
         String pathProject = VUOTA;
 
         //--inserisce il path completo del progetto in esecuzione
-        pathProject = AEWizCost.pathCurrent.getValue();
+        pathProject = AEWizCost.pathCurrent.get();
         AEWizCost.pathTargetProjectRoot.setValue(pathProject);
 
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali

@@ -39,17 +39,16 @@ public class WizDialogNewPackage extends WizDialogPackage {
     }
 
     protected void regolazioniIniziali() {
-        String pathProject = VUOTA;
-        String projectNameUpper = VUOTA;
-        String packageName = VUOTA;
+        String pathProject;
+        String projectNameUpper;
 
         //--recupera il path completo del progetto in esecuzione
         //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrent.getValue();
+        pathProject = AEWizCost.pathCurrent.get();
 
         //--recupera il nome (maiuscolo) del progetto in esecuzione
         //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-        projectNameUpper = AEWizCost.nameProjectCurrentUpper.getValue();
+        projectNameUpper = AEWizCost.nameProjectCurrentUpper.get();
 
         //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
         super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
@@ -153,11 +152,7 @@ public class WizDialogNewPackage extends WizDialogPackage {
 
         //--recupera il path completo del progetto in esecuzione
         //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
-        pathProject = AEWizCost.pathCurrent.getValue();
-
-//        //--recupera il nome (maiuscolo) del progetto in esecuzione
-//        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
-//        projectNameUpper = AEWizCost.nameProjectCurrentUpper.getValue();
+        pathProject = AEWizCost.pathCurrent.get();
 
         //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
         //--estraendo la parte del nome precedente il tag 'Application'

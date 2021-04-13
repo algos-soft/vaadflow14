@@ -143,7 +143,7 @@ public enum AEWizCost {
         public void fixValue() {
             nameTargetProjectModulo.fixValue();
             if (nameTargetProjectModulo.valida) {
-                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirModulo.get() + nameTargetProjectModulo.getValue() + FlowCost.SLASH;
+                this.value = pathTargetProjectRoot.get() + AEWizCost.dirModulo.get() + nameTargetProjectModulo.get() + FlowCost.SLASH;
                 this.setValida(true);
             }
         }
@@ -318,7 +318,7 @@ public enum AEWizCost {
         @Override
         public void fixValue() {
             if (nameProjectCurrentUpper.valida) {
-                this.value = nameProjectCurrentUpper.getValue().toLowerCase();
+                this.value = nameProjectCurrentUpper.get().toLowerCase();
                 this.setValida(true);
             }
         }
@@ -340,7 +340,7 @@ public enum AEWizCost {
         @Override
         public void fixValue() {
             if (pathTargetProjectRoot.valida) {
-                this.value = file.estraeClasseFinale(pathTargetProjectRoot.getValue()).toLowerCase(Locale.ROOT);
+                this.value = file.estraeClasseFinale(pathTargetProjectRoot.get()).toLowerCase(Locale.ROOT);
                 this.setValida(true);
             }
         }
@@ -362,7 +362,7 @@ public enum AEWizCost {
         public void fixValue() {
             nameTargetProjectUpper.fixValue();
             if (nameTargetProjectUpper.valida) {
-                this.value = text.primaMinuscola(nameTargetProjectUpper.getValue());
+                this.value = text.primaMinuscola(nameTargetProjectUpper.get());
                 this.setValida(true);
             }
         }
@@ -377,7 +377,7 @@ public enum AEWizCost {
         public void fixValue() {
             pathTargetProjectModulo.fixValue();
             if (pathTargetProjectModulo.valida) {
-                this.value = pathTargetProjectModulo.getValue() + AEWizCost.dirBoot.get();
+                this.value = pathTargetProjectModulo.get() + AEWizCost.dirBoot.get();
                 this.setValida(true);
             }
         }
@@ -392,7 +392,7 @@ public enum AEWizCost {
         public void fixValue() {
             pathTargetProjectModulo.fixValue();
             if (pathTargetProjectModulo.valida) {
-                this.value = pathTargetProjectModulo.getValue() + AEWizCost.dirPackages.get();
+                this.value = pathTargetProjectModulo.get() + AEWizCost.dirPackages.get();
                 this.setValida(true);
             }
         }
@@ -407,7 +407,7 @@ public enum AEWizCost {
         public void fixValue() {
             pathTargetProjectRoot.fixValue();
             if (pathTargetProjectRoot.valida) {
-                this.value = pathTargetProjectRoot.getValue() + AEWizCost.dirVaadFlow14WizardSources.get();
+                this.value = pathTargetProjectRoot.get() + AEWizCost.dirVaadFlow14WizardSources.get();
                 this.setValida(true);
             }
         }
@@ -427,7 +427,7 @@ public enum AEWizCost {
         @Override
         public void fixValue() {
             if (nameTargetPackagePunto.valida) {
-                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.getValue());
+                this.value = text.fixPuntoToSlash(nameTargetPackagePunto.get());
                 this.setValida(true);
             }
         }
@@ -444,7 +444,7 @@ public enum AEWizCost {
 
             nameTargetPackage.fixValue();
             if (nameTargetPackage.valida) {
-                fileName = text.levaTestoPrimaDi(nameTargetPackage.getValue(), SLASH);
+                fileName = text.levaTestoPrimaDi(nameTargetPackage.get(), SLASH);
                 this.value = text.primaMaiuscola(fileName);
                 this.setValida(true);
             }
@@ -461,7 +461,7 @@ public enum AEWizCost {
             pathTargetProjectPackages.fixValue();
             nameTargetPackage.fixValue();
             if (pathTargetProjectPackages.valida && nameTargetPackage.valida) {
-                this.value = pathTargetProjectPackages.getValue() + AEWizCost.nameTargetPackage.getValue() + SLASH;
+                this.value = pathTargetProjectPackages.get() + AEWizCost.nameTargetPackage.get() + SLASH;
                 this.setValida(true);
             }
         }

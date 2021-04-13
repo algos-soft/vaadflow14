@@ -22,6 +22,7 @@ public abstract class WizDialogPackage extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
+    @Deprecated
     protected boolean regolaPackages(final String pathProject, final String packageName) {
         String message;
 
@@ -46,7 +47,6 @@ public abstract class WizDialogPackage extends WizDialog {
         //--regola tutti i valori automatici, dopo aver inserito quelli fondamentali
         AEWizCost.fixValoriDerivati();
 
-        wizService.printProgetto();
         return false;
     }
 

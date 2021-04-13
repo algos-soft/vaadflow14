@@ -28,7 +28,25 @@ public class WizDialogDocPackages extends WizDialog {
         super.wizRecipient = wizRecipient;
         AEFlag.isDocPackages.set(true);
 
+        this.regolazioniIniziali();
         super.inizia();
+    }
+
+    protected void regolazioniIniziali() {
+        String pathProject = VUOTA;
+        String projectNameUpper = VUOTA;
+
+        //--recupera il path completo del progetto in esecuzione
+        //--sempre AEWizCost.pathCurrent sia in AEFlag.isBaseFlow che in un progetto specifico
+        pathProject = AEWizCost.pathCurrent.get();
+
+        //-recupera il nome (maiuscolo) del progetto in esecuzione, usando il valore del file xxxApplication
+        //--estraendo la parte del nome precedente il tag 'Application'
+        //--sempre AEWizCost.nameProjectCurrentUpper sia in AEFlag.isBaseFlow che in un progetto specifico
+        projectNameUpper = wizService.estraeProjectFromApplication();
+
+        //--inserisce i valori fondamentali (3) e poi regola tutti i valori automatici derivati
+        super.fixValoriDerivati(pathProject, projectNameUpper, VUOTA);
     }
 
 
@@ -98,8 +116,7 @@ public class WizDialogDocPackages extends WizDialog {
      * WizElaboraNewProject, WizElaboraUpdateProject,WizElaboraNewPackage, WizElaboraUpdatePackage <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected boolean regolaAEWizCost() {
+    protected boolean regolaAEWizCost2() {
         String pathProject = VUOTA;
         String message;
 
@@ -107,7 +124,7 @@ public class WizDialogDocPackages extends WizDialog {
         }
         else {
             //--recupera il path completo del progetto in esecuzione
-            pathProject = AEWizCost.pathCurrent.getValue();
+            pathProject = AEWizCost.pathCurrent.get();
         }
 
         if (text.isEmpty(pathProject)) {
