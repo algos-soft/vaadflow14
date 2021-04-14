@@ -438,7 +438,6 @@ public class WizService {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
             return risultato;
         }
-
         sourceText = elaboraFileCreatoDaSource(sourceText);
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a elaborare i tokens del file " + path, this.getClass(), "fixDocFile");
@@ -772,6 +771,7 @@ public class WizService {
             AEToken.packageNamePunti.setValue(text.fixSlashToPunto(packageName));
             AEToken.packageNameSlash.setValue(text.fixPuntoToSlash(packageName));
             AEToken.packageNameLower.setValue(text.levaTestoPrimaDi(AEToken.packageNameSlash.getValue(), SLASH));
+            AEToken.packageNameUpper.setValue(text.primaMaiuscola(AEToken.packageNameLower.getValue()));
         }
         if (text.isValid(fileName)) {
             AEToken.entityLower.setValue(fileName.toLowerCase(Locale.ROOT));
@@ -817,7 +817,6 @@ public class WizService {
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
 
-        AEToken.printInfo("levare");
         return status;
     }
 

@@ -41,12 +41,12 @@ import static java.awt.image.ImageObserver.WIDTH;
  */
 @SpringComponent
 @QueryEntity
-@Document(collection = "@ENTITYLOWER@")
-@TypeAlias("@ENTITYLOWER@")
+@Document(collection = "@PACKAGENAMELOWER@")
+@TypeAlias("@PACKAGENAMELOWER@")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builder@ENTITYUPPER@")
+@Builder(builderMethodName = "builder@PACKAGENAMEUPPER@")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)

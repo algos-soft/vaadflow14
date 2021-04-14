@@ -209,7 +209,7 @@ public class WizDialogUpdateProject extends WizDialog {
 
             //--recupera il path del progetto selezionato dall'elemento della enumeration AEProgetto
             pathProject = progettoTarget.getPathCompleto();
-            if (text.isEmpty(pathProject)) {
+            if (text.isEmpty(pathProject) || pathProject.equals(SLASH)) {
                 pathProject = AEWizCost.pathOperativiDirStandard.get() + progettoTarget.getDirectoryAndProjectModuloLower() + SLASH;
             }
 

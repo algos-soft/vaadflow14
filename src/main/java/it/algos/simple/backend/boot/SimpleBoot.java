@@ -85,8 +85,10 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.bottoniSpecificiList = Arrays.asList(AESimpleButton.values());
 
         if (AEPreferenza.usaDebug.is()) {
-            FlowVar.usaCronoPackages = true;
+            FlowVar.usaAdminPackages = true;
+            FlowVar.usaGestionePackages = true;
             FlowVar.usaGeografiaPackages = true;
+            FlowVar.usaCronoPackages = true;
         }
     }
 

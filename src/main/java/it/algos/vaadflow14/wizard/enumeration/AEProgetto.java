@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 
@@ -23,6 +24,7 @@ public enum AEProgetto {
     beta("beta", "Beta", "/Users/gac/Documents/IdeaProjects/tutorial/beta/"),
     untitled("untitled", "Torino", "/Users/gac/Documents/IdeaProjects/untitled/"),
     moneglia("moneglia", "Moneglia", VUOTA),
+    bologna("bologna", "Modena", "/Users/gac/Documents/IdeaProjects/tutorial/sub/bologna"),
     gestione("gestione", "Gestione", VUOTA),
 
     ;
@@ -109,6 +111,6 @@ public enum AEProgetto {
     }
 
     public String getPathCompleto() {
-        return pathCompleto;
+        return pathCompleto.endsWith(FlowCost.SLASH) ? pathCompleto : pathCompleto + FlowCost.SLASH;
     }
 }// end of enumeration class

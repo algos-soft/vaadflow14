@@ -27,6 +27,7 @@ public enum AEToken {
     packageNamePunti("PACKAGEPUNTI", true),
     packageNameSlash("PACKAGESLASH", true),
     packageNameLower("PACKAGENAMELOWER", true),
+    packageNameUpper("PACKAGENAMEUPPER", true),
     projectCost("COST"),
     user("USER"),
     today("TODAY"),
