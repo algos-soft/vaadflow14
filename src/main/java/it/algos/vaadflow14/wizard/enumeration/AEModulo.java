@@ -19,6 +19,7 @@ public enum AEModulo {
     dirBackend("Backend", "Directory backend del modulo target", true, false, AEWizCost.dirBackend.get()),
     dirApplication("Application", "Directory application del modulo target", true, false, AEWizCost.dirApplication.get()),
     dirBoot("Boot", "Directory boot del modulo target", true, false, AEWizCost.dirBoot.get()),
+    dirEnumeration("Enumeration", "Directory enumeration del modulo target", true, false, AEWizCost.dirEnumeration.get()),
     dirData("Data", "Directory data del modulo target", true, false, AEWizCost.dirData.get()),
     dirPackages("Packages", "Directory packages del modulo target", true, false, AEWizCost.dirPackages.get()),
     dirUI("UI", "Directory UI del modulo target", true, false, AEWizCost.dirUI.get()),
@@ -26,6 +27,7 @@ public enum AEModulo {
     fileCost("Cost", "File Cost del modulo target", false, true, AEWizCost.dirApplication.get(), FILE_COST),
     fileBoot("Boot", "File Boot del modulo target", false, true, AEWizCost.dirBoot.get(), FILE_BOOT),
     fileData("Data", "File Data del modulo target", false, true, AEWizCost.dirData.get(), FILE_DATA),
+    filePreferenza("Preferenza", "File AExxxPreferenza del modulo target", false, true, AEWizCost.dirEnumeration.get(), FILE_PREFERENZA),
     //            creaDirectorySecurity();
     ;
 

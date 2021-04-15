@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Project @MODULELOWER@
@@ -75,6 +76,7 @@ public class @PROJECT@Boot extends FlowBoot {
         FlowVar.projectDescrizione = "Cambia questa descrizione nel file @PROJECT@Boot";
         FlowVar.projectVersion = environment.getProperty("algos.@PROJECTLOWER@.version") != null ? Double.parseDouble(environment.getProperty("algos.@PROJECTLOWER@.version")) : 0.0;
         FlowVar.versionDate = @VERSIONDATE@;
+        FlowVar.preferenzeSpecificheList = Arrays.asList(AE@PROJECT@Preferenza.values());
         FlowVar.projectNote = "Sviluppo di una applicazione in Vaadin14";
         FlowVar.usaCronoPackages = false;
         FlowVar.usaGeografiaPackages = false;

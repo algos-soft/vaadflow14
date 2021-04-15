@@ -65,12 +65,10 @@ public class WizDialogUpdateProject extends WizDialog {
 
         if (AEFlag.isBaseFlow.is()) {
             topLayout.add(text.getLabelGreenBold("Update del progetto selezionato"));
-            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " viene sovrascritto"));
-            topLayout.add(text.getLabelGreenBold("Eventuali modifiche locali vengono perse"));
+            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " del progetto selezionato viene sovrascritto. Eventuali modifiche locali vengono perse"));
             topLayout.add(text.getLabelGreenBold("I sorgenti (che non vengono modificati) sono in  " + pathBreve));
             topLayout.add(text.getLabelRedBold("Il progetto deve esistere nella enum AEProgetto"));
-            topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante"));
-            topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+            topLayout.add(text.getLabelRedBold("Seleziona il progetto dalla lista sottostante e le cartelle/files da aggiornare"));
         }
         else {
             topLayout.add(text.getLabelGreenBold("Update di questo progetto"));

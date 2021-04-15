@@ -7,8 +7,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -49,10 +48,10 @@ import static java.awt.image.ImageObserver.WIDTH;
 @Builder(builderMethodName = "builder@PACKAGENAMEUPPER@")
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCompany = @USACOMPANY@)
+@AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCreazione = false, usaModifica = false, usaCompany = @USACOMPANY@)
 @AIView(menuName = "@ENTITYUPPER@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
-@AIForm(fields = @PROPERTIES@, usaSpostamentoTraSchede = false)
+@AIForm(fields = @PROPERTIES@, operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)
 public class @ENTITYUPPER@ extends @SUPERCLASSENTITY@ {
 
 
