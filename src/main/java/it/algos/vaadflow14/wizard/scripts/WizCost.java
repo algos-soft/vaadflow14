@@ -154,6 +154,8 @@ public abstract class WizCost {
 
     public static final String FILE_DATA = "Data";
 
+    public static final String FILE_PREFIX_ENUMERATION = "AE";
+
     public static final String FILE_PREFERENZA = "Preferenza";
 
     public static final String FILE_VERS = "Vers";

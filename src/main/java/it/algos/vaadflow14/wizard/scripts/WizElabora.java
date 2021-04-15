@@ -432,7 +432,7 @@ public abstract class WizElabora implements WizRecipient {
         //--crea file xxxBoot
         //--crea file xxxData
         //--crea file AExxxPreferenza
-        for (AEModulo mod : AEModulo.getSourceFiles()) {
+        for (AEModulo mod : AEModulo.getFilesValidi()) {
             pathBreve = getPathBreve(mod);
             if (text.isEmpty(path) || path.equals(VALORE_MANCANTE)) {
                 message = String.format("Nel target %s manca il path del file %s", projectUpper, mod.getTag());
@@ -446,6 +446,7 @@ public abstract class WizElabora implements WizRecipient {
             }
         }
     }
+
 
     /**
      *

@@ -3,7 +3,6 @@ package it.algos.vaadflow14.wizard.scripts;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
 import static it.algos.vaadflow14.backend.application.FlowCost.SLASH;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -23,7 +22,7 @@ import java.util.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class WizDialogUpdateProject extends WizDialog {
+public class WizDialogUpdateModulo extends WizDialog {
 
 
     /**
@@ -55,37 +54,29 @@ public class WizDialogUpdateProject extends WizDialog {
         String pathBreve = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), "vaadflow14");
 
         if (AEFlag.isBaseFlow.is()) {
-            topLayout = fixSezione("Aggiornamento di un progetto", "green");
+            topLayout = fixSezione("Aggiornamento del modulo di un progetto", "green");
         }
         else {
-            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.nameProjectCurrentUpper.get()), "green");
+            topLayout = fixSezione(String.format("Aggiornamento del modulo di %s", AEWizCost.nameProjectCurrentUpper.get()), "green");
         }
         this.add(topLayout);
 
         if (AEFlag.isBaseFlow.is()) {
-            topLayout.add(text.getLabelGreenBold("Update del progetto selezionato"));
-            topLayout.add(text.getLabelGreenBold("Il modulo " + NAME_VAADFLOW + " del progetto selezionato viene sovrascritto. Eventuali modifiche locali vengono perse"));
-            topLayout.add(text.getLabelGreenBold("I sorgenti (che non vengono modificati) sono in  " + pathBreve));
+            topLayout.add(text.getLabelGreenBold("Update del modulo corrente di un progetto selezionato"));
+            topLayout.add(text.getLabelGreenBold("I vari files vengono modificati o sovrascritti (dipende dal flag)"));
             topLayout.add(text.getLabelRedBold("Il progetto deve esistere nella enum AEProgetto"));
-            topLayout.add(text.getLabelRedBold("Seleziona il progetto dal comboBox sottostante e le cartelle/files da aggiornare"));
+            topLayout.add(text.getLabelRedBold("Seleziona il progetto dal comboBox sottostante ed i file da aggiornare"));
         }
         else {
-            topLayout.add(text.getLabelGreenBold("Update di questo progetto"));
-            topLayout.add(text.getLabelGreenBold("Le varie directory vengono copiate o sovrascritte (dipende da un flag)"));
+            topLayout.add(text.getLabelGreenBold("Update del modulo corrente di questo progetto"));
             topLayout.add(text.getLabelGreenBold("I vari files vengono modificati o sovrascritti (dipende da un flag)"));
 
             pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Modulo.get(), "it");
-            topLayout.add(text.getLabelGreenBold(String.format("Il modulo base %s di questo progetto, viene completamente sovrascritto", pathModuloBase)));
-
-            pathModuloCorrente = file.findPathBreve(AEWizCost.pathTargetProjectModulo.get(), "it");
-            topLayout.add(text.getLabelGreenBold(String.format("Il modulo corrente %s di questo progetto, viene integrato", pathModuloCorrente)));
-
-            pathModuloBase = file.findPathBreve(AEWizCost.pathVaadFlow14Root.get(), AEWizCost.dirProjects.get());
-            topLayout.add(text.getLabelGreenBold(String.format("Il modulo base da ricopiare qui viene da %s", pathModuloBase)));
+            topLayout.add(text.getLabelGreenBold(String.format("Il modulo base %s di questo progetto, non viene toccato", pathModuloBase)));
 
             pathSorgenti = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), AEWizCost.dirVaadFlow14.get());
-            topLayout.add(text.getLabelGreenBold(String.format("I sorgenti per integrare il modulo corrente vengono da %s", pathSorgenti)));
-            topLayout.add(text.getLabelRedBold("Seleziona le cartelle/files da aggiornare"));
+            topLayout.add(text.getLabelGreenBold(String.format("I sorgenti per modificare il modulo corrente vengono da %s", pathSorgenti)));
+            topLayout.add(text.getLabelRedBold("Seleziona i file da aggiornare"));
         }
     }
 
@@ -139,11 +130,10 @@ public class WizDialogUpdateProject extends WizDialog {
     protected void creaCheckBoxLayout() {
         super.creaCheckBoxLayout();
 
-        for (AEWizCost aeCost : wizService.getWizUsoProject()) {
-            mappaWizBox.put(aeCost.name(), new WizBox(aeCost, false));
+        for (AEModulo modulo : AEModulo.getFiles()) {
+            mappaWizBox.put(modulo.name(), new WizBox(modulo));
         }
         super.addCheckBoxMap();
-        mappaWizBox.get(AEWizCost.dirModuloVaadFlow14.name()).getBox().setValue(true);
     }
 
 
@@ -237,9 +227,9 @@ public class WizDialogUpdateProject extends WizDialog {
         }
 
         //--recupera i flag selezionati a video
-        for (AEWizCost aeCost : wizService.getAll()) {
-            if (mappaWizBox != null && mappaWizBox.get(aeCost.name()) != null) {
-                aeCost.setAcceso(mappaWizBox.get(aeCost.name()).is());
+        for (AEModulo modulo : AEModulo.getFiles()) {
+            if (mappaWizBox != null && mappaWizBox.get(modulo.name()) != null) {
+                modulo.setAcceso(mappaWizBox.get(modulo.name()).is());
             }
         }
 

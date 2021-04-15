@@ -66,6 +66,13 @@ public class Wizard extends VerticalLayout {
     private WizDialogUpdateProject dialogUpdateProject;
 
     /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     */
+    @Autowired
+    private WizDialogUpdateModulo dialogUpdateModulo;
+
+    /**
      * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
      */
     @Autowired
@@ -101,6 +108,13 @@ public class Wizard extends VerticalLayout {
      */
     @Autowired
     private WizElaboraUpdateProject elaboraUpdateProject;
+    /**
+     * Utilizzato dall'interno di VaadFlow14 per aggiornare un progetto esistente <br>
+     * Utilizzato dall'interno di un qualsiasi progetto per importare/aggiornare il codice da VaadFlow14 <br>
+     */
+    @Autowired
+    private WizElaboraUpdateModulo elaboraUpdateModulo;
+
 
     /**
      * Utilizzato dall'interno di un qualsiasi progetto per creare nuovi packages <br>
@@ -263,6 +277,11 @@ public class Wizard extends VerticalLayout {
         this.add(layout);
     }
 
+    private void elaboraUpdateProject() {
+        elaboraUpdateProject.esegue();
+        dialogUpdateProject.close();
+    }
+
     public void paragrafoUpdateModulo() {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(false);
@@ -288,15 +307,15 @@ public class Wizard extends VerticalLayout {
 
         Button bottone = new Button("Update modulo");
         bottone.getElement().setAttribute("theme", "primary");
-        bottone.addClickListener(event -> dialogUpdateProject.open(this::elaboraUpdateProject));
+        bottone.addClickListener(event -> dialogUpdateModulo.open(this::elaboraUpdateModulo));
 
         layout.add(bottone);
         this.add(layout);
     }
 
-    private void elaboraUpdateProject() {
-        elaboraUpdateProject.esegue();
-        dialogUpdateProject.close();
+    private void elaboraUpdateModulo() {
+        elaboraUpdateModulo.esegue();
+        dialogUpdateModulo.close();
     }
 
 

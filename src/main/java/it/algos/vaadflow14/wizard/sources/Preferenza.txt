@@ -1,6 +1,6 @@
-package it.algos.simple.backend.enumeration;
+package it.algos.@MODULELOWER@.backend.enumeration;
 
-import static it.algos.simple.backend.application.SimpleCost.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -13,22 +13,22 @@ import javax.annotation.*;
 import java.time.*;
 
 /**
- * Project vaadflow14
+ * Project @MODULELOWER@
  * Created by Algos
- * User: gac
- * Date: ven, 18-set-2020
- * Time: 15:41
+ * User: @USER@
+ * Date: @TODAY@
+ * Time: @TIME@
  * <p>
  * Classi concrete di Enumeration:
  * AEPreferenza (obbligatoria) di VaadFlow14 <br>
- * AESimplePreferenza (facoltativa) specifica del progetto corrente <br>
+ * AE@PROJECT@Preferenza (facoltativa) specifica del progetto corrente <br>
  */
-public enum AESimplePreferenza implements AIPreferenza {
+@AIScript(sovraScrivibile = false)
+public enum AE@PROJECT@Preferenza implements AIPreferenza {
 
-    datauno(PREF_DATA, "Data senza ora (pref di prova)", AETypePref.localdate, DATA, false),
-    datadue(PREF_DATA_TIME, "Data e ora (pref di prova)", AETypePref.localdatetime, DATA_TIME, false),
-    timeuno(PREF_TIME, "Solo orario (pref di prova)", AETypePref.localtime, TIME, false),
-    testo("testo", "Testo (pref di prova)", AETypePref.string, "mariolino", false),
+    datauno("giorno", "Data senza ora (pref di prova)", AETypePref.localdate, LocalDate.of(2020, 3, 25), false),
+    datadue("data", "Data e ora (pref di prova)", AETypePref.localdatetime, LocalDateTime.of(2020, 10, 28, 14, 35), false),
+    timeuno("orario", "Solo orario (pref di prova)", AETypePref.localtime, LocalTime.of(8, 47), false),
 
     ;
 
@@ -73,12 +73,12 @@ public enum AESimplePreferenza implements AIPreferenza {
     private AEnumerationService enumService;
 
 
-    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
+    AE@PROJECT@Preferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany) {
         this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
     }// fine del costruttore
 
 
-    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
+    AE@PROJECT@Preferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
         this.keyCode = keyCode;
         this.descrizione = descrizione;
         this.type = type;
@@ -276,7 +276,7 @@ public enum AESimplePreferenza implements AIPreferenza {
 
         @PostConstruct
         public void postConstruct() {
-            for (AESimplePreferenza pref : AESimplePreferenza.values()) {
+            for (AE@PROJECT@Preferenza pref : AE@PROJECT@Preferenza.values()) {
                 pref.setPreferenzaService(preferenzaService);
                 pref.setLogger(logger);
                 pref.setDate(date);
