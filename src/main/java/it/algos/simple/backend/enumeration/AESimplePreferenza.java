@@ -77,6 +77,9 @@ public enum AESimplePreferenza implements AIPreferenza {
         this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, VUOTA);
     }// fine del costruttore
 
+    AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, String note) {
+        this(keyCode, descrizione, type, defaultValue, usaCompany, false, false, note);
+    }// fine del costruttore
 
     AESimplePreferenza(String keyCode, String descrizione, AETypePref type, Object defaultValue, boolean usaCompany, boolean needRiavvio, boolean visibileAdmin, String note) {
         this.keyCode = keyCode;
