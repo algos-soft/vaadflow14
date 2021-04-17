@@ -202,6 +202,11 @@ public enum AEPreferenza implements AIPreferenza {
         return javaValue;
     }
 
+    public void setValue(Object value) {
+        Preferenza pref = preferenzaService.findByKey(this.keyCode);
+        pref.setValue(pref.type.objectToBytes(value));
+        preferenzaService.save(pref);
+    }
 
     public String getStr() {
         String valore = VUOTA;
