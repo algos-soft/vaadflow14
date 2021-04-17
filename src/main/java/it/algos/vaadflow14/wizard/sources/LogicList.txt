@@ -4,8 +4,10 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import java.util.*;
+import org.springframework.beans.factory.annotation.*;
 
 /**
  * Project: @MODULELOWER@ <br>
@@ -36,11 +38,14 @@ public class @ENTITYUPPER@LogicList extends LogicList {
 
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Il framework SpringBoot/Vaadin con l'Annotation @Autowired inietta automaticamente un riferimento al singleton xxxService <br>
+     * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
      */
-    public @ENTITYUPPER@LogicList() {
-        super.entityClazz = @ENTITYUPPER@.class;
+    public @ENTITYUPPER@LogicList(@Autowired @Qualifier("@ENTITYLOWER@Service") final AIService entityService) {
+        super(@ENTITYUPPER@.class, entityService);
     }// end of Vaadin/@Route constructor
 
 

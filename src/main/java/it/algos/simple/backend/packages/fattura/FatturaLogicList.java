@@ -53,14 +53,15 @@ public class FatturaLogicList extends LogicList {
     protected String fatturaStatisticheTitle;
 
     /**
-     * Costruttore senza parametri <br>
+     * Costruttore con parametro <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
+     * Il framework SpringBoot/Vaadin con l'Annotation @Autowired inietta automaticamente un riferimento al singleton xxxService <br>
+     * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
+     * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
      */
-    public FatturaLogicList(@Qualifier("FatturaService") AIService fatturaService) {
-        super.entityClazz = Fattura.class;
-        super.entityService = fatturaService;
+    public FatturaLogicList(@Autowired @Qualifier("FatturaService") final AIService entityService) {
+        super(Fattura.class, entityService);
     }// end of Vaadin/@Route constructor
-
 
     /**
      * Preferenze usate da questa 'logica' <br>
