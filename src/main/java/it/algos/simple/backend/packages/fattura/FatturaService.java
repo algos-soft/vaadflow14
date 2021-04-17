@@ -22,7 +22,7 @@ import org.springframework.stereotype.*;
  * Non mantiene lo stato di una istanza entityBean <br>
  */
 @Service
-@Qualifier("FatturaService")
+@Qualifier("fatturaService")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @AIScript(sovraScrivibile = true)
 public class FatturaService extends AService {

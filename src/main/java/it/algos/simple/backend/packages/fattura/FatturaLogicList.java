@@ -59,8 +59,8 @@ public class FatturaLogicList extends LogicList {
      * L'annotation @Autowired potrebbe essere omessa perché c'è un solo costruttore <br>
      * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
      */
-    public FatturaLogicList(@Autowired @Qualifier("FatturaService") final AIService entityService) {
-        super(Fattura.class, entityService);
+    public FatturaLogicList(@Autowired @Qualifier("fatturaService") final AIService entityService) {
+        super(entityService,Fattura.class);
     }// end of Vaadin/@Route constructor
 
     /**
