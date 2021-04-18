@@ -34,6 +34,7 @@ public class PiUnoView extends VerticalLayout {
     }
 
 
+
     private Grid creaGrid() {
 
         PiGrid grid = new PiGrid();
