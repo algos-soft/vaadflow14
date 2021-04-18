@@ -134,7 +134,7 @@ public abstract class AService extends AAbstractService implements AIService {
      */
     @Override
     public AEntity save(AEntity entityBean) {
-        return mongo.insert(entityBean);
+        return mongo.save(entityBean);
     }
 
     /**

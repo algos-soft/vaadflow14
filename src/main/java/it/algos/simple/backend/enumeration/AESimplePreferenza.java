@@ -224,6 +224,7 @@ public enum AESimplePreferenza implements AIPreferenza {
         return valore;
     }
 
+    @Override
     public boolean is() {
         String message;
 
@@ -237,7 +238,7 @@ public enum AESimplePreferenza implements AIPreferenza {
         }
     }
 
-
+    @Override
     public int getInt() {
         String message;
 
@@ -248,6 +249,20 @@ public enum AESimplePreferenza implements AIPreferenza {
             message = String.format("La preferenza %s è di type %s. Non puoi usare getInt()", keyCode, type);
             logger.error(message);
             return 0;
+        }
+    }
+
+    @Override
+    public LocalDateTime getDate() {
+        String message;
+
+        if (type == AETypePref.localdatetime) {
+            return getValue() != null ? (LocalDateTime) getValue() : null;
+        }
+        else {
+            message = String.format("La preferenza %s è di type %s. Non puoi usare getDate()", keyCode, type);
+            logger.error(message);
+            return null;
         }
     }
 
