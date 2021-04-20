@@ -124,7 +124,6 @@ public class AGrid {
 
     public AGrid(Class<? extends AEntity> entityClazz, AILogic entityLogic) {
         super();
-        this.grid = new Grid(entityClazz, false);
         this.entityLogic = entityLogic;
         this.entityClazz = entityClazz;
     }
@@ -147,9 +146,10 @@ public class AGrid {
      */
     @PostConstruct
     protected void postConstruct() {
+        grid = new Grid(entityClazz, false);
         grid.setHeightByRows(true);
-        this.grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz, null));
-        grid.setHeight("100%");
+        grid.setDataProvider(dataProviderService.creaDataProvider(entityClazz, null));
+//        grid.setHeight("100%");
 
         if (AEPreferenza.usaDebug.is()) {
             grid.getElement().getStyle().set("background-color", AEColor.blue.getEsadecimale());
@@ -165,6 +165,9 @@ public class AGrid {
 
         //--Colonne normali indicate in @AIList(fields =... , aggiunte in automatico
         columnsMap = new HashMap<>();
+//        grid.addColumn("id").setHeader("Id");
+//        grid.addColumn("anno").setHeader("Anno");
+//        grid.addColumn("bisestile").setHeader("bisestile");
         this.addColumnsGrid();
         this.creaGridHeader();
     }

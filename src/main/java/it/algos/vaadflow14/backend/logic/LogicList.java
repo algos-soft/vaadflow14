@@ -1,9 +1,7 @@
 package it.algos.vaadflow14.backend.logic;
 
-import com.mongodb.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
-import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -178,19 +176,27 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void fixBodyLayout() {
-        DataProvider dataProvider;
-        String sortProperty = annotation.getSortProperty(entityClazz);
-        BasicDBObject sort = null;
+//        DataProvider dataProvider;
+//        String sortProperty = annotation.getSortProperty(entityClazz);
+//        BasicDBObject sort = null;
         grid = appContext.getBean(AGrid.class, entityClazz, this);
-        sort = new BasicDBObject(sortProperty, 1);
+//        sort = new BasicDBObject(sortProperty, 1);
 
-        dataProvider = dataService.creaDataProvider(entityClazz, sort);
-        grid.getGrid().setDataProvider(dataProvider);
-        grid.getGrid().setHeight("100%");
-        grid.fixGridHeader(dataProvider.size(null));
+//        dataProvider = dataService.creaDataProvider(entityClazz, sort);
+//        grid.getGrid().setDataProvider(dataProvider);
+//        grid.fixGridHeader(dataProvider.size(null));
         this.addGridListeners();
 
+        /**
+         * Regolazioni INDISPENSBILI per usare DataProvider su grossi DB <br>
+         * Deve essere MENO di 100% il VerticalLayout esterno <br
+         * Deve essere MENO di 100% il bodyPlaceHolder <br
+         * Deve essere ESATTAMENTE il 100% la Grid <br
+         */
         if (bodyPlaceHolder != null && grid != null) {
+            this.setHeight("95%");
+            bodyPlaceHolder.setHeight("95%");
+            grid.getGrid().setHeight("100%");
             bodyPlaceHolder.add(grid.getGrid());
         }
     }

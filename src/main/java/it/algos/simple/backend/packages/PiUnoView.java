@@ -6,6 +6,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
+import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -19,17 +20,21 @@ import javax.annotation.PostConstruct;
 public class PiUnoView extends VerticalLayout {
 
     @Autowired
-    private PiService service;
+    private PiService piService;
+
+    @Autowired
+    private ADataProviderService dataProviderService;
 
 
     @PostConstruct
     private void postConstruct() {
-        setHeight("90%");
+        setHeight("100%");
         //            this.getElement().getStyle().set("background-color", EAColor.lime.getEsadecimale());
 
 
-        Grid grid = creaGrid();
-        this.add(grid);
+//        this.add(creaGrid());
+//        this.add(creaGrid2());
+        this.add(creaGrid3());//quello più simile a AGrid
 
     }
 
@@ -42,7 +47,39 @@ public class PiUnoView extends VerticalLayout {
         grid.addColumn(Anno::getAnno).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
-        DataProvider dataProvider = service.createDataProvider(Anno.class);
+        DataProvider dataProvider = piService.createDataProvider(Anno.class);
+        grid.setDataProvider(dataProvider);
+        grid.setHeight("100%");
+
+        return grid;
+    }
+
+
+    private Grid creaGrid2() {
+
+        Grid<Anno> grid = new Grid<Anno>(Anno.class,false);
+
+        grid.addColumn(Anno::getId).setHeader("Id");
+        grid.addColumn(Anno::getAnno).setHeader("Anno");
+        grid.addColumn(Anno::isBisestile).setHeader("bisestile");
+
+        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
+        grid.setDataProvider(dataProvider);
+        grid.setHeight("100%");
+
+        return grid;
+    }
+
+
+    private Grid creaGrid3() {
+
+        Grid grid = new Grid(Anno.class,false);
+
+        grid.addColumn("id").setHeader("Id");
+        grid.addColumn("anno").setHeader("Anno");
+        grid.addColumn("bisestile").setHeader("bisestile");
+
+        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
         grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 
