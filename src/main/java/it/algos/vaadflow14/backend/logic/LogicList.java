@@ -184,7 +184,7 @@ public abstract class LogicList extends Logic {
 
 //        dataProvider = dataService.creaDataProvider(entityClazz, sort);
 //        grid.getGrid().setDataProvider(dataProvider);
-//        grid.fixGridHeader(dataProvider.size(null));
+        grid.fixGridHeader();
         this.addGridListeners();
 
         /**
