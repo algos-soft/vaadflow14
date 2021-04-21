@@ -18,6 +18,7 @@ Per il merge di una branch:
 - Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 - Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+
 ####User-specific stuff
     .idea/**/workspace.xml
     .idea/**/tasks.xml
