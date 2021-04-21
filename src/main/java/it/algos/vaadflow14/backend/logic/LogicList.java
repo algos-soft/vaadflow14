@@ -195,7 +195,7 @@ public abstract class LogicList extends Logic {
         this.addGridListeners();
 
         /**
-         * Regolazioni INDISPENSBILI per usare DataProvider sui DB voluminosi <br>
+         * Regolazioni INDISPENABILI per usare DataProvider sui DB voluminosi <br>
          * Deve essere MENO di 100% il VerticalLayout esterno <br
          * Deve essere MENO di 100% il bodyPlaceHolder <br
          * Deve essere ESATTAMENTE il 100% la Grid <br
