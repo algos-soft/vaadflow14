@@ -11,8 +11,8 @@ Per il merge di una branch:
 5) premere Checkout per switchare sul master
 6) posizionarsi su Remote Branches
 7) selezionare quella che si vuole 'consolidare'
-8) premere Rebase current onto selected
-9) eseguire SUBITO un commit (forzando con una modifica farlocca)
+8) premere Merge into Current
+9) eseguire SUBITO un UPDATE Project (selezionando merge incoming changes...)
 
 ##Gitignore
 - Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
