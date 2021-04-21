@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -98,6 +99,11 @@ public class AGrid {
     @Autowired
     protected AAnnotationService annotation;
 
+    /**
+     * Filtri per dataProvider <br>
+     */
+    protected List<AFiltro> filtri;
+
     private AILogic entityLogic;
 
     private List<String> gridPropertyNamesList;
@@ -115,7 +121,6 @@ public class AGrid {
 
     private Grid grid;
 
-
     @Deprecated
     public AGrid() {
     }
@@ -130,17 +135,20 @@ public class AGrid {
     /**
      * Costruttore con parametri <br>
      * Questa istanza viene costruita partendo da LogicList nel metodo fixBodyLayout() <br>
-     * con -> grid = appContext.getBean(AGrid.class, entityClazz, this); <br>
+     * con -> grid = appContext.getBean(AGrid.class, entityClazz, this, filtri); <br>
      * <p>
      * La Grid viene costruita e regolata in postConstruct() <br>
+     * I filtri e la relativa dataProvider possono essere modificati in maniera dinamica <br>
      *
      * @param entityClazz (obbligatorio)  the class of type AEntity
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
+     * @param filtri      (obbligatorio)  per selezione e ordinamento
      */
-    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic) {
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, List<AFiltro> filtri) {
         super();
-        this.entityLogic = entityLogic;
         this.entityClazz = entityClazz;
+        this.entityLogic = entityLogic;
+        this.filtri = filtri;
     }
 
 
@@ -435,6 +443,7 @@ public class AGrid {
      * Eventuale header text <br>
      */
     public void fixGridHeader() {
+        int totRec = mongo.count(entityClazz);
         int items = grid.getDataProvider().size(null); //@todo Funzionalità ancora da implementare coi filtri al posto di null
         String message = VUOTA;
 
@@ -445,7 +454,12 @@ public class AGrid {
                     message += "Lista di un solo elemento";
                 }
                 else {
-                    message += "Lista di " + text.format(items) + " elementi";
+                    if (items == totRec) {
+                        message += "Lista di " + text.format(items) + " elementi";
+                    }
+                    else {
+                        message += "Lista di " + text.format(items) + " elementi su " + text.format(totRec);
+                    }
                 }
             }
             else {
@@ -490,6 +504,10 @@ public class AGrid {
 
     public DataProvider getDataProvider() {
         return dataProvider;
+    }
+
+    public void setDataProvider(DataProvider dataProvider) {
+        grid.setDataProvider(dataProvider);
     }
 
     public void setItems(List<Mese> items) {
