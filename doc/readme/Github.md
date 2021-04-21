@@ -25,6 +25,7 @@ Per il merge di una branch:
     .idea/**/dictionaries
     .idea/**/shelf
 
+
 ####Generated files
     .idea/**/contentModel.xml
 
