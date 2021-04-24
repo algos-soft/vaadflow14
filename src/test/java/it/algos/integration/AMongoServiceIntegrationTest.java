@@ -33,6 +33,7 @@ import org.springframework.data.mongodb.core.query.*;
 import org.springframework.test.context.junit.jupiter.*;
 
 import java.util.*;
+import java.util.regex.*;
 
 
 /**
@@ -457,7 +458,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         clazz = Via.class;
         offset = 0;
         limit = 12;
-        previstoIntero = 12;
+        previstoIntero = limit;
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
@@ -465,7 +466,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
         offset = 4;
         limit = 5;
-        previstoIntero = 5;
+        previstoIntero = limit;
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
@@ -474,7 +475,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         clazz = Anno.class;
         offset = 2850;
         limit = 4;
-        previstoIntero = 4;
+        previstoIntero = limit;
         listaBean = mongo.findSet(clazz, offset, limit);
         Assert.assertNotNull(listaBean);
         Assert.assertEquals(previstoIntero, listaBean.size());
@@ -1039,6 +1040,99 @@ public class AMongoServiceIntegrationTest extends ATest {
         viaOttenuta = (Via) service.findNext(Via.class, sortProperty, valueProperty);
         Assert.assertNotNull(viaOttenuta);
         assertEquals(previsto, viaOttenuta.nome);
+    }
+
+    @Test
+    @Order(27)
+    @DisplayName("27 - findSetQuery")
+    void findSetQuery() {
+        int offset = 0;
+        int limit = 12;
+        List<Anno> listaAnni;
+        Class<? extends AEntity> clazz = Anno.class;
+        BasicDBObject query = new BasicDBObject("ordine", new BasicDBObject("$lt", 3000));
+
+        previstoIntero = limit;
+        listaAnni = mongo.findSetQuery(clazz, offset, limit, query, null);
+        Assert.assertNotNull(listaAnni);
+        Assert.assertEquals(previstoIntero, listaAnni.size());
+        System.out.println(VUOTA);
+        System.out.println("Anni (12) minori di 3000");
+        for (Anno anno : listaAnni) {
+            System.out.print(anno.anno + SEP + anno.ordine);
+            System.out.println();
+        }
+
+        BasicDBObject query2 = new BasicDBObject("ordine", new BasicDBObject("$gt", 3000));
+        previstoIntero = limit;
+        listaAnni = mongo.findSetQuery(clazz, offset, limit, query2, null);
+        Assert.assertNotNull(listaAnni);
+        Assert.assertEquals(previstoIntero, listaAnni.size());
+        System.out.println(VUOTA);
+        System.out.println("Anni (12) maggiori di 3000");
+        for (Anno anno : listaAnni) {
+            System.out.print(anno.anno + SEP + anno.ordine);
+            System.out.println();
+        }
+
+        previstoIntero = limit;
+        listaAnni = mongo.findSetQuery(clazz, offset, limit, query, null);
+        Assert.assertNotNull(listaAnni);
+        Assert.assertEquals(previstoIntero, listaAnni.size());
+        System.out.println(VUOTA);
+        System.out.println("Anni (12) minori di 3000");
+        for (Anno anno : listaAnni) {
+            System.out.print(anno.anno + SEP + anno.ordine);
+            System.out.println();
+        }
+    }
+
+    @Test
+    @Order(28)
+    @DisplayName("28 - findSetQuery2")
+    void findSetQuery2() {
+        int offset = 0;
+        int limit = 2000;
+        List<Via> listaVia;
+        Class<? extends AEntity> clazz = Via.class;
+
+        //        BasicDBObject  query = new BasicDBObject();
+        //        query.put("nome", "/.*v.*/");
+
+        //                BasicDBObject  query =   new BasicDBObject("nome", new BasicDBObject("$eq", "^v"));
+
+        //        Query query = new Query();
+        //        query.addCriteria(Criteria.where("stato.id").is(statoKeyID));
+
+        Document regexQuery = new Document();
+        regexQuery.append("$regex", "^" + Pattern.quote("v") + ".*");
+        BasicDBObject query = new BasicDBObject("nome", regexQuery);
+
+        previstoIntero = limit;
+        listaVia = mongo.findSetQuery(clazz, offset, limit, query, null);
+        Assert.assertNotNull(listaVia);
+        System.out.println(VUOTA);
+        System.out.println("Via iniziano con 'v'");
+        for (Via via : listaVia) {
+            System.out.print(via.nome);
+            System.out.println();
+        }
+
+        Document regexQuery2 = new Document();
+        regexQuery2.append("$regex", "^" + Pattern.quote("p") + ".*");
+        BasicDBObject query2 = new BasicDBObject("nome", regexQuery2);
+
+
+        previstoIntero = limit;
+        listaVia = mongo.findSetQuery(clazz, offset, limit, query2, null);
+        Assert.assertNotNull(listaVia);
+        System.out.println(VUOTA);
+        System.out.println("Via iniziano con 'p'");
+        for (Via via : listaVia) {
+            System.out.print(via.nome);
+            System.out.println();
+        }
+
     }
 
     @Test

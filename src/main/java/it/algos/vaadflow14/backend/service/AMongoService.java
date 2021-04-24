@@ -631,6 +631,90 @@ public class AMongoService<capture> extends AAbstractService {
         return items;
     }
 
+    /**
+     * Crea un set di entities da una collection. <br>
+     * Utilizzato da DataProvider <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param offset      da cui iniziare
+     * @param limit       numero di entityBeans da restituire
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> findSetQuery(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query,BasicDBObject sort) {
+        List<AEntity> items = null;
+        Gson gSon = new Gson();
+        String jsonString;
+        String mongoClazzName;
+        MongoCollection<Document> collection;
+        AEntity entityBean = null;
+        List<Field> listaRef;
+        boolean esisteTagValue;
+        String tag = "\"value\":{\"";
+        String tag2;
+        String tagEnd = "},";
+        int ini = 0;
+        int end = 0;
+        List<Document> documents;
+
+        mongoClazzName = annotation.getCollectionName(entityClazz);
+        collection = mongoOp.getCollection(mongoClazzName);
+        documents = collection.find(query).sort(sort).skip(offset).limit(limit).into(new ArrayList());
+
+        if (documents.size() > 0) {
+            items = new ArrayList<>();
+            for (Document doc : documents) {
+                esisteTagValue = false;
+                tag2 = VUOTA;
+                jsonString = gSon.toJson(doc);
+                jsonString = jsonString.replaceAll("_id", "id");
+                try {
+                    entityBean = gSon.fromJson(jsonString, entityClazz);
+                } catch (JsonSyntaxException unErrore) {
+                    esisteTagValue = jsonString.contains(tag);
+                    if (esisteTagValue) {
+                        ini = jsonString.indexOf(tag);
+                        end = jsonString.indexOf(tagEnd, ini) + tagEnd.length();
+                        tag2 = jsonString.substring(ini, end);
+                        jsonString = jsonString.replace(tag2, VUOTA);
+                        try {
+                            entityBean = gSon.fromJson(jsonString, entityClazz);
+                        } catch (Exception unErrore2) {
+                            logger.error(unErrore, this.getClass(), "findSet");
+                        }
+                    }
+                    else {
+                        entityBean = agSonService.crea(doc, entityClazz);
+
+                        //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
+                        //                            logger.error("Non legge la data", this.getClass(), "findSet");
+                        //                        }
+                        //                        else {
+                        //                            logger.error(unErrore, this.getClass(), "findSet");
+                        //                        }
+                    }
+                }
+
+                listaRef = annotation.getDBRefFields(entityClazz);
+                if (listaRef != null && listaRef.size() > 0) {
+                    entityBean = fixDbRef(doc, gSon, entityBean, listaRef);
+                }
+                if (esisteTagValue && entityBean.getClass().getSimpleName().equals(Preferenza.class.getSimpleName())) {
+                    entityBean = fixPrefValue(doc, gSon, entityBean, tag2);
+                    if (((Preferenza) entityBean).value == null) {
+                        logger.warn("Valore nullo della preferenza " + ((Preferenza) entityBean).code, this.getClass(), "findSet");
+                    }
+                }
+
+                if (entityBean != null) {
+                    items.add(entityBean);
+                }
+            }
+        }
+
+        return items;
+    }
+
 
     /**
      * Aggiunge il valore del campo 'value' di una preferenza. <br>
