@@ -44,6 +44,31 @@ public class ADataProviderService extends AAbstractService {
     private AMongoService mongo;
 
 
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject aQuery, BasicDBObject aSort) {
+
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                query -> {
+                    // The index of the first item to load
+                    int offset = query.getOffset();
+
+                    // The number of items to load
+                    int limit = query.getLimit();
+                    //                    limit = 50;//@todo Funzionalità ancora da implementare
+                    //                    BasicDBObject sort = new BasicDBObject("nome", -1);
+                    return mongo.findSet(entityClazz, offset, limit, aQuery,aSort).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                query -> mongo.count(entityClazz)
+        );
+
+        return dataProvider;
+    }
+
+
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject sort) {
 
         DataProvider dataProvider = DataProvider.fromCallbacks(

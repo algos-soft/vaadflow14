@@ -2,7 +2,6 @@ package it.algos.integration;
 
 import com.fasterxml.jackson.databind.*;
 import com.google.gson.*;
-import static com.helger.commons.mock.CommonsAssert.*;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
@@ -19,6 +18,7 @@ import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import static junit.framework.TestCase.*;
 import org.bson.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
@@ -1053,7 +1053,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         BasicDBObject query = new BasicDBObject("ordine", new BasicDBObject("$lt", 3000));
 
         previstoIntero = limit;
-        listaAnni = mongo.findSetQuery(clazz, offset, limit, query, null);
+        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
         Assert.assertNotNull(listaAnni);
         Assert.assertEquals(previstoIntero, listaAnni.size());
         System.out.println(VUOTA);
@@ -1065,7 +1065,7 @@ public class AMongoServiceIntegrationTest extends ATest {
 
         BasicDBObject query2 = new BasicDBObject("ordine", new BasicDBObject("$gt", 3000));
         previstoIntero = limit;
-        listaAnni = mongo.findSetQuery(clazz, offset, limit, query2, null);
+        listaAnni = mongo.findSet(clazz, offset, limit, query2, null);
         Assert.assertNotNull(listaAnni);
         Assert.assertEquals(previstoIntero, listaAnni.size());
         System.out.println(VUOTA);
@@ -1076,7 +1076,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         }
 
         previstoIntero = limit;
-        listaAnni = mongo.findSetQuery(clazz, offset, limit, query, null);
+        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
         Assert.assertNotNull(listaAnni);
         Assert.assertEquals(previstoIntero, listaAnni.size());
         System.out.println(VUOTA);
@@ -1094,45 +1094,67 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 0;
         int limit = 2000;
         List<Via> listaVia;
+        Sort.Direction sortDirection;
+        String sortProperty = "nome";
         Class<? extends AEntity> clazz = Via.class;
+        int totRec = service.count(clazz);
+        Document regexQuery;
+        BasicDBObject sort;
+        previsto = "banchi";
+        previsto2 = "vicolo";
+        previsto3 = "via";
 
-        //        BasicDBObject  query = new BasicDBObject();
-        //        query.put("nome", "/.*v.*/");
+        regexQuery = new Document();
+        regexQuery.append("$regex", "^" + Pattern.quote("p") + ".*");
+        BasicDBObject query2 = new BasicDBObject(sortProperty, regexQuery);
+        listaVia = mongo.findSet(clazz, offset, limit, query2, null);
+        assertNotNull(listaVia);
+        printVia(listaVia, "Via iniziano con 'p'");
 
-        //                BasicDBObject  query =   new BasicDBObject("nome", new BasicDBObject("$eq", "^v"));
-
-        //        Query query = new Query();
-        //        query.addCriteria(Criteria.where("stato.id").is(statoKeyID));
-
-        Document regexQuery = new Document();
+        regexQuery = new Document();
         regexQuery.append("$regex", "^" + Pattern.quote("v") + ".*");
-        BasicDBObject query = new BasicDBObject("nome", regexQuery);
+        BasicDBObject query = new BasicDBObject(sortProperty, regexQuery);
+        listaVia = mongo.findSet(clazz, offset, limit, query, null);
+        assertNotNull(listaVia);
+        printVia(listaVia, "Via iniziano con 'v'");
 
-        previstoIntero = limit;
-        listaVia = mongo.findSetQuery(clazz, offset, limit, query, null);
-        Assert.assertNotNull(listaVia);
-        System.out.println(VUOTA);
-        System.out.println("Via iniziano con 'v'");
-        for (Via via : listaVia) {
-            System.out.print(via.nome);
-            System.out.println();
-        }
+        sort = new BasicDBObject(sortProperty, 1);
+        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
+        assertNotNull(listaVia);
+        printVia(listaVia, "Via iniziano con 'v' ascendenti");
 
-        Document regexQuery2 = new Document();
-        regexQuery2.append("$regex", "^" + Pattern.quote("p") + ".*");
-        BasicDBObject query2 = new BasicDBObject("nome", regexQuery2);
+        sort = new BasicDBObject(sortProperty, -1);
+        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
+        assertNotNull(listaVia);
+        printVia(listaVia, "Via iniziano con 'v' discendenti");
 
+        sort = new BasicDBObject(sortProperty, 1);
+        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
+        assertNotNull(listaVia);
+        assertEquals(totRec, listaVia.size());
+        assertEquals(previsto, listaVia.get(0).nome);
+        assertEquals(previsto2, listaVia.get(listaVia.size() - 1).nome);
+        printVia(listaVia, "Via tutte ascendenti - query nulla");
 
-        previstoIntero = limit;
-        listaVia = mongo.findSetQuery(clazz, offset, limit, query2, null);
-        Assert.assertNotNull(listaVia);
-        System.out.println(VUOTA);
-        System.out.println("Via iniziano con 'p'");
-        for (Via via : listaVia) {
-            System.out.print(via.nome);
-            System.out.println();
-        }
+        sort = new BasicDBObject(sortProperty, -1);
+        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
+        assertNotNull(listaVia);
+        assertEquals(totRec, listaVia.size());
+        assertEquals(previsto2, listaVia.get(0).nome);
+        assertEquals(previsto, listaVia.get(listaVia.size() - 1).nome);
+        printVia(listaVia, "Via tutte discendenti - query nulla");
 
+        listaVia = mongo.findSet(clazz, offset, limit, null, null);
+        assertNotNull(listaVia);
+        assertEquals(totRec, listaVia.size());
+        assertEquals(previsto3, listaVia.get(0).nome);
+        printVia(listaVia, "Via tutte ascendenti- query e sort nulli");
+
+        listaVia = mongo.findSet(clazz, offset, limit);
+        assertNotNull(listaVia);
+        assertEquals(totRec, listaVia.size());
+        assertEquals(previsto3, listaVia.get(0).nome);
+        printVia(listaVia, "Via tutte ascendenti- parametri query e sort non presenti");
     }
 
     @Test
@@ -1365,6 +1387,15 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     private void printLista(List<AEntity> lista) {
         printLista(lista, VUOTA);
+    }
+
+    private void printVia(List<Via> listaVia, String titolo) {
+        System.out.println(VUOTA);
+        System.out.println(titolo);
+        for (Via via : listaVia) {
+            System.out.print(via.nome);
+            System.out.println();
+        }
     }
 
 

@@ -1,16 +1,12 @@
 package it.algos.vaadflow14.ui.fields;
 
-import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.login.LoginI18n;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.HasValidator;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.service.ALogService;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.textfield.*;
+import com.vaadin.flow.shared.*;
+import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 
 /**
  * Project vaadflow15
@@ -92,6 +88,9 @@ public class ATextField extends AField<String>  {
         ALogService.messageError(errorMessage);//@todo Creare una preferenza e sostituirla qui
     }
 
-
+    @Override
+    public Registration addValueChangeListener(ValueChangeListener valueChangeListener) {
+        return textField.addValueChangeListener(valueChangeListener);
+    }
 
 }
