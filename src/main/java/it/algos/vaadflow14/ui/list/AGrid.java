@@ -102,7 +102,7 @@ public class AGrid {
     /**
      * Filtri per dataProvider <br>
      */
-    protected List<AFiltro> filtri;
+    protected Map<String, AFiltro> filtri;
 
     private AILogic entityLogic;
 
@@ -144,7 +144,7 @@ public class AGrid {
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
      * @param filtri      (obbligatorio)  per selezione e ordinamento
      */
-    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, List<AFiltro> filtri) {
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, Map<String,AFiltro> filtri) {
         super();
         this.entityClazz = entityClazz;
         this.entityLogic = entityLogic;
@@ -168,7 +168,7 @@ public class AGrid {
 
         String sortProperty = annotation.getSortProperty(entityClazz);
         BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, sort);
+        dataProvider = dataProviderService.creaDataProvider(entityClazz, filtri);
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {

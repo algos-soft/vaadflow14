@@ -45,7 +45,7 @@ public interface AILogic {
 
 
     /**
-     * Esegue l'azione del bottone, searchText o comboBox. <br>
+     * Esegue l'azione del bottone. Azione che non necessita di parametri. <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param iAzione interfaccia dell'azione selezionata da eseguire
@@ -56,7 +56,7 @@ public interface AILogic {
 
 
     /**
-     * Esegue l'azione del bottone, textEdit o comboBox. <br>
+     * Esegue l'azione del bottone. Azione che necessita di una entityBean. <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      *
      * @param iAzione    interfaccia dell'azione selezionata da eseguire
@@ -65,6 +65,18 @@ public interface AILogic {
      * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
      */
     boolean performAction(final AIAction iAzione, final AEntity entityBean);
+
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di una stringa. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione    interfaccia dell'azione selezionata da eseguire
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    boolean performAction(final AIAction iAzione, final String searchFieldValue);
 
 
     /**

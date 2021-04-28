@@ -1,17 +1,18 @@
 package it.algos.simple.backend.packages;
 
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
+import com.mongodb.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.data.provider.*;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
+import javax.annotation.*;
 
 
 @Route(value = "alex")
@@ -63,7 +64,7 @@ public class PiUnoView extends VerticalLayout {
         grid.addColumn(Anno::getAnno).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
-        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
+        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,(BasicDBObject)null);
         grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 
@@ -79,7 +80,7 @@ public class PiUnoView extends VerticalLayout {
         grid.addColumn("anno").setHeader("Anno");
         grid.addColumn("bisestile").setHeader("bisestile");
 
-        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
+        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,(BasicDBObject)null);
         grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 

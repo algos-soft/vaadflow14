@@ -33,7 +33,6 @@ import org.springframework.data.mongodb.core.query.*;
 import org.springframework.test.context.junit.jupiter.*;
 
 import java.util.*;
-import java.util.regex.*;
 
 
 /**
@@ -88,6 +87,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         service.text = text;
         service.mongoOp = mongoOp;
         service.logger = logger;
+        service.array = array;
         annotation.text = text;
         service.mongoOp = mongoOp;
         meseService.mongo = service;
@@ -241,261 +241,482 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assert.assertEquals(previstoIntero, ottenutoIntero);
     }
 
-
     @Test
     @Order(5)
-    @DisplayName("5 - findAllFiltri")
-    void findAllFiltri() {
-        System.out.println("una serie di filtri");
+    @DisplayName("5 - Via (filtro manca)")
+    void fetch5() {
+        int offset = 0;
+        int limit = 2000;
+        List<Via> listaVia = null;
+        AFiltro filtro = null;
+        Sort.Direction sortDirection;
+        String sortProperty = "nome";
+        String starting = "vi";
+        String contains = "l";
+        Sort sort = null;
+        Class<? extends AEntity> clazz = Via.class;
+        List<AFiltro> filtri = new ArrayList<>();
+        previsto = "banchi";
+        previsto2 = "vicolo";
+        previsto3 = "via";
+        //        String alfa = "^" + Pattern.quote(starting) + ".*";
+        //        String beta = ".*" + Pattern.quote(contains) + ".*";
 
-        listaFiltri = new ArrayList<>();
+        previstoIntero = 26;
+        listaBean = service.fetch(clazz);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via completi (filtro manca)", previstoIntero));
+        ;
 
-        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
+        //        previstoIntero = 4;
+        //        filtro = AFiltro.search(sortProperty, starting);
+        //        filtri.add(filtro);
+        //        listaVia = mongo.fetch(clazz, offset, limit, filtri);
+        //        assertNotNull(listaVia);
+        //        assertEquals(previstoIntero, listaVia.size());
+        //        printVia(listaVia, String.format("Records di Via che iniziano con %s", starting));
 
-        filtro = new AFiltro(Criteria.where("mese.$id").is("marzo"));
-        listaFiltri.add(filtro);
-        listaBean = service.findAll(Giorno.class, listaFiltri);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
-
-        listaFiltri = new ArrayList<>();
-        filtro = new AFiltro(Criteria.where("secolo").is("xxsecolo"));
-        listaFiltri.add(filtro);
-        sort = Sort.by(Sort.Direction.ASC, "ordine");
-        filtro = new AFiltro(Criteria.where("ordine").gt(3970), sort);
-        listaFiltri.add(filtro);
-        listaBean = service.findAll(Anno.class, listaFiltri);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
+        //        previstoIntero = 2;
+        //        filtro = AFiltro.contains(sortProperty, contains);
+        //        filtri.put("contains", filtro);
+        //        listaVia = mongo.fetch(clazz, offset, limit, filtri);
+        //        assertNotNull(listaVia);
+        //        assertEquals(previstoIntero, listaVia.size());
+        //        printVia(listaVia, String.format("Records di Via che iniziano con %s e contengono %s", starting, contains));
     }
-
 
     @Test
     @Order(6)
-    @DisplayName("6 - findAllFiltriSort")
-    void findAllFiltriSort() {
-        System.out.println("una serie di filtri e ordinamenti vari");
-
-        listaFiltri = new ArrayList<>();
-        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
-
-        listaFiltri = new ArrayList<>();
-        sort = Sort.by(Sort.Direction.DESC, "mese");
-        filtro = new AFiltro(sort);
-        listaFiltri.add(filtro);
-        listaBean = service.findAll(Mese.class, listaFiltri);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
-
-        listaFiltri = new ArrayList<>();
-        filtro = new AFiltro(Criteria.where("ordine").lt(10));
-        listaFiltri.add(filtro);
-        sort = Sort.by(Sort.Direction.ASC, "alfadue");
-        filtro = new AFiltro(Criteria.where("ue").is(true), sort);
-        listaFiltri.add(filtro);
-        listaBean = service.findAll(Stato.class, listaFiltri);
-        Assert.assertNotNull(listaBean);
-        Assert.assertTrue(listaBean.size() > 1);
-        System.out.println(VUOTA);
-        printLista(listaBean);
+    @DisplayName("6 - Via (filtro=null)")
+    void fetch6() {
+        previstoIntero = service.count(VIA_ENTITY_CLASS);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, (AFiltro) null);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via completi (filtro=null)", previstoIntero));
     }
-
 
     @Test
     @Order(7)
-    @DisplayName("7 - find")
-    void find() {
-        System.out.println("find rimanda a findAll");
-
-        listaBean = service.find((Class) null);
-        Assert.assertNull(listaBean);
-
-        listaBean = service.find(Secolo.class);
-        Assert.assertNotNull(listaBean);
-        System.out.println(VUOTA);
-        printLista(listaBean);
+    @DisplayName("7 - Via (filtri=null)")
+    void fetch7() {
+        previstoIntero = service.count(VIA_ENTITY_CLASS);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via completi (filtri=null)", previstoIntero));
     }
 
 
     @Test
     @Order(8)
-    @DisplayName("8 - findAll")
-    void findAll() {
-        System.out.println("tutta la collection");
-
-        listaBean = service.findAll((Class) null);
-        Assert.assertNull(listaBean);
-
-        listaBean = service.findAll(Mese.class);
-        Assert.assertNotNull(listaBean);
-        System.out.println(VUOTA);
-        printLista(listaBean);
+    @DisplayName("8 - Via (filtri=null, sort=null)")
+    void fetch8() {
+        previstoIntero = service.count(VIA_ENTITY_CLASS);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via completi (filtri=null, sort=null)", previstoIntero));
     }
-
 
     @Test
     @Order(9)
-    @DisplayName("9 - findAllQuery")
-    void findAllQuery() {
-        System.out.println("metodo base - tutta la collection filtrata da una query");
-
-        query = new Query();
-        sort = Sort.by(Sort.Direction.DESC, "ordine");
-
-        listaBean = service.findAll((Class) null, (Query) null);
-        Assert.assertTrue(array.isEmpty(listaBean));
-
-        listaBean = service.findAll(Mese.class, (Query) null);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query nulla");
-
-        listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query vuota ordine interno");
-
-        query.with(sort);
-        listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query vuota ma ordinata");
-
-        query = new Query();
-        query.with(sort);
-        query.addCriteria(Criteria.where("ordine").lt(8));
-        listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata");
-
-        query = new Query();
-        query.addCriteria(Criteria.where("ordine").lt(8));
-        query.with(sort);
-        query.fields().exclude("ordine");
-        listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata e con campo escluso");
-
-        query = new Query();
-        query.addCriteria(Criteria.where("ordine").lt(8));
-        query.with(sort);
-        query.fields().include("mese");
-        listaBean = service.findAll(Mese.class, query);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata e con singolo campo selezionato");
+    @DisplayName("9 - Via (filtri=null, sort=null, offset=0, limit=0)")
+    void fetch9() {
+        int offset = 0;
+        int limit = 0;
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
     }
 
 
     @Test
     @Order(10)
-    @DisplayName("10 - findAllQueryProjection")
-    void findAllQueryProjection() {
-        System.out.println("metodo base - la projection non si usa");
-        System.out.println(VUOTA);
-
-        query = new Query();
-        sort = Sort.by(Sort.Direction.ASC, "code");
-
-        listaBean = service.findAll((Class) null, (Query) null, VUOTA);
-        Assert.assertTrue(array.isEmpty(listaBean));
-
-        listaBean = service.findAll(Mese.class, (Query) null, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query nulla");
-
-        listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query vuota");
-
-        query.with(sort);
-        listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query ordinata");
-
-        query.addCriteria(Criteria.where("ordine").lt(10));
-        listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata");
-
-        query.fields().exclude("ordine");
-        listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata e selezione dei campi");
-
-        query = new Query();
-        query.fields().include("mese");
-        listaBean = service.findAll(Mese.class, query, VUOTA);
-        Assert.assertTrue(array.isAllValid(listaBean));
-        printLista(listaBean, "lista con query filtrata e ordinata e selezione di un solo campo");
-
-        String projection = "{'code': 1}";
-        query = new Query();
-        listaBean = service.findAll(Mese.class, query, projection);
-        Assert.assertFalse(array.isAllValid(listaBean));
-        printLista(listaBean, "la projection non funziona");
+    @DisplayName("10 - Via (filtri=null, sort=null, offset=0, limit=15)")
+    void fetch10() {
+        int offset = 0;
+        int limit = 15;
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
     }
 
 
     @Test
     @Order(11)
-    @DisplayName("11 - findSet")
-    void findSet() {
+    @DisplayName("11 - Via (filtri=null, sort=null, offset=14, limit=0)")
+    void fetch11() {
+        int offset = 14;
+        int limit = 0;
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("12 - Via (filtri=null, sort=null, offset=14, limit=5)")
+    void fetch12() {
+        int offset = 14;
+        int limit = 5;
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("13 - Via (filtri=null, sort=ASC, offset=0, limit=0)")
+    void fetch13() {
         int offset = 0;
         int limit = 0;
-        Class<? extends AEntity> clazz;
-
-        clazz = Via.class;
-        offset = 0;
-        limit = 12;
-        previstoIntero = limit;
-        listaBean = mongo.findSet(clazz, offset, limit);
-        Assert.assertNotNull(listaBean);
-        Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities per Via");
-
-        offset = 4;
-        limit = 5;
-        previstoIntero = limit;
-        listaBean = mongo.findSet(clazz, offset, limit);
-        Assert.assertNotNull(listaBean);
-        Assert.assertEquals(previstoIntero, listaBean.size());
-        printLista(listaBean, "Set di entities per Via");
-
-        clazz = Anno.class;
-        offset = 2850;
-        limit = 4;
-        previstoIntero = limit;
-        listaBean = mongo.findSet(clazz, offset, limit);
-        Assert.assertNotNull(listaBean);
-        Assert.assertEquals(previstoIntero, listaBean.size());
-        Assert.assertNotNull(((Anno) listaBean.get(0)).secolo.secolo);
-        printLista(listaBean, "Set di entities per Anno");
-        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
-
-        //        clazz = Mese.class;
-        //        offset = 0;
-        //        limit = 1;
-        //        previstoIntero = 1;
-        //        listaBean = mongo.findSet(clazz, offset, limit);
-        //        Assert.assertNotNull(listaBean);
-        //        Assert.assertEquals(previstoIntero, listaBean.size());
-        //        Assert.assertNotNull(((Mese) listaBean.get(0)).id);
-        //        Assert.assertNotNull(((Mese) listaBean.get(0)).mese);
-        //        Assert.assertNotNull(((Mese) listaBean.get(0)).sigla);
-        //        printLista(listaBean, "Set di entities per Mese");
-        //        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
+        sort = Sort.by(Sort.Direction.ASC, NAME_NOME);
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
     }
+
+    @Test
+    @Order(14)
+    @DisplayName("14 - Via (filtri=null, sort=DESC, offset=0, limit=0)")
+    void fetch14() {
+        int offset = 0;
+        int limit = 0;
+        sort = Sort.by(Sort.Direction.DESC, NAME_NOME);
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+    }
+
+
+    @Test
+    @Order(15)
+    @DisplayName("15 - Via (filtri=null, sort=ordine.ASC, offset=7, limit=4)")
+    void fetch15() {
+        int offset = 7;
+        int limit = 4;
+        sort = Sort.by(Sort.Direction.ASC, NAME_ORDINE);
+        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        System.out.println(String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        for (AEntity bean : listaBean) {
+            System.out.print(((Via) bean).ordine);
+            System.out.print(SEP);
+            System.out.print(((Via) bean).nome);
+            System.out.println();
+        }
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("16 - Via (filtro=vi)")
+    void fetch16() {
+        String filtroStart = "vi";
+        AFiltro filtro = AFiltro.start(NAME_NOME, filtroStart);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroStart));
+    }
+
+
+    @Test
+    @Order(17)
+    @DisplayName("17 - Via (filtro=azz)")
+    void fetch17() {
+        String filtroText = "azz";
+        AFiltro filtro = AFiltro.contains(NAME_NOME, filtroText);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroText));
+    }
+
+
+    @Test
+    @Order(18)
+    @DisplayName("18 - Via (filtro=vi+co)")
+    void fetch18() {
+        AFiltro filtro = null;
+        String filtroStart = "vi";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        listaFiltri.add(filtro);
+        String filtroText = "co";
+        filtro = AFiltro.contains(NAME_NOME, filtroText);
+        listaFiltri.add(filtro);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri);
+        assertNotNull(listaBean);
+        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+    }
+
+    //    @Test
+    //    @Order(5)
+    //    @DisplayName("5 - findAllFiltri")
+    //    void findAllFiltri() {
+    //        System.out.println("una serie di filtri");
+    //
+    //        listaFiltri = new ArrayList<>();
+    //
+    //        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //
+    //        filtro = new AFiltro(Criteria.where("mese.$id").is("marzo"));
+    //        listaFiltri.add(filtro);
+    //        listaBean = service.findAll(Giorno.class, listaFiltri);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //
+    //        listaFiltri = new ArrayList<>();
+    //        filtro = new AFiltro(Criteria.where("secolo").is("xxsecolo"));
+    //        listaFiltri.add(filtro);
+    //        sort = Sort.by(Sort.Direction.ASC, "ordine");
+    //        filtro = new AFiltro(Criteria.where("ordine").gt(3970), sort);
+    //        listaFiltri.add(filtro);
+    //        listaBean = service.findAll(Anno.class, listaFiltri);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(6)
+    //    @DisplayName("6 - findAllFiltriSort")
+    //    void findAllFiltriSort() {
+    //        System.out.println("una serie di filtri e ordinamenti vari");
+    //
+    //        listaFiltri = new ArrayList<>();
+    //        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //
+    //        listaFiltri = new ArrayList<>();
+    //        sort = Sort.by(Sort.Direction.DESC, "mese");
+    //        filtro = new AFiltro(sort);
+    //        listaFiltri.add(filtro);
+    //        listaBean = service.findAll(Mese.class, listaFiltri);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //
+    //        listaFiltri = new ArrayList<>();
+    //        filtro = new AFiltro(Criteria.where("ordine").lt(10));
+    //        listaFiltri.add(filtro);
+    //        sort = Sort.by(Sort.Direction.ASC, "alfadue");
+    //        filtro = new AFiltro(Criteria.where("ue").is(true), sort);
+    //        listaFiltri.add(filtro);
+    //        listaBean = service.findAll(Stato.class, listaFiltri);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertTrue(listaBean.size() > 1);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(7)
+    //    @DisplayName("7 - find")
+    //    void find() {
+    //        System.out.println("find rimanda a findAll");
+    //
+    //        listaBean = service.find((Class) null);
+    //        Assert.assertNull(listaBean);
+    //
+    //        listaBean = service.find(Secolo.class);
+    //        Assert.assertNotNull(listaBean);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(8)
+    //    @DisplayName("8 - findAll")
+    //    void findAll() {
+    //        System.out.println("tutta la collection");
+    //
+    //        listaBean = service.findAll((Class) null);
+    //        Assert.assertNull(listaBean);
+    //
+    //        listaBean = service.findAll(Mese.class);
+    //        Assert.assertNotNull(listaBean);
+    //        System.out.println(VUOTA);
+    //        printLista(listaBean);
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(9)
+    //    @DisplayName("9 - findAllQuery")
+    //    void findAllQuery() {
+    //        System.out.println("metodo base - tutta la collection filtrata da una query");
+    //
+    //        query = new Query();
+    //        sort = Sort.by(Sort.Direction.DESC, "ordine");
+    //
+    //        listaBean = service.findAll((Class) null, (Query) null);
+    //        Assert.assertTrue(array.isEmpty(listaBean));
+    //
+    //        listaBean = service.findAll(Mese.class, (Query) null);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query nulla");
+    //
+    //        listaBean = service.findAll(Mese.class, query);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query vuota ordine interno");
+    //
+    //        query.with(sort);
+    //        listaBean = service.findAll(Mese.class, query);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query vuota ma ordinata");
+    //
+    //        query = new Query();
+    //        query.with(sort);
+    //        query.addCriteria(Criteria.where("ordine").lt(8));
+    //        listaBean = service.findAll(Mese.class, query);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata");
+    //
+    //        query = new Query();
+    //        query.addCriteria(Criteria.where("ordine").lt(8));
+    //        query.with(sort);
+    //        query.fields().exclude("ordine");
+    //        listaBean = service.findAll(Mese.class, query);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata e con campo escluso");
+    //
+    //        query = new Query();
+    //        query.addCriteria(Criteria.where("ordine").lt(8));
+    //        query.with(sort);
+    //        query.fields().include("mese");
+    //        listaBean = service.findAll(Mese.class, query);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata e con singolo campo selezionato");
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(10)
+    //    @DisplayName("10 - findAllQueryProjection")
+    //    void findAllQueryProjection() {
+    //        System.out.println("metodo base - la projection non si usa");
+    //        System.out.println(VUOTA);
+    //
+    //        query = new Query();
+    //        sort = Sort.by(Sort.Direction.ASC, "code");
+    //
+    //        listaBean = service.findAll((Class) null, (Query) null, VUOTA);
+    //        Assert.assertTrue(array.isEmpty(listaBean));
+    //
+    //        listaBean = service.findAll(Mese.class, (Query) null, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query nulla");
+    //
+    //        listaBean = service.findAll(Mese.class, query, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query vuota");
+    //
+    //        query.with(sort);
+    //        listaBean = service.findAll(Mese.class, query, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query ordinata");
+    //
+    //        query.addCriteria(Criteria.where("ordine").lt(10));
+    //        listaBean = service.findAll(Mese.class, query, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata");
+    //
+    //        query.fields().exclude("ordine");
+    //        listaBean = service.findAll(Mese.class, query, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata e selezione dei campi");
+    //
+    //        query = new Query();
+    //        query.fields().include("mese");
+    //        listaBean = service.findAll(Mese.class, query, VUOTA);
+    //        Assert.assertTrue(array.isAllValid(listaBean));
+    //        printLista(listaBean, "lista con query filtrata e ordinata e selezione di un solo campo");
+    //
+    //        String projection = "{'code': 1}";
+    //        query = new Query();
+    //        listaBean = service.findAll(Mese.class, query, projection);
+    //        Assert.assertFalse(array.isAllValid(listaBean));
+    //        printLista(listaBean, "la projection non funziona");
+    //    }
+    //
+    //
+    //    @Test
+    //    @Order(11)
+    //    @DisplayName("11 - findSet")
+    //    void findSet() {
+    //        int offset = 0;
+    //        int limit = 0;
+    //        Class<? extends AEntity> clazz;
+    //
+    //        clazz = Via.class;
+    //        offset = 0;
+    //        limit = 12;
+    //        previstoIntero = limit;
+    //        listaBean = mongo.findSet(clazz, offset, limit);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertEquals(previstoIntero, listaBean.size());
+    //        printLista(listaBean, "Set di entities per Via");
+    //
+    //        offset = 4;
+    //        limit = 5;
+    //        previstoIntero = limit;
+    //        listaBean = mongo.findSet(clazz, offset, limit);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertEquals(previstoIntero, listaBean.size());
+    //        printLista(listaBean, "Set di entities per Via");
+    //
+    //        clazz = Anno.class;
+    //        offset = 2850;
+    //        limit = 4;
+    //        previstoIntero = limit;
+    //        listaBean = mongo.findSet(clazz, offset, limit);
+    //        Assert.assertNotNull(listaBean);
+    //        Assert.assertEquals(previstoIntero, listaBean.size());
+    //        Assert.assertNotNull(((Anno) listaBean.get(0)).secolo.secolo);
+    //        printLista(listaBean, "Set di entities per Anno");
+    //        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
+    //
+    //        //        clazz = Mese.class;
+    //        //        offset = 0;
+    //        //        limit = 1;
+    //        //        previstoIntero = 1;
+    //        //        listaBean = mongo.findSet(clazz, offset, limit);
+    //        //        Assert.assertNotNull(listaBean);
+    //        //        Assert.assertEquals(previstoIntero, listaBean.size());
+    //        //        Assert.assertNotNull(((Mese) listaBean.get(0)).id);
+    //        //        Assert.assertNotNull(((Mese) listaBean.get(0)).mese);
+    //        //        Assert.assertNotNull(((Mese) listaBean.get(0)).sigla);
+    //        //        printLista(listaBean, "Set di entities per Mese");
+    //        //        System.out.println(((Anno) listaBean.get(0)).secolo.secolo);
+    //    }
 
 
     @Test
@@ -1042,120 +1263,121 @@ public class AMongoServiceIntegrationTest extends ATest {
         assertEquals(previsto, viaOttenuta.nome);
     }
 
-    @Test
-    @Order(27)
-    @DisplayName("27 - findSetQuery")
-    void findSetQuery() {
-        int offset = 0;
-        int limit = 12;
-        List<Anno> listaAnni;
-        Class<? extends AEntity> clazz = Anno.class;
-        BasicDBObject query = new BasicDBObject("ordine", new BasicDBObject("$lt", 3000));
+    //    @Test
+    //    @Order(27)
+    //    @DisplayName("27 - findSetQuery")
+    //    void findSetQuery() {
+    //        int offset = 0;
+    //        int limit = 12;
+    //        List<Anno> listaAnni;
+    //        Class<? extends AEntity> clazz = Anno.class;
+    //        BasicDBObject query = new BasicDBObject("ordine", new BasicDBObject("$lt", 3000));
+    //
+    //        previstoIntero = limit;
+    //        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
+    //        Assert.assertNotNull(listaAnni);
+    //        Assert.assertEquals(previstoIntero, listaAnni.size());
+    //        System.out.println(VUOTA);
+    //        System.out.println("Anni (12) minori di 3000");
+    //        for (Anno anno : listaAnni) {
+    //            System.out.print(anno.anno + SEP + anno.ordine);
+    //            System.out.println();
+    //        }
+    //
+    //        BasicDBObject query2 = new BasicDBObject("ordine", new BasicDBObject("$gt", 3000));
+    //        previstoIntero = limit;
+    //        listaAnni = mongo.findSet(clazz, offset, limit, query2, null);
+    //        Assert.assertNotNull(listaAnni);
+    //        Assert.assertEquals(previstoIntero, listaAnni.size());
+    //        System.out.println(VUOTA);
+    //        System.out.println("Anni (12) maggiori di 3000");
+    //        for (Anno anno : listaAnni) {
+    //            System.out.print(anno.anno + SEP + anno.ordine);
+    //            System.out.println();
+    //        }
+    //
+    //        previstoIntero = limit;
+    //        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
+    //        Assert.assertNotNull(listaAnni);
+    //        Assert.assertEquals(previstoIntero, listaAnni.size());
+    //        System.out.println(VUOTA);
+    //        System.out.println("Anni (12) minori di 3000");
+    //        for (Anno anno : listaAnni) {
+    //            System.out.print(anno.anno + SEP + anno.ordine);
+    //            System.out.println();
+    //        }
+    //    }
+    //
+    //    @Test
+    //    @Order(28)
+    //    @DisplayName("28 - findSetQuery2")
+    //    void findSetQuery2() {
+    //        int offset = 0;
+    //        int limit = 2000;
+    //        List<Via> listaVia;
+    //        Sort.Direction sortDirection;
+    //        String sortProperty = "nome";
+    //        Class<? extends AEntity> clazz = Via.class;
+    //        int totRec = service.count(clazz);
+    //        Document regexQuery;
+    //        BasicDBObject sort;
+    //        previsto = "banchi";
+    //        previsto2 = "vicolo";
+    //        previsto3 = "via";
+    //
+    //        regexQuery = new Document();
+    //        regexQuery.append("$regex", "^" + Pattern.quote("p") + ".*");
+    //        BasicDBObject query2 = new BasicDBObject(sortProperty, regexQuery);
+    //        listaVia = mongo.findSet(clazz, offset, limit, query2, null);
+    //        assertNotNull(listaVia);
+    //        printVia(listaVia, "Via iniziano con 'p'");
+    //
+    //        regexQuery = new Document();
+    //        regexQuery.append("$regex", "^" + Pattern.quote("v") + ".*");
+    //        BasicDBObject query = new BasicDBObject(sortProperty, regexQuery);
+    //        listaVia = mongo.findSet(clazz, offset, limit, query, null);
+    //        assertNotNull(listaVia);
+    //        printVia(listaVia, "Via iniziano con 'v'");
+    //
+    //        sort = new BasicDBObject(sortProperty, 1);
+    //        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
+    //        assertNotNull(listaVia);
+    //        printVia(listaVia, "Via iniziano con 'v' ascendenti");
+    //
+    //        sort = new BasicDBObject(sortProperty, -1);
+    //        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
+    //        assertNotNull(listaVia);
+    //        printVia(listaVia, "Via iniziano con 'v' discendenti");
+    //
+    //        sort = new BasicDBObject(sortProperty, 1);
+    //        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
+    //        assertNotNull(listaVia);
+    //        assertEquals(totRec, listaVia.size());
+    //        assertEquals(previsto, listaVia.get(0).nome);
+    //        assertEquals(previsto2, listaVia.get(listaVia.size() - 1).nome);
+    //        printVia(listaVia, "Via tutte ascendenti - query nulla");
+    //
+    //        sort = new BasicDBObject(sortProperty, -1);
+    //        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
+    //        assertNotNull(listaVia);
+    //        assertEquals(totRec, listaVia.size());
+    //        assertEquals(previsto2, listaVia.get(0).nome);
+    //        assertEquals(previsto, listaVia.get(listaVia.size() - 1).nome);
+    //        printVia(listaVia, "Via tutte discendenti - query nulla");
+    //
+    //        listaVia = mongo.findSet(clazz, offset, limit, null, null);
+    //        assertNotNull(listaVia);
+    //        assertEquals(totRec, listaVia.size());
+    //        assertEquals(previsto3, listaVia.get(0).nome);
+    //        printVia(listaVia, "Via tutte ascendenti- query e sort nulli");
+    //
+    //        listaVia = mongo.findSet(clazz, offset, limit);
+    //        assertNotNull(listaVia);
+    //        assertEquals(totRec, listaVia.size());
+    //        assertEquals(previsto3, listaVia.get(0).nome);
+    //        printVia(listaVia, "Via tutte ascendenti- parametri query e sort non presenti");
+    //    }
 
-        previstoIntero = limit;
-        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
-        Assert.assertNotNull(listaAnni);
-        Assert.assertEquals(previstoIntero, listaAnni.size());
-        System.out.println(VUOTA);
-        System.out.println("Anni (12) minori di 3000");
-        for (Anno anno : listaAnni) {
-            System.out.print(anno.anno + SEP + anno.ordine);
-            System.out.println();
-        }
-
-        BasicDBObject query2 = new BasicDBObject("ordine", new BasicDBObject("$gt", 3000));
-        previstoIntero = limit;
-        listaAnni = mongo.findSet(clazz, offset, limit, query2, null);
-        Assert.assertNotNull(listaAnni);
-        Assert.assertEquals(previstoIntero, listaAnni.size());
-        System.out.println(VUOTA);
-        System.out.println("Anni (12) maggiori di 3000");
-        for (Anno anno : listaAnni) {
-            System.out.print(anno.anno + SEP + anno.ordine);
-            System.out.println();
-        }
-
-        previstoIntero = limit;
-        listaAnni = mongo.findSet(clazz, offset, limit, query, null);
-        Assert.assertNotNull(listaAnni);
-        Assert.assertEquals(previstoIntero, listaAnni.size());
-        System.out.println(VUOTA);
-        System.out.println("Anni (12) minori di 3000");
-        for (Anno anno : listaAnni) {
-            System.out.print(anno.anno + SEP + anno.ordine);
-            System.out.println();
-        }
-    }
-
-    @Test
-    @Order(28)
-    @DisplayName("28 - findSetQuery2")
-    void findSetQuery2() {
-        int offset = 0;
-        int limit = 2000;
-        List<Via> listaVia;
-        Sort.Direction sortDirection;
-        String sortProperty = "nome";
-        Class<? extends AEntity> clazz = Via.class;
-        int totRec = service.count(clazz);
-        Document regexQuery;
-        BasicDBObject sort;
-        previsto = "banchi";
-        previsto2 = "vicolo";
-        previsto3 = "via";
-
-        regexQuery = new Document();
-        regexQuery.append("$regex", "^" + Pattern.quote("p") + ".*");
-        BasicDBObject query2 = new BasicDBObject(sortProperty, regexQuery);
-        listaVia = mongo.findSet(clazz, offset, limit, query2, null);
-        assertNotNull(listaVia);
-        printVia(listaVia, "Via iniziano con 'p'");
-
-        regexQuery = new Document();
-        regexQuery.append("$regex", "^" + Pattern.quote("v") + ".*");
-        BasicDBObject query = new BasicDBObject(sortProperty, regexQuery);
-        listaVia = mongo.findSet(clazz, offset, limit, query, null);
-        assertNotNull(listaVia);
-        printVia(listaVia, "Via iniziano con 'v'");
-
-        sort = new BasicDBObject(sortProperty, 1);
-        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
-        assertNotNull(listaVia);
-        printVia(listaVia, "Via iniziano con 'v' ascendenti");
-
-        sort = new BasicDBObject(sortProperty, -1);
-        listaVia = mongo.findSet(clazz, offset, limit, query, sort);
-        assertNotNull(listaVia);
-        printVia(listaVia, "Via iniziano con 'v' discendenti");
-
-        sort = new BasicDBObject(sortProperty, 1);
-        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
-        assertNotNull(listaVia);
-        assertEquals(totRec, listaVia.size());
-        assertEquals(previsto, listaVia.get(0).nome);
-        assertEquals(previsto2, listaVia.get(listaVia.size() - 1).nome);
-        printVia(listaVia, "Via tutte ascendenti - query nulla");
-
-        sort = new BasicDBObject(sortProperty, -1);
-        listaVia = mongo.findSet(clazz, offset, limit, null, sort);
-        assertNotNull(listaVia);
-        assertEquals(totRec, listaVia.size());
-        assertEquals(previsto2, listaVia.get(0).nome);
-        assertEquals(previsto, listaVia.get(listaVia.size() - 1).nome);
-        printVia(listaVia, "Via tutte discendenti - query nulla");
-
-        listaVia = mongo.findSet(clazz, offset, limit, null, null);
-        assertNotNull(listaVia);
-        assertEquals(totRec, listaVia.size());
-        assertEquals(previsto3, listaVia.get(0).nome);
-        printVia(listaVia, "Via tutte ascendenti- query e sort nulli");
-
-        listaVia = mongo.findSet(clazz, offset, limit);
-        assertNotNull(listaVia);
-        assertEquals(totRec, listaVia.size());
-        assertEquals(previsto3, listaVia.get(0).nome);
-        printVia(listaVia, "Via tutte ascendenti- parametri query e sort non presenti");
-    }
 
     @Test
     @Order(94)
@@ -1389,11 +1611,10 @@ public class AMongoServiceIntegrationTest extends ATest {
         printLista(lista, VUOTA);
     }
 
-    private void printVia(List<Via> listaVia, String titolo) {
-        System.out.println(VUOTA);
+    private void print(List<AEntity> lista, String titolo) {
         System.out.println(titolo);
-        for (Via via : listaVia) {
-            System.out.print(via.nome);
+        for (AEntity bean : lista) {
+            System.out.print(bean);
             System.out.println();
         }
     }

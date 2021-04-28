@@ -1,5 +1,6 @@
 package it.algos.simple.backend.packages.viale;
 
+import com.mongodb.*;
 import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.data.provider.*;
@@ -43,7 +44,7 @@ public class VialeView extends VerticalLayout implements BeforeEnterObserver {
 
     public void primaGrid() {
         Grid<Via> grid = new Grid<>(Via.class, false);
-        DataProvider dataProvider = service.creaDataProvider(Via.class, null);
+        DataProvider dataProvider = service.creaDataProvider(Via.class, (BasicDBObject)null);
         grid.setDataProvider(dataProvider);
 
         // Will be sortable by the user

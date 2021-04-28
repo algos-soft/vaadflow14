@@ -331,7 +331,7 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Filtri per dataProvider <br>
      */
-    protected List<AFiltro> filtri;
+    protected Map<String,AFiltro> filtri;
 
     protected void fixProperty() {
         if (routeParameter == null && annotation.getRouteName(this.getClass()).equals(ROUTE_NAME_GENERIC_VIEW)) {
@@ -615,6 +615,15 @@ public abstract class LogicProperty extends VerticalLayout {
         }
 
         this.addFooterCopyright();
+    }
+
+    /**
+     * Aggiunge i listener ai vari oggetti <br>
+     */
+    protected void fixListener() {
+        if (topLayout != null) {
+            topLayout.setAllListener((AILogic) this);
+        }
     }
 
     /**

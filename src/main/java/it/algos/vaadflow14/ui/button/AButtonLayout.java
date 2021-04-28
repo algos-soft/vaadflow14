@@ -303,7 +303,7 @@ public abstract class AButtonLayout extends VerticalLayout {
      * @param searchFieldValue valore corrente del campo editText (solo per List)
      */
     public void performAction(AEAction azione, String searchFieldValue) {
-        //        entityLogic.performAction(azione, searchFieldValue);@//@todo PROVVISORIO
+        entityLogic.performAction(azione, searchFieldValue);
     }
 
 

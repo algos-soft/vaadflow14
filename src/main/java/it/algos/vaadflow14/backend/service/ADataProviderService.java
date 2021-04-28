@@ -5,6 +5,7 @@ import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -43,6 +44,35 @@ public class ADataProviderService extends AAbstractService {
     @Autowired
     private AMongoService mongo;
 
+    private Map<String, AFiltro> filter;
+
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> filtri) {
+        this.filter=filtri;
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                fetchCallback -> {
+                    // The index of the first item to load
+                    int offset = fetchCallback.getOffset();
+
+                    // The number of items to load
+                    int limit = fetchCallback.getLimit();
+                    //                    limit = 50;//@todo Funzionalità ancora da implementare
+
+                    // Ordine delle colonne
+                    List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
+
+                    return mongo.findSet(entityClazz, offset, limit, null, null).stream();
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                query -> mongo.count(entityClazz)
+        );
+
+        return dataProvider;
+    }
+
 
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, BasicDBObject aQuery, BasicDBObject aSort) {
 
@@ -57,7 +87,7 @@ public class ADataProviderService extends AAbstractService {
                     int limit = query.getLimit();
                     //                    limit = 50;//@todo Funzionalità ancora da implementare
                     //                    BasicDBObject sort = new BasicDBObject("nome", -1);
-                    return mongo.findSet(entityClazz, offset, limit, aQuery,aSort).stream();
+                    return mongo.findSet(entityClazz, offset, limit, aQuery, aSort).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.

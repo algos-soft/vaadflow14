@@ -346,6 +346,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return entity
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Sort sortPrevalente) {
         return findAll(entityClazz, (List<AFiltro>) null, sortPrevalente);
     }
@@ -360,6 +361,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return entity
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri) {
         return findAll(entityClazz, listaFiltri, (Sort) null);
     }
@@ -376,6 +378,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return entity
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
         Query query = new Query();
         CriteriaDefinition criteria;
@@ -435,6 +438,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
+    @Deprecated
     public List<AEntity> find(Class<? extends AEntity> entityClazz) {
         return findAll(entityClazz);
     }
@@ -449,6 +453,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz) {
         return findAll(entityClazz, (Query) null, VUOTA);
     }
@@ -466,6 +471,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Query query) {
         return findAll(entityClazz, query, VUOTA);
     }
@@ -514,6 +520,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
+    @Deprecated
     public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Query query, String projection) {
         if (entityClazz == null) {
             return null;
@@ -533,17 +540,100 @@ public class AMongoService<capture> extends AAbstractService {
     }
 
     /**
-     * Crea un set di entities da una collection. <br>
-     * Utilizzato da DataProvider <br>
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param offset      da cui iniziare
-     * @param limit       numero di entityBeans da restituire
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
-        return findSet(entityClazz, offset, limit, new BasicDBObject());
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz) {
+        return fetch(entityClazz, (AFiltro) null);
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param filtro      eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) {
+        return fetch(entityClazz, Collections.singletonList(filtro));
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param listaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri) {
+        return fetch(entityClazz, listaFiltri, (Sort) null);
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param listaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param sort        eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sort) {
+        return fetch(entityClazz, listaFiltri, sort, 0, 0);
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     * https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param listaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param sort        eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sort, int offset, int limit) {
+        Query query = new Query();
+        Criteria criteriaFiltro ;
+        Criteria criteriaQuery = null;
+
+        if (array.isAllValid(listaFiltri)) {
+            for (AFiltro filtro : listaFiltri) {
+                criteriaFiltro = filtro.getCriteria();
+
+                if (criteriaQuery == null) {
+                    criteriaQuery = criteriaFiltro;
+                }
+                else {
+                    criteriaQuery.andOperator(criteriaFiltro);
+                }
+            }
+            query.addCriteria(criteriaQuery);
+        }
+        if (sort != null) {
+            query.with(sort);
+        }
+        if (offset > 0) {
+            query.skip(offset);
+        }
+        if (limit > 0) {
+            query.limit(limit);
+        }
+
+        return (List<AEntity>) mongoOp.find(query, entityClazz);
     }
 
     /**
@@ -556,6 +646,23 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
+    @Deprecated
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
+        return findSet(entityClazz, offset, limit, new BasicDBObject());
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. <br>
+     * Utilizzato da DataProvider <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param offset      da cui iniziare
+     * @param limit       numero di entityBeans da restituire
+     *
+     * @return lista di entityBeans
+     */
+    @Deprecated
     public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject sort) {
         return findSet(entityClazz, offset, limit, new BasicDBObject(), sort);
     }
@@ -571,6 +678,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
+    @Deprecated
     public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
@@ -646,6 +754,92 @@ public class AMongoService<capture> extends AAbstractService {
         return items;
     }
 
+    /**
+     * Crea un set di entities da una collection. <br>
+     * Utilizzato da DataProvider <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param offset      da cui iniziare
+     * @param limit       numero di entityBeans da restituire
+     *
+     * @return lista di entityBeans
+     */
+    @Deprecated
+    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+        List<AEntity> items = null;
+        Gson gSon = new Gson();
+        String jsonString;
+        String mongoClazzName;
+        MongoCollection<Document> collection;
+        AEntity entityBean = null;
+        List<Field> listaRef;
+        boolean esisteTagValue;
+        String tag = "\"value\":{\"";
+        String tag2;
+        String tagEnd = "},";
+        int ini = 0;
+        int end = 0;
+        List<Document> documents;
+        query = query != null ? query : new BasicDBObject();
+
+        mongoClazzName = annotation.getCollectionName(entityClazz);
+        collection = mongoOp.getCollection(mongoClazzName);
+
+        documents = collection.find(query).sort(sort).skip(offset).limit(limit).into(new ArrayList());
+
+        if (documents.size() > 0) {
+            items = new ArrayList<>();
+            for (Document doc : documents) {
+                esisteTagValue = false;
+                tag2 = VUOTA;
+                jsonString = gSon.toJson(doc);
+                jsonString = jsonString.replaceAll("_id", "id");
+                try {
+                    entityBean = gSon.fromJson(jsonString, entityClazz);
+                } catch (JsonSyntaxException unErrore) {
+                    esisteTagValue = jsonString.contains(tag);
+                    if (esisteTagValue) {
+                        ini = jsonString.indexOf(tag);
+                        end = jsonString.indexOf(tagEnd, ini) + tagEnd.length();
+                        tag2 = jsonString.substring(ini, end);
+                        jsonString = jsonString.replace(tag2, VUOTA);
+                        try {
+                            entityBean = gSon.fromJson(jsonString, entityClazz);
+                        } catch (Exception unErrore2) {
+                            logger.error(unErrore, this.getClass(), "findSet");
+                        }
+                    }
+                    else {
+                        entityBean = agSonService.crea(doc, entityClazz);
+
+                        //                        if (jsonString.contains("AM")||jsonString.contains("PM")) {
+                        //                            logger.error("Non legge la data", this.getClass(), "findSet");
+                        //                        }
+                        //                        else {
+                        //                            logger.error(unErrore, this.getClass(), "findSet");
+                        //                        }
+                    }
+                }
+
+                listaRef = annotation.getDBRefFields(entityClazz);
+                if (listaRef != null && listaRef.size() > 0) {
+                    entityBean = fixDbRef(doc, gSon, entityBean, listaRef);
+                }
+                if (esisteTagValue && entityBean.getClass().getSimpleName().equals(Preferenza.class.getSimpleName())) {
+                    entityBean = fixPrefValue(doc, gSon, entityBean, tag2);
+                    if (((Preferenza) entityBean).value == null) {
+                        logger.warn("Valore nullo della preferenza " + ((Preferenza) entityBean).code, this.getClass(), "findSet");
+                    }
+                }
+
+                if (entityBean != null) {
+                    items.add(entityBean);
+                }
+            }
+        }
+
+        return items;
+    }
 
     /**
      * Aggiunge il valore del campo 'value' di una preferenza. <br>

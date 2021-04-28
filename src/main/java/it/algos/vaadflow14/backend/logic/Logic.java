@@ -168,6 +168,9 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //--Aggiunge i 5 oggetti base (placeholder) alla view, se sono utilizzati <br>
         this.addToLayout();
 
+        //--Aggiunge i listener ai vari oggetti <br>
+        this.fixListener();
+
         //--Regolazioni finali di alcuni oggetti <br>
         this.regolazioniFinali();
     }
@@ -201,6 +204,20 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
      */
     @Override
     public boolean performAction(final AIAction iAzione, final AEntity entityBean) {
+        return false;
+    }
+
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di una stringa. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione          interfaccia dell'azione selezionata da eseguire
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(AIAction iAzione, String searchFieldValue) {
         return false;
     }
 

@@ -306,6 +306,8 @@ public abstract class FlowCost {
     //--chiavi mappa eventi
     public static final String KEY_MAPPA_EVENTO_AZIONE = "eventoAzione";
 
+    public static final String KEY_MAPPA_SEARCH = "search";
+
     public static final String TXT_SUFFIX = ".txt";
 
     public static final String XML_SUFFIX = ".xml";

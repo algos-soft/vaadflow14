@@ -381,7 +381,7 @@ public abstract class ATest {
         query = null;
         sort = null;
         filtro = null;
-        listaFiltri = null;
+        listaFiltri = new ArrayList<>();
         listaBean = null;
         listaStr = null;
         listaFields = null;

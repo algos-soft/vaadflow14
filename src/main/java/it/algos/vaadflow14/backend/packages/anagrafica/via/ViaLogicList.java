@@ -61,8 +61,7 @@ public class ViaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-
-        //        super.operationForm= AEOperation.editDaLink;
+        super.usaBottoneSearch = true;
     }
 
     /**

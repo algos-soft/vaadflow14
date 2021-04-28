@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
@@ -81,8 +82,8 @@ public abstract class LogicList extends Logic {
     protected void regolazioniIniziali() {
         super.regolazioniIniziali();
 
-        //--costruisce una lista (vuota) di filtri per la Grid
-        super.filtri = new ArrayList<>();
+        //--costruisce una mappa (vuota) di filtri per la Grid
+        super.filtri = new HashMap<>();
     }
 
     /**
@@ -189,7 +190,7 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this,filtri);
+        grid = appContext.getBean(AGrid.class, entityClazz, this, filtri);
 
         grid.fixGridHeader();
         this.addGridListeners();
@@ -330,6 +331,57 @@ public abstract class LogicList extends Logic {
         return status;
     }
 
+    /**
+     * Esegue l'azione del bottone. Azione che necessita di una stringa. <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @param iAzione          interfaccia dell'azione selezionata da eseguire
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     *
+     * @return false se il parametro iAzione non è una enumeration valida o manca lo switch
+     */
+    @Override
+    public boolean performAction(AIAction iAzione, String searchFieldValue) {
+        boolean status = true;
+        AEAction azione = iAzione instanceof AEAction ? (AEAction) iAzione : null;
+
+        if (azione == null) {
+            return false;
+        }
+
+        switch (azione) {
+            case searchField:
+                this.fixFiltroSearch(searchFieldValue);
+//                this.refreshGrid();
+                this.grid.getGrid().getDataProvider().refreshAll();
+                break;
+            default:
+                status = false;
+                break;
+        }
+
+        return status;
+    }
+
+    /**
+     * Costruisce il filtro. <br>
+     * Recupera il field su cui selezionare il valore <br>
+     * Filtro per caratteri iniziali <br>
+     *
+     * @param searchFieldValue valore corrente del campo searchField (solo per List)
+     */
+    protected void fixFiltroSearch(String searchFieldValue) {
+        AFiltro filtro = null;
+        String searchFieldName = annotation.getSearchPropertyName(entityClazz);
+
+        if (text.isValid(searchFieldName)) {
+            filtro = AFiltro.start(searchFieldName, searchFieldValue);
+        }
+        if (filtri != null) {
+            filtri.put(KEY_MAPPA_SEARCH, filtro);
+        }
+
+    }
 
     protected void executeRoute() {
         executeRoute(VUOTA, VUOTA, VUOTA);
