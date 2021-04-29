@@ -352,8 +352,9 @@ public abstract class LogicList extends Logic {
         switch (azione) {
             case searchField:
                 this.fixFiltroSearch(searchFieldValue);
-//                this.refreshGrid();
                 this.grid.getGrid().getDataProvider().refreshAll();
+//                                this.refreshGrid();
+                grid.fixGridHeader();
                 break;
             default:
                 status = false;

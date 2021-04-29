@@ -62,6 +62,7 @@ public class AnnoLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+        super.usaBottoneSearch = true;
     }
 
 

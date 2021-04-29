@@ -606,8 +606,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends
-            AEntity> entityClazz, AFiltro filtro) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return fetch(entityClazz, mappaFiltri);
     }
@@ -621,8 +620,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends
-            AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) {
         return fetch(entityClazz, mappaFiltri, (Sort) null);
     }
 
@@ -636,8 +634,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends
-            AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
     }
 
@@ -657,9 +654,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
-    public List<AEntity> fetch(Class<? extends
-            AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort,
-                               int offset, int limit) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort, int offset, int limit) {
         Query query = new Query();
         Criteria criteriaFiltro;
         Criteria criteriaQuery = null;

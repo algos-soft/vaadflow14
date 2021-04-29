@@ -45,9 +45,9 @@ public class ADataProviderService extends AAbstractService {
     @Autowired
     private AMongoService mongo;
 
-    private Map<String,AFiltro>  filter;
+    private Map<String, AFiltro> filter;
 
-    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String,AFiltro> mappaFiltri) {
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> mappaFiltri) {
         DataProvider dataProvider = DataProvider.fromCallbacks(
 
                 // First callback fetches items based on a query
@@ -59,14 +59,30 @@ public class ADataProviderService extends AAbstractService {
                     int limit = fetchCallback.getLimit();
 
                     // Ordine delle colonne
+                    // Funziona per UNA sola colonna
                     List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
+                    Sort sort = null;
+                    if (sorts != null && sorts.size() == 1) {
+                        QuerySortOrder sortOrder = sorts.get(0);
+                        SortDirection direction = sortOrder.getDirection();
+                        String field = sortOrder.getSorted();
+                        if (direction == SortDirection.ASCENDING) {
+                            sort = Sort.by(Sort.Direction.ASC, field);
+                        }
+                        else {
+                            sort = Sort.by(Sort.Direction.DESC, field);
+                        }
+                    }
+                    else {
+                        sort = null;
+                    }
 
-                  return mongo.fetch(entityClazz, mappaFiltri, (Sort)null, offset, limit).stream();
+                    return mongo.fetch(entityClazz, mappaFiltri, sort, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz,mappaFiltri)
+                countCallback -> mongo.count(entityClazz, mappaFiltri)
         );
 
         return dataProvider;

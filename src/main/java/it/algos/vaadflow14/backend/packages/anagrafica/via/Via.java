@@ -70,7 +70,7 @@ public class Via extends AEntity {
     @Size(min = 3)
     @Indexed(unique = true)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn()
+    @AIColumn(widthEM = 20)
     public String nome;
 
 
