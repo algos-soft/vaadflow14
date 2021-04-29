@@ -10,6 +10,7 @@ import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -44,10 +45,10 @@ public class ADataProviderService extends AAbstractService {
     @Autowired
     private AMongoService mongo;
 
-    private Map<String, AFiltro> filter;
+    private Map<String,AFiltro>  filter;
 
-    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> filtri) {
-        this.filter=filtri;
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String,AFiltro> mappaFiltri) {
+        this.filter =mappaFiltri;
         DataProvider dataProvider = DataProvider.fromCallbacks(
 
                 // First callback fetches items based on a query
@@ -62,12 +63,13 @@ public class ADataProviderService extends AAbstractService {
                     // Ordine delle colonne
                     List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
 
-                    return mongo.findSet(entityClazz, offset, limit, null, null).stream();
+//                    return mongo.findSet(entityClazz, offset, limit, null, null).stream();
+                  return mongo.fetch(entityClazz, filter, (Sort)null, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz)
+                query -> mongo.count(entityClazz,filter)
         );
 
         return dataProvider;

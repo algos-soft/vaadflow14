@@ -25,6 +25,7 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:18
+ *
  * @AIScript(sovraScrivibile = false)
  */
 public abstract class ATest {
@@ -266,6 +267,8 @@ public abstract class ATest {
 
     protected List<AFiltro> listaFiltri;
 
+    protected Map<String, AFiltro> mappaFiltri;
+
     protected List<Field> listaFields;
 
     protected List<String> listaStr;
@@ -382,6 +385,7 @@ public abstract class ATest {
         sort = null;
         filtro = null;
         listaFiltri = new ArrayList<>();
+        mappaFiltri = new HashMap<>();
         listaBean = null;
         listaStr = null;
         listaFields = null;

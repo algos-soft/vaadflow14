@@ -1,22 +1,16 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-import static org.junit.Assert.assertTrue;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow14
@@ -148,15 +142,15 @@ public class AJavaTest extends ATest {
         System.out.println(student);
     }
 
-    @Test
-    @Order(8)
-    @DisplayName("8 - Supplier strings")
-    void supplier8() {
-        System.out.println("Java8 Supplier strings\n");
-
-        List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
-        names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
-    }
+    //    @Test
+    //    @Order(8)
+    //    @DisplayName("8 - Supplier strings")
+    //    void supplier8() {
+    //        System.out.println("Java8 Supplier strings\n");
+    //
+    //        List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
+    //        names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
+    //    }
 
     @Test
     @Order(9)
@@ -177,10 +171,10 @@ public class AJavaTest extends ATest {
     void keyword() {
         var lista = List.of("one", "two", "three");
         lista.forEach(System.out::println);
-        Object obj=null;
-//        if (obj instanceof String ) {
-//            System.out.println(s.contains("hello"));
-//        }
+        Object obj = null;
+        //        if (obj instanceof String ) {
+        //            System.out.println(s.contains("hello"));
+        //        }
 
         //        System.out.println("Java10 \n");
         //
@@ -230,16 +224,37 @@ public class AJavaTest extends ATest {
         String patterns = Pattern.quote("wikitable");
         Pattern pattern = Pattern.compile(patterns);
         Matcher matcher = pattern.matcher((String) sor1);
-        int num=matcher.groupCount();
+        int num = matcher.groupCount();
         matcher.matches();
-//        assertTrue(matcher.matches());
-
-
+        //        assertTrue(matcher.matches());
     }
 
-    private void printNamesSupplier(Supplier<String> supplier) {
-        System.out.println(supplier.get());
-    }
+//    @Test
+//    @Order(12)
+//    @DisplayName("12 - clone")
+//    void cloneTest() throws Exception {
+//        AFiltro shallowCopy;
+//        AFiltro deepCopy;
+//        sorgente = "vi";
+//        filtro = AFiltro.start(NAME_NOME, sorgente);
+//        shallowCopy = filtro;
+//        deepCopy = filtro.getClone();
+//        String alfa=    filtro.getCriteria().getKey();
+//        Document alfa2=    filtro.getCriteria().getCriteriaObject();
+//        Criteria.BitwiseCriteriaOperators alfa3=    filtro.getCriteria().bits();
+////        Criteria criteriaNew = Criteria.where(alfa).regex(questionPattern, "i");
+////        criteriaNew.regex()
+//        System.out.println("Filtro");
+//        System.out.println("Originale: " + filtro);
+//        System.out.println("ShallowCopy: " + shallowCopy);
+//        System.out.println("DeepCopy: " + deepCopy);
+//
+//        System.out.println(VUOTA);
+//        System.out.println("Criteria");
+//        System.out.println("Criteria originale: " + filtro.getCriteria());
+//        System.out.println("Criteria shallowCopy: " + shallowCopy.getCriteria());
+//        System.out.println("Criteria deepCopy: " + deepCopy.getCriteria());
+//    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

@@ -302,7 +302,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("7 - Via (filtri=null)")
     void fetch7() {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via completi (filtri=null)", previstoIntero));
@@ -314,7 +314,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("8 - Via (filtri=null, sort=null)")
     void fetch8() {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via completi (filtri=null, sort=null)", previstoIntero));
@@ -327,7 +327,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 0;
         int limit = 0;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -341,7 +341,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 0;
         int limit = 15;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -355,7 +355,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 14;
         int limit = 0;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -368,7 +368,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 14;
         int limit = 5;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -382,7 +382,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int limit = 0;
         sort = Sort.by(Sort.Direction.ASC, NAME_NOME);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -396,7 +396,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int limit = 0;
         sort = Sort.by(Sort.Direction.DESC, NAME_NOME);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -411,7 +411,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int limit = 4;
         sort = Sort.by(Sort.Direction.ASC, NAME_ORDINE);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         System.out.println(String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
@@ -429,8 +429,10 @@ public class AMongoServiceIntegrationTest extends ATest {
     void fetch16() {
         String filtroStart = "vi";
         AFiltro filtro = AFiltro.start(NAME_NOME, filtroStart);
+        previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroStart));
     }
 
@@ -441,26 +443,64 @@ public class AMongoServiceIntegrationTest extends ATest {
     void fetch17() {
         String filtroText = "azz";
         AFiltro filtro = AFiltro.contains(NAME_NOME, filtroText);
+        previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroText));
     }
 
 
+//    @Test
+//    @Order(18)
+//    @DisplayName("18 - Via (filtro=vi+co)")
+//    void fetch18() {
+//        AFiltro filtro = null;
+//        String filtroStart = "vi";
+//        filtro = AFiltro.start(NAME_NOME, filtroStart);
+//        mappaFiltri.put("a", filtro);
+//        String filtroText = "co";
+//        filtro = AFiltro.contains(NAME_NOME, filtroText);
+//        mappaFiltri.put("b", filtro);
+//        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
+//        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
+//        assertNotNull(listaBean);
+//        assertEquals(previstoIntero, listaBean.size());
+//        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+//    }
+
     @Test
-    @Order(18)
-    @DisplayName("18 - Via (filtro=vi+co)")
-    void fetch18() {
-        AFiltro filtro = null;
-        String filtroStart = "vi";
-        filtro = AFiltro.start(NAME_NOME, filtroStart);
-        listaFiltri.add(filtro);
-        String filtroText = "co";
-        filtro = AFiltro.contains(NAME_NOME, filtroText);
-        listaFiltri.add(filtro);
-        listaBean = service.fetch(VIA_ENTITY_CLASS, listaFiltri);
+    @Order(19)
+    @DisplayName("19 - Via (filtro=p) con mappa")
+    void fetch19() {
+        String filtroStart = "p";
+        AFiltro filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
         assertNotNull(listaBean);
-        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtro=%s) con mappa", listaBean.size(), filtroStart));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - uguale")
+    void uguale() {
+        String filtroText = "viale";
+        previstoIntero = 1;
+        filtro = AFiltro.uguale(NAME_NOME, filtroText);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+
+        filtroText = "vial";
+        previstoIntero = 0;
+        filtro = AFiltro.uguale(NAME_NOME, filtroText);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+
     }
 
     //    @Test

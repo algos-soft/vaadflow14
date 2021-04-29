@@ -1,9 +1,11 @@
 package it.algos.vaadflow14.backend.wrapper;
 
-import com.mongodb.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import org.bson.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.*;
 
+import java.io.*;
 import java.util.regex.*;
 
 /**
@@ -13,11 +15,11 @@ import java.util.regex.*;
  * Date: gio, 19-dic-2019
  * Time: 11:01
  */
-public class AFiltro {
+public class AFiltro implements Serializable {
 
     private Criteria criteria;
 
-    private BasicDBObject query;
+    //    private BasicDBObject query;
 
     private Sort sort;
 
@@ -42,35 +44,28 @@ public class AFiltro {
         this.sort = sort;
     }
 
-    public static AFiltro start(String searchFieldName, String searchFieldValue) {
+    public static AFiltro start(String fieldName, String value) {
         AFiltro filtro = new AFiltro();
-        //        Document regexQuery = new Document();
-        //        regexQuery.append("$regex", "^" + Pattern.quote(searchFieldValue) + ".*");
-        //        BasicDBObject query = new BasicDBObject(searchFieldName, regexQuery);
-        //        filtro.tag = "search" + searchFieldName;
-        //        filtro.query = query;
 
-        String questionPattern = "^" + Pattern.quote(searchFieldValue) + ".*";
-        Criteria criteria = Criteria.where(searchFieldName).regex(questionPattern, "i");
+        String questionPattern = "^" + Pattern.quote(value) + ".*";
+        Criteria criteria = Criteria.where(fieldName).regex(questionPattern, "i");
         filtro.criteria = criteria;
 
         return filtro;
     }
 
-    public static AFiltro contains(String searchFieldName, String searchFieldValue) {
+    public static AFiltro contains(String fieldName, String value) {
         AFiltro filtro = new AFiltro();
 
-//        Document regexQuery = new Document();
-//        regexQuery.append("$regex", ".*" + Pattern.quote(searchFieldValue) + ".*");
-//        BasicDBObject query = new BasicDBObject(searchFieldName, regexQuery);
-//        filtro.tag = "contains" + searchFieldName;
-//        filtro.query = query;
-
-        String questionPattern = ".*" + Pattern.quote(searchFieldValue) + ".*";
-        Criteria criteria = Criteria.where(searchFieldName).regex(questionPattern, "i");
+        String questionPattern = ".*" + Pattern.quote(value) + ".*";
+        Criteria criteria = Criteria.where(fieldName).regex(questionPattern, "i");
         filtro.criteria = criteria;
 
         return filtro;
+    }
+
+    public static AFiltro uguale(String fieldName, String value) {
+        return new AFiltro(AETypeBson.uguale.getCriteria(fieldName, value));
     }
 
     public Criteria getCriteria() {
@@ -81,12 +76,21 @@ public class AFiltro {
         return sort;
     }
 
-    public BasicDBObject getQuery() {
-        return query;
-    }
+    //    public BasicDBObject getQuery() {
+    //        return query;
+    //    }
 
     public String getTag() {
         return tag;
+    }
+
+    public AFiltro getClone() {
+        AFiltro deepCopy = new AFiltro();
+
+        Document doc = this.criteria.getCriteriaObject();
+        deepCopy.criteria = Criteria.byExample(doc);
+
+        return deepCopy;
     }
 
 }
