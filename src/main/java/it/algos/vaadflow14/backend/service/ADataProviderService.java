@@ -48,7 +48,6 @@ public class ADataProviderService extends AAbstractService {
     private Map<String,AFiltro>  filter;
 
     public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String,AFiltro> mappaFiltri) {
-        this.filter =mappaFiltri;
         DataProvider dataProvider = DataProvider.fromCallbacks(
 
                 // First callback fetches items based on a query
@@ -58,18 +57,16 @@ public class ADataProviderService extends AAbstractService {
 
                     // The number of items to load
                     int limit = fetchCallback.getLimit();
-                    //                    limit = 50;//@todo Funzionalità ancora da implementare
 
                     // Ordine delle colonne
                     List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
 
-//                    return mongo.findSet(entityClazz, offset, limit, null, null).stream();
-                  return mongo.fetch(entityClazz, filter, (Sort)null, offset, limit).stream();
+                  return mongo.fetch(entityClazz, mappaFiltri, (Sort)null, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz,filter)
+                query -> mongo.count(entityClazz,mappaFiltri)
         );
 
         return dataProvider;
