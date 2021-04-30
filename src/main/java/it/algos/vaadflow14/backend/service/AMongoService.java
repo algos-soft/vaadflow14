@@ -5,6 +5,7 @@ import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
 import com.mongodb.client.result.*;
+import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.*;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.*;
 import org.springframework.stereotype.*;
 
@@ -636,6 +638,39 @@ public class AMongoService<capture> extends AAbstractService {
      */
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato SOLO da DataProvider. <br>
+     * DataProvider usa QuerySortOrder (Vaadin) mentre invece la Query usa Sort (springframework) <br>
+     * Qui effettuo la conversione
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param sorts       eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sorts, int offset, int limit) {
+        Sort sort = null;
+        if (sorts != null && sorts.size() == 1) {
+            QuerySortOrder sortOrder = sorts.get(0);
+            SortDirection direction = sortOrder.getDirection();
+            String field = sortOrder.getSorted();
+            if (direction == SortDirection.ASCENDING) {
+                sort = Sort.by(Sort.Direction.ASC, field);
+            }
+            else {
+                sort = Sort.by(Sort.Direction.DESC, field);
+            }
+        }
+        else {
+            sort = null;
+        }
+
+        return fetch(entityClazz, mappaFiltri, sort, offset, limit);
     }
 
     /**

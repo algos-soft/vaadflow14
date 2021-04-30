@@ -61,23 +61,8 @@ public class ADataProviderService extends AAbstractService {
                     // Ordine delle colonne
                     // Funziona per UNA sola colonna
                     List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
-                    Sort sort = null;
-                    if (sorts != null && sorts.size() == 1) {
-                        QuerySortOrder sortOrder = sorts.get(0);
-                        SortDirection direction = sortOrder.getDirection();
-                        String field = sortOrder.getSorted();
-                        if (direction == SortDirection.ASCENDING) {
-                            sort = Sort.by(Sort.Direction.ASC, field);
-                        }
-                        else {
-                            sort = Sort.by(Sort.Direction.DESC, field);
-                        }
-                    }
-                    else {
-                        sort = null;
-                    }
 
-                    return mongo.fetch(entityClazz, mappaFiltri, sort, offset, limit).stream();
+                    return mongo.fetch(entityClazz, mappaFiltri, sorts, offset, limit).stream();
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
