@@ -10,7 +10,6 @@ import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -59,7 +58,7 @@ public class ADataProviderService extends AAbstractService {
                     int limit = fetchCallback.getLimit();
 
                     // Ordine delle colonne
-                    // Funziona per UNA sola colonna
+                    // Vaadin mi manda sempre UNA sola colonna. Perché?
                     List<QuerySortOrder> sorts = fetchCallback.getSortOrders();
 
                     return mongo.fetch(entityClazz, mappaFiltri, sorts, offset, limit).stream();

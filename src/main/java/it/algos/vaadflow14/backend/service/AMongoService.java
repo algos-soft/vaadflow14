@@ -642,7 +642,7 @@ public class AMongoService<capture> extends AAbstractService {
 
     /**
      * Crea un set di entities da una collection. Utilizzato SOLO da DataProvider. <br>
-     * DataProvider usa QuerySortOrder (Vaadin) mentre invece la Query usa Sort (springframework) <br>
+     * DataProvider usa QuerySortOrder (Vaadin) mentre invece la Query di MongoDB usa Sort (springframework) <br>
      * Qui effettuo la conversione
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
@@ -654,23 +654,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return lista di entityBeans
      */
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sorts, int offset, int limit) {
-        Sort sort = null;
-        if (sorts != null && sorts.size() == 1) {
-            QuerySortOrder sortOrder = sorts.get(0);
-            SortDirection direction = sortOrder.getDirection();
-            String field = sortOrder.getSorted();
-            if (direction == SortDirection.ASCENDING) {
-                sort = Sort.by(Sort.Direction.ASC, field);
-            }
-            else {
-                sort = Sort.by(Sort.Direction.DESC, field);
-            }
-        }
-        else {
-            sort = null;
-        }
-
-        return fetch(entityClazz, mappaFiltri, sort, offset, limit);
+        return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sorts), offset, limit);
     }
 
     /**
@@ -1452,8 +1436,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @param entityClazz  corrispondente ad una collection sul database mongoDB
      * @param propertyName dell'ordinamento
      */
-    public int getNewOrder(Class<? extends AEntity> entityClazz, String
-            propertyName) {
+    public int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) {
         int ordine = 0;
         AEntity entityBean;
         Object value;

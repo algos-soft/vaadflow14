@@ -1,27 +1,22 @@
 package it.algos.vaadflow14.ui.service;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import it.algos.vaadflow14.backend.entity.AEntity;
+import com.vaadin.flow.component.checkbox.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.data.renderer.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.service.AAbstractService;
-import it.algos.vaadflow14.ui.fields.AComboField;
-import it.algos.vaadflow14.ui.fields.AField;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.ui.fields.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import java.lang.reflect.*;
+import java.util.*;
 
 
 /**
@@ -55,12 +50,12 @@ public class AColumnService extends AAbstractService {
      * Create a single column.
      * The column type is chosen according to the annotation @AIColumn or, if is not present, a @AIField.
      *
-     * @param grid         a cui aggiungere la colonna
-     * @param entityClazz  modello-dati specifico
-     * @param propertyName della property
+     * @param grid        a cui aggiungere la colonna
+     * @param entityClazz modello-dati specifico
+     * @param fieldName   della property da utilizzare per la colonna
      */
-    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName) {
-        return add(grid, entityClazz, propertyName, VUOTA);
+    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String fieldName) {
+        return add(grid, entityClazz, fieldName, VUOTA);
     }
 
 
@@ -70,12 +65,12 @@ public class AColumnService extends AAbstractService {
      *
      * @param grid           a cui aggiungere la colonna
      * @param entityClazz    modello-dati specifico
-     * @param propertyName   della property
-     * @param propertySearch per l' ordinamento
+     * @param fieldName      della property da utilizzare per la colonna
+     * @param searchProperty per la ricerca
      */
-    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String propertyName, String propertySearch) {
+    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String fieldName, String searchProperty) {
         Grid.Column<AEntity> colonna = null;
-        Field field = reflection.getField(entityClazz, propertyName);
+        Field field = reflection.getField(entityClazz, fieldName);
         AETypeField type = null;
         AETypeBoolField typeBool = AETypeBoolField.checkBox;
         String header = VUOTA;
@@ -99,7 +94,8 @@ public class AColumnService extends AAbstractService {
         if (type == null) {
             logger.error("Manca il type del field " + propertyName + " della entity " + entityClazz.getSimpleName(), this.getClass(), "add");
             return null;
-        } else {
+        }
+        else {
             switch (type) {
                 case text:
                 case phone:
@@ -194,15 +190,10 @@ public class AColumnService extends AAbstractService {
             //--l'header di default viene sempre uguale al nome della property
             //--può essere minuscolo o con la prima maiuscola, a seconda del flag di preferenza
             //--può essere modificato con name = "Xyz" nell'annotation @AIColumn della Entity
-            //            if (pref.isBool(USA_GRID_HEADER_PRIMA_MAIUSCOLA)) {
-            //                headerNotNull = text.primaMaiuscola(headerNotNull);
-            //            } else {
-            //                headerNotNull = headerNotNull.toLowerCase();
-            //            }// end of if/else cycle
-
             if (AEPreferenza.usaGridHeaderMaiuscola.is()) {
                 header = text.primaMaiuscola(header);
-            } else {
+            }
+            else {
                 header = text.primaMinuscola(header);
             }
             colonna.setHeader(header);
@@ -214,36 +205,28 @@ public class AColumnService extends AAbstractService {
                 //                icon.setSize(widthHeaderIcon);
                 icon.setColor(colorHeaderIcon);
                 label.add(icon);
-            } else {
+            }
+            else {
                 label.setText(header);
-                //                colonna.setHeader(headerNotNull);
             }
             colonna.setHeader(label);
 
-            //            if (propertyName.equals(searchProperty)) {
-            //                Icon icon = new Icon(VaadinIcon.SEARCH);
-            //                icon.setSize("10px");
-            //                icon.getStyle().set("float", "center");
-            //                icon.setColor("red");
-            //                Label label = new Label();
-            //                label.add(icon);
-            //                label.add(text.primaMaiuscola(headerNotNull));
-            //                label.getElement().getStyle().set("fontWeight", "bold");
-            //                colonna.setHeader(label);
-            //            }// end of if cycle
+            if (propertyName.equals(propertySearch)) {
+                Icon icon = new Icon(VaadinIcon.SEARCH);
+                icon.setSize("10px");
+                icon.getStyle().set("float", "center");
+                icon.setColor("red");
+                label = new Label();
+                label.add(icon);
+                label.add(text.primaMaiuscola(header));
+                label.getElement().getStyle().set("fontWeight", "bold");
+                colonna.setHeader(label);
+            }// end of if cycle
 
-            //            //--di default le colonne NON sono sortable
-            //            //--può essere modificata con sortable = true, nell'annotation @AIColumn della Entity
-            //            colonna.setSortable(sortable);
-            //            //            colonna.setSortProperty(propertyName);
-
-            //            //            if (property.equals("id")) {
-            //            //                colonna.setWidth("1px");
-            //            //            }// end of if cycle
-            if (sortable) {
-                colonna.setSortable(true);
-                colonna.setSortProperty(propertyName);
-            }
+            //--di default le colonne NON sono sortable
+            //--può essere modificata con sortable = true, nell'annotation @AIColumn della Entity
+            colonna.setSortable(sortable);
+            colonna.setSortProperty(propertyName);
 
             colonna.setWidth(width);
             colonna.setFlexGrow(isFlexGrow ? 1 : 0);
@@ -324,7 +307,8 @@ public class AColumnService extends AAbstractService {
                         label.setText(testo);
                         if (status) {
                             label.getStyle().set("color", "green");
-                        } else {
+                        }
+                        else {
                             label.getStyle().set("color", "red");
                         }
                     }
@@ -340,7 +324,8 @@ public class AColumnService extends AAbstractService {
                     if (status) {
                         icon = new Icon(VaadinIcon.CHECK);
                         icon.setColor("green");
-                    } else {
+                    }
+                    else {
                         icon = new Icon(VaadinIcon.CLOSE);
                         icon.setColor("red");
                     }
@@ -350,7 +335,8 @@ public class AColumnService extends AAbstractService {
                     if (status) {
                         icon = new Icon(VaadinIcon.CLOSE);
                         icon.setColor("red");
-                    } else {
+                    }
+                    else {
                         icon = new Icon(VaadinIcon.CHECK);
                         icon.setColor("green");
                     }
@@ -368,7 +354,8 @@ public class AColumnService extends AAbstractService {
                         label.setText(testo);
                         if (status) {
                             label.getStyle().set("color", "green");
-                        } else {
+                        }
+                        else {
                             label.getStyle().set("color", "red");
                         }
                     }
@@ -385,7 +372,8 @@ public class AColumnService extends AAbstractService {
                         label.setText(testo);
                         if (status) {
                             label.getStyle().set("color", "green");
-                        } else {
+                        }
+                        else {
                             label.getStyle().set("color", "red");
                         }
                     }
@@ -403,7 +391,8 @@ public class AColumnService extends AAbstractService {
                         label.getStyle().set("font-weight", "bold");
                         if (status) {
                             label.getStyle().set("color", "green");
-                        } else {
+                        }
+                        else {
                             label.getStyle().set("color", "red");
                         }
                     }
@@ -455,7 +444,8 @@ public class AColumnService extends AAbstractService {
                     message = status ? "si" : "no";
                     if (status) {
                         label.getStyle().set("color", "green");
-                    } else {
+                    }
+                    else {
                         label.getStyle().set("color", "red");
                     }// end of if/else cycle
                     break;

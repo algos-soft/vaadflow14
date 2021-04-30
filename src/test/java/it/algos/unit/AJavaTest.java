@@ -229,32 +229,6 @@ public class AJavaTest extends ATest {
         //        assertTrue(matcher.matches());
     }
 
-//    @Test
-//    @Order(12)
-//    @DisplayName("12 - clone")
-//    void cloneTest() throws Exception {
-//        AFiltro shallowCopy;
-//        AFiltro deepCopy;
-//        sorgente = "vi";
-//        filtro = AFiltro.start(NAME_NOME, sorgente);
-//        shallowCopy = filtro;
-//        deepCopy = filtro.getClone();
-//        String alfa=    filtro.getCriteria().getKey();
-//        Document alfa2=    filtro.getCriteria().getCriteriaObject();
-//        Criteria.BitwiseCriteriaOperators alfa3=    filtro.getCriteria().bits();
-////        Criteria criteriaNew = Criteria.where(alfa).regex(questionPattern, "i");
-////        criteriaNew.regex()
-//        System.out.println("Filtro");
-//        System.out.println("Originale: " + filtro);
-//        System.out.println("ShallowCopy: " + shallowCopy);
-//        System.out.println("DeepCopy: " + deepCopy);
-//
-//        System.out.println(VUOTA);
-//        System.out.println("Criteria");
-//        System.out.println("Criteria originale: " + filtro.getCriteria());
-//        System.out.println("Criteria shallowCopy: " + shallowCopy.getCriteria());
-//        System.out.println("Criteria deepCopy: " + deepCopy.getCriteria());
-//    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

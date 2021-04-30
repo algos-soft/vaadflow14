@@ -87,6 +87,14 @@ public abstract class FlowCost {
 
     public static final String TRE_PUNTI = "...";
 
+    public static final String SORT_VAADIN_ASC = "ASCENDING";
+
+    public static final String SORT_VAADIN_DESC = "DESCENDING";
+
+    public static final String SORT_SPRING_ASC = "ASC";
+
+    public static final String SORT_SPRING_DESC = "DESC";
+
     public static final String TAB = "\t";
 
     public static final String APICE = "\\\"";
