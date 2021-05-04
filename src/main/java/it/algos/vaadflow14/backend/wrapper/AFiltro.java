@@ -64,8 +64,17 @@ public class AFiltro implements Serializable {
         return filtro;
     }
 
-    public static AFiltro uguale(String fieldName, String value) {
+    public static AFiltro ugualeStr(String fieldName, String value) {
         return new AFiltro(AETypeBson.uguale.getCriteria(fieldName, value));
+    }
+
+    public static AFiltro ugualeObj(String fieldName, Object value) {
+        AFiltro filtro = new AFiltro();
+
+        Criteria criteria = Criteria.where(fieldName).is(value);
+        filtro.criteria = criteria;
+
+        return filtro;
     }
 
     public Criteria getCriteria() {

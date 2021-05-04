@@ -415,5 +415,7 @@ public abstract class FlowCost {
 
     public static final double ICON_WIDTH = 3.0;
 
+    public static final int COMBO_WIDTH = 10;
+
 
 }

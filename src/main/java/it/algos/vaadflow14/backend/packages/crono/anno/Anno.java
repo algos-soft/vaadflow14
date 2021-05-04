@@ -44,7 +44,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Anno", keyPropertyName = "anno", usaCompany = false, usaCreazione = false, usaModifica = false)
-@AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "anno", sortProperty = "ordine")
+@AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "anno", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,anno,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "anno,bisestile,secolo", usaSpostamentoTraSchede = false)
 public class Anno extends AEntity {
@@ -77,7 +77,7 @@ public class Anno extends AEntity {
      */
     @Indexed()
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", widthEM = 6)
-    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS")
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 5)
     public boolean bisestile;
 
     /**
@@ -86,7 +86,7 @@ public class Anno extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Secolo.class)
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBoxGrid = true)
     @AIColumn(flexGrow = true)
     public Secolo secolo;
 

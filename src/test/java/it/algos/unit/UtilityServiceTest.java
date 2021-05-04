@@ -65,24 +65,22 @@ public class UtilityServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("getSortField")
+    @DisplayName("1 - getSortField")
     void getSortField() {
-        Sort sortSpring;
         previsto = NAME_NOME;
 
         sortSpring = Sort.by(Sort.Direction.ASC, NAME_NOME);
         Assert.assertNotNull(sortSpring);
 
-        ottenuto = service.getSortField(sortSpring);
+        ottenuto = service.getSortFieldName(sortSpring);
         Assert.assertNotNull(ottenuto);
         Assert.assertEquals(previsto, ottenuto);
     }
 
     @Test
     @Order(2)
-    @DisplayName("getSortDirection")
+    @DisplayName("2 - getSortDirection")
     void getSortDirection() {
-        Sort sortSpring;
         Sort.Direction direzionePrevista = Sort.Direction.ASC;
 
         sortSpring = Sort.by(Sort.Direction.ASC, NAME_NOME);
@@ -96,25 +94,22 @@ public class UtilityServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("getSortDirection")
+    @DisplayName("3 - getSortDirection")
     void getSortDirection2() {
-        QuerySortOrder sortOrder;
         Sort.Direction direzionePrevista = Sort.Direction.ASC;
 
-        sortOrder = new QuerySortOrder(NAME_NOME, SortDirection.ASCENDING);
-        Assert.assertNotNull(sortOrder);
+        sortVaadin = new QuerySortOrder(NAME_NOME, SortDirection.ASCENDING);
+        Assert.assertNotNull(sortVaadin);
 
-        direzionePrevista = service.getSortDirection(sortOrder);
+        direzionePrevista = service.getSortDirection(sortVaadin);
         Assert.assertNotNull(direzionePrevista);
         Assert.assertEquals(previsto, ottenuto);
     }
 
     @Test
     @Order(4)
-    @DisplayName("sortVaadinToSpring")
+    @DisplayName("4 - sortVaadinToSpring")
     void sortVaadinToSpring() {
-        QuerySortOrder sortVaadin;
-        Sort sortSpring;
         previsto = NAME_NOME;
         Sort.Direction previstoDirection;
         Sort.Direction ottenutoDirection;
@@ -123,7 +118,7 @@ public class UtilityServiceTest extends ATest {
         sortVaadin = new QuerySortOrder(NAME_NOME, SortDirection.ASCENDING);
         sortSpring = service.sortVaadinToSpring(sortVaadin);
         Assert.assertNotNull(sortSpring);
-        ottenuto = service.getSortField(sortSpring);
+        ottenuto = service.getSortFieldName(sortSpring);
         Assert.assertEquals(previsto, ottenuto);
         ottenutoDirection = service.getSortDirection(sortSpring);
         Assert.assertEquals(previstoDirection, ottenutoDirection);
@@ -132,7 +127,7 @@ public class UtilityServiceTest extends ATest {
         sortVaadin = new QuerySortOrder(NAME_NOME, SortDirection.DESCENDING);
         sortSpring = service.sortVaadinToSpring(sortVaadin);
         Assert.assertNotNull(sortSpring);
-        ottenuto = service.getSortField(sortSpring);
+        ottenuto = service.getSortFieldName(sortSpring);
         Assert.assertEquals(previsto, ottenuto);
         ottenutoDirection = service.getSortDirection(sortSpring);
         Assert.assertEquals(previstoDirection, ottenutoDirection);
@@ -141,24 +136,52 @@ public class UtilityServiceTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("sortVaadinToSpring")
+    @DisplayName("5 - List sortVaadinToSpring")
     void sortVaadinToSpring2() {
-        List<QuerySortOrder> sorts = new ArrayList<>();
-        QuerySortOrder sortVaadin;
-        Sort sortSpring;
+        List<QuerySortOrder> sortVaadinList = new ArrayList<>();
+
+        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>)null);
+        Assert.assertNotNull(sortSpring);
 
         sortVaadin = new QuerySortOrder(NAME_NOME, SortDirection.ASCENDING);
-        sorts.add(sortVaadin);
+        sortVaadinList.add(sortVaadin);
         sortVaadin = new QuerySortOrder(NAME_ORDINE, SortDirection.DESCENDING);
-        sorts.add(sortVaadin);
+        sortVaadinList.add(sortVaadin);
         sortVaadin = new QuerySortOrder(NAME_CODE, SortDirection.ASCENDING);
-        sorts.add(sortVaadin);
+        sortVaadinList.add(sortVaadin);
 
-        sortSpring = service.sortVaadinToSpring(sorts);
+        sortSpring = service.sortVaadinToSpring(sortVaadinList);
         Assert.assertNotNull(sortSpring);
         Assert.assertEquals(3, sortSpring.stream().count());
     }
 
+    @Test
+    @Order(6)
+    @DisplayName("6 - sortSpringToVaadin")
+    void sortSpringToVaadin() {
+        QuerySortOrder ottenutoSortVaadin;
+        previsto = NAME_NOME;
+        SortDirection previstoDirection;
+        SortDirection ottenutoDirection;
+
+        previstoDirection = SortDirection.ASCENDING;
+        sortSpring = Sort.by(Sort.Direction.ASC, NAME_NOME);
+        ottenutoSortVaadin = service.sortSpringToVaadin(sortSpring);
+        Assert.assertNotNull(ottenutoSortVaadin);
+        ottenuto = ottenutoSortVaadin.getSorted();
+        Assert.assertEquals(previsto, ottenuto);
+        ottenutoDirection = ottenutoSortVaadin.getDirection();
+        Assert.assertEquals(previstoDirection, ottenutoDirection);
+
+        previstoDirection = SortDirection.DESCENDING;
+        sortSpring = Sort.by(Sort.Direction.DESC, NAME_NOME);
+        ottenutoSortVaadin = service.sortSpringToVaadin(sortSpring);
+        Assert.assertNotNull(ottenutoSortVaadin);
+        ottenuto = ottenutoSortVaadin.getSorted();
+        Assert.assertEquals(previsto, ottenuto);
+        ottenutoDirection = ottenutoSortVaadin.getDirection();
+        Assert.assertEquals(previstoDirection, ottenutoDirection);
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

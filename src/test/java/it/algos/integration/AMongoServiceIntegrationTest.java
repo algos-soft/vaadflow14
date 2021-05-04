@@ -64,6 +64,9 @@ public class AMongoServiceIntegrationTest extends ATest {
     @InjectMocks
     MeseService meseService;
 
+    @InjectMocks
+    SecoloService secoloService;
+
     private Mese meseUno;
 
     private Mese meseDue;
@@ -81,16 +84,22 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assertions.assertNotNull(service);
         MockitoAnnotations.initMocks(meseService);
         Assertions.assertNotNull(meseService);
+        MockitoAnnotations.initMocks(secoloService);
+        Assertions.assertNotNull(secoloService);
         Assertions.assertNotNull(mongoOp);
 
         service.annotation = annotation;
         service.text = text;
-        service.mongoOp = mongoOp;
-        service.logger = logger;
         service.array = array;
-        annotation.text = text;
+        service.logger = logger;
+        service.mongo = mongo;
         service.mongoOp = mongoOp;
-        meseService.mongo = service;
+        annotation.text = text;
+        meseService.text = text;
+        secoloService.text = text;
+        meseService.mongo = mongo;
+        secoloService.mongo = mongo;
+        secoloService.keyPropertyName = "secolo";
         mongo.mongoOp = mongoOp;
         mongo.logger = logger;
 
@@ -314,7 +323,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("8 - Via (filtri=null, sort=null)")
     void fetch8() {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via completi (filtri=null, sort=null)", previstoIntero));
@@ -327,10 +336,10 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 0;
         int limit = 0;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
 
@@ -341,10 +350,10 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 0;
         int limit = 15;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
 
@@ -355,10 +364,10 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 14;
         int limit = 0;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
     @Test
@@ -368,10 +377,10 @@ public class AMongoServiceIntegrationTest extends ATest {
         int offset = 14;
         int limit = 5;
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
     @Test
@@ -380,12 +389,12 @@ public class AMongoServiceIntegrationTest extends ATest {
     void fetch13() {
         int offset = 0;
         int limit = 0;
-        sort = Sort.by(Sort.Direction.ASC, NAME_NOME);
+        sortSpring = Sort.by(Sort.Direction.ASC, NAME_NOME);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
     @Test
@@ -394,12 +403,12 @@ public class AMongoServiceIntegrationTest extends ATest {
     void fetch14() {
         int offset = 0;
         int limit = 0;
-        sort = Sort.by(Sort.Direction.DESC, NAME_NOME);
+        sortSpring = Sort.by(Sort.Direction.DESC, NAME_NOME);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
     }
 
 
@@ -409,12 +418,12 @@ public class AMongoServiceIntegrationTest extends ATest {
     void fetch15() {
         int offset = 7;
         int limit = 4;
-        sort = Sort.by(Sort.Direction.ASC, NAME_ORDINE);
+        sortSpring = Sort.by(Sort.Direction.ASC, NAME_ORDINE);
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sort, offset, limit);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sort, offset, limit));
+        System.out.println(String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
         for (AEntity bean : listaBean) {
             System.out.print(((Via) bean).ordine);
             System.out.print(SEP);
@@ -450,24 +459,23 @@ public class AMongoServiceIntegrationTest extends ATest {
         print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroText));
     }
 
-
-//    @Test
-//    @Order(18)
-//    @DisplayName("18 - Via (filtro=vi+co)")
-//    void fetch18() {
-//        AFiltro filtro = null;
-//        String filtroStart = "vi";
-//        filtro = AFiltro.start(NAME_NOME, filtroStart);
-//        mappaFiltri.put("a", filtro);
-//        String filtroText = "co";
-//        filtro = AFiltro.contains(NAME_NOME, filtroText);
-//        mappaFiltri.put("b", filtro);
-//        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-//        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
-//        assertNotNull(listaBean);
-//        assertEquals(previstoIntero, listaBean.size());
-//        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
-//    }
+    //    @Test
+    //    @Order(18)
+    //    @DisplayName("18 - Via (filtro=vi+co)")
+    //    void fetch18() {
+    //        AFiltro filtro = null;
+    //        String filtroStart = "vi";
+    //        filtro = AFiltro.start(NAME_NOME, filtroStart);
+    //        mappaFiltri.put("a", filtro);
+    //        String filtroText = "co";
+    //        filtro = AFiltro.contains(NAME_NOME, filtroText);
+    //        mappaFiltri.put("b", filtro);
+    //        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
+    //        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
+    //        assertNotNull(listaBean);
+    //        assertEquals(previstoIntero, listaBean.size());
+    //        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+    //    }
 
     @Test
     @Order(19)
@@ -485,22 +493,72 @@ public class AMongoServiceIntegrationTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - uguale")
-    void uguale() {
+    @DisplayName("3 - ugualeStr")
+    void ugualeStr() {
         String filtroText = "viale";
         previstoIntero = 1;
-        filtro = AFiltro.uguale(NAME_NOME, filtroText);
+        filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
 
         filtroText = "vial";
         previstoIntero = 0;
-        filtro = AFiltro.uguale(NAME_NOME, filtroText);
+        filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
+    }
 
+    @Test
+    @Order(4)
+    @DisplayName("4 - ugualeObj")
+    void ugualeObj() {
+        Secolo unSecolo = secoloService.findByKey("XVIII secolo");
+        assertNotNull(unSecolo);
+        Query query;
+        String fieldName = "secolo";
+        int totRec = service.count(ANNO_ENTITY_CLASS);
+
+        previstoIntero = totRec;
+        listaBean = service.fetch(ANNO_ENTITY_CLASS);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s senza filtri", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName()));
+
+        previstoIntero = totRec;
+        listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s con filtro nullo", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName()));
+
+        previstoIntero = 100;
+        query = new Query();
+        query.addCriteria(Criteria.where(fieldName).is(unSecolo));
+        listaBean = service.findAll(ANNO_ENTITY_CLASS, query);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s con query %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
+
+        previstoIntero = 100;
+        filtro = AFiltro.ugualeObj(fieldName, unSecolo);
+        listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s con filtro %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
+
+        previstoIntero = 100;
+        filtro = AFiltro.ugualeObj(fieldName, unSecolo);
+        mappaFiltri.put("keyNonUsata", filtro);
+        listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s con mappaFiltri %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
     }
 
     //    @Test
@@ -874,7 +932,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         System.out.println(entityBean);
 
         query = new Query();
-        sort = Sort.by(Sort.Direction.ASC, "mese");
+        sortSpring = Sort.by(Sort.Direction.ASC, "mese");
 
         entityBean = service.findOneFirst((Class) null, (Query) null);
         Assert.assertNull(entityBean);
@@ -900,8 +958,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previsto = "agosto";
         query = new Query();
         query.addCriteria(Criteria.where("giorni").is(31));
-        sort = Sort.by(Sort.Direction.ASC, "mese");
-        query.with(sort);
+        sortSpring = Sort.by(Sort.Direction.ASC, "mese");
+        query.with(sortSpring);
         entityBean = service.findOneFirst(Mese.class, query);
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, ((Mese) entityBean).getMese());
@@ -909,8 +967,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previsto = "gennaio";
         query = new Query();
         query.addCriteria(Criteria.where("giorni").is(31));
-        sort = Sort.by(Sort.Direction.ASC, "ordine");
-        query.with(sort);
+        sortSpring = Sort.by(Sort.Direction.ASC, "ordine");
+        query.with(sortSpring);
         entityBean = service.findOneFirst(Mese.class, query);
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(previsto, ((Mese) entityBean).getMese());
@@ -940,7 +998,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     void findOneUnique() {
         System.out.println("singola entity - se ce n'è più di una NON restituisce nulla");
         query = new Query();
-        sort = Sort.by(Sort.Direction.ASC, "nome");
+        sortSpring = Sort.by(Sort.Direction.ASC, "nome");
 
         entityBean = service.findOneUnique((Class) null, VUOTA, VUOTA);
         Assert.assertNull(entityBean);
@@ -1013,16 +1071,16 @@ public class AMongoServiceIntegrationTest extends ATest {
         previsto = "agosto";
         query = new Query();
         query.addCriteria(Criteria.where("giorni").is(31));
-        sort = Sort.by(Sort.Direction.ASC, "nome");
-        query.with(sort);
+        sortSpring = Sort.by(Sort.Direction.ASC, "nome");
+        query.with(sortSpring);
         entityBean = service.findOneUnique(Mese.class, query);
         Assert.assertNull(entityBean);
 
         previsto = "gennaio";
         query = new Query();
         query.addCriteria(Criteria.where("giorni").is(31));
-        sort = Sort.by(Sort.Direction.ASC, "ordine");
-        query.with(sort);
+        sortSpring = Sort.by(Sort.Direction.ASC, "ordine");
+        query.with(sortSpring);
         entityBean = service.findOneUnique(Mese.class, query);
         Assert.assertNull(entityBean);
 

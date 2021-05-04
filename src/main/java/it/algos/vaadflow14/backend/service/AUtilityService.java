@@ -1,12 +1,16 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -34,17 +38,17 @@ public class AUtilityService extends AAbstractService {
     /**
      * Estrae il contenuto testuale dal Sort (springframework) <br>
      *
-     * @param sort di springframework
+     * @param sortSpring di springframework
      *
      * @return array di parti
      */
-    private String[] getParti(final Sort sort) {
+    private String[] getParti(final Sort sortSpring) {
         String[] parti = null;
         String sortTxt = VUOTA;
         String[] partiTmp = null;
 
-        if (sort != null) {
-            sortTxt = sort.toString();
+        if (sortSpring != null) {
+            sortTxt = sortSpring.toString();
         }
 
         if (text.isValid(sortTxt) && sortTxt.contains(DUE_PUNTI)) {
@@ -62,12 +66,12 @@ public class AUtilityService extends AAbstractService {
     /**
      * Estrae il field dal Sort (springframework) <br>
      *
-     * @param sort di springframework
+     * @param sortSpring di springframework
      *
      * @return fieldName
      */
-    public String getSortField(final Sort sort) {
-        String[] parti = getParti(sort);
+    public String getSortFieldName(final Sort sortSpring) {
+        String[] parti = getParti(sortSpring);
         return parti != null ? parti[0].trim() : VUOTA;
     }
 
@@ -75,13 +79,13 @@ public class AUtilityService extends AAbstractService {
     /**
      * Estrae la Direction dal Sort (springframework) <br>
      *
-     * @param sort di springframework
+     * @param sortSpring di springframework
      *
      * @return direction di springframework
      */
-    public Sort.Direction getSortDirection(Sort sort) {
+    public Sort.Direction getSortDirection(final Sort sortSpring) {
         Sort.Direction directionSpring = null;
-        String[] parti = getParti(sort);
+        String[] parti = getParti(sortSpring);
         String directionTxt = VUOTA;
 
         if (parti != null) {
@@ -101,15 +105,15 @@ public class AUtilityService extends AAbstractService {
     /**
      * Estrae la Direction dal sortOrder (vaadin) <br>
      *
-     * @param sortOrder di vaadin
+     * @param sortVaadin di vaadin
      *
      * @return direction di springframework
      */
-    public Sort.Direction getSortDirection(QuerySortOrder sortOrder) {
+    public Sort.Direction getSortDirection(final QuerySortOrder sortVaadin) {
         Sort.Direction directionSpring = null;
         SortDirection directionVaadin = null;
 
-        directionVaadin = sortOrder.getDirection();
+        directionVaadin = sortVaadin.getDirection();
         if (directionVaadin.name().equals(SORT_VAADIN_ASC)) {
             directionSpring = Sort.Direction.ASC;
         }
@@ -125,23 +129,23 @@ public class AUtilityService extends AAbstractService {
      * Query di MongoDB usa Sort (springframework) <br>
      * Qui effettuo la conversione
      *
-     * @param sortOrder di Vaadin
+     * @param sortVaadin di Vaadin
      *
-     * @return sort di springframework
+     * @return sortSpring di springframework
      */
-    public Sort sortVaadinToSpring(QuerySortOrder sortOrder) {
-        Sort sort;
+    public Sort sortVaadinToSpring(final QuerySortOrder sortVaadin) {
+        Sort sortSpring;
 
-        SortDirection direction = sortOrder.getDirection();
-        String field = sortOrder.getSorted();
-        if (direction == SortDirection.ASCENDING) {
-            sort = Sort.by(Sort.Direction.ASC, field);
+        SortDirection directionVaadin = sortVaadin.getDirection();
+        String field = sortVaadin.getSorted();
+        if (directionVaadin == SortDirection.ASCENDING) {
+            sortSpring = Sort.by(Sort.Direction.ASC, field);
         }
         else {
-            sort = Sort.by(Sort.Direction.DESC, field);
+            sortSpring = Sort.by(Sort.Direction.DESC, field);
         }
 
-        return sort;
+        return sortSpring;
     }
 
 
@@ -150,29 +154,105 @@ public class AUtilityService extends AAbstractService {
      * Query di MongoDB usa Sort (springframework) <br>
      * Qui effettuo la conversione
      *
-     * @param sorts sort di Vaadin
+     * @param sortVaadinList sort di Vaadin
      *
-     * @return sort di springframework
+     * @return sortSpring di springframework
      */
-    public Sort sortVaadinToSpring(List<QuerySortOrder> sorts) {
-        Sort sort = null;
-        Sort.Direction direction = null;
+    public Sort sortVaadinToSpring(final List<QuerySortOrder> sortVaadinList) {
+        Sort sortSpring = null;
+        Sort.Direction directionSpring = null;
         String fieldName = VUOTA;
 
-        if (sorts != null) {
-            for (QuerySortOrder sortOrder : sorts) {
-                direction = getSortDirection(sortOrder);
-                fieldName = sortOrder.getSorted();
-                if (sort == null) {
-                    sort = Sort.by(direction, fieldName);
+        if (sortVaadinList != null) {
+            for (QuerySortOrder sortVaadin : sortVaadinList) {
+                directionSpring = getSortDirection(sortVaadin);
+                fieldName = sortVaadin.getSorted();
+                if (sortSpring == null) {
+                    sortSpring = Sort.by(directionSpring, fieldName);
                 }
                 else {
-                    sort = sort.and(Sort.by(direction, fieldName));
+                    sortSpring = sortSpring.and(Sort.by(directionSpring, fieldName));
                 }
             }
         }
 
-        return sort;
+        return sortSpring;
+    }
+
+    /**
+     * Query di MongoDB usa Sort (springframework) <br>
+     * DataProvider usa QuerySortOrder (Vaadin) <br>
+     * Qui effettuo la conversione
+     *
+     * @param sortSpring di springframework
+     *
+     * @return sortVaadin di Vaadin
+     */
+    public QuerySortOrder sortSpringToVaadin(final Sort sortSpring) {
+        QuerySortOrder sortVaadin = null;
+        SortDirection directionVaadin = SortDirection.ASCENDING;
+        String fieldName = getSortFieldName(sortSpring);
+        Sort.Direction directionSpring = getSortDirection(sortSpring);
+
+        if (directionSpring == Sort.Direction.DESC) {
+            directionVaadin = SortDirection.DESCENDING;
+        }
+
+        if (text.isValid(fieldName)) {
+            sortVaadin = new QuerySortOrder(fieldName, directionVaadin);
+        }
+
+        return sortVaadin;
+    }
+
+    /**
+     * Crea un ComboBox <br>
+     *
+     * @param entityClazz  the class of type AEntity
+     * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
+     * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
+     * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
+     * @param initialValue eventuale valore iniziale di selezione
+     */
+    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, final Object initialValue) {
+        ComboBox combo = null;
+        Field reflectionJavaField = null;
+        Class comboEnumClazz = null;
+        String widthEM = width > 0 ? width + TAG_EM : VUOTA;
+        Sort sortSpring;
+
+        reflectionJavaField = reflection.getField(entityClazz, fieldName);
+        AETypeField type = annotation.getColumnType(reflectionJavaField);
+
+        if (type != AETypeField.combo && type != AETypeField.enumeration) {
+            return null;
+        }
+
+        if (type == AETypeField.combo) {
+            comboEnumClazz = annotation.getComboClass(reflectionJavaField);
+            sortSpring = annotation.getSortSpring(comboEnumClazz);
+        }
+        if (type == AETypeField.enumeration) {
+            comboEnumClazz = annotation.getEnumClass(reflectionJavaField);
+        }
+        combo = new ComboBox();
+        combo.setWidth(widthEM);
+        combo.setPreventInvalidInput(true);
+        combo.setAllowCustomValue(false);
+        combo.setPlaceholder(text.primaMaiuscola(fieldName) + TRE_PUNTI);
+        combo.setClearButtonVisible(true);
+        combo.setRequired(false);
+
+        dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboEnumClazz);
+        if (dataProvider != null) {
+            combo.setDataProvider(dataProvider);
+        }
+
+        if (initialValue != null) {
+            combo.setValue(initialValue);
+        }
+
+        return combo;
     }
 
 }

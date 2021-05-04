@@ -43,7 +43,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazione = true, usaModifica = true)
-@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
+@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine", sortDirection = "ASC")
 @AIList(fields = "ordine,nome", usaRowIndex = false, usaReset = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {

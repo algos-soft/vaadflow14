@@ -84,7 +84,7 @@ public class VialeLogicList extends LogicList {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this,filtri);
+        grid = appContext.getBean(AGrid.class, entityClazz, this,mappaFiltri);
 
         grid.fixGridHeader();
         this.addGridListeners();

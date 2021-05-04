@@ -519,8 +519,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
     @Deprecated
-    public List<AEntity> findAll(Class<? extends
-            AEntity> entityClazz, Query query) {
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Query query) {
         return findAll(entityClazz, query, VUOTA);
     }
 
@@ -536,8 +535,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
-    public List<AEntity> findAll(Class<? extends
-            AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -568,8 +566,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
     @Deprecated
-    public List<AEntity> findAll(Class<? extends
-            AEntity> entityClazz, Query query, String projection) {
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, Query query, String projection) {
         if (entityClazz == null) {
             return null;
         }
@@ -645,16 +642,16 @@ public class AMongoService<capture> extends AAbstractService {
      * DataProvider usa QuerySortOrder (Vaadin) mentre invece la Query di MongoDB usa Sort (springframework) <br>
      * Qui effettuo la conversione
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
-     * @param sorts       eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
-     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
-     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     * @param entityClazz    corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param mappaFiltri    eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param sortVaadinList eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     * @param offset         eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit          numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sorts, int offset, int limit) {
-        return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sorts), offset, limit);
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) {
+        return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList), offset, limit);
     }
 
     /**
@@ -665,7 +662,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
-     * @param sort        eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
+     * @param sortSpring        eventuali condizioni di ordinamento. Se nullo, cerca quello base della AEntity.
      * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
      * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
      *
@@ -673,7 +670,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort, int offset, int limit) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) {
         Query query = new Query();
         Criteria criteriaFiltro;
         Criteria criteriaQuery = null;
@@ -697,8 +694,8 @@ public class AMongoService<capture> extends AAbstractService {
             }
             query.addCriteria(criteriaQuery);
         }
-        if (sort != null) {
-            query.with(sort);
+        if (sortSpring != null) {
+            query.with(sortSpring);
         }
         if (offset > 0) {
             query.skip(offset);
@@ -1003,8 +1000,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return the founded entity
      */
-    public AEntity find(Class<? extends AEntity> entityClazz, String
-            keyId) {
+    public AEntity find(Class<? extends AEntity> entityClazz, String keyId) {
         return findById(entityClazz, keyId);
     }
 
@@ -1016,8 +1012,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findById(Class<? extends AEntity> entityClazz, String
-            keyId) {
+    public AEntity findById(Class<? extends AEntity> entityClazz, String keyId) {
         AEntity entity = null;
         if (entityClazz == null) {
             return null;
@@ -1040,8 +1035,7 @@ public class AMongoService<capture> extends AAbstractService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity findByKey(Class<? extends
-            AEntity> entityClazz, String keyPropertyValue) {
+    public AEntity findByKey(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);

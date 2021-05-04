@@ -1,10 +1,13 @@
 package it.algos.test;
 
 import com.mongodb.*;
+import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.junit.jupiter.api.*;
@@ -12,7 +15,7 @@ import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.context.*;
 import org.springframework.data.domain.*;
-import org.springframework.data.mongodb.core.query.*;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.reflect.Field;
 import java.time.*;
@@ -71,9 +74,13 @@ public abstract class ATest {
 
     protected final static String NAME_NOME = "nome";
 
+    protected final static String NAME_ANNO = "anno";
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
+
+    protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
 
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
 
@@ -130,6 +137,12 @@ public abstract class ATest {
 
     @InjectMocks
     protected AClassService classService;
+
+    @InjectMocks
+    protected AUtilityService utilityService;
+
+    @InjectMocks
+    protected PreferenzaService preferenzaService;
 
     protected Logger adminLogger;
 
@@ -261,7 +274,9 @@ public abstract class ATest {
 
     protected BasicDBObject objectQuery;
 
-    protected Sort sort;
+    protected Sort sortSpring;
+
+    protected QuerySortOrder sortVaadin;
 
     protected AFiltro filtro;
 
@@ -328,6 +343,12 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(gSonService);
         Assertions.assertNotNull(gSonService);
 
+        MockitoAnnotations.initMocks(utilityService);
+        Assertions.assertNotNull(utilityService);
+
+        MockitoAnnotations.initMocks(preferenzaService);
+        Assertions.assertNotNull(preferenzaService);
+
         array.text = text;
         text.array = array;
         logger.text = text;
@@ -343,6 +364,7 @@ public abstract class ATest {
         bean.mongo = mongo;
         mongo.text = text;
         mongo.annotation = annotation;
+        mongo.reflection = reflection;
         web.text = text;
         web.logger = logger;
         wiki.text = text;
@@ -352,11 +374,13 @@ public abstract class ATest {
         file.array = array;
         file.logger = logger;
         date.math = math;
-        sort = null;
+        sortSpring = null;
         classService.fileService = file;
         classService.text = text;
         classService.logger = logger;
         classService.annotation = annotation;
+        preferenzaService.mongo = mongo;
+        utilityService.text = text;
     }
 
 
@@ -372,6 +396,7 @@ public abstract class ATest {
         previsto = VUOTA;
         previsto2 = VUOTA;
         previsto3 = VUOTA;
+        previstoIntero = 0;
         sorgenteClasse = null;
         sorgenteField = null;
         sorgenteMatrice = null;
@@ -382,7 +407,8 @@ public abstract class ATest {
         previstoInteroArray = null;
         ottenutoInteroArray = null;
         query = null;
-        sort = null;
+        sortSpring = null;
+        sortVaadin = null;
         filtro = null;
         listaFiltri = new ArrayList<>();
         mappaFiltri = new HashMap<>();

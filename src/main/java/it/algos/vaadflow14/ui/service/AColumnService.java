@@ -55,20 +55,6 @@ public class AColumnService extends AAbstractService {
      * @param fieldName   della property da utilizzare per la colonna
      */
     public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String fieldName) {
-        return add(grid, entityClazz, fieldName, VUOTA);
-    }
-
-
-    /**
-     * Create a single column.
-     * The column type is chosen according to the annotation @AIColumn or, if is not present, a @AIField.
-     *
-     * @param grid           a cui aggiungere la colonna
-     * @param entityClazz    modello-dati specifico
-     * @param fieldName      della property da utilizzare per la colonna
-     * @param searchProperty per la ricerca
-     */
-    public Grid.Column<AEntity> add(Grid grid, Class<? extends AEntity> entityClazz, String fieldName, String searchProperty) {
         Grid.Column<AEntity> colonna = null;
         Field field = reflection.getField(entityClazz, fieldName);
         AETypeField type = null;
@@ -76,6 +62,7 @@ public class AColumnService extends AAbstractService {
         String header = VUOTA;
         VaadinIcon headerIcon = null;
         String colorHeaderIcon = VUOTA;
+        String searchProperty = annotation.getSearchPropertyName(entityClazz);
         boolean isFlexGrow = false;
         String width = VUOTA;
         Label label = null;
@@ -92,7 +79,7 @@ public class AColumnService extends AAbstractService {
         }
 
         if (type == null) {
-            logger.error("Manca il type del field " + propertyName + " della entity " + entityClazz.getSimpleName(), this.getClass(), "add");
+            logger.error(String.format("Manca il type del field %s della entity &s", fieldName, entityClazz.getSimpleName()), this.getClass(), "add");
             return null;
         }
         else {
@@ -102,7 +89,7 @@ public class AColumnService extends AAbstractService {
                 case password:
                 case email:
                 case cap:
-                    colonna = grid.addColumn(propertyName);
+                    colonna = grid.addColumn(fieldName);
                     sortable = true;
                     break;
                 case textArea:
@@ -120,7 +107,7 @@ public class AColumnService extends AAbstractService {
                     }));//end of lambda expressions and anonymous inner class
                     break;
                 case integer:
-                    colonna = grid.addColumn(propertyName);
+                    colonna = grid.addColumn(fieldName);
                     sortable = true;
                     break;
                 case booleano:
@@ -160,7 +147,7 @@ public class AColumnService extends AAbstractService {
                     break;
                 case enumeration:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        Object obj = reflection.getPropertyValue((AEntity) entity, propertyName);
+                        Object obj = reflection.getPropertyValue((AEntity) entity, fieldName);
                         return new Label(obj != null ? obj.toString() : VUOTA);
                     }));//end of lambda expressions and anonymous inner class
                     break;
@@ -169,7 +156,7 @@ public class AColumnService extends AAbstractService {
                     break;
                 case image:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                        String mongoValue = (String) reflection.getPropertyValue((AEntity) entity, propertyName);
+                        String mongoValue = (String) reflection.getPropertyValue((AEntity) entity, fieldName);
                         Image image = resourceService.getBandieraFromMongo(mongoValue);
                         return image != null ? image : new Label("X");
                     }));//end of lambda expressions and anonymous inner class
@@ -211,7 +198,7 @@ public class AColumnService extends AAbstractService {
             }
             colonna.setHeader(label);
 
-            if (propertyName.equals(propertySearch)) {
+            if (fieldName.equals(searchProperty)) {
                 Icon icon = new Icon(VaadinIcon.SEARCH);
                 icon.setSize("10px");
                 icon.getStyle().set("float", "center");
@@ -226,7 +213,7 @@ public class AColumnService extends AAbstractService {
             //--di default le colonne NON sono sortable
             //--può essere modificata con sortable = true, nell'annotation @AIColumn della Entity
             colonna.setSortable(sortable);
-            colonna.setSortProperty(propertyName);
+            colonna.setSortProperty(fieldName);
 
             colonna.setWidth(width);
             colonna.setFlexGrow(isFlexGrow ? 1 : 0);

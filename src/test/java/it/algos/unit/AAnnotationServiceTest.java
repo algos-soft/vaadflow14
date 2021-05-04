@@ -10,10 +10,13 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.AAnnotationService.*;
+import org.junit.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
@@ -37,11 +40,11 @@ import java.util.*;
 public class AAnnotationServiceTest extends ATest {
 
 
-        protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
+    protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
 
-        protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
+    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
 
-        protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
+    protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
     AAnnotationService service;
 
@@ -1003,6 +1006,41 @@ public class AAnnotationServiceTest extends ATest {
         canonicalName = ANNO_LOGIC_LIST.getCanonicalName();
         ottenutoBooleano = service.isEntityClass(canonicalName);
         assertFalse(ottenutoBooleano);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - getSortSpring")
+    public void getSortSpring() {
+        Sort.Direction previstoDirection;
+        Sort.Direction ottenutoDirection;
+
+        previsto = NAME_ORDINE;
+        previstoDirection = Sort.Direction.DESC;
+        sortSpring = service.getSortSpring(ANNO_ENTITY_CLASS);
+        Assert.assertNotNull(sortSpring);
+        ottenuto = utilityService.getSortFieldName(sortSpring);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenutoDirection = utilityService.getSortDirection(sortSpring);
+        Assert.assertEquals(previstoDirection, ottenutoDirection);
+
+        previsto = NAME_ORDINE;
+        previstoDirection = Sort.Direction.ASC;
+        sortSpring = service.getSortSpring(VIA_ENTITY_CLASS);
+        Assert.assertNotNull(sortSpring);
+        ottenuto = utilityService.getSortFieldName(sortSpring);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenutoDirection = utilityService.getSortDirection(sortSpring);
+        Assert.assertEquals(previstoDirection, ottenutoDirection);
+
+        previsto = NAME_CODE;
+        previstoDirection = Sort.Direction.ASC;
+        sortSpring = service.getSortSpring(COMPANY_ENTITY_CLASS);
+        Assert.assertNotNull(sortSpring);
+        ottenuto = utilityService.getSortFieldName(sortSpring);
+        Assert.assertEquals(previsto, ottenuto);
+        ottenutoDirection = utilityService.getSortDirection(sortSpring);
+        Assert.assertEquals(previstoDirection, ottenutoDirection);
     }
 
 }
