@@ -16,17 +16,49 @@
     
 ##Cartelle
 Cartelle a livello di /root del progetto
-####algos
+###algos
 - Link e snippets vari
 ###build
 - Gestita in automatico da Idea
-####config
+###config
 - File di risorse di testo e immagini
-###documentation
+###doc
 - Scripts e sorgenti per i logs
 ###frontend
 - Risorse css, js, ts
+###link
+- xxx
 ###log
 - Uscita dei files di log
 ###node-modules
 - Gestita in automatico da Vaadin
+###snippets
+- xxx
+
+##Moduli
+Gruppi merceologici di moduli
+###Cronologia
+- Secolo
+- Anno
+- Mese
+- Giorno
+###Geografica
+- Continente
+- Stato
+- Regione
+- Provincia
+- Comune
+###Anagrafica
+- Via
+- Indirizzo
+- Persona
+###Company
+- Company
+###Gestione
+- Bolla
+- Fattura
+###Utility
+- Versione
+###Security
+- Utente
+- 

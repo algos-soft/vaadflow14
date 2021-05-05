@@ -167,16 +167,35 @@ public abstract class LogicList extends Logic {
     @Override
     protected List<AIButton> getListaAEBottoniTop() {
         List<AIButton> listaBottoni = super.getListaAEBottoniTop();
+        String message = VUOTA;
 
         if (usaBottoneDeleteAll) {
             listaBottoni.add(AEButton.deleteAll);
         }
+
         if (usaBottoneResetList && entityService != null) {
-            //--se manca la classe specifica il metodo è vuoto e il bottone non potrebbe funzionare
-            if (entityService.resetEmptyOnly().isErrato()) {
-                listaBottoni.add(AEButton.resetList);
+            //--se manca il metodo specifico il bottone non potrebbe funzionare
+            try {
+                if (entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null) {
+                    listaBottoni.add(AEButton.resetList);
+                }
+            } catch (Exception unErrore) {
+                message = String.format("Non sono riuscito a controllare se esiste il metodo resetEmptyOnly() nella classe %s", entityService.getClass().getSimpleName());
+                logger.log(AETypeLog.checkData, message);
             }
         }
+
+        //        if (methodExists) {
+        //            result = entityService.resetEmptyOnly();
+        //            logger.log(AETypeLog.checkData, result.getMessage());
+        //        }
+        //        else {
+        //            if (!nameService.equals(TAG_GENERIC_SERVICE)) {
+        //                message = String.format("Nel package %s la classe %s non ha il metodo resetEmptyOnly() ", packageName, entityServicePrevista);
+        //                logger.log(AETypeLog.checkData, message);
+        //            }
+        //        }
+
         if (usaBottoneNew) {
             listaBottoni.add(AEButton.nuovo);
         }

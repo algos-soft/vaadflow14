@@ -990,6 +990,18 @@ public class AAnnotationService extends AAbstractService {
         return annotation != null ? annotation.usaReset() : false;
     }
 
+    /**
+     * Flag per la ri-creazione automatica della lista. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaResetIniziale(final Class<? extends AEntity> entityClazz) {
+        AIEntity annotation = this.getAIEntity(entityClazz);
+        return annotation != null ? annotation.usaResetIniziale() : false;
+    }
+
 
     /**
      * Restituisce il nome del record (da usare nel Dialog)
