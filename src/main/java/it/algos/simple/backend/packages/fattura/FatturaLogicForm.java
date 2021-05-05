@@ -25,7 +25,7 @@ public class FatturaLogicForm extends LogicForm {
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
-    public FatturaLogicForm(@Qualifier("FatturaService") AIService fatturaService) {
+    public FatturaLogicForm(@Qualifier("fatturaService") AIService fatturaService) {
         super.entityClazz = Fattura.class;
         super.entityService = fatturaService;
     }// end of Vaadin/@Route constructor
