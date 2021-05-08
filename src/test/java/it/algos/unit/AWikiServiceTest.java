@@ -22,8 +22,8 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("AWikiServiceTest")
-@DisplayName("Gestione dei collegamenti con wikipedia")
+@Tag("testAllValido")
+@DisplayName("Test di controllo per i collegamenti base di wikipedia")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AWikiServiceTest extends ATest {
 
@@ -59,6 +59,7 @@ public class AWikiServiceTest extends ATest {
         service.text = text;
         service.array = array;
         service.web = web;
+        service.html = html;
     }
 
 
@@ -83,8 +84,13 @@ public class AWikiServiceTest extends ATest {
     @DisplayName("1 - legge testo grezzo html")
     public void getSorgente() {
         sorgente = PAGINA_PIOZZANO;
+        previsto = "<!DOCTYPE html><html class=\"client-nojs\" lang=\"it\" dir=\"ltr\"><head><meta charset=\"UTF-8\"/><title>Piozzano - Wikipedia</title>";
+        previsto2 = ";});</script></body></html>";
+
         ottenuto = service.getSorgente(sorgente);
-        assertNotNull(ottenuto);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("1 - Legge il testo grezzo della pagina html. Non lo faccio vedere perché troppo lungo");
     }
 
@@ -95,9 +101,12 @@ public class AWikiServiceTest extends ATest {
     public void legge() {
         sorgente = PAGINA_PIOZZANO;
         previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
+        previsto2 = "[[Categoria:Piozzano| ]]";
+
         ottenuto = service.legge(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("2 - Legge il testo wiki della pagina. Non lo faccio vedere perché troppo lungo");
     }
 
@@ -108,16 +117,19 @@ public class AWikiServiceTest extends ATest {
     public void leggeTable() {
         sorgente = "ISO 3166-2:IT";
         previsto = "{| class=\"wikitable sortable\"";
+        previsto2 = "| <code>IT-34</code>\n| {{bandiera|Veneto|nome}}\n|}";
 
         //--regione
         ottenuto = service.leggeTable(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("3 - Legge una tabella wiki completa");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
 
         //--provincia
+        previsto2 = "| <code>IT-VE</code>\n| {{IT-VE}}\n| [[Veneto]] (<code>34</code>)\n|}";
         try {
             ottenuto = service.leggeTable(sorgente, 2);
         } catch (Exception unErrore) {
@@ -125,6 +137,7 @@ public class AWikiServiceTest extends ATest {
 
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
         System.out.println(VUOTA);
         System.out.println("3 - Legge una tabella wiki completa");
         System.out.println(VUOTA);
@@ -137,36 +150,89 @@ public class AWikiServiceTest extends ATest {
     public void leggeModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         previsto = "{\n[\"abate\"] =";
+        previsto2 = "[\"zoologo\"] = \"zoologi\"\n}";
+
         ottenuto = service.leggeModulo(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("4 - Legge un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
 
     @Test
     @Order(5)
-    @DisplayName("5 - legge la mappa di un modulo")
+    @DisplayName("5 - legge la mappa del modulo Attività")
     public void leggeMappaModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
-        previsto = "{\n[\"abate\"] =";
+        sorgente2 = "abate";
+        sorgente3 = "badessa";
+        previsto = "abati e badesse";
+
         mappaOttenuta = service.leggeMappaModulo(sorgente);
         assertNotNull(mappaOttenuta);
-        System.out.println("4 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        ottenuto = mappaOttenuta.get(sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(ottenuto, previsto);
+        ottenuto = mappaOttenuta.get(sorgente3);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(ottenuto, previsto);
+        System.out.println("5 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
 
     @Test
     @Order(6)
-    @DisplayName("6 - legge la mappa di un altro modulo")
+    @DisplayName("6 - legge la mappa del modulo Attività/Genere")
     public void leggeMappaModulo2() {
         sorgente = "Modulo:Bio/Plurale_attività_genere";
-        previsto = "{\n[\"abate\"] =";
+        sorgente2 = "abate";
+        previsto = "\"abati\",\"M\"";
+
         mappaOttenuta = service.leggeMappaModulo(sorgente);
         assertNotNull(mappaOttenuta);
-        System.out.println("4 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        ottenuto = mappaOttenuta.get(sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(ottenuto, previsto);
+        System.out.println("6 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
+    @Test
+    @Order(7)
+    @DisplayName("7 - legge un template")
+    public void leggeTmpl() {
+        sorgente = PAGINA_PIOZZANO;
+        previsto = VUOTA;
+        sorgente2 = "Divisione amministrativa";
+
+        ottenuto = service.leggeTmpl(VUOTA, VUOTA);
+        assertTrue(text.isEmpty(ottenuto));
+        assertEquals(ottenuto, previsto);
+
+        ottenuto = service.leggeTmpl(sorgente, VUOTA);
+        assertTrue(text.isEmpty(ottenuto));
+        assertEquals(ottenuto, previsto);
+
+        previsto = "{{Divisione amministrativa";
+        ottenuto = service.leggeTmpl(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        System.out.println("7 - Legge un template amministrativo");
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+
+        sorgente = "Guido Rossi";
+        sorgente2 = "Bio";
+        previsto = "{{Bio";
+        ottenuto = service.leggeTmpl(sorgente, sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        System.out.println(VUOTA);
+        System.out.println(VUOTA);
+        System.out.println("7 - Legge un template bio");
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+    }
 
     //    @Test
     @Order(5)

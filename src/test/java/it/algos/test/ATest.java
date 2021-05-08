@@ -142,6 +142,9 @@ public abstract class ATest {
     protected AUtilityService utilityService;
 
     @InjectMocks
+    protected AHtmlService html;
+
+    @InjectMocks
     protected PreferenzaService preferenzaService;
 
     protected Logger adminLogger;
@@ -190,6 +193,11 @@ public abstract class ATest {
      * The Ottenuto.
      */
     protected String ottenuto;
+
+    /**
+     * The Ottenuto.
+     */
+    protected String ottenuto2;
 
     /**
      * The Sorgente classe.
@@ -243,11 +251,11 @@ public abstract class ATest {
 
     protected Integer[] ottenutoInteroMatrice;
 
-    protected Map mappaSorgente;
+    protected Map<String, String> mappaSorgente;
 
-    protected Map mappaPrevista;
+    protected Map<String, String> mappaPrevista;
 
-    protected Map mappaOttenuta;
+    protected Map<String, String> mappaOttenuta;
 
     protected String tag;
 
@@ -346,6 +354,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(utilityService);
         Assertions.assertNotNull(utilityService);
 
+        MockitoAnnotations.initMocks(html);
+        Assertions.assertNotNull(html);
+
         MockitoAnnotations.initMocks(preferenzaService);
         Assertions.assertNotNull(preferenzaService);
 
@@ -370,6 +381,7 @@ public abstract class ATest {
         wiki.text = text;
         wiki.web = web;
         wiki.logger = logger;
+        wiki.html = html;
         file.text = text;
         file.array = array;
         file.logger = logger;
@@ -381,6 +393,7 @@ public abstract class ATest {
         classService.annotation = annotation;
         preferenzaService.mongo = mongo;
         utilityService.text = text;
+        html.text = text;
     }
 
 

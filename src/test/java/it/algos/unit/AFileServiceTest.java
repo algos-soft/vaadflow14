@@ -1578,6 +1578,11 @@ public class AFileServiceTest extends ATest {
         previsto = "Stato";
         ottenuto = file.estraeClasseFinale(sorgente);
         assertEquals(previsto, ottenuto);
+
+        sorgente = "/Users/gac/Documents/IdeaProjects/untitled/";
+        previsto = "untitled";
+        ottenuto = file.estraeClasseFinale(sorgente);
+        assertEquals(previsto, ottenuto);
     }
 
     @Test

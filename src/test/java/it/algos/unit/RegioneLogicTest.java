@@ -112,7 +112,7 @@ public class RegioneLogicTest extends ATest {
         if (parti != null && parti.length > 0) {
             listaAlfaDue = new ArrayList<>();
             for (String riga : parti) {
-                riga = text.estrae(riga, QUADRE_INI, QUADRE_END);
+                riga = text.estrae(riga, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
                 riga = text.levaTestoPrimaDi(riga, PIPE);
                 listaAlfaDue.add(riga);
             }

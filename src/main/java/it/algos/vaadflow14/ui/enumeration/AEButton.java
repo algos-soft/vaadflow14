@@ -30,12 +30,12 @@ public enum AEButton implements AIButton {
     searchDialog("Cerca...", VaadinIcon.SEARCH, "secondary", AEAction.searchDialog, true, "Apre un dialogo di ricerca", "search", Key.KEY_F, KeyModifier.CONTROL),
     export("Export", VaadinIcon.DOWNLOAD, "error", AEAction.export, true, "Esporta la lista", "cross", null, null),
     wiki("Wiki", VaadinIcon.GLOBE_WIRE, "secondary", AEAction.showWiki, true, "Apre una pagina di Wikipedia", "cross", Key.KEY_R, KeyModifier.CONTROL),
-    download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross", Key.KEY_R, null),
-    upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross", Key.KEY_R, null),
+    download("Download", VaadinIcon.DOWNLOAD, "primary", AEAction.download, true, "Download di una pagina", "cross"),
+    upload("Upload", VaadinIcon.UPLOAD, "error", AEAction.upload, true, "Upload di una pagina", "cross"),
 
     //--Form
     resetForm("Reset", VaadinIcon.REFRESH, "secondary", AEAction.resetForm, true, "Ripristina tutte le properties della scheda", "cross", Key.KEY_R, KeyModifier.CONTROL),
-    back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left", Key.ESCAPE, null),
+    back("Back", VaadinIcon.ARROW_BACKWARD, "secondary", AEAction.back, true, "Torna indietro", "arrow-left"),
     annulla("Annulla", VaadinIcon.ARROW_LEFT, "primary", AEAction.annulla, true, "Annulla l' operazione", "arrow-left", Key.ESCAPE, null),
     delete("Delete", VaadinIcon.CLOSE, "error", AEAction.delete, true, "Cancella la scheda", "cross", null, null),
     conferma("Conferma", VaadinIcon.CHECK, "secondary", AEAction.conferma, true, "Conferma l' operazione", "checkmark", Key.KEY_S, KeyModifier.CONTROL),

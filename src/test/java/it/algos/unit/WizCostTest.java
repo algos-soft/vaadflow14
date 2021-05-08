@@ -25,8 +25,8 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("WizCostTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("Test di controllo sulle costanti AEWizCost, in parte tramite WizService")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WizCostTest extends ATest {
 
@@ -196,8 +196,67 @@ public class WizCostTest extends ATest {
 
 
     @Test
-    @Order(47)
-    @DisplayName("4 - reset")
+    @Order(12)
+    @DisplayName("12 - All tipo AETypeFile.nome")
+    void getNome() {
+        listaWiz = service.getNome();
+        print(AEWizCopy.nome.name(), listaWiz);
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("13 - All tipo AETypeFile.file")
+    void getFile() {
+        listaWiz = service.getFile();
+        print(AEWizCopy.file.name(), listaWiz);
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("14 - All tipo AETypeFile.source")
+    void getSource() {
+        listaWiz = service.getSource();
+        print(AEWizCopy.source.name(), listaWiz);
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("15 - All tipo AETypeFile.dir")
+    void getDir() {
+        listaWiz = service.getDir();
+        print(AEWizCopy.dir.name(), listaWiz);
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("16 - All tipo AETypeFile.path")
+    void getPath() {
+        listaWiz = service.getPath();
+        print(AEWizCopy.path.name(), listaWiz);
+    }
+
+
+
+    @Test
+    @Order(17)
+    @DisplayName("17 - getValide")
+    void getValorizzate() {
+        listaWiz = service.getHannoValore();
+        print("Costanti che hanno un valore valido tra quelle che dovrebbero averlo", listaWiz);
+    }
+
+
+    @Test
+    @Order(18)
+    @DisplayName("18 - getVuote")
+    void getVuote() {
+        listaWiz = service.getVuote();
+        print("Costanti a cui manca un valore indispensabile", listaWiz);
+    }
+
+    @Test
+    @Order(19)
+    @DisplayName("19 - reset")
     void reset() {
         previstoBooleano = false;
         previsto = VALORE_MANCANTE;
@@ -227,122 +286,12 @@ public class WizCostTest extends ATest {
 
 
     @Test
-    @Order(77)
-    @DisplayName("7 - getNecessitanoValore")
+    @Order(20)
+    @DisplayName("20 - getNecessitanoValore")
     void getNecessitanoValore() {
         listaWiz = service.getNecessitanoInserimentoValore();
         print("Costanti che hanno bisogno di un valore in runtime", listaWiz);
     }
-
-    @Test
-    @Order(87)
-    @DisplayName("8 - All tipo AETypeFile.nome")
-    void getNome() {
-        listaWiz = service.getNome();
-        print(AEWizCopy.nome.name(), listaWiz);
-    }
-
-    @Test
-    @Order(99)
-    @DisplayName("9 - All tipo AETypeFile.file")
-    void getFile() {
-        //        listaWiz = service.getFile();
-        //        print(AEWizCopy.file.name(), listaWiz);
-    }
-
-    @Test
-    @Order(109)
-    @DisplayName("10 - All tipo AETypeFile.source")
-    void getSource() {
-        //        listaWiz = service.getSource();
-        //        print(AEWizCopy.source.name(), listaWiz);
-    }
-
-    @Test
-    @Order(119)
-    @DisplayName("11 - All tipo AETypeFile.dir")
-    void getDir() {
-        //        listaWiz = service.getDir();
-        //        print(AEWizCopy.dir.name(), listaWiz);
-    }
-
-    @Test
-    @Order(129)
-    @DisplayName("12 - All tipo AETypeFile.path")
-    void getPath() {
-        listaWiz = service.getPath();
-        print(AEWizCopy.path.name(), listaWiz);
-    }
-
-    //    @Test
-    //    @Order(13)
-    //    @DisplayName("13 - getNewProject")
-    //    void getNewProject() {
-    //        listaWiz = service.getNewProject();
-    //        print("Soluzioni possibili (nel dialogo) per un nuovo progetto", listaWiz);
-    //    }
-    //
-    //    @Test
-    //    @Order(14)
-    //    @DisplayName("14 - getUpdateProject")
-    //    void getUpdateProject() {
-    //        listaWiz = service.getUpdateProject();
-    //        print("Soluzioni possibili (nel dialogo) per un Update del progetto", listaWiz);
-    //    }
-    //
-    //    @Test
-    //    @Order(15)
-    //    @DisplayName("15 - getNewUpdateProject")
-    //    void getNewUpdateProject() {
-    //        listaWiz = service.getNewUpdateProject();
-    //        print("Soluzioni possibili (nel dialogo) per un progetto sia nuovo sia update", listaWiz);
-    //    }
-
-
-    @Test
-    @Order(16)
-    @DisplayName("16 - getValide")
-    void getValorizzate() {
-        listaWiz = service.getHannoValore();
-        print("Costanti che hanno un valore valido tra quelle che dovrebbero averlo", listaWiz);
-    }
-
-
-    @Test
-    @Order(17)
-    @DisplayName("17 - getVuote")
-    void getVuote() {
-        listaWiz = service.getVuote();
-        print("Costanti a cui manca un valore indispensabile", listaWiz);
-    }
-
-    @Test
-    @Order(99)
-    @DisplayName("99 - untitled")
-    void check() {
-        String target = "/Users/gac/Documents/IdeaProjects/untitled/";
-        int len = target.length();
-        int pos = 0;
-        previsto = "untitled";
-
-        target = target.trim();
-        if (target.contains(FlowCost.SLASH)) {
-            target = target.substring(0, target.length() - 1);
-            pos = target.lastIndexOf(FlowCost.SLASH);
-            pos = pos + 1;
-            target = target.substring(pos);
-        }
-        ottenuto = target;
-        assertEquals(previsto, ottenuto);
-    }
-
-    //    @Test
-    //    @Order(19)
-    //    @DisplayName("19 - getVuoteProject")
-    //    void getVuoteProject() {
-    //        listaWiz = AEWizCost.getVuoteProject();
-    //        print("Quelle di project a cui manca un valore da inserire", listaWiz);
-    //    }
 
 
     private void printAll(String titolo, List<AEWizCost> lista) {
