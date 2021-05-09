@@ -3,7 +3,7 @@ package it.algos.unit;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.service.AFileService;
 import it.algos.vaadflow14.backend.service.AResourceService;
-import it.algos.vaadflow14.backend.service.AWikiService;
+import it.algos.vaadflow14.wiki.AWikiUserService;
 import it.algos.vaadflow14.backend.wrapper.WrapDueStringhe;
 import it.algos.vaadflow14.backend.wrapper.WrapTreStringhe;
 import org.junit.jupiter.api.*;
@@ -39,7 +39,7 @@ public class RegioneLogicTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AWikiService service;
+    AWikiUserService service;
 
     @InjectMocks
     AResourceService resource;
@@ -183,7 +183,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = service.getRegioni(sorgente);
+                listaWrap = geografic.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -211,7 +211,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = service.getRegioni(sorgente);
+                listaWrap = geografic.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());

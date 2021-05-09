@@ -2,8 +2,9 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wiki.*;
+import org.json.simple.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.*;
@@ -25,15 +26,21 @@ import java.util.*;
 @Tag("testAllValido")
 @DisplayName("Test di controllo per i collegamenti base di wikipedia")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AWikiServiceTest extends ATest {
+public class WikiUserServiceTest extends ATest {
 
     public static final String PAGINA_PIOZZANO = "Piozzano";
+
+    public static final String PAGINA_TEST = "Utente:Gac/T17";
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AWikiService service;
+    AWikiUserService service;
+
+    private int cicli;
+
+    private int caratteriVisibili;
 
     private List<List<String>> listaGrezza;
 
@@ -60,6 +67,9 @@ public class AWikiServiceTest extends ATest {
         service.array = array;
         service.web = web;
         service.html = html;
+
+        cicli = 1;
+        caratteriVisibili = 80;
     }
 
 
@@ -81,39 +91,180 @@ public class AWikiServiceTest extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - legge testo grezzo html")
+    @DisplayName("1 - legge (come user) il testo grezzo html di una pagina wiki")
     public void getSorgente() {
         sorgente = PAGINA_PIOZZANO;
         previsto = "<!DOCTYPE html><html class=\"client-nojs\" lang=\"it\" dir=\"ltr\"><head><meta charset=\"UTF-8\"/><title>Piozzano - Wikipedia</title>";
         previsto2 = ";});</script></body></html>";
 
-        ottenuto = service.getSorgente(sorgente);
+        for (int k = 0; k < cicli; k++) {
+            ottenuto = service.getSorgente(sorgente);
+        }
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("1 - Legge il testo grezzo della pagina html. Non lo faccio vedere perché troppo lungo");
+        System.out.println("1 - Legge il testo grezzo della pagina html.");
+        System.out.println("1 - Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("1 - Sorgente restituito in formato html");
+        System.out.println(String.format("1 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, caratteriVisibili));
     }
 
 
     @Test
     @Order(2)
-    @DisplayName("2 - legge testo wiki")
+    @DisplayName("2 - legge (come user) il testo visibile/leggibile di una pagina wiki")
     public void legge() {
         sorgente = PAGINA_PIOZZANO;
         previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
         previsto2 = "[[Categoria:Piozzano| ]]";
 
-        ottenuto = service.legge(sorgente);
+        for (int k = 0; k < cicli; k++) {
+            ottenuto = service.legge(sorgente);
+        }
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("2 - Legge il testo wiki della pagina. Non lo faccio vedere perché troppo lungo");
+        System.out.println("2 - Legge il testo wiki della pagina wiki.");
+        System.out.println("2 - Usa le API base SENZA loggarsi.");
+        System.out.println("2 - Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("2 - Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("2 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, caratteriVisibili));
     }
 
 
     @Test
     @Order(3)
-    @DisplayName("3 - legge una table wiki")
+    @DisplayName("3 - legge la risposta in formato JSON ad una query su API Mediawiki")
+    public void leggeJson() {
+        sorgente = PAGINA_TEST;
+        previsto = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":8956310,\"ns\":2,\"title\":\"Utente:Gac/T17\"";
+
+        for (int k = 0; k < cicli; k++) {
+            ottenuto = service.leggeJson(sorgente);
+        }
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        System.out.println("3 - Legge una pagina wiki con una query su API Mediawiki");
+        System.out.println("3 - Sorgente restituito in formato JSON");
+        System.out.println(String.format("3 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - estrae un array di 'pages' da una query")
+    public void leggeJsonArray() {
+        sorgente = PAGINA_TEST;
+        JSONArray jsonArray = null;
+        previstoIntero = 1;
+
+        ottenuto = service.leggeJson(sorgente);
+        jsonArray = service.getArrayPagine(ottenuto);
+        assertNotNull(jsonArray);
+        assertEquals(previstoIntero, jsonArray.size());
+        System.out.println("4 - legge il contenuto in formato JSON di una pagina wiki");
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - estrae un singolo oggetto JSON da una query")
+    public void getObjectPage() {
+        sorgente = PAGINA_TEST;
+        JSONObject jsonObject = null;
+        previstoIntero = 1;
+
+        ottenuto = service.leggeJson(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        jsonObject = service.getObjectPage(ottenuto);
+        assertNotNull(jsonObject);
+        System.out.println("5 - estrae un singolo oggetto JSON da una query");
+        System.out.println(VUOTA);
+        System.out.println(jsonObject);
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("6 - crea una mappa da un singolo oggetto JSON")
+    public void getMappaJSON() {
+        sorgente = PAGINA_TEST;
+        JSONObject jsonObject = null;
+        previstoIntero = 19;
+        sorgente2 = "content";
+
+        ottenuto = service.leggeJson(sorgente);
+        jsonObject = service.getObjectPage(ottenuto);
+        mappa = service.getMappaJSON(jsonObject);
+        assertNotNull(mappa);
+        assertEquals(previstoIntero, mappa.size());
+        ottenuto = (String) mappa.get(sorgente2);
+        assertTrue(text.isValid(ottenuto));
+        printMappaPar(mappa);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - crea una wikiPage da una mappa")
+    public void getWikiPageFromMappa() {
+        sorgente = PAGINA_TEST;
+        JSONObject jsonObject = null;
+        WikiPage wikiPage;
+        sorgente2 = "content";
+
+        ottenuto = service.leggeJson(sorgente);
+        jsonObject = service.getObjectPage(ottenuto);
+        mappa = service.getMappaJSON(jsonObject);
+        assertNotNull(mappa);
+        wikiPage = service.getWikiPageFromMappa(mappa);
+        assertNotNull(wikiPage);
+        ottenuto = wikiPage.getContent();
+        assertTrue(text.isValid(ottenuto));
+        this.printWikiPage(wikiPage);
+    }
+
+
+    @Test
+    @Order(8)
+    @DisplayName("8 - crea una wikiPage in risposta ad una query")
+    public void getWikiPageFromTitle() {
+        sorgente = PAGINA_TEST;
+        WikiPage wikiPage;
+        sorgente2 = "content";
+
+        wikiPage = service.getWikiPageFromTitle(sorgente);
+        assertNotNull(wikiPage);
+        ottenuto = wikiPage.getContent();
+        assertTrue(text.isValid(ottenuto));
+        this.printWikiPage(wikiPage);
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("9 - Legge il testo wiki della pagina wiki passando da Page")
+    public void getContent() {
+        sorgente = PAGINA_TEST;
+
+        ottenuto = service.getContent(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        System.out.println("9 - Legge il testo wiki della pagina wiki.");
+        System.out.println("9 - Usa le API base SENZA loggarsi.");
+        System.out.println("9 - Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("9 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("10 - legge (come user) una table wiki")
     public void leggeTable() {
         sorgente = "ISO 3166-2:IT";
         previsto = "{| class=\"wikitable sortable\"";
@@ -145,8 +296,8 @@ public class AWikiServiceTest extends ATest {
     }
 
     @Test
-    @Order(4)
-    @DisplayName("4 - legge un modulo")
+    @Order(11)
+    @DisplayName("11 - legge (come user) un modulo")
     public void leggeModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         previsto = "{\n[\"abate\"] =";
@@ -161,8 +312,8 @@ public class AWikiServiceTest extends ATest {
 
 
     @Test
-    @Order(5)
-    @DisplayName("5 - legge la mappa del modulo Attività")
+    @Order(12)
+    @DisplayName("12 - legge (come user) la mappa del modulo Attività")
     public void leggeMappaModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         sorgente2 = "abate";
@@ -182,8 +333,8 @@ public class AWikiServiceTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - legge la mappa del modulo Attività/Genere")
+    @Order(13)
+    @DisplayName("13 - legge (come user) la mappa del modulo Attività/Genere")
     public void leggeMappaModulo2() {
         sorgente = "Modulo:Bio/Plurale_attività_genere";
         sorgente2 = "abate";
@@ -198,8 +349,8 @@ public class AWikiServiceTest extends ATest {
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - legge un template")
+    @Order(14)
+    @DisplayName("14 - legge (come user) un template")
     public void leggeTmpl() {
         sorgente = PAGINA_PIOZZANO;
         previsto = VUOTA;
@@ -236,16 +387,16 @@ public class AWikiServiceTest extends ATest {
 
     //    @Test
     @Order(5)
-    @DisplayName("5 - legge un template")
+    @DisplayName("5 - legge (come user) un template")
     public void getTemplateBandierina() {
         sorgente = "ES-AN";
-        dueStringhe = service.getTemplateBandierina(sorgente);
+        dueStringhe = geografic.getTemplateBandierina(sorgente);
         assertNotNull(dueStringhe);
         System.out.println(VUOTA);
         System.out.println(sorgente + FORWARD + dueStringhe.getPrima() + SEP + dueStringhe.getSeconda());
 
         sorgente = "{{ES-CB}}";
-        dueStringhe = service.getTemplateBandierina(sorgente);
+        dueStringhe = geografic.getTemplateBandierina(sorgente);
         assertNotNull(dueStringhe);
         System.out.println(VUOTA);
         System.out.println(sorgente + FORWARD + dueStringhe.getPrima() + SEP + dueStringhe.getSeconda());
@@ -254,7 +405,7 @@ public class AWikiServiceTest extends ATest {
 
     //    @Test
     @Order(5)
-    @DisplayName("5 - legge una colonna")
+    @DisplayName("5 - legge (come user) una colonna")
     public void getColonna() {
         sorgente = "ISO_3166-2:ES";
         listaStr = service.getColonna(sorgente, 1, 2, 2);
@@ -283,7 +434,7 @@ public class AWikiServiceTest extends ATest {
         listaStr = service.getColonna(sorgente, 1, 2, 2);
         assertNotNull(listaStr);
         assertEquals(previstoIntero, listaStr.size());
-        listaWrap = service.getTemplateList(listaStr);
+        listaWrap = geografic.getTemplateList(listaStr);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -349,7 +500,7 @@ public class AWikiServiceTest extends ATest {
 
         //--province
         previstoIntero = 14;
-        listaWrapTre = service.getTemplateList(sorgente, 2, 3, 1, 3);
+        listaWrapTre = geografic.getTemplateList(sorgente, 2, 3, 1, 3);
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
         System.out.println(VUOTA);
@@ -366,7 +517,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableFrancia() {
         sorgente = "ISO_3166-2:FR";
         previstoIntero = 13;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -397,7 +548,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableSvizzera() {
         sorgente = "ISO_3166-2:CH";
         previstoIntero = 26;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -412,7 +563,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableAustria() {
         sorgente = "ISO_3166-2:AT";
         previstoIntero = 9;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -427,7 +578,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableGermania() {
         sorgente = "ISO_3166-2:DE";
         previstoIntero = 16;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -442,7 +593,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableSpagna() {
         sorgente = "ISO_3166-2:ES";
         previstoIntero = 17;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -487,7 +638,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableBelgio() {
         sorgente = "ISO_3166-2:BE";
         previstoIntero = 3;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -502,7 +653,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableOlanda() {
         sorgente = "ISO_3166-2:NL";
         previstoIntero = 12;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 3);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -573,7 +724,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableCechia() {
         sorgente = "ISO_3166-2:CZ";
         previstoIntero = 14;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 3);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 3);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -603,7 +754,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableUngheria() {
         sorgente = "ISO_3166-2:HU";
         previstoIntero = 19;
-        listaWrap = service.getTemplateList(sorgente, 1, 2, 2);
+        listaWrap = geografic.getTemplateList(sorgente, 1, 2, 2);
         assertNotNull(listaWrap);
         assertEquals(previstoIntero, listaWrap.size());
         System.out.println(VUOTA);
@@ -690,7 +841,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:FI";
         previstoIntero = 19 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -707,7 +858,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:AZ";
         previstoIntero = 77 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -724,7 +875,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:BZ";
         previstoIntero = 6 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -741,7 +892,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:GT";
         previstoIntero = 22 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -758,7 +909,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:GW";
         previstoIntero = 9 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -775,7 +926,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:SI";
         previstoIntero = 211 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -792,7 +943,7 @@ public class AWikiServiceTest extends ATest {
         sorgente = "ISO_3166-2:KG";
         previstoIntero = 8 + 1;
         try {
-            listaWrap = service.getRegioni(sorgente);
+            listaWrap = geografic.getRegioni(sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(listaWrap);
@@ -806,7 +957,7 @@ public class AWikiServiceTest extends ATest {
     @Order(40)
     @DisplayName("40 - legge le regioni dei primi 50 stati")
     public void readStati1() {
-        List<List<String>> listaStati = service.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(0, 50);
         readStati(listaStati);
@@ -816,7 +967,7 @@ public class AWikiServiceTest extends ATest {
     @Order(41)
     @DisplayName("41 - legge le regioni degli stati 50-100")
     public void readStati2() {
-        List<List<String>> listaStati = service.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(50, 100);
         readStati(listaStati);
@@ -826,7 +977,7 @@ public class AWikiServiceTest extends ATest {
     @Order(42)
     @DisplayName("42 - legge le regioni degli stati 100-150")
     public void readStati3() {
-        List<List<String>> listaStati = service.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(100, 150);
         readStati(listaStati);
@@ -836,7 +987,7 @@ public class AWikiServiceTest extends ATest {
     @Order(43)
     @DisplayName("43 - legge le regioni degli stati 150-200")
     public void readStati4() {
-        List<List<String>> listaStati = service.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(150, 200);
         readStati(listaStati);
@@ -846,7 +997,7 @@ public class AWikiServiceTest extends ATest {
     @Order(44)
     @DisplayName("44 - legge le regioni degli stati 200-250")
     public void readStati5() {
-        List<List<String>> listaStati = service.getStati();
+        List<List<String>> listaStati = geografic.getStati();
         assertNotNull(listaStati);
         listaStati = listaStati.subList(200, listaStati.size() - 1);
         readStati(listaStati);
@@ -858,7 +1009,7 @@ public class AWikiServiceTest extends ATest {
         List<String> valide = new ArrayList<>();
         List<String> errate = new ArrayList<>();
 
-        System.out.println("Legge le regioni di " + listaStati.size() + " stati (" + AWikiService.PAGINA_ISO_1 + ")");
+        System.out.println("Legge le regioni di " + listaStati.size() + " stati (" + AWikiUserService.PAGINA_ISO_1 + ")");
         System.out.println(VUOTA);
         System.out.println("Valide                    Errate");
         System.out.println("********************************");
@@ -866,7 +1017,7 @@ public class AWikiServiceTest extends ATest {
             nome = lista.get(0);
             sorgente = tag + lista.get(3);
             try {
-                listaWrap = service.getRegioni(sorgente);
+                listaWrap = geografic.getRegioni(sorgente);
                 if (listaWrap != null && listaWrap.size() > 0) {
                     valide.add(nome);
                     System.out.println(nome);
@@ -887,7 +1038,7 @@ public class AWikiServiceTest extends ATest {
     public void getTableProvinceItaliane() {
         previstoIntero = 107;
 
-        listaWrapTre = service.getProvince();
+        listaWrapTre = geografic.getProvince();
 
         assertNotNull(listaWrapTre);
         assertEquals(previstoIntero, listaWrapTre.size());
@@ -926,6 +1077,37 @@ public class AWikiServiceTest extends ATest {
         }
     }
 
+    private void printMappaPar(Map<String, Object> mappa) {
+        System.out.println("11 - crea una mappa da un singolo oggetto BJSON");
+        System.out.println(VUOTA);
+        for (String key : mappa.keySet()) {
+            System.out.print(key);
+            System.out.print(SEP);
+            System.out.println(mappa.get(key));
+        }
+    }
+
+
+    private void printWikiPage(WikiPage wikiPage) {
+        System.out.println("WikiPage");
+        System.out.println(VUOTA);
+        System.out.println("pageid" + SEP + wikiPage.getPageid());
+        System.out.println("ns" + SEP + wikiPage.getNs());
+        System.out.println("title" + SEP + wikiPage.getTitle());
+        System.out.println("pagelanguage" + SEP + wikiPage.getPagelanguage());
+        System.out.println("pagelanguagehtmlcode" + SEP + wikiPage.getPagelanguagehtmlcode());
+        System.out.println("pagelanguagedir" + SEP + wikiPage.getPagelanguagedir());
+        System.out.println("touched" + SEP + wikiPage.getTouched());
+        System.out.println("length" + SEP + wikiPage.getLength());
+        System.out.println("revid" + SEP + wikiPage.getRevid());
+        System.out.println("parentid" + SEP + wikiPage.getParentid());
+        System.out.println("user" + SEP + wikiPage.getUser());
+        System.out.println("userid" + SEP + wikiPage.getUserid());
+        System.out.println("timestamp" + SEP + wikiPage.getTimestamp());
+        System.out.println("size" + SEP + wikiPage.getSize());
+        System.out.println("comment" + SEP + wikiPage.getComment());
+        System.out.println("content" + SEP + wikiPage.getContent());
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>

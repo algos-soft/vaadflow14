@@ -23,8 +23,8 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("UtilityServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("Test di utility varie")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UtilityServiceTest extends ATest {
 
@@ -140,8 +140,13 @@ public class UtilityServiceTest extends ATest {
     void sortVaadinToSpring2() {
         List<QuerySortOrder> sortVaadinList = new ArrayList<>();
 
-        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>)null);
+        previstoIntero = 1;
+        previsto = "_id: ASC";
+        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>) null);
         Assert.assertNotNull(sortSpring);
+        Assert.assertEquals(previstoIntero, sortSpring.stream().count());
+        ottenuto = sortSpring.toString();
+        Assert.assertEquals(previsto, ottenuto);
 
         sortVaadin = new QuerySortOrder(NAME_NOME, SortDirection.ASCENDING);
         sortVaadinList.add(sortVaadin);

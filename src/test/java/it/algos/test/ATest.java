@@ -2,6 +2,7 @@ package it.algos.test;
 
 import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -10,6 +11,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wiki.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.slf4j.*;
@@ -28,9 +30,8 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:18
- *
- * @AIScript(sovraScrivibile = false)
  */
+@AIScript(sovraScrivibile = false)
 public abstract class ATest {
 
     /**
@@ -124,7 +125,10 @@ public abstract class ATest {
     protected AWebService web;
 
     @InjectMocks
-    protected AWikiService wiki;
+    protected AWikiUserService wikiUser;
+
+    @InjectMocks
+    protected AGeograficService geografic;
 
     @InjectMocks
     protected AFileService file;
@@ -251,6 +255,8 @@ public abstract class ATest {
 
     protected Integer[] ottenutoInteroMatrice;
 
+    protected Map<String, Object> mappa;
+
     protected Map<String, String> mappaSorgente;
 
     protected Map<String, String> mappaPrevista;
@@ -277,7 +283,6 @@ public abstract class ATest {
 
     protected AEntity entityBean;
 
-
     protected Query query;
 
     protected BasicDBObject objectQuery;
@@ -301,6 +306,8 @@ public abstract class ATest {
     protected byte[] bytes;
 
     protected Class clazz;
+
+    protected long inizio;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -339,8 +346,11 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(web);
         Assertions.assertNotNull(web);
 
-        MockitoAnnotations.initMocks(wiki);
-        Assertions.assertNotNull(wiki);
+        MockitoAnnotations.initMocks(wikiUser);
+        Assertions.assertNotNull(wikiUser);
+
+        MockitoAnnotations.initMocks(geografic);
+        Assertions.assertNotNull(geografic);
 
         MockitoAnnotations.initMocks(file);
         Assertions.assertNotNull(file);
@@ -378,10 +388,10 @@ public abstract class ATest {
         mongo.reflection = reflection;
         web.text = text;
         web.logger = logger;
-        wiki.text = text;
-        wiki.web = web;
-        wiki.logger = logger;
-        wiki.html = html;
+        wikiUser.text = text;
+        wikiUser.web = web;
+        wikiUser.logger = logger;
+        wikiUser.html = html;
         file.text = text;
         file.array = array;
         file.logger = logger;
@@ -401,6 +411,7 @@ public abstract class ATest {
      * Qui passa ad ogni test delle sottoclassi <br>
      */
     protected void setUp() {
+        inizio = System.currentTimeMillis();
         previstoBooleano = false;
         ottenutoBooleano = false;
         sorgente = VUOTA;
@@ -425,6 +436,7 @@ public abstract class ATest {
         filtro = null;
         listaFiltri = new ArrayList<>();
         mappaFiltri = new HashMap<>();
+        mappa = new HashMap<>();
         listaBean = null;
         listaStr = null;
         listaFields = null;

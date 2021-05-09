@@ -176,7 +176,7 @@ public class AUtilityService extends AAbstractService {
             }
         }
 
-        return sortSpring;
+        return sortSpring != null ? sortSpring : Sort.by(Sort.DEFAULT_DIRECTION, FIELD_ID);
     }
 
     /**
