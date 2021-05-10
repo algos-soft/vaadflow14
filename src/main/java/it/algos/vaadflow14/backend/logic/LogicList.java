@@ -470,30 +470,7 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case searchField:
-
-                //@todo PROVVISORIO
-                logger.info(VUOTA);
-                logger.info(String.format("TextFieldSearch in modifica."));
-                int totaleRecordsDiretti = mongo.count(entityClazz);
-                logger.info(String.format("Ci sono %d records totali nella Collection", totaleRecordsDiretti));
-                int totaleRecordsProvider = this.grid.getGrid().getDataProvider().size(null);
-                logger.info(String.format("Ci sono %d records nel DataProvider PRIMA della query", totaleRecordsProvider));
-                int numeroFiltri = mappaFiltri.size();
-                logger.info(String.format("Ci sono %d filtri attivi preesistenti", numeroFiltri));
-                int numeroQuery = mongo.count(entityClazz,mappaFiltri);
-                logger.info(String.format("Una query diretta coi filtri esistenti SENZA passare da DataProvider trova %d records", numeroQuery));
-                //@todo PROVVISORIO
-
                 this.fixFiltroSearch(searchFieldValue);
-
-                //@todo PROVVISORIO
-                int numeroFiltri2 = mappaFiltri.size();
-                logger.info(String.format("Ci sono %d filtri attivi DOPO aver regolato mappaFiltri e PRIMA del refreshAll", numeroFiltri2));
-                int numeroQuery2 = mongo.count(entityClazz,mappaFiltri);
-                logger.info(String.format("Una query diretta coi filtri esistenti SENZA passare da DataProvider trova %d records", numeroQuery2));
-                logger.info(VUOTA);
-                //@todo PROVVISORIO
-
                 this.grid.getGrid().getDataProvider().refreshAll();
                 grid.fixGridHeader();
                 break;
@@ -527,39 +504,8 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case valueChanged:
-
-                //@todo PROVVISORIO
-                logger.info(VUOTA);
-                logger.info(String.format("Combo in modifica."));
-                int totaleRecordsDiretti = mongo.count(entityClazz);
-                logger.info(String.format("Ci sono %d records totali nella Collection", totaleRecordsDiretti));
-                int totaleRecordsProvider = this.grid.getGrid().getDataProvider().size(null);
-                logger.info(String.format("Ci sono %d records nel DataProvider PRIMA della query", totaleRecordsProvider));
-                int numeroFiltri = mappaFiltri.size();
-                logger.info(String.format("Ci sono %d filtri attivi preesistenti", numeroFiltri));
-                int numeroQuery = mongo.count(entityClazz,mappaFiltri);
-                logger.info(String.format("Una query diretta coi filtri esistenti SENZA passare da DataProvider trova %d records", numeroQuery));
-                //@todo PROVVISORIO
-
                 this.fixFiltroCombo(fieldName, fieldValue);
-
-                //@todo PROVVISORIO
-                int numeroFiltri2 = mappaFiltri.size();
-                logger.info(String.format("Ci sono %d filtri attivi DOPO aver regolato mappaFiltri e PRIMA del refreshAll", numeroFiltri2));
-                int numeroQuery2 = mongo.count(entityClazz,mappaFiltri);
-                logger.info(String.format("Una query diretta coi filtri esistenti SENZA passare da DataProvider trova %d records", numeroQuery2));
-                logger.info(VUOTA);
-                //@todo PROVVISORIO
-
                 this.grid.getGrid().getDataProvider().refreshAll();
-
-//                //@todo PROVVISORIO
-//                int totaleRecordsDiretti2 = mongo.count(entityClazz);
-//                int totaleRecordsProvider2 = this.grid.getGrid().getDataProvider().size(null);
-//                logger.info(String.format("Ci sono %d records nel DataProvider DOPO la query", totaleRecordsProvider2));
-//                logger.info(VUOTA);
-//                //@todo PROVVISORIO
-
                 grid.fixGridHeader();
                 break;
             default:

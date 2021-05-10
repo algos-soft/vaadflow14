@@ -437,7 +437,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("16 - Via (filtro=vi)")
     void fetch16() {
         String filtroStart = "vi";
-        AFiltro filtro = AFiltro.start(NAME_NOME, filtroStart);
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
         previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
@@ -451,7 +451,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @DisplayName("17 - Via (filtro=azz)")
     void fetch17() {
         String filtroText = "azz";
-        AFiltro filtro = AFiltro.contains(NAME_NOME, filtroText);
+        filtro = AFiltro.contains(NAME_NOME, filtroText);
         previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
         assertNotNull(listaBean);
@@ -459,30 +459,13 @@ public class AMongoServiceIntegrationTest extends ATest {
         print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroText));
     }
 
-    //    @Test
-    //    @Order(18)
-    //    @DisplayName("18 - Via (filtro=vi+co)")
-    //    void fetch18() {
-    //        AFiltro filtro = null;
-    //        String filtroStart = "vi";
-    //        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    //        mappaFiltri.put("a", filtro);
-    //        String filtroText = "co";
-    //        filtro = AFiltro.contains(NAME_NOME, filtroText);
-    //        mappaFiltri.put("b", filtro);
-    //        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-    //        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
-    //        assertNotNull(listaBean);
-    //        assertEquals(previstoIntero, listaBean.size());
-    //        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
-    //    }
 
     @Test
-    @Order(19)
-    @DisplayName("19 - Via (filtro=p) con mappa")
-    void fetch19() {
+    @Order(18)
+    @DisplayName("18 - Via (filtro=p) con mappa")
+    void fetch18() {
         String filtroStart = "p";
-        AFiltro filtro = AFiltro.start(NAME_NOME, filtroStart);
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
         mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
         previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
         listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
@@ -490,6 +473,47 @@ public class AMongoServiceIntegrationTest extends ATest {
         assertEquals(previstoIntero, listaBean.size());
         print(listaBean, String.format("%s records di Via con (filtro=%s) con mappa", listaBean.size(), filtroStart));
     }
+
+
+    //    @Test
+    @Order(19)
+    @DisplayName("19 - Via (filtro=a+co)")
+    void fetch19() {
+        AFiltro filtro = null;
+        String filtroStart = "23";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri.put("a", filtro);
+        String filtroText = "co";
+        AFiltro filtro2 = AFiltro.contains(NAME_NOME, filtroText);
+        mappaFiltri.put("b", filtro2);
+        previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
+        listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - Via (filtro=23+III secolo)")
+    void fetch202() {
+        Secolo unSecolo = secoloService.findByKey("III secolo");
+        assertNotNull(unSecolo);
+        String fieldName = "secolo";
+        String filtroStart = "23";
+        filtro = AFiltro.start(NAME_ANNO, filtroStart);
+        mappaFiltri.put(NAME_ANNO, filtro);
+
+        previstoIntero = 10;
+        AFiltro filtro2 = AFiltro.ugualeObj(fieldName, unSecolo);
+        mappaFiltri.put(fieldName, filtro2);
+        listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
+        assertNotNull(listaBean);
+        ottenutoIntero = listaBean.size();
+        assertEquals(previstoIntero, ottenutoIntero);
+        System.out.println(String.format("Ci sono %s entities nella collezione %s con mappaFiltri %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
+    }
+
 
     @Test
     @Order(3)
@@ -1258,7 +1282,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(22)
     @DisplayName("22 - find next")
     void findNext() {
@@ -1270,7 +1294,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(23)
     @DisplayName("23 - find next ordered")
     void findNext2() {
@@ -1295,7 +1319,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
+    //    @Test
     @Order(24)
     @DisplayName("24 - find previous")
     void findPrevious() {
@@ -1306,7 +1330,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         assertEquals(previsto, statoOttenuto.id);
     }
 
-    @Test
+    //    @Test
     @Order(25)
     @DisplayName("25 - find previous ordered")
     void findPrevious2() {

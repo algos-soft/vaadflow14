@@ -685,15 +685,16 @@ public class AMongoService<capture> extends AAbstractService {
                 else {
                     //--For multiple criteria on the same field, uses a “comma” to combine them.
                     if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                        criteriaQuery.andOperator(criteriaFiltro);
+                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
                     }
                     else {
-                        criteriaQuery.andOperator(criteriaFiltro);
+                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
                     }
                 }
             }
             query.addCriteria(criteriaQuery);
         }
+
         if (sortSpring != null) {
             query.with(sortSpring);
         }
