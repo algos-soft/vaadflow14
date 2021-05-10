@@ -24,9 +24,9 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test di controllo per i collegamenti base di wikipedia")
+@DisplayName("Test di controllo per i collegamenti base di wikipedia.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WikiUserServiceTest extends ATest {
+public class WikiApiService extends ATest {
 
     public static final String PAGINA_PIOZZANO = "Piozzano";
 
@@ -36,11 +36,8 @@ public class WikiUserServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AWikiUserService service;
+    AWikiApiService service;
 
-    private int cicli;
-
-    private int caratteriVisibili;
 
     private List<List<String>> listaGrezza;
 
@@ -67,9 +64,6 @@ public class WikiUserServiceTest extends ATest {
         service.array = array;
         service.web = web;
         service.html = html;
-
-        cicli = 1;
-        caratteriVisibili = 80;
     }
 
 
@@ -1009,7 +1003,7 @@ public class WikiUserServiceTest extends ATest {
         List<String> valide = new ArrayList<>();
         List<String> errate = new ArrayList<>();
 
-        System.out.println("Legge le regioni di " + listaStati.size() + " stati (" + AWikiUserService.PAGINA_ISO_1 + ")");
+        System.out.println("Legge le regioni di " + listaStati.size() + " stati (" + AWikiApiService.PAGINA_ISO_1 + ")");
         System.out.println(VUOTA);
         System.out.println("Valide                    Errate");
         System.out.println("********************************");

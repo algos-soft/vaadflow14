@@ -30,6 +30,8 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 21:18
+ * <p>
+ * Classe astratta per i test <br>
  */
 @AIScript(sovraScrivibile = false)
 public abstract class ATest {
@@ -125,7 +127,7 @@ public abstract class ATest {
     protected AWebService web;
 
     @InjectMocks
-    protected AWikiUserService wikiUser;
+    protected AWikiApiService wikiApi;
 
     @InjectMocks
     protected AGeograficService geografic;
@@ -309,6 +311,10 @@ public abstract class ATest {
 
     protected long inizio;
 
+    protected int cicli;
+
+    protected int caratteriVisibili;
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
@@ -346,8 +352,8 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(web);
         Assertions.assertNotNull(web);
 
-        MockitoAnnotations.initMocks(wikiUser);
-        Assertions.assertNotNull(wikiUser);
+        MockitoAnnotations.initMocks(wikiApi);
+        Assertions.assertNotNull(wikiApi);
 
         MockitoAnnotations.initMocks(geografic);
         Assertions.assertNotNull(geografic);
@@ -388,10 +394,10 @@ public abstract class ATest {
         mongo.reflection = reflection;
         web.text = text;
         web.logger = logger;
-        wikiUser.text = text;
-        wikiUser.web = web;
-        wikiUser.logger = logger;
-        wikiUser.html = html;
+        wikiApi.text = text;
+        wikiApi.web = web;
+        wikiApi.logger = logger;
+        wikiApi.html = html;
         file.text = text;
         file.array = array;
         file.logger = logger;
@@ -412,6 +418,8 @@ public abstract class ATest {
      */
     protected void setUp() {
         inizio = System.currentTimeMillis();
+        cicli = 1;
+        caratteriVisibili = 80;
         previstoBooleano = false;
         ottenutoBooleano = false;
         sorgente = VUOTA;
