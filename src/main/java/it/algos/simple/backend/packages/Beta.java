@@ -38,7 +38,7 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Beta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
-@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette", headerAlert = "Esempio di valori booleani, rappresentati in diversi modi")
+@AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette", spanHeader = "Esempio di valori booleani, rappresentati in diversi modi")
 @AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette")
 public class Beta extends AEntity {
 

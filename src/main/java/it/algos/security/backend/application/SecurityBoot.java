@@ -63,7 +63,7 @@ public class SecurityBoot extends FlowBoot {
 
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = true;
-        FlowVar.projectName = "Security";
+        FlowVar.projectNameUpper = "Security";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow con SpringSecurity ma senza companies";
         FlowVar.projectVersion = 0.73;
         FlowVar.versionDate = LocalDate.of(2020, 8, 21);

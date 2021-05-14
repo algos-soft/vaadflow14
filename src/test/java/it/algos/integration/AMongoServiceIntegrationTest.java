@@ -475,7 +475,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     }
 
 
-    //    @Test
+    @Test
     @Order(19)
     @DisplayName("19 - Via (filtro=a+co)")
     void fetch19() {

@@ -44,7 +44,7 @@ import java.time.LocalTime;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Gamma", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(fields = "code,mese,secolo,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette", usaRowIndex = true, headerAlert = "Esempio di date e tempi, rappresentati in diversi modi")
+@AIList(fields = "code,mese,secolo,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette", usaRowIndex = true, spanHeader = "Esempio di date e tempi, rappresentati in diversi modi")
 @AIForm(fields = "code,mese,secolo,uno,due,tre,quattro,cinque,sei,sette,otto,nove,dieci,undici,dodici,tredici,quattordici,quindici,sedici,diciassette")
 public class Gamma extends AEntity {
 

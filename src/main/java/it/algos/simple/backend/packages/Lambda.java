@@ -34,7 +34,7 @@ import javax.validation.constraints.Size;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Lambda", keyPropertyName = "uno", usaCompany = false)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "uno")
-@AIList(fields = "uno,due,tre,quattro", headerAlert = "Validator dei textField")
+@AIList(fields = "uno,due,tre,quattro", spanHeader = "Validator dei textField")
 @AIForm(fields = "uno,due,tre,quattro")
 public class Lambda extends AEntity {
 

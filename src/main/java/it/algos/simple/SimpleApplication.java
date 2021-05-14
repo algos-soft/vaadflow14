@@ -11,6 +11,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.vaadin.artur.helpers.*;
 
 /**
  * Project vaadflow14
@@ -36,7 +37,8 @@ public class SimpleApplication extends SpringBootServletInitializer {
      * @param args command line parameters
      */
     public static void main(String[] args) {
-        SpringApplication.run(SimpleApplication.class, args);
+//        SpringApplication.run(SimpleApplication.class, args);
+        LaunchUtil.launchBrowserInDevelopmentMode(SpringApplication.run(SimpleApplication.class, args));
     }// end of SpringBoot constructor
 
 

@@ -120,26 +120,15 @@ public class FatturaLogicList extends LogicList {
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
-     *
-     * @return una lista di elementi html di tipo 'span'
      */
     @Override
-    protected List<Span> getSpanList() {
-        boolean singola = false;
-
-        //--Riga singola, oppure righe multiple
-        if (singola) {
-            return Collections.singletonList(html.getSpanVerde("Esempio verde."));
-        }
-        else {
-            List<Span> lista = new ArrayList<>();
-            lista.add(html.getSpanBlu("Esempio di label realizzato con 'span' di colore blue"));
-            lista.add(html.getSpanVerde("Scritta verde"));
-            lista.add(html.getSpanVerde("Seconda scritta verde bold", AETypeWeight.bold));
-            lista.add(html.getSpanRosso("Scritta rossa"));
-            return lista;
-        }
+    protected void fixSpanList() {
+        addSpanBlu("Esempio di label realizzato con 'span' di colore blue");
+        addSpanVerde("Scritta verde");
+        addSpanBlu("Seconda scritta verde");
+        addSpanRosso("Scritta rossa");
     }
+
 
     /**
      * Costruisce una lista di bottoni (enumeration) <br>

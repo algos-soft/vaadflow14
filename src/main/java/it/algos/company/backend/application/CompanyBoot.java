@@ -64,7 +64,7 @@ public class CompanyBoot extends FlowBoot {
 
         FlowVar.usaCompany = true;
         FlowVar.usaSecurity = true;
-        FlowVar.projectName = "Company";
+        FlowVar.projectNameUpper = "Company";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow con SpringSecurity e companies";
         FlowVar.projectVersion = 0.73;
         FlowVar.versionDate = LocalDate.of(2020, 8, 25);

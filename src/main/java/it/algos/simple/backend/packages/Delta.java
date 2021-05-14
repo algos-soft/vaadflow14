@@ -37,7 +37,7 @@ import java.time.*;
 @AIScript(sovraScrivibile = false)
 @AIEntity(recordName = "Delta", keyPropertyName = "code")
 @AIView(menuIcon = VaadinIcon.COG)
-@AIList(headerAlert = "Esempio di comboBox con e senza valori personalizzati")
+@AIList(spanHeader = "Esempio di comboBox con e senza valori personalizzati")
 @AIForm(fields = "code,secolo,via,immagine,uno,due,tre")
 public class Delta extends AEntity {
 

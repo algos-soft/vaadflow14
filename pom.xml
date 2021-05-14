@@ -27,7 +27,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.5.4</vaadin.version>
+        <vaadin.version>14.5.5</vaadin.version>
     </properties>
 
 
@@ -142,6 +142,12 @@
             <groupId>com.vaadin.componentfactory</groupId>
             <artifactId>tooltip</artifactId>
             <version>1.2.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.vaadin.artur/a-vaadin-helper -->
+        <dependency>
+            <groupId>org.vaadin.artur</groupId>
+            <artifactId>a-vaadin-helper</artifactId>
+            <version>1.6.0</version>
         </dependency>
         <!-- Vaadin -->
 

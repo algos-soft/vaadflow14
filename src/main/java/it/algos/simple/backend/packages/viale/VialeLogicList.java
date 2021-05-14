@@ -68,13 +68,11 @@ public class VialeLogicList extends LogicList {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto <br>
-     *
-     * @return una liste di 'span'
+     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected List<Span> getSpanList() {
-        return Collections.singletonList(html.getSpanVerde("Test"));
+    protected void fixSpanList() {
+        addSpanBlu("Test");
     }
 
     /**

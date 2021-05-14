@@ -76,11 +76,13 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = false;
         FlowVar.dataClazz = SimpleData.class;
-        FlowVar.projectName = "Simple";
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        FlowVar.projectNameModulo = "simple";
+        FlowVar.projectNameUpper = "Simple";
         FlowVar.projectDescrizione = "Programma di prova per testare vaadflow senza security e senza company";
         FlowVar.projectNote = "Sviluppo del modulo base in Vaadin14";
         FlowVar.usaVaadinIcon = true; //@todo Creare una preferenza e sostituirla qui
-        FlowVar.projectVersion = environment.getProperty("algos.simplex.version") != null ? Double.parseDouble(environment.getProperty("algos.simplex.version")) : 0.0;
+        FlowVar.projectVersion = environment.getProperty("algos.simple.version") != null ? Double.parseDouble(environment.getProperty("algos.simple.version")) : 0.0;
         FlowVar.preferenzeSpecificheList = Arrays.asList(AESimplePreferenza.values());
         FlowVar.bottoniSpecificiList = Arrays.asList(AESimpleButton.values());
 
