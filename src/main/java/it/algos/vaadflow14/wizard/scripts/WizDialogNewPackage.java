@@ -23,10 +23,17 @@ public class WizDialogNewPackage extends WizDialogPackage {
      * Apertura del dialogo <br>
      */
     public void open(WizRecipient wizRecipient) {
+        this.open(wizRecipient,VUOTA);
+    }
+
+    /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient, String nomeModulo) {
         AEFlag.isNewPackage.set(true);
         AEFlag.isUpdatePackage.set(false);
 
-        super.open(wizRecipient);
+        super.open(wizRecipient,nomeModulo);
     }
 
 
