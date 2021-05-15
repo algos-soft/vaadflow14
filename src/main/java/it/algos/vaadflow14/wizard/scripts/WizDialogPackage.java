@@ -16,6 +16,20 @@ public abstract class WizDialogPackage extends WizDialog {
 
 
     /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient) {
+        super.wizRecipient = wizRecipient;
+        super.isNuovoProgetto = false;
+
+        AEFlag.isProject.set(false);
+        AEFlag.isPackage.set(true);
+
+        super.inizia();
+    }
+
+
+    /**
      * Chiamato alla dismissione del dialogo <br>
      * Regola i valori regolabili della Enumeration AEWizCost <br>
      * Verranno usati da: <br>

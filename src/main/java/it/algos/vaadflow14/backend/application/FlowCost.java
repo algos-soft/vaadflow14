@@ -41,6 +41,8 @@ public abstract class FlowCost {
 
     public static final String VUOTA = "";
 
+    public static final String ERRORE = "Errore";
+
     public static final String SPAZIO = " ";
 
     public static final String A_CAPO = "\n";

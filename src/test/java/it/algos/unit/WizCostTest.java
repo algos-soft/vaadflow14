@@ -260,8 +260,8 @@ public class WizCostTest extends ATest {
     void reset() {
         previstoBooleano = false;
         previsto = VALORE_MANCANTE;
-        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
-        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
+        ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
         assertEquals(previstoBooleano, ottenutoBooleano);
 
@@ -269,8 +269,8 @@ public class WizCostTest extends ATest {
 
         previstoBooleano = true;
         previsto = NAME_VAADFLOW;
-        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
-        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
+        ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
         assertEquals(previstoBooleano, ottenutoBooleano);
 
@@ -278,8 +278,8 @@ public class WizCostTest extends ATest {
 
         previstoBooleano = false;
         previsto = VALORE_MANCANTE;
-        ottenutoBooleano = AEWizCost.nameProjectCurrentLower.isValida();
-        ottenuto = AEWizCost.nameProjectCurrentLower.getValue();
+        ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
+        ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
         assertEquals(previstoBooleano, ottenutoBooleano);
     }
