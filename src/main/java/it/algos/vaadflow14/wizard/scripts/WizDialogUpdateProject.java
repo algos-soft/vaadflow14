@@ -58,7 +58,7 @@ public class WizDialogUpdateProject extends WizDialog {
             topLayout = fixSezione("Aggiornamento di un progetto", "green");
         }
         else {
-            topLayout = fixSezione(String.format("Aggiornamento di %s", AEWizCost.nameCurrentProjectUpper.get()), "green");
+            topLayout = fixSezione(String.format("Aggiornamento del modulo base %s contenuto in %s", AEWizCost.nameVaadFlow14Lower.get(),AEWizCost.nameCurrentProjectUpper.get()), "green");
         }
         this.add(topLayout);
 
