@@ -1,11 +1,9 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
-import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
@@ -38,7 +36,14 @@ public class WizDialogNewPackage extends WizDialogPackage {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione(TITOLO_NEW_PACKAGE, "green");
+        String message;
+        if (AEFlag.isBaseFlow.is()) {
+            message = String.format("Nuovo package per il modulo %s", AEWizCost.nameTargetProjectModulo.get());
+        }
+        else {
+            message = "Nuovo package";
+        }
+        topLayout = fixSezione(message, "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Creazione di un nuovo package funzionante"));

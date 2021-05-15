@@ -48,7 +48,14 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
      */
     @Override
     protected void creaTopLayout() {
-        topLayout = fixSezione("Modifica di un package", "green");
+        String message;
+        if (AEFlag.isBaseFlow.is()) {
+            message = String.format("Modifica di un package del modulo %s", AEWizCost.nameTargetProjectModulo.get());
+        }
+        else {
+            message = "Modifica di un package";
+        }
+        topLayout = fixSezione(message, "green");
         this.add(topLayout);
 
         topLayout.add(text.getLabelGreenBold("Update di un package esistente in questo progetto"));
@@ -67,7 +74,7 @@ public class WizDialogUpdatePackage extends WizDialogPackage {
 
         List<String> packages = wizService.getPackages();
         Collections.sort(packages);
-        String label = "Packages esistenti nella directory di questo progetto";
+        String label = "Packages esistenti nella directory di questo modulo";
 
         if (array.isAllValid(packages)) {
 

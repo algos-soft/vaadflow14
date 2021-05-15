@@ -12,7 +12,6 @@ import it.algos.vaadflow14.wizard.enumeration.*;
  */
 public abstract class WizDialogPackage extends WizDialog {
 
-    protected String nomeModulo;
 
     /**
      * Apertura del dialogo <br>
