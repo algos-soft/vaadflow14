@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.wizard.scripts;
 
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 
@@ -13,7 +12,7 @@ import it.algos.vaadflow14.wizard.enumeration.*;
  */
 public abstract class WizDialogPackage extends WizDialog {
 
-
+    protected String nomeModulo;
 
     /**
      * Apertura del dialogo <br>
@@ -21,6 +20,20 @@ public abstract class WizDialogPackage extends WizDialog {
     public void open(WizRecipient wizRecipient) {
         super.wizRecipient = wizRecipient;
         super.isNuovoProgetto = false;
+
+        AEFlag.isProject.set(false);
+        AEFlag.isPackage.set(true);
+
+        super.inizia();
+    }
+
+    /**
+     * Apertura del dialogo <br>
+     */
+    public void open(WizRecipient wizRecipient, String nomeModulo) {
+        super.wizRecipient = wizRecipient;
+        super.isNuovoProgetto = false;
+        this.nomeModulo = nomeModulo;
 
         AEFlag.isProject.set(false);
         AEFlag.isPackage.set(true);

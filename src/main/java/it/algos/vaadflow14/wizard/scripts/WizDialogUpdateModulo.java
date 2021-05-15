@@ -54,7 +54,7 @@ public class WizDialogUpdateModulo extends WizDialog {
         String pathBreve = file.findPathBreve(AEWizCost.pathVaadFlow14WizSources.get(), "vaadflow14");
 
         if (AEFlag.isBaseFlow.is()) {
-            topLayout = fixSezione("Aggiornamento del modulo di un progetto", "green");
+            topLayout = fixSezione(String.format("Aggiornamento del modulo %s di %s", AEWizCost.nameCurrentProjectModulo.get(),AEWizCost.nameVaadFlow14Upper.get()), "green");
         }
         else {
             topLayout = fixSezione(String.format("Aggiornamento del modulo %s di %s", AEWizCost.nameCurrentProjectModulo.get(),AEWizCost.nameCurrentProjectUpper.get()), "green");
