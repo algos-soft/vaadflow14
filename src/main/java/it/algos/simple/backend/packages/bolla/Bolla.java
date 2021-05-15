@@ -53,8 +53,8 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity)
 @AIEntity(recordName = "Bolla", keyPropertyName = "pertino", usaCreazione = true, usaModifica = true, usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.ASTERISK, searchProperty = "pertino", sortProperty = "pertino")
-@AIList(fields = "pertino,descrizione", usaRowIndex = false)
-@AIForm(fields = "pertino,descrizione", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)
+@AIList(fields = "code,descrizione", usaRowIndex = false)
+@AIForm(fields = "code,descrizione", operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)
 public class Bolla extends AEntity {
 
 
@@ -73,7 +73,7 @@ public class Bolla extends AEntity {
     @Size(min = 2, max = 50)
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "pertino", widthEM = 8)
     @AIColumn(header = "pertino", widthEM = 8)
-    public String pertino;
+    public String code;
 
      /**
      * descrizione (facoltativo, non unico) <br>
@@ -92,7 +92,7 @@ public class Bolla extends AEntity {
      */
     @Override
     public String toString() {
-        return pertino;
+        return code;
     }
 
 
