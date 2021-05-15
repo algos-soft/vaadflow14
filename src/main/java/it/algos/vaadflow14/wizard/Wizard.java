@@ -381,11 +381,11 @@ public class Wizard extends VerticalLayout {
         if (AEFlag.isBaseFlow.is()) {
             Button bottone = new Button("Update package " + AEWizCost.nameVaadFlow14Lower.get());
             bottone.getElement().setAttribute("theme", "primary");
-            bottone.addClickListener(event -> dialogNewPackage.open(this::elaboraUpdatePackage,AEWizCost.nameVaadFlow14Lower.get()));
+            bottone.addClickListener(event -> dialogUpdatePackage.open(this::elaboraUpdatePackage,AEWizCost.nameVaadFlow14Lower.get()));
 
             Button bottone2 = new Button("Update package " + AEWizCost.nameCurrentProjectModulo.get());
             bottone2.getElement().setAttribute("theme", "primary");
-            bottone2.addClickListener(event -> dialogNewPackage.open(this::elaboraUpdatePackage,AEWizCost.nameCurrentProjectModulo.get()));
+            bottone2.addClickListener(event -> dialogUpdatePackage.open(this::elaboraUpdatePackage,AEWizCost.nameCurrentProjectModulo.get()));
 
             layout.add(label, label2, new HorizontalLayout(bottone, bottone2));
         }
