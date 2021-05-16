@@ -639,21 +639,22 @@ public class AAnnotationService extends AAbstractService {
     // @AIView
     //==========================================================================
 
-    /**
-     * Restituisce il nome della property per navigare verso la View <br>
-     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l'annotation specifica <br>
-     * 4) Cerca la property 'routeFormName' nell'Annotation @AIView della classe AViewList <br>
-     *
-     * @param viewClazz the class of type AView
-     *
-     * @return the name of the property
-     */
-    public String getFormRouteName(final Class<? extends AView> viewClazz) {
-        AIView annotation = this.getAIViewView(viewClazz);
-        return annotation != null ? annotation.routeFormName() : VUOTA;
-    }
+//    /**
+//     * Restituisce il nome della property per navigare verso la View <br>
+//     * 1) Controlla che il parametro in ingresso non sia nullo <br>
+//     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
+//     * 3) Controlla che esista l'annotation specifica <br>
+//     * 4) Cerca la property 'routeFormName' nell'Annotation @AIView della classe AViewList <br>
+//     *
+//     * @param viewClazz the class of type AView
+//     *
+//     * @return the name of the property
+//     */
+//    @Deprecated
+//    public String getFormRouteName(final Class<? extends AView> viewClazz) {
+//        AIView annotation = this.getAIViewView(viewClazz);
+//        return annotation != null ? annotation.routeFormName() : VUOTA;
+//    }
 
 
     /**

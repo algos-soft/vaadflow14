@@ -27,10 +27,11 @@ import java.lang.annotation.*;
  * usaTimeStamp()=false -> (Optional) Utilizza timestamps per memorizzare date di creazione e di modifica della entity
  * <p>
  * Standard:
- * AIEntity(recordName = "xxx", keyPropertyName = "code", usaBoot = true, usaCreazione = true, usaModifica = true, usaDelete = true)
+ * AIEntity(recordName = "Xxx", keyPropertyName = "code", usaBoot = true, usaCreazione = true, usaModifica = true, usaDelete = true)
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE) //--Class, interface (including annotation type), or enum declaration
+@Target(ElementType.TYPE)
+//--Class, interface (including annotation type), or enum declaration
 public @interface AIEntity {
 
     /**
