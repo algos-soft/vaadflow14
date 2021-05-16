@@ -12,7 +12,14 @@ import java.lang.annotation.*;
  * Time: 12:12
  * <p>
  * Annotation Algos per tutte le classi <br>
- * Controlla il flusso degli scripts di creazione del framework. <br>
+ * Controlla il flusso degli scripts di modifica del framework. <br>
+ * <p>
+ * Regola:
+ * sovraScrivibile()=false -> Se il file può essere sovrascritto
+ * type()=AETypeFile.nessuno -> Tipologia dei file Algos sia generici che del package
+ * <p>
+ * Standard:
+ * AIScript(sovraScrivibile = false, type = AETypeFile.nessuno)
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
