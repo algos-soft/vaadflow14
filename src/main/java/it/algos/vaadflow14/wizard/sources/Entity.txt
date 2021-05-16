@@ -23,8 +23,8 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Project: @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
- * Fix date: @TODAY@ <br>
- * Fix time: @TIME@ <br>
+ * First time: @TODAY@ alle @TIME@ <br>
+ * Last doc revision: @TODAY@ alle @TIME@ <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>

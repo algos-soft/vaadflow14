@@ -429,7 +429,7 @@ public class WizService {
     public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare, boolean inizioFile) {
         AIResult risultato = AResult.errato();
         String message = VUOTA;
-        String tagIni = inizioFile ? "package" : "* <p>";
+        String tagIni = inizioFile ? "package" : TAG_INIZIO_DOC;
         String tagEnd = "@AIScript(";
         String oldHeader;
         String newHeader;

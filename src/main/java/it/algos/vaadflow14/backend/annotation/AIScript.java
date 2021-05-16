@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.annotation;
 
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 
 import java.lang.annotation.*;
 
@@ -15,11 +16,12 @@ import java.lang.annotation.*;
  * Controlla il flusso degli scripts di modifica del framework. <br>
  * <p>
  * Regola:
- * sovraScrivibile()=false -> Se il file può essere sovrascritto
- * type()=AETypeFile.nessuno -> Tipologia dei file Algos sia generici che del package
+ * sovraScrivibile()=false -> (Optional) Se il file può essere sovrascritto
+ * type()=AETypeFile.nessuno -> (Mandatory) Tipologia dei file Algos sia generici che del package
+ * doc()=AEWizDoc.revisione -> (Mandatory) The type of doc upgrade from wizard
  * <p>
  * Standard:
- * AIScript(sovraScrivibile = false, type = AETypeFile.nessuno)
+ * AIScript(sovraScrivibile = false, type = AETypeFile.nessuno, doc = AEWizDoc.revisione)
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
@@ -36,11 +38,19 @@ public @interface AIScript {
     boolean sovraScrivibile() default false;
 
     /**
-     * (Required) The type of the Algos file.
+     * (Mandatory) The type of the Algos file.
      * Defaults to AETypeFile.nessuno.
      *
      * @return the Algos file type
      */
     AETypeFile type() default AETypeFile.nessuno;
+
+    /**
+     * (Mandatory) The type of doc upgrade from wizard.
+     * Defaults to AETypeFile.nessuno.
+     *
+     * @return the Algos file type
+     */
+    AEWizDoc doc() default AEWizDoc.revisione;
 
 }

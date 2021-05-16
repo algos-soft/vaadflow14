@@ -121,6 +121,8 @@ public abstract class FlowCost {
 
     public static final String SUFFIX_VIEW = "View";
 
+    public static final String TAG_INIZIO_DOC = "* Last doc revision";
+
     //--praticamente una data 'nulla'
     public static final LocalDateTime ROOT_DATA_TIME = LocalDateTime.of(2000, 1, 1, 0, 0);
 
