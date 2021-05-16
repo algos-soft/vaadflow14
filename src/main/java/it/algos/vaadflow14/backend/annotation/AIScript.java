@@ -16,7 +16,7 @@ import java.lang.annotation.*;
  * Controlla il flusso degli scripts di modifica del framework. <br>
  * <p>
  * Regola:
- * sovraScrivibile()=false -> (Optional) Se il file può essere sovrascritto
+ * sovraScrivibile()=false -> (Optional) Se il file può essere sovrascritto dal Doc Wizard
  * type()=AETypeFile.nessuno -> (Mandatory) Tipologia dei file Algos sia generici che del package
  * doc()=AEWizDoc.revisione -> (Mandatory) The type of doc upgrade from wizard
  * <p>
@@ -31,6 +31,7 @@ public @interface AIScript {
 
     /**
      * (Optional) Status of this file for Wizard re-working.
+     * Se il file può essere sovrascritto dal Doc Wizard
      * Defaults to false.
      *
      * @return the boolean
