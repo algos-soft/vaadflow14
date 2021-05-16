@@ -505,9 +505,9 @@ public class AAnnotationService extends AAbstractService {
      *
      * @return the status
      */
-    public boolean usaResetIniziale(final Class<? extends AEntity> entityClazz) {
+    public boolean usaBoot(final Class<? extends AEntity> entityClazz) {
         AIEntity annotation = this.getAIEntity(entityClazz);
-        return annotation != null ? annotation.usaResetIniziale() : false;
+        return annotation != null ? annotation.usaBoot() : false;
     }
 
     /**

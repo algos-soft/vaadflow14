@@ -85,12 +85,12 @@ public @interface AIEntity {
     boolean usaDelete() default true;
 
     /**
-     * (Optional) possibilità di resettare i data alla partenza
+     * (Optional) creazione automatica dei dati alla partenza se collezione vuota
      * Di default false
      *
      * @return the status
      */
-    boolean usaResetIniziale() default false;
+    boolean usaBoot() default false;
 
 
 }

@@ -142,7 +142,7 @@ public class UtilityServiceTest extends ATest {
 
         previstoIntero = 1;
         previsto = "_id: ASC";
-        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>) null);
+        sortSpring = service.sortVaadinToSpring((List<QuerySortOrder>) null,null);
         Assert.assertNotNull(sortSpring);
         Assert.assertEquals(previstoIntero, sortSpring.stream().count());
         ottenuto = sortSpring.toString();
@@ -155,7 +155,7 @@ public class UtilityServiceTest extends ATest {
         sortVaadin = new QuerySortOrder(NAME_CODE, SortDirection.ASCENDING);
         sortVaadinList.add(sortVaadin);
 
-        sortSpring = service.sortVaadinToSpring(sortVaadinList);
+        sortSpring = service.sortVaadinToSpring(sortVaadinList,null);
         Assert.assertNotNull(sortSpring);
         Assert.assertEquals(3, sortSpring.stream().count());
     }
