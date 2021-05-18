@@ -1,8 +1,6 @@
 package it.algos.vaadflow14.wizard.enumeration;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 
 /**
  * Project vaadwiki
@@ -12,29 +10,49 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * Time: 15:34
  */
 public enum AEWizDoc {
-    nullo("Nessuno", "Non modifica il file."),
-    inizio("Inizio file","Modifica l'header partendo dall'inizio del file e fino al tag @AIScript(sovraScrivibile="),
-    revisione("Inizio revisione","Modifica l'header partendo dalla data di revisione (compresa) e fino al tag @AIScript(sovraScrivibile="),
+    nessuno(false, "Non modifica il file.", VUOTA),
+    inizio(true, "Modifica l'header partendo dall'inizio del file e fino al tag " + TAG_END_DOC, TAG_INIZIO_DOC),
+    revisione(true, "Modifica l'header partendo dalla data di revisione (compresa) e fino al tag " + TAG_END_DOC, TAG_INIZIO_REVISION),
     ;
 
-    private String tag;
+    private boolean esegue;
 
     private String descrizione;
 
+    private String tagIni;
+
+    private String tagEnd;
 
     /**
      * Costruttore <br>
      */
-    AEWizDoc(String tag, String descrizione) {
-        this.tag = tag;
-        this.descrizione = descrizione;
+    AEWizDoc(final boolean esegue, final String descrizione, final String tagIni) {
+        this(esegue, descrizione, tagIni, TAG_END_DOC);
     }
 
-    public String getTag() {
-        return tag;
+    /**
+     * Costruttore <br>
+     */
+    AEWizDoc(final boolean esegue, final String descrizione, final String tagIni, final String tagEnd) {
+        this.esegue = esegue;
+        this.descrizione = descrizione;
+        this.tagIni = tagIni;
+        this.tagEnd = tagEnd;
+    }
+
+    public boolean isEsegue() {
+        return esegue;
     }
 
     public String getDescrizione() {
         return descrizione;
+    }
+
+    public String getTagIni() {
+        return tagIni;
+    }
+
+    public String getTagEnd() {
+        return tagEnd;
     }
 }

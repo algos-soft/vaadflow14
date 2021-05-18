@@ -73,6 +73,22 @@ public class WizService {
     @Autowired
     public AFileService file;
 
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
+     * Disponibile al termine del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
+    /**
+     * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con @Autowired <br>
+     * Disponibile al termine del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AClassService classService;
+
 
     /**
      * Regolazioni iniziali indipendenti dal dialogo di input <br>
@@ -170,13 +186,13 @@ public class WizService {
         AEPackage.print(message);
     }
 
-//    /**
-//     * Visualizzazione finale di controllo <br>
-//     */
-//    public void printInfoCompleto(String message) {
-//        printInfo(message);
-//        AEToken.printInfo(message);
-//    }
+    //    /**
+    //     * Visualizzazione finale di controllo <br>
+    //     */
+    //    public void printInfoCompleto(String message) {
+    //        printInfo(message);
+    //        AEToken.printInfo(message);
+    //    }
 
     /**
      * Copia una cartella da VaadFlow al progetto <br>
@@ -424,19 +440,42 @@ public class WizService {
      * @param nameSourceText       nome del file di testo presente nella directory wizard.sources di VaadFlow14
      * @param suffisso             del file da modificare
      * @param pathFileDaModificare nome completo del file da modificare
-     * @param inizioFile           per la modifica dell'header
      */
-    public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare, boolean inizioFile) {
+    public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare) {
         AIResult risultato = AResult.errato();
         String message = VUOTA;
-        String tagIni = inizioFile ? "package" : TAG_INIZIO_DOC;
-        String tagEnd = "@AIScript(";
+        AEWizDoc wizDoc = null;
+        String tagIni = VUOTA;
+        String tagEnd = VUOTA;
         String oldHeader;
         String newHeader;
         String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
         String fileName = file.estraeClasseFinaleSenzaJava(pathFileDaModificare);
+        Class clazz = classService.getClazzFromPath(pathFileDaModificare);
+        boolean preservaOldDate = false;
+
+        if (clazz != null) {
+            wizDoc = annotation.getDocFile(clazz);
+        }
+
+        if (wizDoc == null) {
+            message = String.format("Nel package %s manca il tag doc = AEWizDoc nello @AIScript del file %s e preferisco non modificare la documentazione", packageName, path);
+            logger.log(AETypeLog.wizardDoc, message);
+            return risultato;
+        }
+
+        if (wizDoc.isEsegue()) {
+            tagIni = wizDoc.getTagIni();
+            tagEnd = wizDoc.getTagEnd();
+            preservaOldDate = wizDoc == AEWizDoc.inizio;
+        }
+        else {
+            message = String.format("Nel package %s c'è AEWizDoc=nessuno nello @AIScript del file %s e non modifico la documentazione", packageName, path);
+            logger.log(AETypeLog.wizardDoc, message);
+            return risultato;
+        }
 
         if (text.isEmpty(sourceText)) {
             logger.warn("Non sono riuscito a trovare il file " + nameSourceText + " nella directory wizard.sources di VaadFlow14", this.getClass(), "fixDocFile");
@@ -469,6 +508,7 @@ public class WizService {
                     risultato = AResult.errato(message);
                 }
                 else {
+                    newHeader = preservaOldDate ? fixOldDate(oldHeader, newHeader) : newHeader;
                     realText = text.sostituisce(realText, oldHeader, newHeader);
                     risultato = file.scriveFile(pathFileDaModificare, realText, true, FlowCost.DIR_PACKAGES);
                     if (risultato.isValido()) {
@@ -483,11 +523,52 @@ public class WizService {
             }
         }
         else {
-            message = String.format("Nel package %s manca il tag @AIScript nel file %s che non è stato modificato", packageName, path);
-            logger.log(AETypeLog.wizardDoc, message);
+            if (!realText.contains(tagIni)) {
+                message = String.format("Nel package %s manca il tag %s nel file %s che non è stato modificato", packageName, tagIni, path);
+                logger.log(AETypeLog.wizardDoc, message);
+            }
+            if (!realText.contains(tagEnd)) {
+                message = String.format("Nel package %s manca il tag %s nel file %s che non è stato modificato", packageName, tagEnd, path);
+                logger.log(AETypeLog.wizardDoc, message);
+            }
+
+            //            message = String.format("Nel package %s manca il tag @AIScript nel file %s che non è stato modificato", packageName, path);
+            //            logger.log(AETypeLog.wizardDoc, message);
         }
 
         return risultato;
+    }
+
+    /**
+     * Preserva la vecchia data di creazione del file <br>
+     */
+    public String fixOldDate(final String oldHeader, final String newHeader) {
+        String newHeaderModificato = newHeader;
+        String tagIni = TAG_FIRST_TIME;
+        String tagEnd = "*";
+        String vecchiaData = VUOTA;
+        int posIniOld = 0;
+        int posEndOld = 0;
+        int posIniNew = 0;
+        int posEndnew = 0;
+        String nuovaData = VUOTA;
+
+        if (oldHeader.contains(tagIni) && newHeader.contains(TAG_FIRST_TIME)) {
+            posIniOld = oldHeader.indexOf(tagIni);
+            posEndOld = oldHeader.indexOf(tagEnd, posIniOld + tagIni.length());
+            vecchiaData = oldHeader.substring(posIniOld, posEndOld).trim();
+            if (!vecchiaData.endsWith("<br>")) {
+                vecchiaData += SPAZIO + "<br>" + A_CAPO + SPAZIO;
+            }
+            vecchiaData += A_CAPO + SPAZIO;
+
+            posIniNew = newHeader.indexOf(TAG_FIRST_TIME);
+            posEndnew = newHeader.indexOf(tagEnd, posIniNew + TAG_FIRST_TIME.length());
+            nuovaData = newHeader.substring(posIniNew, posEndnew);
+            newHeaderModificato = text.sostituisce(newHeader, nuovaData, vecchiaData);
+        }
+
+        return newHeaderModificato.trim();
     }
 
     public String leggeFile(String nomeFileTextSorgente) {
@@ -509,7 +590,7 @@ public class WizService {
      *
      * @return testo elaborato
      */
-    protected String elaboraFileCreatoDaSource(String testoGrezzoDaElaborare) {
+    public String elaboraFileCreatoDaSource(String testoGrezzoDaElaborare) {
         String testoFinaleElaborato = testoGrezzoDaElaborare;
 
         for (AEToken token : AEToken.values()) {
@@ -830,13 +911,13 @@ public class WizService {
         AEToken.newEntityKeyUnica.setValue(fixNewEntityUnica());
         AEToken.toString.setValue(fixString());
 
-//        System.out.println(VUOTA);
-//        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
-//        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
-//        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
-//        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
-//        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
-//        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
+        //        System.out.println(VUOTA);
+        //        System.out.println(AEToken.packageNamePunti.getTokenTag() + SEP + AEToken.packageNamePunti.getValue());
+        //        System.out.println(AEToken.packageNameSlash.getTokenTag() + SEP + AEToken.packageNameSlash.getValue());
+        //        System.out.println(AEToken.packageNameLower.getTokenTag() + SEP + AEToken.packageNameLower.getValue());
+        //        System.out.println(AEToken.packageNameUpper.getTokenTag() + SEP + AEToken.packageNameUpper.getValue());
+        //        System.out.println(AEToken.entityLower.getTokenTag() + SEP + AEToken.entityLower.getValue());
+        //        System.out.println(AEToken.entityUpper.getTokenTag() + SEP + AEToken.entityUpper.getValue());
 
         return status;
     }

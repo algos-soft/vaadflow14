@@ -5,9 +5,9 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
-import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -50,7 +50,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AllArgsConstructor
 @Builder(builderMethodName = "builder@PACKAGENAMEUPPER@")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false, type = AETypeFile.entity)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.revisione)
 @AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCreazione = true, usaModifica = true, usaCompany = @USACOMPANY@)
 @AIView(menuName = "@ENTITYUPPER@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)

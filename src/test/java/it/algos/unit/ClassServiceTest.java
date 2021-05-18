@@ -46,6 +46,8 @@ public class ClassServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.fileService = file;
+        service.logger = logger;
     }
 
 
@@ -83,25 +85,70 @@ public class ClassServiceTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - getClazzFromName")
+    @DisplayName("2 - getNameFromPath")
+    void getNameFromPath() {
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
+
+        ottenuto = service.getNameFromPath(VUOTA);
+        assertTrue(text.isEmpty(ottenuto));
+
+        previsto = "it/algos/vaadflow14/backend/packages/anagrafica/via/Via";
+        ottenuto = service.getNameFromPath(sorgente);
+        assertEquals(previsto, ottenuto);
+        System.out.println(sorgente);
+        System.out.println(previsto);
+        System.out.println(ottenuto);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - getClazzFromName")
     void getClazzFromName() {
         Class clazz;
         sorgente = VIA_ENTITY_CLASS.getCanonicalName();
 
+        clazz = service.getClazzFromName(VUOTA);
+        assertNull(clazz);
+
         clazz = service.getClazzFromName(sorgente);
         assertNotNull(clazz);
+        System.out.println(sorgente);
         System.out.println(clazz.getSimpleName());
         System.out.println(clazz.getName());
         System.out.println(clazz.getCanonicalName());
+        System.out.println(VUOTA);
 
         sorgente2 = sorgente + JAVA_SUFFIX;
         clazz = service.getClazzFromName(sorgente2);
         assertNotNull(clazz);
+        System.out.println(sorgente2);
         System.out.println(clazz.getSimpleName());
         System.out.println(clazz.getName());
         System.out.println(clazz.getCanonicalName());
-
+        System.out.println(VUOTA);
     }
+
+
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - getClazzFromPath")
+    void getClazzFromPath() {
+        Class clazz;
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
+
+        clazz = service.getClazzFromPath(VUOTA);
+        assertNull(clazz);
+
+        clazz = service.getClazzFromPath(sorgente);
+        assertNotNull(clazz);
+        System.out.println(sorgente);
+        System.out.println(clazz.getSimpleName());
+        System.out.println(clazz.getName());
+        System.out.println(clazz.getCanonicalName());
+        System.out.println(VUOTA);
+    }
+
 
     /**
      * Qui passa al termine di ogni singolo test <br>
