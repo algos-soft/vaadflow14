@@ -427,6 +427,44 @@ public class WizService {
     }
 
     /**
+     * Aggiornamento documentazione dei vecchi files <br>
+     *
+     * @param packageName          nome della directory per il package in esame
+     * @param suffisso             del file da modificare
+     * @param pathFileDaModificare nome completo del file da modificare
+     */
+    public void fixDocFileOld(final String packageName, final String suffisso, final String pathFileDaModificare) {
+        String oldText = file.leggeFile(pathFileDaModificare);
+        String newText = oldText;
+        String par = ")";
+        String tagTrue = "@AIScript(sovraScrivibile = true";
+        String tagFalse = "@AIScript(sovraScrivibile = false";
+        String tagTrueOld = tagTrue + par;
+        String tagFalseOld = tagFalse + par;
+        String tagNew = ", doc = AEWizDoc.inizioRevisione" + par;
+
+        if (newText.contains(TAG_FIRST_TIME_OLD)) {
+            newText = text.sostituisce(newText, TAG_FIRST_TIME_OLD, TAG_FIRST_TIME);
+        }
+        if (newText.contains(TAG_INIZIO_REVISION_OLD)) {
+            newText = text.sostituisce(newText, TAG_INIZIO_REVISION_OLD, TAG_INIZIO_REVISION);
+        }
+
+        if (newText.contains(tagTrueOld)) {
+            newText = text.sostituisce(newText, tagTrueOld, tagTrue + tagNew);
+        }
+
+        if (newText.contains(tagFalseOld)) {
+            newText = text.sostituisce(newText, tagFalseOld, tagFalse + tagNew);
+        }
+
+        if (!newText.equals(oldText)) {
+            file.sovraScriveFile(pathFileDaModificare, newText);
+        }
+    }
+
+
+    /**
      * Sostituisce l'header di un file leggendo il testo da wizard.sources di VaadFlow14 ed elaborandolo <br>
      * <p>
      * Modifica il testo esistente dal termine dei dati cronologici fino al tag @AIScript(... <br>
@@ -443,12 +481,12 @@ public class WizService {
      */
     public AIResult fixDocFile(String packageName, String nameSourceText, String suffisso, String pathFileDaModificare) {
         AIResult risultato = AResult.errato();
-        String message = VUOTA;
+        String message;
         AEWizDoc wizDoc = null;
-        String tagIni = VUOTA;
-        String tagEnd = VUOTA;
+        String tagIni;
+        String tagEnd;
         String oldHeader;
-        String newHeader;
+        String newHeader = VUOTA;
         String realText = file.leggeFile(pathFileDaModificare);
         String sourceText = leggeFile(nameSourceText);
         String path = file.findPathBreve(pathFileDaModificare, FlowCost.DIR_PACKAGES);
@@ -469,7 +507,7 @@ public class WizService {
         if (wizDoc.isEsegue()) {
             tagIni = wizDoc.getTagIni();
             tagEnd = wizDoc.getTagEnd();
-            preservaOldDate = wizDoc == AEWizDoc.inizio;
+            preservaOldDate = wizDoc == AEWizDoc.inizioFile;
         }
         else {
             message = String.format("Nel package %s c'è AEWizDoc=nessuno nello @AIScript del file %s e non modifico la documentazione", packageName, path);
@@ -500,7 +538,12 @@ public class WizService {
                 return risultato;
             }
             oldHeader = realText.substring(realText.indexOf(tagIni), realText.indexOf(tagEnd));
-            newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
+            if (sourceText.contains(tagIni) && sourceText.contains(tagEnd)) {
+                if (sourceText.indexOf(tagIni) < sourceText.indexOf(tagEnd)) {
+                    newHeader = sourceText.substring(sourceText.indexOf(tagIni), sourceText.indexOf(tagEnd));
+                }
+            }
+
             if (text.isValid(oldHeader) && text.isValid(newHeader)) {
                 if (newHeader.trim().equals(oldHeader.trim())) {
                     message = String.format("Nel package %s non è stato modificato il file %s", packageName, fileName);
@@ -542,7 +585,7 @@ public class WizService {
     /**
      * Preserva la vecchia data di creazione del file <br>
      */
-    public String fixOldDate(final String oldHeader, final String newHeader) {
+    public String fixOldDate(String oldHeader, final String newHeader) {
         String newHeaderModificato = newHeader;
         String tagIni = TAG_FIRST_TIME;
         String tagEnd = "*";
@@ -558,7 +601,7 @@ public class WizService {
             posEndOld = oldHeader.indexOf(tagEnd, posIniOld + tagIni.length());
             vecchiaData = oldHeader.substring(posIniOld, posEndOld).trim();
             if (!vecchiaData.endsWith("<br>")) {
-                vecchiaData += SPAZIO + "<br>" + A_CAPO + SPAZIO;
+                vecchiaData += SPAZIO + "<br>";
             }
             vecchiaData += A_CAPO + SPAZIO;
 
@@ -568,7 +611,7 @@ public class WizService {
             newHeaderModificato = text.sostituisce(newHeader, nuovaData, vecchiaData);
         }
 
-        return newHeaderModificato.trim();
+        return newHeaderModificato + A_CAPO;
     }
 
     public String leggeFile(String nomeFileTextSorgente) {

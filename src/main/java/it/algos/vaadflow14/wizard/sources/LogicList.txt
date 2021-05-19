@@ -5,6 +5,8 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadflow14.ui.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.*;
@@ -13,8 +15,8 @@ import org.springframework.beans.factory.annotation.*;
  * Project: @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
- * Fix date: @TODAY@ <br>
- * Fix time: @TIME@ <br>
+ * First time: @TODAY@ alle @TIME@ <br>
+ * Last doc revision: @TODAY@ alle @TIME@ <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>
@@ -26,7 +28,9 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "@PACKAGENAMELOWER@", layout = MainLayout.class)
+//Algos
 @AIScript(sovraScrivibile = false)
 public class @ENTITYUPPER@LogicList extends LogicList {
 
