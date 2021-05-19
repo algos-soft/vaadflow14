@@ -1,4 +1,4 @@
-package it.algos.simple.backend.packages;
+package it.algos.simple.backend.packages.alfa;
 
 import com.querydsl.core.annotations.QueryEntity;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,52 +22,37 @@ import javax.validation.constraints.Size;
  * Created by Algos <br>
  * User: Gac <br>
  * Fix date: 20-set-2019 18.19.24 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:37 <br>
  * <p>
+ * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
+ * Unica classe obbligatoria per un package. <br>
+ * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Not annotated with @SpringComponent (inutile).  <br>
- * Not annotated with @Scope (inutile). Le istanze 'prototype' vengono generate da xxxService.newEntity() <br>
- * Not annotated with @Qualifier (inutile) <br>
- * Annotated with @QueryEntity per specificare che si tratta di una collection (DB Mongo) <br>
- * Annotated with @Document per avere un nome della collection (DB Mongo) eventualmente diverso dal nome della Entity <br>
- * Annotated with @TypeAlias (facoltativo) to replace the fully qualified class name with a different value. <br>
- * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
- * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications <br>
- * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service <br>
- * Annotated with @Builder (Lombok) con un metodo specifico, per usare quello standard nella (eventuale) sottoclasse <br>
- * - lets you automatically produce the code required to have your class be instantiable with code such as:
- * - Person.builder().name("Adam Savage").city("San Francisco").build(); <br>
- * Annotated with @EqualsAndHashCode (Lombok) per l'uguaglianza di due istanze della classe <br>
- * Annotated with @AIEntity (facoltativo Algos) per alcuni parametri generali del modulo <br>
- * Annotated with @AIList (facoltativo Algos) per le colonne automatiche della Grid nella lista <br>
- * Annotated with @AIForm (facoltativo Algos) per i fields automatici nel dialogo del Form <br>
- * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
- * In ogni caso la ri-creazione del file header avviene sempre FINO alla Annotation @AIScript <br>
- * <p>
- * Inserisce SEMPRE la versione di serializzazione <br>
- * Le singole property sono pubbliche in modo da poterne leggere il valore tramite 'reflection' <br>
- * Le singole property sono annotate con @AIField (obbligatorio Algos) per il tipo di fields nel dialogo del Form <br>
- * Le singole property sono annotate con @AIColumn (facoltativo Algos) per il tipo di Column nella Grid <br>
- * Le singole property sono annotate con @Field("xxx") (facoltativo)
- * -which gives a name to the key to be used to store the field inside the document.
- * -The property name (i.e. 'descrizione') would be used as the field key if this annotation was not included.
- * -Remember that field keys are repeated for every document so using a smaller key name will reduce the required space.
- * Le property non primitive, di default sono EMBEDDED con un riferimento statico
- * (EAFieldType.link e XxxPresenter.class)
- * Le singole property possono essere annotate con @DBRef per un riferimento DINAMICO (not embedded)
- * (EAFieldType.combo e XXService.class, con inserimento automatico nel ViewDialog)
- * Una (e una sola) property deve avere @AIColumn(flexGrow = true) per fissare la larghezza della Grid <br>
+ * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
+ * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
+ * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
+ * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
+ * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
+ * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "alfa")
+//Spring data
 @TypeAlias("alfa")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderAlfa")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "alfaRecord")
 @AIView(menuIcon = VaadinIcon.BOAT)
 @AIList(fields = "ordine,code,descrizione")

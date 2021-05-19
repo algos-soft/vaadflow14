@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.list.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -17,7 +18,7 @@ import java.util.*;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: gio, 22-apr-2021 <br>
- * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:35 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>

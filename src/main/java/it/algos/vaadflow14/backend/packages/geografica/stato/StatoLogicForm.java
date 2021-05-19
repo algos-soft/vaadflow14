@@ -1,11 +1,13 @@
 package it.algos.vaadflow14.backend.packages.geografica.stato;
 
 import com.vaadin.flow.router.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -14,11 +16,13 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: lun, 15-mar-2021
- * Time: 17:41
+ * First time: lun, 15-mar-2021
+ * Last doc revision: 17:41
  * <p>
  */
 @Route(value = "statoForm", layout = MainLayout.class)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class StatoLogicForm extends LogicForm {
 
 
@@ -61,6 +65,3 @@ public class StatoLogicForm extends LogicForm {
 
 
 }// end of Route class
-
-
-

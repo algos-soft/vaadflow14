@@ -25,7 +25,7 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Created by Algos <br>
  * User: gac <br>
  * First time: sab, 15-mag-2021 <br>
- * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:37 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>

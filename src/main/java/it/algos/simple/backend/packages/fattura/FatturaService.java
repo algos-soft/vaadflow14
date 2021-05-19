@@ -16,7 +16,7 @@ import org.springframework.stereotype.*;
  * Created by Algos
  * User: gac
  * First time: ven, 26-feb-2021
- * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:35 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>

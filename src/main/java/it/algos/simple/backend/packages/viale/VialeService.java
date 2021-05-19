@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.*;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: gio, 22-apr-2021 <br>
- * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:35 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe EntityService <br>
