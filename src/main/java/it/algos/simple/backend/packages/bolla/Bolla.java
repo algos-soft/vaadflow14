@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.enumeration.AETypeField;
 import it.algos.vaadflow14.backend.enumeration.AETypeNum;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -23,7 +24,7 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Project: simple <br>
  * Created by Algos <br>
  * User: gac <br>
- * Fix date: sab, 15-mag-2021 <br>
+ * First time: sab, 15-mag-2021 <br>
  * Fix time: 22:02 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
@@ -50,7 +51,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderBolla")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false, type = AETypeFile.entity)
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bolla", keyPropertyName = "pertino", usaCreazione = true, usaModifica = true, usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.ASTERISK, searchProperty = "pertino", sortProperty = "pertino")
 @AIList(fields = "code,descrizione", usaRowIndex = false)
