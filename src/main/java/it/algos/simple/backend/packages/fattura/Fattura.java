@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -18,7 +19,7 @@ import javax.validation.constraints.*;
  * Created by Algos
  * User: gac
  * First time: ven, 26-feb-2021
- * Last doc revision: mer, 19-mag-2021 alle 16:08 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>

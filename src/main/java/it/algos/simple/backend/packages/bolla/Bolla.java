@@ -25,16 +25,14 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Created by Algos <br>
  * User: gac <br>
  * First time: sab, 15-mag-2021 <br>
- * Fix time: 22:02 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
  * <p>
  * Classe (obbligatoria) di un package <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
- * Le properties sono PUBLIC per poter usare la Reflection <br>
+ * Le properties sono PUBLIC per poter usare la Reflection ed i Test <br>
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Spring: @SpringComponent (vaadin), @QueryEntity (querydsl), @Document (mongodb), @TypeAlias (data) <br>
- * Annotated with @SpringComponent, @QueryEntity, @Document, @TypeAlias <br>
  * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
@@ -42,15 +40,21 @@ import static java.awt.image.ImageObserver.WIDTH;
  * Annotated with Algos: @AIList per info sulla Grid e sulle colonne <br>
  * Annotated with Algos: @AIForm per info sul Form e sulle properties <br>
  */
+//Vaadin spring
 @SpringComponent
+//querydsl
 @QueryEntity
+//Spring mongodb
 @Document(collection = "bolla")
+//Spring data
 @TypeAlias("bolla")
+//Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(builderMethodName = "builderBolla")
 @EqualsAndHashCode(callSuper = false)
+//Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Bolla", keyPropertyName = "pertino", usaCreazione = true, usaModifica = true, usaCompany = false)
 @AIView(menuName = "Bolla", menuIcon = VaadinIcon.ASTERISK, searchProperty = "pertino", sortProperty = "pertino")

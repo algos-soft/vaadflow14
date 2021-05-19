@@ -14,10 +14,10 @@ import org.springframework.stereotype.*;
  * Created by Algos <br>
  * User: gac <br>
  * Fix date: gio, 22-apr-2021 <br>
- * Fix time: 9:27 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
- * Se manca, si usa la classe EntityService <br>
+ * Se manca, usa la classe EntityService <br>
  * Layer di collegamento tra il 'backend' e mongoDB <br>
  * Mantiene lo 'stato' della classe AEntity ma non mantiene lo stato di un'istanza entityBean <br>
  * L' istanza (SINGLETON) viene creata alla partenza del programma <br>
@@ -27,10 +27,14 @@ import org.springframework.stereotype.*;
  * Annotated with @Scope (obbligatorio con SCOPE_SINGLETON) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Spring
 @Service
+//Spring
 @Qualifier("vialeService")
+//Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@AIScript(sovraScrivibile = false)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class VialeService extends AService {
 
 

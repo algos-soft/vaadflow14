@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.simple.ui.enumeration.*;
+import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -11,6 +12,7 @@ import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
@@ -19,10 +21,23 @@ import java.util.*;
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: ven, 26-feb-2021
- * Time: 17:06
+ * First time: ven, 26-feb-2021
+ * Last doc revision: mer, 19-mag-2021 alle 16:49 <br>
+ * <p>
+ * Classe (facoltativa) di un package con personalizzazioni <br>
+ * Se manca, usa la classe GenericLogicList con @Route <br>
+ * Gestione della 'view' di @Route e della 'business logic' <br>
+ * Mantiene lo 'stato' <br>
+ * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
+ * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
+ * <p>
+ * Annotated with @Route (obbligatorio) <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+//Vaadin flow
 @Route(value = "fattura", layout = MainLayout.class)
+//Algos
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class FatturaLogicList extends LogicList {
 
     /**
