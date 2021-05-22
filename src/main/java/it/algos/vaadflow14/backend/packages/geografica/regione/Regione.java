@@ -51,9 +51,9 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaCompany = false, usaCreazione = false, usaModifica = false)
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaBoot = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
-@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaDeleteMenu = true, usaRowIndex = false)
 @AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = false)
 public class Regione extends AEntity {
 
@@ -68,7 +68,7 @@ public class Regione extends AEntity {
      */
     @Indexed(unique = true, direction = IndexDirection.ASCENDING)
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 4)
+    @AIColumn(header = "#", widthEM = 5)
     public int ordine;
 
     /**
@@ -88,7 +88,7 @@ public class Regione extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboMethod = true, methodName = "creaComboStati")
+    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboBoxGrid = true, usaComboMethod = true, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 
@@ -98,7 +98,7 @@ public class Regione extends AEntity {
     @NotBlank(message = "Il codice ISO numerico è obbligatorio")
     @Indexed(direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, required = true, caption = "Codice ISO 3166-2:IT", widthEM = 12)
-    @AIColumn(header = "iso", widthEM = 6)
+    @AIColumn(header = "iso", widthEM = 7)
     public String iso;
 
 
@@ -115,7 +115,7 @@ public class Regione extends AEntity {
     /**
      * statuto normativo (facoltativo) <br>
      */
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, widthEM = 19)
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBoxGrid = true,widthEM = 14)
     @AIColumn(widthEM = 18, flexGrow = true)
     public AEStatus status;
 

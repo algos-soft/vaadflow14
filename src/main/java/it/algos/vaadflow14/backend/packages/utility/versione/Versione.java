@@ -51,7 +51,7 @@ import java.time.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false, usaCreazione = false)
+@AIEntity(recordName = "Versione", keyPropertyName = "code", usaCompany = false)
 @AIView(menuName = "Versione", menuIcon = VaadinIcon.COG, searchProperty = "code", sortProperty = "code")
 @AIList(fields = "code,giorno,descrizione", usaRowIndex = true)
 @AIForm(fields = "code,giorno,descrizione", usaSpostamentoTraSchede = false)

@@ -1,15 +1,13 @@
 package it.algos.vaadflow14.backend.packages.anagrafica.via;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project vaadflow14
@@ -31,7 +29,7 @@ import java.util.*;
 //Vaadin flow
 @Route(value = "via", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione, type = AETypeFile.list)
 public class ViaLogicList extends LogicList {
 
 

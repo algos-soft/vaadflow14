@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
@@ -42,6 +43,13 @@ public class StatoLogicList extends LogicList {
      */
     private final static long serialVersionUID = 1L;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ContinenteService continenteService;
 
     /**
      * Costruttore con parametro <br>
@@ -67,10 +75,11 @@ public class StatoLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEOperation.showOnly;
+        //        super.operationForm = AEOperation.showOnly;
         super.usaBottonePaginaWiki = true;
-        //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
+        super.usaBottoneSearch = true;
         super.wikiPageTitle = "ISO_3166-1";
+        this.maxNumeroBottoniPrimaRiga = 5;
     }
 
 
@@ -84,9 +93,16 @@ public class StatoLogicList extends LogicList {
         //        addSpanBlu("Recuperati dalla pagina wiki: " + wikiPageTitle));//@todo Funzionalità ancora da implementare
         addSpanBlu("Codici: numerico, alfa-due, alfa-tre e ISO locale");
         addSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
-        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField");
     }
 
+    /**
+     * Costruisce una mappa di ComboBox di selezione e filtro <br>
+     * DEVE essere sovrascritto nella sottoclasse <br>
+     */
+//    @Override
+    protected void fixMappaComboBox2() {
+        super.fixComboBox("continente", continenteService.findByKey("Europa"));
+    }
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>

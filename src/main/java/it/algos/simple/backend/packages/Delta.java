@@ -35,7 +35,7 @@ import java.time.*;
 @Builder(builderMethodName = "builderDelta")
 @EqualsAndHashCode(callSuper = true)
 @AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Delta", keyPropertyName = "code")
+@AIEntity(recordName = "Delta", keyPropertyName = "code", usaTimeStamp = true)
 @AIView(menuIcon = VaadinIcon.COG)
 @AIList(spanHeader = "Esempio di comboBox con e senza valori personalizzati")
 @AIForm(fields = "code,secolo,via,immagine,uno,due,tre")

@@ -70,8 +70,8 @@ public abstract class LogicList extends Logic {
 
         super.operationForm = annotation.getOperation(entityClazz);
         super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaDeleteMenu(entityClazz);
-        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaResetMenu(entityClazz);
-        super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
+        //        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaResetMenu(entityClazz);
+//        super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
 
         this.fixOperationForm();
     }
@@ -135,6 +135,17 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixAlertLayout() {
         this.fixSpanList();
+
+        addSpanRosso("La visualizzazione di questi avvisi rossi si regola in Preferenza:usaSpanHeaderRossi");
+        addSpanRosso(String.format("Bottone Delete presente se in %s->@AIEntity usaNew=true oppure usaReset=true", entityClazz.getSimpleName()));
+        addSpanRosso(String.format("Bottone Reset presente se in %s->@AIEntity usaReset=true e in %s.resetEmptyOnly()!=null", entityClazz.getSimpleName(), entityService.getClass().getSimpleName()));
+        addSpanRosso(String.format("Bottone New presente se in %s->@AIEntity usaNew=true", entityClazz.getSimpleName(), entityService.getClass().getSimpleName()));
+        addSpanRosso(String.format("Se in %s->@AIEntity usaBoot=true la collezione viene creata all'avvio se manca.", entityClazz.getSimpleName()));
+        addSpanRosso(String.format("Se in %s->@AIEntity usaNew=true oppure usaReset=true, nel Form si può modificare/cancellare la scheda .", entityClazz.getSimpleName()));
+        addSpanRosso(String.format("Se in %s->@AIEntity usaReset=true e usaNew=false, non compare il field 'reset'", entityClazz.getSimpleName()));
+        addSpanRosso(String.format("Se in %s->@AIEntity usaReset=true e usaNew=true, compare il field 'reset' uguale a true per le schede create con reset", entityClazz.getSimpleName()));
+
+
         if (spanHeaderList != null && spanHeaderList.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
         }
@@ -220,12 +231,6 @@ public abstract class LogicList extends Logic {
         if (usaBottoneNew) {
             listaBottoni.add(AEButton.nuovo);
         }
-        if (usaBottoneSearch) {
-            listaBottoni.add(AEButton.searchDialog);
-        }
-        if (usaBottoneExport) {
-            listaBottoni.add(AEButton.export);
-        }
         if (usaBottonePaginaWiki) {
             listaBottoni.add(AEButton.wiki);
         }
@@ -234,6 +239,12 @@ public abstract class LogicList extends Logic {
         }
         if (usaBottoneUpload) {
             listaBottoni.add(AEButton.upload);
+        }
+        if (usaBottoneSearch) {
+            listaBottoni.add(AEButton.searchDialog);
+        }
+        if (usaBottoneExport) {
+            listaBottoni.add(AEButton.export);
         }
 
         return listaBottoni;
@@ -247,7 +258,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      */
     protected ComboBox fixComboBox(final String fieldName) {
-        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, null);
+        return fixComboBox(fieldName, (DataProvider) null, 0, null);
     }
 
 
@@ -260,7 +271,7 @@ public abstract class LogicList extends Logic {
      * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
      */
     protected ComboBox fixComboBox(final String fieldName, final DataProvider dataProvider) {
-        return fixComboBox(fieldName, dataProvider, COMBO_WIDTH, null);
+        return fixComboBox(fieldName, dataProvider, 0, null);
     }
 
 
@@ -286,7 +297,7 @@ public abstract class LogicList extends Logic {
      * @param initialValue eventuale valore iniziale di selezione
      */
     protected ComboBox fixComboBox(final String fieldName, final Object initialValue) {
-        return fixComboBox(fieldName, (DataProvider) null, COMBO_WIDTH, initialValue);
+        return fixComboBox(fieldName, (DataProvider) null, 0, initialValue);
     }
 
     /**
@@ -345,6 +356,10 @@ public abstract class LogicList extends Logic {
 
         if (searchField != null) {
             searchField.setPlaceholder(text.primaMaiuscola(placeHolder) + TRE_PUNTI);
+        }
+
+        for (String comboName : mappaComboBox.keySet()) {
+            performAction(AEAction.valueChanged, comboName, mappaComboBox.get(comboName).getValue());
         }
     }
 

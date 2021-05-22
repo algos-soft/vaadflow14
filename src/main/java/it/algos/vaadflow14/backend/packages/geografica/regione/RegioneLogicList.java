@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -10,8 +9,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project: vaadflow14 <br>
@@ -38,17 +35,17 @@ public class RegioneLogicList extends LogicList {
 
 
     /**
+     * versione della classe per la serializzazione
+     */
+    private final static long serialVersionUID = 1L;
+
+    /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
     public StatoService statoService;
-
-    /**
-     * versione della classe per la serializzazione
-     */
-    private final static long serialVersionUID = 1L;
 
 
     /**
@@ -75,15 +72,11 @@ public class RegioneLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.operationForm = AEPreferenza.usaDebug.is() ? AEOperation.edit : AEOperation.showOnly;
-        super.usaBottoneDeleteAll = AEPreferenza.usaDebug.is();
-        super.usaBottoneResetList = AEPreferenza.usaDebug.is();
-        super.usaBottoneNew = AEPreferenza.usaDebug.is();
         super.usaBottonePaginaWiki = true;
-//        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-//        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare
+        super.usaBottoneSearch = true;
+        super.wikiPageTitle = "ISO_3166-2";
+        this.maxNumeroBottoniPrimaRiga = 3;
     }
-
 
 
     /**
@@ -95,7 +88,6 @@ public class RegioneLogicList extends LogicList {
         addSpanBlu("Suddivisioni geografica di secondo livello. Codifica secondo ISO 3166-2");
         addSpanBlu("Codice ISO, sigla abituale e 'status' normativo");
         addSpanBlu("Ordinamento alfabetico: prima Italia poi altri stati europei");
-        addSpanRosso("Bottoni 'DeleteAll', 'Reset' e 'New' (e anche questo avviso) solo in fase di debug. Sempre presente il searchField ed i comboBox 'Stato' e 'Status'");
     }
 
 
@@ -103,17 +95,17 @@ public class RegioneLogicList extends LogicList {
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
      */
-//    @Override
+    @Override
     protected void fixMappaComboBox() {
 
-//        if (AEPreferenza.usaBandiereStati.is()) {
-//            mappaComboBox.put("stato", statoService.creaComboStati());//@todo con bandierine
-//        }
-//        else {
-//            super.creaComboBox("stato", AEStato.italia.getStato());//@todo senza bandierine
-//        }
-//
-//        super.creaComboBox("status", 14);
+        if (AEPreferenza.usaBandiereStati.is()) {
+            mappaComboBox.put("stato", statoService.creaComboStati());
+        }
+        else {
+            super.fixComboBox("stato", AEStato.italia.getStato());
+        }
+
+        super.fixComboBox("status");
     }
 
 }// end of Route class

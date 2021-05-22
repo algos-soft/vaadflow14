@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -83,9 +84,15 @@ public abstract class ATest {
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
 
+    protected static Class<? extends AEntity> MESE_ENTITY_CLASS = Mese.class;
+
     protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
 
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
+
+    protected static Class VIA_LIST_CLASS = ViaLogicList.class;
+
+    protected static Class VIA_SERVICE_CLASS = ViaService.class;
 
     protected static Field FIELD_ORDINE;
 

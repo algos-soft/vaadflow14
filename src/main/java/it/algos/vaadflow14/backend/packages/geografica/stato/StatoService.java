@@ -183,6 +183,7 @@ public class StatoService extends AService {
         return (Stato) super.findByKey(keyValue);
     }
 
+
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
@@ -201,8 +202,8 @@ public class StatoService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-//    @Override
-    public AIResult resetEmptyOnly2() {//@todo rimettere
+    @Override
+    public AIResult resetEmptyOnly() {
         AIResult result = super.resetEmptyOnly();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
@@ -323,7 +324,7 @@ public class StatoService extends AService {
     public ComboBox creaComboStati() {
         ComboBox<Stato> combo = new ComboBox();
         String tag = TRE_PUNTI;
-        String widthEM = "12em";
+        String widthEM = "14em";
         Sort sort = Sort.by("ordine");
         List items;
 

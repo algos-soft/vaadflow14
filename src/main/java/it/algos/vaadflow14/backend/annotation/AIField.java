@@ -294,8 +294,16 @@ public @interface AIField {
      * The type of the data type
      * Defaults to standard type.
      *
-     * @return the strings
+     * @return the type
      */
     AETypeData getTypeData() default AETypeData.standard;
+
+    /**
+     * Valore iniziale (text) di un combo
+     * Defaults to VUOTA.
+     *
+     * @return the strings
+     */
+    String comboInitialValue() default VUOTA;
 
 }

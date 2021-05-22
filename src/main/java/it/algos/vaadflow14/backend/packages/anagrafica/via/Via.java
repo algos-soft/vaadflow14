@@ -26,7 +26,7 @@ import javax.validation.constraints.*;
  * Unica classe obbligatoria per un package. <br>
  * Le altre servono solo se si vuole qualcosa in più dello standard minimo. <br>
  * <p>
- * Annotated with Lombok: @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
+ * Annotated with Lombok(RetentionPolicy.SOURCE): @Data, @NoArgsConstructor, @AllArgsConstructor, @Builder, @EqualsAndHashCode <br>
  * Annotated with Algos: @AIScript per controllare il typo di file e la ri-creazione con Wizard <br>
  * Annotated with Algos: @AIEntity per informazioni sulle property per il DB <br>
  * Annotated with Algos: @AIView per info su menu, icon, route, search e sort <br>
@@ -49,9 +49,9 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity)
-@AIEntity(recordName = "Via", keyPropertyName = "nome", usaCompany = false, usaCreazione = true, usaModifica = true, usaBoot = true)
+@AIEntity(recordName = "Via", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = true)
 @AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine", sortDirection = "ASC")
-@AIList(fields = "ordine,nome", usaDeleteMenu = true, usaResetMenu = true, usaRowIndex = true)
+@AIList(fields = "ordine,nome,reset", usaDeleteMenu = true, usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {
 

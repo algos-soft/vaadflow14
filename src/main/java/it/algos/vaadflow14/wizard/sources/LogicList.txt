@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.*;
 //Vaadin flow
 @Route(value = "@PACKAGENAMELOWER@", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class @ENTITYUPPER@LogicList extends LogicList {
 
 

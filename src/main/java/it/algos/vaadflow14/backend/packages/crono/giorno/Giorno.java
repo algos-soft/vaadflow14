@@ -51,7 +51,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false, usaCreazione = false, usaModifica = false, usaBoot  = true)
+@AIEntity(recordName = "Giorno", keyPropertyName = "giorno", usaCompany = false, usaBoot  = true)
 @AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "giorno", sortProperty = "ordine")
 @AIList(fields = "ordine,giorno", usaRowIndex = false)
 @AIForm(fields = "ordine,giorno,mese", usaSpostamentoTraSchede = false)

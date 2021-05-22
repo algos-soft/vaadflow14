@@ -53,9 +53,9 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaCompany = false, usaCreazione = false, usaModifica = false, usaDelete = false)
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaBoot = true)
 @AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
-@AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaRowIndex = false)
+@AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaDeleteMenu = true, usaRowIndex = false)
 @AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)
 public class Stato extends AEntity {
 
@@ -105,9 +105,8 @@ public class Stato extends AEntity {
      * continente (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
-    //    @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Continente.class, widthEM = 14)
+    @AIField(type = AETypeField.combo, comboClazz = Continente.class, widthEM = 14, usaComboBoxGrid = true, comboInitialValue = "Europa")
     @AIColumn(widthEM = 8)
     public Continente continente;
 
@@ -136,7 +135,7 @@ public class Stato extends AEntity {
     @NotBlank(message = "Il codice iso-alfa2 numerico è obbligatorio")
     @Indexed()
     @AIField(type = AETypeField.text, caption = "alfa-due", widthEM = 4)
-    @AIColumn(header = "due", widthEM = 5)
+    @AIColumn(header = "αDue", widthEM = 6)
     public String alfadue;
 
 
@@ -146,7 +145,7 @@ public class Stato extends AEntity {
     @NotBlank(message = "Il codice iso-alfa3 numerico è obbligatorio")
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, caption = "alfa-tre", widthEM = 4)
-    @AIColumn(header = "tre", widthEM = 5)
+    @AIColumn(header = "αTre", widthEM = 6)
     public String alfatre;
 
 

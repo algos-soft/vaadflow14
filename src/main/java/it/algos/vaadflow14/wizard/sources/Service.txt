@@ -40,7 +40,7 @@ import java.util.*;
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
-@AIScript(sovraScrivibile = false)
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class @ENTITYUPPER@Service extends AService {
 
 

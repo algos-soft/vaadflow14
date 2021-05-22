@@ -52,7 +52,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaCompany = false, usaCreazione = false, usaModifica = false)
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome")
 @AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,sigla,regione,iso,status", usaRowIndex = false)
 @AIForm(fields = "ordine,nome,sigla,regione,iso,status", usaSpostamentoTraSchede = false)

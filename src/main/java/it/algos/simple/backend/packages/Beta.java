@@ -1,21 +1,17 @@
 package it.algos.simple.backend.packages;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolCol;
-import it.algos.vaadflow14.backend.enumeration.AETypeBoolField;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Project vaadflow14
@@ -35,8 +31,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Builder(builderMethodName = "builderBeta")
 @EqualsAndHashCode(callSuper = false)
-@AIScript(sovraScrivibile = false)
-@AIEntity(recordName = "Beta", keyPropertyName = "code")
+@AIEntity(keyPropertyName = "code", usaCompany = false, usaNote = true, usaTimeStamp = false)
 @AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
 @AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette", spanHeader = "Esempio di valori booleani, rappresentati in diversi modi")
 @AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette")

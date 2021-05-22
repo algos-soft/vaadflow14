@@ -52,9 +52,9 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false, usaCreazione = true, usaModifica = true, usaDelete = true, usaBoot = true)
+@AIEntity(recordName = "Mese", keyPropertyName = "mese", usaCompany = false, usaBoot = true)
 @AIView(menuName = "Mese", menuIcon = VaadinIcon.CALENDAR, searchProperty = "mese", sortProperty = "ordine")
-@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false, usaResetMenu = true)
+@AIList(fields = "ordine,mese,giorni,giorniBisestile,sigla", usaRowIndex = false)
 @AIForm(fields = "mese,giorni,giorniBisestile,sigla", usaSpostamentoTraSchede = true)
 public class Mese extends AEntity {
 

@@ -1,20 +1,18 @@
 package it.algos.simple.backend.packages.alfa;
 
-import com.querydsl.core.annotations.QueryEntity;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.querydsl.core.annotations.*;
+import com.vaadin.flow.component.icon.*;
+import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AETypeField;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.annotation.*;
+import org.springframework.data.mongodb.core.index.*;
+import org.springframework.data.mongodb.core.mapping.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 
 /**
@@ -52,8 +50,8 @@ import javax.validation.constraints.Size;
 @Builder(builderMethodName = "builderAlfa")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "alfaRecord")
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioFile)
+@AIEntity(recordName = "alfaRecord", usaCompany = true, usaNote = false)
 @AIView(menuIcon = VaadinIcon.BOAT)
 @AIList(fields = "ordine,code,descrizione")
 public class Alfa extends AEntity {
@@ -82,7 +80,7 @@ public class Alfa extends AEntity {
     @Indexed()
     @AIField(type = AETypeField.text, required = true, focus = true, caption = "Codice", widthEM = 9)
     @AIColumn(header = "sigla", widthEM = 8)
-    private String code;
+    public String code;
 
 
     /**

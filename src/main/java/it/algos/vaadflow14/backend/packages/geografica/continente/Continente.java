@@ -52,9 +52,9 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaBoot = true, usaCompany = false, usaCreazione = false, usaModifica = false)
+@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaBoot = true)
 @AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,abitato", usaDeleteMenu = true, usaResetMenu = true, usaRowIndex = true)
+@AIList(fields = "ordine,nome,abitato", usaDeleteMenu = true, usaRowIndex = true)
 @AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = true)
 public class Continente extends AEntity {
 
