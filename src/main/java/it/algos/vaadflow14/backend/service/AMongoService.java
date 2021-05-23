@@ -428,8 +428,7 @@ public class AMongoService<capture> extends AAbstractService {
      * @return entity
      */
     @Deprecated
-    public List<AEntity> findAll(Class<? extends
-            AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
+    public List<AEntity> findAll(Class<? extends AEntity> entityClazz, List<AFiltro> listaFiltri, Sort sortPrevalente) {
         Query query = new Query();
         CriteriaDefinition criteria;
         Sort sort;

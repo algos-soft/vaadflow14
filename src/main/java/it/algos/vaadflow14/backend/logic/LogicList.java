@@ -411,7 +411,7 @@ public abstract class LogicList extends Logic {
     public List<String> getGridColumns() {
         List<String> lista = annotation.getGridColumns(entityClazz);
 
-        if (annotation.usaReset(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
+        if (annotation.usaReset(entityClazz) && annotation.usaNew(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
             lista.add(FIELD_NAME_RESET);
         }
 
@@ -767,9 +767,9 @@ public abstract class LogicList extends Logic {
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
     private boolean resetDeletingAll() {
-        AIResult result=null;
+        AIResult result = null;
         entityService.delete();
-//        result = entityService.resetEmptyOnly();
+        //        result = entityService.resetEmptyOnly();
 
         logger.log(AETypeLog.reset, result.getMessage());
         return result.isValido();

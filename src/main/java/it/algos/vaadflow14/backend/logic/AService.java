@@ -382,7 +382,7 @@ public abstract class AService extends AAbstractService implements AIService {
      * 1) deve esistere lo specifico metodo sovrascritto <br>
      * 2) deve essere valida la entityClazz <br>
      * 3) deve esistere la collezione su mongoDB <br>
-     * 4) la collezione viene svuotata <br>
+     * 4) la collezione (dei soli dati rest) viene ricreata solo è vuota <br>
      * 5) vengono mantenuti eventuali records inseriti manualmente <br>
      * <p>
      * I dati possono essere: <br>
@@ -410,7 +410,9 @@ public abstract class AService extends AAbstractService implements AIService {
             //--cancella le entities preesistenti
             //--solo quelle create da reset
             query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
-            mongo.delete(entityClazz, query);
+            if (mongo.count(entityClazz, query) > 0) {
+                mongo.delete(entityClazz, query);
+            }
 
             result = reset();
         }
