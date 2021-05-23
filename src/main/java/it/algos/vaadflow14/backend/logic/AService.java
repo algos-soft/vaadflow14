@@ -399,6 +399,7 @@ public abstract class AService extends AAbstractService implements AIService {
         AIResult result = null;
         String collectionName;
         Query query = new Query();
+        int numRec = 0;
 
         if (entityClazz == null) {
             result = AResult.errato("Manca la entityClazz nella businessService specifica");
@@ -410,11 +411,19 @@ public abstract class AService extends AAbstractService implements AIService {
             //--cancella le entities preesistenti
             //--solo quelle create da reset
             query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
-            if (mongo.count(entityClazz, query) > 0) {
-                mongo.delete(entityClazz, query);
+            numRec = mongo.count(entityClazz, query);
+            if (numRec == 0) {
+                result = reset();
+            }
+            else {
+                result = AResult.errato( numRec);
             }
 
-            result = reset();
+            //            if (mongo.count(entityClazz, query) > 0) {
+            //                mongo.delete(entityClazz, query);
+            //            }
+
+            //            result = reset();
         }
         else {
             result = AResult.errato("La collezione " + collectionName + " non esiste");

@@ -60,44 +60,15 @@ public class ViaService extends AService {
      * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param aeVia: enumeration per la creazione-reset di tutte le entities
-     *               <p>
-     *               //     * @return la nuova entityBean appena creata e salvata
      *
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AEVia aeVia) {
-        Via via = newEntity(aeVia.getPos(), aeVia.toString());
+        Via via = newEntity(aeVia.toString());
         via.reset = true;
 
         return save(via) != null;
     }
-
-    //    /**
-    //     * Crea e registra una entityBean solo se non esisteva <br>
-    //     *
-    //     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
-    //     * @param nome   completo (obbligatorio, unico)
-    //     *
-    //     * @return true se la nuova entityBean è stata creata e salvata
-    //     */
-    //    private Via creaIfNotExist(final int ordine, final String nome) {
-    //        return (Via) checkAndSave(newEntity(ordine, nome));
-    //    }
-
-    //    /**
-    //     * Crea e registra una entityBean solo se non esisteva <br>
-    //     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
-    //     * solo col valore di un parametro da usare anche come keyID <br>
-    //     * Controlla che non esista già una entityBean con lo stesso keyID <br>
-    //     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-    //     *
-    //     * @param keyPropertyValue obbligatorio
-    //     *
-    //     * @return la nuova entityBean appena creata e salvata
-    //     */
-    //    public Via creaIfNotExist(final String keyPropertyValue) {
-    //        return (Via) checkAndSave(newEntity(keyPropertyValue));
-    //    }
 
 
     /**
@@ -110,35 +81,22 @@ public class ViaService extends AService {
      */
     @Override
     public Via newEntity() {
-        return newEntity(0, VUOTA);
+        return newEntity(VUOTA);
     }
-
-    //    /**
-    //     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-    //     * Usa il @Builder di Lombok <br>
-    //     * Eventuali regolazioni iniziali delle property <br>
-    //     *
-    //     * @param nome completo (obbligatorio, unico)
-    //     *
-    //     * @return la nuova entityBean appena creata (non salvata)
-    //     */
-    //    private Via newEntity(final String nome) {
-    //        return newEntity(0, nome);
-    //    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
+     * L'ordine di presentazione nel popup/combobox (obbligatorio, unico) viene calcolato in automatico
      *
-     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
-     * @param nome   completo (obbligatorio, unico)
+     * @param nome completo (obbligatorio, unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
-    public Via newEntity(final int ordine, final String nome) {
+    public Via newEntity(final String nome) {
         Via newEntityBean = Via.builderVia()
-                .ordine(ordine > 0 ? ordine : this.getNewOrdine())
+                .ordine(this.getNewOrdine())
                 .nome(text.isValid(nome) ? nome : null)
                 .build();
 
@@ -199,7 +157,7 @@ public class ViaService extends AService {
             }
         }
 
-        return AResult.valido( AETypeReset.enumeration.get(),numRec);
+        return AResult.valido(AETypeReset.enumeration.get(), numRec);
     }
 
 }// end of Singleton class
