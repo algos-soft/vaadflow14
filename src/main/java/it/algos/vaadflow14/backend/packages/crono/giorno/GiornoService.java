@@ -168,9 +168,10 @@ public class GiornoService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         AIResult resultCollectionPropedeutica;
         int ordine;
         String titolo;
@@ -202,7 +203,7 @@ public class GiornoService extends AService {
             numRec = creaIfNotExist(ordine, titolo, mese) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
 

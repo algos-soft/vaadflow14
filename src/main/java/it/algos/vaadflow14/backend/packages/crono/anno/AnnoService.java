@@ -200,9 +200,10 @@ public class AnnoService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
         int ordine;
@@ -258,7 +259,7 @@ public class AnnoService extends AService {
             }
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
 

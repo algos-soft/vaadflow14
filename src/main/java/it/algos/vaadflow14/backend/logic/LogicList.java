@@ -67,11 +67,18 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+        boolean isResetMethod = false;
 
-        super.operationForm = annotation.getOperation(entityClazz);
-        super.usaBottoneDeleteAll = AEPreferenza.usaMenuReset.is() && annotation.usaDeleteMenu(entityClazz);
-        //        super.usaBottoneResetList = AEPreferenza.usaMenuReset.is() && annotation.usaResetMenu(entityClazz);
-//        super.usaBottoneNew = AEPreferenza.usaMenuReset.is() && annotation.usaCreazione(entityClazz);
+        try {
+            isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
+
+        super.usaBottoneDeleteAll = annotation.usaReset(entityClazz) || annotation.usaNew(entityClazz);
+        super.usaBottoneResetList = annotation.usaReset(entityClazz) && isResetMethod;
+        super.usaBottoneNew = annotation.usaNew(entityClazz);
+        super.usaBottoneSearch = annotation.usaSearchField(entityClazz);
 
         this.fixOperationForm();
     }
@@ -135,16 +142,32 @@ public abstract class LogicList extends Logic {
     @Override
     protected void fixAlertLayout() {
         this.fixSpanList();
+        String preferenza = html.bold("Preferenza");
+        String delete = html.bold("Delete");
+        String reset = html.bold("Reset");
+        String nuovo = html.bold("New");
+        String usaReset = html.bold("usaReset");
+        String usaBoot = html.bold("usaBoot");
+        String usaNew = html.bold("usaNew");
+        String tutte = html.bold("tutte");
+        String solo = html.bold("solo");
+        String resetTrue = html.bold("reset=true");
+        String search = html.bold("SearchField");
+        String property = html.bold("searchProperty");
+        String and = html.bold("e");
+        String non = html.bold("non");
+        String propReset = html.bold("reset");
 
-        addSpanRosso("La visualizzazione di questi avvisi rossi si regola in Preferenza:usaSpanHeaderRossi");
-        addSpanRosso(String.format("Bottone Delete presente se in %s->@AIEntity usaNew=true oppure usaReset=true", entityClazz.getSimpleName()));
-        addSpanRosso(String.format("Bottone Reset presente se in %s->@AIEntity usaReset=true e in %s.resetEmptyOnly()!=null", entityClazz.getSimpleName(), entityService.getClass().getSimpleName()));
-        addSpanRosso(String.format("Bottone New presente se in %s->@AIEntity usaNew=true", entityClazz.getSimpleName(), entityService.getClass().getSimpleName()));
-        addSpanRosso(String.format("Se in %s->@AIEntity usaBoot=true la collezione viene creata all'avvio se manca.", entityClazz.getSimpleName()));
-        addSpanRosso(String.format("Se in %s->@AIEntity usaNew=true oppure usaReset=true, nel Form si può modificare/cancellare la scheda .", entityClazz.getSimpleName()));
-        addSpanRosso(String.format("Se in %s->@AIEntity usaReset=true e usaNew=false, non compare il field 'reset'", entityClazz.getSimpleName()));
-        addSpanRosso(String.format("Se in %s->@AIEntity usaReset=true e usaNew=true, compare il field 'reset' uguale a true per le schede create con reset", entityClazz.getSimpleName()));
-
+        addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true oppure %s=true", delete, entityClazz.getSimpleName(), usaReset, usaNew));
+        addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, annotation.getCollectionName(entityClazz)));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.resetEmptyOnly()!=null", reset, entityClazz.getSimpleName(), usaReset, entityService.getClass().getSimpleName()));
+        addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, annotation.getCollectionName(entityClazz), resetTrue));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entityClazz.getSimpleName(), usaNew));
+        addSpanRosso(String.format("%s presente se in %s->@AIEntity esiste il valore della property %s", search, entityClazz.getSimpleName(), property));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true %s anche %s=true, la collezione viene resettata all'avvio del programma.", entityClazz.getSimpleName(), usaReset, and, usaBoot));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=false, %s compare la property %s", entityClazz.getSimpleName(), usaReset, usaNew, non, propReset));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=true, compare la property %s uguale a true per le schede create con reset", entityClazz.getSimpleName(), usaReset, usaNew, propReset));
 
         if (spanHeaderList != null && spanHeaderList.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
@@ -208,7 +231,7 @@ public abstract class LogicList extends Logic {
         if (usaBottoneResetList && entityService != null) {
             //--se manca il metodo specifico il bottone non potrebbe funzionare
             try {
-                if (entityService.getClass().getDeclaredMethod("resetEmptyOnly") != null) {
+                if (entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null) {
                     listaBottoni.add(AEButton.resetList);
                 }
             } catch (Exception unErrore) {
@@ -386,7 +409,13 @@ public abstract class LogicList extends Logic {
      */
     @Override
     public List<String> getGridColumns() {
-        return annotation.getGridColumns(entityClazz);
+        List<String> lista = annotation.getGridColumns(entityClazz);
+
+        if (annotation.usaReset(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
+            lista.add(FIELD_NAME_RESET);
+        }
+
+        return lista;
     }
 
 
@@ -709,9 +738,18 @@ public abstract class LogicList extends Logic {
      * Rinfresca la griglia <br>
      */
     public void clickReset() {
-        if (resetDeletingAll()) {
+        String collection = annotation.getCollectionName(entityClazz);
+        String message;
+        int numRec;
+        String type;
+
+        AIResult result = entityService.reset();
+        if (result.isValido()) {
+            numRec = result.getValore();
+            type = result.getMessage();
+            message = String.format("Nella collezione %s sono stati re-inseriti %d elementi %s", collection, numRec, type);
+            logger.log(AETypeLog.reset, message);
             this.refreshGrid();
-            //            this.reloadList();
         }
     }
 
@@ -729,9 +767,9 @@ public abstract class LogicList extends Logic {
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
     private boolean resetDeletingAll() {
-        AIResult result;
+        AIResult result=null;
         entityService.delete();
-        result = entityService.resetEmptyOnly();
+//        result = entityService.resetEmptyOnly();
 
         logger.log(AETypeLog.reset, result.getMessage());
         return result.isValido();

@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -56,44 +57,47 @@ public class ViaService extends AService {
 
 
     /**
-     * Crea e registra una entityBean solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param aeVia: enumeration per la creazione-reset di tutte le entities
+     *               <p>
+     *               //     * @return la nuova entityBean appena creata e salvata
      *
-     * @return la nuova entityBean appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    private Via creaIfNotExist(final AEVia aeVia) {
-        return creaIfNotExist(aeVia.getPos(), aeVia.toString());
+    private boolean creaReset(final AEVia aeVia) {
+        Via via = newEntity(aeVia.getPos(), aeVia.toString());
+        via.reset = true;
+
+        return save(via) != null;
     }
 
+    //    /**
+    //     * Crea e registra una entityBean solo se non esisteva <br>
+    //     *
+    //     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
+    //     * @param nome   completo (obbligatorio, unico)
+    //     *
+    //     * @return true se la nuova entityBean è stata creata e salvata
+    //     */
+    //    private Via creaIfNotExist(final int ordine, final String nome) {
+    //        return (Via) checkAndSave(newEntity(ordine, nome));
+    //    }
 
-    /**
-     * Crea e registra una entityBean solo se non esisteva <br>
-     *
-     * @param ordine di presentazione nel popup/combobox (obbligatorio, unico)
-     * @param nome   completo (obbligatorio, unico)
-     *
-     * @return true se la nuova entityBean è stata creata e salvata
-     */
-    private Via creaIfNotExist(final int ordine, final String nome) {
-        return (Via) checkAndSave(newEntity(ordine, nome));
-    }
-
-
-    /**
-     * Crea e registra una entityBean solo se non esisteva <br>
-     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
-     * solo col valore di un parametro da usare anche come keyID <br>
-     * Controlla che non esista già una entityBean con lo stesso keyID <br>
-     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
-     *
-     * @param keyPropertyValue obbligatorio
-     *
-     * @return la nuova entityBean appena creata e salvata
-     */
-    public Via creaIfNotExist(final String keyPropertyValue) {
-        return (Via) checkAndSave(newEntity(keyPropertyValue));
-    }
+    //    /**
+    //     * Crea e registra una entityBean solo se non esisteva <br>
+    //     * Deve esistere la keyPropertyName della collezione, in modo da poter creare una nuova entityBean <br>
+    //     * solo col valore di un parametro da usare anche come keyID <br>
+    //     * Controlla che non esista già una entityBean con lo stesso keyID <br>
+    //     * Deve esistere il metodo newEntity(keyPropertyValue) con un solo parametro <br>
+    //     *
+    //     * @param keyPropertyValue obbligatorio
+    //     *
+    //     * @return la nuova entityBean appena creata e salvata
+    //     */
+    //    public Via creaIfNotExist(final String keyPropertyValue) {
+    //        return (Via) checkAndSave(newEntity(keyPropertyValue));
+    //    }
 
 
     /**
@@ -109,19 +113,18 @@ public class ViaService extends AService {
         return newEntity(0, VUOTA);
     }
 
-
-    /**
-     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param nome completo (obbligatorio, unico)
-     *
-     * @return la nuova entityBean appena creata (non salvata)
-     */
-    private Via newEntity(final String nome) {
-        return newEntity(0, nome);
-    }
+    //    /**
+    //     * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
+    //     * Usa il @Builder di Lombok <br>
+    //     * Eventuali regolazioni iniziali delle property <br>
+    //     *
+    //     * @param nome completo (obbligatorio, unico)
+    //     *
+    //     * @return la nuova entityBean appena creata (non salvata)
+    //     */
+    //    private Via newEntity(final String nome) {
+    //        return newEntity(0, nome);
+    //    }
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -141,6 +144,7 @@ public class ViaService extends AService {
 
         return (Via) fixKey(newEntityBean);
     }
+
 
     /**
      * Retrieves an entity by its id.
@@ -173,12 +177,7 @@ public class ViaService extends AService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -190,19 +189,16 @@ public class ViaService extends AService {
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+    public AIResult reset() {
         int numRec = 0;
 
-        if (result.isErrato()) {
-            return result;
+        if (super.reset().isValido()) {
+            for (AEVia aeVia : AEVia.values()) {
+                numRec = creaReset(aeVia) ? numRec + 1 : numRec;
+            }
         }
 
-        for (AEVia aeVia : AEVia.values()) {
-            numRec = creaIfNotExist(aeVia) != null ? numRec + 1 : numRec;
-        }
-
-        return super.fixPostReset(AETypeReset.enumeration, numRec);
+        return AResult.valido( AETypeReset.enumeration.get(),numRec);
     }
 
 }// end of Singleton class

@@ -180,9 +180,10 @@ public class MeseService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -193,7 +194,7 @@ public class MeseService extends AService {
             numRec = creaIfNotExist(aeMese) != null ? numRec + 1 : numRec;
         }
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
 }

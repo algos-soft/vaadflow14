@@ -62,7 +62,6 @@ public class ViaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
-        super.usaBottoneSearch = true;
     }
 
     /**

@@ -176,9 +176,10 @@ public class CompanyService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -189,7 +190,7 @@ public class CompanyService extends AService {
         numRec = creaIfNotExist("Demo", "Company demo", "345 994487", "demo@algos.it") != null ? numRec + 1 : numRec;
         numRec = creaIfNotExist("Test", "Company di test", "", "presidentePonteTaro@crocerossa.it") != null ? numRec + 1 : numRec;
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
     /**

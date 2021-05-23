@@ -80,7 +80,7 @@ public class SimpleData extends FlowData {
      */
     private void fixDataPackageBolla() {
         entityService = appContext.getBean(EntityService.class, Bolla.class);
-        AIResult result = entityService.resetEmptyOnly();
+        AIResult result = entityService.reset();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -93,7 +93,7 @@ public class SimpleData extends FlowData {
         numRec = creaBolla("tre", "terza riga") ? numRec + 1 : numRec;
         numRec = creaBolla("quattro", "quarta riga") ? numRec + 1 : numRec;
 
-        result = entityService.fixPostReset(AETypeReset.hardCoded, numRec);
+        result = entityService.fixPostResetOnly(AETypeReset.hardCoded, numRec);
         logger.log(AETypeLog.checkData, result.getMessage());
     }
 

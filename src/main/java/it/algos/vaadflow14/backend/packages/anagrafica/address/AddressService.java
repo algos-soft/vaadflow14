@@ -151,9 +151,10 @@ public class AddressService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+//    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+//        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -165,7 +166,7 @@ public class AddressService extends AService {
         message = String.format("Nel package %s la classe %s non ha ancora sviluppato il metodo resetEmptyOnly() ", "Address", "AddressService");
 //        return AResult.errato(message);
 
-        return super.fixPostReset(AETypeReset.hardCoded, numRec);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
     }
 
 }

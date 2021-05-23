@@ -149,15 +149,44 @@ public class ViewTest extends ATest {
         ottenuto = service.getSearchPropertyName(Alfa.class);
         assertEquals(previsto, ottenuto);
 
-        previsto = "lambda";
+        previsto = VUOTA;
         ottenuto = service.getSearchPropertyName(Lambda.class);
         assertEquals(previsto, ottenuto);
+
+        previsto = VUOTA;
+        ottenuto = service.getSearchPropertyName(Beta.class);
+        assertEquals(previsto, ottenuto);
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - usaSearchField")
+    void usaSearchField() {
+        AIView view;
+
+        view = VIA_ENTITY_CLASS.getAnnotation(AIView.class);
+        assertNotNull(view);
+
+        ottenutoBooleano = service.usaSearchField(VIA_ENTITY_CLASS);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.usaSearchField(VIA_LIST_CLASS);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.usaSearchField(Alfa.class);
+        assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.usaSearchField(Lambda.class);
+        assertFalse(ottenutoBooleano);
+
+        ottenutoBooleano = service.usaSearchField(Lambda.class);
+        assertFalse(ottenutoBooleano);
     }
 
 
     @Test
-    @Order(5)
-    @DisplayName("5 - getSortProperty")
+    @Order(6)
+    @DisplayName("6 - getSortProperty")
     void getSortProperty() {
         AIView view;
 
@@ -177,8 +206,8 @@ public class ViewTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - getSortDirectionSpring")
+    @Order(7)
+    @DisplayName("7 - getSortDirectionSpring")
     void getSortDirectionSpring() {
         AIView view;
         Sort.Direction sortDirectionSpringOttenuto = null;
@@ -200,8 +229,8 @@ public class ViewTest extends ATest {
 
 
     @Test
-    @Order(7)
-    @DisplayName("7 - getSortSpring")
+    @Order(8)
+    @DisplayName("8 - getSortSpring")
     void getSortSpring() {
         AIView view;
         Sort sortSpringOttenuto = null;

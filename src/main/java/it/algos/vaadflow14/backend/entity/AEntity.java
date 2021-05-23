@@ -89,7 +89,7 @@ public abstract class AEntity implements Serializable {
     @Indexed()
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
     @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "R.", widthEM = 5)
-    public boolean reset = true;
+    public boolean reset;
 
 
     /**

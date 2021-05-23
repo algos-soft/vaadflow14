@@ -156,9 +156,10 @@ public class GammaService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    @Override
+    //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result = super.resetEmptyOnly();
+        AIResult result=null;
+        //        AIResult result = super.resetEmptyOnly();
         int numRec = 6;
         Mese mese1 = meseService.findByKey("aprile");
         Mese mese2 = meseService.findByKey("ottobre");
@@ -180,7 +181,7 @@ public class GammaService extends AService {
         creaIfNotExist("epsilon", mese3, secolo3);
         creaIfNotExist("omega", mese2, secolo4);
 
-        return super.fixPostReset(AETypeReset.hardCoded, 6);
+        return super.fixPostResetOnly(AETypeReset.hardCoded, 6);
     }
 
 }

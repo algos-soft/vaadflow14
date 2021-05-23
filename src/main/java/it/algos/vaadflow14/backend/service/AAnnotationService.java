@@ -817,7 +817,6 @@ public class AAnnotationService extends AAbstractService {
      * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
      * 3) Controlla che esista l'annotation specifica <br>
      * 4) Se non la trova, di default cerca la property 'code' <br>
-     * 6) Se non la trova, di default restituisce il nome della classe <br>
      *
      * @param entityClazz the class of type AEntity
      *
@@ -840,32 +839,41 @@ public class AAnnotationService extends AAbstractService {
 
         //--la property 'code' DEVE essere pubblica
         if (text.isEmpty(searchProperty)) {
-            if (reflection.isEsiste(entityClazz, FIELD_CODE)) {
-                searchProperty = FIELD_CODE;
-            }
+            searchProperty = FIELD_CODE;
         }
 
-        if (text.isEmpty(searchProperty)) {
-            searchProperty = entityClazz.getSimpleName().toLowerCase();
+        //--la property DEVE esistere
+        if (!reflection.isEsiste(entityClazz, searchProperty)) {
+            searchProperty = VUOTA;
         }
 
         return searchProperty;
     }
 
-    //    /**
-    //     * Flag per mostrare una Grid vuota all'apertura. Da usare SOLO se ci sono filtri di selezione. <br>
-    //     * 1) Controlla che il parametro in ingresso non sia nullo <br>
-    //     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-    //     * 3) Controlla che esista l'annotation specifica <br>
-    //     *
-    //     * @param entityViewClazz the class of type AEntity or AView
-    //     *
-    //     * @return true per mostrare ka lista vuota all'apertura della Grid
-    //     */
-    //    public boolean isStartListEmpty(final Class<?> entityViewClazz) {
-    //        AIView annotation = this.getAIView(entityViewClazz);
-    //        return annotation != null && annotation.startListEmpty();
-    //    }
+    /**
+     * Flag per l'utilizzo delle ricerche con searchField. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaSearchField(final Class<? extends AEntity> entityClazz) {
+        boolean usaSearchField = false;
+        AIView annotation = null;
+
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
+            annotation = getAIView(entityClazz);
+        }
+        else {
+            return false;
+        }
+
+        if (annotation != null) {
+            usaSearchField = text.isValid(getSearchPropertyName(entityClazz));
+        }
+
+        return usaSearchField;
+    }
 
 
     /**
@@ -967,7 +975,6 @@ public class AAnnotationService extends AAbstractService {
 
         return sortVaadinList;
     }
-
 
     //==========================================================================
     // @AIList

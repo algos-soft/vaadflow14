@@ -32,7 +32,7 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderBeta")
 @EqualsAndHashCode(callSuper = false)
 @AIEntity(keyPropertyName = "code", usaCompany = false, usaNote = true, usaTimeStamp = false)
-@AIView(menuIcon = VaadinIcon.COG, sortProperty = "ordine")
+@AIView(menuIcon = VaadinIcon.COG, searchProperty = "nessuno", sortProperty = "ordine")
 @AIList(fields = "code,uno,due,tre,quattro,cinque,sei,sette", spanHeader = "Esempio di valori booleani, rappresentati in diversi modi")
 @AIForm(fields = "code,uno,due,tre,quattro,cinque,sei,sette")
 public class Beta extends AEntity {

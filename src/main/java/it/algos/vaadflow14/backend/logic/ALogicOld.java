@@ -1937,8 +1937,8 @@ public abstract class ALogicOld implements AILogicOld {
     private boolean resetDeletingAll() {
         AIResult result;
         entityService.delete();
-        result = entityService.resetEmptyOnly();
-
+//        result = entityService.resetEmptyOnly();
+result=null;
         logger.log(AETypeLog.reset, result.getMessage());
         return result.isValido();
     }

@@ -166,8 +166,8 @@ public class DeltaLogicOld extends ALogicOld {
         ComboBox box = combo.comboBox;
         Object obj = box.getValue();
         if (obj instanceof String) {
-            Via via = viaService.creaIfNotExist((String) obj);
-            entityBean.via = via;
+//            Via via = viaService.creaIfNotExist((String) obj);
+//            entityBean.via = via;
         }
 
         return entityBean != null ? save(entityBean) : false;

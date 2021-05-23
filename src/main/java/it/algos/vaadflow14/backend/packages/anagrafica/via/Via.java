@@ -50,8 +50,8 @@ import javax.validation.constraints.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity)
 @AIEntity(recordName = "Via", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = true)
-@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine", sortDirection = "ASC")
-@AIList(fields = "ordine,nome,reset", usaDeleteMenu = true, usaRowIndex = true)
+@AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
+@AIList(fields = "ordine,nome", usaDeleteMenu = true, usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {
 
