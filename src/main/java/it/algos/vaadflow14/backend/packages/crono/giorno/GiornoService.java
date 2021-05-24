@@ -55,7 +55,7 @@ public class GiornoService extends AService {
      * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    MeseService meseService;
+    private MeseService meseService;
 
     /**
      * Costruttore @Autowired. <br>

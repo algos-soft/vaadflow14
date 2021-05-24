@@ -72,8 +72,6 @@ public class ProvinciaService extends AService {
     }
 
 
-
-
     /**
      * Crea e registra una entity solo se non esisteva <br>
      *
@@ -220,7 +218,7 @@ public class ProvinciaService extends AService {
                 return AResult.errato("Manca la classe RegioneService");
             }
             else {
-                return regioneService.resetEmptyOnly();
+                return regioneService.reset();
             }
         }
     }

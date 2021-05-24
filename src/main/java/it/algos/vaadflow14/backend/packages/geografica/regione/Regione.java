@@ -50,10 +50,10 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderRegione")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaBoot = false)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
-@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaDeleteMenu = true, usaRowIndex = false)
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione",  usaRowIndex = false)
 @AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = false)
 public class Regione extends AEntity {
 

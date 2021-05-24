@@ -329,7 +329,7 @@ public abstract class LogicForm extends Logic {
 
         switch (azione) {
             case resetForm:
-                //                this.reloadForm(entityBean);
+//                this.reloadForm(entityBean);
                 break;
             case export:
                 //                export();

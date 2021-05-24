@@ -60,7 +60,7 @@ public class StatoService extends AService {
      * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    ContinenteService continenteService;
+    private ContinenteService continenteService;
 
 
     /**
@@ -98,23 +98,23 @@ public class StatoService extends AService {
         return save(entity) != null;
     }
 
-//    /**
-//     * Crea e registra una entity solo se non esisteva <br>
-//     *
-//     * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
-//     * @param stato    (obbligatorio, unico)
-//     * @param ue       appartenenza all' unione europea (obbligatorio)
-//     * @param numerico di riferimento (obbligatorio)
-//     * @param alfatre  (obbligatorio, unico)
-//     * @param alfadue  (obbligatorio, unico)
-//     * @param locale   (obbligatorio, unico)
-//     * @param bandiera (facoltativa)
-//     *
-//     * @return la nuova entity appena creata e salvata
-//     */
-//    public Stato creaIfNotExist(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
-//        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
-//    }
+    //    /**
+    //     * Crea e registra una entity solo se non esisteva <br>
+    //     *
+    //     * @param ordine   di presentazione nel popup/combobox (obbligatorio, unico)
+    //     * @param stato    (obbligatorio, unico)
+    //     * @param ue       appartenenza all' unione europea (obbligatorio)
+    //     * @param numerico di riferimento (obbligatorio)
+    //     * @param alfatre  (obbligatorio, unico)
+    //     * @param alfadue  (obbligatorio, unico)
+    //     * @param locale   (obbligatorio, unico)
+    //     * @param bandiera (facoltativa)
+    //     *
+    //     * @return la nuova entity appena creata e salvata
+    //     */
+    //    public Stato creaIfNotExist(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
+    //        return (Stato) checkAndSave(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
+    //    }
 
 
     /**
