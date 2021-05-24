@@ -5,6 +5,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -54,32 +55,20 @@ public class MeseService extends AService {
         super(Mese.class);
     }
 
-
     /**
-     * Crea e registra una entity solo se non esisteva <br>
+     * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param aeMese enumeration per la creazione-reset di tutte le entities
      *
-     * @return la nuova entity appena creata e salvata
+     * @return true se la entity è stata creata e salvata
      */
-    public Mese creaIfNotExist(final AEMese aeMese) {
-        return creaIfNotExist(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
+    private boolean creaReset(final AEMese aeMese) {
+        Mese entity = newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
+        entity.reset = true;
+
+        return save(entity) != null;
     }
 
-
-    /**
-     * Crea e registra una entity solo se non esisteva <br>
-     *
-     * @param mese            nome completo (obbligatorio, unico)
-     * @param giorni          numero di giorni presenti (obbligatorio)
-     * @param giorniBisestile numero di giorni presenti in un anno bisestile (obbligatorio)
-     * @param sigla           nome abbreviato di tre cifre (obbligatorio, unico)
-     *
-     * @return la nuova entity appena creata e salvata
-     */
-    public Mese creaIfNotExist(final String mese, final int giorni, final int giorniBisestile, final String sigla) {
-        return (Mese) checkAndSave(newEntity(mese, giorni, giorniBisestile, sigla));
-    }
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
@@ -93,19 +82,6 @@ public class MeseService extends AService {
         return newEntity(VUOTA, 0, 0, VUOTA);
     }
 
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Usa il @Builder di Lombok <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     *
-     * @param aeMese: enumeration per la creazione-reset di tutte le entities
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Mese newEntity(final AEMese aeMese) {
-        return newEntity(aeMese.getNome(), aeMese.getGiorni(), aeMese.getGiorniBisestili(), aeMese.getSigla());
-    }
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
@@ -134,42 +110,8 @@ public class MeseService extends AService {
 
 
     /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Mese findById(final String keyID) {
-        return (Mese) super.findById(keyID);
-    }
-
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Mese findByKey(final String keyValue) {
-        return (Mese) super.findByKey(keyValue);
-    }
-
-    /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -180,10 +122,9 @@ public class MeseService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    //    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result=null;
-        //        AIResult result = super.resetEmptyOnly();
+    @Override
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
 
         if (result.isErrato()) {
@@ -191,10 +132,10 @@ public class MeseService extends AService {
         }
 
         for (AEMese aeMese : AEMese.values()) {
-            numRec = creaIfNotExist(aeMese) != null ? numRec + 1 : numRec;
+            numRec = creaReset(aeMese) ? numRec + 1 : numRec;
         }
 
-        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
+        return AResult.valido(AETypeReset.enumeration.get(), numRec);
     }
 
-}
+}// end of Singleton class

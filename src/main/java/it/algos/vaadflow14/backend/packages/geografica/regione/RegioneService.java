@@ -267,7 +267,7 @@ public class RegioneService extends AService {
                 return AResult.errato("Manca la classe StatoService");
             }
             else {
-                return statoService.resetEmptyOnly();
+                return statoService.reset();
             }
         }
     }

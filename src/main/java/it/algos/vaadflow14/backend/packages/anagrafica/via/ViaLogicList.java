@@ -64,6 +64,7 @@ public class ViaLogicList extends LogicList {
         super.fixPreferenze();
     }
 
+
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>

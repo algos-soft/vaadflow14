@@ -50,8 +50,8 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderSecolo")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaBoot = true)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Secolo", menuIcon = VaadinIcon.CALENDAR, searchProperty = "secolo", sortProperty = "ordine")
 @AIList(fields = "ordine,secolo,anteCristo,inizio,fine", usaRowIndex = false)
 @AIForm(fields = "secolo,anteCristo,inizio,fine", usaSpostamentoTraSchede = false)
@@ -100,7 +100,7 @@ public class Secolo extends AEntity {
      * ultimo anno (obbligatorio, unico) <br>
      */
     @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno finale")
-    @AIColumn(flexGrow = true)
+    @AIColumn(widthEM = 6)
     public int fine;
 
 

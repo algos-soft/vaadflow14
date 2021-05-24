@@ -75,7 +75,7 @@ public abstract class LogicList extends Logic {
             logger.error(unErrore, this.getClass(), "nomeDelMetodo");
         }
 
-        super.usaBottoneDeleteAll = annotation.usaReset(entityClazz) || annotation.usaNew(entityClazz);
+        super.usaBottoneDeleteAll =  annotation.usaNew(entityClazz);
         super.usaBottoneResetList = annotation.usaReset(entityClazz) && isResetMethod;
         super.usaBottoneNew = annotation.usaNew(entityClazz);
         super.usaBottoneSearch = annotation.usaSearchField(entityClazz);
@@ -159,9 +159,9 @@ public abstract class LogicList extends Logic {
         String propReset = html.bold("reset");
 
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true oppure %s=true", delete, entityClazz.getSimpleName(), usaReset, usaNew));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", delete, entityClazz.getSimpleName(), usaNew));
         addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, annotation.getCollectionName(entityClazz)));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.resetEmptyOnly()!=null", reset, entityClazz.getSimpleName(), usaReset, entityService.getClass().getSimpleName()));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.reset()!=null", reset, entityClazz.getSimpleName(), usaReset, entityService.getClass().getSimpleName()));
         addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, annotation.getCollectionName(entityClazz), resetTrue));
         addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entityClazz.getSimpleName(), usaNew));
         addSpanRosso(String.format("%s presente se in %s->@AIEntity esiste il valore della property %s", search, entityClazz.getSimpleName(), property));

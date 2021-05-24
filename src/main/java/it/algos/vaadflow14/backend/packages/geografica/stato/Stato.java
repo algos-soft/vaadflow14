@@ -52,8 +52,8 @@ import java.util.*;
 @Builder(builderMethodName = "builderStato")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaBoot = true)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Stato", keyPropertyName = "stato", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Stato", menuIcon = VaadinIcon.GLOBE, searchProperty = "stato", sortProperty = "ordine")
 @AIList(fields = "ordine,bandiera,stato,ue,continente,numerico,alfadue,alfatre,locale", usaDeleteMenu = true, usaRowIndex = false)
 @AIForm(fields = "ordine,stato,bandiera,regioni,ue,continente,numerico,alfadue,alfatre,locale", usaSpostamentoTraSchede = true)

@@ -64,10 +64,10 @@ public class ViaService extends AService {
      * @return true se la entity è stata creata e salvata
      */
     private boolean creaReset(final AEVia aeVia) {
-        Via via = newEntity(aeVia.toString());
-        via.reset = true;
+        Via entity = newEntity(aeVia.toString());
+        entity.reset = true;
 
-        return save(via) != null;
+        return save(entity) != null;
     }
 
 
@@ -83,6 +83,7 @@ public class ViaService extends AService {
     public Via newEntity() {
         return newEntity(VUOTA);
     }
+
 
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
@@ -105,36 +106,6 @@ public class ViaService extends AService {
 
 
     /**
-     * Retrieves an entity by its id.
-     *
-     * @param keyID must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Via findById(final String keyID) {
-        return (Via) super.findById(keyID);
-    }
-
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public Via findByKey(final String keyValue) {
-        return (Via) super.findByKey(keyValue);
-    }
-
-
-    /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
      * Invocato dal bottone Reset di alcune liste <br>
      * <p>
@@ -149,12 +120,15 @@ public class ViaService extends AService {
      */
     @Override
     public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
 
-        if (super.reset().isValido()) {
-            for (AEVia aeVia : AEVia.values()) {
-                numRec = creaReset(aeVia) ? numRec + 1 : numRec;
-            }
+        if (result.isErrato()) {
+            return result;
+        }
+
+        for (AEVia aeVia : AEVia.values()) {
+            numRec = creaReset(aeVia) ? numRec + 1 : numRec;
         }
 
         return AResult.valido(AETypeReset.enumeration.get(), numRec);

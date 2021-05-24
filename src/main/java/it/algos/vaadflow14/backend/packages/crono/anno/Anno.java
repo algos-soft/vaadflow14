@@ -50,8 +50,8 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderAnno")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaBoot = true)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Anno", keyPropertyName = "anno", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "anno", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,anno,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "anno,bisestile,secolo", usaSpostamentoTraSchede = false)
@@ -94,7 +94,7 @@ public class Anno extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBoxGrid = true)
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBoxGrid = true, widthEM = 12)
     @AIColumn(flexGrow = true)
     public Secolo secolo;
 

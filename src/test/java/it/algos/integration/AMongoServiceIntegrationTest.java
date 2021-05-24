@@ -498,7 +498,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @Order(20)
     @DisplayName("20 - Via (filtro=23+III secolo)")
     void fetch202() {
-        Secolo unSecolo = secoloService.findByKey("III secolo");
+        Secolo unSecolo = (Secolo)secoloService.findByKey("III secolo");
         assertNotNull(unSecolo);
         String fieldName = "secolo";
         String filtroStart = "23";
@@ -539,7 +539,7 @@ public class AMongoServiceIntegrationTest extends ATest {
     @Order(4)
     @DisplayName("4 - ugualeObj")
     void ugualeObj() {
-        Secolo unSecolo = secoloService.findByKey("XVIII secolo");
+        Secolo unSecolo = (Secolo)secoloService.findByKey("XVIII secolo");
         assertNotNull(unSecolo);
         Query query;
         String fieldName = "secolo";

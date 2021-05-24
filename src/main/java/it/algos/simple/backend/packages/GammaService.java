@@ -161,14 +161,14 @@ public class GammaService extends AService {
         AIResult result=null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 6;
-        Mese mese1 = meseService.findByKey("aprile");
-        Mese mese2 = meseService.findByKey("ottobre");
-        Mese mese3 = meseService.findByKey("gennaio");
-        Mese mese4 = meseService.findByKey("marzo");
-        Secolo secolo1 = secoloService.findByKey("XVII secolo a.C.");
-        Secolo secolo2 = secoloService.findByKey("X secolo");
-        Secolo secolo3 = secoloService.findByKey("XIV secolo");
-        Secolo secolo4 = secoloService.findByKey("XX secolo");
+        Mese mese1 = (Mese)meseService.findByKey("aprile");
+        Mese mese2 = (Mese)meseService.findByKey("ottobre");
+        Mese mese3 = (Mese)meseService.findByKey("gennaio");
+        Mese mese4 = (Mese)meseService.findByKey("marzo");
+        Secolo secolo1 = (Secolo)secoloService.findByKey("XVII secolo a.C.");
+        Secolo secolo2 = (Secolo)secoloService.findByKey("X secolo");
+        Secolo secolo3 = (Secolo)secoloService.findByKey("XIV secolo");
+        Secolo secolo4 = (Secolo)secoloService.findByKey("XX secolo");
 
         if (result.isErrato()) {
             return result;

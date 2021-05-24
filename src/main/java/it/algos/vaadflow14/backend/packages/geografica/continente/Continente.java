@@ -51,10 +51,10 @@ import java.util.*;
 @Builder(builderMethodName = "builderContinente")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaBoot = true)
-@AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,abitato", usaDeleteMenu = true, usaRowIndex = true)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Continente", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
+@AIView(menuName = "Continente", menuIcon = VaadinIcon.GLOBE, sortProperty = "ordine")
+@AIList(fields = "ordine,nome,abitato")
 @AIForm(fields = "ordine,nome,stati,abitato", usaSpostamentoTraSchede = true)
 public class Continente extends AEntity {
 
@@ -104,4 +104,4 @@ public class Continente extends AEntity {
         return getNome();
     }
 
-}
+}// end of Bean

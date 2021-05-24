@@ -418,12 +418,6 @@ public abstract class AService extends AAbstractService implements AIService {
             else {
                 result = AResult.errato( numRec);
             }
-
-            //            if (mongo.count(entityClazz, query) > 0) {
-            //                mongo.delete(entityClazz, query);
-            //            }
-
-            //            result = reset();
         }
         else {
             result = AResult.errato("La collezione " + collectionName + " non esiste");

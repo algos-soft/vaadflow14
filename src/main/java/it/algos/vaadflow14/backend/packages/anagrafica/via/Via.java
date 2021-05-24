@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.*;
@@ -48,10 +49,10 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderVia")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.entity)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Via", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = true)
 @AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome", usaDeleteMenu = true, usaRowIndex = true)
+@AIList(fields = "ordine,nome", usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
 public class Via extends AEntity {
 

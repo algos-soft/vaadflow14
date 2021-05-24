@@ -186,12 +186,7 @@ public class StatoService extends AService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -202,10 +197,9 @@ public class StatoService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    //    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result=null;
-        //        AIResult result = super.resetEmptyOnly();
+    @Override
+    public AIResult reset() {
+        AIResult result = super.reset();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
         Stato stato;
@@ -266,32 +260,27 @@ public class StatoService extends AService {
                 if (stato != null) {
                     numRec++;
                 }
-
             }
         }
 
-        return super.fixPostResetOnly(AETypeReset.wikipedia, numRec);
+        return AResult.valido(AETypeReset.wikipedia.get(), numRec);
     }
 
 
     private AIResult checkContinente() {
+        String packageName = Stato.class.getSimpleName().toLowerCase();
         String collection = "continente";
 
-        if (continenteService == null) {
-            continenteService = appContext.getBean(ContinenteService.class);
-        }
-
         if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
             if (continenteService == null) {
                 return AResult.errato("Manca la classe ContinenteService");
             }
             else {
-                return continenteService.resetEmptyOnly();
+                return continenteService.reset();
             }
-
         }
     }
 
