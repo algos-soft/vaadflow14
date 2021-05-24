@@ -177,7 +177,7 @@ public class FlowData implements AIData {
                     message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.reset() ", packageName, numRec, type, nameService);
                 }
                 else {
-                    message = String.format("Nel package %s esistono già %d elementi creati col metodo %s.reset() ", packageName, numRec, nameService);
+                    message = String.format("Nel package %s esistono %d elementi creati col metodo %s.reset() ", packageName, numRec, nameService);
                 }
                 logger.log(AETypeLog.checkData, message);
             }
