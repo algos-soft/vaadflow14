@@ -51,11 +51,11 @@ import javax.validation.constraints.*;
 @Builder(builderMethodName = "builderProvincia")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Provincia", keyPropertyName = "nome")
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
+@AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome,sigla,regione,iso,status", usaRowIndex = false)
-@AIForm(fields = "ordine,nome,sigla,regione,iso,status", usaSpostamentoTraSchede = false)
+@AIForm(fields = "ordine,nome,sigla,iso,status", usaSpostamentoTraSchede = true)
 public class Provincia extends AEntity {
 
     /**
@@ -99,7 +99,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
+    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboBoxGrid = true, widthEM = 14, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
     @AIColumn(widthEM = 11)
     public Regione regione;
 

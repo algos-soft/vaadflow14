@@ -182,7 +182,7 @@ public class ProvinciaService extends AService {
      */
     //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
         AIResult resultCollectionPropedeutica;
@@ -204,14 +204,11 @@ public class ProvinciaService extends AService {
 
 
     private AIResult checkRegione() {
+        String packageName = Provincia.class.getSimpleName().toLowerCase();
         String collection = "regione";
 
-        if (regioneService == null) {
-            regioneService = appContext.getBean(RegioneService.class);
-        }
-
         if (mongo.isValid(collection)) {
-            return AResult.valido("La collezione " + collection + " esiste già e non è stata modificata");
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
             if (regioneService == null) {
@@ -246,7 +243,7 @@ public class ProvinciaService extends AService {
                 regioneTxt = wrap.getTerza().toLowerCase();
                 regione = regioneService.findById(regioneTxt);
 
-                if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
+                if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
                     provincia = creaIfNotExist(ordine, nome, sigla, regione, stato, iso, status);
                     if (provincia != null) {
                         ordine++;
@@ -265,5 +262,38 @@ public class ProvinciaService extends AService {
         return result;
     }
 
+    /**
+     * Creazione o ricreazione di alcuni dati iniziali standard <br>
+     * Invocato dal bottone Reset di alcune liste <br>
+     * <p>
+     * I dati possono essere: <br>
+     * 1) recuperati da una Enumeration interna <br>
+     * 2) letti da un file CSV esterno <br>
+     * 3) letti da Wikipedia <br>
+     * 4) creati direttamente <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     *
+     * @return wrapper col risultato ed eventuale messaggio di errore
+     */
+    @Override
+    public AIResult reset() {
+        AIResult result = super.reset();
+        int numRec = 0;
+        AIResult resultCollectionPropedeutica;
 
-}
+        if (result.isErrato()) {
+            return result;
+        }
+        resultCollectionPropedeutica = checkRegione();
+        if (resultCollectionPropedeutica.isValido()) {
+            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
+        }
+        else {
+            return resultCollectionPropedeutica;
+        }
+
+//        result = creaProvinceItaliane();
+        return AResult.valido(AETypeReset.wikipedia.get(), numRec);
+    }
+
+}// end of Singleton class}

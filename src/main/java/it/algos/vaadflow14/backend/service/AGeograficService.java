@@ -1,11 +1,11 @@
 package it.algos.vaadflow14.backend.service;
 
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import static it.algos.vaadflow14.wiki.AWikiApiService.*;
+import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
 import java.util.*;
 
@@ -827,6 +827,7 @@ public class AGeograficService extends AAbstractService {
         String regione = VUOTA;
         WrapTreStringhe wrap = null;
         WrapDueStringhe wrapDue = null;
+        WrapDueStringhe wrapDueReg = null;
         String tagVdA = "Valle d'Aosta";
 
         if (listaRiga.size() < 3) {
@@ -835,7 +836,11 @@ public class AGeograficService extends AAbstractService {
 
         sigla = listaRiga.get(0).trim();
         regione = listaRiga.get(2).trim();
-        regione = text.estrae(regione, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
+        regione = text.estrae(regione, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+        wrapDueReg = getTemplateBandierina(regione);
+        if (wrapDueReg != null) {
+            regione = wrapDueReg.getSeconda();
+        }
 
         //--template bandierine per recuperare il nome
         if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
@@ -852,18 +857,6 @@ public class AGeograficService extends AAbstractService {
                 }
             }
         }
-
-        //        sigla = sigla.trim();
-        //        sigla = text.setNoHtmlTag(sigla, "kbd");
-        //        sigla = text.setNoHtmlTag(sigla, "code");
-        //        sigla = text.levaCodaDa(sigla, "<ref");
-
-        //        nome = nome.trim();
-        //        nome = text.estrae(nome, QUADRE_INI, QUADRE_END);
-        //        nome = text.levaTestoPrimaDi(nome, PIPE);
-        //            wrap = new WrapDueStringhe(sigla, nome);
-
-        //        regione = regione.trim();
 
         wrap = new WrapTreStringhe(sigla, nome, regione);
         return wrap;

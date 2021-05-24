@@ -53,7 +53,7 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
-@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione",  usaRowIndex = false)
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
 @AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = true)
 public class Regione extends AEntity {
 
@@ -115,7 +115,7 @@ public class Regione extends AEntity {
     /**
      * statuto normativo (facoltativo) <br>
      */
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBoxGrid = true,widthEM = 14)
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBoxGrid = true, widthEM = 14)
     @AIColumn(widthEM = 18, flexGrow = true)
     public AEStatus status;
 

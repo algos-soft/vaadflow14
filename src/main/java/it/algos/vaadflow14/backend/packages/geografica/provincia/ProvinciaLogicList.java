@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.provincia;
 
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -8,8 +7,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
-
-import java.util.*;
 
 /**
  * Project: vaadflow14 <br>
@@ -34,10 +31,9 @@ import java.util.*;
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 public class ProvinciaLogicList extends LogicList {
 
-
-//    public static final String FIELD_REGIONE = "regione";
-//
-//    public static final String FIELD_STATO = "stato";
+    //    public static final String FIELD_REGIONE = "regione";
+    //
+    //    public static final String FIELD_STATO = "stato";
 
     /**
      * versione della classe per la serializzazione
@@ -74,11 +70,11 @@ public class ProvinciaLogicList extends LogicList {
         super.usaBottoneNew = true;
         super.usaBottoneSearch = true;
         super.usaBottonePaginaWiki = true;
-//        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-//        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare
-//        super.formClazz = ProvinciaForm.class;//@todo Funzionalità ancora da implementare
+        super.maxNumeroBottoniPrimaRiga = 3;
+        //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
+        //        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare
+        //        super.formClazz = ProvinciaForm.class;//@todo Funzionalità ancora da implementare
     }
-
 
 
     /**
@@ -87,7 +83,8 @@ public class ProvinciaLogicList extends LogicList {
      */
     @Override
     protected void fixSpanList() {
-        addSpanBlu("Test");
+        addSpanBlu("Suddivisioni geografica di terzo livello. Codifica secondo ISO 3166-3");
+        addSpanBlu("107 province italiane");
     }
 
 }// end of Route class
