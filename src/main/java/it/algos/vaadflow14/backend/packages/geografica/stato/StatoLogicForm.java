@@ -66,6 +66,7 @@ public class StatoLogicForm extends LogicForm {
         super.wikiPageTitle = ((Stato) entityBean).stato;
     }
 
+
     /**
      * Costruisce una lista di bottoni (enumeration) <br>
      * Di default costruisce (come da flag) i bottoni 'delete' e 'reset' <br>

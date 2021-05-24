@@ -54,7 +54,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
 @AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione",  usaRowIndex = false)
-@AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = false)
+@AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = true)
 public class Regione extends AEntity {
 
     /**
