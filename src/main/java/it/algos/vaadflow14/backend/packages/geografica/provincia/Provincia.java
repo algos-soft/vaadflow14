@@ -128,7 +128,7 @@ public class Provincia extends AEntity {
      * statuto normativo (obbligatorio) <br>
      */
     @NotNull()
-    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, widthEM = 16)
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, usaComboBoxGrid = true, widthEM = 17)
     @AIColumn(widthEM = 15)
     public AETypeProvincia status;
 

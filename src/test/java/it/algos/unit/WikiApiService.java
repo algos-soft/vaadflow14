@@ -45,6 +45,8 @@ public class WikiApiService extends ATest {
 
     private List<WrapTreStringhe> listaWrapTre;
 
+    private List<WrapQuattro> listaWrapQuattro;
+
     private WrapDueStringhe dueStringhe;
 
 
@@ -1033,15 +1035,15 @@ public class WikiApiService extends ATest {
     public void getTableProvinceItaliane() {
         previstoIntero = 107;
 
-        listaWrapTre = geografic.getProvince();
+        listaWrapQuattro = geografic.getProvince();
 
-        assertNotNull(listaWrapTre);
-        assertEquals(previstoIntero, listaWrapTre.size());
+        assertNotNull(listaWrapQuattro);
+        assertEquals(previstoIntero, listaWrapQuattro.size());
         System.out.println(VUOTA);
         System.out.println(VUOTA);
         System.out.println(VUOTA);
-        System.out.println("45 - Province: " + listaWrapTre.size());
-        printWrapTre(listaWrapTre);
+        System.out.println("45 - Province: " + listaWrapQuattro.size());
+        printWrapQuattro(listaWrapQuattro);
     }
 
     private void printColonna(List<String> listaColonna) {
@@ -1067,6 +1069,15 @@ public class WikiApiService extends ATest {
         System.out.println("********");
         if (array.isAllValid(listaWrap)) {
             for (WrapTreStringhe wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
+            }
+        }
+    }
+
+    private void printWrapQuattro(List<WrapQuattro> listaWrap) {
+        System.out.println("********");
+        if (array.isAllValid(listaWrap)) {
+            for (WrapQuattro wrap : listaWrap) {
                 System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
             }
         }

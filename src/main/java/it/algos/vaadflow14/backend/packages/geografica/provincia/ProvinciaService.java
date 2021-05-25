@@ -102,7 +102,7 @@ public class ProvinciaService extends AService {
      */
     @Override
     public Provincia newEntity() {
-        return newEntity( VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
+        return newEntity(VUOTA, VUOTA, (Regione) null, (Stato) null, VUOTA, (AETypeProvincia) null);
     }
 
 
@@ -120,7 +120,7 @@ public class ProvinciaService extends AService {
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Provincia newEntity( final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
+    public Provincia newEntity(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
         Provincia newEntityBean = Provincia.builderProvincia()
                 .nome(text.isValid(nome) ? nome : null)
                 .sigla(text.isValid(sigla) ? sigla : null)
@@ -184,7 +184,7 @@ public class ProvinciaService extends AService {
 
     private AIResult creaProvinceItaliane() {
         AIResult result = AResult.errato();
-        List<WrapTreStringhe> listaWrap;
+        List<WrapQuattro> listaWrap;
         Provincia provincia;
         String nome;
         String sigla;
@@ -192,26 +192,28 @@ public class ProvinciaService extends AService {
         Regione regione;
         Stato stato = AEStato.italia.getStato();
         String iso;
-        AETypeProvincia status = AETypeProvincia.provincia;
+        AETypeProvincia status = null;
 
         listaWrap = geografic.getProvince();
         if (listaWrap != null && listaWrap.size() > 0) {
-            for (WrapTreStringhe wrap : listaWrap) {
+            for (WrapQuattro wrap : listaWrap) {
                 nome = wrap.getSeconda();
                 sigla = wrap.getPrima();
                 iso = sigla;
                 regioneTxt = wrap.getTerza().toLowerCase();
                 regione = regioneService.findById(regioneTxt);
+                status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
+                status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
 
                 if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
-                    if ( creaReset( nome, sigla, regione, stato, iso, status)) {
+                    if (creaReset(nome, sigla, regione, stato, iso, status)) {
                     }
                     else {
-                        logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s",nome,sigla,regioneTxt));
+                        logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
                     }
                 }
                 else {
-                    logger.log(String.format("Mancano dati essenziali. Nome:%s, Sigla:%s, Regione:%s",nome,sigla,regioneTxt));
+                    logger.log(String.format("Mancano dati essenziali. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
                 }
             }
             result = AResult.valido("Province italiane: ");

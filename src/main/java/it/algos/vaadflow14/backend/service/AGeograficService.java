@@ -635,20 +635,21 @@ public class AGeograficService extends AAbstractService {
      *
      * @return lista di wrapper con due stringhe ognuno (sigla, nome)
      */
-    public List<WrapTreStringhe> getProvince() {
-        List<WrapTreStringhe> listaWrap = null;
+    public List<WrapQuattro> getProvince() {
+        List<WrapQuattro> listaWrap = null;
         String wikiTitle = "ISO_3166-2:IT";
         List<List<String>> listaTable = null;
-        WrapTreStringhe wrap;
+        WrapTreStringhe wrapTre;
+        WrapQuattro wrapQuattro;
 
         listaTable = wikiApi.getTable(wikiTitle, 2);
         if (listaTable != null && listaTable.size() > 0) {
             listaWrap = new ArrayList<>();
 
             for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
-                wrap = getWrapProvincia(listaRiga);
-                if (wrap != null) {
-                    listaWrap.add(wrap);
+                wrapTre = getWrapProvincia(listaRiga);
+                if (wrapTre != null) {
+                    listaWrap.add(new WrapQuattro(wrapTre,true));
                 }
             }
         }
@@ -657,9 +658,9 @@ public class AGeograficService extends AAbstractService {
         if (listaTable != null && listaTable.size() > 0) {
 
             for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
-                wrap = getWrapProvincia(listaRiga);
-                if (wrap != null) {
-                    listaWrap.add(wrap);
+                wrapTre = getWrapProvincia(listaRiga);
+                if (wrapTre != null) {
+                    listaWrap.add(new WrapQuattro(wrapTre,false));
                 }
             }
         }
@@ -667,33 +668,6 @@ public class AGeograficService extends AAbstractService {
         return listaWrap;
     }
 
-
-    /**
-     * Import delle province italiane da una pagina di wikipedia <br>
-     *
-     * @return lista di wrapper con due stringhe ognuno (sigla, nome)
-     */
-    public List<WrapTreStringhe> getProvinceOld() {
-        List<WrapTreStringhe> listaWrap = null;
-        String wikiTitle = "Province d'Italia";
-        List<List<String>> listaTable = null;
-        WrapTreStringhe wrap;
-
-        listaTable = wikiApi.getTable(wikiTitle);
-
-        if (listaTable != null && listaTable.size() > 0) {
-            listaWrap = new ArrayList<>();
-
-            for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
-                wrap = getWrapProvincia(listaRiga);
-                if (wrap != null) {
-                    listaWrap.add(wrap);
-                }
-            }
-        }
-
-        return listaWrap;
-    }
 
     /**
      * Probabilmente il secondo elemento della lista contiene i titoli <br>
@@ -863,10 +837,11 @@ public class AGeograficService extends AAbstractService {
         String sigla = VUOTA;
         String nome = VUOTA;
         String regioneID = VUOTA;
-        WrapTreStringhe wrap = null;
+        WrapTreStringhe wrapTre = null;
         WrapDueStringhe wrapDue = null;
         WrapDueStringhe wrapDueReg = null;
         String tagVdA = "valled'aosta";
+        String tagA = "Aosta";
 
         if (listaRiga.size() < 3) {
             return null;
@@ -879,7 +854,7 @@ public class AGeograficService extends AAbstractService {
         if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
             if (regioneID.equals(tagVdA)) {
                 sigla = "AO";
-                nome = regioneID;
+                nome = tagA;
             }
             else {
                 sigla = text.estraeGraffaDoppia(sigla);
@@ -891,8 +866,8 @@ public class AGeograficService extends AAbstractService {
             }
         }
 
-        wrap = new WrapTreStringhe(sigla, nome, regioneID);
-        return wrap;
+        wrapTre = new WrapTreStringhe(sigla, nome, regioneID);
+        return wrapTre;
     }
 
     public String fixRegione(String testoIn) {

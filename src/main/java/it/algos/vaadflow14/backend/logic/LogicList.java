@@ -717,7 +717,7 @@ public abstract class LogicList extends Logic {
      */
     protected final void openConfirmReset() {
         MessageDialog messageDialog;
-        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori successivamente aggiunti o modificati.";
+        String message = "Vuoi veramente ripristinare i valori originali predeterminati di questa collezione? L' operazione cancellerà tutti i valori originali. Eventuali valori inseriti manualmente NON vengono cancellati/modificati";
         VaadinIcon icon = VaadinIcon.WARNING;
 
         if (mongo.isEmpty(entityClazz)) {

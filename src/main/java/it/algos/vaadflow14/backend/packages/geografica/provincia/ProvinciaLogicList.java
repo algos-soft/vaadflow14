@@ -79,7 +79,7 @@ public class ProvinciaLogicList extends LogicList {
     @Override
     protected void fixSpanList() {
         addSpanBlu("Suddivisioni geografiche di terzo livello. Codifica secondo ISO 3166-3");
-        addSpanBlu("In Italia 107 province. Codifica secondo ISO 3166-3");
+        addSpanBlu("In Italia 107 province. Codifica secondo ISO_3166-2:IT");
     }
 
 }// end of Route class
