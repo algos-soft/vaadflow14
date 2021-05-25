@@ -637,6 +637,44 @@ public class AGeograficService extends AAbstractService {
      */
     public List<WrapTreStringhe> getProvince() {
         List<WrapTreStringhe> listaWrap = null;
+        String wikiTitle = "ISO_3166-2:IT";
+        List<List<String>> listaTable = null;
+        WrapTreStringhe wrap;
+
+        listaTable = wikiApi.getTable(wikiTitle, 2);
+        if (listaTable != null && listaTable.size() > 0) {
+            listaWrap = new ArrayList<>();
+
+            for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
+                wrap = getWrapProvincia(listaRiga);
+                if (wrap != null) {
+                    listaWrap.add(wrap);
+                }
+            }
+        }
+
+        listaTable = wikiApi.getTable(wikiTitle, 3);
+        if (listaTable != null && listaTable.size() > 0) {
+
+            for (List<String> listaRiga : listaTable.subList(1, listaTable.size())) {
+                wrap = getWrapProvincia(listaRiga);
+                if (wrap != null) {
+                    listaWrap.add(wrap);
+                }
+            }
+        }
+
+        return listaWrap;
+    }
+
+
+    /**
+     * Import delle province italiane da una pagina di wikipedia <br>
+     *
+     * @return lista di wrapper con due stringhe ognuno (sigla, nome)
+     */
+    public List<WrapTreStringhe> getProvinceOld() {
+        List<WrapTreStringhe> listaWrap = null;
         String wikiTitle = "Province d'Italia";
         List<List<String>> listaTable = null;
         WrapTreStringhe wrap;
@@ -824,6 +862,66 @@ public class AGeograficService extends AAbstractService {
     public WrapTreStringhe getWrapProvincia(List<String> listaRiga) {
         String sigla = VUOTA;
         String nome = VUOTA;
+        String regioneID = VUOTA;
+        WrapTreStringhe wrap = null;
+        WrapDueStringhe wrapDue = null;
+        WrapDueStringhe wrapDueReg = null;
+        String tagVdA = "valled'aosta";
+
+        if (listaRiga.size() < 3) {
+            return null;
+        }
+
+        sigla = listaRiga.get(1).trim();
+        regioneID = fixRegione(listaRiga.get(2).trim());
+
+        //--template bandierine per recuperare il nome
+        if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
+            if (regioneID.equals(tagVdA)) {
+                sigla = "AO";
+                nome = regioneID;
+            }
+            else {
+                sigla = text.estraeGraffaDoppia(sigla);
+                wrapDue = getTemplateBandierina(sigla);
+                if (wrapDue != null) {
+                    sigla = wrapDue.getPrima();
+                    nome = wrapDue.getSeconda();
+                }
+            }
+        }
+
+        wrap = new WrapTreStringhe(sigla, nome, regioneID);
+        return wrap;
+    }
+
+    public String fixRegione(String testoIn) {
+        String regione = testoIn;
+
+        if (testoIn.contains(DOPPIE_QUADRE_INI) && testoIn.contains(DOPPIE_QUADRE_END)) {
+            regione = text.estrae(testoIn, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
+            regione = regione.toLowerCase();
+            regione = regione.replaceAll(SPAZIO, VUOTA);
+        }
+
+        return regione;
+    }
+
+    /**
+     * Estrae una tripletta di valori significativi da una lista eterogenea <br>
+     * Se la lista ha un solo valore, qualcosa non funziona <br>
+     * Se la lista ha più di due valori, occorre selezionare i due significativi <br>
+     * Sicuramente uno dei due valori contiene la sigla (deve avere un trattino) <br>
+     * Uno dei valori deve essere un nome oppure il link alle bandierine (deve avere le doppie graffe) <br>
+     * Dalla eventuale bandierina recupero il nome <br>
+     *
+     * @param listaRiga valori di una singola regione
+     *
+     * @return wrapper di due stringhe valid (sigla, nome)
+     */
+    public WrapTreStringhe getWrapProvinciaOld(List<String> listaRiga) {
+        String sigla = VUOTA;
+        String nome = VUOTA;
         String regione = VUOTA;
         WrapTreStringhe wrap = null;
         WrapDueStringhe wrapDue = null;
@@ -900,24 +998,23 @@ public class AGeograficService extends AAbstractService {
     //        return testoValido.trim();
     //    }
 
-
-    public String fixRegione(String testoGrezzo) {
-        String testoValido = VUOTA;
-        String tag = "-";
-        int pos = 0;
-        String[] parti = null;
-
-        if (text.isEmpty(testoGrezzo)) {
-            return VUOTA;
-        }
-
-        if (testoGrezzo.contains(tag)) {
-            pos = testoGrezzo.indexOf(tag) + tag.length();
-            testoValido = testoGrezzo.substring(pos, pos + 3);
-        }
-
-        return testoValido.trim();
-    }
+    //    public String fixRegione(String testoGrezzo) {
+    //        String testoValido = VUOTA;
+    //        String tag = "-";
+    //        int pos = 0;
+    //        String[] parti = null;
+    //
+    //        if (text.isEmpty(testoGrezzo)) {
+    //            return VUOTA;
+    //        }
+    //
+    //        if (testoGrezzo.contains(tag)) {
+    //            pos = testoGrezzo.indexOf(tag) + tag.length();
+    //            testoValido = testoGrezzo.substring(pos, pos + 3);
+    //        }
+    //
+    //        return testoValido.trim();
+    //    }
 
     //    public String fixRegione(String testoGrezzo) {
     //        String testoValido = VUOTA;

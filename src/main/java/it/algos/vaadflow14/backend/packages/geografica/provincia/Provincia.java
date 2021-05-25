@@ -54,8 +54,8 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Provincia", keyPropertyName = "nome", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Provincia", menuIcon = VaadinIcon.GLOBE, searchProperty = "nome", sortProperty = "ordine")
-@AIList(fields = "ordine,nome,sigla,regione,iso,status", usaRowIndex = false)
-@AIForm(fields = "ordine,nome,sigla,iso,status", usaSpostamentoTraSchede = true)
+@AIList(fields = "nome,sigla,regione,iso,status", usaRowIndex = true)
+@AIForm(fields = "nome,sigla,iso,status", usaSpostamentoTraSchede = true)
 public class Provincia extends AEntity {
 
     /**
@@ -64,13 +64,13 @@ public class Provincia extends AEntity {
     private final static long serialVersionUID = 1L;
 
 
-    /**
-     * ordinamento (obbligatorio, unico) <br>
-     */
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
-    public int ordine;
+//    /**
+//     * ordinamento (obbligatorio, unico) <br>
+//     */
+//    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
+//    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
+//    @AIColumn(header = "#", widthEM = 3)
+//    public int ordine;
 
     /**
      * nome (obbligatorio, unico) <br>

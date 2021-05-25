@@ -101,22 +101,6 @@ public class RegioneService extends AService {
     }
 
 
-//    /**
-//     * Crea e registra una entity solo se non esisteva <br>
-//     *
-//     * @param divisione (obbligatorio, unico)
-//     * @param stato     (obbligatorio)
-//     * @param iso       di riferimento (obbligatorio, unico)
-//     * @param sigla     (consuetudinaria, obbligatoria)
-//     * @param status    (obbligatorio)
-//     *
-//     * @return true se la nuova entity è stata creata e salvata
-//     */
-//    public Regione creaIfNotExist(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) {
-//        return (Regione) checkAndSave(newEntity(divisione, stato, iso, sigla, status));
-//    }
-
-
     /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
@@ -235,45 +219,6 @@ public class RegioneService extends AService {
     public Regione findByKey(final String keyValue) {
         return (Regione) super.findByKey(keyValue);
     }
-
-
-//    /**
-//     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-//     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-//     * <p>
-//     * 1) deve esistere lo specifico metodo sovrascritto
-//     * 2) deve essere valida la entityClazz
-//     * 3) deve esistere la collezione su mongoDB
-//     * 4) la collezione non deve essere vuota
-//     * <p>
-//     * I dati possono essere: <br>
-//     * 1) recuperati da una Enumeration interna <br>
-//     * 2) letti da un file CSV esterno <br>
-//     * 3) letti da Wikipedia <br>
-//     * 4) creati direttamente <br>
-//     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     *
-//     * @return wrapper col risultato ed eventuale messaggio di errore
-//     */
-//    //    @Override
-//    public AIResult resetEmptyOnly() {
-//        AIResult result = null;
-//        //        AIResult result = super.resetEmptyOnly();
-//        AIResult resultCollectionPropedeutica;
-//
-//        if (result.isErrato()) {
-//            return result;
-//        }
-//        resultCollectionPropedeutica = checkStato();
-//        if (resultCollectionPropedeutica.isValido()) {
-//            logger.log(AETypeLog.checkData, resultCollectionPropedeutica.getMessage());
-//        }
-//        else {
-//            return resultCollectionPropedeutica;
-//        }
-//
-//        return creaRegioniAllStati();
-//    }
 
 
     private AIResult checkStato() {

@@ -65,14 +65,9 @@ public class ProvinciaLogicList extends LogicList {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.usaBottoneDeleteAll = false;
-        super.usaBottoneResetList = true;
-        super.usaBottoneNew = true;
-        super.usaBottoneSearch = true;
         super.usaBottonePaginaWiki = true;
         super.maxNumeroBottoniPrimaRiga = 3;
-        //        super.searchType = AESearch.editField;//@todo Funzionalità ancora da implementare
-        //        super.wikiPageTitle = "ISO_3166-2";//@todo Funzionalità ancora da implementare
+        super.wikiPageTitle = "ISO_3166-2:IT";//@todo Funzionalità ancora da implementare
         //        super.formClazz = ProvinciaForm.class;//@todo Funzionalità ancora da implementare
     }
 
@@ -83,8 +78,8 @@ public class ProvinciaLogicList extends LogicList {
      */
     @Override
     protected void fixSpanList() {
-        addSpanBlu("Suddivisioni geografica di terzo livello. Codifica secondo ISO 3166-3");
-        addSpanBlu("107 province italiane");
+        addSpanBlu("Suddivisioni geografiche di terzo livello. Codifica secondo ISO 3166-3");
+        addSpanBlu("In Italia 107 province. Codifica secondo ISO 3166-3");
     }
 
 }// end of Route class
