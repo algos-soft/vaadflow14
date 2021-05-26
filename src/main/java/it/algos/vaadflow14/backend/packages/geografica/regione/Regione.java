@@ -6,6 +6,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -54,7 +56,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
 @AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
-@AIForm(fields = "ordine,divisione,stato,iso,sigla,status", usaSpostamentoTraSchede = true)
+@AIForm(fields = "stato,divisione,iso,sigla,province,status", usaSpostamentoTraSchede = true)
 public class Regione extends AEntity {
 
     /**
@@ -111,6 +113,14 @@ public class Regione extends AEntity {
     @AIColumn(widthEM = 6)
     public String sigla;
 
+
+    /**
+     * divisione amministrativa di terzo livello (facoltativa) <br>
+     */
+    @Transient()
+    @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di terzo livello", linkClazz = Provincia.class, linkProperty = "regione", properties = "sigla,nome")
+    @AIColumn(header = "Divisione")
+    public List<Provincia> province;
 
     /**
      * statuto normativo (facoltativo) <br>

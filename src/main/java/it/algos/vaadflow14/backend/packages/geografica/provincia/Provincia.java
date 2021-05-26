@@ -64,14 +64,6 @@ public class Provincia extends AEntity {
     private final static long serialVersionUID = 1L;
 
 
-//    /**
-//     * ordinamento (obbligatorio, unico) <br>
-//     */
-//    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
-//    @AIField(type = AETypeField.integer, caption = "ordine", typeNum = AETypeNum.positiviOnly)
-//    @AIColumn(header = "#", widthEM = 3)
-//    public int ordine;
-
     /**
      * nome (obbligatorio, unico) <br>
      */

@@ -1,35 +1,40 @@
-package it.algos.vaadflow14.backend.packages.geografica.stato;
+package it.algos.vaadflow14.backend.packages.geografica.regione;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.provincia.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.enumeration.*;
-import it.algos.vaadflow14.ui.fields.*;
-import it.algos.vaadflow14.ui.form.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.util.*;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.textfield.TextField;
+
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * First time: lun, 15-mar-2021
- * Last doc revision: 17:41
+ * Date: mar, 25-mag-2021
+ * Time: 20:15
  * <p>
  */
 //Vaadin flow
-@Route(value = "statoForm", layout = MainLayout.class)
+@Route(value = "regioneForm", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-public class StatoLogicForm extends LogicForm {
+public class RegioneLogicForm extends LogicForm {
 
 
     /**
@@ -43,14 +48,14 @@ public class StatoLogicForm extends LogicForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public RegioneService regioneService;
+    public ProvinciaService provinciaService;
 
     /**
      * Costruttore senza parametri <br>
      * Questa classe viene costruita partendo da @Route e NON dalla catena @Autowired di SpringBoot <br>
      */
-    public StatoLogicForm(@Qualifier("statoService") AIService entityService) {
-        super.entityClazz = Stato.class;
+    public RegioneLogicForm(@Qualifier("regioneService") AIService entityService) {
+        super.entityClazz = Regione.class;
         super.entityService = entityService;
     }// end of Vaadin/@Route constructor
 
@@ -64,7 +69,7 @@ public class StatoLogicForm extends LogicForm {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
-        super.wikiPageTitle = ((Stato) entityBean).stato;
+        super.wikiPageTitle = ((Regione) entityBean).divisione;
     }
 
 
@@ -76,23 +81,13 @@ public class StatoLogicForm extends LogicForm {
     protected List<AIButton> getListaAEBottoniTop() {
         List<AIButton> listaBottoni = new ArrayList<>();
 
-        listaBottoni.add(AEButton.download);
         listaBottoni.add(AEButton.wiki);
 
         return listaBottoni;
     }
 
-    /**
-     * Esegue un azione di download, specifica del programma/package in corso <br>
-     * Deve essere sovrascritto <br>
-     *
-     * @return true se l'azione è stata eseguita
-     */
-    public boolean download() {
-        regioneService.creaRegioniDiUnoStato((Stato) entityBean);
-        UI.getCurrent().getPage().reload();
-
-        return true;
-    }
 
 }// end of Route class
+
+
+
