@@ -114,7 +114,7 @@ public class Stato extends AEntity {
     /**
      * unione europea
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Appartenente all' Unione Europea", usaCheckBox = true)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Appartenente all' Unione Europea", usaCheckBox3Vie = true)
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "UE")
     public boolean ue;
 

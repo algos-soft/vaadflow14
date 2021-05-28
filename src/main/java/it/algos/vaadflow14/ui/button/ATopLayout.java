@@ -237,6 +237,7 @@ public class ATopLayout extends AButtonLayout {
         Button button;
         ComboBox combo;
         Checkbox check;
+        IndeterminateCheckbox check3Vie;
 
         if (mappaComponenti != null && mappaComponenti.size() > 0) {
             for (String key : mappaComponenti.keySet()) {
@@ -260,10 +261,16 @@ public class ATopLayout extends AButtonLayout {
 
                 if (obj instanceof Checkbox) {
                     check = ((Checkbox) obj);
-                    String fieldName=check.getLabel();
-                    IndeterminateCheckbox indeterminateCheckbox = new IndeterminateCheckbox(text.primaMaiuscola(check.getLabel()));
-                    indeterminateCheckbox.addValueChangeListener(event -> {
-                        if (indeterminateCheckbox.isIndeterminate()) {
+                    this.addComp(check);
+                }
+
+                if (obj instanceof IndeterminateCheckbox) {
+                    check3Vie = ((IndeterminateCheckbox) obj);
+                    String fieldName=check3Vie.getLabel();
+//                    IndeterminateCheckbox indeterminateCheckbox = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
+                    IndeterminateCheckbox finalCheck3Vie = check3Vie;
+                    check3Vie.addValueChangeListener(event -> {
+                        if (finalCheck3Vie.isIndeterminate()) {
                             // new "value" is indeterminate. (Pseudo "null")
                             // warning: event.getValue() and event.isFromClient() both return false here!
                             performAction(AEAction.check, fieldName,null);
@@ -277,7 +284,7 @@ public class ATopLayout extends AButtonLayout {
                             performAction(AEAction.check, fieldName,false);
                         }
                     });
-                    this.addComp(indeterminateCheckbox);
+                    this.addComp(finalCheck3Vie);
                 }
             }
         }

@@ -256,14 +256,24 @@ public @interface AIField {
      */
     boolean usaComboBox() default false;
 
+
     /**
-     * (Optional) Usa un checkBox di filtro come bottone nel header della Grid.
+     * (Optional) Usa un checkBox come filtro nel header della Grid.
      * Meaning sense only for AETypeField.booleano and typeBool.
      * Defaults to false.
      *
      * @return the boolean
      */
     boolean usaCheckBox() default false;
+
+    /**
+     * (Optional) Usa un checkBox a 3 vie come filtro nel header della Grid.
+     * Meaning sense only for AETypeField.booleano and typeBool.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaCheckBox3Vie() default false;
 
     /**
      * (Optional) placeholder for empty field

@@ -84,7 +84,7 @@ public class Anno extends AEntity {
      * flag bisestile (obbligatorio)
      */
     @Indexed()
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", usaCheckBox = true, widthEM = 6)
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", usaCheckBox3Vie = true, widthEM = 6)
     @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 5)
     public boolean bisestile;
 

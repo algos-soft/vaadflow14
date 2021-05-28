@@ -1636,15 +1636,49 @@ public class AAnnotationService extends AAbstractService {
      * @return status of field
      */
     public boolean usaCheckBox(final Field reflectionJavaField) {
-        boolean usaCheckBoxGrid = false;
+        boolean usaCheckBox = false;
         AIField annotation = this.getAIField(reflectionJavaField);
         AETypeField type = this.getFormType(reflectionJavaField);
 
         if (annotation != null && type == AETypeField.booleano) {
-            usaCheckBoxGrid = annotation.usaCheckBox();
+            usaCheckBox = annotation.usaCheckBox();
         }
 
-        return usaCheckBoxGrid;
+        return usaCheckBox;
+    }
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox3Vie(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+    }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox3Vie(final Field reflectionJavaField) {
+        boolean usaCheckBox3Vie = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
+
+        if (annotation != null && type == AETypeField.booleano) {
+            usaCheckBox3Vie = annotation.usaCheckBox3Vie();
+        }
+
+        return usaCheckBox3Vie;
     }
 
 

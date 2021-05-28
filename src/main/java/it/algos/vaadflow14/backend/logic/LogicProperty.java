@@ -544,8 +544,8 @@ public abstract class LogicProperty extends VerticalLayout {
         this.creaAEBottoniTop();
         this.creaComandiTop();
         //        this.fixWrapSearch();
-        this.fixComboBox();
-        this.fixCheckBox();
+//        this.fixComboBox();
+//        this.fixCheckBox();
         //        this.fixMappaBottoniSpecifici();
         wrapper = new WrapTop((AILogic) this, mappaComponenti,maxNumeroBottoniPrimaRiga);
 
@@ -581,29 +581,30 @@ public abstract class LogicProperty extends VerticalLayout {
      * Costruisce il searchField previsto in AEntity->@AIView(searchProperty) <br>
      * Costruisce i comboBox previsti nella AEntity->@AIField(usaComboBox = true) <br>
      * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+     * Costruisce gli indeterminateCheckbox previsti nella AEntity->@AIField(usaCheckBox3Vie = true) <br>
      * Nella sottoclasse possono essere aggiunti i bottoni, comboBox e checkBox <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void creaComandiTop() {
     }
 
-    /**
-     * Costruisce una lista di ComboBox al Top della view <br>
-     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBox = true) <br>
-     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixComboBox() {
-    }
-
-    /**
-     * Costruisce una lista di checkBox al Top della view <br>
-     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
-     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    protected void fixCheckBox() {
-    }
+//    /**
+//     * Costruisce una lista di ComboBox al Top della view <br>
+//     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBox = true) <br>
+//     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    protected void fixComboBox() {
+//    }
+//
+//    /**
+//     * Costruisce una lista di checkBox al Top della view <br>
+//     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+//     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    protected void fixCheckBox() {
+//    }
 
     //    /**
     //     * Costruisce una lista di bottoni (enumeration) al Top della view <br>

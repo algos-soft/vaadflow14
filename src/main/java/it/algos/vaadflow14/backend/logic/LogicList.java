@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.logic;
 
+import ch.carnet.kasparscherrer.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.icon.*;
@@ -259,14 +260,18 @@ public abstract class LogicList extends Logic {
      * Costruisce una mappa di componenti di comando/selezione/filtro al Top della view <br>
      * <p>
      * I componenti possono essere (nell'ordine):
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
      * SearchField per il filtro testuale di ricerca <br>
      * ComboBox di filtro <br>
      * CheckBox di filtro <br>
+     * IndeterminateCheckbox di filtro <br>
      * Bottoni specifici non standard <br>
      * <p>
+     * Costruisce i bottoni standard come dai flag regolati di default o nella sottoclasse <br>
      * Costruisce il searchField previsto in AEntity->@AIView(searchProperty) <br>
      * Costruisce i comboBox previsti nella AEntity->@AIField(usaComboBox = true) <br>
      * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+     * Costruisce gli indeterminateCheckbox previsti nella AEntity->@AIField(usaCheckBox3Vie = true) <br>
      * Nella sottoclasse possono essere aggiunti i bottoni, comboBox e checkBox <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
@@ -275,56 +280,64 @@ public abstract class LogicList extends Logic {
         super.creaComandiTop();
         ComboBox combo;
         Checkbox check;
+        IndeterminateCheckbox check3Vie;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
+
             if (annotation.usaComboBox(entityClazz, fieldName)) {
                 combo = this.getComboBox(fieldName);
                 mappaComponenti.put(fieldName, combo);
             }
+
             if (annotation.usaCheckBox(entityClazz, fieldName)) {
-                check = new Checkbox(fieldName);
+                check = new Checkbox(text.primaMaiuscola(fieldName));
                 mappaComponenti.put(fieldName, check);
             }
-        }
-    }
 
-    /**
-     * Costruisce una mappa di ComboBox al Top della view <br>
-     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBoxGrid = true) <br>
-     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixComboBox() {
-        super.fixComboBox();
-        ComboBox combo;
-
-        for (String fieldName : annotation.getGridColumns(entityClazz)) {
-            if (annotation.usaComboBox(entityClazz, fieldName)) {
-                combo = this.getComboBox(fieldName);
-                mappaComponenti.put(fieldName, combo);
+            if (annotation.usaCheckBox3Vie(entityClazz, fieldName)) {
+                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
+                mappaComponenti.put(fieldName, check3Vie);
             }
         }
     }
 
-    /**
-     * Costruisce una lista di checkBox al Top della view <br>
-     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
-     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixCheckBox() {
-        super.fixCheckBox();
-        Checkbox check;
+//    /**
+//     * Costruisce una mappa di ComboBox al Top della view <br>
+//     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBoxGrid = true) <br>
+//     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixComboBox() {
+//        super.fixComboBox();
+//        ComboBox combo;
+//
+//        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+//            if (annotation.usaComboBox(entityClazz, fieldName)) {
+//                combo = this.getComboBox(fieldName);
+//                mappaComponenti.put(fieldName, combo);
+//            }
+//        }
+//    }
 
-        for (String fieldName : annotation.getGridColumns(entityClazz)) {
-            if (annotation.usaCheckBox(entityClazz, fieldName)) {
-                check = new Checkbox(fieldName);
-                mappaComponenti.put(fieldName, check);
-            }
-        }
-    }
+//    /**
+//     * Costruisce una lista di checkBox al Top della view <br>
+//     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+//     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixCheckBox() {
+//        super.fixCheckBox();
+//        Checkbox check;
+//
+//        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+//            if (annotation.usaCheckBox(entityClazz, fieldName)) {
+//                check = new Checkbox(fieldName);
+//                mappaComponenti.put(fieldName, check);
+//            }
+//        }
+//    }
 
     //    /**
     //     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
