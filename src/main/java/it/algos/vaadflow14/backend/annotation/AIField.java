@@ -254,7 +254,16 @@ public @interface AIField {
      *
      * @return the boolean
      */
-    boolean usaComboBoxGrid() default false;
+    boolean usaComboBox() default false;
+
+    /**
+     * (Optional) Usa un checkBox di filtro come bottone nel header della Grid.
+     * Meaning sense only for AETypeField.booleano and typeBool.
+     * Defaults to false.
+     *
+     * @return the boolean
+     */
+    boolean usaCheckBox() default false;
 
     /**
      * (Optional) placeholder for empty field

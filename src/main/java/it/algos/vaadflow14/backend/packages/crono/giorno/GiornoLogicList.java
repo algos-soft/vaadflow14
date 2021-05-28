@@ -75,13 +75,13 @@ public class GiornoLogicList extends LogicList {
         addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Mese'");
     }
 
-    /**
-     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixMappaComboBox() {
-        this.fixComboBox("mese");
-    }
+//    /**
+//     * Regola una mappa di ComboBox (solo per la List e facoltativi) da usare nel wrapper getWrapButtonsTop() <br>
+//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+//     */
+//    @Override
+//    protected void fixMappaComboBox() {
+//        this.fixComboBox("mese");
+//    }
 
 }// end of Route class

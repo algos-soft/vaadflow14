@@ -1510,33 +1510,36 @@ public class AAnnotationService extends AAbstractService {
 
     /**
      * Get the status of specific method for comboBox in Grid.
+     * Meaning sense only for AETypeField.combo.
      *
      * @param entityClazz the class of type AEntity
      * @param fieldName   the property name
      *
      * @return status of field
      */
-    public boolean usaComboBoxGrid(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaComboBoxGrid(reflection.getField(entityClazz, fieldName));
+    public boolean usaComboBox(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaComboBox(reflection.getField(entityClazz, fieldName));
     }
 
 
     /**
      * Get the status of specific method for comboBox in Grid.
+     * Meaning sense only for AETypeField.combo.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
      *
      * @return status of field
      */
-    public boolean usaComboBoxGrid(final Field reflectionJavaField) {
-        boolean usaComboMethod = false;
+    public boolean usaComboBox(final Field reflectionJavaField) {
+        boolean usaComboBoxGrid = false;
         AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
 
-        if (annotation != null) {
-            usaComboMethod = annotation.usaComboBoxGrid();
+        if (annotation != null && (type == AETypeField.combo||type == AETypeField.enumeration)) {
+            usaComboBoxGrid = annotation.usaComboBox();
         }
 
-        return usaComboMethod;
+        return usaComboBoxGrid;
     }
 
     /**
@@ -1608,6 +1611,42 @@ public class AAnnotationService extends AAbstractService {
 
         return methodName;
     }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param entityClazz the class of type AEntity
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox(Class<? extends AEntity> entityClazz, String fieldName) {
+        return usaCheckBox(reflection.getField(entityClazz, fieldName));
+    }
+
+
+    /**
+     * Get the status of specific method for checkBox in Grid.
+     * Meaning sense only for AETypeField.booleano.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean usaCheckBox(final Field reflectionJavaField) {
+        boolean usaCheckBoxGrid = false;
+        AIField annotation = this.getAIField(reflectionJavaField);
+        AETypeField type = this.getFormType(reflectionJavaField);
+
+        if (annotation != null && type == AETypeField.booleano) {
+            usaCheckBoxGrid = annotation.usaCheckBox();
+        }
+
+        return usaCheckBoxGrid;
+    }
+
 
     /**
      * Get the placeholder from @AIField

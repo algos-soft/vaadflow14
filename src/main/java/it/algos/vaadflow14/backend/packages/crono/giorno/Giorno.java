@@ -88,7 +88,7 @@ public class Giorno extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Mese.class, usaComboBoxGrid = true)
+    @AIField(type = AETypeField.combo, comboClazz = Mese.class, usaComboBox = true)
     @AIColumn(widthEM = 8)
     public Mese mese;
 

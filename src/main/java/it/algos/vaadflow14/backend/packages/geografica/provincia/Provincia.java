@@ -91,7 +91,7 @@ public class Provincia extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboBoxGrid = true, widthEM = 14, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
+    @AIField(type = AETypeField.combo, comboClazz = Regione.class, logicClazz = RegioneService.class, usaComboBox = true, widthEM = 14, usaComboMethod = true, methodName = "creaComboRegioniItaliane")
     @AIColumn(widthEM = 11)
     public Regione regione;
 
@@ -120,7 +120,7 @@ public class Provincia extends AEntity {
      * statuto normativo (obbligatorio) <br>
      */
     @NotNull()
-    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, usaComboBoxGrid = true, widthEM = 17)
+    @AIField(type = AETypeField.enumeration, enumClazz = AETypeProvincia.class, usaComboBox = true, widthEM = 17)
     @AIColumn(widthEM = 15)
     public AETypeProvincia status;
 

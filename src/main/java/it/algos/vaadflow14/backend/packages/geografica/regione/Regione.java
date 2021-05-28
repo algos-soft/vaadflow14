@@ -55,7 +55,7 @@ import java.util.*;
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Regione", keyPropertyName = "divisione", usaReset = true, usaBoot = true, usaNew = false)
 @AIView(menuName = "Regione", menuIcon = VaadinIcon.GLOBE, searchProperty = "divisione", sortProperty = "ordine")
-@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "divisione", usaRowIndex = false)
+@AIList(fields = "ordine,divisione,stato,iso,sigla,status", title = "regione", usaRowIndex = false)
 @AIForm(fields = "stato,divisione,iso,sigla,province,status", usaSpostamentoTraSchede = true)
 public class Regione extends AEntity {
 
@@ -90,7 +90,7 @@ public class Regione extends AEntity {
      */
     @NotNull
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboBoxGrid = true, usaComboMethod = true, methodName = "creaComboStati")
+    @AIField(type = AETypeField.combo, comboClazz = Stato.class, logicClazz = StatoService.class, usaComboBox = true, usaComboMethod = true, methodName = "creaComboStati")
     @AIColumn(widthEM = 8)
     public Stato stato;
 
@@ -119,13 +119,13 @@ public class Regione extends AEntity {
      */
     @Transient()
     @AIField(type = AETypeField.gridShowOnly, caption = "divisioni amministrative di terzo livello", linkClazz = Provincia.class, linkProperty = "regione", properties = "sigla,nome")
-    @AIColumn(header = "Divisione")
+    @AIColumn(header = "Province")
     public List<Provincia> province;
 
     /**
      * statuto normativo (facoltativo) <br>
      */
-    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBoxGrid = true, widthEM = 14)
+    @AIField(type = AETypeField.enumeration, enumClazz = AEStatus.class, usaComboBox = true, widthEM = 14)
     @AIColumn(widthEM = 18, flexGrow = true)
     public AEStatus status;
 

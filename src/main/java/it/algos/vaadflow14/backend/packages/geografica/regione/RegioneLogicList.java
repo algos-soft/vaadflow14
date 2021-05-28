@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
+import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
@@ -9,6 +10,8 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
+
+import java.util.*;
 
 /**
  * Project: vaadflow14 <br>
@@ -92,20 +95,26 @@ public class RegioneLogicList extends LogicList {
 
 
     /**
-     * Costruisce una mappa di ComboBox di selezione e filtro <br>
-     * DEVE essere sovrascritto nella sottoclasse <br>
+     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    @Override
-    protected void fixMappaComboBox() {
+    protected Map<String, ComboBox> getMappaComboBox() {
+        Map<String, ComboBox> mappa = super.getMappaComboBox();
+        ComboBox combo;
 
         if (AEPreferenza.usaBandiereStati.is()) {
-            mappaComboBox.put("stato", statoService.creaComboStati());
+            combo = getComboBox("stato", statoService.creaComboStati());
+            mappa.put("stato", combo);
         }
         else {
-            super.fixComboBox("stato", AEStato.italia.getStato());
+            combo = getComboBox("stato", AEStato.italia.getStato());
+            mappa.put("stato", combo);
         }
 
-        super.fixComboBox("status");
+        combo = getComboBox("status");
+        mappa.put("status", combo);
+
+        return mappa;
     }
 
 }// end of Route class

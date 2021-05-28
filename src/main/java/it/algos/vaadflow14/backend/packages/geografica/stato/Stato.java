@@ -106,7 +106,7 @@ public class Stato extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Continente.class, widthEM = 14, usaComboBoxGrid = true, comboInitialValue = "Europa")
+    @AIField(type = AETypeField.combo, comboClazz = Continente.class, widthEM = 14, usaComboBox = true, comboInitialValue = "Europa")
     @AIColumn(widthEM = 8)
     public Continente continente;
 
@@ -114,7 +114,7 @@ public class Stato extends AEntity {
     /**
      * unione europea
      */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Appartenente all' Unione Europea")
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Appartenente all' Unione Europea", usaCheckBox = true)
     @AIColumn(typeBool = AETypeBoolCol.checkIcon, header = "UE")
     public boolean ue;
 

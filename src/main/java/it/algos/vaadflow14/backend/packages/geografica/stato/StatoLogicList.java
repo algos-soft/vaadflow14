@@ -9,10 +9,13 @@ import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.button.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Project: vaadflow14 <br>
@@ -79,7 +82,7 @@ public class StatoLogicList extends LogicList {
         super.usaBottonePaginaWiki = true;
         super.usaBottoneSearch = true;
         super.wikiPageTitle = "ISO_3166-1";
-        this.maxNumeroBottoniPrimaRiga = 5;
+        this.maxNumeroBottoniPrimaRiga = 3;
     }
 
 
@@ -95,14 +98,21 @@ public class StatoLogicList extends LogicList {
         addSpanBlu("Ordinamento alfabetico: prima Italia, UE e poi gli altri");
     }
 
+//    protected void fixTopLayout() {
+//        topLayout = appContext.getBean(ATopLayout.class, this.getWrapButtonsTop());
+//        if (topPlaceHolder != null && topLayout != null) {
+//            topPlaceHolder.add(topLayout);
+//        }
+//    }
+
     /**
      * Costruisce una mappa di ComboBox di selezione e filtro <br>
      * DEVE essere sovrascritto nella sottoclasse <br>
      */
 //    @Override
-    protected void fixMappaComboBox2() {
-        super.fixComboBox("continente", continenteService.findByKey("Europa"));
-    }
+//    protected void fixMappaComboBox2() {
+//        super.fixComboBox("continente", continenteService.findByKey("Europa"));
+//    }
 
     /**
      * Costruisce una lista ordinata di nomi delle properties del Form. <br>
