@@ -151,14 +151,14 @@ public abstract class LogicForm extends Logic {
             super.usaBottonePrima = true;
             super.usaBottoneDopo = true;
 
-            //            bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
-            //            if (bottone != null) {
-            //                bottone.setEnabled(text.isValid(entityBeanPrevID));
-            //            }
-            //            bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
-            //            if (bottone != null) {
-            //                bottone.setEnabled(text.isValid(entityBeanNextID));
-            //            }
+            //                        bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+            //                        if (bottone != null) {
+            //                            bottone.setEnabled(text.isValid(entityBeanPrevID));
+            //                        }
+            //                        bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+            //                        if (bottone != null) {
+            //                            bottone.setEnabled(text.isValid(entityBeanNextID));
+            //                        }
         }
     }
 
@@ -312,11 +312,11 @@ public abstract class LogicForm extends Logic {
         Button bottone;
 
         //--regola l'aspetto dei bottoni spostamento (se esistono)
-        bottone = bottomLayout.getMappaBottoni().get(AEButton.prima);
+        bottone = bottomLayout.getBottone((AEButton.prima.testo));
         if (bottone != null) {
             bottone.setEnabled(text.isValid(entityBeanPrevID));
         }
-        bottone = bottomLayout.getMappaBottoni().get(AEButton.dopo);
+        bottone = bottomLayout.getBottone((AEButton.dopo.testo));
         if (bottone != null) {
             bottone.setEnabled(text.isValid(entityBeanNextID));
         }
@@ -340,7 +340,7 @@ public abstract class LogicForm extends Logic {
 
         switch (azione) {
             case resetForm:
-//                this.reloadForm(entityBean);
+                //                this.reloadForm(entityBean);
                 break;
             case export:
                 //                export();
@@ -498,12 +498,6 @@ public abstract class LogicForm extends Logic {
         if (entityBean == null) {
             return status;
         }
-
-        //        if (beanService.isModificata(entityBean)) {
-        //        }
-        //        else {
-        //            return true;
-        //        }
 
         if (text.isEmpty(entityBean.id) && !(operationForm == AEOperation.addNew)) {
             logger.error("operationForm errato in una nuova entity che NON è stata salvata", LogicForm.class, "save");

@@ -33,10 +33,20 @@ public class ABottomLayout extends AButtonLayout {
      *
      * @param wrapper di informazioni tra 'logic' e 'view'
      */
-    public ABottomLayout(final WrapTop wrapper) {
+    public ABottomLayout(final WrapComponenti wrapper) {
         super(wrapper);
     }
 
+
+    /**
+     * Preferenze usate da questa 'view' <br>
+     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixPreferenze() {
+        super.fixPreferenze();
+    }
 
     /**
      * Qui va tutta la logica iniziale della view <br>
@@ -63,21 +73,10 @@ public class ABottomLayout extends AButtonLayout {
                     button = ((AIButton) obj).get();
                     button.addClickListener(event -> performAction(((AIButton) obj).getAction()));
                     rigaUnica.add(button);
+                    mappaCorrente.put(key, button);
                 }
             }
         }
-
-        //        if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-        //            for (AIButton bottone : listaAEBottoni) {
-        //                this.addBottoneEnum(bottone);
-        //            }
-        //        }
-
-        //        if (listaBottoniSpecifici != null && listaBottoniSpecifici.size() > 0) {
-        //            for (Button bottone : listaBottoniSpecifici) {
-        //                rigaUnica.add(bottone);
-        //            }
-        //        }
     }
 
     @Deprecated
