@@ -100,7 +100,7 @@ public abstract class LogicList extends Logic {
         //        super.mappaComboBox = new HashMap<>();
 
         //--costruisce una lista (vuota) di Component per i comandi sopra la lista
-        super.mappaComponenti = new LinkedHashMap<>();
+        super.mappaComponentiTop = new LinkedHashMap<>();
 
         //--costruisce una mappa (vuota) di filtri per la Grid
         super.mappaFiltri = new HashMap<>();
@@ -150,12 +150,15 @@ public abstract class LogicList extends Logic {
 
         String preferenza = html.bold("Preferenza");
         String delete = html.bold("Delete");
+        String tutte = html.bold("tutte");
+        String entity = entityClazz.getSimpleName();
+        String service = entityService.getClass().getSimpleName();
+        String collezione = html.bold(annotation.getCollectionName(entityClazz));
         String reset = html.bold("Reset");
         String nuovo = html.bold("New");
         String usaReset = html.bold("usaReset");
         String usaBoot = html.bold("usaBoot");
         String usaNew = html.bold("usaNew");
-        String tutte = html.bold("tutte");
         String solo = html.bold("solo");
         String resetTrue = html.bold("reset=true");
         String search = html.bold("SearchField");
@@ -165,15 +168,15 @@ public abstract class LogicList extends Logic {
         String propReset = html.bold("reset");
 
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", delete, entityClazz.getSimpleName(), usaNew));
-        addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, annotation.getCollectionName(entityClazz)));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.reset()!=null", reset, entityClazz.getSimpleName(), usaReset, entityService.getClass().getSimpleName()));
-        addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, annotation.getCollectionName(entityClazz), resetTrue));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entityClazz.getSimpleName(), usaNew));
-        addSpanRosso(String.format("%s presente se in %s->@AIEntity esiste il valore della property %s", search, entityClazz.getSimpleName(), property));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true %s anche %s=true, la collezione viene resettata all'avvio del programma.", entityClazz.getSimpleName(), usaReset, and, usaBoot));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=false, %s compare la property %s", entityClazz.getSimpleName(), usaReset, usaNew, non, propReset));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=true, compare la property %s uguale a true per le schede create con reset", entityClazz.getSimpleName(), usaReset, usaNew, propReset));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", delete, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, collezione));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.reset()!=null", reset, entity, usaReset, service));
+        addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
+        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entity, usaNew));
+        addSpanRosso(String.format("%s presente se in %s->@AIView esiste il valore della property %s", search, entity, property));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true %s anche %s=true, la collezione viene resettata all'avvio del programma.", entity, usaReset, and, usaBoot));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=false, %s compare la property %s", entity, usaReset, usaNew, non, propReset));
+        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=true, compare la property %s uguale a true per le schede create con reset", entity, usaReset, usaNew, propReset));
 
         if (spanHeaderList != null && spanHeaderList.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);
@@ -221,14 +224,14 @@ public abstract class LogicList extends Logic {
         String message = VUOTA;
 
         if (usaBottoneDeleteAll) {
-            mappaComponenti.put(AEButton.deleteAll.testo, AEButton.deleteAll);
+            mappaComponentiTop.put(AEButton.deleteAll.testo, AEButton.deleteAll);
         }
 
         if (usaBottoneResetList && entityService != null) {
             //--se manca il metodo specifico il bottone non potrebbe funzionare
             try {
                 if (entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null) {
-                    mappaComponenti.put(AEButton.resetList.testo, AEButton.resetList);
+                    mappaComponentiTop.put(AEButton.resetList.testo, AEButton.resetList);
                 }
             } catch (Exception unErrore) {
                 message = String.format("Non sono riuscito a controllare se esiste il metodo resetEmptyOnly() nella classe %s", entityService.getClass().getSimpleName());
@@ -237,22 +240,22 @@ public abstract class LogicList extends Logic {
         }
 
         if (usaBottoneNew) {
-            mappaComponenti.put(AEButton.nuovo.testo, AEButton.nuovo);
+            mappaComponentiTop.put(AEButton.nuovo.testo, AEButton.nuovo);
         }
         if (usaBottonePaginaWiki) {
-            mappaComponenti.put(AEButton.wiki.testo, AEButton.wiki);
+            mappaComponentiTop.put(AEButton.wiki.testo, AEButton.wiki);
         }
         if (usaBottoneDownload) {
-            mappaComponenti.put(AEButton.download.testo, AEButton.download);
+            mappaComponentiTop.put(AEButton.download.testo, AEButton.download);
         }
         if (usaBottoneUpload) {
-            mappaComponenti.put(AEButton.upload.testo, AEButton.upload);
+            mappaComponentiTop.put(AEButton.upload.testo, AEButton.upload);
         }
         if (usaBottoneSearch) {
-            mappaComponenti.put(AEButton.searchDialog.testo, AEButton.searchDialog);
+            mappaComponentiTop.put(AEButton.searchDialog.testo, AEButton.searchDialog);
         }
         if (usaBottoneExport) {
-            mappaComponenti.put(AEButton.export.testo, AEButton.export);
+            mappaComponentiTop.put(AEButton.export.testo, AEButton.export);
         }
     }
 
@@ -286,58 +289,63 @@ public abstract class LogicList extends Logic {
 
             if (annotation.usaComboBox(entityClazz, fieldName)) {
                 combo = this.getComboBox(fieldName);
-                mappaComponenti.put(fieldName, combo);
+                mappaComponentiTop.put(fieldName, combo);
             }
 
             if (annotation.usaCheckBox(entityClazz, fieldName)) {
                 check = new Checkbox(text.primaMaiuscola(fieldName));
-                mappaComponenti.put(fieldName, check);
+                mappaComponentiTop.put(fieldName, check);
             }
 
             if (annotation.usaCheckBox3Vie(entityClazz, fieldName)) {
                 check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
-                mappaComponenti.put(fieldName, check3Vie);
+                mappaComponentiTop.put(fieldName, check3Vie);
             }
+        }
+
+        if (utility.usaReset(entityClazz)) {
+            check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(FIELD_NAME_RESET));
+            mappaComponentiTop.put(FIELD_NAME_RESET, check3Vie);
         }
     }
 
-//    /**
-//     * Costruisce una mappa di ComboBox al Top della view <br>
-//     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBoxGrid = true) <br>
-//     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected void fixComboBox() {
-//        super.fixComboBox();
-//        ComboBox combo;
-//
-//        for (String fieldName : annotation.getGridColumns(entityClazz)) {
-//            if (annotation.usaComboBox(entityClazz, fieldName)) {
-//                combo = this.getComboBox(fieldName);
-//                mappaComponenti.put(fieldName, combo);
-//            }
-//        }
-//    }
+    //    /**
+    //     * Costruisce una mappa di ComboBox al Top della view <br>
+    //     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBoxGrid = true) <br>
+    //     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    @Override
+    //    protected void fixComboBox() {
+    //        super.fixComboBox();
+    //        ComboBox combo;
+    //
+    //        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+    //            if (annotation.usaComboBox(entityClazz, fieldName)) {
+    //                combo = this.getComboBox(fieldName);
+    //                mappaComponenti.put(fieldName, combo);
+    //            }
+    //        }
+    //    }
 
-//    /**
-//     * Costruisce una lista di checkBox al Top della view <br>
-//     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
-//     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    @Override
-//    protected void fixCheckBox() {
-//        super.fixCheckBox();
-//        Checkbox check;
-//
-//        for (String fieldName : annotation.getGridColumns(entityClazz)) {
-//            if (annotation.usaCheckBox(entityClazz, fieldName)) {
-//                check = new Checkbox(fieldName);
-//                mappaComponenti.put(fieldName, check);
-//            }
-//        }
-//    }
+    //    /**
+    //     * Costruisce una lista di checkBox al Top della view <br>
+    //     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+    //     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    @Override
+    //    protected void fixCheckBox() {
+    //        super.fixCheckBox();
+    //        Checkbox check;
+    //
+    //        for (String fieldName : annotation.getGridColumns(entityClazz)) {
+    //            if (annotation.usaCheckBox(entityClazz, fieldName)) {
+    //                check = new Checkbox(fieldName);
+    //                mappaComponenti.put(fieldName, check);
+    //            }
+    //        }
+    //    }
 
     //    /**
     //     * Costruisce una mappa di ComboBox da usare nel wrapper WrapTop <br>
@@ -562,7 +570,7 @@ public abstract class LogicList extends Logic {
     public List<String> getGridColumns() {
         List<String> lista = annotation.getGridColumns(entityClazz);
 
-        if (annotation.usaReset(entityClazz) && annotation.usaNew(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
+        if (utility.usaReset(entityClazz)) {
             lista.add(FIELD_NAME_RESET);
         }
 
@@ -826,7 +834,7 @@ public abstract class LogicList extends Logic {
                 filtro = null;
             }
             else {
-                if ((boolean)fieldValue) {
+                if ((boolean) fieldValue) {
                     filtro = AFiltro.vero(fieldName);
                 }
                 else {

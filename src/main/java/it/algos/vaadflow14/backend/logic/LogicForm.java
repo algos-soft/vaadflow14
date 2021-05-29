@@ -111,6 +111,18 @@ public abstract class LogicForm extends Logic {
     }
 
     /**
+     * Regolazioni iniziali di alcuni oggetti <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void regolazioniIniziali() {
+        super.regolazioniIniziali();
+
+        //--costruisce una lista (vuota) di Component per i comandi sopra la lista
+        super.mappaComponentiBottom = new LinkedHashMap<>();
+    }
+
+    /**
      * Regola il modo di presentare la scheda (Form) prima di lanciare la @Route. <br>
      * 1) Usa l'annotation @AIForm.operationForm() nella AEntity del package <br>
      * - nel package la classe AEntity esiste sempre <br>
@@ -256,41 +268,40 @@ public abstract class LogicForm extends Logic {
     }
 
     /**
-     * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
-     * Costruisce i bottoni come previsto dal flag operationForm, regolato in fixPreferenze() <br>
+     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     @Override
-    protected List<AIButton> getListaAEBottoniBottom() {
-        List<AIButton> listaBottoni = super.getListaAEBottoniTop();
+    protected void creaAEBottoniBottom() {
+        String message = VUOTA;
 
         if (usaBottoneResetForm) {
-            listaBottoni.add(AEButton.resetForm);
+            mappaComponentiBottom.put(AEButton.resetForm.testo, AEButton.resetForm);
         }
         if (usaBottoneBack) {
-            listaBottoni.add(AEButton.back);
+            mappaComponentiBottom.put(AEButton.back.testo, AEButton.back);
         }
         if (usaBottoneAnnulla) {
-            listaBottoni.add(AEButton.annulla);
+            mappaComponentiBottom.put(AEButton.annulla.testo, AEButton.annulla);
         }
         if (usaBottoneCancella) {
-            listaBottoni.add(AEButton.delete);
+            mappaComponentiBottom.put(AEButton.delete.testo, AEButton.delete);
         }
         if (usaBottoneConferma) {
-            listaBottoni.add(AEButton.conferma);
+            mappaComponentiBottom.put(AEButton.conferma.testo, AEButton.conferma);
         }
         if (usaBottoneRegistra) {
-            listaBottoni.add(AEButton.registra);
+            mappaComponentiBottom.put(AEButton.registra.testo, AEButton.registra);
         }
         if (usaBottonePrima) {
-            listaBottoni.add(AEButton.prima);
+            mappaComponentiBottom.put(AEButton.prima.testo, AEButton.prima);
         }
         if (usaBottoneDopo) {
-            listaBottoni.add(AEButton.dopo);
+            mappaComponentiBottom.put(AEButton.dopo.testo, AEButton.dopo);
         }
-
-        return listaBottoni;
     }
 
     /**

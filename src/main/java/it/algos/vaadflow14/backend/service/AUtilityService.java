@@ -282,4 +282,21 @@ public class AUtilityService extends AAbstractService {
         return combo;
     }
 
+    /**
+     * Controlla i flag della entityClazz per vedere se usare la colonna reset <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return sortVaadin di Vaadin
+     */
+    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
+        boolean usaReset = false;
+
+        if (annotation.usaReset(entityClazz) && annotation.usaNew(entityClazz) && reflection.isEsiste(entityClazz, FIELD_NAME_RESET)) {
+            usaReset = true;
+        }
+
+        return usaReset;
+    }
+
 }

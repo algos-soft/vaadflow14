@@ -2,6 +2,7 @@ package it.algos.vaadflow14.ui.button;
 
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.spring.annotation.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.wrapper.*;
 import org.springframework.beans.factory.config.*;
@@ -27,13 +28,13 @@ public class ABottomLayout extends AButtonLayout {
 
 
     /**
-     * Costruttore base con parametro wrapper di passaggio dati <br>
-     * La classe viene costruita con appContext.getBean(xxxLayout.class, wrapButtons) in AEntityService <br>
+     * Costruttore <br>
+     * La classe viene costruita con appContext.getBean(ABottomLayout.class, wrapper) in ALogic <br>
      *
-     * @param wrapButtons wrap di informazioni
+     * @param wrapper di informazioni tra 'logic' e 'view'
      */
-    public ABottomLayout(WrapButtons wrapButtons) {
-        super(wrapButtons);
+    public ABottomLayout(final WrapTop wrapper) {
+        super(wrapper);
     }
 
 
@@ -51,18 +52,32 @@ public class ABottomLayout extends AButtonLayout {
 
 
     @Override
-    protected void creaAllBottoni() {
-        if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
-            for (AIButton bottone : listaAEBottoni) {
-                this.addBottoneEnum(bottone);
+    protected void creaAll() {
+        Button button;
+
+        if (mappaComponenti != null && mappaComponenti.size() > 0) {
+            for (String key : mappaComponenti.keySet()) {
+                Object obj = mappaComponenti.get(key);
+
+                if (obj instanceof AIButton) {
+                    button = ((AIButton) obj).get();
+                    button.addClickListener(event -> performAction(((AIButton) obj).getAction()));
+                    rigaUnica.add(button);
+                }
             }
         }
 
-        if (listaBottoniSpecifici != null && listaBottoniSpecifici.size() > 0) {
-            for (Button bottone : listaBottoniSpecifici) {
-                rigaUnica.add(bottone);
-            }
-        }
+        //        if (listaAEBottoni != null && listaAEBottoni.size() > 0) {
+        //            for (AIButton bottone : listaAEBottoni) {
+        //                this.addBottoneEnum(bottone);
+        //            }
+        //        }
+
+        //        if (listaBottoniSpecifici != null && listaBottoniSpecifici.size() > 0) {
+        //            for (Button bottone : listaBottoniSpecifici) {
+        //                rigaUnica.add(bottone);
+        //            }
+        //        }
     }
 
     @Deprecated

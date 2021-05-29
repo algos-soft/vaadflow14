@@ -366,7 +366,12 @@ public abstract class LogicProperty extends VerticalLayout {
     /**
      * Mappa di componenti di selezione e filtro <br>
      */
-    protected Map<String, Object> mappaComponenti;
+    protected Map<String, Object> mappaComponentiTop;
+
+    /**
+     * Mappa di componenti di selezione e filtro <br>
+     */
+    protected Map<String, Object> mappaComponentiBottom;
 
 
     protected void fixProperty() {
@@ -544,10 +549,10 @@ public abstract class LogicProperty extends VerticalLayout {
         this.creaAEBottoniTop();
         this.creaComandiTop();
         //        this.fixWrapSearch();
-//        this.fixComboBox();
-//        this.fixCheckBox();
+        //        this.fixComboBox();
+        //        this.fixCheckBox();
         //        this.fixMappaBottoniSpecifici();
-        wrapper = new WrapTop((AILogic) this, mappaComponenti,maxNumeroBottoniPrimaRiga);
+        wrapper = new WrapTop((AILogic) this, mappaComponentiTop, maxNumeroBottoniPrimaRiga);
 
         //        wrapper = new WrapTop((AILogic) this, listaAEBottoni, wrapSearch, mappaComboBox, mappaCheckBox, listaBottoniSpecifici, 4);
 
@@ -588,23 +593,23 @@ public abstract class LogicProperty extends VerticalLayout {
     protected void creaComandiTop() {
     }
 
-//    /**
-//     * Costruisce una lista di ComboBox al Top della view <br>
-//     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBox = true) <br>
-//     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    protected void fixComboBox() {
-//    }
-//
-//    /**
-//     * Costruisce una lista di checkBox al Top della view <br>
-//     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
-//     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
-//     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-//     */
-//    protected void fixCheckBox() {
-//    }
+    //    /**
+    //     * Costruisce una lista di ComboBox al Top della view <br>
+    //     * Costruisce i combo previsti nella AEntity->@AIField(usaComboBox = true) <br>
+    //     * Nella sottoclasse possono essere aggiunti altri comboBox <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    protected void fixComboBox() {
+    //    }
+    //
+    //    /**
+    //     * Costruisce una lista di checkBox al Top della view <br>
+    //     * Costruisce i checkBox previsti nella AEntity->@AIField(usaCheckBox = true) <br>
+    //     * Nella sottoclasse possono essere aggiunti altri checkBox <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    protected void fixCheckBox() {
+    //    }
 
     //    /**
     //     * Costruisce una lista di bottoni (enumeration) al Top della view <br>
@@ -702,7 +707,12 @@ public abstract class LogicProperty extends VerticalLayout {
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
     protected void fixBottomLayout() {
-        bottomLayout = appContext.getBean(ABottomLayout.class, this.getWrapButtonsBottom());
+        WrapTop wrapper;
+        this.creaAEBottoniBottom();
+
+        wrapper = new WrapTop((AILogic) this, mappaComponentiBottom);
+
+        bottomLayout = appContext.getBean(ABottomLayout.class, wrapper);
         if (bottomPlaceHolder != null && bottomLayout != null) {
             bottomPlaceHolder.add(bottomLayout);
         }
@@ -710,29 +720,37 @@ public abstract class LogicProperty extends VerticalLayout {
 
 
     /**
-     * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Bottom della view <br>
-     * I dati sono gestiti da questa 'logic' <br>
-     * I dati vengono passati alla View che li usa <br>
-     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
-     *
-     * @return wrapper di dati per la view
-     */
-    protected WrapButtons getWrapButtonsBottom() {
-        List<AIButton> listaAEBottoni = this.getListaAEBottoniBottom();
-
-        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null);
-    }
-
-
-    /**
      * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
-     * Costruisce i bottoni come previsto dal flag operationForm <br>
-     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+     * Bottoni standard AIButton di VaadinFlow14 e della applicazione corrente <br>
+     * Costruisce i bottoni come dai flag regolati di default o nella sottoclasse <br>
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
-    protected List<AIButton> getListaAEBottoniBottom() {
-        return new ArrayList<>();
+    protected void creaAEBottoniBottom() {
     }
+
+    //    /**
+    //     * Costruisce un wrapper (obbligatorio) di dati per i bottoni di comando al Bottom della view <br>
+    //     * I dati sono gestiti da questa 'logic' <br>
+    //     * I dati vengono passati alla View che li usa <br>
+    //     * Può essere sovrascritto senza invocare il metodo della superclasse <br>
+    //     *
+    //     * @return wrapper di dati per la view
+    //     */
+    //    protected WrapButtons getWrapButtonsBottom() {
+    //        List<AIButton> listaAEBottoni = this.getListaAEBottoniBottom();
+    //
+    //        return appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, null);
+    //    }
+
+    //    /**
+    //     * Costruisce una lista di bottoni (enumeration) al Bottom della view <br>
+    //     * Costruisce i bottoni come previsto dal flag operationForm <br>
+    //     * Nella sottoclasse possono essere aggiunti i bottoni specifici dell'applicazione <br>
+    //     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+    //     */
+    //    protected List<AIButton> getListaAEBottoniBottom() {
+    //        return new ArrayList<>();
+    //    }
 
 
     /**

@@ -62,6 +62,8 @@ public class ViaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+        super.maxNumeroBottoniPrimaRiga = 3;
     }
 
 
@@ -73,7 +75,9 @@ public class ViaLogicList extends LogicList {
     protected void fixSpanList() {
         addSpanBlu("Codifica delle più comuni tipologie di indirizzi.");
         addSpanBlu("Presentate nelle anagrafiche in un popup di selezione.");
-        addSpanBlu("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");
+        addSpanVerde("L'ordinamento del popup è quello numerico riportato qui e non quello alfabetico.");
+        addSpanVerde("Viene pre-caricato un pacchetto di valori standard che sono sempre resettabili");
+        addSpanVerde("Possono essere aggiunti altri valori");
     }
 
 

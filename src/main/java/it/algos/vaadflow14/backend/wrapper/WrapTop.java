@@ -73,6 +73,11 @@ public class WrapTop {
     private Map<String, Object> mappaComponenti;
 
 
+    public WrapTop(final AILogic entityLogic, final Map<String, Object> mappaComponenti) {
+        this.entityLogic = entityLogic;
+        this.mappaComponenti = mappaComponenti;
+    }
+
     public WrapTop(final AILogic entityLogic, final Map<String, Object> mappaComponenti,int maxNumeroBottoniPrimaRiga) {
         this.entityLogic = entityLogic;
         this.mappaComponenti = mappaComponenti;

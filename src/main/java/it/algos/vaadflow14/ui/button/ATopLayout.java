@@ -233,6 +233,7 @@ public class ATopLayout extends AButtonLayout {
     //        super.secondaRiga = new AHorizontalLayout();
     //    }
 
+    @Override
     protected void creaAll() {
         Button button;
         ComboBox combo;
