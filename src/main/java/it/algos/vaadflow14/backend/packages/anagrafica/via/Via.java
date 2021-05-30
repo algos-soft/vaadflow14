@@ -54,7 +54,7 @@ import javax.validation.constraints.*;
 @AIView(menuName = "Via", menuIcon = VaadinIcon.ASTERISK, searchProperty = "nome", sortProperty = "ordine")
 @AIList(fields = "ordine,nome", usaRowIndex = true)
 @AIForm(fields = "ordine,nome", usaSpostamentoTraSchede = true)
-public class Via extends AEntity {
+public class Via extends AREntity {
 
     /**
      * versione della classe per la serializzazione

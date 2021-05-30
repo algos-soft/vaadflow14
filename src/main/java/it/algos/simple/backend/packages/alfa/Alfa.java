@@ -51,10 +51,10 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioFile)
-@AIEntity(recordName = "alfaRecord", usaReset = true, usaCompany = true, usaNote = false)
+@AIEntity(recordName = "alfaRecord", usaCompany = true, usaNote = false)
 @AIView(menuIcon = VaadinIcon.BOAT)
 @AIList(fields = "ordine,code,descrizione")
-public class Alfa extends AEntity {
+public class Alfa extends AREntity {
 
     /**
      * versione della classe per la serializzazione

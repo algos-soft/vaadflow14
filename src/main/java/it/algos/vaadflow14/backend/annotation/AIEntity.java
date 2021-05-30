@@ -63,16 +63,6 @@ public @interface AIEntity {
 
 
     /**
-     * (Optional) Flag per la creazione automatica della lista
-     * Ha senso solo se esiste il metodo xxxService.reset()
-     * Di default false
-     *
-     * @return the status
-     */
-    boolean usaReset() default false;
-
-
-    /**
      * (Optional) Possibilità di creazione di una nuova entity
      * Di default true
      *

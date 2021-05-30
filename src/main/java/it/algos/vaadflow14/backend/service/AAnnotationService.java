@@ -561,29 +561,6 @@ public class AAnnotationService extends AAbstractService {
     }
 
     /**
-     * Flag per usare il reset della collection. <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
-        boolean usaReset = false;
-        AIEntity annotation = null;
-
-        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
-            annotation = getAIEntity(entityClazz);
-        }
-
-        if (annotation != null) {
-            usaReset = annotation.usaReset();
-        }
-
-        return usaReset;
-    }
-
-
-    /**
      * Flag per la ri-creazione automatica della lista alla partenza. <br>
      *
      * @param entityClazz the class of type AEntity
@@ -603,6 +580,22 @@ public class AAnnotationService extends AAbstractService {
         }
 
         return usaBoot;
+    }
+
+    /**
+     * Flag per usare il reset della collection. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the status
+     */
+    public boolean usaReset(final Class<? extends AEntity> entityClazz) {
+        if (entityClazz != null && AREntity.class.isAssignableFrom(entityClazz)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
@@ -1535,7 +1528,7 @@ public class AAnnotationService extends AAbstractService {
         AIField annotation = this.getAIField(reflectionJavaField);
         AETypeField type = this.getFormType(reflectionJavaField);
 
-        if (annotation != null && (type == AETypeField.combo||type == AETypeField.enumeration)) {
+        if (annotation != null && (type == AETypeField.combo || type == AETypeField.enumeration)) {
             usaComboBoxGrid = annotation.usaComboBox();
         }
 

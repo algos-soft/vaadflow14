@@ -150,6 +150,19 @@ public abstract class AService extends AAbstractService implements AIService {
     }
 
     /**
+     * Crea e registra una entityBean col flag reset=true <br>
+     * Esegue SOLO se la entity è sottoclasse di AREntity <br>
+     *
+     * @param newEntity appena creata, da regolare e da salvare
+     *
+     * @return true se la entity è stata creata e salvata
+     */
+    protected boolean creaReset(final AREntity newEntity) {
+        newEntity.reset = true;
+        return save(newEntity) != null;
+    }
+
+    /**
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * Senza properties per compatibilità con la superclasse <br>

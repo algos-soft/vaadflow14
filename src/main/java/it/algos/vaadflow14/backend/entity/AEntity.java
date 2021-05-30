@@ -79,16 +79,6 @@ public abstract class AEntity implements Serializable {
     @AIColumn(header = "Key", widthEM = 12)
     public String id;
 
-    /**
-     * flag per le collezioni che usano 'reset' e 'leggono' i dati
-     * true se la entities viene costruita dal programma (all'avvio o dal bottone reset)
-     * false se viene inserita direttamente dall'utente
-     * di default reset=false
-     */
-    @Indexed()
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox)
-    @AIColumn(typeBool = AETypeBoolCol.checkBox, header = "R.", widthEM = 5)
-    public boolean reset;
 
 
     /**
