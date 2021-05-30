@@ -166,17 +166,18 @@ public abstract class LogicList extends Logic {
         String and = html.bold("e");
         String non = html.bold("non");
         String propReset = html.bold("reset");
+        String methodReset = html.bold("reset()");
 
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", delete, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
         addSpanRosso(String.format("Bottone %s agisce su %s le entities della collezione %s", delete, tutte, collezione));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true e in %s.reset()!=null", reset, entity, usaReset, service));
+        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true) ed esiste %s.%s", reset, entity, usaReset, service, methodReset));
         addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
-        addSpanRosso(String.format("Bottone %s presente se in %s->@AIEntity %s=true", nuovo, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", nuovo, entity, usaNew));
         addSpanRosso(String.format("%s presente se in %s->@AIView esiste il valore della property %s", search, entity, property));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true %s anche %s=true, la collezione viene resettata all'avvio del programma.", entity, usaReset, and, usaBoot));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=false, %s compare la property %s", entity, usaReset, usaNew, non, propReset));
-        addSpanRosso(String.format("Se in %s->@AIEntity %s=true e %s=true, compare la property %s uguale a true per le schede create con reset", entity, usaReset, usaNew, propReset));
+        addSpanRosso(String.format("Se %s->@AIEntity %s=true ed esiste %s.%s, la collezione viene resettata all'avvio del programma.", entity, usaBoot, service, methodReset));
+        addSpanRosso(String.format("Se %s->@AIEntity(%s=true e %s=false), %s compare la property %s", entity, usaReset, usaNew, non, propReset));
+        addSpanRosso(String.format("Se %s->@AIEntity(%s=true e %s=true), compare la property %s uguale a true per le schede create con reset", entity, usaReset, usaNew, propReset));
 
         if (spanHeaderList != null && spanHeaderList.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanList.class, super.spanHeaderList);

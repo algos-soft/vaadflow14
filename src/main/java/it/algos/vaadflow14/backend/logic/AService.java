@@ -377,26 +377,21 @@ public abstract class AService extends AAbstractService implements AIService {
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' <br>
+     * Invocato da FlowData.bootReset() in fase di 'startup' <br>
      * <p>
      * 1) deve esistere lo specifico metodo sovrascritto <br>
      * 2) deve essere valida la entityClazz <br>
      * 3) deve esistere la collezione su mongoDB <br>
-     * 4) la collezione (dei soli dati rest) viene ricreata solo è vuota <br>
+     * 4) la collezione (per i soli dati reset) viene ricreata SOLO è vuota <br>
      * 5) vengono mantenuti eventuali records inseriti manualmente <br>
      * <p>
-     * I dati possono essere: <br>
-     * 1) recuperati da una Enumeration interna <br>
-     * 2) letti da un file CSV esterno <br>
-     * 3) letti da Wikipedia <br>
-     * 4) creati direttamente <br>
-     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     * Se la collezione è vuota (per i soli dati reset), invoca il metodo reset() <br>
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
     @Override
     public AIResult bootReset() {
-        AIResult result = null;
+        AIResult result;
         String collectionName;
         Query query = new Query();
         int numRec = 0;
@@ -425,6 +420,7 @@ public abstract class AService extends AAbstractService implements AIService {
 
         return result;
     }
+
 
     @Deprecated
     public AIResult fixPostResetOnly(final AETypeReset type, final int numRec) {

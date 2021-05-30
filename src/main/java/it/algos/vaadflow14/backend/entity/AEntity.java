@@ -79,7 +79,6 @@ public abstract class AEntity implements Serializable {
     @AIColumn(header = "Key", widthEM = 12)
     public String id;
 
-
     /**
      * flag per le collezioni che usano 'reset' e 'leggono' i dati
      * true se la entities viene costruita dal programma (all'avvio o dal bottone reset)

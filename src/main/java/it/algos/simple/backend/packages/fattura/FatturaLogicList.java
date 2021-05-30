@@ -170,8 +170,8 @@ public class FatturaLogicList extends LogicList {
      * Costruisce un (eventuale) layout per i bottoni sotto la Grid <br>
      * Può essere sovrascritto senza invocare il metodo della superclasse <br>
      */
-    @Override
-    protected void fixBottomLayout() {
+//    @Override
+    protected void fixBottomLayout2() {
         List<AIButton> listaAEBottoni = Collections.singletonList(AEButton.upload);
         List<Button> listaBottoniSpecifici = Collections.singletonList(new Button("Bottoni su un'unica riga sotto la Grid"));
         WrapButtons wrapper = appContext.getBean(WrapButtons.class, this, listaAEBottoni, null, listaBottoniSpecifici);

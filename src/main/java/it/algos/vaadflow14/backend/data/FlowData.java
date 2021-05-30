@@ -162,12 +162,20 @@ public class FlowData implements AIData {
             return;
         }
 
+        /**
+         * Controllo che esiste il metodo reset() nella sottoclasse specifica xxxService <br>
+         * Altrimenti i dati non possono essere ri-creati <br>
+         */
         try {
             methodRestExists = !packageName.equals(TAG_GENERIC_SERVICE) && entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
         } catch (Exception unErrore) {
         }
 
         if (methodRestExists) {
+            /**
+             * Non invoca però direttamente xxxService.reset() ma passa da AService.bootReset() <br>
+             * che chiama xxxService.reset() SOLO se la collezione (per i soli dati reset) è vuota <br>
+             */
             result = entityService.bootReset();
 
             if (result != null) {

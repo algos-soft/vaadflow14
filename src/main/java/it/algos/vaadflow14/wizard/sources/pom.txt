@@ -331,6 +331,13 @@
 <!--            <artifactId>font-awesome-iron-iconset</artifactId>-->
 <!--            <version>2.1.2</version>-->
 <!--        </dependency>-->
+
+        <!-- indeterminate-checkbox 3 vie -->
+        <dependency>
+            <groupId>ch.carnet.kasparscherrer</groupId>
+            <artifactId>indeterminate-checkbox</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 
