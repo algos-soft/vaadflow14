@@ -58,19 +58,21 @@ public class SimpleData extends FlowData {
 
 
     /**
-     * Check iniziale di alcune collections <br>
-     * Controlla se le collections sono vuote e, nel caso, le ricrea <br>
-     * Vengono create se mancano e se esiste un metodo resetEmptyOnly() nella classe xxxService specifica <br>
-     * Crea un elenco di entities/collections che implementano il metodo resetEmptyOnly() <br>
+     * Check iniziale. Ad ogni avvio del programma spazzola tutte le collections <br>
+     * Ognuna viene ricreata (mantenendo le entities che hanno reset=false) se:
+     * - xxx->@AIEntity usaBoot=true,
+     * - esiste xxxService.reset(),
+     * - la collezione non contiene nessuna entity che abbia la property reset=true
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      * L' ordine con cui vengono create le collections è significativo <br>
      *
      * @since java 8
      */
     @Override
-    public void fixData() {
-        super.fixData();
-        super.fixData("simple");
+    public void resetData() {
+        super.resetData();
+
+        super.resetData("simple");
         this.fixDataPackageBolla();
     }
 
@@ -93,8 +95,8 @@ public class SimpleData extends FlowData {
         numRec = creaBolla("tre", "terza riga") ? numRec + 1 : numRec;
         numRec = creaBolla("quattro", "quarta riga") ? numRec + 1 : numRec;
 
-        result = entityService.fixPostResetOnly(AETypeReset.hardCoded, numRec);
         logger.log(AETypeLog.checkData, result.getMessage());
+        return ;
     }
 
 

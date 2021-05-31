@@ -502,6 +502,32 @@ public class AAnnotationService extends AAbstractService {
     }
 
 
+//    /**
+//     * Check if the class is an entityBean class.
+//     * 1) Controlla che il parametro in ingresso non sia vuoto <br>
+//     *
+//     * @param canonicalName of the class to be checked if is of type AREntity
+//     *
+//     * @return true if the class is of type AREntity
+//     */
+//    public boolean isResetEntityClass(final String canonicalName) {
+//        Class clazz = null;
+//
+//        try {
+//            clazz = Class.forName(canonicalName);
+//        } catch (Exception unErrore) {
+//            logger.error(unErrore, this.getClass(), "isResetEntityClass");
+//        }
+//
+//        if (isEntityClass(canonicalName)) {
+//            return usaReset(clazz);
+//        }
+//        else {
+//            return false;
+//        }
+//    }
+
+
     /**
      * Restituisce il nome del record (da usare nel Dialog)
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
@@ -563,16 +589,35 @@ public class AAnnotationService extends AAbstractService {
     /**
      * Flag per la ri-creazione automatica della lista alla partenza. <br>
      *
-     * @param entityClazz the class of type AEntity
+     * @param canonicalName of the class to be checked
+     *
+     * @return true if the class is of type AEntity
+     */
+    public boolean usaBoot(final String canonicalName) {
+        Class clazz = null;
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "isEntityClass");
+        }
+
+        return usaBoot(clazz);
+    }
+
+    /**
+     * Flag per la ri-creazione automatica della lista alla partenza. <br>
+     *
+     * @param genericClazz to be checked if is of type AEntity
      *
      * @return the status
      */
-    public boolean usaBoot(final Class<? extends AEntity> entityClazz) {
+    public boolean usaBoot(final Class genericClazz) {
         boolean usaBoot = false;
         AIEntity annotation = null;
 
-        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
-            annotation = getAIEntity(entityClazz);
+        if (genericClazz != null && AEntity.class.isAssignableFrom(genericClazz)) {
+            annotation = getAIEntity(genericClazz);
         }
 
         if (annotation != null) {
@@ -581,6 +626,7 @@ public class AAnnotationService extends AAbstractService {
 
         return usaBoot;
     }
+
 
     /**
      * Flag per usare il reset della collection. <br>
@@ -597,6 +643,7 @@ public class AAnnotationService extends AAbstractService {
             return false;
         }
     }
+
 
 
     /**

@@ -166,7 +166,7 @@ public class FatturaService extends AService {
         creaIfNotExist("epsilon","Antonio");
         creaIfNotExist("omega","forse niente");
 
-        return super.fixPostResetOnly(AETypeReset.hardCoded, numRec);
+        return result;
     }
 
 }// end of Singleton class

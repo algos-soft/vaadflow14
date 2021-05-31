@@ -162,6 +162,7 @@ public abstract class LogicList extends Logic {
         String usaNew = html.bold("usaNew");
         String solo = html.bold("solo");
         String resetTrue = html.bold("reset=true");
+        String resetFalse = html.bold("reset=false");
         String search = html.bold("SearchField");
         String property = html.bold("searchProperty");
         String and = html.bold("e");
@@ -176,7 +177,11 @@ public abstract class LogicList extends Logic {
         addSpanRosso(String.format("Bottone %s agisce %s sulle entities della collezione %s che hanno la property %s", reset, solo, collezione, resetTrue));
         addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", nuovo, entity, usaNew));
         addSpanRosso(String.format("%s presente se in %s->@AIView esiste il valore della property %s", search, entity, property));
-        addSpanRosso(String.format("Se %s->@AIEntity %s=true ed esiste %s.%s, la collezione viene resettata all'avvio del programma.", entity, usaBoot, service, methodReset));
+        addSpanRosso(String.format("La collezione %s viene ricreata (mantenendo le entities che hanno %s) ad ogni avvio del programma se:", collezione, resetFalse));
+        addSpanRosso(String.format("- %s estende %s,", entity, aREntity));
+        addSpanRosso(String.format("- %s->@AIEntity %s=true,", entity, usaBoot));
+        addSpanRosso(String.format("- esiste %s.%s,", service, methodReset));
+        addSpanRosso(String.format("- la collezione %s contiene nessuna entity che abbia la property %s ", non, resetTrue));
         addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=false), %s compare la property %s", entity, aREntity, entity, usaNew, non, propReset));
         addSpanRosso(String.format("Se %s extends %s e %s->@AIEntity(%s=true), compare la property %s uguale a true per le schede create con reset", entity, aREntity, entity, usaNew, propReset));
 

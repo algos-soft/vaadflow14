@@ -105,7 +105,7 @@ public class SimpleBoot extends FlowBoot {
      */
     protected void fixData() {
         if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(SimpleData.class)) {
-            dataInstance.fixData();
+            dataInstance.resetData();
         }
     }
 

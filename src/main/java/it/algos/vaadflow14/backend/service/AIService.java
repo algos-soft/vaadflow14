@@ -155,21 +155,6 @@ public interface AIService {
      */
     boolean deleteAll();
 
-    /**
-     * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato da FlowData.bootReset() in fase di 'startup' <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto <br>
-     * 2) deve essere valida la entityClazz <br>
-     * 3) deve esistere la collezione su mongoDB <br>
-     * 4) la collezione (per i soli dati reset) viene ricreata SOLO è vuota <br>
-     * 5) vengono mantenuti eventuali records inseriti manualmente <br>
-     * <p>
-     * Se la collezione è vuota (per i soli dati reset), invoca il metodo reset() <br>
-     *
-     * @return wrapper col risultato ed eventuale messaggio di errore
-     */
-    AIResult bootReset();
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

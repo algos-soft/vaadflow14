@@ -181,7 +181,7 @@ public class GammaService extends AService {
         creaIfNotExist("epsilon", mese3, secolo3);
         creaIfNotExist("omega", mese2, secolo4);
 
-        return super.fixPostResetOnly(AETypeReset.hardCoded, 6);
+        return result;
     }
 
 }
