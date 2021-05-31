@@ -47,6 +47,16 @@ public class ContinenteLogicForm extends LogicForm {
         super.entityService = entityService;
     }// end of Vaadin/@Route constructor
 
+    /**
+     * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
+     * DEVE essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
+     */
+    @Override
+    protected void fixSpanForm() {
+        super.fixSpanForm();
+
+        addSpanBlu("Nella sub-lista tutti gli stati di questo contenente");
+    }
 
     /**
      * Regolazioni finali di alcuni oggetti <br>

@@ -142,7 +142,6 @@ public abstract class LogicList extends Logic {
      * Costruisce un' istanza dedicata con la lista degli avvisi <br>
      * Gli avvisi sono realizzati con tag html 'span' differenziati per colore anche in base all'utente collegato <br>
      * Se l'applicazione non usa security, il colore è deciso dal service specifico <br<
-     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
      */
     @Override
     protected void fixAlertLayout() {
@@ -157,7 +156,6 @@ public abstract class LogicList extends Logic {
         String collezione = html.bold(annotation.getCollectionName(entityClazz));
         String reset = html.bold("Reset");
         String nuovo = html.bold("New");
-        //        String usaReset = html.bold("usaReset");
         String usaBoot = html.bold("usaBoot");
         String usaNew = html.bold("usaNew");
         String solo = html.bold("solo");
