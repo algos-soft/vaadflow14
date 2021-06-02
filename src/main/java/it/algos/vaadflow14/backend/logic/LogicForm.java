@@ -97,15 +97,24 @@ public abstract class LogicForm extends Logic {
     protected void fixPreferenze() {
         super.fixPreferenze();
 
+        boolean usaNew = annotation.usaNew(entityClazz);
+        boolean isResetMethod = false;
+
+        try {
+            isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
+
         //        super.usaBottoneCancella = AEPreferenza.usaMenuReset.is() && annotation.usaDelete(entityClazz);
         //        super.usaBottoneRegistra = AEPreferenza.usaMenuReset.is() && annotation.usaModifica(entityClazz);
 
         super.usaBottoneResetForm = false;
         super.usaBottoneBack = true;
         super.usaBottoneAnnulla = false;
-        super.usaBottoneCancella = operationForm.isDeleteEnabled();
+        super.usaBottoneCancella = usaNew;
         super.usaBottoneConferma = false;
-        super.usaBottoneRegistra = operationForm.isSaveEnabled();
+        super.usaBottoneRegistra = usaNew || annotation.usaReset(entityClazz) && isResetMethod;
 
         this.fixOperationForm();
     }
@@ -176,6 +185,18 @@ public abstract class LogicForm extends Logic {
      */
     @Override
     protected void fixAlertLayout() {
+        String back = html.bold("Back");
+        String delete = html.bold("Delete");
+        String save = html.bold("Save");
+        String entity = entityClazz.getSimpleName();
+        String usaNew = html.bold("usaNew");
+        String prima = html.bold("<");
+        String dopo = html.bold(">");
+        String frecce = html.bold("usaSpostamentoTraSchede");
+        String aREntity = html.bold("AREntity");
+        String service = entityService.getClass().getSimpleName();
+        String methodReset = html.bold("reset()");
+
         if (entityBean != null) {
             addSpanVerde(String.format("%s %s %s.%s", TAG_SCHEDA, SEP, entityClazz.getSimpleName(), entityBean.toString()));
         }
@@ -187,6 +208,11 @@ public abstract class LogicForm extends Logic {
 
         String preferenza = html.bold("Preferenza");
         addSpanRosso(String.format("La visualizzazione di questi avvisi rossi si regola in %s:usaSpanHeaderRossi", preferenza));
+        addSpanRosso(String.format("Bottone %s sempre presente per tornare alla lista", back));
+        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", delete, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s presente se %s->@AIEntity(%s=true)", save, entity, usaNew));
+        addSpanRosso(String.format("Bottone %s presente se %s extends %s ed esiste %s.%s", save, entity, aREntity, service, methodReset));
+        addSpanRosso(String.format("Frecce %s e %s presenti se %s->@AIEntity(%s=true)", prima, dopo, entity, frecce));
 
         if (spanHeaderForm != null && spanHeaderForm.size() > 0) {
             headerSpan = appContext.getBean(AHeaderSpanForm.class, super.spanHeaderForm);
@@ -220,23 +246,6 @@ public abstract class LogicForm extends Logic {
         }
     }
 
-    //    /**
-    //     * Costruisce una singola 'span' da mostrare come header della view <br>
-    //     * Puo essere sovrascritto, SENZA invocare il metodo della superclasse <br>
-    //     *
-    //     * @return un messaggio di 'span' col nome della collezione e la scheda visualizzata
-    //     */
-    //    protected String getSpanForm() {
-    //        String titolo = "SCHEDA";
-    //        String sep = SEP;
-    //
-    //        if (entityBean != null) {
-    //            return String.format("%s %s %s.%s", titolo, sep, entityClazz.getSimpleName(), entityBean.toString());
-    //        }
-    //        else {
-    //            return String.format("%s %s %s", titolo, sep, entityClazz.getSimpleName());
-    //        }
-    //    }
 
     /**
      * Costruisce una lista di bottoni (enumeration) al Top della view <br>

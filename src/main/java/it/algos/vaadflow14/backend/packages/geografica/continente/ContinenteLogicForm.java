@@ -55,7 +55,7 @@ public class ContinenteLogicForm extends LogicForm {
     protected void fixSpanForm() {
         super.fixSpanForm();
 
-        addSpanBlu("Nella sub-lista tutti gli stati di questo contenente");
+        addSpanBlu("Nella sub-lista tutti gli stati di questo continente");
     }
 
     /**
