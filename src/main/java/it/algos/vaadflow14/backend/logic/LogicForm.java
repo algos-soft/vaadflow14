@@ -215,7 +215,7 @@ public abstract class LogicForm extends Logic {
         addSpanRosso(String.format("Frecce %s e %s presenti se %s->@AIEntity(%s=true)", prima, dopo, entity, frecce));
 
         if (spanHeaderForm != null && spanHeaderForm.size() > 0) {
-            headerSpan = appContext.getBean(AHeaderSpanForm.class, super.spanHeaderForm);
+            headerSpan = appContext.getBean(AHeaderAlertForm.class, super.spanHeaderForm);
         }
 
         super.fixAlertLayout();

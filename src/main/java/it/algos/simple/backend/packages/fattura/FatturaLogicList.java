@@ -137,7 +137,7 @@ public class FatturaLogicList extends LogicList {
      * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
      */
     @Override
-    protected void fixSpanList() {
+    protected void fixAlertList() {
         addSpanBlu("Esempio di label realizzato con 'span' di colore blue");
         addSpanVerde("Scritta verde");
         addSpanBlu("Seconda scritta verde");
