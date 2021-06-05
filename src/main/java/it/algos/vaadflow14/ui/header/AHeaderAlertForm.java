@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.ui.header;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import org.springframework.beans.factory.config.*;
@@ -38,10 +37,10 @@ public class AHeaderAlertForm extends AHeaderAlert {
             comp = listaAlert.get(0);
             comp.getElement().getStyle().set(AETypeColor.verde.getTag(), AETypeColor.verde.get());
             comp.getElement().getStyle().set(AETypeWeight.bold.getTag(), AETypeWeight.bold.get());
-            comp.getElement().getStyle().set(AETypeSize.smaller.getTag(), AETypeSize.smaller.get());
+            //            comp.getElement().getStyle().set(AETypeSize.smaller.getTag(), AETypeSize.smaller.get());
             this.add(comp);
 
-            for (int k = 1; k < listaAlert.size() ; k++) {
+            for (int k = 1; k < listaAlert.size(); k++) {
                 this.add(listaAlert.get(k));
             }
         }
