@@ -157,7 +157,7 @@ public class FlowData implements AIData {
      * Invoco il metodo API resetEmptyOnly() della interfaccia AIService <br>
      */
     protected Consumer<Object> bootReset = canonicalEntity -> {
-        AIResult result=null;
+        AIResult result = null;
         final String canonicalEntityName = (String) canonicalEntity;
         final String canonicaName = canonicalEntityName.endsWith(SUFFIX_ENTITY) ? text.levaCoda(canonicalEntityName, SUFFIX_ENTITY) : canonicalEntityName;
         final String classeFinale = file.estraeClasseFinale(canonicaName);
@@ -169,6 +169,7 @@ public class FlowData implements AIData {
         Class entityClazz = null;
         int numRec;
         String type;
+        String metodo = VUOTA;
 
         try {
             entityClazz = Class.forName(canonicalEntityName);
@@ -189,6 +190,7 @@ public class FlowData implements AIData {
             return;
         }
         if (annotation.usaReset(entityClazz)) {
+            metodo = "reset";
             if (mongo.isResetVuoto(entityClazz)) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
@@ -207,6 +209,7 @@ public class FlowData implements AIData {
             }
         }
         else {
+            metodo = "download";
             if (mongo.isEmpty(entityClazz)) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
@@ -221,19 +224,18 @@ public class FlowData implements AIData {
                 }
             }
             else {
-                result = AResult.errato(mongo.countReset(entityClazz));
+                result = AResult.errato(mongo.count(entityClazz));
             }
         }
-
 
         if (result != null) {
             numRec = result.getValore();
             type = result.getValidationMessage();
             if (result.isValido()) {
-                message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.reset() ", packageName, numRec, type, nameService);
+                message = String.format("Nel package %s sono stati inseriti %d elementi %s col metodo %s.%s() ", packageName, numRec, type, nameService, metodo);
             }
             else {
-                message = String.format("Nel package %s esistevano %d elementi creati col metodo %s.reset() ", packageName, numRec, nameService);
+                message = String.format("Nel package %s esistevano %d elementi creati col metodo %s.%s() ", packageName, numRec, nameService, metodo);
             }
             logger.log(AETypeLog.checkData, message);
         }
@@ -289,7 +291,7 @@ public class FlowData implements AIData {
         List<String> allModulePackagesClasses;
         List<Object> allEntityClasses;
         List<Object> allUsaBootEntityClasses;
-        List<Object> allEntityClassesResettabili;
+        List<Object> allEntityClassesRicreabiliResetDownload;
         String message;
         Object[] matrice = null;
 
@@ -324,18 +326,18 @@ public class FlowData implements AIData {
         logger.log(AETypeLog.checkData, message);
 
         //--seleziona le xxxService classes che hanno il metodo reset() oppure download()
-        allEntityClassesResettabili = Arrays.asList(allUsaBootEntityClasses.stream().filter(esisteMetodoService).sorted().toArray());
-        if (array.isAllValid(allEntityClassesResettabili)) {
-            message = String.format("In %s sono stati trovati %d packages con classi di tipo xxxService che hanno reset() oppure download()", moduleName, allEntityClassesResettabili.size());
+        allEntityClassesRicreabiliResetDownload = Arrays.asList(allUsaBootEntityClasses.stream().filter(esisteMetodoService).sorted().toArray());
+        if (array.isAllValid(allEntityClassesRicreabiliResetDownload)) {
+            message = String.format("In %s sono stati trovati %d packages con classi di tipo xxxService che hanno reset() oppure download()", moduleName, allEntityClassesRicreabiliResetDownload.size());
         }
         else {
             message = String.format("In %s non è stato trovato nessun package con classi di tipo xxxService che hanno reset() oppure download()", moduleName);
         }
         logger.log(AETypeLog.checkData, message);
 
-        //--elabora le entity classes che estendono AREntity
+        //--elabora le entity classes che hanno il metodo reset() oppure download() e quindi sono ricreabili
         //--eseguendo xxxService.bootReset (forEach=elaborazione)
-        allEntityClassesResettabili.stream().forEach(bootReset);
+        allEntityClassesRicreabiliResetDownload.stream().forEach(bootReset);
         message = String.format("Controllati i dati iniziali di %s", moduleName);
         logger.log(AETypeLog.checkData, message);
     }

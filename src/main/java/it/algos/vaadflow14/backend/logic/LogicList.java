@@ -75,7 +75,6 @@ public abstract class LogicList extends Logic {
         try {
             isResetMethod = entityService.getClass().getDeclaredMethod(TAG_METHOD_RESET) != null;
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
         }
 
         super.usaBottoneDeleteAll = annotation.usaNew(entityClazz);
@@ -99,9 +98,6 @@ public abstract class LogicList extends Logic {
 
         //        //--costruisce una mappa (vuota) di ComboBox per il topLayout
         //        super.mappaComboBox = new HashMap<>();
-
-        //--costruisce una lista (vuota) di Component per i comandi sopra la lista
-        super.mappaComponentiTop = new LinkedHashMap<>();
 
         //--costruisce una mappa (vuota) di filtri per la Grid
         super.mappaFiltri = new HashMap<>();
@@ -196,7 +192,7 @@ public abstract class LogicList extends Logic {
 
     /**
      * Costruisce una lista (eventuale) di 'span' da mostrare come header della view <br>
-     * DEVE essere sovrascritto, senza invocare il metodo della superclasse <br>
+     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixAlertList() {
     }
@@ -324,14 +320,14 @@ public abstract class LogicList extends Logic {
         }
     }
 
-    /**
-     * Aggiunge una enumeration alla mappa dei componenti <br>
-     *
-     * @param aiButton enumeration da aggiungere alla mappa componenti
-     */
-    protected void putMappa(final AIButton aiButton) {
-        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
-    }
+//    /**
+//     * Aggiunge una enumeration alla mappa dei componenti <br>
+//     *
+//     * @param aiButton enumeration da aggiungere alla mappa componenti
+//     */
+//    protected void putMappa(final AIButton aiButton) {
+//        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
+//    }
 
 
     /**
@@ -794,10 +790,15 @@ public abstract class LogicList extends Logic {
      * Ridisegna la GUI <br>
      */
     public void clickDeleteAll() {
+        String message;
+        String collectionName;
+
         entityService.deleteAll();
-        logger.deleteAll(entityClazz);
+
+        collectionName = annotation.getCollectionName(entityClazz);
+        message = "La collezione " + collectionName + " è stata interamente cancellata";
+        logger.log(AETypeLog.deleteAll, message);
         this.refreshGrid();
-        //            this.reloadList();//@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
     }
 
     /**
@@ -857,6 +858,7 @@ public abstract class LogicList extends Logic {
      * @return false se non esiste il metodo sovrascritto o se la collection
      * ....... true se esiste il metodo sovrascritto è la collection viene ri-creata
      */
+    @Deprecated
     private boolean resetDeletingAll() {
         AIResult result = null;
         entityService.delete();
