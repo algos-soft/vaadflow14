@@ -52,8 +52,8 @@ import javax.validation.constraints.*;
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Fattura", keyPropertyName = "code", usaBoot  = true, usaCompany = false)
 @AIView(menuName = "Fattura", menuIcon = VaadinIcon.COG, sortProperty = "code")
-@AIList(fields = "code,descrizione", usaRowIndex = true)
-@AIForm(fields = "code,descrizione", usaSpostamentoTraSchede = true)
+@AIList(fields = "pageId,code,descrizione", usaRowIndex = true)
+@AIForm(fields = "pageId,code,descrizione", usaSpostamentoTraSchede = true)
 public class Fattura extends AEntity {
 
     /**
@@ -61,6 +61,14 @@ public class Fattura extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
+
+    /**
+     * pageId (obbligatorio, unico) <br>
+     */
+    @Indexed(unique = false, direction = IndexDirection.DESCENDING)
+    @AIField(type = AETypeField.lungo, caption = "pageId", typeNum = AETypeNum.positiviOnly)
+    @AIColumn(header = "#")
+    public long pageId;
 
     /**
      * codice di riferimento (obbligatorio, unico)

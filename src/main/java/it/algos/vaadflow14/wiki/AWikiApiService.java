@@ -61,7 +61,9 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String CONTENT = "content";
 
-    public static final String WIKI_URL = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+    public static final String WIKI_QUERY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+
+    public static final String WIKI_PARSE = "https://it.wikipedia.org/w/api.php?action=parse&prop=wikitext&formatversion=2&format=json&page=";
 
     /**
      * Converte il valore stringa nel tipo previsto dal parametro PagePar
@@ -77,15 +79,18 @@ public class AWikiApiService extends AAbstractService {
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
-     * Usa le API base SENZA loggarsi <br>
-     * Testo in linguaggio wiki visibile <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest tutti i dati della pagina <br>
+     * Estrae il testo in linguaggio wiki visibile <br>
+     * Elaborazione della urlRequest leggermente più complessa di leggeParse <br>
+     * Tempo di download leggermente più corto di leggeParse <br>
      * Metodo base per tutte le API in semplice lettura <br>
      *
      * @param wikiTitle della pagina wiki
      *
      * @return testo completo (visibile) della pagina wiki
      */
-    public String legge(String wikiTitle) {
+    public String leggeQuery(String wikiTitle) {
         String testoPagina = VUOTA;
         String webUrl;
         String rispostaDellaQuery;
@@ -95,10 +100,39 @@ public class AWikiApiService extends AAbstractService {
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "legge");
         }
-        webUrl = WIKI_URL + wikiTitle;
+        webUrl = WIKI_QUERY + wikiTitle;
 
         rispostaDellaQuery = text.isValid(webUrl) ? web.leggeWeb(webUrl) : VUOTA;
         testoPagina = text.isValid(rispostaDellaQuery) ? estraeTestoPaginaWiki(rispostaDellaQuery) : VUOTA;
+
+        return testoPagina;
+    }
+
+    /**
+     * Legge (come user) una pagina dal server wiki <br>
+     * Usa una API con action=parse SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest title, pageid e wikitext <br>
+     * Estrae il wikitext in linguaggio wiki visibile <br>
+     * Elaborazione della urlRequest leggermente meno complessa di leggeQuery <br>
+     * Tempo di download leggermente più lungo di leggeQuery <br>
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return testo completo (visibile) della pagina wiki
+     */
+    public String leggeParse(String wikiTitle) {
+        String testoPagina = VUOTA;
+        String webUrl;
+        String rispostaDellaParse;
+
+        try {
+            wikiTitle = text.isValid(wikiTitle) ? URLEncoder.encode(wikiTitle, ENCODE) : VUOTA;
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "leggeParse");
+        }
+        webUrl = WIKI_PARSE + wikiTitle;
+        rispostaDellaParse = text.isValid(webUrl) ? web.leggeWeb(webUrl) : VUOTA;
+        testoPagina = text.isValid(rispostaDellaParse) ? estraeTestoParse(rispostaDellaParse) : VUOTA;
 
         return testoPagina;
     }
@@ -121,7 +155,7 @@ public class AWikiApiService extends AAbstractService {
             logger.error(unErrore, this.getClass(), "legge");
         }
 
-        webUrl = WIKI_URL + wikiTitle;
+        webUrl = WIKI_QUERY + wikiTitle;
         return text.isValid(webUrl) ? web.leggeWeb(webUrl) : VUOTA;
     }
 
@@ -140,7 +174,7 @@ public class AWikiApiService extends AAbstractService {
      * @return template completo di doppie graffe iniziali e finali
      */
     public String leggeTmpl(final String wikiTitle, final String tag) {
-        return estraeTmpl(legge(wikiTitle), tag);
+        return estraeTmpl(leggeQuery(wikiTitle), tag);
     }
 
     /**
@@ -528,7 +562,7 @@ public class AWikiApiService extends AAbstractService {
         String tagEnd = "|}\n";
         int posIni = 0;
         int posEnd = 0;
-        String testoPagina = legge(wikiTitle);
+        String testoPagina = leggeQuery(wikiTitle);
 
         if (text.isValid(testoPagina)) {
             if (testoPagina.contains(tag1) || testoPagina.contains(tag2) || testoPagina.contains(tag3) || testoPagina.contains(tag4) || testoPagina.contains(tag5) || testoPagina.contains(tag6)) {
@@ -573,7 +607,7 @@ public class AWikiApiService extends AAbstractService {
      */
     public String leggeModulo(final String wikiTitle) {
         String testoModulo = VUOTA;
-        String testoPagina = legge(wikiTitle);
+        String testoPagina = leggeQuery(wikiTitle);
         String tag = "return";
 
         if (text.isValid(testoPagina)) {
@@ -650,6 +684,42 @@ public class AWikiApiService extends AAbstractService {
         }
 
         return testoPagina;
+    }
+
+    /**
+     * Recupera il testo di una singola pagina dalla risposta alla parse <br>
+     *
+     * @param rispostaDellaParse in ingresso
+     *
+     * @return testo della pagina
+     */
+    public String estraeTestoParse(final String rispostaDellaParse) {
+        Map<String, Object> mappa = getMappaParse(rispostaDellaParse);
+        return mappa != null ? (String) mappa.get(KEY_MAPPA_TEXT) : VUOTA;
+    }
+
+
+    /**
+     * Recupera i parametri una singola pagina dalla risposta alla parse <br>
+     * 3 parametri:
+     * title
+     * pageid
+     * wikitext
+     *
+     * @param rispostaDellaParse in ingresso
+     *
+     * @return testo della pagina
+     */
+    public Map<String, Object> getMappaParse(final String rispostaDellaParse) {
+        Map<String, Object> mappa = new HashMap<>();
+        JSONObject jsonRisposta = (JSONObject) JSONValue.parse(rispostaDellaParse);
+        JSONObject jsonParse = (JSONObject) jsonRisposta.get(KEY_MAPPA_PARSE);
+
+        mappa.put(KEY_MAPPA_TITLE, jsonParse.get(KEY_MAPPA_TITLE));
+        mappa.put(KEY_MAPPA_PAGEID, jsonParse.get(KEY_MAPPA_PAGEID));
+        mappa.put(KEY_MAPPA_TEXT, jsonParse.get(KEY_MAPPA_TEXT));
+
+        return mappa;
     }
 
     /**
@@ -1043,7 +1113,7 @@ public class AWikiApiService extends AAbstractService {
         String tagEnd = "{{Colonne fine}}";
         int posIni = 0;
         int posEnd = 0;
-        String testoPagina = legge(wikiTitle);
+        String testoPagina = leggeQuery(wikiTitle);
 
         if (text.isValid(testoPagina)) {
             if (testoPagina.contains(tagIni)) {

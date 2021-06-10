@@ -462,6 +462,9 @@ public abstract class ATest {
         clazz = null;
     }
 
+    protected String getTime() {
+        return date.deltaTextEsatto(inizio);
+    }
 
     protected void printVuota(List<String> lista) {
         System.out.println(VUOTA);

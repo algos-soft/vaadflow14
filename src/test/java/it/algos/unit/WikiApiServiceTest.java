@@ -26,7 +26,7 @@ import java.util.*;
 @Tag("testAllValido")
 @DisplayName("Test di controllo per i collegamenti base di wikipedia.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WikiApiService extends ATest {
+public class WikiApiServiceTest extends ATest {
 
     public static final String PAGINA_PIOZZANO = "Piozzano";
 
@@ -87,7 +87,7 @@ public class WikiApiService extends ATest {
 
     @Test
     @Order(1)
-    @DisplayName("1 - legge (come user) il testo grezzo html di una pagina wiki")
+    @DisplayName("1 - legge il testo grezzo html come fosse il browser")
     public void getSorgente() {
         sorgente = PAGINA_PIOZZANO;
         previsto = "<!DOCTYPE html><html class=\"client-nojs\" lang=\"it\" dir=\"ltr\"><head><meta charset=\"UTF-8\"/><title>Piozzano - Wikipedia</title>";
@@ -99,42 +99,19 @@ public class WikiApiService extends ATest {
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("1 - Legge il testo grezzo della pagina html.");
-        System.out.println("1 - Faccio vedere solo l'inizio, perché troppo lungo");
-        System.out.println("1 - Sorgente restituito in formato html");
-        System.out.println(String.format("1 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println("Legge il testo grezzo della pagina html. Sorgente del browser");
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("Sorgente restituito in formato html");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(VUOTA);
-        System.out.println(ottenuto.substring(0, caratteriVisibili));
+        System.out.println(ottenuto.substring(0, previsto.length()));
+        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
     }
 
 
     @Test
     @Order(2)
-    @DisplayName("2 - legge (come user) il testo visibile/leggibile di una pagina wiki")
-    public void legge() {
-        sorgente = PAGINA_PIOZZANO;
-        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
-        previsto2 = "[[Categoria:Piozzano| ]]";
-
-        for (int k = 0; k < cicli; k++) {
-            ottenuto = service.legge(sorgente);
-        }
-        assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.startsWith(previsto));
-        assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("2 - Legge il testo wiki della pagina wiki.");
-        System.out.println("2 - Usa le API base SENZA loggarsi.");
-        System.out.println("2 - Faccio vedere solo l'inizio, perché troppo lungo");
-        System.out.println("2 - Sorgente restituito in formato visibile/leggibile");
-        System.out.println(String.format("2 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
-        System.out.println(VUOTA);
-        System.out.println(ottenuto.substring(0, caratteriVisibili));
-    }
-
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - legge la risposta in formato JSON ad una query su API Mediawiki")
+    @DisplayName("2 - legge in formato JSON con una API query di Mediawiki")
     public void leggeJson() {
         sorgente = PAGINA_TEST;
         previsto = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":8956310,\"ns\":2,\"title\":\"Utente:Gac/T17\"";
@@ -144,17 +121,74 @@ public class WikiApiService extends ATest {
         }
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
-        System.out.println("3 - Legge una pagina wiki con una query su API Mediawiki");
-        System.out.println("3 - Sorgente restituito in formato JSON");
-        System.out.println(String.format("3 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println("Legge una pagina wiki con una query su API Mediawiki");
+        System.out.println("Sorgente restituito in formato JSON");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
 
 
     @Test
+    @Order(3)
+    @DisplayName("3 - legge in formato testo con una API action=query di Mediawiki")
+    public void legge() {
+        sorgente = PAGINA_PIOZZANO;
+        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
+        previsto2 = "[[Categoria:Piozzano| ]]";
+
+        for (int k = 0; k < cicli; k++) {
+            ottenuto = service.leggeQuery(sorgente);
+        }
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
+
+        System.out.println("Legge (come user) una pagina dal server wiki");
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println("Recupera dalla urlRequest tutti i dati della pagina");
+        System.out.println("Estrae il testo in linguaggio wiki visibile");
+        System.out.println("Elaborazione della urlRequest leggermente più complessa di leggeParse");
+        System.out.println("Tempo di download leggermente più corto di leggeParse");
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, previsto.length()));
+        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
+    }
+
+    @Test
     @Order(4)
-    @DisplayName("4 - estrae un array di 'pages' da una query")
+    @DisplayName("4 - legge in formato testo con una API action=parse di Mediawiki")
+    public void legge3() {
+        sorgente = PAGINA_PIOZZANO;
+        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
+        previsto2 = "[[Categoria:Piozzano| ]]";
+
+        for (int k = 0; k < cicli; k++) {
+            ottenuto = service.leggeParse(sorgente);
+        }
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+        assertTrue(ottenuto.endsWith(previsto2));
+        System.out.println("Legge (come user) una pagina dal server wiki");
+        System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
+        System.out.println("Recupera dalla urlRequest title, pageid e wikitext");
+        System.out.println("Estrae il testo in linguaggio wiki visibile");
+        System.out.println("Elaborazione della urlRequest leggermente meno complessa di leggeQuery");
+        System.out.println("Tempo di download leggermente più lungo di leggeQuery");
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, previsto.length()));
+        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - estrae un array di 'pages' da una query")
     public void leggeJsonArray() {
         sorgente = PAGINA_TEST;
         JSONArray jsonArray = null;
@@ -164,15 +198,16 @@ public class WikiApiService extends ATest {
         jsonArray = service.getArrayPagine(ottenuto);
         assertNotNull(jsonArray);
         assertEquals(previstoIntero, jsonArray.size());
-        System.out.println("4 - legge il contenuto in formato JSON di una pagina wiki");
+        System.out.println("Legge il contenuto in formato JSON di una pagina wiki");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
 
 
     @Test
-    @Order(5)
-    @DisplayName("5 - estrae un singolo oggetto JSON da una query")
+    @Order(6)
+    @DisplayName("6 - estrae un singolo oggetto JSON da una query")
     public void getObjectPage() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -182,14 +217,14 @@ public class WikiApiService extends ATest {
         assertTrue(text.isValid(ottenuto));
         jsonObject = service.getObjectPage(ottenuto);
         assertNotNull(jsonObject);
-        System.out.println("5 - estrae un singolo oggetto JSON da una query");
+        System.out.println("estrae un singolo oggetto JSON da una query");
         System.out.println(VUOTA);
         System.out.println(jsonObject);
     }
 
     @Test
-    @Order(6)
-    @DisplayName("6 - crea una mappa da un singolo oggetto JSON")
+    @Order(7)
+    @DisplayName("7 - crea una mappa da un singolo oggetto JSON")
     public void getMappaJSON() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -207,8 +242,8 @@ public class WikiApiService extends ATest {
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - crea una wikiPage da una mappa")
+    @Order(8)
+    @DisplayName("8 - crea una wikiPage da una mappa")
     public void getWikiPageFromMappa() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -228,8 +263,8 @@ public class WikiApiService extends ATest {
 
 
     @Test
-    @Order(8)
-    @DisplayName("8 - crea una wikiPage in risposta ad una query")
+    @Order(9)
+    @DisplayName("9 - crea una wikiPage in risposta ad una query")
     public void getWikiPageFromTitle() {
         sorgente = PAGINA_TEST;
         WikiPage wikiPage;
@@ -243,24 +278,24 @@ public class WikiApiService extends ATest {
     }
 
     @Test
-    @Order(9)
-    @DisplayName("9 - Legge il testo wiki della pagina wiki passando da Page")
+    @Order(10)
+    @DisplayName("10 - Legge il testo wiki della pagina wiki passando da Page")
     public void getContent() {
         sorgente = PAGINA_TEST;
 
         ottenuto = service.getContent(sorgente);
         assertTrue(text.isValid(ottenuto));
-        System.out.println("9 - Legge il testo wiki della pagina wiki.");
-        System.out.println("9 - Usa le API base SENZA loggarsi.");
-        System.out.println("9 - Sorgente restituito in formato visibile/leggibile");
-        System.out.println(String.format("9 - Tempo impiegato per leggere %d pagine: %s", cicli, date.deltaTextEsatto(inizio)));
+        System.out.println("Legge il testo wiki della pagina wiki.");
+        System.out.println("Usa le API base SENZA loggarsi.");
+        System.out.println("Sorgente restituito in formato visibile/leggibile");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
 
     @Test
-    @Order(10)
-    @DisplayName("10 - legge (come user) una table wiki")
+    @Order(11)
+    @DisplayName("11 - legge (come user) una table wiki")
     public void leggeTable() {
         sorgente = "ISO 3166-2:IT";
         previsto = "{| class=\"wikitable sortable\"";
@@ -271,7 +306,7 @@ public class WikiApiService extends ATest {
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("3 - Legge una tabella wiki completa");
+        System.out.println("Legge una tabella wiki completa");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
 
@@ -286,14 +321,14 @@ public class WikiApiService extends ATest {
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println(VUOTA);
-        System.out.println("3 - Legge una tabella wiki completa");
+        System.out.println("Legge una tabella wiki completa");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
 
     @Test
-    @Order(11)
-    @DisplayName("11 - legge (come user) un modulo")
+    @Order(12)
+    @DisplayName("12 - legge (come user) un modulo")
     public void leggeModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         previsto = "{\n[\"abate\"] =";
@@ -303,13 +338,13 @@ public class WikiApiService extends ATest {
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("4 - Legge un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
 
     @Test
-    @Order(12)
-    @DisplayName("12 - legge (come user) la mappa del modulo Attività")
+    @Order(13)
+    @DisplayName("13 - legge (come user) la mappa del modulo Attività")
     public void leggeMappaModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         sorgente2 = "abate";
@@ -324,13 +359,13 @@ public class WikiApiService extends ATest {
         ottenuto = mappaOttenuta.get(sorgente3);
         assertTrue(text.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
-        System.out.println("5 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
 
     @Test
-    @Order(13)
-    @DisplayName("13 - legge (come user) la mappa del modulo Attività/Genere")
+    @Order(14)
+    @DisplayName("14 - legge (come user) la mappa del modulo Attività/Genere")
     public void leggeMappaModulo2() {
         sorgente = "Modulo:Bio/Plurale_attività_genere";
         sorgente2 = "abate";
@@ -341,12 +376,12 @@ public class WikiApiService extends ATest {
         ottenuto = mappaOttenuta.get(sorgente2);
         assertTrue(text.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
-        System.out.println("6 - Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
     }
 
     @Test
-    @Order(14)
-    @DisplayName("14 - legge (come user) un template")
+    @Order(15)
+    @DisplayName("15 - legge (come user) un template")
     public void leggeTmpl() {
         sorgente = PAGINA_PIOZZANO;
         previsto = VUOTA;
@@ -364,7 +399,7 @@ public class WikiApiService extends ATest {
         ottenuto = service.leggeTmpl(sorgente, sorgente2);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
-        System.out.println("7 - Legge un template amministrativo");
+        System.out.println("Legge un template amministrativo");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
 
@@ -376,7 +411,7 @@ public class WikiApiService extends ATest {
         assertTrue(ottenuto.startsWith(previsto));
         System.out.println(VUOTA);
         System.out.println(VUOTA);
-        System.out.println("7 - Legge un template bio");
+        System.out.println("Legge un template bio");
         System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
