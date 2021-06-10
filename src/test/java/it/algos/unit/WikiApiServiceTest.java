@@ -160,7 +160,27 @@ public class WikiApiServiceTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("4 - legge in formato testo con una API action=parse di Mediawiki")
+    @DisplayName("4 - estrae una mappa (title,pageid,text) da action=parse di Mediawiki")
+    public void legge2() {
+        sorgente = PAGINA_PIOZZANO;
+        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
+        Map mappa = service.getMappaParse(sorgente);
+
+        assertNotNull(mappa);
+        System.out.println("estrae una mappa (title,pageid,text) da action=parse di Mediawiki");
+        System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
+        System.out.println("Recupera dalla urlRequest title, pageid e wikitext");
+        System.out.println("Faccio vedere solo l'inizio del testo, perché troppo lungo");
+        System.out.println(VUOTA);
+        System.out.println(KEY_MAPPA_TITLE + SEP + mappa.get(KEY_MAPPA_TITLE));
+        System.out.println(KEY_MAPPA_PAGEID + SEP + mappa.get(KEY_MAPPA_PAGEID));
+        System.out.println(KEY_MAPPA_TEXT + SEP + ((String) mappa.get(KEY_MAPPA_TEXT)).substring(0, previsto.length()));
+        System.out.println(VUOTA);
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - legge in formato testo con una API action=parse di Mediawiki")
     public void legge3() {
         sorgente = PAGINA_PIOZZANO;
         previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
@@ -187,8 +207,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(5)
-    @DisplayName("5 - estrae un array di 'pages' da una query")
+    @Order(6)
+    @DisplayName("6 - estrae un array di 'pages' da una query")
     public void leggeJsonArray() {
         sorgente = PAGINA_TEST;
         JSONArray jsonArray = null;
@@ -206,8 +226,8 @@ public class WikiApiServiceTest extends ATest {
 
 
     @Test
-    @Order(6)
-    @DisplayName("6 - estrae un singolo oggetto JSON da una query")
+    @Order(7)
+    @DisplayName("7 - estrae un singolo oggetto JSON da una query")
     public void getObjectPage() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -223,8 +243,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(7)
-    @DisplayName("7 - crea una mappa da un singolo oggetto JSON")
+    @Order(8)
+    @DisplayName("8 - crea una mappa da un singolo oggetto JSON")
     public void getMappaJSON() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -242,8 +262,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(8)
-    @DisplayName("8 - crea una wikiPage da una mappa")
+    @Order(9)
+    @DisplayName("9 - crea una wikiPage da una mappa")
     public void getWikiPageFromMappa() {
         sorgente = PAGINA_TEST;
         JSONObject jsonObject = null;
@@ -263,8 +283,8 @@ public class WikiApiServiceTest extends ATest {
 
 
     @Test
-    @Order(9)
-    @DisplayName("9 - crea una wikiPage in risposta ad una query")
+    @Order(10)
+    @DisplayName("10 - crea una wikiPage in risposta ad una query")
     public void getWikiPageFromTitle() {
         sorgente = PAGINA_TEST;
         WikiPage wikiPage;
@@ -278,8 +298,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(10)
-    @DisplayName("10 - Legge il testo wiki della pagina wiki passando da Page")
+    @Order(11)
+    @DisplayName("11 - Legge il testo wiki della pagina wiki passando da Page")
     public void getContent() {
         sorgente = PAGINA_TEST;
 
@@ -294,8 +314,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(11)
-    @DisplayName("11 - legge (come user) una table wiki")
+    @Order(12)
+    @DisplayName("12 - legge (come user) una table wiki")
     public void leggeTable() {
         sorgente = "ISO 3166-2:IT";
         previsto = "{| class=\"wikitable sortable\"";
@@ -327,8 +347,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(12)
-    @DisplayName("12 - legge (come user) un modulo")
+    @Order(13)
+    @DisplayName("13 - legge (come user) un modulo")
     public void leggeModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         previsto = "{\n[\"abate\"] =";
@@ -343,8 +363,8 @@ public class WikiApiServiceTest extends ATest {
 
 
     @Test
-    @Order(13)
-    @DisplayName("13 - legge (come user) la mappa del modulo Attività")
+    @Order(14)
+    @DisplayName("14 - legge (come user) la mappa del modulo Attività")
     public void leggeMappaModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         sorgente2 = "abate";
@@ -364,8 +384,8 @@ public class WikiApiServiceTest extends ATest {
 
 
     @Test
-    @Order(14)
-    @DisplayName("14 - legge (come user) la mappa del modulo Attività/Genere")
+    @Order(15)
+    @DisplayName("15 - legge (come user) la mappa del modulo Attività/Genere")
     public void leggeMappaModulo2() {
         sorgente = "Modulo:Bio/Plurale_attività_genere";
         sorgente2 = "abate";
@@ -380,8 +400,8 @@ public class WikiApiServiceTest extends ATest {
     }
 
     @Test
-    @Order(15)
-    @DisplayName("15 - legge (come user) un template")
+    @Order(16)
+    @DisplayName("16 - legge (come user) un template")
     public void leggeTmpl() {
         sorgente = PAGINA_PIOZZANO;
         previsto = VUOTA;

@@ -120,21 +120,9 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return testo completo (visibile) della pagina wiki
      */
-    public String leggeParse(String wikiTitle) {
-        String testoPagina = VUOTA;
-        String webUrl;
-        String rispostaDellaParse;
-
-        try {
-            wikiTitle = text.isValid(wikiTitle) ? URLEncoder.encode(wikiTitle, ENCODE) : VUOTA;
-        } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "leggeParse");
-        }
-        webUrl = WIKI_PARSE + wikiTitle;
-        rispostaDellaParse = text.isValid(webUrl) ? web.leggeWeb(webUrl) : VUOTA;
-        testoPagina = text.isValid(rispostaDellaParse) ? estraeTestoParse(rispostaDellaParse) : VUOTA;
-
-        return testoPagina;
+    public String leggeParse(final String wikiTitle) {
+        Map mappa = getMappaParse(wikiTitle);
+        return (String) mappa.get(KEY_MAPPA_TEXT);
     }
 
     /**
@@ -686,32 +674,34 @@ public class AWikiApiService extends AAbstractService {
         return testoPagina;
     }
 
-    /**
-     * Recupera il testo di una singola pagina dalla risposta alla parse <br>
-     *
-     * @param rispostaDellaParse in ingresso
-     *
-     * @return testo della pagina
-     */
-    public String estraeTestoParse(final String rispostaDellaParse) {
-        Map<String, Object> mappa = getMappaParse(rispostaDellaParse);
-        return mappa != null ? (String) mappa.get(KEY_MAPPA_TEXT) : VUOTA;
-    }
+    //    /**
+    //     * Recupera il testo di una singola pagina dalla risposta alla parse <br>
+    //     *
+    //     * @param rispostaDellaParse in ingresso
+    //     *
+    //     * @return testo della pagina
+    //     */
+    //    public String estraeTestoParse(final String rispostaDellaParse) {
+    //        Map<String, Object> mappa = getMappaParse(rispostaDellaParse);
+    //        return mappa != null ? (String) mappa.get(KEY_MAPPA_TEXT) : VUOTA;
+    //    }
 
 
     /**
-     * Recupera i parametri una singola pagina dalla risposta alla parse <br>
+     * Recupera i parametri fondamentali di una singola pagina con action=parse <br>
      * 3 parametri:
      * title
      * pageid
      * wikitext
      *
-     * @param rispostaDellaParse in ingresso
+     * @param wikiTitle della pagina wiki
      *
-     * @return testo della pagina
+     * @return mappa dei parametri
      */
-    public Map<String, Object> getMappaParse(final String rispostaDellaParse) {
+    public Map<String, Object> getMappaParse(final String wikiTitle) {
         Map<String, Object> mappa = new HashMap<>();
+        String webUrl = WIKI_PARSE + wikiTitle;
+        String rispostaDellaParse = web.leggeWeb(webUrl);
         JSONObject jsonRisposta = (JSONObject) JSONValue.parse(rispostaDellaParse);
         JSONObject jsonParse = (JSONObject) jsonRisposta.get(KEY_MAPPA_PARSE);
 
