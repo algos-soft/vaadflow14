@@ -177,7 +177,7 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return template completo di doppie graffe iniziali e finali
      */
-    private String estraeTmpl(final String testoPagina, String tag) {
+    public String estraeTmpl(final String testoPagina, String tag) {
         String templateTxt = VUOTA;
         boolean continua = false;
         String patternTxt = "";

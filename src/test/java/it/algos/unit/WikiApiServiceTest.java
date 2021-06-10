@@ -162,7 +162,7 @@ public class WikiApiServiceTest extends ATest {
     @Order(4)
     @DisplayName("4 - estrae una mappa (title,pageid,text) da action=parse di Mediawiki")
     public void legge2() {
-        sorgente = PAGINA_PIOZZANO;
+        sorgente = "Matteo Salvini";
         previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
         Map mappa = service.getMappaParse(sorgente);
 
