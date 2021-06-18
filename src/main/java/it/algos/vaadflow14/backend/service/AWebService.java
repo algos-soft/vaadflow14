@@ -25,7 +25,9 @@ public class AWebService extends AAbstractService {
      */
     public final static String TAG_WIKI = "https://it.wikipedia.org/wiki/";
 
-    private final static String TAG_INIZIALE = "https://";
+    private final static String TAG_INIZIALE = "http://";
+
+    private final static String TAG_INIZIALE_SECURE = "https://";
 
     //--codifica dei caratteri
     public static String INPUT = "UTF8";
@@ -85,7 +87,7 @@ public class AWebService extends AAbstractService {
 
 
     /**
-     * Request di tipo GET <br>
+     * Request di tipo GET. Legge la pagina intera. <br>
      * Accetta SOLO un urlDomain (indirizzo) completo <br>
      * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
      * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
@@ -95,13 +97,14 @@ public class AWebService extends AAbstractService {
      *
      * @return codiceSorgente grezzo in formato html oppure BSON
      */
-    public String leggeWeb(String urlDomain) {
+    public String leggeWeb(final String urlDomain) {
         String codiceSorgente = VUOTA;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
+        String tag2 = TAG_INIZIALE_SECURE;
 
         try {
-            String indirizzoWebCompleto = urlDomain.startsWith(tag) ? urlDomain : tag + urlDomain;
+            String indirizzoWebCompleto = urlDomain.startsWith(tag) || urlDomain.startsWith(tag2) ? urlDomain : tag2 + urlDomain;
             urlConn = getURLConnection(indirizzoWebCompleto);
             codiceSorgente = getUrlRequest(urlConn);
         } catch (Exception unErrore) {
@@ -109,6 +112,28 @@ public class AWebService extends AAbstractService {
         }
 
         return codiceSorgente;
+    }
+
+    /**
+     * Request di tipo GET. Legge il body della pagina. <br>
+     * Accetta SOLO un urlDomain (indirizzo) completo <br>
+     * Può essere un urlDomain generico di un sito web e restituisce il testo in formato html <br>
+     * Può essere un urlDomain di una pagina wiki in lettura normale (senza API) e restituisce il testo in formato html <br>
+     * Può essere un urlDomain che usa le API di Mediawiki e restituisce il testo in formato BSON <br>
+     *
+     * @param urlDomain completo
+     *
+     * @return codiceSorgente del body in formato html oppure BSON
+     */
+    public String leggeBodyWeb(String urlDomain) {
+        String bodyText = VUOTA;
+        String allText = leggeWeb(urlDomain);
+
+        if (text.isValid(allText)) {
+            bodyText = text.estrae(allText, "<body>", "</body>");
+        }
+
+        return bodyText;
     }
 
 

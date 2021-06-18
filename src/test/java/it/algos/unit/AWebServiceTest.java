@@ -1,14 +1,13 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import org.junit.jupiter.api.*;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow15
@@ -17,12 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Date: gio, 07-mag-2020
  * Time: 07:56
  */
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@Tag("web")
-//@DisplayName("Unit test per i collegamenti web")
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("testAllValido")
+@DisplayName("Test di controllo per i collegamenti base del web.")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AWebServiceTest extends ATest {
 
+    public static final String URL_ERRATO = "htp://www.altos.it/hellogac.html";
+    public static final String URL_GAC = "http://www.algos.it/hellogac.html";
 
     private static String URL_GENERICO = "https://it.wikipedia.org/wiki/ISO_3166-2:IT";
 
@@ -53,6 +54,55 @@ public class AWebServiceTest extends ATest {
 
     @Test
     @Order(1)
+    @DisplayName("1 - Legge un indirizzo URL errato (inesistente)")
+    public void leggeErrato() {
+        sorgente = URL_ERRATO;
+
+        ottenuto = web.leggeWeb(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Legge un indirizzo URL generico")
+    public void leggeGac() {
+        sorgente = URL_GAC;
+        previsto = "<!DOCTYPE html><html><body><h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
+        ottenuto = web.leggeWeb(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+
+        System.out.println("Legge il testo grezzo della pagina html. Sorgente del browser");
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("Sorgente restituito in formato html");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, previsto.length()));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Legge un body di un URL generico")
+    public void leggeBodyGac() {
+        sorgente = URL_GAC;
+        previsto = "<h1>Telefoni</h1><p style=\"font-family:verdana;font-size:60px\">Gac: 338 9235040</p>";
+        previsto2 = "<p style=\"font-family:verdana;font-size:60px\">2NT-3F: No</p>";
+
+        ottenuto = web.leggeBodyWeb(sorgente);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
+
+        System.out.println("Legge il body di una pagina html. Sorgente del browser");
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println("Sorgente restituito in formato html");
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(VUOTA);
+        System.out.println(ottenuto.substring(0, previsto.length()));
+        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
+    }
+
+    @Test
+    @Order(19)
     @DisplayName("Legge un indirizzo URL generico")
     public void legge() {
         sorgente = URL_GENERICO;
@@ -62,7 +112,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(2)
+    @Order(29)
     @DisplayName("Legge una pagina wiki")
     public void leggeWiki() {
         sorgente = PAGINA;
@@ -72,7 +122,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(3)
+    @Order(39)
     @DisplayName("Titoli tabella")
     public void costruisceTagTitoliTable() {
         String[] titoli;
@@ -95,7 +145,6 @@ public class AWebServiceTest extends ATest {
         System.out.println("");
         System.out.println(ottenuto);
 
-
         titoli = new String[]{"Codice", "Province"};
         previsto = VUOTA;
         previsto += "<table class=\"wikitable sortable\">";
@@ -111,7 +160,6 @@ public class AWebServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
         System.out.println("");
         System.out.println(ottenuto);
-
 
         titoli = new String[]{"Codice", "Province", "Nella regione"};
         previsto = VUOTA;
@@ -135,7 +183,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(4)
+    @Order(49)
     @DisplayName("Estrae una tavola")
     public void estraeTableWiki() {
         sorgente = web.leggeSorgenteWiki(PAGINA);
@@ -150,7 +198,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(5)
+    @Order(59)
     @DisplayName("Estrae un'altra tavola")
     public void estraeTableWiki2() {
         sorgente = web.leggeSorgenteWiki(PAGINA);
@@ -164,7 +212,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(6)
+    @Order(69)
     @DisplayName("Estrae le righe")
     public void getRigheTableWiki() {
         List<String> lista = null;
@@ -183,7 +231,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(7)
+    @Order(79)
     @DisplayName("Estrae la mappa")
     public void getMappaTableWiki() {
         LinkedHashMap<String, LinkedHashMap<String, String>> mappaTable = null;
@@ -204,7 +252,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(8)
+    @Order(89)
     @DisplayName("Estrae la matrice")
     public void getMatriceTableWiki() {
         List<List<String>> matriceTable = null;
@@ -219,7 +267,7 @@ public class AWebServiceTest extends ATest {
 
 
     @Test
-    @Order(9)
+    @Order(99)
     @DisplayName("Estrae un'altra matrice")
     public void getMatriceTableWiki2() {
         List<List<String>> matriceTable = null;
