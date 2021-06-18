@@ -11,6 +11,8 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.util.*;
+
 /**
  * Project vaadflow14
  * Created by Algos
@@ -113,9 +115,19 @@ public class FatturaService extends AService {
      */
     @Override
     public Fattura findById(final String keyID) {
-        return (Fattura) super.findById(keyID);
+        Fattura fattura = (Fattura) super.findById(keyID);
+        fixTransienti(fattura);
+        return fattura;
     }
 
+
+    public void fixTransienti(Fattura fattura) {
+        Map mappa = new HashMap<>();
+        mappa.put("nome", "Alfonso");
+        mappa.put("nato", "a gennaio");
+        fattura.mappa = mappa;
+
+    }
 
     /**
      * Retrieves an entity by its keyProperty.

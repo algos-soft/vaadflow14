@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -53,7 +54,7 @@ import javax.validation.constraints.*;
 @AIEntity(recordName = "Fattura", keyPropertyName = "code", usaBoot  = true, usaCompany = false)
 @AIView(menuName = "Fattura", menuIcon = VaadinIcon.COG, sortProperty = "code")
 @AIList(fields = "pageId,code,descrizione", usaRowIndex = true)
-@AIForm(fields = "pageId,code,descrizione", usaSpostamentoTraSchede = true)
+@AIForm(fields = "pageId,code,descrizione,mappa", usaSpostamentoTraSchede = true)
 public class Fattura extends AEntity {
 
     /**
@@ -88,6 +89,9 @@ public class Fattura extends AEntity {
     @AIColumn(header = "Descrizione", flexGrow = true)
     public String descrizione;
 
+    @Transient()
+    @AIField(type = AETypeField.mappa, caption = "Mappa parametri")
+    public Map<String, String> mappa;
 
     /**
      * @return a string representation of the object.

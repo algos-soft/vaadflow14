@@ -59,6 +59,12 @@ public abstract class FlowCost {
 
     public static final String REF = "<ref>";
 
+    public static final String ECC = "ecc.";
+
+    public static final String NOTE = "<!--";
+
+    public static final String CIRCA = "circa";
+
     public static final String DOPPIO_SPAZIO = SPAZIO + SPAZIO;
 
     public static final String TRATTINO = "-";
@@ -68,6 +74,8 @@ public abstract class FlowCost {
     public static final String SLASH = "/";
 
     public static final String PIPE = "|";
+
+    public static final String REGEX_PIPE = "\\|";
 
     public static final String ESCLAMATIVO = "!";
 
@@ -84,6 +92,8 @@ public abstract class FlowCost {
     public static final String PUNTO = ".";
 
     public static final String PUNTO_VIRGOLA = ";";
+
+    public static final String PUNTO_INTERROGATIVO = "?";
 
     public static final String DUE_PUNTI = ":";
 
@@ -216,6 +226,8 @@ public abstract class FlowCost {
 
     public static final String KEY_MAPPA_TEXT = "wikitext";
 
+    public static final String KEY_MAPPA_LAST_MODIFICA = "lastModifica";
+
     /**
      * The constant PROPERTY_SERIAL.
      */
@@ -279,12 +291,12 @@ public abstract class FlowCost {
     /**
      * tag per la singola parentesi tonda di apertura
      */
-    public static final String TONDA_INI = "(";
+    public static final String PARENTESI_TONDA_INI = "(";
 
     /**
      * tag per la singola parentesi tonda di chiusura
      */
-    public static final String TONDA_END = ")";
+    public static final String PARENTESI_TONDA_END = ")";
 
     /**
      * tag per la singola graffa di apertura
