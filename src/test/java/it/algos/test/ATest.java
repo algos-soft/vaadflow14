@@ -5,6 +5,7 @@ import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
@@ -99,6 +100,7 @@ public abstract class ATest {
     protected static Field FIELD_NOME;
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
+    protected static final int WIDTH = 160;
 
     /**
      * The App context.
@@ -322,6 +324,11 @@ public abstract class ATest {
 
     protected int caratteriVisibili;
 
+    protected AIResult previstoRisultato;
+
+    protected AIResult ottenutoRisultato;
+
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
@@ -460,6 +467,8 @@ public abstract class ATest {
         FIELD_NOME = reflection.getField(VIA_ENTITY_CLASS, NAME_NOME);
         entityBean = null;
         clazz = null;
+        previstoRisultato = null;
+        ottenutoRisultato = null;
     }
 
     protected String getTime() {

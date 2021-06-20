@@ -226,6 +226,8 @@ public abstract class FlowCost {
 
     public static final String KEY_MAPPA_TEXT = "wikitext";
 
+    public static final String KEY_MAPPA_DOMAIN = "domain";
+
     public static final String KEY_MAPPA_LAST_MODIFICA = "lastModifica";
 
     /**
@@ -275,6 +277,24 @@ public abstract class FlowCost {
     public static final String KEY_BUTTON_REGISTRA = "save";
 
     public static final String KEY_BUTTON_DELETE = "delete";
+
+    public static final String KEY_JSON_QUERY = "query";
+
+    public static final String KEY_JSON_PAGES = "pages";
+
+    public static final String KEY_JSON_PAGE_ID = "pageid";
+
+    public static final String KEY_JSON_TITLE = "title";
+
+    public static final String KEY_JSON_REVISIONS = "revisions";
+
+    public static final String KEY_JSON_TIMESTAMP = "timestamp";
+
+    public static final String KEY_JSON_SLOTS = "slots";
+
+    public static final String KEY_JSON_MAIN = "main";
+
+    public static final String KEY_JSON_CONTENT = "content";
 
     public static final String QUADRA_INI = "[";
 

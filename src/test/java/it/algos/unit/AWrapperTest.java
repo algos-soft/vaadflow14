@@ -67,24 +67,24 @@ public class AWrapperTest extends ATest {
         sorgente2 = "Avviso per specificare il tipo di risultato positivo";
         sorgenteIntero = 87;
 
-        result = AResult.valido();
-        assertTrue(result.isValido());
-        assertEquals(VUOTA, result.getErrorMessage());
-
-        result = AResult.errato(sorgente);
-        assertFalse(result.isValido());
-        assertEquals(sorgente, result.getErrorMessage());
-
-        result = AResult.valido(sorgente2);
-        assertTrue(result.isValido());
-        assertEquals(VUOTA, result.getErrorMessage());
-        assertEquals(sorgente2, result.getValidationMessage());
-
-        result = AResult.valido(sorgente2,sorgenteIntero);
-        assertTrue(result.isValido());
-        assertEquals(VUOTA, result.getErrorMessage());
-        assertEquals(sorgente2, result.getValidationMessage());
-        assertEquals(sorgenteIntero, result.getValore());
+//        result = AResult.valido();
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//
+//        result = AResult.errato(sorgente);
+//        assertFalse(result.isValido());
+//        assertEquals(sorgente, result.getErrorMessage());
+//
+//        result = AResult.valido(sorgente2);
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//        assertEquals(sorgente2, result.getValidationMessage());
+//
+//        result = AResult.valido(sorgente2,sorgenteIntero);
+//        assertTrue(result.isValido());
+//        assertEquals(VUOTA, result.getErrorMessage());
+//        assertEquals(sorgente2, result.getValidationMessage());
+//        assertEquals(sorgenteIntero, result.getValore());
     }
 
 
