@@ -747,7 +747,7 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
-    public List<WrapPage> leggePages(String pageIds, boolean usaTemplate) {
+    public List<WrapPage> leggePages(String pageIds, String tagTemplate) {
         List<WrapPage> wraps = null;
         pageIds = fixWikiTitle(pageIds);
         String webUrl = WIKI_QUERY_PAGEIDS + pageIds;
@@ -757,7 +757,7 @@ public class AWikiApiService extends AAbstractService {
         if (jsonPages != null) {
             wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
-                wraps.add(creaPage(webUrl, (JSONObject) obj, usaTemplate));
+                wraps.add(creaPage(webUrl, (JSONObject) obj, tagTemplate));
             }
         }
 
@@ -777,7 +777,7 @@ public class AWikiApiService extends AAbstractService {
     public WrapPage leggePage(final long pageId) {
         String webUrl = WIKI_QUERY_PAGEIDS + pageId;
 
-        return creaPage(webUrl, false);
+        return creaPage(webUrl, VUOTA);
     }
 
     /**
@@ -792,7 +792,7 @@ public class AWikiApiService extends AAbstractService {
      */
     public WrapPage leggePage(final String wikiTitleGrezzo) {
         String webUrl = webUrlQueryTitles(wikiTitleGrezzo);
-        return creaPage(webUrl, false);
+        return creaPage(webUrl, VUOTA);
     }
 
     /**
@@ -805,9 +805,9 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return wrapper con template (visibile) della pagina wiki
      */
-    public WrapPage leggePageTmpl(final String wikiTitleGrezzo) {
+    public WrapPage leggePage(final String wikiTitleGrezzo, String tagTemplate) {
         String webUrl = webUrlQueryTitles(wikiTitleGrezzo);
-        return creaPage(webUrl, true);
+        return creaPage(webUrl, tagTemplate);
     }
 
     /**
@@ -820,14 +820,14 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
-    private WrapPage creaPage(final String webUrl, boolean usaTemplate) {
+    private WrapPage creaPage(final String webUrl, String tagTemplate) {
         String rispostaAPI = web.legge(webUrl).getText();
         JSONObject jsonPageZero = getObjectPage(rispostaAPI);
-        return creaPage(webUrl, jsonPageZero, usaTemplate);
+        return creaPage(webUrl, jsonPageZero, tagTemplate);
     }
 
 
-    private WrapPage creaPage(final String webUrl, final JSONObject jsonPage, boolean usaTemplate) {
+    private WrapPage creaPage(final String webUrl, final JSONObject jsonPage, String tagTemplate) {
         long pageid;
         String title;
         String stringTimestamp;
@@ -842,11 +842,11 @@ public class AWikiApiService extends AAbstractService {
         JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
         content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
-        if (usaTemplate) {
-            content = estraeTmpl(content, "Bio");
+        if (text.isValid(tagTemplate)) {
+            content = estraeTmpl(content, tagTemplate);
         }
 
-        return new WrapPage(webUrl, pageid, title, content, stringTimestamp, usaTemplate);
+        return new WrapPage(webUrl, pageid, title, content, stringTimestamp, text.isValid(tagTemplate));
     }
 
     /**

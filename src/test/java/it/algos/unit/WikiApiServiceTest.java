@@ -34,6 +34,8 @@ public class WikiApiServiceTest extends ATest {
 
     public static final String PAGINA_NO_ASCI = "Roman Protasevič";
 
+    public static final String TEMPL_BIO = "Bio";
+
     public static final long PAGINA_TEST_PAGEID = 8956310;
 
     protected static final int WIDTH_WRAP = 40;
@@ -304,7 +306,7 @@ public class WikiApiServiceTest extends ATest {
         System.out.println("Sorgente restituito in formato visibile/leggibile");
 
         sorgente = PAGINA_NO_ASCI;
-        wrap = service.leggePageTmpl(sorgente);
+        wrap = service.leggePage(sorgente, TEMPL_BIO);
         assertNotNull(wrap);
         assertTrue(wrap.isTemplate());
 
@@ -320,7 +322,7 @@ public class WikiApiServiceTest extends ATest {
         List<WrapPage> wrapLista;
         previstoIntero = 5;
 
-        wrapLista = service.leggePages(sorgente, true);
+        wrapLista = service.leggePages(sorgente, "Bio");
         assertNotNull(wrapLista);
         assertEquals(previstoIntero, wrapLista.size());
 
