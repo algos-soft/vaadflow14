@@ -122,8 +122,8 @@ public class AWebService extends AAbstractService {
         String tag2 = TAG_INIZIALE_SECURE;
 
         try {
-            String indirizzoWebCompleto = urlDomain.startsWith(tag) || urlDomain.startsWith(tag2) ? urlDomain : tag2 + urlDomain;
-            urlConn = getURLConnection(indirizzoWebCompleto);
+            String webUrl = urlDomain.startsWith(tag) || urlDomain.startsWith(tag2) ? urlDomain : tag2 + urlDomain;
+            urlConn = getURLConnection(webUrl);
             codiceSorgente = getUrlRequest(urlConn);
             result = AResult.contenuto(codiceSorgente, urlDomain);
         } catch (Exception unErrore) {

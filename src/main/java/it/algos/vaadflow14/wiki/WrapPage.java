@@ -1,5 +1,7 @@
 package it.algos.vaadflow14.wiki;
 
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+
 import java.time.*;
 import java.time.format.*;
 
@@ -12,6 +14,8 @@ import java.time.format.*;
  */
 public class WrapPage {
 
+    boolean template;
+
     private long pageid;
 
     private String title;
@@ -22,12 +26,21 @@ public class WrapPage {
 
     private LocalDateTime time;
 
+    private String tmpl;
+
+
     public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp) {
+        this(domain, pageid, title, text, stringTimestamp, false);
+    }
+
+    public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp, final boolean template) {
         this.domain = domain;
         this.pageid = pageid;
         this.title = title;
-        this.text = text;
+        this.text = template ? VUOTA : text;
+        this.tmpl = template ? text : VUOTA;
         this.time = LocalDateTime.parse(stringTimestamp, DateTimeFormatter.ISO_DATE_TIME);
+        this.template = template;
     }
 
     public String getDomain() {
@@ -48,6 +61,14 @@ public class WrapPage {
 
     public LocalDateTime getTime() {
         return time;
+    }
+
+    public boolean isTemplate() {
+        return template;
+    }
+
+    public String getTmpl() {
+        return tmpl;
     }
 
 }

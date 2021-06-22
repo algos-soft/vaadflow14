@@ -40,7 +40,6 @@ import java.util.regex.*;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AWikiApiService extends AAbstractService {
 
-    public static final String ENCODE = "UTF-8";
 
     public static final String PAGINA_ISO_1 = "ISO 3166-1";
 
@@ -108,28 +107,21 @@ public class AWikiApiService extends AAbstractService {
      * Tempo di download leggermente più corto di leggeParse <br>
      * Metodo base per tutte le API in semplice lettura <br>
      *
-     * @param wikiTitle della pagina wiki
+     * @param wikiTitleGrezzo della pagina wiki
      *
      * @return risultato col testo completo (visibile) della pagina wiki
      */
-    public AIResult leggeQuery(final String wikiTitle) {
+    public AIResult leggeQuery(final String wikiTitleGrezzo) {
         AIResult result;
-        String testoPagina = VUOTA;
-        String webUrl = VUOTA;
+        String webUrl;
         String rispostaDellaQuery;
         String testoValido;
 
-        if (text.isEmpty(wikiTitle)) {
+        if (text.isEmpty(wikiTitleGrezzo)) {
             return AResult.errato("Manca il wikiTitle");
         }
 
-        try {
-            webUrl = URLEncoder.encode(wikiTitle, ENCODE);
-            webUrl = WIKI_QUERY + webUrl;
-        } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "leggeQuery");
-        }
-
+        webUrl = webUrlQuery(wikiTitleGrezzo);
         if (text.isValid(webUrl)) {
             result = web.legge(webUrl);
             rispostaDellaQuery = result.getText();
@@ -701,18 +693,6 @@ public class AWikiApiService extends AAbstractService {
         return testoPagina;
     }
 
-    //    /**
-    //     * Recupera il testo di una singola pagina dalla risposta alla parse <br>
-    //     *
-    //     * @param rispostaDellaParse in ingresso
-    //     *
-    //     * @return testo della pagina
-    //     */
-    //    public String estraeTestoParse(final String rispostaDellaParse) {
-    //        Map<String, Object> mappa = getMappaParse(rispostaDellaParse);
-    //        return mappa != null ? (String) mappa.get(KEY_MAPPA_TEXT) : VUOTA;
-    //    }
-
 
     /**
      * Recupera i parametri fondamentali di una singola pagina con action=parse <br>
@@ -727,8 +707,7 @@ public class AWikiApiService extends AAbstractService {
      */
     public Map<String, Object> leggeMappaParse(final String wikiTitleGrezzo) {
         Map<String, Object> mappa = new HashMap<>();
-        String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
-        String webUrl = WIKI_PARSE + wikiTitleElaborato;
+        String webUrl = webUrlParse(wikiTitleGrezzo);
         String rispostaAPI = web.legge(webUrl).getText();
         JSONObject jsonRisposta = (JSONObject) JSONValue.parse(rispostaAPI);
         JSONObject jsonParse = (JSONObject) jsonRisposta.get(KEY_MAPPA_PARSE);
@@ -759,8 +738,35 @@ public class AWikiApiService extends AAbstractService {
     }
 
     /**
+     * Legge (come user) una serie pagina dal server wiki <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
+     * Estrae il wikitext in linguaggio wiki visibile <br>
+     *
+     * @param pageIds della pagina wiki
+     *
+     * @return wrapper con testo completo (visibile) della pagina wiki
+     */
+    public List<WrapPage> leggePages(String pageIds, boolean usaTemplate) {
+        List<WrapPage> wraps = null;
+        pageIds = fixWikiTitle(pageIds);
+        String webUrl = WIKI_QUERY_PAGEIDS + pageIds;
+        String rispostaAPI = web.legge(webUrl).getText();
+
+        JSONArray jsonPages = getArrayPagine(rispostaAPI);
+        if (jsonPages != null) {
+            wraps = new ArrayList<>();
+            for (Object obj : jsonPages) {
+                wraps.add(creaPage(webUrl, (JSONObject) obj, usaTemplate));
+            }
+        }
+
+        return wraps;
+    }
+
+    /**
      * Legge (come user) una pagina dal server wiki <br>
-     * Usa una API con action=parse SENZA bisogno di loggarsi <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
      * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
@@ -771,12 +777,12 @@ public class AWikiApiService extends AAbstractService {
     public WrapPage leggePage(final long pageId) {
         String webUrl = WIKI_QUERY_PAGEIDS + pageId;
 
-        return creaPage(webUrl);
+        return creaPage(webUrl, false);
     }
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
-     * Usa una API con action=parse SENZA bisogno di loggarsi <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
      * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
@@ -785,15 +791,28 @@ public class AWikiApiService extends AAbstractService {
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
     public WrapPage leggePage(final String wikiTitleGrezzo) {
-        String wikiTitleElaborato = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
-        String webUrl = WIKI_QUERY_TITLES + wikiTitleElaborato;
-
-        return creaPage(webUrl);
+        String webUrl = webUrlQueryTitles(wikiTitleGrezzo);
+        return creaPage(webUrl, false);
     }
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
-     * Usa una API con action=parse SENZA bisogno di loggarsi <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
+     * Recupera dalla urlRequest title, pageid, timestamp e tmpl <br>
+     * Estrae il wikitext in linguaggio wiki visibile <br>
+     *
+     * @param wikiTitleGrezzo della pagina wiki
+     *
+     * @return wrapper con template (visibile) della pagina wiki
+     */
+    public WrapPage leggePageTmpl(final String wikiTitleGrezzo) {
+        String webUrl = webUrlQueryTitles(wikiTitleGrezzo);
+        return creaPage(webUrl, true);
+    }
+
+    /**
+     * Legge (come user) una pagina dal server wiki <br>
+     * Usa una API con action=query SENZA bisogno di loggarsi <br>
      * Recupera dalla urlRequest title, pageid, timestamp e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
@@ -801,27 +820,33 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return wrapper con testo completo (visibile) della pagina wiki
      */
-    private WrapPage creaPage(final String webUrl) {
+    private WrapPage creaPage(final String webUrl, boolean usaTemplate) {
+        String rispostaAPI = web.legge(webUrl).getText();
+        JSONObject jsonPageZero = getObjectPage(rispostaAPI);
+        return creaPage(webUrl, jsonPageZero, usaTemplate);
+    }
+
+
+    private WrapPage creaPage(final String webUrl, final JSONObject jsonPage, boolean usaTemplate) {
         long pageid;
         String title;
         String stringTimestamp;
         String content;
 
-        String rispostaAPI = web.legge(webUrl).getText();
-        JSONObject jsonAll = (JSONObject) JSONValue.parse(rispostaAPI);
-        JSONObject jsonQuery = (JSONObject) jsonAll.get(KEY_JSON_QUERY);
-        JSONArray jsonPages = (JSONArray) jsonQuery.get(KEY_JSON_PAGES);
-        JSONObject jsonPageZero = (JSONObject) jsonPages.get(0);
-        pageid = (long) jsonPageZero.get(KEY_JSON_PAGE_ID);
-        title = (String) jsonPageZero.get(KEY_JSON_TITLE);
-        JSONArray jsonRevisions = (JSONArray) jsonPageZero.get(KEY_JSON_REVISIONS);
+        pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
+        title = (String) jsonPage.get(KEY_JSON_TITLE);
+        JSONArray jsonRevisions = (JSONArray) jsonPage.get(KEY_JSON_REVISIONS);
         JSONObject jsonRevZero = (JSONObject) jsonRevisions.get(0);
         stringTimestamp = (String) jsonRevZero.get(KEY_JSON_TIMESTAMP);
         JSONObject jsonSlots = (JSONObject) jsonRevZero.get(KEY_JSON_SLOTS);
         JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
         content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
-        return new WrapPage(webUrl, pageid, title, content, stringTimestamp);
+        if (usaTemplate) {
+            content = estraeTmpl(content, "Bio");
+        }
+
+        return new WrapPage(webUrl, pageid, title, content, stringTimestamp, usaTemplate);
     }
 
     /**
@@ -1324,6 +1349,63 @@ public class AWikiApiService extends AAbstractService {
         return testoValido;
     }
 
+    /**
+     * Regola l'url per interrogare una pagina wiki <br>
+     * Recupera spazio e caratteri strani nel titolo <br>
+     * Aggiunge in testa il prefisso della API Mediawiki <br>
+     *
+     * @param wikiTitleGrezzo della pagina wiki
+     *
+     * @return webUrl completo
+     */
+    public String webUrlQuery(final String wikiTitleGrezzo) {
+        return WIKI_QUERY + fixWikiTitle(wikiTitleGrezzo);
+    }
+
+    /**
+     * Regola l'url per interrogare una pagina wiki <br>
+     * Recupera spazio e caratteri strani nel titolo <br>
+     * Aggiunge in testa il prefisso della API Mediawiki <br>
+     *
+     * @param wikiTitleGrezzo della pagina wiki
+     *
+     * @return webUrl completo
+     */
+    public String webUrlQueryTitles(final String wikiTitleGrezzo) {
+        return WIKI_QUERY_TITLES + fixWikiTitle(wikiTitleGrezzo);
+    }
+
+    /**
+     * Regola l'url per interrogare una pagina wiki <br>
+     * Recupera spazio e caratteri strani nel titolo <br>
+     * Aggiunge in testa il prefisso della API Mediawiki <br>
+     *
+     * @param wikiTitleGrezzo della pagina wiki
+     *
+     * @return webUrl completo
+     */
+    public String webUrlParse(final String wikiTitleGrezzo) {
+        return WIKI_PARSE + fixWikiTitle(wikiTitleGrezzo);
+    }
+
+    /**
+     * Recupera spazio e caratteri strani nel titolo <br>
+     *
+     * @param wikiTitleGrezzo della pagina wiki
+     *
+     * @return titolo 'spedibile' al server
+     */
+    public String fixWikiTitle(final String wikiTitleGrezzo) {
+        String wikiTitle = wikiTitleGrezzo.replaceAll(SPAZIO, UNDERSCORE);
+        try {
+            wikiTitle = URLEncoder.encode(wikiTitle, ENCODE);
+
+        } catch (Exception unErrore) {
+
+        }
+
+        return wikiTitle;
+    }
 
     public String estraeGraffa(String testoCompleto) {
         return text.setNoDoppieGraffe(estraeGraffaCon(testoCompleto));

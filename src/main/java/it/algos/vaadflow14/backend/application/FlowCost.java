@@ -24,6 +24,7 @@ import java.util.*;
  * Prefisso SHOW per abilitare la presentazione dei moduli nel menu <br>
  */
 public abstract class FlowCost {
+    public static final String ENCODE = "UTF-8";
 
     public static final int MAX = 2147483647;
 

@@ -81,6 +81,8 @@ public abstract class ATest {
 
     protected final static String NAME_ANNO = "anno";
 
+    protected static final int WIDTH = 160;
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
@@ -100,7 +102,6 @@ public abstract class ATest {
     protected static Field FIELD_NOME;
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
-    protected static final int WIDTH = 160;
 
     /**
      * The App context.
