@@ -104,7 +104,7 @@ public class AFieldService extends AAbstractService {
 
         fieldKey = reflectionJavaField.getName();
         width = annotation.getFormWith(reflectionJavaField);
-        autofocus = annotation.isFocus(reflectionJavaField);
+        autofocus = operationForm == AEOperation.addNew && annotation.isFocus(reflectionJavaField);
         type = annotation.getFormType(reflectionJavaField);
         if (type != null) {
             switch (type) {

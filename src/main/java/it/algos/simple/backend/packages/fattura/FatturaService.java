@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.time.*;
 import java.util.*;
 
 /**
@@ -99,6 +100,7 @@ public class FatturaService extends AService {
         Fattura newEntityBean = Fattura.builderFattura()
                 .code(text.isValid(code) ? code : null)
                 .descrizione(text.isValid(descrizione) ? descrizione : null)
+                .lastModifica(LocalDateTime.now())
                 .build();
 
         return (Fattura) fixKey(newEntityBean);

@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -51,10 +52,10 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Fattura", keyPropertyName = "code", usaBoot  = true, usaCompany = false)
+@AIEntity(recordName = "Fattura", keyPropertyName = "code", usaBoot = true, usaCompany = false)
 @AIView(menuName = "Fattura", menuIcon = VaadinIcon.COG, sortProperty = "code")
-@AIList(fields = "pageId,code,descrizione", usaRowIndex = true)
-@AIForm(fields = "pageId,code,descrizione,mappa", usaSpostamentoTraSchede = true)
+@AIList(fields = "pageId,code,descrizione,lastModifica", usaRowIndex = true)
+@AIForm(fields = "pageId,code,descrizione,mappa,lastModifica", usaSpostamentoTraSchede = true)
 public class Fattura extends AEntity {
 
     /**
@@ -86,8 +87,12 @@ public class Fattura extends AEntity {
      * descrizione (facoltativa)
      */
     @AIField(type = AETypeField.text, caption = "Descrizione completa")
-    @AIColumn(header = "Descrizione", flexGrow = true)
+    @AIColumn(header = "Descrizione")
     public String descrizione;
+
+    @AIField(type = AETypeField.localDateTime, help = "ultima modifica")
+    @AIColumn(typeData = AETypeData.normaleOrario)
+    public LocalDateTime lastModifica;
 
     @Transient()
     @AIField(type = AETypeField.mappa, caption = "Mappa parametri")

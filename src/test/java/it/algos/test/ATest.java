@@ -83,6 +83,8 @@ public abstract class ATest {
 
     protected static final int WIDTH = 160;
 
+    protected static final int WIDTH_WRAP = 40;
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
@@ -514,6 +516,21 @@ public abstract class ATest {
                     printVuota(lista);
                 }
             }
+        }
+    }
+
+    protected void printWrap(WrapPage wrap) {
+        System.out.println(VUOTA);
+        System.out.println(String.format("La query è: %s", wrap.getDomain()));
+        System.out.println(String.format("Il title è: %s", wrap.getTitle()));
+        System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
+        System.out.println(String.format("Il time è: %s", wrap.getTime()));
+        System.out.println(wrap.isTemplate() ? "Usa solo il template come testo" : "Usa tutta la pagina come testo");
+        if (wrap.isTemplate()) {
+            System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+        }
+        else {
+            System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
         }
     }
 
