@@ -91,7 +91,7 @@ public class Fattura extends AEntity {
     public String descrizione;
 
     @AIField(type = AETypeField.localDateTime, help = "ultima modifica")
-    @AIColumn(typeData = AETypeData.normaleOrario)
+//    @AIColumn(typeData = AETypeData.normaleOrario)
     public LocalDateTime lastModifica;
 
     @Transient()
