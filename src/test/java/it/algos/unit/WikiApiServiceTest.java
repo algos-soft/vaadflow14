@@ -33,6 +33,7 @@ public class WikiApiServiceTest extends ATest {
     public static final String PAGINA_TEST = "Utente:Gac/T17";
 
     public static final String PAGINA_NO_ASCI = "Roman Protasevič";
+    public static final String PAGINA_INESISTENTE = "Roman Protellino";
 
     public static final String TEMPL_BIO = "Bio";
 
@@ -315,7 +316,29 @@ public class WikiApiServiceTest extends ATest {
 
     @Test
     @Order(8)
-    @DisplayName("8 - legge una serie di wrapper di dati con una API action=query di Mediawiki")
+    @DisplayName("8 - legge un wrapper di dati con una API action=query di Mediawiki")
+    public void creaPage() {
+        WrapPage wrap;
+        System.out.println("8 - legge un wrapper di dati con una API action=query di Mediawiki");
+        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
+        System.out.println("La pagina viene richiesta dal TITLE");
+        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
+        System.out.println("Sorgente restituito in formato visibile/leggibile");
+
+        sorgente = PAGINA_INESISTENTE;
+        wrap = service.leggePage(sorgente, TEMPL_BIO);
+        assertNotNull(wrap);
+        assertFalse(wrap.isValida());
+        assertFalse(wrap.isTemplate());
+
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        this.printWrap(wrap);
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("9 - legge una serie di wrapper di dati con una API action=query di Mediawiki")
     public void leggePages() {
         sorgente = "8956310|132555|134246|133958|8978579";
         List<WrapPage> wrapLista;
@@ -325,7 +348,7 @@ public class WikiApiServiceTest extends ATest {
         assertNotNull(wrapLista);
         assertEquals(previstoIntero, wrapLista.size());
 
-        System.out.println("8 - legge un wrapper di dati con una API action=query di Mediawiki");
+        System.out.println("9 - legge un wrapper di dati con una API action=query di Mediawiki");
         System.out.println("Legge (come user) una SERIE di pagine dal server wiki");
         System.out.println("Le pagine vengono richiesta dal PAGEIDs");
         System.out.println(String.format("Le pagine wiki sono: %s", sorgente));
@@ -338,6 +361,7 @@ public class WikiApiServiceTest extends ATest {
             this.printWrap(wrap);
         }
     }
+
 
     @Test
     @Order(10)

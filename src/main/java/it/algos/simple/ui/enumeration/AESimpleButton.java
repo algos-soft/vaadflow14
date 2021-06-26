@@ -175,4 +175,9 @@ public enum AESimpleButton implements AIButton {
         return FactoryButton.get(this);
     }
 
+    @Override
+    public Button get(String text) {
+        return FactoryButton.get(this, text);
+    }
+
 }

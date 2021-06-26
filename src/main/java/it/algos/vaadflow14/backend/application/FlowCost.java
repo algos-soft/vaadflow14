@@ -288,6 +288,8 @@ public abstract class FlowCost {
 
     public static final String KEY_JSON_TITLE = "title";
 
+    public static final String KEY_JSON_MISSING = "missing";
+
     public static final String KEY_JSON_REVISIONS = "revisions";
 
     public static final String KEY_JSON_TIMESTAMP = "timestamp";
