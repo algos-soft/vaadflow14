@@ -24,6 +24,7 @@ import java.util.*;
  * Prefisso SHOW per abilitare la presentazione dei moduli nel menu <br>
  */
 public abstract class FlowCost {
+
     public static final String ENCODE = "UTF-8";
 
     public static final int MAX = 2147483647;
@@ -448,6 +449,8 @@ public abstract class FlowCost {
     public static final String PREF_USA_FORM_MAIUSCOLA = "usaFormFieldMaiuscola";
 
     public static final String PREF_USA_SEARCH_SENSITIVE = "usaSearchCaseSensitive";
+
+    public static final String PREF_USA_BUTTON_SHORTCUT = "usaButtonShortCut";
 
     public static final String PREF_USA_LOG_VIDEO = "usaLogVideo";
 
