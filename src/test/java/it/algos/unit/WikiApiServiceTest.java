@@ -33,7 +33,12 @@ public class WikiApiServiceTest extends ATest {
     public static final String PAGINA_TEST = "Utente:Gac/T17";
 
     public static final String PAGINA_NO_ASCI = "Roman Protasevič";
+
     public static final String PAGINA_INESISTENTE = "Roman Protellino";
+
+    public static final String PAGINA_DISAMBIGUA = "Rossi";
+
+    public static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
     public static final String TEMPL_BIO = "Bio";
 
@@ -284,12 +289,25 @@ public class WikiApiServiceTest extends ATest {
         System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
         System.out.println("Sorgente restituito in formato visibile/leggibile");
 
-        sorgente = PAGINA_NO_ASCI;
+        sorgente = PAGINA_INESISTENTE;
         wrap = service.leggePage(sorgente);
         assertNotNull(wrap);
-        assertFalse(wrap.isTemplate());
+        assertEquals(AETypePage.nonEsiste, wrap.getType());
+        assertFalse(wrap.isValida());
+        this.printWrap(wrap);
 
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        sorgente = PAGINA_DISAMBIGUA;
+        wrap = service.leggePage(sorgente);
+        assertNotNull(wrap);
+        assertEquals(AETypePage.disambigua, wrap.getType());
+        assertFalse(wrap.isValida());
+        this.printWrap(wrap);
+
+        sorgente = PAGINA_REDIRECT;
+        wrap = service.leggePage(sorgente);
+        assertNotNull(wrap);
+        assertEquals(AETypePage.redirect, wrap.getType());
+        assertFalse(wrap.isValida());
         this.printWrap(wrap);
     }
 
@@ -308,7 +326,9 @@ public class WikiApiServiceTest extends ATest {
         sorgente = PAGINA_NO_ASCI;
         wrap = service.leggePage(sorgente, TEMPL_BIO);
         assertNotNull(wrap);
-        assertTrue(wrap.isTemplate());
+        assertEquals(AETypePage.testoConTmpl, wrap.getType());
+        assertTrue(wrap.isValida());
+        this.printWrap(wrap);
 
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         this.printWrap(wrap);
@@ -330,7 +350,7 @@ public class WikiApiServiceTest extends ATest {
         wrap = service.leggePage(sorgente, TEMPL_BIO);
         assertNotNull(wrap);
         assertFalse(wrap.isValida());
-        assertFalse(wrap.isTemplate());
+        //        assertFalse(wrap.isTemplate());
 
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         this.printWrap(wrap);

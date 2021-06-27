@@ -61,6 +61,15 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String CONTENT = "content";
 
+    public static final String TAG_DISAMBIGUA_UNO = "{{Disambigua}}";
+
+    public static final String TAG_DISAMBIGUA_DUE = "{{disambigua}}";
+
+    public static final String TAG_REDIRECT_UNO = "#redirect";
+    public static final String TAG_REDIRECT_DUE = "#REDIRECT";
+    public static final String TAG_REDIRECT_TRE = "#rinvia";
+    public static final String TAG_REDIRECT_QUATTRO = "#RINVIA";
+
     public static final String WIKI_QUERY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
 
     public static final String WIKI_PARSE = "https://it.wikipedia.org/w/api.php?action=parse&prop=wikitext&formatversion=2&format=json&page=";
@@ -842,7 +851,7 @@ public class AWikiApiService extends AAbstractService {
         title = (String) jsonPage.get(KEY_JSON_TITLE);
 
         if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
-            return new WrapPage(webUrl, title, false);
+            return new WrapPage(webUrl, title, AETypePage.nonEsiste);
         }
 
         pageid = (long) jsonPage.get(KEY_JSON_PAGE_ID);
@@ -853,11 +862,29 @@ public class AWikiApiService extends AAbstractService {
         JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
         content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
+        if (text.isValid(content) ) {
+            if (content.startsWith(TAG_DISAMBIGUA_UNO)||content.startsWith(TAG_DISAMBIGUA_DUE)) {
+                return new WrapPage(webUrl, title, AETypePage.disambigua);
+            }
+        }
+
+        if (text.isValid(content) ) {
+            if (content.startsWith(TAG_REDIRECT_UNO)||content.startsWith(TAG_REDIRECT_DUE)||content.startsWith(TAG_REDIRECT_TRE)||content.startsWith(TAG_REDIRECT_QUATTRO)) {
+                return new WrapPage(webUrl, title, AETypePage.redirect);
+            }
+        }
+
         if (text.isValid(tagTemplate)) {
             content = estraeTmpl(content, tagTemplate);
         }
 
-        return new WrapPage(webUrl, pageid, title, content, stringTimestamp, text.isValid(tagTemplate));
+        if (text.isValid(tagTemplate)) {
+            content = estraeTmpl(content, tagTemplate);
+            return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoConTmpl);
+        }
+        else {
+            return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoSenzaTmpl);
+        }
     }
 
     /**
