@@ -1,5 +1,7 @@
 package it.algos.integration;
 
+import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.dialog.*;
 import com.vaadin.flow.router.*;
 import it.algos.simple.*;
 import it.algos.test.*;
