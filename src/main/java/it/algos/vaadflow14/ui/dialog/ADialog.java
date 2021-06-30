@@ -124,14 +124,22 @@ public class ADialog extends Dialog {
     public boolean usaConfirmButton;
 
     /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
+    //    /**
+    //     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.
+    //     */
+    //    protected String textConfirmlButton = "Conferma";
+
+    /**
      * Flag di preferenza per il testo del bottone Cancel. Normalmente 'Annulla'.
      */
     protected String textCancelButton = "Annulla";
-
-//    /**
-//     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.
-//     */
-//    protected String textConfirmlButton = "Conferma";
 
     /**
      * Corpo centrale del Dialog <br>
@@ -139,15 +147,15 @@ public class ADialog extends Dialog {
      */
     protected VerticalLayout bodyPlaceHolder = new VerticalLayout();
 
+    //    protected String message;
+    //
+    //    protected String additionalMessage;
+
     /**
      * Barra dei bottoni di comando <br>
      * Placeholder (eventuale, presente di default) <br>
      */
     protected HorizontalLayout bottomLayout = new HorizontalLayout();
-
-    //    protected String message;
-    //
-    //    protected String additionalMessage;
 
     /**
      * Titolo del dialogo <br>
@@ -174,7 +182,6 @@ public class ADialog extends Dialog {
      */
     @Autowired
     protected AVaadinService vaadinService;
-
 
     /**
      * Costruttore <br>
@@ -203,8 +210,8 @@ public class ADialog extends Dialog {
      */
     @PostConstruct
     protected void inizia() {
-        this.setCloseOnEsc(false);
-        this.setCloseOnOutsideClick(false);
+        this.setCloseOnEsc(true);
+        this.setCloseOnOutsideClick(true);
         this.getElement().getClassList().add("confirm-dialog");
 
         //--preferenze standard. Possono essere modificate anche selezionando la firma di open(...)
@@ -213,11 +220,14 @@ public class ADialog extends Dialog {
         //--Titolo placeholder del dialogo
         this.add(titleField);
 
+        //--spazio per distanziare i bottoni sottostanti
+        this.add(new H2());
+
         //--Corpo centrale del Dialog
         this.add(bodyPlaceHolder);
 
         //--spazio per distanziare i bottoni sottostanti
-        this.add(new H3());
+        this.add(new H2());
 
         //--Barra placeholder dei bottoni, creati e regolati
         this.add(bottomLayout);
@@ -482,10 +492,7 @@ public class ADialog extends Dialog {
         bottomLayout.setSpacing(true);
         bottomLayout.setMargin(false);
         bottomLayout.setClassName("confirm-dialog-buttons");
-
         Label spazioVuotoEspandibile = new Label("");
-        bottomLayout.add(spazioVuotoEspandibile);
-        bottomLayout.setFlexGrow(1, spazioVuotoEspandibile);
 
         if (usaCancelButton) {
             cancelButton.setText(textCancelButton);
@@ -494,6 +501,8 @@ public class ADialog extends Dialog {
             cancelButton.setIcon(new Icon(VaadinIcon.ARROW_LEFT));
             bottomLayout.add(cancelButton);
         }// end of if cycle
+
+        bottomLayout.add(spazioVuotoEspandibile);
 
         if (usaConfirmButton) {
             confirmButton.setText(confirmText);
@@ -505,10 +514,11 @@ public class ADialog extends Dialog {
             }// end of if/else cycle
             confirmButton.addClickListener(e -> confermaHandler());
             confirmButton.setIcon(new Icon(confirmIcon));
+            confirmButton.getElement().getStyle().set("margin-right", "auto");
             bottomLayout.add(confirmButton);
         }// end of if cycle
 
-        bottomLayout.setAlignItems(FlexComponent.Alignment.END);
+        bottomLayout.setFlexGrow(1, spazioVuotoEspandibile);
     }// end of method
 
 
@@ -520,15 +530,19 @@ public class ADialog extends Dialog {
     }// end of method
 
 
+    /**
+     * Esegue l'azione principale confermata <br>
+     * L'azione viene individuata nella sottoclasse specifica <br>
+     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
+     * Lancia, in un thread separato, il metodo run() ricevuto come parametro della classe <br>
+     * Chiude il dialogo <br>
+     */
     public void confermaHandler() {
         if (confirmHandler != null) {
             confirmHandler.run();
-        }// end of if cycle
-        close();
-    }// end of method
+        }
 
-    public void confirmHandler() {
-        int a = 87;
+        close();
     }
 
     //    /**

@@ -27,7 +27,7 @@ public class ADialogDelete<T> extends ADialog {
     //--Titolo standard, eventualmente modificabile nelle sottoclassi
     private static final String TITOLO = "Delete";
 
-    private static final String MESSAGE = "Sei sicuro di voler cancellare la entity";
+    private static final String MESSAGE = "Sei sicuro di voler cancellare la scheda";
 
     private static final String ADDITIONAL_MESSAGE = "L'operazione non è reversibile";
 
@@ -59,7 +59,7 @@ public class ADialogDelete<T> extends ADialog {
         super.usaConfirmButton = true;
 
         super.title = TITOLO;
-        super.message = String.format(MESSAGE + " %s ?", entityBean);
+        super.message = String.format(MESSAGE + " %s%s%s ?", getCollection(), DUE_PUNTI, entityBean);
         super.additionalMessage = ADDITIONAL_MESSAGE;
 
         this.confirmTheme = AETypeTheme.error;
@@ -68,24 +68,37 @@ public class ADialogDelete<T> extends ADialog {
     }
 
 
+    /**
+     * Esegue l'azione principale confermata <br>
+     * L'azione viene individuata nella sottoclasse specifica <br>
+     * DEVE essere sovrascritto, invocando DOPO il metodo della superclasse <br>
+     * Lancia, in un thread separato, il metodo run() ricevuto come parametro della classe <br>
+     * Chiude il dialogo <br>
+     */
     @Override
     public void confermaHandler() {
-
         //--azione locale
         if (entityBean != null) {
             mongo.delete((AEntity) entityBean);
-            logger.info(AETypeLog.delete, String.format("Cancellata la entity %s%s%s", "Farttura", ":", entityBean.toString()));
+            logger.info(AETypeLog.delete, String.format("Cancellata la entity %s%s%s", getCollection(), DUE_PUNTI, entityBean.toString()));
         }
         else {
             logger.warn(AETypeLog.delete, "La entityBean è nulla");
         }
 
-        //--ritorno al chiamante
-        if (confirmHandler != null) {
-            confirmHandler.run();
-        }
+        super.confermaHandler();
+    }
 
-        close();
+    public String getCollection() {
+        String collection = VUOTA;
+        Class clazz;
+
+        if (entityBean != null) {
+            clazz = entityBean.getClass();
+            collection = annotation.getCollectionName(clazz);
+            collection = text.primaMaiuscola(collection);
+        }
+        return collection;
     }
 
 }

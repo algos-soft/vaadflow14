@@ -346,7 +346,7 @@ public class AAnnotationServiceTest extends ATest {
         System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
-        String[] stringArray2 = {"code", "descrizione"};
+        String[] stringArray2 = {"pageId","code", "descrizione","lastModifica"};
         previstoArray = new ArrayList(Arrays.asList(stringArray2));
         ottenutoArray = annotation.getGridColumns(FATTURA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
