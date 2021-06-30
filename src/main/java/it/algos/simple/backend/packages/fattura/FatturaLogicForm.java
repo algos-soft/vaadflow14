@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.ui.dialog.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -73,6 +74,32 @@ public class FatturaLogicForm extends LogicForm {
      */
     protected List<AIButton> getListaAEBottoniTop() {
         return Collections.singletonList(AEButton.wiki);
+    }
+
+    @Override
+    public boolean deleteForm() {
+        appContext.getBean(ADialogDelete.class, entityBean, new PostDelete());
+        return false;
+    }
+
+
+    private class PostDelete implements Runnable {
+
+        /**
+         * When an object implementing interface <code>Runnable</code> is used
+         * to create a thread, starting the thread causes the object's
+         * <code>run</code> method to be called in that separately executing
+         * thread.
+         * <p>
+         * The general contract of the method <code>run</code> is that it may
+         * take any action whatsoever.
+         *
+         * @see Thread#run()
+         */
+        @Override
+        public void run() {
+            backToList();
+        }
     }
 
 }

@@ -6,12 +6,15 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.spring.annotation.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import javax.annotation.*;
 import java.util.function.*;
 
 /**
@@ -64,7 +67,7 @@ import java.util.function.*;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ADialog extends Dialog  {
+public class ADialog extends Dialog {
 
     protected final H2 titleField = new H2();
 
@@ -90,6 +93,22 @@ public class ADialog extends Dialog  {
     @Autowired
     public PreferenzaService pref;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AMongoService mongo;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
+
     public Runnable cancelHandler;
 
     public Runnable confirmHandler;
@@ -109,10 +128,10 @@ public class ADialog extends Dialog  {
      */
     protected String textCancelButton = "Annulla";
 
-    /**
-     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.
-     */
-    protected String textConfirmlButton = "Conferma";
+//    /**
+//     * Flag di preferenza per il testo del bottone Confirm. Normalmente 'Conferma'.
+//     */
+//    protected String textConfirmlButton = "Conferma";
 
     /**
      * Corpo centrale del Dialog <br>
@@ -126,18 +145,28 @@ public class ADialog extends Dialog  {
      */
     protected HorizontalLayout bottomLayout = new HorizontalLayout();
 
-//    protected String message;
-//
-//    protected String additionalMessage;
+    //    protected String message;
+    //
+    //    protected String additionalMessage;
 
     /**
      * Titolo del dialogo <br>
      */
     protected String title;
 
+    protected String message;
+
+    protected String additionalMessage;
+
     protected Button cancelButton = new Button(textCancelButton);
 
-    protected Button confirmButton = new Button(textConfirmlButton);
+    protected Button confirmButton = new Button(VUOTA);
+
+    protected AETypeTheme confirmTheme;
+
+    protected VaadinIcon confirmIcon;
+
+    protected String confirmText;
 
     /**
      * Service (@Scope = 'singleton') iniettato dal costruttore @Autowired di Spring <br>
@@ -145,8 +174,6 @@ public class ADialog extends Dialog  {
      */
     @Autowired
     protected AVaadinService vaadinService;
-
-
 
 
     /**
@@ -174,7 +201,7 @@ public class ADialog extends Dialog  {
      * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti,
      * ma l'ordine con cui vengono chiamati NON è garantito
      */
-//    @PostConstruct
+    @PostConstruct
     protected void inizia() {
         this.setCloseOnEsc(false);
         this.setCloseOnOutsideClick(false);
@@ -196,19 +223,32 @@ public class ADialog extends Dialog  {
         this.add(bottomLayout);
 
         this.creaTitleLayout();
+
+        //--Body placeholder
+        this.fixBodyLayout();
+
+        //--Barra placeholder dei bottoni, creati e regolati
+        this.fixBottomLayout();
+
+        super.open();
     }// end of method
 
 
     /**
-     * Preferenze standard.
+     * Preferenze standard. <br>
      * Possono essere modificate anche selezionando la firma di open(...)
      * Le preferenze vengono eventualmente sovrascritte nella sottoclasse
      * Invocare PRIMA il metodo della superclasse
      */
     protected void fixPreferenze() {
-//        this.usaCancelButton = pref.isBool(USA_BACK_BUTTON);
+
+        //        this.usaCancelButton = pref.isBool(USA_BACK_BUTTON);
         this.usaCancelButton = true;
         this.usaConfirmButton = true;
+
+        this.confirmTheme = AETypeTheme.primary;
+        this.confirmIcon = VaadinIcon.CHECK;
+        this.confirmText = KEY_BUTTON_CONFERMA;
     }// end of method
 
 
@@ -222,15 +262,14 @@ public class ADialog extends Dialog  {
         }// end of if cycle
     }// end of method
 
-
-//    /**
-//     * Apre un dialogo di 'avviso' <br>
-//     * Il title è già stato regolato dal costruttore <br>
-//     */
-//    public void open() {
-////        this.usaCancelButton = false;
-//        this.open("", "", (Runnable) null, (Runnable) null);
-//    }// end of method
+    //    /**
+    //     * Apre un dialogo di 'avviso' <br>
+    //     * Il title è già stato regolato dal costruttore <br>
+    //     */
+    //    public void open() {
+    ////        this.usaCancelButton = false;
+    //        this.open("", "", (Runnable) null, (Runnable) null);
+    //    }// end of method
 
 
     /**
@@ -350,22 +389,47 @@ public class ADialog extends Dialog  {
         super.open();
     }// end of method
 
-
-//    /**
-//     * Opens the given item for editing in the dialog.
-//     * Crea i fields e visualizza il dialogo <br>
-//     *
-//     * @param entityBean  The item to edit; it may be an existing or a newly created instance
-//     * @param operation   The operation being performed on the item (addNew, edit, editNoDelete, editDaLink, showOnly)
-//     * @param itemSaver   funzione associata al bottone 'accetta' ('registra', 'conferma')
-//     * @param itemDeleter funzione associata al bottone 'delete'
-//     */
-//    public void open(AEntity entityBean, EAOperation operation, BiConsumer itemSaver, Consumer itemDeleter) {
-//
-//    }
+    //    /**
+    //     * Opens the given item for editing in the dialog.
+    //     * Crea i fields e visualizza il dialogo <br>
+    //     *
+    //     * @param entityBean  The item to edit; it may be an existing or a newly created instance
+    //     * @param operation   The operation being performed on the item (addNew, edit, editNoDelete, editDaLink, showOnly)
+    //     * @param itemSaver   funzione associata al bottone 'accetta' ('registra', 'conferma')
+    //     * @param itemDeleter funzione associata al bottone 'delete'
+    //     */
+    //    public void open(AEntity entityBean, EAOperation operation, BiConsumer itemSaver, Consumer itemDeleter) {
+    //
+    //    }
 
 
     public void open(String message, Consumer itemSaver) {
+    }
+
+
+    /**
+     * Corpo centrale del Dialog, alternativo al Form <br>
+     */
+    protected void fixBodyLayout() {
+        bodyPlaceHolder.setPadding(false);
+        bodyPlaceHolder.setSpacing(true);
+        bodyPlaceHolder.setMargin(false);
+        VerticalLayout bodyLayout = new VerticalLayout();
+        bodyLayout.setPadding(false);
+        bodyLayout.setSpacing(true);
+        bodyLayout.setMargin(false);
+        bodyPlaceHolder.removeAll();
+
+        if (text.isValid(message)) {
+            messageLabel.setText(message);
+            bodyLayout.add(messageLabel);
+        }
+        if (text.isValid(additionalMessage)) {
+            extraMessageLabel.setText(additionalMessage);
+            bodyLayout.add(extraMessageLabel);
+        }
+
+        bodyPlaceHolder.add(bodyLayout);
     }
 
 
@@ -432,16 +496,18 @@ public class ADialog extends Dialog  {
         }// end of if cycle
 
         if (usaConfirmButton) {
-            confirmButton.setText(textConfirmlButton);
+            confirmButton.setText(confirmText);
             if (usaCancelButton) {
-                confirmButton.getElement().setAttribute("theme", "secondary");
-            } else {
-                confirmButton.getElement().setAttribute("theme", "primary");
+                confirmButton.getElement().setAttribute("theme", confirmTheme.toString());
+            }
+            else {
+                confirmButton.getElement().setAttribute("theme", confirmTheme.toString());
             }// end of if/else cycle
             confirmButton.addClickListener(e -> confermaHandler());
-            confirmButton.setIcon(new Icon(VaadinIcon.CHECK));
+            confirmButton.setIcon(new Icon(confirmIcon));
             bottomLayout.add(confirmButton);
         }// end of if cycle
+
         bottomLayout.setAlignItems(FlexComponent.Alignment.END);
     }// end of method
 
@@ -461,47 +527,48 @@ public class ADialog extends Dialog  {
         close();
     }// end of method
 
+    public void confirmHandler() {
+        int a = 87;
+    }
 
-//    /**
-//     * Opens the given item for editing in the dialog.
-//     *
-//     * @param item      The item to edit; it may be an existing or a newly created instance
-//     * @param operation The operation being performed on the item
-//     * @param context   legato alla sessione
-//     */
-//    @Override
-//    public void open(AEntity item, EAOperation operation, AContext context) {
-//    }
-//
-//
-//    /**
-//     * Opens the given item for editing in the dialog.
-//     *
-//     * @param item      The item to edit; it may be an existing or a newly created instance
-//     * @param operation The operation being performed on the item
-//     * @param context   legato alla sessione
-//     * @param title     of the window dialog
-//     */
-//    @Override
-//    public void open(AEntity item, EAOperation operation, AContext context, String title) {
-//    }
+    //    /**
+    //     * Opens the given item for editing in the dialog.
+    //     *
+    //     * @param item      The item to edit; it may be an existing or a newly created instance
+    //     * @param operation The operation being performed on the item
+    //     * @param context   legato alla sessione
+    //     */
+    //    @Override
+    //    public void open(AEntity item, EAOperation operation, AContext context) {
+    //    }
+    //
+    //
+    //    /**
+    //     * Opens the given item for editing in the dialog.
+    //     *
+    //     * @param item      The item to edit; it may be an existing or a newly created instance
+    //     * @param operation The operation being performed on the item
+    //     * @param context   legato alla sessione
+    //     * @param title     of the window dialog
+    //     */
+    //    @Override
+    //    public void open(AEntity item, EAOperation operation, AContext context, String title) {
+    //    }
 
+    //    /**
+    //     * Azione proveniente dal click sul bottone Confirm (delete)
+    //     */
+    //    private void confirmClicked() {
+    //        close();
+    //    }// end of method
 
-//    /**
-//     * Azione proveniente dal click sul bottone Confirm (delete)
-//     */
-//    private void confirmClicked() {
-//        close();
-//    }// end of method
-
-
-//    public void parte(String title, String message, String additionalMessage, Runnable pippo) {
-//        this.pippo = pippo;
-//        Button edit = new Button("Prova", event -> pippo.run());
-//        this.add(edit);
-//
-//        super.open();
-//    }// end of method
+    //    public void parte(String title, String message, String additionalMessage, Runnable pippo) {
+    //        this.pippo = pippo;
+    //        Button edit = new Button("Prova", event -> pippo.run());
+    //        this.add(edit);
+    //
+    //        super.open();
+    //    }// end of method
 
 
 }// end of class

@@ -5,11 +5,13 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.simple.ui.enumeration.*;
 import it.algos.vaadflow14.backend.annotation.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.button.*;
+import it.algos.vaadflow14.ui.dialog.*;
 import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -233,6 +235,18 @@ public class FatturaLogicList extends LogicList {
         }
 
         return status;
+    }
+
+    protected  void openConfirmDeleteAll() {
+        ADialogConfirm dialog= appContext.getBean(ADialogConfirm.class);
+        dialog.open(this::pippo);
+    }
+
+    private void pippo(Object o) {
+    }
+
+    private  void pippo() {
+        int a=87;
     }
 
 }
