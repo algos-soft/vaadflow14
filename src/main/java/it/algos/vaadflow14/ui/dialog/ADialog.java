@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.ui.dialog;
 
 import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.confirmdialog.*;
 import com.vaadin.flow.component.dialog.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
@@ -492,6 +493,7 @@ public class ADialog extends Dialog {
         bottomLayout.setSpacing(true);
         bottomLayout.setMargin(false);
         bottomLayout.setClassName("confirm-dialog-buttons");
+        bottomLayout.getStyle().set("background-color", AEColor.grigio1.getEsadecimale());
         Label spazioVuotoEspandibile = new Label("");
 
         if (usaCancelButton) {

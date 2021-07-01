@@ -101,4 +101,9 @@ public class ADialogDelete<T> extends ADialog {
         return collection;
     }
 
+    @Override
+    public void close() {
+        super.close();
+    }
+
 }
