@@ -51,9 +51,19 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String PAGES = "pages";
 
+    public static final String PAGE_ID = "pageid";
+
+    public static final String TITLE = "title";
+
     public static final String QUERY = "query";
 
     public static final String REVISIONS = "revisions";
+
+    public static final String CATEGORY = "categorymembers";
+
+    public static final String CONTINUE = "continue";
+
+    public static final String CONTINUE_CM = "cmcontinue";
 
     public static final String SLOTS = "slots";
 
@@ -66,8 +76,11 @@ public class AWikiApiService extends AAbstractService {
     public static final String TAG_DISAMBIGUA_DUE = "{{disambigua}}";
 
     public static final String TAG_REDIRECT_UNO = "#redirect";
+
     public static final String TAG_REDIRECT_DUE = "#REDIRECT";
+
     public static final String TAG_REDIRECT_TRE = "#rinvia";
+
     public static final String TAG_REDIRECT_QUATTRO = "#RINVIA";
 
     public static final String WIKI_QUERY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
@@ -77,6 +90,8 @@ public class AWikiApiService extends AAbstractService {
     public static final String WIKI_QUERY_TITLES = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&titles=";
 
     public static final String WIKI_QUERY_PAGEIDS = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
+
+    public static final String WIKI_QUERY_CATEGORY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Categoria:";
 
     public static final String API_VIEW = "https://it.wikipedia.org/wiki/";
 
@@ -180,6 +195,112 @@ public class AWikiApiService extends AAbstractService {
 
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
     }
+
+
+    /**
+     * Legge una lista di pagine di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce sia pageid che title <br>
+     *
+     * @param wikiCategoria da recuperare
+     *
+     * @return lista
+     */
+    public List<WrapCat> leggeCategoria(final String wikiCategoria) {
+        List<WrapCat> lista = new ArrayList<>();
+        AIResult result;
+        JSONArray jsonPagine = null;
+        String continua = VUOTA;
+
+        result = web.legge(WIKI_QUERY_CATEGORY + wikiCategoria);
+
+        if (result.isValido()) {
+            jsonPagine = getListaCategoria(result.getText());
+        }
+
+        if (jsonPagine != null && jsonPagine.size() > 0) {
+            lista = getListaCategoria(jsonPagine);
+            continua = getContinuaCategoria(result.getText());
+        }
+
+        if (text.isValid(continua)) {
+            result = web.legge(WIKI_QUERY_CATEGORY + wikiCategoria + "&cmcontinue=" + continua);
+        }
+
+        return lista;
+    }
+
+    /**
+     * Recupera un lista di WrapCat dal testo JSON di risposta ad una query <br>
+     *
+     * @param rispostaDellaQuery in ingresso
+     *
+     * @return array di WrapCat
+     */
+    private JSONArray getListaCategoria(String rispostaDellaQuery) {
+        JSONArray jsonPagine = null;
+        JSONObject objectQuery = getPages(rispostaDellaQuery);
+
+        //--recupera i valori dei parametri
+        if (objectQuery != null && objectQuery.get(CATEGORY) != null && objectQuery.get(CATEGORY) instanceof JSONArray) {
+            jsonPagine = (JSONArray) objectQuery.get(CATEGORY);
+        }
+
+        return jsonPagine;
+    }
+
+    /**
+     * Recupera un lista di WrapCat dal testo JSON di risposta ad una query <br>
+     *
+     * @param jsonPagine in ingresso
+     *
+     * @return array di WrapCat
+     */
+    private List<WrapCat> getListaCategoria(JSONArray jsonPagine) {
+        List<WrapCat> lista = new ArrayList<>();
+        WrapCat wrap;
+        long pageid;
+        String title;
+
+        if (jsonPagine != null && jsonPagine.size() > 0) {
+            for (Object obj : jsonPagine) {
+                pageid = (long) ((JSONObject) obj).get(PAGE_ID);
+                title = (String) ((JSONObject) obj).get(TITLE);
+                wrap = new WrapCat(pageid, title);
+                lista.add(wrap);
+            }
+        }
+
+        return lista;
+    }
+
+    /**
+     * Recupera il tag per le categorie successive <br>
+     * Nella forma 'page|token|pageid' <br>
+     *
+     * @param rispostaDellaQuery in ingresso
+     *
+     * @return token e prossima pagina
+     */
+    private String getContinuaCategoria(String rispostaDellaQuery) {
+        String continua = VUOTA;
+        JSONObject objectAll = (JSONObject) JSONValue.parse(rispostaDellaQuery);
+        JSONObject jsonContinue;
+
+        //--recupera il valore del parametro
+        if (objectAll != null && objectAll.get(CONTINUE) != null && objectAll.get(CONTINUE) instanceof JSONObject) {
+            jsonContinue = (JSONObject) objectAll.get(CONTINUE);
+            continua = (String) jsonContinue.get(CONTINUE_CM);
+        }
+
+//        if (continua.startsWith("page|")) {
+//            continua = text.levaTesta(continua, "page|");
+//        }
+
+        return continua;
+    }
+
 
     /**
      * Legge il testo di un template da una voce wiki <br>
@@ -862,14 +983,14 @@ public class AWikiApiService extends AAbstractService {
         JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
         content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
-        if (text.isValid(content) ) {
-            if (content.startsWith(TAG_DISAMBIGUA_UNO)||content.startsWith(TAG_DISAMBIGUA_DUE)) {
+        if (text.isValid(content)) {
+            if (content.startsWith(TAG_DISAMBIGUA_UNO) || content.startsWith(TAG_DISAMBIGUA_DUE)) {
                 return new WrapPage(webUrl, title, AETypePage.disambigua);
             }
         }
 
-        if (text.isValid(content) ) {
-            if (content.startsWith(TAG_REDIRECT_UNO)||content.startsWith(TAG_REDIRECT_DUE)||content.startsWith(TAG_REDIRECT_TRE)||content.startsWith(TAG_REDIRECT_QUATTRO)) {
+        if (text.isValid(content)) {
+            if (content.startsWith(TAG_REDIRECT_UNO) || content.startsWith(TAG_REDIRECT_DUE) || content.startsWith(TAG_REDIRECT_TRE) || content.startsWith(TAG_REDIRECT_QUATTRO)) {
                 return new WrapPage(webUrl, title, AETypePage.redirect);
             }
         }

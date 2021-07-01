@@ -11,6 +11,8 @@ import java.time.format.*;
  * User: gac
  * Date: dom, 20-giu-2021
  * Time: 07:19
+ * <p>
+ * Semplice wrapper per i dati essenziali di una pagina recuperata da MediaWiki <br>
  */
 public class WrapPage {
 
@@ -30,9 +32,6 @@ public class WrapPage {
 
     private boolean valida;
 
-    //    public WrapPage(final String domain, final long pageid, final String title, final String text, final String stringTimestamp) {
-    //        this(domain, pageid, title, text, stringTimestamp, AETypePage.testoSenzaTmpl);
-    //    }
 
     public WrapPage(final String domain, final String title, final AETypePage type) {
         this(domain, 0, title, VUOTA, VUOTA, type);

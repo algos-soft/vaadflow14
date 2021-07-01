@@ -44,6 +44,9 @@ public class WikiApiServiceTest extends ATest {
 
     public static final long PAGINA_TEST_PAGEID = 8956310;
 
+    public static final String CAT_INESISTENTE = "Nati nel 3435";
+
+    public static final String CAT_1435 = "Nati nel 1435";
 
     /**
      * Classe principale di riferimento <br>
@@ -626,6 +629,23 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(ottenuto);
     }
 
+    @Test
+    @Order(21)
+    @DisplayName("21 - legge (come user) una categoria")
+    public void leggeCategoria() {
+        List<WrapCat> lista;
+
+        previstoIntero = 0;
+        lista = service.leggeCategoria(CAT_INESISTENTE);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+
+        previstoIntero = 10;
+        lista = service.leggeCategoria(CAT_1435);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        printCat(lista);
+    }
 
     //    @Test
     @Order(5)
@@ -1360,6 +1380,15 @@ public class WikiApiServiceTest extends ATest {
         System.out.println("content" + SEP + wikiPage.getContent());
     }
 
+    private void printCat(List<WrapCat> lista) {
+        System.out.println("21 - legge (come user) una categoria");
+        System.out.println(VUOTA);
+        for (WrapCat wrap : lista) {
+            System.out.print(wrap.getPageid());
+            System.out.print(SEP);
+            System.out.println(wrap.getTitle());
+        }
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>
