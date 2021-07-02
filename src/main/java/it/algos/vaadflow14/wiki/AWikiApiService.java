@@ -49,6 +49,8 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String PAGINA_ISO_1_NUMERICO = "ISO 3166-1 numerico";
 
+    public static final String LIMIT = "500";
+
     public static final String PAGES = "pages";
 
     public static final String PAGE_ID = "pageid";
@@ -83,15 +85,23 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String TAG_REDIRECT_QUATTRO = "#RINVIA";
 
-    public static final String WIKI_QUERY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
+    public static final String WIKI = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query";
+
+    public static final String WIKI_QUERY = WIKI + "&rvslots=main&prop=info|revisions&rvprop=content|ids|flags|timestamp|user|userid|comment|size&titles=";
 
     public static final String WIKI_PARSE = "https://it.wikipedia.org/w/api.php?action=parse&prop=wikitext&formatversion=2&format=json&page=";
 
-    public static final String WIKI_QUERY_TITLES = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&titles=";
+    public static final String WIKI_QUERY_TITLES = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&titles=";
 
-    public static final String WIKI_QUERY_PAGEIDS = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
+    public static final String WIKI_QUERY_PAGEIDS = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
 
-    public static final String WIKI_QUERY_CATEGORY = "https://it.wikipedia.org/w/api.php?&format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Categoria:";
+    public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmlimit=" + LIMIT + "&cmtitle=Categoria:";
+
+    public static final String WIKI_QUERY_CAT_CONTINUE = "&cmcontinue=";
+
+    public static final String WIKI_QUERY_CAT_TYPE = "&cmtype=";
+
+    public static final String WIKI_QUERY_CAT_PROP = "&cmprop=";
 
     public static final String API_VIEW = "https://it.wikipedia.org/wiki/";
 
@@ -196,39 +206,155 @@ public class AWikiApiService extends AAbstractService {
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
     }
 
+    /**
+     * Legge una lista di pageid di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce SOLO pageid <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di pageid
+     */
+    public List<Long> getLongCat(final String categoryTitle) {
+        List<Long> lista = new ArrayList<>();
+        String categoryType = AECatType.page.getTag();
+        String urlDomain;
+        String propType = AECatProp.pageid.getTag();
+        AIResult result;
+        String continueParam = VUOTA;
+
+        do {
+            urlDomain = fixUrl(categoryTitle, categoryType, propType, continueParam);
+            result = web.legge(urlDomain);
+            lista.addAll(getListaLongCategoria(result.getText()));
+            continueParam = getContinuaCategoria(result.getText());
+        }
+        while (text.isValid(continueParam));
+
+        return lista;
+    }
 
     /**
-     * Legge una lista di pagine di una categoria wiki <br>
+     * Legge una lista di titles di una categoria wiki <br>
      * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce SOLO pageid <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di titles
+     */
+    public List<String> getTitleCat(final String categoryTitle) {
+        List<String> lista = new ArrayList<>();
+        String categoryType = AECatType.page.getTag();
+        String urlDomain;
+        String propType = AECatProp.title.getTag();
+        AIResult result;
+        String continueParam = VUOTA;
+
+        do {
+            urlDomain = fixUrl(categoryTitle, categoryType, propType, continueParam);
+            result = web.legge(urlDomain);
+            lista.addAll(getListaTitleCategoria(result.getText()));
+            continueParam = getContinuaCategoria(result.getText());
+        }
+        while (text.isValid(continueParam));
+
+        return lista;
+    }
+
+    /**
+     * Legge una lista di WrapCat di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
      * Il valore massimo (come user) di 'cmlimit' è 20 <br>
      * La query restituisce sia pageid che title <br>
      *
-     * @param wikiCategoria da recuperare
+     * @param titleWikiCategoria da recuperare
      *
-     * @return lista
+     * @return lista di WrapCat
      */
-    public List<WrapCat> leggeCategoria(final String wikiCategoria) {
+    public List<WrapCat> getWrapCat(final String titleWikiCategoria) {
+        return getWrapCat(titleWikiCategoria, AECatType.page);
+    }
+
+    /**
+     * Legge una lista di WrapCat di pagine/files/subcategorie di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce sia pageid che title <br>
+     *
+     * @param categoryTitle da recuperare
+     * @param aeCatType     per la selezione
+     *
+     * @return lista di WrapCat
+     */
+    public List<WrapCat> getWrapCat(final String categoryTitle, final AECatType aeCatType) {
         List<WrapCat> lista = new ArrayList<>();
+        String urlDomain;
         AIResult result;
-        JSONArray jsonPagine = null;
-        String continua = VUOTA;
+        String propType = AECatProp.all.getTag();
+        String continueParam = VUOTA;
+        String categoryType = aeCatType.getTag();
 
-        result = web.legge(WIKI_QUERY_CATEGORY + wikiCategoria);
-
-        if (result.isValido()) {
-            jsonPagine = getListaCategoria(result.getText());
+        do {
+            urlDomain = fixUrl(categoryTitle, categoryType, propType, continueParam);
+            result = web.legge(urlDomain);
+            lista.addAll(getListaWrapCategoria(result.getText()));
+            continueParam = getContinuaCategoria(result.getText());
         }
-
-        if (jsonPagine != null && jsonPagine.size() > 0) {
-            lista = getListaCategoria(jsonPagine);
-            continua = getContinuaCategoria(result.getText());
-        }
-
-        if (text.isValid(continua)) {
-            result = web.legge(WIKI_QUERY_CATEGORY + wikiCategoria + "&cmcontinue=" + continua);
-        }
+        while (text.isValid(continueParam));
 
         return lista;
+    }
+
+    /**
+     * Costruisce l'url <br>
+     *
+     * @param categoryTitle da recuperare
+     * @param catType       per la selezione
+     * @param continueParam per la successiva query
+     *
+     * @return testo dell'url
+     */
+    private String fixUrl(final String categoryTitle, final String catType, final String propType, final String continueParam) {
+        String catTitle = fixWikiTitle(categoryTitle);
+        String query = WIKI_QUERY_CATEGORY;
+        String type = WIKI_QUERY_CAT_TYPE;
+        String prop = WIKI_QUERY_CAT_PROP;
+        String continua = WIKI_QUERY_CAT_CONTINUE;
+
+        String message = String.format(query + "%s" + type + "%s" + prop + "%s" + continua + "%s", catTitle, catType, propType, continueParam);
+        System.out.println(message);
+        return message;
+    }
+
+    /**
+     * Recupera un lista di 'pageid'' dal testo JSON di risposta ad una query <br>
+     *
+     * @param rispostaDellaQuery in ingresso
+     *
+     * @return array di pageid
+     */
+    private List<Long> getListaLongCategoria(String rispostaDellaQuery) {
+        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        return getListaLongCategoria(jsonPagine);
+    }
+
+    /**
+     * Recupera un lista di 'pageid'' dal testo JSON di risposta ad una query <br>
+     *
+     * @param rispostaDellaQuery in ingresso
+     *
+     * @return array di pageid
+     */
+    private List<String> getListaTitleCategoria(String rispostaDellaQuery) {
+        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        return getListaTitleCategoria(jsonPagine);
     }
 
     /**
@@ -238,7 +364,19 @@ public class AWikiApiService extends AAbstractService {
      *
      * @return array di WrapCat
      */
-    private JSONArray getListaCategoria(String rispostaDellaQuery) {
+    private List<WrapCat> getListaWrapCategoria(String rispostaDellaQuery) {
+        JSONArray jsonPagine = getJsonPagine(rispostaDellaQuery);
+        return getListaWrapCategoria(jsonPagine);
+    }
+
+    /**
+     * Recupera le 'pagine' dal testo JSON di risposta ad una query <br>
+     *
+     * @param rispostaDellaQuery in ingresso
+     *
+     * @return array di 'pagine''
+     */
+    private JSONArray getJsonPagine(String rispostaDellaQuery) {
         JSONArray jsonPagine = null;
         JSONObject objectQuery = getPages(rispostaDellaQuery);
 
@@ -251,13 +389,54 @@ public class AWikiApiService extends AAbstractService {
     }
 
     /**
+     * Recupera un lista di 'pageid'' dal testo JSON di risposta ad una query <br>
+     *
+     * @param jsonPagine in ingresso
+     *
+     * @return array di 'pageid'
+     */
+    private List<Long> getListaLongCategoria(JSONArray jsonPagine) {
+        List<Long> lista = new ArrayList<>();
+        long pageid;
+
+        if (jsonPagine != null && jsonPagine.size() > 0) {
+            for (Object obj : jsonPagine) {
+                pageid = (long) ((JSONObject) obj).get(PAGE_ID);
+                lista.add(pageid);
+            }
+        }
+
+        return lista;
+    }
+    /**
+     * Recupera un lista di 'title'' dal testo JSON di risposta ad una query <br>
+     *
+     * @param jsonPagine in ingresso
+     *
+     * @return array di 'title'
+     */
+    private List<String> getListaTitleCategoria(JSONArray jsonPagine) {
+        List<String> lista = new ArrayList<>();
+        String title;
+
+        if (jsonPagine != null && jsonPagine.size() > 0) {
+            for (Object obj : jsonPagine) {
+                title = (String) ((JSONObject) obj).get(TITLE);
+                lista.add(title);
+            }
+        }
+
+        return lista;
+    }
+
+    /**
      * Recupera un lista di WrapCat dal testo JSON di risposta ad una query <br>
      *
      * @param jsonPagine in ingresso
      *
      * @return array di WrapCat
      */
-    private List<WrapCat> getListaCategoria(JSONArray jsonPagine) {
+    private List<WrapCat> getListaWrapCategoria(JSONArray jsonPagine) {
         List<WrapCat> lista = new ArrayList<>();
         WrapCat wrap;
         long pageid;
@@ -293,10 +472,6 @@ public class AWikiApiService extends AAbstractService {
             jsonContinue = (JSONObject) objectAll.get(CONTINUE);
             continua = (String) jsonContinue.get(CONTINUE_CM);
         }
-
-//        if (continua.startsWith("page|")) {
-//            continua = text.levaTesta(continua, "page|");
-//        }
 
         return continua;
     }

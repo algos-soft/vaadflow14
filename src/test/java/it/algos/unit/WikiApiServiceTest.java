@@ -48,6 +48,10 @@ public class WikiApiServiceTest extends ATest {
 
     public static final String CAT_1435 = "Nati nel 1435";
 
+    public static final String CAT_1935 = "Nati nel 1935";
+
+    public static final String CAT_ROMANI = "Personaggi della storia romana";
+
     /**
      * Classe principale di riferimento <br>
      */
@@ -631,21 +635,193 @@ public class WikiApiServiceTest extends ATest {
 
     @Test
     @Order(21)
-    @DisplayName("21 - legge (come user) una categoria")
+    @DisplayName("21 - WrapCat (come user) una categoria")
     public void leggeCategoria() {
         List<WrapCat> lista;
+        System.out.println("21 - legge (come user) una categoria");
 
+        sorgente = CAT_INESISTENTE;
         previstoIntero = 0;
-        lista = service.leggeCategoria(CAT_INESISTENTE);
+        lista = service.getWrapCat(sorgente);
         assertNotNull(lista);
         assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Nessuna pagina"));
 
-        previstoIntero = 10;
-        lista = service.leggeCategoria(CAT_1435);
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente);
         assertNotNull(lista);
         assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
         printCat(lista);
+
+        sorgente = CAT_1935;
+        previstoIntero = 1987;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        System.out.println("Non faccio vedere le pagine perché sono troppe");
     }
+
+
+    @Test
+    @Order(22)
+    @DisplayName("22 - WrapCat (come user) pages/subcat/files di una categoria")
+    public void leggeCategoria2() {
+        List<WrapCat> lista;
+        AECatType typeCat;
+        System.out.println("22 - legge (come user) pages/subcat/files di una categoria");
+
+        sorgente = CAT_ROMANI;
+
+        typeCat = AECatType.file;
+        previstoIntero = 0;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente, typeCat);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
+        System.out.println(String.format("Non ce ne sono"));
+
+        typeCat = AECatType.subcat;
+        previstoIntero = 60;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente, typeCat);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+
+        typeCat = AECatType.page;
+        previstoIntero = 78;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente, typeCat);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+
+        previstoIntero = 78;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s Ricerca generica che automaticamente cerca solo %s", sorgente, typeCat.getTag()));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+
+        typeCat = AECatType.all;
+        previstoIntero = 138;
+        inizio = System.currentTimeMillis();
+        lista = service.getWrapCat(sorgente, typeCat);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+    }
+
+    @Test
+    @Order(23)
+    @DisplayName("23 - legge pageid (come user) una categoria")
+    public void getLongCat() {
+        List<Long> lista;
+        System.out.println("23 - legge pageid (come user) una categoria");
+
+        sorgente = CAT_INESISTENTE;
+        previstoIntero = 0;
+        lista = service.getLongCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Nessuna pagina"));
+
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        inizio = System.currentTimeMillis();
+        lista = service.getLongCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        printLong(lista);
+
+        sorgente = CAT_1935;
+        previstoIntero = 1987;
+        inizio = System.currentTimeMillis();
+        lista = service.getLongCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        System.out.println("Non faccio vedere le pagine perché sono troppe");
+    }
+
+
+    @Test
+    @Order(24)
+    @DisplayName("24 - legge titles (come user) una categoria")
+    public void getTitleCat() {
+        List<String> lista;
+        System.out.println("24 - legge titles (come user) una categoria");
+
+        sorgente = CAT_INESISTENTE;
+        previstoIntero = 0;
+        lista = service.getTitleCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Nessuna pagina"));
+
+        sorgente = CAT_1435;
+        previstoIntero = 33;
+        inizio = System.currentTimeMillis();
+        lista = service.getTitleCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        printTitle(lista);
+
+        sorgente = CAT_1935;
+        previstoIntero = 1987;
+        inizio = System.currentTimeMillis();
+        lista = service.getTitleCat(sorgente);
+        assertNotNull(lista);
+        assertEquals(lista.size(), previstoIntero);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        System.out.println("Non faccio vedere le pagine perché sono troppe");
+    }
+
 
     //    @Test
     @Order(5)
@@ -1381,12 +1557,22 @@ public class WikiApiServiceTest extends ATest {
     }
 
     private void printCat(List<WrapCat> lista) {
-        System.out.println("21 - legge (come user) una categoria");
-        System.out.println(VUOTA);
         for (WrapCat wrap : lista) {
             System.out.print(wrap.getPageid());
             System.out.print(SEP);
             System.out.println(wrap.getTitle());
+        }
+    }
+
+    private void printLong(List<Long> lista) {
+        for (Long pageid : lista) {
+            System.out.println(pageid);
+        }
+    }
+
+    private void printTitle(List<String> lista) {
+        for (String title : lista) {
+            System.out.println(title);
         }
     }
 
