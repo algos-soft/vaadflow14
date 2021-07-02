@@ -251,6 +251,12 @@ public abstract class ATest {
 
     protected List<String> ottenutoArray;
 
+    protected List<Long> sorgenteArrayLong;
+
+    protected List<Long> previstoArrayLong;
+
+    protected List<Long> ottenutoArrayLong;
+
     protected List<Integer> previstoInteroArray;
 
     protected List<Integer> ottenutoInteroArray;
@@ -427,6 +433,12 @@ public abstract class ATest {
         preferenzaService.mongo = mongo;
         utilityService.text = text;
         html.text = text;
+        sorgenteArray = null;
+        previstoArray = null;
+        ottenutoArray = null;
+        sorgenteArrayLong = null;
+        previstoArrayLong = null;
+        ottenutoArrayLong = null;
     }
 
 

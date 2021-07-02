@@ -7,6 +7,7 @@ import it.algos.test.*;
 import it.algos.vaadflow14.backend.enumeration.AECrono;
 import it.algos.vaadflow14.backend.enumeration.AEGeografia;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -504,32 +505,37 @@ public class AArrayServiceTest extends ATest {
         previsto = "alfa,beta,gamma,delta";
 
         ottenuto = array.toStringaVirgola(null);
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         ottenuto = array.toStringaVirgola(new ArrayList());
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         ottenuto = array.toStringaVirgola(sorgenteArray);
-        Assertions.assertNotNull(ottenuto);
-        Assertions.assertEquals(previsto, ottenuto);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
     }
 
     @Test
     @Order(12)
     @DisplayName("12 - toStringaPipe (since Java 11)")
     void toStringaPipe() {
-        sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
-        previsto = "alfa|beta|gamma|delta";
-
         ottenuto = array.toStringaPipe(null);
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         ottenuto = array.toStringaPipe(new ArrayList());
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
+        sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
+        previsto = "alfa|beta|gamma|delta";
         ottenuto = array.toStringaPipe(sorgenteArray);
-        Assertions.assertNotNull(ottenuto);
-        Assertions.assertEquals(previsto, ottenuto);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+
+        sorgenteArrayLong = List.of(Long.valueOf(876876),Long.valueOf(793444),Long.valueOf(22223),Long.valueOf(50030044));
+        previsto = "876876|793444|22223|50030044";
+        ottenuto = array.toStringaPipe(sorgenteArrayLong);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
     }
 
     @Test
@@ -540,14 +546,14 @@ public class AArrayServiceTest extends ATest {
         previsto = "alfa, beta, gamma, delta";
 
         ottenuto = array.toStringa(null);
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         ottenuto = array.toStringa(new ArrayList());
-        Assertions.assertNull(ottenuto);
+        assertTrue(text.isEmpty(ottenuto));
 
         ottenuto = array.toStringa(sorgenteArray);
-        Assertions.assertNotNull(ottenuto);
-        Assertions.assertEquals(previsto, ottenuto);
+        assertTrue(text.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
     }
 
     @Test

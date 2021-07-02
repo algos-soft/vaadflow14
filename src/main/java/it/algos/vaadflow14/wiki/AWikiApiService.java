@@ -49,7 +49,9 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String PAGINA_ISO_1_NUMERICO = "ISO 3166-1 numerico";
 
-    public static final String LIMIT = "500";
+    public static final int LIMIT_USER = 50;
+
+    public static final int LIMIT_BOT = 500;
 
     public static final String PAGES = "pages";
 
@@ -95,7 +97,9 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String WIKI_QUERY_PAGEIDS = WIKI + "&rvslots=main&prop=revisions&rvprop=content|ids|timestamp&pageids=";
 
-    public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmlimit=" + LIMIT + "&cmtitle=Categoria:";
+    public static final String WIKI_QUERY_TIMESTAMP = WIKI + "&prop=revisions&rvprop=ids|timestamp&limit=" + LIMIT_USER + "&pageids=";
+
+    public static final String WIKI_QUERY_CATEGORY = WIKI + "&list=categorymembers&cmlimit=" + LIMIT_BOT + "&cmtitle=Categoria:";
 
     public static final String WIKI_QUERY_CAT_CONTINUE = "&cmcontinue=";
 
@@ -204,6 +208,27 @@ public class AWikiApiService extends AAbstractService {
         }
 
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
+    }
+
+
+    /**
+     * Legge una lista di pageid di una categoria wiki <br>
+     * Se non si mette 'cmlimit' restituisce 10 pagine <br>
+     * Valore massimo di 'cmlimit' (come user) 500 pagine <br>
+     * Il valore massimo (come user) di 'cmlimit' è 20 <br>
+     * La query restituisce SOLO pageid <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return lista di pageid
+     */
+    public String getPageidsCat(final String categoryTitle) {
+        String striscia = VUOTA;
+        List<Long> lista = getLongCat(categoryTitle);
+
+        striscia = array.toStringaPipe(lista);
+
+        return striscia;
     }
 
     /**
@@ -328,9 +353,7 @@ public class AWikiApiService extends AAbstractService {
         String prop = WIKI_QUERY_CAT_PROP;
         String continua = WIKI_QUERY_CAT_CONTINUE;
 
-        String message = String.format(query + "%s" + type + "%s" + prop + "%s" + continua + "%s", catTitle, catType, propType, continueParam);
-        System.out.println(message);
-        return message;
+        return String.format(query + "%s" + type + "%s" + prop + "%s" + continua + "%s", catTitle, catType, propType, continueParam);
     }
 
     /**
@@ -408,6 +431,7 @@ public class AWikiApiService extends AAbstractService {
 
         return lista;
     }
+
     /**
      * Recupera un lista di 'title'' dal testo JSON di risposta ad una query <br>
      *
@@ -1182,6 +1206,7 @@ public class AWikiApiService extends AAbstractService {
             return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoSenzaTmpl);
         }
     }
+
 
     /**
      * Recupera un array di pages dal testo JSON di risposta ad una query <br>

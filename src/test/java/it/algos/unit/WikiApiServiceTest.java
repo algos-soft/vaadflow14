@@ -741,10 +741,10 @@ public class WikiApiServiceTest extends ATest {
 
     @Test
     @Order(23)
-    @DisplayName("23 - legge pageid (come user) una categoria")
+    @DisplayName("23 - legge una lista di pageid (come user) di una categoria")
     public void getLongCat() {
         List<Long> lista;
-        System.out.println("23 - legge pageid (come user) una categoria");
+        System.out.println("23 - legge una lista di pageid (come user) di una categoria");
 
         sorgente = CAT_INESISTENTE;
         previstoIntero = 0;
@@ -760,7 +760,7 @@ public class WikiApiServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         lista = service.getLongCat(sorgente);
         assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
+        assertEquals(previstoIntero, lista.size());
         System.out.println(VUOTA);
         System.out.println(String.format("Categoria: %s", sorgente));
         System.out.println(String.format("Ce ne sono %s", lista.size()));
@@ -772,7 +772,7 @@ public class WikiApiServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         lista = service.getLongCat(sorgente);
         assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
+        assertEquals(previstoIntero, lista.size());
         System.out.println(VUOTA);
         System.out.println(String.format("Categoria: %s", sorgente));
         System.out.println(String.format("Ce ne sono %s", lista.size()));
@@ -783,10 +783,49 @@ public class WikiApiServiceTest extends ATest {
 
     @Test
     @Order(24)
-    @DisplayName("24 - legge titles (come user) una categoria")
+    @DisplayName("24 - legge una stringa di pageid (come user) di una categoria")
+    public void getLongCat2() {
+        String striscia;
+        System.out.println("24 - legge una stringa di pageid (come user) di una categoria");
+
+        sorgente = CAT_INESISTENTE;
+        previsto = VUOTA;
+        striscia = service.getPageidsCat(sorgente);
+        assertFalse(text.isValid(striscia));
+        assertEquals(previsto, ottenuto);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Nessuna pagina"));
+
+        sorgente = CAT_1435;
+        inizio = System.currentTimeMillis();
+        striscia = service.getPageidsCat(sorgente);
+        assertTrue(text.isValid(striscia));
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono alcune"));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        System.out.println(striscia);
+
+        //        sorgente = CAT_1935;
+        //        previstoIntero = 1987;
+        //        inizio = System.currentTimeMillis();
+        //        lista = service.getLongCat(sorgente);
+        //        assertNotNull(lista);
+        //        assertEquals(lista.size(), previstoIntero);
+        //        System.out.println(VUOTA);
+        //        System.out.println(String.format("Categoria: %s", sorgente));
+        //        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        //        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        //        System.out.println("Non faccio vedere le pagine perché sono troppe");
+    }
+
+    @Test
+    @Order(25)
+    @DisplayName("25 - legge titles (come user) una categoria")
     public void getTitleCat() {
         List<String> lista;
-        System.out.println("24 - legge titles (come user) una categoria");
+        System.out.println("25 - legge titles (come user) una categoria");
 
         sorgente = CAT_INESISTENTE;
         previstoIntero = 0;
@@ -821,7 +860,6 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
         System.out.println("Non faccio vedere le pagine perché sono troppe");
     }
-
 
     //    @Test
     @Order(5)
