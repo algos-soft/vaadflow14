@@ -2,7 +2,6 @@ package it.algos.simple.backend.packages.fattura;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -70,7 +69,7 @@ public class FatturaService extends AService {
      * @return la nuova entityBean appena creata e salvata
      */
     public Fattura creaIfNotExist(final String keyPropertyValue, String descrizione) {
-        return (Fattura) checkAndSave(newEntity(keyPropertyValue,descrizione));
+        return (Fattura) checkAndSave(newEntity(keyPropertyValue, descrizione));
     }
 
 
@@ -84,7 +83,7 @@ public class FatturaService extends AService {
      */
     @Override
     public Fattura newEntity() {
-        return newEntity( VUOTA,VUOTA);
+        return newEntity(VUOTA, VUOTA);
     }
 
 
@@ -92,7 +91,6 @@ public class FatturaService extends AService {
      * Creazione in memoria di una nuova entityBean che NON viene salvata <br>
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
-     *
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
@@ -145,14 +143,10 @@ public class FatturaService extends AService {
         return (Fattura) super.findByKey(keyValue);
     }
 
+
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>
-     * Invocato in fase di 'startup' e dal bottone Reset di alcune liste <br>
-     * <p>
-     * 1) deve esistere lo specifico metodo sovrascritto
-     * 2) deve essere valida la entityClazz
-     * 3) deve esistere la collezione su mongoDB
-     * 4) la collezione non deve essere vuota
+     * Invocato dal bottone Reset di alcune liste <br>
      * <p>
      * I dati possono essere: <br>
      * 1) recuperati da una Enumeration interna <br>
@@ -163,9 +157,9 @@ public class FatturaService extends AService {
      *
      * @return wrapper col risultato ed eventuale messaggio di errore
      */
-    //    @Override
-    public AIResult resetEmptyOnly() {
-        AIResult result=null;
+    @Override
+    public AIResult reset() {
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 6;
 
@@ -173,14 +167,15 @@ public class FatturaService extends AService {
             return result;
         }
 
-        creaIfNotExist("alfa","finestra");
-        creaIfNotExist("beta","possibile");
-        creaIfNotExist("delta","Praga");
-        creaIfNotExist("gamma","determinante");
-        creaIfNotExist("epsilon","Antonio");
-        creaIfNotExist("omega","forse niente");
+        creaIfNotExist("alfa", "finestra");
+        creaIfNotExist("beta", "possibile");
+        creaIfNotExist("delta", "Praga");
+        creaIfNotExist("gamma", "determinante");
+        creaIfNotExist("epsilon", "Antonio");
+        creaIfNotExist("omega", "forse niente");
 
         return result;
     }
+
 
 }// end of Singleton class

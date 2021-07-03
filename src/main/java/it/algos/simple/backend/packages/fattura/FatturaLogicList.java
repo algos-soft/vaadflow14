@@ -212,14 +212,13 @@ public class FatturaLogicList extends LogicList {
         boolean status = super.performAction(iAzione);
         AESimpleAction azione = iAzione instanceof AESimpleAction ? (AESimpleAction) iAzione : null;
 
-        if (azione == null) {
-            return false;
-        }
-
         if (status) {
             return true;
         }
         else {
+            if (azione == null) {
+                return false;
+            }
             status = true;
             switch (azione) {
                 case modulo:
@@ -243,6 +242,9 @@ public class FatturaLogicList extends LogicList {
     }
 
     private void pippo(Object o) {
+        Fattura fattura= new Fattura();
+        fattura.code="x";
+        mongo.save(fattura);
     }
 
     private  void pippo() {
