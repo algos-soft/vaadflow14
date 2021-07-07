@@ -65,6 +65,10 @@ public class AWikiApiService extends AAbstractService {
 
     public static final String CATEGORY = "categorymembers";
 
+    public static final String CATEGORY_INFO = "categoryinfo";
+
+    public static final String CATEGORY_PAGES = "pages";
+
     public static final String CONTINUE = "continue";
 
     public static final String CONTINUE_CM = "cmcontinue";
@@ -106,6 +110,8 @@ public class AWikiApiService extends AAbstractService {
     public static final String WIKI_QUERY_CAT_TYPE = "&cmtype=";
 
     public static final String WIKI_QUERY_CAT_PROP = "&cmprop=";
+
+    public static final String WIKI_QUERY_CAT_TOTALE = WIKI + "&prop=categoryinfo&titles=Categoria:";
 
     public static final String API_VIEW = "https://it.wikipedia.org/wiki/";
 
@@ -208,6 +214,32 @@ public class AWikiApiService extends AAbstractService {
         }
 
         return web.legge(WIKI_QUERY_TITLES + wikiTitle);
+    }
+
+
+    /**
+     * Legge il numero di pagine di una categoria wiki <br>
+     *
+     * @param categoryTitle da recuperare
+     *
+     * @return numero di pagine (subcategorie escluse)
+     */
+    public int getTotaleCategoria(final String categoryTitle) {
+        int totale = 0;
+        String webUrl = WIKI_QUERY_CAT_TOTALE + categoryTitle;
+        String rispostaDellaQuery = web.legge(webUrl).getText();
+
+        JSONObject jsonPageZero = this.getObjectPage(rispostaDellaQuery);
+        if (isMissing(jsonPageZero)) {
+            return totale;
+        }
+
+        JSONObject categoryInfo = (JSONObject) jsonPageZero.get(CATEGORY_INFO);
+        if (categoryInfo!=null&&categoryInfo.get(CATEGORY_PAGES)!=null) {
+            totale = ((Long) categoryInfo.get(CATEGORY_PAGES)).intValue();
+        }
+
+        return totale;
     }
 
 
@@ -1019,10 +1051,10 @@ public class AWikiApiService extends AAbstractService {
      */
     public String estraeTestoPaginaWiki(final String rispostaDellaQuery) {
         String testoPagina = VUOTA;
-        JSONObject object = getObjectPage(rispostaDellaQuery);
+        JSONObject jsonPageZero = getObjectPage(rispostaDellaQuery);
 
-        if (object != null) {
-            testoPagina = this.getContent(object);
+        if (jsonPageZero != null) {
+            testoPagina = this.getContent(jsonPageZero);
         }
 
         return testoPagina;
@@ -1087,12 +1119,16 @@ public class AWikiApiService extends AAbstractService {
         pageIds = fixWikiTitle(pageIds);
         String webUrl = WIKI_QUERY_PAGEIDS + pageIds;
         String rispostaAPI = web.legge(webUrl).getText();
+        WrapPage wrap = null;
 
         JSONArray jsonPages = getArrayPagine(rispostaAPI);
         if (jsonPages != null) {
             wraps = new ArrayList<>();
             for (Object obj : jsonPages) {
-                wraps.add(creaPage(webUrl, (JSONObject) obj, tagTemplate));
+                wrap = creaPage(webUrl, (JSONObject) obj, tagTemplate);
+                if (wrap.isValida()) {
+                    wraps.add(wrap);
+                }
             }
         }
 
@@ -1161,16 +1197,20 @@ public class AWikiApiService extends AAbstractService {
         return creaPage(webUrl, jsonPageZero, tagTemplate);
     }
 
+    private boolean isMissing(final JSONObject jsonPage) {
+        return jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING);
+    }
 
     private WrapPage creaPage(final String webUrl, final JSONObject jsonPage, String tagTemplate) {
         long pageid;
         String title;
         String stringTimestamp;
         String content;
+        String tmpl;
 
         title = (String) jsonPage.get(KEY_JSON_TITLE);
 
-        if (jsonPage.get(KEY_JSON_MISSING) != null && (boolean) jsonPage.get(KEY_JSON_MISSING)) {
+        if (isMissing(jsonPage)) {
             return new WrapPage(webUrl, title, AETypePage.nonEsiste);
         }
 
@@ -1182,25 +1222,31 @@ public class AWikiApiService extends AAbstractService {
         JSONObject jsonMain = (JSONObject) jsonSlots.get(KEY_JSON_MAIN);
         content = (String) jsonMain.get(KEY_JSON_CONTENT);
 
-        if (text.isValid(content)) {
-            if (content.startsWith(TAG_DISAMBIGUA_UNO) || content.startsWith(TAG_DISAMBIGUA_DUE)) {
-                return new WrapPage(webUrl, title, AETypePage.disambigua);
-            }
+        //--la pagina esiste ma il content no
+        if (text.isEmpty(content)) {
+            return new WrapPage(webUrl, pageid, title, VUOTA, stringTimestamp, AETypePage.testoVuoto);
         }
 
-        if (text.isValid(content)) {
-            if (content.startsWith(TAG_REDIRECT_UNO) || content.startsWith(TAG_REDIRECT_DUE) || content.startsWith(TAG_REDIRECT_TRE) || content.startsWith(TAG_REDIRECT_QUATTRO)) {
-                return new WrapPage(webUrl, title, AETypePage.redirect);
-            }
+        //--contenuto inizia col tag della disambigua
+        if (content.startsWith(TAG_DISAMBIGUA_UNO) || content.startsWith(TAG_DISAMBIGUA_DUE)) {
+            return new WrapPage(webUrl, title, AETypePage.disambigua);
         }
 
+        //--contenuto inizia col tag del redirect
+        if (content.startsWith(TAG_REDIRECT_UNO) || content.startsWith(TAG_REDIRECT_DUE) || content.startsWith(TAG_REDIRECT_TRE) || content.startsWith(TAG_REDIRECT_QUATTRO)) {
+            return new WrapPage(webUrl, title, AETypePage.redirect);
+        }
+
+        //--flag per la ricerca o meno del template
         if (text.isValid(tagTemplate)) {
-            content = estraeTmpl(content, tagTemplate);
-        }
-
-        if (text.isValid(tagTemplate)) {
-            content = estraeTmpl(content, tagTemplate);
-            return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoConTmpl);
+            //--prova ad estrarre il template
+            tmpl = estraeTmpl(content, tagTemplate);
+            if (text.isValid(tmpl)) {
+                return new WrapPage(webUrl, pageid, title, tmpl, stringTimestamp, AETypePage.testoConTmpl);
+            }
+            else {
+                return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.mancaTmpl);
+            }
         }
         else {
             return new WrapPage(webUrl, pageid, title, content, stringTimestamp, AETypePage.testoSenzaTmpl);
@@ -1488,8 +1534,8 @@ public class AWikiApiService extends AAbstractService {
 
     public WikiPage getWikiPageFromTitle(String wikiTitle) {
         String rispostaDellaQuery = leggeJsonTxt(wikiTitle);
-        JSONObject objectPage = getObjectPage(rispostaDellaQuery);
-        Map<String, Object> mappa = getMappaJSON(objectPage);
+        JSONObject jsonPageZero = getObjectPage(rispostaDellaQuery);
+        Map<String, Object> mappa = getMappaJSON(jsonPageZero);
 
         return getWikiPageFromMappa(mappa);
     }

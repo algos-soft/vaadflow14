@@ -212,6 +212,8 @@ public class ALogService extends AAbstractService {
                         nuovo(entityBean);
                     }
                     break;
+                case newEditNoLog:
+                    break;
                 case edit:
                 case editProfile:
                 case editNoDelete:
