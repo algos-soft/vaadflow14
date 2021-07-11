@@ -215,7 +215,7 @@ public abstract class AForm extends VerticalLayout {
     private LinkedHashMap<String, List> enumMap;
 
     @Deprecated
-    public AForm(ALogicOld logic, WrapForm wrap) {
+    public AForm( WrapForm wrap) {
         System.err.println("È stato chiamato il costruttore AForm con parametri errati. Non può funzionare");
     }
 

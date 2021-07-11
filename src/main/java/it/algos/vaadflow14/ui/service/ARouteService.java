@@ -379,44 +379,6 @@ public class ARouteService extends AAbstractService {
     }
 
 
-    /**
-     * Estrae un' istanza di classe AService dalla mappa di parametri arrivata dal browser. <br>
-     * Costruisce l' istanza dal nome completo <br>
-     */
-    public ALogicOld getService(Parametro parametro) {
-        ALogicOld entityLogic = null;
-        String canonicalName = VUOTA;
-        Object istanza;
-
-        //        if ((parametro == null) || (parametro.isSingoloParametro())) {
-        //            return null;
-        //        }
-
-        //        if (parametro.isMappa()) {
-        //            if (parametro.containsKey(KEY_BEAN_CLASS)) {
-        //                canonicalName = parametro.get(KEY_BEAN_CLASS);
-        //                canonicalName += SUFFIX_SERVICE;
-        //            }
-        //
-        //            if (parametro.containsKey(KEY_SERVICE_CLASS)) {
-        //                canonicalName = parametro.get(KEY_SERVICE_CLASS);
-        //            }
-        //
-        //            if (text.isValid(canonicalName)) {
-        //                try {
-        //                    istanza = appContext.getBean(Class.forName(canonicalName));
-        //
-        //                    if (istanza instanceof ALogicOld) {
-        //                        entityLogic = (ALogicOld) istanza;
-        //                    }
-        //                } catch (Exception unErrore) {
-        //                    logger.error(unErrore);
-        //                }
-        //            }
-        //
-        //        }
-        return entityLogic;
-    }
 
     public final void openList(Class<? extends AEntity> entityClazz) {
         openList(entityClazz.getCanonicalName());
