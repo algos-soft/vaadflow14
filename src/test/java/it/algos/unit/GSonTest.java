@@ -1,49 +1,40 @@
 package it.algos.unit;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.*;
+import com.fasterxml.jackson.databind.*;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.*;
-import com.mongodb.BasicDBObject;
-import com.mongodb.ConnectionString;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import it.algos.simple.backend.packages.Delta;
+import com.mongodb.client.*;
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.entity.AEntity;
-import it.algos.vaadflow14.backend.enumeration.AEMese;
-import it.algos.vaadflow14.backend.enumeration.AETypePref;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
-import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.packages.crono.mese.Mese;
-import it.algos.vaadflow14.backend.packages.crono.secolo.Secolo;
-import it.algos.vaadflow14.backend.packages.preferenza.Preferenza;
-import it.algos.vaadflow14.backend.packages.utility.versione.Versione;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.junit.Assert;
-import org.junit.jupiter.api.*;
-import org.mockito.MockitoAnnotations;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
+import org.bson.*;
+import static org.bson.codecs.configuration.CodecRegistries.*;
+import org.bson.codecs.configuration.*;
+import org.bson.codecs.pojo.*;
+import org.junit.*;
 import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.mockito.*;
+
+import java.lang.reflect.*;
+import java.time.*;
+import java.time.format.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -82,19 +73,24 @@ public class GSonTest extends ATest {
 
     private Class clazzAnno = Anno.class;
 
+    private Class clazzGiorno = Giorno.class;
+
     private Class clazzVersione = Versione.class;
 
-    private Class clazzDelta = Delta.class;
+    private Class clazzRegione = Regione.class;
 
     private MongoCollection collection;
 
-    private MongoCollection collectionVia = database.getCollection(clazzVia.getSimpleName().toLowerCase());
+    private MongoCollection collectionVia ;
 
-    private MongoCollection collectionAnno = database.getCollection(clazzAnno.getSimpleName().toLowerCase());
+    private MongoCollection collectionAnno ;
 
-    private MongoCollection collectionVersione = database.getCollection(clazzVersione.getSimpleName().toLowerCase());
+    private MongoCollection collectionGiorno ;
 
-    private MongoCollection collectionDelta = database.getCollection(clazzDelta.getSimpleName().toLowerCase());
+    private MongoCollection collectionVersione;
+
+    private MongoCollection collectionRegione ;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -119,6 +115,12 @@ public class GSonTest extends ATest {
         gSonService.mongo = mongo;
         gSonService.date = date;
         date.text = text;
+
+         collectionVia = database.getCollection(clazzVia.getSimpleName().toLowerCase());
+         collectionAnno = database.getCollection(clazzAnno.getSimpleName().toLowerCase());
+         collectionGiorno = database.getCollection(clazzGiorno.getSimpleName().toLowerCase());
+         collectionVersione = database.getCollection(clazzVersione.getSimpleName().toLowerCase());
+         collectionRegione = database.getCollection(clazzRegione.getSimpleName().toLowerCase());
 
         System.out.println("Fine del setup di mongo");
         System.out.println(VUOTA);
@@ -461,11 +463,11 @@ public class GSonTest extends ATest {
     @DisplayName("13 - deserializeLocalDateTime")
     void deserializeLocalDateTime() {
         for (AEMese aeMese : AEMese.values()) {
-            entityBean = gSonService.crea(clazzDelta, aeMese.getNome());
+            entityBean = gSonService.crea(clazzGiorno, aeMese.getNome());
 
             Assert.assertNotNull(entityBean);
             Assert.assertEquals(aeMese.getNome(), entityBean.id);
-            ottenutoDataTime = ((Delta) entityBean).uno;
+            ottenutoDataTime = entityBean.creazione;
             System.out.println(date.getDataOrarioCompleta(ottenutoDataTime));
         }
     }
@@ -475,11 +477,11 @@ public class GSonTest extends ATest {
     @DisplayName("14 - deserializeLocalDate")
     void deserializeLocalDate() {
         for (AEMese aeMese : AEMese.values()) {
-            entityBean = gSonService.crea(clazzDelta, aeMese.getNome());
+            entityBean = gSonService.crea(clazzGiorno, aeMese.getNome());
 
             Assert.assertNotNull(entityBean);
             Assert.assertEquals(aeMese.getNome(), entityBean.id);
-            ottenutoData = ((Delta) entityBean).due;
+            ottenutoDataTime = entityBean.creazione;
             System.out.println(date.getCompleta(ottenutoData));
         }
     }
@@ -489,11 +491,11 @@ public class GSonTest extends ATest {
     @DisplayName("15 - deserializeLocalTime")
     void deserializeLocalTime() {
         for (AEMese aeMese : AEMese.values()) {
-            entityBean = gSonService.crea(clazzDelta, aeMese.getNome());
+            entityBean = gSonService.crea(clazzGiorno, aeMese.getNome());
 
             Assert.assertNotNull(entityBean);
             Assert.assertEquals(aeMese.getNome(), entityBean.id);
-            ottenutoOrario = ((Delta) entityBean).tre;
+            ottenutoDataTime = entityBean.creazione;
             System.out.println(date.getOrario(ottenutoOrario));
         }
     }
@@ -570,7 +572,7 @@ public class GSonTest extends ATest {
     @DisplayName("19 - crea - delta")
     void creaDelta() {
         for (AEMese aeMese : AEMese.values()) {
-            entityBean = gSonService.crea(clazzDelta, aeMese.getNome());
+            entityBean = gSonService.crea(clazzGiorno, aeMese.getNome());
 
             Assert.assertNotNull(entityBean);
             Assert.assertEquals(aeMese.getNome(), entityBean.id);
@@ -578,7 +580,7 @@ public class GSonTest extends ATest {
         }
 
         valueID = "nonEsiste";
-        entityBean = gSonService.crea(clazzDelta, valueID);
+        entityBean = gSonService.crea(clazzGiorno, valueID);
         Assert.assertNull(entityBean);
     }
 

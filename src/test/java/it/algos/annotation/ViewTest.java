@@ -1,4 +1,4 @@
-package it.algos.unit.annotation;
+package it.algos.annotation;
 
 import com.vaadin.flow.component.icon.*;
 import it.algos.simple.backend.packages.*;

@@ -1,4 +1,4 @@
-package it.algos.unit.annotation;
+package it.algos.annotation;
 
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;

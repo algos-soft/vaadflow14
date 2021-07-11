@@ -1,4 +1,4 @@
-package it.algos.unit.annotation;
+package it.algos.annotation;
 
 import com.vaadin.flow.router.*;
 import it.algos.test.*;

@@ -50,6 +50,8 @@ public class WikiApiServiceTest extends ATest {
 
     public static final String CAT_1935 = "Nati nel 1935";
 
+    public static final String CAT_ROMA = "Nati a Roma";
+
     public static final int TOT_CAT_1935 = 1985;
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
@@ -668,7 +670,7 @@ public class WikiApiServiceTest extends ATest {
         inizio = System.currentTimeMillis();
         lista = service.getWrapCat(sorgente);
         assertNotNull(lista);
-//        assertEquals(lista.size(), previstoIntero);
+        //        assertEquals(lista.size(), previstoIntero);
         System.out.println(VUOTA);
         System.out.println(String.format("Categoria: %s", sorgente));
         System.out.println(String.format("Ce ne sono %s", lista.size()));
@@ -775,6 +777,16 @@ public class WikiApiServiceTest extends ATest {
         lista = service.getLongCat(sorgente);
         assertNotNull(lista);
         //        assertEquals(previstoIntero, lista.size());
+        System.out.println(VUOTA);
+        System.out.println(String.format("Categoria: %s", sorgente));
+        System.out.println(String.format("Ce ne sono %s", lista.size()));
+        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
+        System.out.println("Non faccio vedere le pagine perché sono troppe");
+
+        sorgente = CAT_ROMA;
+        inizio = System.currentTimeMillis();
+        lista = service.getLongCat(sorgente);
+        assertNotNull(lista);
         System.out.println(VUOTA);
         System.out.println(String.format("Categoria: %s", sorgente));
         System.out.println(String.format("Ce ne sono %s", lista.size()));

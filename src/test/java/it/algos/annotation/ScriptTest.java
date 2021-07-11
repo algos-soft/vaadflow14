@@ -1,4 +1,4 @@
-package it.algos.unit.annotation;
+package it.algos.annotation;
 
 import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.alfa.*;

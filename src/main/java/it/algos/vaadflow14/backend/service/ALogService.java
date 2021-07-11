@@ -451,6 +451,21 @@ public class ALogService extends AAbstractService {
         info(unErrore.toString(), clazz, methodName);
     }
 
+
+    public void error(AILogType type, Exception unErrore) {
+        error(type, unErrore.getMessage());
+    }
+
+    public void error(AILogType type, String message) {
+        String typeTxt;
+
+        typeTxt = type != null ? type.getTag() : AETypeLog.system.getTag();
+        typeTxt = text.fixSizeQuadre(typeTxt, 10);
+
+        message = typeTxt + DOPPIO_SPAZIO + message;
+        adminLogger.error(message.trim());
+    }
+
     /**
      * Gestisce un log di error <br>
      *
