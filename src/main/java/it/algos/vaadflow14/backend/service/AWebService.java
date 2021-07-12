@@ -116,7 +116,7 @@ public class AWebService extends AAbstractService {
      */
     public AIResult legge(final String urlDomain) {
         AIResult result;
-        String codiceSorgente = VUOTA;
+        String codiceSorgente ;
         URLConnection urlConn;
         String tag = TAG_INIZIALE;
         String tag2 = TAG_INIZIALE_SECURE;

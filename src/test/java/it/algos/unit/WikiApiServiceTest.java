@@ -4,7 +4,7 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wiki.*;
-import org.json.simple.*;
+import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.*;
@@ -117,9 +117,7 @@ public class WikiApiServiceTest extends ATest {
         previsto = "<!DOCTYPE html><html class=\"client-nojs\" lang=\"it\" dir=\"ltr\"><head><meta charset=\"UTF-8\"/><title>Piozzano - Wikipedia</title>";
         previsto2 = ";});</script></body></html>";
 
-        for (int k = 0; k < cicli; k++) {
-            ottenuto = service.leggeHtml(sorgente);
-        }
+        ottenuto = service.leggeHtml(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
@@ -129,104 +127,135 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(String.format("Legge il sorgente di una pagina wiki"));
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println("Risultato restituito in formato html");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio e la fine, perché tutto sarebbe troppo lungo");
 
         System.out.println(VUOTA);
-        System.out.println("Inizio");
+        System.out.print("Inizio");
+        System.out.print(DUE_PUNTI_SPAZIO);
         System.out.println(ottenuto.substring(0, previsto.length()));
         System.out.println(VUOTA);
-        System.out.println("Fine");
+        System.out.print("Fine");
+        System.out.print(DUE_PUNTI_SPAZIO);
         System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
     }
 
-
     @Test
     @Order(2)
-    @DisplayName("2 - legge in formato JSON con una API query di Mediawiki")
-    public void leggeJson() {
+    @DisplayName("2 - legge una pagina in formato JSON con una API action=parse di Mediawiki")
+    public void leggeJSONParse() {
         sorgente = PAGINA_TEST;
-        previsto = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":8956310,\"ns\":2,\"title\":\"Utente:Gac/T17\"";
+        previsto = "{\"parse\":{\"title\":\"Utente:Gac/T17\",\"pageid\":8956310,\"wikitext\":\"Solo test\"}}";
 
-        ottenutoRisultato = service.leggeJson(sorgente);
-        assertTrue(ottenutoRisultato.isValido());
-
-        ottenuto = service.leggeJsonTxt(sorgente);
+        ottenuto = service.leggeJSONParse(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
+        assertEquals(previsto, ottenuto);
 
-        System.out.println("2 - legge in formato JSON con una API query di Mediawiki");
+        System.out.println("2 - legge una pagina in formato JSON con una API action=parse di Mediawiki");
         System.out.println("Legge una pagina wiki con una query API Mediawiki");
+        System.out.println("Legge title, pageid e wikitext");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println("Risultato restituito in formato JSON");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
 
         System.out.println(VUOTA);
-        System.out.println("Query");
-        System.out.println(ottenutoRisultato.getValidationMessage());
+        System.out.print(KEY_MAPPA_DOMAIN + DUE_PUNTI_SPAZIO);
+        System.out.println(WIKI_PARSE + sorgente);
         System.out.println(VUOTA);
-        System.out.println("Risultato completo");
-        System.out.println(ottenutoRisultato.getText());
+        System.out.print("Risultato completo");
+        System.out.print(DUE_PUNTI_SPAZIO);
+        System.out.println(ottenuto);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - legge una mappa in formato JSON con una API action=parse di Mediawiki")
+    public void leggeMappaParse() {
+        Map<String, Object> mappa;
+        sorgente = PAGINA_TEST;
+        previsto = "Utente:Gac/T17";
+        long previstoLungo = 8956310;
+        previsto3 = "Solo test";
+
+        mappa = service.leggeMappaParse(sorgente);
+        assertNotNull(mappa);
+        assertEquals(previsto, mappa.get(KEY_MAPPA_TITLE));
+        assertEquals(previstoLungo, (long) mappa.get(KEY_MAPPA_PAGEID));
+        assertEquals(previsto3, mappa.get(KEY_MAPPA_TEXT));
+
+        System.out.println("3 - legge una mappa in formato JSON con una API action=parse di Mediawiki");
+        System.out.println("Legge una mappa wiki con una query API Mediawiki");
+        System.out.println("Legge title, pageid e wikitext");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println("Risultato restituito in formato JSON");
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+
+        System.out.println(VUOTA);
+        System.out.print(KEY_MAPPA_DOMAIN + DUE_PUNTI_SPAZIO);
+        System.out.println(mappa.get(KEY_MAPPA_DOMAIN));
+        System.out.println(VUOTA);
+        System.out.print(KEY_MAPPA_TITLE + DUE_PUNTI_SPAZIO);
+        System.out.println(mappa.get(KEY_MAPPA_TITLE));
+        System.out.println(VUOTA);
+        System.out.print(KEY_MAPPA_PAGEID + DUE_PUNTI_SPAZIO);
+        System.out.println(mappa.get(KEY_MAPPA_PAGEID));
+        System.out.println(VUOTA);
+        System.out.print(KEY_MAPPA_TEXT + DUE_PUNTI_SPAZIO);
+        System.out.println(mappa.get(KEY_MAPPA_TEXT));
     }
 
 
     @Test
-    @Order(3)
-    @DisplayName("3 - legge in formato visibile con una API action=query di Mediawiki")
-    public void leggeQuery() {
-        System.out.println("3 - legge in formato visibile con una API action=query di Mediawiki");
+    @Order(4)
+    @DisplayName("4 - legge il testo in formato visibile con una API action=parse di Mediawiki")
+    public void legge() {
+        System.out.println("4 - legge il testo in formato visibile con una API action=parse di Mediawiki");
         System.out.println("Legge (come user) una pagina dal server wiki");
-        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
-        System.out.println("Recupera dalla urlRequest tutti i dati della pagina");
+        System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
         System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
-        System.out.println("Elaborazione della urlRequest leggermente più complessa di leggeParse");
-        System.out.println("Tempo di download leggermente più corto di leggeParse");
 
         sorgente = PAGINA_TEST;
         previsto = "Solo test";
 
-        ottenutoRisultato = service.leggeQuery(sorgente);
-        assertTrue(ottenutoRisultato.isValido());
-
-        ottenuto = service.leggeQueryTxt(sorgente);
+        ottenuto = service.legge(sorgente);
         assertNotNull(ottenuto);
         assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.equals(ottenutoRisultato.getText()));
-        assertEquals(previsto, ottenutoRisultato.getText());
+        assertEquals(previsto, ottenuto);
 
         System.out.println(VUOTA);
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
-        System.out.println(String.format("La query è: %s", ottenutoRisultato.getMessage()));
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        System.out.println(ottenutoRisultato.getText());
+        System.out.print(KEY_MAPPA_DOMAIN + DUE_PUNTI_SPAZIO);
+        System.out.println(WIKI_PARSE + sorgente);
+        System.out.print(KEY_MAPPA_TEXT + DUE_PUNTI_SPAZIO);
+        System.out.println(ottenuto);
 
         sorgente = PAGINA_NO_ASCI;
-        previsto = "{{In corso|biografie}}\n{{P|la voce include fonti poco accessibili";
+        previsto = "{{In corso|biografie}}";
 
-        for (int k = 0; k < cicli; k++) {
-            ottenutoRisultato = service.leggeQuery(sorgente);
-        }
-        assertTrue(ottenutoRisultato.isValido());
-        assertTrue(ottenutoRisultato.getText().startsWith(previsto));
+        inizio = System.currentTimeMillis();
+        ottenuto = service.legge(sorgente);
+        assertNotNull(ottenuto);
+        assertTrue(text.isValid(ottenuto));
+        assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(VUOTA);
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
-        System.out.println(String.format("La query è: %s", ottenutoRisultato.getMessage()));
+        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
 
-        System.out.println(VUOTA);
-        System.out.println("Query");
-        System.out.println(ottenutoRisultato.getValidationMessage());
-        System.out.println(VUOTA);
-        System.out.println("Inizio");
-        System.out.println(ottenutoRisultato.getText().substring(0, previsto.length()));
+        System.out.print(KEY_MAPPA_DOMAIN + DUE_PUNTI_SPAZIO);
+        System.out.println(WIKI_PARSE + service.fixWikiTitle(sorgente));
+        System.out.print("Inizio");
+        System.out.print(DUE_PUNTI_SPAZIO);
+        System.out.println(ottenuto.substring(0, previsto.length()));
     }
 
     @Test
-    @Order(4)
-    @DisplayName("4 - estrae una mappa (title,pageid,text) da action=parse di Mediawiki")
-    public void leggeMappaParse() {
+    @Order(5)
+    @DisplayName("5 - legge una mappa in formato JSON con una API action=parse di Mediawiki")
+    public void leggeMappaParse2() {
         sorgente = PAGINA_NO_ASCI;
         previstoIntero = 4;
         Map mappa = service.leggeMappaParse(sorgente);
@@ -234,15 +263,13 @@ public class WikiApiServiceTest extends ATest {
         assertNotNull(mappa);
         assertEquals(previstoIntero, mappa.size());
 
-        System.out.println("4 - Legge (come user) una mappa (title,pageid,text) dal server wiki");
+        System.out.println("5 - legge una mappa in formato JSON con una API action=parse di Mediawiki");
         System.out.println("Legge (come user) una mappa (title,pageid,text) dal server wiki");
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
         System.out.println("Recupera dalla urlRequest title, pageid e wikitext");
         System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
         System.out.println(String.format("La mappa contiene %s elementi", mappa.size()));
-        System.out.println("Elaborazione della urlRequest leggermente meno complessa di leggeQuery");
-        System.out.println("Tempo di download leggermente più lungo di leggeQuery");
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println("Faccio vedere solo l'inizio del wikitext, perché troppo lungo");
 
@@ -254,265 +281,262 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
-    @Test
-    @Order(5)
-    @DisplayName("5 - legge in formato visibile con una API action=parse di Mediawiki")
-    public void leggeParseText() {
-        sorgente = PAGINA_PIOZZANO;
-        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
-        previsto2 = "[[Categoria:Piozzano| ]]";
+    //    @Test
+    //    @Order(5)
+    //    @DisplayName("5 - legge in formato visibile con una API action=parse di Mediawiki")
+    //    public void leggeParseText() {
+    //        sorgente = PAGINA_PIOZZANO;
+    //        previsto = "{{Divisione amministrativa\n" + "|Nome=Piozzano";
+    //        previsto2 = "[[Categoria:Piozzano| ]]";
+    //
+    //        for (int k = 0; k < cicli; k++) {
+    //            ottenuto = service.leggeParseText(sorgente);
+    //        }
+    //        assertNotNull(ottenuto);
+    //        assertTrue(text.isValid(ottenuto));
+    //        assertTrue(ottenuto.startsWith(previsto));
+    //        assertTrue(ottenuto.endsWith(previsto2));
+    //
+    //        System.out.println("5 - legge in formato visibile con una API action=parse di Mediawiki");
+    //        System.out.println("Legge (come user) una pagina dal server wiki");
+    //        System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
+    //        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
+    //        System.out.println("Elaborazione della urlRequest leggermente meno complessa di leggeQuery");
+    //        System.out.println("Tempo di download leggermente più lungo di leggeQuery");
+    //        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+    //        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+    //
+    //        System.out.println(VUOTA);
+    //        System.out.println("Inizio");
+    //        System.out.println(ottenuto.substring(0, previsto.length()));
+    //        System.out.println(VUOTA);
+    //        System.out.println("Fine");
+    //        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
+    //    }
 
-        for (int k = 0; k < cicli; k++) {
-            ottenuto = service.leggeParseText(sorgente);
-        }
-        assertNotNull(ottenuto);
-        assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.startsWith(previsto));
-        assertTrue(ottenuto.endsWith(previsto2));
+    //    @Test
+    //    @Order(6)
+    //    @DisplayName("6 - legge un wrapper di dati con una API action=query di Mediawiki")
+    //    public void leggePage() {
+    //        WrapPage wrap;
+    //        System.out.println("6 - legge un wrapper di dati con una API action=query di Mediawiki");
+    //        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
+    //        System.out.println("La pagina viene richiesta dal TITLE");
+    //        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+    //        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
+    //        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //
+    //        sorgente = PAGINA_INESISTENTE;
+    //        wrap = service.leggePage(sorgente);
+    //        assertNotNull(wrap);
+    //        assertEquals(AETypePage.nonEsiste, wrap.getType());
+    //        assertFalse(wrap.isValida());
+    //        this.printWrap(wrap);
+    //
+    //        sorgente = PAGINA_DISAMBIGUA;
+    //        wrap = service.leggePage(sorgente);
+    //        assertNotNull(wrap);
+    //        assertEquals(AETypePage.disambigua, wrap.getType());
+    //        assertFalse(wrap.isValida());
+    //        this.printWrap(wrap);
+    //
+    //        sorgente = PAGINA_REDIRECT;
+    //        wrap = service.leggePage(sorgente);
+    //        assertNotNull(wrap);
+    //        assertEquals(AETypePage.redirect, wrap.getType());
+    //        assertFalse(wrap.isValida());
+    //        this.printWrap(wrap);
+    //    }
 
-        System.out.println("5 - legge in formato visibile con una API action=parse di Mediawiki");
-        System.out.println("Legge (come user) una pagina dal server wiki");
-        System.out.println("Usa una API con action=parse SENZA bisogno di loggarsi");
-        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
-        System.out.println("Elaborazione della urlRequest leggermente meno complessa di leggeQuery");
-        System.out.println("Tempo di download leggermente più lungo di leggeQuery");
-        System.out.println("Sorgente restituito in formato visibile/leggibile");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+    //    @Test
+    //    @Order(7)
+    //    @DisplayName("7 - legge un wrapper di dati con una API action=query di Mediawiki")
+    //    public void leggePageID() {
+    //        WrapPage wrap;
+    //        System.out.println("7 - legge un wrapper di dati con una API action=query di Mediawiki");
+    //        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
+    //        System.out.println("La pagina viene richiesta dal TITLE");
+    //        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+    //        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
+    //        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //
+    //        sorgente = PAGINA_NO_ASCI;
+    //        wrap = service.leggePage(sorgente, TEMPL_BIO);
+    //        assertNotNull(wrap);
+    //        assertEquals(AETypePage.testoConTmpl, wrap.getType());
+    //        assertTrue(wrap.isValida());
+    //        this.printWrap(wrap);
+    //
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+    //        this.printWrap(wrap);
+    //    }
 
-        System.out.println(VUOTA);
-        System.out.println("Inizio");
-        System.out.println(ottenuto.substring(0, previsto.length()));
-        System.out.println(VUOTA);
-        System.out.println("Fine");
-        System.out.println(ottenuto.substring(ottenuto.length() - previsto2.length()));
-    }
+    //    @Test
+    //    @Order(8)
+    //    @DisplayName("8 - legge un wrapper di dati con una API action=query di Mediawiki")
+    //    public void creaPage() {
+    //        WrapPage wrap;
+    //        System.out.println("8 - legge un wrapper di dati con una API action=query di Mediawiki");
+    //        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
+    //        System.out.println("La pagina viene richiesta dal TITLE");
+    //        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+    //        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
+    //        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //
+    //        sorgente = PAGINA_INESISTENTE;
+    //        wrap = service.leggePage(sorgente, TEMPL_BIO);
+    //        assertNotNull(wrap);
+    //        assertFalse(wrap.isValida());
+    //        //        assertFalse(wrap.isTemplate());
+    //
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+    //        this.printWrap(wrap);
+    //    }
 
-    @Test
-    @Order(6)
-    @DisplayName("6 - legge un wrapper di dati con una API action=query di Mediawiki")
-    public void leggePage() {
-        WrapPage wrap;
-        System.out.println("6 - legge un wrapper di dati con una API action=query di Mediawiki");
-        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
-        System.out.println("La pagina viene richiesta dal TITLE");
-        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
-        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
-        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //    @Test
+    //    @Order(9)
+    //    @DisplayName("9 - legge una serie di wrapper di dati con una API action=query di Mediawiki")
+    //    public void leggePages() {
+    //        sorgente = "8956310|132555|134246|133958|8978579";
+    //        List<WrapPage> wrapLista;
+    //        previstoIntero = 4;
+    //
+    //        wrapLista = service.leggePages(sorgente, "Bio");
+    //        assertNotNull(wrapLista);
+    //        assertEquals(previstoIntero, wrapLista.size());
+    //
+    //        System.out.println("9 - legge un wrapper di dati con una API action=query di Mediawiki");
+    //        System.out.println("Legge (come user) una SERIE di pagine dal server wiki");
+    //        System.out.println("Le pagine vengono richiesta dal PAGEIDs");
+    //        System.out.println(String.format("Le pagine wiki sono: %s", sorgente));
+    //        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", previstoIntero, getTime()));
+    //
+    //        System.out.println(VUOTA);
+    //        System.out.println("Pagine recuperate:");
+    //        for (WrapPage wrap : wrapLista) {
+    //            this.printWrap(wrap);
+    //        }
+    //    }
 
-        sorgente = PAGINA_INESISTENTE;
-        wrap = service.leggePage(sorgente);
-        assertNotNull(wrap);
-        assertEquals(AETypePage.nonEsiste, wrap.getType());
-        assertFalse(wrap.isValida());
-        this.printWrap(wrap);
+    //    @Test
+    //    @Order(10)
+    //    @DisplayName("10 - estrae un array di 'pages' da una query")
+    //    public void getArrayPagine() {
+    //        sorgente = PAGINA_TEST;
+    //        JSONArray jsonArray = null;
+    //        previsto = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":8956310,\"ns\":2,\"title\":\"Utente:Gac/T17\",\"revisions\":[{\"revid\":120519028,\"parentid\":0,\"timestamp\":\"2021-05-08T16:44:17Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Solo test\"}}}]}]}}";
+    //        previstoIntero = 1;
+    //
+    //        ottenutoRisultato = service.leggeJson(sorgente);
+    //        assertTrue(ottenutoRisultato.isValido());
+    //        ottenuto = ottenutoRisultato.getText();
+    //        assertTrue(ottenuto.equals(previsto));
+    //
+    //        System.out.println("10 - estrae un array di 'pages' da una query");
+    //        System.out.println(VUOTA);
+    //        System.out.println("Query");
+    //        System.out.println(ottenutoRisultato.getValidationMessage());
+    //        System.out.println(VUOTA);
+    //        System.out.println("Risposta json");
+    //        System.out.println(ottenutoRisultato.getText());
+    //
+    //        jsonArray = service.getArrayPagine(ottenuto);
+    //        assertNotNull(jsonArray);
+    //        assertEquals(previstoIntero, jsonArray.size());
+    //        System.out.println("Legge il contenuto in formato JSON di una pagina wiki");
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+    //        System.out.println(VUOTA);
+    //        System.out.println(ottenuto);
+    //    }
 
-        sorgente = PAGINA_DISAMBIGUA;
-        wrap = service.leggePage(sorgente);
-        assertNotNull(wrap);
-        assertEquals(AETypePage.disambigua, wrap.getType());
-        assertFalse(wrap.isValida());
-        this.printWrap(wrap);
+    //    @Test
+    //    @Order(11)
+    //    @DisplayName("11 - estrae un singolo oggetto JSON da una query")
+    //    public void getObjectPage() {
+    //        sorgente = PAGINA_TEST;
+    //        JSONObject jsonObject = null;
+    //        previstoIntero = 1;
+    //
+    //        ottenuto = service.leggeJsonTxt(sorgente);
+    //        assertTrue(text.isValid(ottenuto));
+    //        jsonObject = service.getObjectPage(ottenuto);
+    //        assertNotNull(jsonObject);
+    //        System.out.println("estrae un singolo oggetto JSON da una query");
+    //        System.out.println(VUOTA);
+    //        System.out.println(jsonObject);
+    //    }
 
-        sorgente = PAGINA_REDIRECT;
-        wrap = service.leggePage(sorgente);
-        assertNotNull(wrap);
-        assertEquals(AETypePage.redirect, wrap.getType());
-        assertFalse(wrap.isValida());
-        this.printWrap(wrap);
-    }
+    //    @Test
+    //    @Order(12)
+    //    @DisplayName("12 - crea una mappa da un singolo oggetto JSON")
+    //    public void getMappaJSON() {
+    //        sorgente = PAGINA_TEST;
+    //        JSONObject jsonObject = null;
+    //        previstoIntero = 7;
+    //        sorgente2 = "content";
+    //
+    //        ottenuto = service.leggeJsonTxt(sorgente);
+    //        jsonObject = service.getObjectPage(ottenuto);
+    //        mappa = service.getMappaJSON(jsonObject);
+    //        assertNotNull(mappa);
+    //        assertEquals(previstoIntero, mappa.size());
+    //        ottenuto = (String) mappa.get(sorgente2);
+    //        assertTrue(text.isValid(ottenuto));
+    //        printMappaPar(mappa);
+    //    }
 
-    @Test
-    @Order(7)
-    @DisplayName("7 - legge un wrapper di dati con una API action=query di Mediawiki")
-    public void leggePageID() {
-        WrapPage wrap;
-        System.out.println("7 - legge un wrapper di dati con una API action=query di Mediawiki");
-        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
-        System.out.println("La pagina viene richiesta dal TITLE");
-        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
-        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
-        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //    @Test
+    //    @Order(13)
+    //    @DisplayName("13 - crea una wikiPage da una mappa")
+    //    public void getWikiPageFromMappa() {
+    //        sorgente = PAGINA_TEST;
+    //        JSONObject jsonObject = null;
+    //        WikiPage wikiPage;
+    //        sorgente2 = "content";
+    //
+    //        ottenuto = service.leggeJsonTxt(sorgente);
+    //        jsonObject = service.getObjectPage(ottenuto);
+    //        mappa = service.getMappaJSON(jsonObject);
+    //        assertNotNull(mappa);
+    //        wikiPage = service.getWikiPageFromMappa(mappa);
+    //        assertNotNull(wikiPage);
+    //        ottenuto = wikiPage.getContent();
+    //        assertTrue(text.isValid(ottenuto));
+    //        this.printWikiPage(wikiPage);
+    //    }
 
-        sorgente = PAGINA_NO_ASCI;
-        wrap = service.leggePage(sorgente, TEMPL_BIO);
-        assertNotNull(wrap);
-        assertEquals(AETypePage.testoConTmpl, wrap.getType());
-        assertTrue(wrap.isValida());
-        this.printWrap(wrap);
+    //    @Test
+    //    @Order(14)
+    //    @DisplayName("14 - crea una wikiPage in risposta ad una query")
+    //    public void getWikiPageFromTitle() {
+    //        sorgente = PAGINA_TEST;
+    //        WikiPage wikiPage;
+    //        sorgente2 = "content";
+    //
+    //        wikiPage = service.getWikiPageFromTitle(sorgente);
+    //        assertNotNull(wikiPage);
+    //        ottenuto = wikiPage.getContent();
+    //        assertTrue(text.isValid(ottenuto));
+    //        this.printWikiPage(wikiPage);
+    //    }
 
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        this.printWrap(wrap);
-    }
-
-    @Test
-    @Order(8)
-    @DisplayName("8 - legge un wrapper di dati con una API action=query di Mediawiki")
-    public void creaPage() {
-        WrapPage wrap;
-        System.out.println("8 - legge un wrapper di dati con una API action=query di Mediawiki");
-        System.out.println("Legge (come user) una SINGOLA pagina dal server wiki");
-        System.out.println("La pagina viene richiesta dal TITLE");
-        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
-        System.out.println("Estrae il testo in linguaggio wiki visibile/leggibile");
-        System.out.println("Sorgente restituito in formato visibile/leggibile");
-
-        sorgente = PAGINA_INESISTENTE;
-        wrap = service.leggePage(sorgente, TEMPL_BIO);
-        assertNotNull(wrap);
-        assertFalse(wrap.isValida());
-        //        assertFalse(wrap.isTemplate());
-
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        this.printWrap(wrap);
-    }
-
-    @Test
-    @Order(9)
-    @DisplayName("9 - legge una serie di wrapper di dati con una API action=query di Mediawiki")
-    public void leggePages() {
-        sorgente = "8956310|132555|134246|133958|8978579";
-        List<WrapPage> wrapLista;
-        previstoIntero = 4;
-
-        wrapLista = service.leggePages(sorgente, "Bio");
-        assertNotNull(wrapLista);
-        assertEquals(previstoIntero, wrapLista.size());
-
-        System.out.println("9 - legge un wrapper di dati con una API action=query di Mediawiki");
-        System.out.println("Legge (come user) una SERIE di pagine dal server wiki");
-        System.out.println("Le pagine vengono richiesta dal PAGEIDs");
-        System.out.println(String.format("Le pagine wiki sono: %s", sorgente));
-        System.out.println("Usa una API con action=query SENZA bisogno di loggarsi");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", previstoIntero, getTime()));
-
-        System.out.println(VUOTA);
-        System.out.println("Pagine recuperate:");
-        for (WrapPage wrap : wrapLista) {
-            this.printWrap(wrap);
-        }
-    }
-
-
-    @Test
-    @Order(10)
-    @DisplayName("10 - estrae un array di 'pages' da una query")
-    public void getArrayPagine() {
-        sorgente = PAGINA_TEST;
-        JSONArray jsonArray = null;
-        previsto = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":8956310,\"ns\":2,\"title\":\"Utente:Gac/T17\",\"revisions\":[{\"revid\":120519028,\"parentid\":0,\"timestamp\":\"2021-05-08T16:44:17Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Solo test\"}}}]}]}}";
-        previstoIntero = 1;
-
-        ottenutoRisultato = service.leggeJson(sorgente);
-        assertTrue(ottenutoRisultato.isValido());
-        ottenuto = ottenutoRisultato.getText();
-        assertTrue(ottenuto.equals(previsto));
-
-        System.out.println("10 - estrae un array di 'pages' da una query");
-        System.out.println(VUOTA);
-        System.out.println("Query");
-        System.out.println(ottenutoRisultato.getValidationMessage());
-        System.out.println(VUOTA);
-        System.out.println("Risposta json");
-        System.out.println(ottenutoRisultato.getText());
-
-        jsonArray = service.getArrayPagine(ottenuto);
-        assertNotNull(jsonArray);
-        assertEquals(previstoIntero, jsonArray.size());
-        System.out.println("Legge il contenuto in formato JSON di una pagina wiki");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-    }
-
-
-    @Test
-    @Order(11)
-    @DisplayName("11 - estrae un singolo oggetto JSON da una query")
-    public void getObjectPage() {
-        sorgente = PAGINA_TEST;
-        JSONObject jsonObject = null;
-        previstoIntero = 1;
-
-        ottenuto = service.leggeJsonTxt(sorgente);
-        assertTrue(text.isValid(ottenuto));
-        jsonObject = service.getObjectPage(ottenuto);
-        assertNotNull(jsonObject);
-        System.out.println("estrae un singolo oggetto JSON da una query");
-        System.out.println(VUOTA);
-        System.out.println(jsonObject);
-    }
-
-    @Test
-    @Order(12)
-    @DisplayName("12 - crea una mappa da un singolo oggetto JSON")
-    public void getMappaJSON() {
-        sorgente = PAGINA_TEST;
-        JSONObject jsonObject = null;
-        previstoIntero = 7;
-        sorgente2 = "content";
-
-        ottenuto = service.leggeJsonTxt(sorgente);
-        jsonObject = service.getObjectPage(ottenuto);
-        mappa = service.getMappaJSON(jsonObject);
-        assertNotNull(mappa);
-        assertEquals(previstoIntero, mappa.size());
-        ottenuto = (String) mappa.get(sorgente2);
-        assertTrue(text.isValid(ottenuto));
-        printMappaPar(mappa);
-    }
-
-    @Test
-    @Order(13)
-    @DisplayName("13 - crea una wikiPage da una mappa")
-    public void getWikiPageFromMappa() {
-        sorgente = PAGINA_TEST;
-        JSONObject jsonObject = null;
-        WikiPage wikiPage;
-        sorgente2 = "content";
-
-        ottenuto = service.leggeJsonTxt(sorgente);
-        jsonObject = service.getObjectPage(ottenuto);
-        mappa = service.getMappaJSON(jsonObject);
-        assertNotNull(mappa);
-        wikiPage = service.getWikiPageFromMappa(mappa);
-        assertNotNull(wikiPage);
-        ottenuto = wikiPage.getContent();
-        assertTrue(text.isValid(ottenuto));
-        this.printWikiPage(wikiPage);
-    }
-
-
-    @Test
-    @Order(14)
-    @DisplayName("14 - crea una wikiPage in risposta ad una query")
-    public void getWikiPageFromTitle() {
-        sorgente = PAGINA_TEST;
-        WikiPage wikiPage;
-        sorgente2 = "content";
-
-        wikiPage = service.getWikiPageFromTitle(sorgente);
-        assertNotNull(wikiPage);
-        ottenuto = wikiPage.getContent();
-        assertTrue(text.isValid(ottenuto));
-        this.printWikiPage(wikiPage);
-    }
-
-    @Test
-    @Order(15)
-    @DisplayName("15 - Legge il testo wiki della pagina wiki passando da Page")
-    public void getContent() {
-        sorgente = PAGINA_TEST;
-
-        ottenuto = service.getContent(sorgente);
-        assertTrue(text.isValid(ottenuto));
-        System.out.println("Legge il testo wiki della pagina wiki.");
-        System.out.println("Usa le API base SENZA loggarsi.");
-        System.out.println("Sorgente restituito in formato visibile/leggibile");
-        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-    }
+    //    @Test
+    //    @Order(15)
+    //    @DisplayName("15 - Legge il testo wiki della pagina wiki passando da Page")
+    //    public void getContent() {
+    //        sorgente = PAGINA_TEST;
+    //
+    //        ottenuto = service.getContent(sorgente);
+    //        assertTrue(text.isValid(ottenuto));
+    //        System.out.println("Legge il testo wiki della pagina wiki.");
+    //        System.out.println("Usa le API base SENZA loggarsi.");
+    //        System.out.println("Sorgente restituito in formato visibile/leggibile");
+    //        System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
+    //        System.out.println(VUOTA);
+    //        System.out.println(ottenuto);
+    //    }
 
     @Test
     @Order(16)
@@ -528,38 +552,62 @@ public class WikiApiServiceTest extends ATest {
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println("Legge una tabella wiki completa");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println("REGIONE");
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println(VUOTA);
         System.out.println(ottenuto);
 
         //--provincia
         previsto2 = "| <code>IT-VE</code>\n| {{IT-VE}}\n| [[Veneto]] (<code>34</code>)\n|}";
-        try {
-            ottenuto = service.leggeTable(sorgente, 2);
-        } catch (Exception unErrore) {
-        }
+        inizio = System.currentTimeMillis();
+        ottenuto = service.leggeTable(sorgente, 2);
 
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
         System.out.println(VUOTA);
-        System.out.println("Legge una tabella wiki completa");
         System.out.println(VUOTA);
-        System.out.println(ottenuto);
+        System.out.println("Legge una tabella wiki completa");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println("PROVINCIA");
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println(VUOTA);
+        System.out.print("Inizio");
+        System.out.print(DUE_PUNTI_SPAZIO);
+        System.out.println(ottenuto.substring(0, previsto.length()));
     }
 
     @Test
     @Order(17)
-    @DisplayName("17 - legge (come user) un modulo")
+    @DisplayName("17 - legge (come user) un modulo wiki")
     public void leggeModulo() {
         sorgente = "Modulo:Bio/Plurale_attività";
         previsto = "{\n[\"abate\"] =";
         previsto2 = "[\"zoologo\"] = \"zoologi\"\n}";
+        int ini = 0;
+        int end;
 
         ottenuto = service.leggeModulo(sorgente);
         assertTrue(text.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
         assertTrue(ottenuto.endsWith(previsto2));
-        System.out.println("Legge un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge un modulo wiki completo");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+        System.out.println("Faccio vedere solo l'inizio e la fine, perché troppo lungo");
+        System.out.println(VUOTA);
+        System.out.print("Inizio");
+        System.out.print(DUE_PUNTI_SPAZIO);
+        end = previsto.length();
+        System.out.println(ottenuto.substring(ini, end));
+        System.out.println(VUOTA);
+        System.out.print("Fine");
+        System.out.print(DUE_PUNTI_SPAZIO);
+        ini = ottenuto.length() - previsto2.length();
+        end = ottenuto.length();
+        System.out.println(ottenuto.substring(ini, end));
     }
 
 
@@ -567,7 +615,7 @@ public class WikiApiServiceTest extends ATest {
     @Order(18)
     @DisplayName("18 - legge (come user) la mappa del modulo Attività")
     public void leggeMappaModulo() {
-        sorgente = "Modulo:Bio/Plurale_attività";
+        sorgente = "Modulo:Bio/Plurale attività";
         sorgente2 = "abate";
         sorgente3 = "badessa";
         previsto = "abati e badesse";
@@ -580,7 +628,21 @@ public class WikiApiServiceTest extends ATest {
         ottenuto = mappaOttenuta.get(sorgente3);
         assertTrue(text.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
-        System.out.println("Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge la mappa di un modulo wiki");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println(VUOTA);
+        System.out.println("Mappa");
+        System.out.print(sorgente2 + FORWARD);
+        System.out.println(mappaOttenuta.get(sorgente2));
+        System.out.print(sorgente3 + FORWARD);
+        System.out.println(mappaOttenuta.get(sorgente3));
+        System.out.print("allevatore" + FORWARD);
+        System.out.println(mappaOttenuta.get("allevatore"));
+        System.out.print("allevatrice" + FORWARD);
+        System.out.println(mappaOttenuta.get("allevatrice"));
+
     }
 
 
@@ -590,6 +652,7 @@ public class WikiApiServiceTest extends ATest {
     public void leggeMappaModulo2() {
         sorgente = "Modulo:Bio/Plurale_attività_genere";
         sorgente2 = "abate";
+        sorgente3 = "badessa";
         previsto = "\"abati\",\"M\"";
 
         mappaOttenuta = service.leggeMappaModulo(sorgente);
@@ -597,311 +660,63 @@ public class WikiApiServiceTest extends ATest {
         ottenuto = mappaOttenuta.get(sorgente2);
         assertTrue(text.isValid(ottenuto));
         assertEquals(ottenuto, previsto);
-        System.out.println("Legge la mappa di un modulo wiki. Non lo faccio vedere perché troppo lungo");
+        System.out.println("Legge la mappa di un modulo wiki");
+        System.out.println(String.format("La pagina wiki è: %s", sorgente));
+        System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
+        System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
+        System.out.println(VUOTA);
+        System.out.println("Mappa");
+        System.out.print(sorgente2 + FORWARD);
+        System.out.println(mappaOttenuta.get(sorgente2));
+        System.out.print(sorgente3 + FORWARD);
+        System.out.println(mappaOttenuta.get(sorgente3));
+        System.out.print("accademica" + FORWARD);
+        System.out.println(mappaOttenuta.get("accademica"));
+        System.out.print("accademico" + FORWARD);
+        System.out.println(mappaOttenuta.get("accademico"));
+        System.out.print("alchimista" + FORWARD);
+        System.out.println(mappaOttenuta.get("alchimista"));
+        System.out.print("alpinista" + FORWARD);
+        System.out.println(mappaOttenuta.get("alpinista"));
     }
 
-    @Test
-    @Order(20)
-    @DisplayName("20 - legge (come user) un template")
-    public void leggeTmpl() {
-        sorgente = PAGINA_PIOZZANO;
-        previsto = VUOTA;
-        sorgente2 = "Divisione amministrativa";
+    //    @Test
+    //    @Order(20)
+    //    @DisplayName("20 - legge (come user) un template")
+    //    public void leggeTmpl() {
+    //        sorgente = PAGINA_PIOZZANO;
+    //        previsto = VUOTA;
+    //        sorgente2 = "Divisione amministrativa";
+    //
+    //        ottenuto = service.leggeTmpl(VUOTA, VUOTA);
+    //        assertTrue(text.isEmpty(ottenuto));
+    //        assertEquals(ottenuto, previsto);
+    //
+    //        ottenuto = service.leggeTmpl(sorgente, VUOTA);
+    //        assertTrue(text.isEmpty(ottenuto));
+    //        assertEquals(ottenuto, previsto);
+    //
+    //        previsto = "{{Divisione amministrativa";
+    //        ottenuto = service.leggeTmpl(sorgente, sorgente2);
+    //        assertTrue(text.isValid(ottenuto));
+    //        assertTrue(ottenuto.startsWith(previsto));
+    //        System.out.println("Legge un template amministrativo");
+    //        System.out.println(VUOTA);
+    //        System.out.println(ottenuto);
+    //
+    //        sorgente = "Guido Rossi";
+    //        sorgente2 = "Bio";
+    //        previsto = "{{Bio";
+    //        ottenuto = service.leggeTmpl(sorgente, sorgente2);
+    //        assertTrue(text.isValid(ottenuto));
+    //        assertTrue(ottenuto.startsWith(previsto));
+    //        System.out.println(VUOTA);
+    //        System.out.println(VUOTA);
+    //        System.out.println("Legge un template bio");
+    //        System.out.println(VUOTA);
+    //        System.out.println(ottenuto);
+    //    }
 
-        ottenuto = service.leggeTmpl(VUOTA, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
-        assertEquals(ottenuto, previsto);
-
-        ottenuto = service.leggeTmpl(sorgente, VUOTA);
-        assertTrue(text.isEmpty(ottenuto));
-        assertEquals(ottenuto, previsto);
-
-        previsto = "{{Divisione amministrativa";
-        ottenuto = service.leggeTmpl(sorgente, sorgente2);
-        assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.startsWith(previsto));
-        System.out.println("Legge un template amministrativo");
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-
-        sorgente = "Guido Rossi";
-        sorgente2 = "Bio";
-        previsto = "{{Bio";
-        ottenuto = service.leggeTmpl(sorgente, sorgente2);
-        assertTrue(text.isValid(ottenuto));
-        assertTrue(ottenuto.startsWith(previsto));
-        System.out.println(VUOTA);
-        System.out.println(VUOTA);
-        System.out.println("Legge un template bio");
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
-    }
-
-    @Test
-    @Order(21)
-    @DisplayName("21 - legge una lista di WrapCat (come user) di una categoria")
-    public void leggeCategoria() {
-        List<WrapCat> lista;
-        System.out.println("21 - legge una lista di WrapCat (come user) di una categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        lista = service.getWrapCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Nessuna pagina"));
-
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        printCat(lista);
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_CAT_1935;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente);
-        assertNotNull(lista);
-        //        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        System.out.println("Non faccio vedere le pagine perché sono troppe");
-    }
-
-
-    @Test
-    @Order(22)
-    @DisplayName("22 - WrapCat (come user) pages/subcat/files di una categoria")
-    public void leggeCategoria2() {
-        List<WrapCat> lista;
-        AECatType typeCat;
-        System.out.println("22 - legge (come user) pages/subcat/files di una categoria");
-
-        sorgente = CAT_ROMANI;
-
-        typeCat = AECatType.file;
-        previstoIntero = 0;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente, typeCat);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
-        System.out.println(String.format("Non ce ne sono"));
-
-        typeCat = AECatType.subcat;
-        previstoIntero = 60;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente, typeCat);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-
-        typeCat = AECatType.page;
-        previstoIntero = 78;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente, typeCat);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-
-        previstoIntero = 78;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s Ricerca generica che automaticamente cerca solo %s", sorgente, typeCat.getTag()));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-
-        typeCat = AECatType.all;
-        previstoIntero = 138;
-        inizio = System.currentTimeMillis();
-        lista = service.getWrapCat(sorgente, typeCat);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s Ricerca di: %s", sorgente, typeCat.getTag()));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-    }
-
-    @Test
-    @Order(23)
-    @DisplayName("23 - legge una lista di pageid (come user) di una categoria")
-    public void getLongCat() {
-        List<Long> lista;
-        System.out.println("23 - legge una lista di pageid (come user) di una categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        lista = service.getLongCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Nessuna pagina"));
-
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        inizio = System.currentTimeMillis();
-        lista = service.getLongCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(previstoIntero, lista.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        printLong(lista);
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_CAT_1935;
-        inizio = System.currentTimeMillis();
-        lista = service.getLongCat(sorgente);
-        assertNotNull(lista);
-        //        assertEquals(previstoIntero, lista.size());
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        System.out.println("Non faccio vedere le pagine perché sono troppe");
-
-        sorgente = CAT_ROMA;
-        inizio = System.currentTimeMillis();
-        lista = service.getLongCat(sorgente);
-        assertNotNull(lista);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        System.out.println("Non faccio vedere le pagine perché sono troppe");
-    }
-
-
-    @Test
-    @Order(24)
-    @DisplayName("24 - legge una stringa di pageid (come user) di una categoria")
-    public void getLongCat2() {
-        String striscia;
-        System.out.println("24 - legge una stringa di pageid (come user) di una categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previsto = VUOTA;
-        striscia = service.getPageidsCat(sorgente);
-        assertFalse(text.isValid(striscia));
-        assertEquals(previsto, ottenuto);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Nessuna pagina"));
-
-        sorgente = CAT_1435;
-        inizio = System.currentTimeMillis();
-        striscia = service.getPageidsCat(sorgente);
-        assertTrue(text.isValid(striscia));
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono alcune"));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        System.out.println(striscia);
-
-        //        sorgente = CAT_1935;
-        //        previstoIntero = 1987;
-        //        inizio = System.currentTimeMillis();
-        //        lista = service.getLongCat(sorgente);
-        //        assertNotNull(lista);
-        //        assertEquals(lista.size(), previstoIntero);
-        //        System.out.println(VUOTA);
-        //        System.out.println(String.format("Categoria: %s", sorgente));
-        //        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        //        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        //        System.out.println("Non faccio vedere le pagine perché sono troppe");
-    }
-
-    @Test
-    @Order(25)
-    @DisplayName("25 - legge titles (come user) una categoria")
-    public void getTitleCat() {
-        List<String> lista;
-        System.out.println("25 - legge titles (come user) una categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        lista = service.getTitleCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Nessuna pagina"));
-
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        inizio = System.currentTimeMillis();
-        lista = service.getTitleCat(sorgente);
-        assertNotNull(lista);
-        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        printTitle(lista);
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_CAT_1935;
-        inizio = System.currentTimeMillis();
-        lista = service.getTitleCat(sorgente);
-        assertNotNull(lista);
-        //        assertEquals(lista.size(), previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Categoria: %s", sorgente));
-        System.out.println(String.format("Ce ne sono %s", lista.size()));
-        System.out.println(String.format("Tempo impiegato per leggere la categoria: %s", getTime()));
-        System.out.println("Non faccio vedere le pagine perché sono troppe");
-    }
-
-    @Test
-    @Order(26)
-    @DisplayName("26 - legge il numero totale di pagine di una categoria")
-    public void getTotaleCategoria() {
-        System.out.println("26 - legge il numero totale di pagine di una categoria");
-
-        sorgente = CAT_INESISTENTE;
-        previstoIntero = 0;
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        assertEquals(ottenutoIntero, previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria: '%s' non contiene nessuna pagina", sorgente));
-
-        sorgente = CAT_1435;
-        previstoIntero = 33;
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        //        assertEquals(ottenutoIntero, previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria: '%s' contiene %d pagine", sorgente, ottenutoIntero));
-
-        sorgente = CAT_1935;
-        previstoIntero = TOT_CAT_1935;
-        ottenutoIntero = service.getTotaleCategoria(sorgente);
-        //        assertEquals(ottenutoIntero, previstoIntero);
-        System.out.println(VUOTA);
-        System.out.println(String.format("La categoria: '%s' contiene %d pagine", sorgente, ottenutoIntero));
-    }
 
     //    @Test
     @Order(5)
@@ -1636,13 +1451,6 @@ public class WikiApiServiceTest extends ATest {
         System.out.println("content" + SEP + wikiPage.getContent());
     }
 
-    private void printCat(List<WrapCat> lista) {
-        for (WrapCat wrap : lista) {
-            System.out.print(wrap.getPageid());
-            System.out.print(SEP);
-            System.out.println(wrap.getTitle());
-        }
-    }
 
     private void printLong(List<Long> lista) {
         for (Long pageid : lista) {
