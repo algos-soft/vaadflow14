@@ -14,6 +14,7 @@ import java.net.*;
 import java.sql.*;
 import java.util.Date;
 import java.util.*;
+import java.util.regex.*;
 
 
 /**
@@ -64,6 +65,8 @@ public class AWikiApiService extends AAbstractService {
     public static final String RESULT = "result";
 
     public static final String SUCCESS = "Success";
+
+    public static final String ERROR = "error";
 
     public static final String LOGIN_TOKEN = "logintoken";
 
@@ -701,6 +704,7 @@ public class AWikiApiService extends AAbstractService {
         }
 
         if (array.isAllValid(lista)) {
+            lista = lista.subList(rigaIniziale - 1, lista.size());
             colonna = new ArrayList<>();
             for (List<String> riga : lista) {
                 if (riga.size() == 1 || (riga.size() == 2 && !riga.get(0).startsWith(GRAFFA_END))) {
@@ -1079,6 +1083,7 @@ public class AWikiApiService extends AAbstractService {
     /**
      * Legge (come user) una pagina dal server wiki <br>
      * Usa una API con action=parse SENZA bisogno di loggarsi <br>
+     * Se la pagina è un redirect, legge la pagina 'puntata' <br>
      * Recupera dalla urlRequest title, pageid e wikitext <br>
      * Estrae il wikitext in linguaggio wiki visibile <br>
      *
@@ -1091,16 +1096,41 @@ public class AWikiApiService extends AAbstractService {
         String webUrl = WIKI_PARSE + fixWikiTitle(wikiTitleGrezzo);
         String rispostaAPI = web.leggeWebTxt(webUrl);
         JSONObject jsonRisposta = (JSONObject) JSONValue.parse(rispostaAPI);
-        JSONObject jsonParse = (JSONObject) jsonRisposta.get(KEY_MAPPA_PARSE);
 
-        mappa.put(KEY_MAPPA_DOMAIN, webUrl);
-        mappa.put(KEY_MAPPA_TITLE, jsonParse.get(KEY_MAPPA_TITLE));
-        mappa.put(KEY_MAPPA_PAGEID, jsonParse.get(KEY_MAPPA_PAGEID));
-        mappa.put(KEY_MAPPA_TEXT, jsonParse.get(KEY_MAPPA_TEXT));
+        if (jsonValida(jsonRisposta)) {
+            JSONObject jsonParse = (JSONObject) jsonRisposta.get(KEY_MAPPA_PARSE);
+            mappa.put(KEY_MAPPA_DOMAIN, webUrl);
+            mappa.put(KEY_MAPPA_TITLE, jsonParse.get(KEY_MAPPA_TITLE));
+            mappa.put(KEY_MAPPA_PAGEID, jsonParse.get(KEY_MAPPA_PAGEID));
+            mappa.put(KEY_MAPPA_TEXT, jsonParse.get(KEY_MAPPA_TEXT));
+        }
+
+        if (isRedirect((String) mappa.get(KEY_MAPPA_TEXT))) {
+            mappa = leggeMappaParse(getRedirect((String) mappa.get(KEY_MAPPA_TEXT)));
+        }
 
         return mappa;
     }
 
+    /**
+     * Estrae il wikiTitle del #redirect contenuto in una pagina <br>
+     *
+     * @param paginaConRedirect contenuto della pagina wiki con #redirect
+     *
+     * @return wikiTitleGrezzo del #redirect
+     */
+    public String getRedirect(final String paginaConRedirect) {
+        int ini = 0;
+        int end = 0;
+        ini = paginaConRedirect.indexOf(DOPPIE_QUADRE_INI) + DOPPIE_QUADRE_INI.length();
+        end = paginaConRedirect.indexOf(DOPPIE_QUADRE_END, ini);
+
+        return paginaConRedirect.substring(ini, end);
+    }
+
+    public boolean jsonValida(final JSONObject jsonRisposta) {
+        return jsonRisposta.get(ERROR) == null;
+    }
 
     /**
      * Legge (come user) una pagina dal server wiki <br>
@@ -1134,6 +1164,127 @@ public class AWikiApiService extends AAbstractService {
         }
 
         return wikiTitle;
+    }
+
+    /**
+     * Legge il testo di un template da una voce wiki <br>
+     * Esamina il PRIMO template che trova <br>
+     * Gli estremi sono COMPRESI <br>
+     * <p>
+     * Recupera il tag iniziale con o senza ''Template''
+     * Recupera il tag iniziale con o senza primo carattere maiuscolo
+     * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
+     * Controlla che non esistano doppie graffe dispari all'interno del template
+     *
+     * @param wikiTitle della pagina wiki
+     *
+     * @return template completo di doppie graffe iniziali e finali
+     */
+    public String leggeTmpl(final String wikiTitle, final String tag) {
+        String testoPagina = this.legge(wikiTitle);
+        return estraeTmpl(testoPagina, tag);
+    }
+
+    /**
+     * Estrae il testo di un template dal testo completo di una voce wiki <br>
+     * Esamina il PRIMO template che trova <br>
+     * Gli estremi sono COMPRESI <br>
+     * <p>
+     * Recupera il tag iniziale con o senza ''Template''
+     * Recupera il tag iniziale con o senza primo carattere maiuscolo
+     * Recupera il tag finale di chiusura con o senza ritorno a capo precedente
+     * Controlla che non esistano doppie graffe dispari all'interno del template
+     *
+     * @return template completo di doppie graffe iniziali e finali
+     */
+    public String estraeTmpl(final String testoPagina, String tag) {
+        String templateTxt = VUOTA;
+        boolean continua = false;
+        String patternTxt = "";
+        Pattern patttern = null;
+        Matcher matcher = null;
+        int posIni;
+        int posEnd;
+        String tagIniTemplate = VUOTA;
+
+        // controllo di congruità
+        if (text.isValid(testoPagina) && text.isValid(tag)) {
+            // patch per nome template minuscolo o maiuscolo
+            // deve terminare con 'aCapo' oppure 'return' oppure 'tab' oppure '|'(pipe) oppure 'spazio'(u0020)
+            if (tag.equals("Bio")) {
+                tag = "[Bb]io[\n\r\t\\|\u0020(grafia)]";
+            }
+
+            // Create a Pattern text
+            patternTxt = "\\{\\{(Template:)?" + tag;
+
+            // Create a Pattern object
+            patttern = Pattern.compile(patternTxt);
+
+            // Now create matcher object.
+            matcher = patttern.matcher(testoPagina);
+            if (matcher.find() && matcher.groupCount() > 0) {
+                tagIniTemplate = matcher.group(0);
+            }
+
+            // controlla se esiste una doppia graffa di chiusura
+            // non si sa mai
+            if (!tagIniTemplate.equals("")) {
+                posIni = testoPagina.indexOf(tagIniTemplate);
+                posEnd = testoPagina.indexOf(DOPPIE_GRAFFE_END, posIni);
+                templateTxt = testoPagina.substring(posIni);
+                if (posEnd != -1) {
+                    continua = true;
+                }
+            }
+
+            // cerco la prima doppia graffa che abbia all'interno
+            // lo stesso numero di aperture e chiusure
+            // spazzola il testo fino a pareggiare le graffe
+            if (continua) {
+                templateTxt = chiudeTmpl(templateTxt);
+            }
+        }
+
+        return templateTxt;
+    }
+
+    /**
+     * Chiude il template <br>
+     * <p>
+     * Il testo inizia col template, ma prosegue (forse) anche oltre <br>
+     * Cerco la prima doppia graffa che abbia all'interno lo stesso numero di aperture e chiusure <br>
+     * Spazzola il testo fino a pareggiare le graffe <br>
+     * Se non riesce a pareggiare le graffe, ritorna una stringa nulla <br>
+     *
+     * @param templateTxt da spazzolare
+     *
+     * @return template completo
+     */
+    public String chiudeTmpl(String templateTxt) {
+        String templateOut;
+        int posIni = 0;
+        int posEnd = 0;
+        boolean pari = false;
+
+        templateOut = templateTxt.substring(posIni, posEnd + DOPPIE_GRAFFE_END.length()).trim();
+
+        while (!pari) {
+            posEnd = templateTxt.indexOf(DOPPIE_GRAFFE_END, posEnd + DOPPIE_GRAFFE_END.length());
+            if (posEnd != -1) {
+                templateOut = templateTxt.substring(posIni, posEnd + DOPPIE_GRAFFE_END.length()).trim();
+                pari = html.isPariTag(templateOut, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+            }
+            else {
+                break;
+            }
+        }
+
+        if (!pari) {
+            templateOut = VUOTA;
+        }
+
+        return templateOut;
     }
 
     //    /**
@@ -1930,5 +2081,35 @@ public class AWikiApiService extends AAbstractService {
         UI.getCurrent().getPage().executeJavaScript("window.open(" + link + ");");
     }
 
+    /**
+     * Controlla se il contenuto della pagina wiki inizia con un redirect <br>
+     * Controlla tutte le possibili 'declinazione' ammesse dal software <br>
+     *
+     * @param testoPagina della pagina wiki
+     *
+     * @return true se è una pagina di #redirect
+     */
+    public boolean isRedirect(String testoPagina) {
+        boolean redirect;
+        String patternTxt;
+        Pattern patttern;
+        Matcher matcher;
+        int pos = testoPagina.indexOf(A_CAPO);
+
+        //--solo prima riga
+        testoPagina = pos > 0 ? testoPagina.substring(0, pos) : testoPagina;
+
+        //--Create a Pattern text
+        patternTxt = "\\s?#\\s?(REDIRECT|RINVIA).*";
+
+        //--Create a Pattern object
+        patttern = Pattern.compile(patternTxt, Pattern.CASE_INSENSITIVE);
+
+        //--Now create matcher object.
+        matcher = patttern.matcher(testoPagina);
+        redirect = matcher.matches();
+
+        return redirect;
+    }
 
 }

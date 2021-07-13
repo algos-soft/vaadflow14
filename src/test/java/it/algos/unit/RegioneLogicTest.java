@@ -260,14 +260,14 @@ public class RegioneLogicTest extends ATest {
     //    }
 
 
-    private void printWrap(List<WrapDueStringhe> listaWrap) {
-        System.out.println("********");
-        if (array.isAllValid(listaWrap)) {
-            for (WrapDueStringhe wrap : listaWrap) {
-                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
-            }
-        }
-    }
+//    private void printWrap(List<WrapDueStringhe> listaWrap) {
+//        System.out.println("********");
+//        if (array.isAllValid(listaWrap)) {
+//            for (WrapDueStringhe wrap : listaWrap) {
+//                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
+//            }
+//        }
+//    }
 
 
     /**

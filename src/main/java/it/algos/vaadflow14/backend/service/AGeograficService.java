@@ -43,13 +43,13 @@ public class AGeograficService extends AAbstractService {
         List<List<String>> listaGrezza = null;
         Map<String, String> mappa = getTableStatiNumerico();
         String sep = DOPPIO_PIPE_REGEX;
-        String[] parti ;
-        List<String> riga ;
-        String numerico ;
-        String nome ;
-        String alfatre ;
-        String alfadue ;
-        String locale ;
+        String[] parti;
+        List<String> riga;
+        String numerico;
+        String nome;
+        String alfatre;
+        String alfadue;
+        String locale;
 
         try {
             listaGrezza = wikiApi.getTable(PAGINA_ISO_1);
@@ -145,14 +145,16 @@ public class AGeograficService extends AAbstractService {
     /**
      * Estrae il contenuto del template bandierina indicato <br>
      *
-     * @param wikiTitle della pagina wiki
+     * @param wikiTitle del template wiki
      *
      * @return coppia di valori: sigla e nome
      */
-    public WrapDueStringhe getTemplateBandierina(String wikiTitle) {
-        WrapDueStringhe wrap = null;
-        String testoGrezzo ;
-        String sigla ;
+    public WrapTreStringhe getTemplateBandierina(String wikiTitle) {
+        WrapTreStringhe wrap = null;
+        String tag = "Template:";
+        String titolo;
+        String testoGrezzo;
+        String sigla;
 
         if (text.isEmpty(wikiTitle)) {
             return null;
@@ -164,22 +166,30 @@ public class AGeograficService extends AAbstractService {
             sigla = text.levaCodaDa(sigla, PIPE);
         }
 
-        if (sigla.length() < 2) {
+        if (sigla.length() < 2 && Character.isDigit(sigla.charAt(0))) {
             sigla = "0" + sigla;
         }
 
-        testoGrezzo = web.legge(wikiTitle).getText();
+        if (wikiTitle.startsWith(tag)) {
+            titolo = text.levaTesta(wikiTitle, tag);
+        }
+        else {
+            titolo = wikiTitle;
+            wikiTitle = tag + wikiTitle;
+        }
+
+        testoGrezzo = wikiApi.legge(wikiTitle);
 
         if (text.isValid(testoGrezzo)) {
             if (testoGrezzo.startsWith(DOPPIE_GRAFFE_INI)) {
-                wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
+                wrap = estraeBandierinaGraffe(titolo, testoGrezzo, sigla);
             }
             else {
                 if (testoGrezzo.contains("{{band div|ITA")) {
-                    wrap = estraeBandierinaGraffe(testoGrezzo, sigla);
+                    wrap = estraeBandierinaGraffe(titolo, testoGrezzo, sigla);
                 }
                 else {
-                    wrap = estraeBandierinaQuadre(testoGrezzo, sigla);
+                    wrap = estraeBandierinaQuadre(titolo, testoGrezzo, sigla);
                 }
             }
         }
@@ -196,8 +206,8 @@ public class AGeograficService extends AAbstractService {
      *
      * @return wrapper di valori: sigla e nome
      */
-    public WrapDueStringhe estraeBandierinaGraffe(String testoGrezzo, String sigla) {
-        WrapDueStringhe wrap = null;
+    public WrapTreStringhe estraeBandierinaGraffe(String titolo, String testoGrezzo, String sigla) {
+        WrapTreStringhe wrap = null;
         String testoGraffa = VUOTA;
         String[] parti = null;
         String nome = VUOTA;
@@ -212,7 +222,7 @@ public class AGeograficService extends AAbstractService {
 
         if (parti != null && parti.length >= 3) {
             nome = parti[2];
-            wrap = new WrapDueStringhe(sigla, nome);
+            wrap = new WrapTreStringhe(titolo, sigla, nome);
         }
 
         return wrap;
@@ -227,11 +237,11 @@ public class AGeograficService extends AAbstractService {
      *
      * @return wrapper di valori: sigla e nome
      */
-    public WrapDueStringhe estraeBandierinaQuadre(String testoGrezzo, String sigla) {
-        WrapDueStringhe wrap = null;
+    public WrapTreStringhe estraeBandierinaQuadre(String titolo, String testoGrezzo, String sigla) {
+        WrapTreStringhe wrap = null;
         String testoQuadra = VUOTA;
         String tag = "<noinclude";
-        String nome ;
+        String nome;
 
         if (text.isValid(testoGrezzo)) {
             testoQuadra = text.levaCodaDa(testoGrezzo, tag);
@@ -247,7 +257,7 @@ public class AGeograficService extends AAbstractService {
             if (nome.contains(PIPE)) {
                 nome = text.levaTestoPrimaDi(nome, PIPE);
             }
-            wrap = new WrapDueStringhe(sigla, nome);
+            wrap = new WrapTreStringhe(titolo, sigla, nome);
         }
 
         return wrap;
@@ -265,7 +275,7 @@ public class AGeograficService extends AAbstractService {
      * @return lista di coppia di valori: sigla e nome
      */
     @Deprecated
-    public List<WrapDueStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
+    public List<WrapTreStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonna) {
         List<String> lista = wikiApi.getColonna(wikiTitle, posTabella, rigaIniziale, numColonna);
         return getTemplateList(lista);
     }
@@ -278,9 +288,9 @@ public class AGeograficService extends AAbstractService {
      * @return lista di coppia di valori: sigla e nome
      */
     @Deprecated
-    public List<WrapDueStringhe> getTemplateList(List<String> listaTemplate) {
-        List<WrapDueStringhe> lista = null;
-        WrapDueStringhe wrap;
+    public List<WrapTreStringhe> getTemplateList(List<String> listaTemplate) {
+        List<WrapTreStringhe> lista = null;
+        WrapTreStringhe wrap;
 
         if (array.isAllValid(listaTemplate)) {
             lista = new ArrayList<>();
@@ -308,7 +318,7 @@ public class AGeograficService extends AAbstractService {
      */
     public List<WrapTreStringhe> getTemplateList(String wikiTitle, int posTabella, int rigaIniziale, int numColonnaBandierine, int numColonnaTerzoValore) {
         List<WrapTreStringhe> listaTre = null;
-        WrapDueStringhe wrapBandierina;
+        WrapTreStringhe wrapBandierina;
         WrapTreStringhe wrapTre;
         List<WrapDueStringhe> listaDue = wikiApi.getDueColonne(wikiTitle, posTabella, rigaIniziale, numColonnaBandierine, numColonnaTerzoValore);
 
@@ -334,9 +344,9 @@ public class AGeograficService extends AAbstractService {
      *
      * @return lista di wrapper con due stringhe ognuno (sigla, nome)
      */
-    public List<WrapDueStringhe> getRegioni(String wikiTitle)  {
+    public List<WrapDueStringhe> getRegioni(String wikiTitle) {
         List<WrapDueStringhe> listaWrap = null;
-        List<List<String>> listaTable ;
+        List<List<String>> listaTable;
         WrapDueStringhe wrap;
 
         listaTable = wikiApi.getTable(wikiTitle);
@@ -371,7 +381,7 @@ public class AGeograficService extends AAbstractService {
     public List<WrapQuattro> getProvince() {
         List<WrapQuattro> listaWrap = null;
         String wikiTitle = "ISO_3166-2:IT";
-        List<List<String>> listaTable ;
+        List<List<String>> listaTable;
         WrapTreStringhe wrapTre;
 
         listaTable = wikiApi.getTable(wikiTitle, 2);
@@ -468,6 +478,7 @@ public class AGeograficService extends AAbstractService {
     public WrapDueStringhe getWrapRegione(final List<String> listaRiga) {
         String sigla = VUOTA;
         String nome = VUOTA;
+        WrapTreStringhe wrapTre = null;
         WrapDueStringhe wrap = null;
 
         if (listaRiga.size() < 2) {
@@ -516,11 +527,13 @@ public class AGeograficService extends AAbstractService {
         //--template bandierine per recuperare il nome
         if (text.isEmpty(nome)) {
             if (listaRiga.get(1).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(1).contains(DOPPIE_GRAFFE_END)) {
-                wrap = getTemplateBandierina(listaRiga.get(1));
+                wrapTre = getTemplateBandierina(listaRiga.get(1));
+                wrap = new WrapDueStringhe(wrapTre.getSeconda(), wrapTre.getTerza());
             }
             else {
                 if (listaRiga.size() > 2 && listaRiga.get(2).contains(DOPPIE_GRAFFE_INI) && listaRiga.get(2).contains(DOPPIE_GRAFFE_END)) {
-                    wrap = getTemplateBandierina(listaRiga.get(2));
+                    wrapTre = getTemplateBandierina(listaRiga.get(2));
+                    wrap = new WrapDueStringhe(wrapTre.getSeconda(), wrapTre.getTerza());
                 }
             }
         }
@@ -567,10 +580,10 @@ public class AGeograficService extends AAbstractService {
      * @return wrapper di due stringhe valid (sigla, nome)
      */
     public WrapTreStringhe getWrapProvincia(List<String> listaRiga) {
-        String sigla ;
+        String sigla;
         String nome = VUOTA;
-        String regioneID ;
-        WrapDueStringhe wrap ;
+        String regioneID;
+        WrapTreStringhe wrap = null;
         String tagVdA = "valled'aosta";
         String tagA = "Aosta";
 
@@ -591,8 +604,8 @@ public class AGeograficService extends AAbstractService {
                 sigla = text.estraeGraffaDoppia(sigla);
                 wrap = getTemplateBandierina(sigla);
                 if (wrap != null) {
-                    sigla = wrap.getPrima();
-                    nome = wrap.getSeconda();
+                    sigla = wrap.getSeconda();
+                    nome = wrap.getTerza();
                 }
             }
         }
@@ -612,58 +625,58 @@ public class AGeograficService extends AAbstractService {
         return regione;
     }
 
-//    /**
-//     * Estrae una tripletta di valori significativi da una lista eterogenea <br>
-//     * Se la lista ha un solo valore, qualcosa non funziona <br>
-//     * Se la lista ha più di due valori, occorre selezionare i due significativi <br>
-//     * Sicuramente uno dei due valori contiene la sigla (deve avere un trattino) <br>
-//     * Uno dei valori deve essere un nome oppure il link alle bandierine (deve avere le doppie graffe) <br>
-//     * Dalla eventuale bandierina recupero il nome <br>
-//     *
-//     * @param listaRiga valori di una singola regione
-//     *
-//     * @return wrapper di due stringhe valid (sigla, nome)
-//     */
-//    public WrapTreStringhe getWrapProvinciaOld(List<String> listaRiga) {
-//        String sigla;
-//        String nome = VUOTA;
-//        String regione;
-//        WrapTreStringhe wrap;
-//        WrapDueStringhe wrapDue;
-//        WrapDueStringhe wrapDueReg;
-//        String tagVdA = "Valle d'Aosta";
-//
-//        if (listaRiga.size() < 3) {
-//            return null;
-//        }
-//
-//        sigla = listaRiga.get(0).trim();
-//        regione = listaRiga.get(2).trim();
-//        regione = text.estrae(regione, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
-//        wrapDueReg = getTemplateBandierina(regione);
-//        if (wrapDueReg != null) {
-//            regione = wrapDueReg.getSeconda();
-//        }
-//
-//        //--template bandierine per recuperare il nome
-//        if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
-//            if (regione.equals(tagVdA)) {
-//                sigla = "AO";
-//                nome = regione;
-//            }
-//            else {
-//                sigla = text.estraeGraffaDoppia(sigla);
-//                wrapDue = getTemplateBandierina(sigla);
-//                if (wrapDue != null) {
-//                    sigla = wrapDue.getPrima();
-//                    nome = wrapDue.getSeconda();
-//                }
-//            }
-//        }
-//
-//        wrap = new WrapTreStringhe(sigla, nome, regione);
-//        return wrap;
-//    }
+    //    /**
+    //     * Estrae una tripletta di valori significativi da una lista eterogenea <br>
+    //     * Se la lista ha un solo valore, qualcosa non funziona <br>
+    //     * Se la lista ha più di due valori, occorre selezionare i due significativi <br>
+    //     * Sicuramente uno dei due valori contiene la sigla (deve avere un trattino) <br>
+    //     * Uno dei valori deve essere un nome oppure il link alle bandierine (deve avere le doppie graffe) <br>
+    //     * Dalla eventuale bandierina recupero il nome <br>
+    //     *
+    //     * @param listaRiga valori di una singola regione
+    //     *
+    //     * @return wrapper di due stringhe valid (sigla, nome)
+    //     */
+    //    public WrapTreStringhe getWrapProvinciaOld(List<String> listaRiga) {
+    //        String sigla;
+    //        String nome = VUOTA;
+    //        String regione;
+    //        WrapTreStringhe wrap;
+    //        WrapDueStringhe wrapDue;
+    //        WrapDueStringhe wrapDueReg;
+    //        String tagVdA = "Valle d'Aosta";
+    //
+    //        if (listaRiga.size() < 3) {
+    //            return null;
+    //        }
+    //
+    //        sigla = listaRiga.get(0).trim();
+    //        regione = listaRiga.get(2).trim();
+    //        regione = text.estrae(regione, DOPPIE_GRAFFE_INI, DOPPIE_GRAFFE_END);
+    //        wrapDueReg = getTemplateBandierina(regione);
+    //        if (wrapDueReg != null) {
+    //            regione = wrapDueReg.getSeconda();
+    //        }
+    //
+    //        //--template bandierine per recuperare il nome
+    //        if (sigla.contains(DOPPIE_GRAFFE_INI) && sigla.contains(DOPPIE_GRAFFE_END)) {
+    //            if (regione.equals(tagVdA)) {
+    //                sigla = "AO";
+    //                nome = regione;
+    //            }
+    //            else {
+    //                sigla = text.estraeGraffaDoppia(sigla);
+    //                wrapDue = getTemplateBandierina(sigla);
+    //                if (wrapDue != null) {
+    //                    sigla = wrapDue.getPrima();
+    //                    nome = wrapDue.getSeconda();
+    //                }
+    //            }
+    //        }
+    //
+    //        wrap = new WrapTreStringhe(sigla, nome, regione);
+    //        return wrap;
+    //    }
 
 
     public String fixNomeStato(String testoGrezzo) {
@@ -736,35 +749,34 @@ public class AGeograficService extends AAbstractService {
         return testoValido;
     }
 
-
-//    /**
-//     * Import degli stati da una pagina di wikipedia <br>
-//     *
-//     * @return lista di wrapper con tre stringhe ognuno (sigla, nome, regione)
-//     */
-//    @Deprecated
-//    public List<WrapQuattroStringhe> stati() {
-//        List<WrapQuattroStringhe> listaWrap = null;
-//        List<WrapQuattroStringhe> listaWrapGrezzo = null;
-//        WrapQuattroStringhe wrapValido;
-//        String titoli = "Codice,Regioni";
-//        String prima;
-//        String seconda;
-//
-//        //        listaWrapGrezzo = estraeListaDue(PAGINA, titoli, 1, 2);
-//        //        if (listaWrapGrezzo != null && listaWrapGrezzo.size() > 0) {
-//        //            listaWrap = new ArrayList<>();
-//        //            for (WrapDueStringhe wrap : listaWrapGrezzo) {
-//        //                prima = wrap.getPrima();
-//        //                seconda = wrap.getSeconda();
-//        //                prima = elaboraCodice(prima);
-//        //                seconda = elaboraNome(seconda);
-//        //                wrapValido = new WrapDueStringhe(prima, seconda);
-//        //                listaWrap.add(wrapValido);
-//        //            }
-//        //        }
-//
-//        return listaWrap;
-//    }
+    //    /**
+    //     * Import degli stati da una pagina di wikipedia <br>
+    //     *
+    //     * @return lista di wrapper con tre stringhe ognuno (sigla, nome, regione)
+    //     */
+    //    @Deprecated
+    //    public List<WrapQuattroStringhe> stati() {
+    //        List<WrapQuattroStringhe> listaWrap = null;
+    //        List<WrapQuattroStringhe> listaWrapGrezzo = null;
+    //        WrapQuattroStringhe wrapValido;
+    //        String titoli = "Codice,Regioni";
+    //        String prima;
+    //        String seconda;
+    //
+    //        //        listaWrapGrezzo = estraeListaDue(PAGINA, titoli, 1, 2);
+    //        //        if (listaWrapGrezzo != null && listaWrapGrezzo.size() > 0) {
+    //        //            listaWrap = new ArrayList<>();
+    //        //            for (WrapDueStringhe wrap : listaWrapGrezzo) {
+    //        //                prima = wrap.getPrima();
+    //        //                seconda = wrap.getSeconda();
+    //        //                prima = elaboraCodice(prima);
+    //        //                seconda = elaboraNome(seconda);
+    //        //                wrapValido = new WrapDueStringhe(prima, seconda);
+    //        //                listaWrap.add(wrapValido);
+    //        //            }
+    //        //        }
+    //
+    //        return listaWrap;
+    //    }
 
 }

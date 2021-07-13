@@ -337,6 +337,17 @@ public abstract class ATest {
 
     protected AIResult ottenutoRisultato;
 
+    protected List<List<String>> listaGrezza;
+
+    protected List<WrapDueStringhe> listaWrap;
+
+    protected List<WrapTreStringhe> listaWrapTre;
+
+    protected List<WrapQuattro> listaWrapQuattro;
+
+    protected WrapDueStringhe dueStringhe;
+
+    protected WrapTreStringhe treStringhe;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -563,8 +574,34 @@ public abstract class ATest {
                 System.out.println("La pagina è un redirect");
             }
         }
-
-
     }
+
+    protected void printWrap(List<WrapDueStringhe> listaWrap) {
+        System.out.println("********");
+        if (array.isAllValid(listaWrap)) {
+            for (WrapDueStringhe wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda());
+            }
+        }
+    }
+
+    protected void printWrapTre(List<WrapTreStringhe> listaWrap) {
+        System.out.println(VUOTA);
+        if (array.isAllValid(listaWrap)) {
+            for (WrapTreStringhe wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
+            }
+        }
+    }
+
+    protected void printWrapQuattro(List<WrapQuattro> listaWrap) {
+        System.out.println(VUOTA);
+        if (array.isAllValid(listaWrap)) {
+            for (WrapQuattro wrap : listaWrap) {
+                System.out.println(wrap.getPrima() + SEP + wrap.getSeconda() + SEP + wrap.getTerza());
+            }
+        }
+    }
+
 
 }// end of class
