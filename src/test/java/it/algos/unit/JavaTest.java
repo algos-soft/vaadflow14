@@ -25,7 +25,7 @@ import java.util.stream.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Nuove funzioni Java +8.")
+@DisplayName("Java - Nuove funzioni Java +8.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class JavaTest extends ATest {
 

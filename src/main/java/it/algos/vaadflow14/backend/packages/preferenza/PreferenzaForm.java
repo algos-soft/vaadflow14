@@ -5,7 +5,6 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.form.*;
@@ -35,7 +34,7 @@ public class PreferenzaForm extends AForm {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AEnumerationService enumerationService;
+    public EnumerationService enumerationService;
 
     private AField valueField;
 
