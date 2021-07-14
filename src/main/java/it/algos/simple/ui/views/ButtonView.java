@@ -27,7 +27,7 @@ public class ButtonView extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    private ATextService text;
+    private TextService text;
 
 
     /**

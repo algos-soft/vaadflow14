@@ -78,7 +78,7 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    protected ATextService text;
+    protected TextService text;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -361,7 +361,7 @@ public class FlowData implements AIData {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    void setText(final ATextService text) {
+    void setText(final TextService text) {
         this.text = text;
     }
 

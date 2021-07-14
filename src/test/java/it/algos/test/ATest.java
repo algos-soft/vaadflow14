@@ -112,7 +112,7 @@ public abstract class ATest {
     protected ApplicationContext appContext;
 
     @InjectMocks
-    protected ATextService text;
+    protected TextService text;
 
     @InjectMocks
     protected ArrayService array;

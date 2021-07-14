@@ -4,7 +4,7 @@ import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.service.AnnotationService;
 import it.algos.vaadflow14.backend.service.ArrayService;
 import it.algos.vaadflow14.backend.service.AMongoService;
-import it.algos.vaadflow14.backend.service.ATextService;
+import it.algos.vaadflow14.backend.service.TextService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public abstract class ADataService {
      * Istanza (@Scope = 'singleton') inietta da Spring <br>
      */
     @Autowired
-    protected ATextService text;
+    protected TextService text;
 
 
     /**

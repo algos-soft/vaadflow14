@@ -450,7 +450,7 @@ public enum AEDir {
     protected FileService file;
 
     //--riferimento iniettato nella classe statico ServiceInjector
-    protected ATextService text;
+    protected TextService text;
 
     //--riferimento iniettato nella classe statico ServiceInjector
     protected ALogService logger;
@@ -656,7 +656,7 @@ public enum AEDir {
     }
 
 
-    public void setText(ATextService text) {
+    public void setText(TextService text) {
         this.text = text;
     }
 
@@ -723,7 +723,7 @@ public enum AEDir {
         private FileService file;
 
         @Autowired
-        private ATextService text;
+        private TextService text;
 
         @Autowired
         private ALogService logger;

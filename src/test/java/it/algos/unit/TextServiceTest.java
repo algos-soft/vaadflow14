@@ -1,6 +1,5 @@
 package it.algos.unit;
 
-import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.html.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;

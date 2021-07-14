@@ -603,7 +603,7 @@ public enum AEWizCost {
 
     protected FileService file;
 
-    protected ATextService text;
+    protected TextService text;
 
     protected ALogService logger;
 
@@ -785,7 +785,7 @@ public enum AEWizCost {
         this.file = file;
     }
 
-    public void setText(ATextService text) {
+    public void setText(TextService text) {
         this.text = text;
     }
 
@@ -800,7 +800,7 @@ public enum AEWizCost {
         private FileService file;
 
         @Autowired
-        private ATextService text;
+        private TextService text;
 
         @Autowired
         private ALogService logger;

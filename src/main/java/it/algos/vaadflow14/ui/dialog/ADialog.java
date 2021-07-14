@@ -82,7 +82,7 @@ public class ADialog extends Dialog {
      * Disponibile dopo un metodo @PostConstruct invocato da Spring al termine dell'init() di questa classe <br>
      */
     @Autowired
-    public ATextService text;
+    public TextService text;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio: <br>
