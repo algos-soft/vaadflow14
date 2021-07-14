@@ -37,7 +37,7 @@ public class AClassServiceTest extends ATest {
      * The Service.
      */
     @InjectMocks
-    AClassService service;
+    ClassService service;
 
 
     /**

@@ -20,7 +20,7 @@ import org.springframework.stereotype.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AClassService extends AAbstractService {
+public class ClassService extends AbstractService {
 
 
     /**

@@ -11,11 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.textfield.TextField;
-
 /**
  * Project vaadflow14
  * Created by Algos
@@ -34,7 +29,7 @@ public class ADataProviderServiceIntegrationTest extends ATest {
      * The Service.
      */
     @InjectMocks
-    ADataProviderService service;
+    DataProviderService service;
 
 
     /**

@@ -423,8 +423,7 @@ public enum AEWizCost {
      * Regolata inizialmente dal system, indipendentemente dall'apertura di un dialogo. <br>
      * Tutte le enums il cui nome NON inizia con 'path' sono nomi o files o sub-directory, non path completi <br>
      */
-    nameCurrentProjectUpper(AEWizValue.calcolato
-            , AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo dell' applicazione. Ricavato da backend.boot.xxxBoot.fixVariabili()", VALORE_MANCANTE) {
+    nameCurrentProjectUpper(AEWizValue.calcolato, AEWizUso.nullo, AEWizCopy.nome, "Nome maiuscolo dell' applicazione. Ricavato da backend.boot.xxxBoot.fixVariabili()", VALORE_MANCANTE) {
         @Override
         public void fixValue() {
             if (text.isValid(FlowVar.projectNameUpper)) {
@@ -602,7 +601,7 @@ public enum AEWizCost {
 
     protected String valoreIniziale;
 
-    protected AFileService file;
+    protected FileService file;
 
     protected ATextService text;
 
@@ -683,19 +682,6 @@ public enum AEWizCost {
         }
     }
 
-    //    /**
-    //     * Visualizzazione di controllo <br>
-    //     */
-    //    public static void print(String titolo) {
-    //        System.out.println(VUOTA);
-    //        System.out.println("********************");
-    //        System.out.println("AEWizCost  - " + titolo);
-    //        System.out.println("********************");
-    //        for (AEWizCost wiz : AEWizCost.values()) {
-    //            System.out.println("AEDir." + wiz.name() + " \"" + wiz.getDescrizione() + "\" = " + wiz.get());
-    //        }
-    //        System.out.println(VUOTA);
-    //    }
 
     /**
      * Estrae tutte le enumeration di un gruppo di valore <br>
@@ -795,7 +781,7 @@ public enum AEWizCost {
         this.valida = valida;
     }
 
-    public void setFile(AFileService file) {
+    public void setFile(FileService file) {
         this.file = file;
     }
 
@@ -811,7 +797,7 @@ public enum AEWizCost {
     public static class WizCostServiceInjector {
 
         @Autowired
-        private AFileService file;
+        private FileService file;
 
         @Autowired
         private ATextService text;

@@ -50,7 +50,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AEnumerationService extends AAbstractService {
+public class AEnumerationService extends AbstractService {
 
     /**
      * versione della classe per la serializzazione

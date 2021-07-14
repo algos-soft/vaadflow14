@@ -34,7 +34,7 @@ public class LabelView extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    private AHtmlService html;
+    private HtmlService html;
 
 
     /**

@@ -67,7 +67,7 @@ public enum AESimplePreferenza implements AIPreferenza {
     private ALogService logger;
 
     //--Link injettato da un metodo static
-    private ADateService date;
+    private DateService date;
 
     //--Link injettato da un metodo static
     private AEnumerationService enumService;
@@ -102,7 +102,7 @@ public enum AESimplePreferenza implements AIPreferenza {
         this.logger = logger;
     }
 
-    public void setDate(ADateService date) {
+    public void setDate(DateService date) {
         this.date = date;
     }
 
@@ -290,7 +290,7 @@ public enum AESimplePreferenza implements AIPreferenza {
         private AEnumerationService enumService;
 
         @Autowired
-        private ADateService date;
+        private DateService date;
 
         @PostConstruct
         public void postConstruct() {

@@ -24,7 +24,7 @@ public class PiUnoView extends VerticalLayout {
     private PiService piService;
 
     @Autowired
-    private ADataProviderService dataProviderService;
+    private DataProviderService dataProviderService;
 
 
     @PostConstruct

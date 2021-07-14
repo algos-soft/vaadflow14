@@ -34,7 +34,7 @@ public class ViewTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AAnnotationService service;
+    AnnotationService service;
 
 
     /**

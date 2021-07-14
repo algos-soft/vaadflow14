@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("WrapperTest")
 @DisplayName("Test di unit")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AWrapperTest extends ATest {
+public class WrapperTest extends ATest {
 
 
     /**

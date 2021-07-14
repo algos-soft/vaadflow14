@@ -447,7 +447,7 @@ public enum AEDir {
     ;// end of all ENUMERATIONS
 
     //--riferimento iniettato nella classe statico ServiceInjector
-    protected AFileService file;
+    protected FileService file;
 
     //--riferimento iniettato nella classe statico ServiceInjector
     protected ATextService text;
@@ -651,7 +651,7 @@ public enum AEDir {
     }
 
 
-    public void setFile(AFileService file) {
+    public void setFile(FileService file) {
         this.file = file;
     }
 
@@ -720,7 +720,7 @@ public enum AEDir {
     public static class ServiceInjector {
 
         @Autowired
-        private AFileService file;
+        private FileService file;
 
         @Autowired
         private ATextService text;

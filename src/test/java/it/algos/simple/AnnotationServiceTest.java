@@ -9,7 +9,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.service.*;
-import static it.algos.vaadflow14.backend.service.AAnnotationService.*;
+import static it.algos.vaadflow14.backend.service.AnnotationService.*;
 import org.junit.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
@@ -34,11 +34,10 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("AAnnotationServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("AnnotationService - Annotazioni delle AEntity.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AAnnotationServiceTest extends ATest {
-
+public class AnnotationServiceTest extends ATest {
 
     protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
 
@@ -46,7 +45,7 @@ public class AAnnotationServiceTest extends ATest {
 
     protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
-    AAnnotationService service;
+    AnnotationService service;
 
     private AIEntity aiEntity;
 

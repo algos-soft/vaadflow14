@@ -45,7 +45,7 @@ public abstract class AHeader extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AArrayService array;
+    protected ArrayService array;
 
 
     /**
@@ -62,7 +62,7 @@ public abstract class AHeader extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    protected AHtmlService html;
+    protected HtmlService html;
 
 
     protected void initView() {

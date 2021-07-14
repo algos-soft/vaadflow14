@@ -33,7 +33,7 @@ public class ScriptTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    AAnnotationService service;
+    AnnotationService service;
 
 
     /**

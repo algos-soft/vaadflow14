@@ -28,7 +28,7 @@ public abstract class WizElabora implements WizRecipient {
      * Disponibile al termine del costruttore di questa classe <br>
      */
     @Autowired
-    protected AFileService file;
+    protected FileService file;
 
     /**
      * Istanza unica di una classe (@Scope = 'singleton') di servizio <br>

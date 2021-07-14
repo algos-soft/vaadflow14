@@ -35,7 +35,7 @@ public class DeltaView extends VerticalLayout {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AResourceService resourceService;
+    public ResourceService resourceService;
 
     @Autowired
     private SecoloService secoloLogic;

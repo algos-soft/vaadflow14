@@ -4,7 +4,7 @@ import com.vaadin.flow.component.AbstractSinglePropertyField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.shared.Registration;
-import it.algos.vaadflow14.backend.service.AArrayService;
+import it.algos.vaadflow14.backend.service.ArrayService;
 import it.algos.vaadflow14.backend.service.ALogService;
 import it.algos.vaadflow14.backend.service.ATextService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public abstract class AField<T> extends CustomField<T> implements AIField {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AArrayService array;
+    public ArrayService array;
 
 
     /**

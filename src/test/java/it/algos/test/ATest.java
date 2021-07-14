@@ -115,28 +115,28 @@ public abstract class ATest {
     protected ATextService text;
 
     @InjectMocks
-    protected AArrayService array;
+    protected ArrayService array;
 
     @InjectMocks
-    protected ADateService date;
+    protected DateService date;
 
     @InjectMocks
-    protected AAnnotationService annotation;
+    protected AnnotationService annotation;
 
     @InjectMocks
-    protected AReflectionService reflection;
+    protected ReflectionService reflection;
 
     @InjectMocks
     protected ALogService logger;
 
     @InjectMocks
-    protected ABeanService bean;
+    protected BeanService bean;
 
     @InjectMocks
     protected AMongoService mongo;
 
     @InjectMocks
-    protected AWebService web;
+    protected WebService web;
 
     @InjectMocks
     protected AWikiApiService wikiApi;
@@ -145,22 +145,22 @@ public abstract class ATest {
     protected AGeograficService geografic;
 
     @InjectMocks
-    protected AFileService file;
+    protected FileService file;
 
     @InjectMocks
-    protected AMathService math;
+    protected MathService math;
 
     @InjectMocks
     protected AGSonService gSonService;
 
     @InjectMocks
-    protected AClassService classService;
+    protected ClassService classService;
 
     @InjectMocks
-    protected AUtilityService utilityService;
+    protected UtilityService utilityService;
 
     @InjectMocks
-    protected AHtmlService html;
+    protected HtmlService html;
 
     @InjectMocks
     protected PreferenzaService preferenzaService;
@@ -542,39 +542,39 @@ public abstract class ATest {
         }
     }
 
-    protected void printWrap(WrapPage wrap) {
-        System.out.println(VUOTA);
-        String message = VUOTA;
-
-        System.out.println(String.format("La query è: %s", wrap.getDomain()));
-        System.out.println(String.format("Il title è: %s", wrap.getTitle()));
-        if (wrap.isValida()) {
-            System.out.println("Il wrap è valido");
-            message = wrap.getType() == AETypePage.testoConTmpl ? "Usa solo il template come testo" : message;
-            message = wrap.getType() == AETypePage.testoSenzaTmpl ? "Usa tutta la pagina come testo" : message;
-            System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
-            System.out.println(String.format("Il timestamp è: %s", wrap.getTime()));
-            System.out.println(message);
-            if (wrap.getType() == AETypePage.testoConTmpl) {
-                System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
-            }
-            if (wrap.getType() == AETypePage.testoSenzaTmpl) {
-                System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
-            }
-        }
-        else {
-            System.out.println("Il wrap non è valido");
-            if (wrap.getType() == AETypePage.nonEsiste) {
-                System.out.println("La pagina non esiste");
-            }
-            if (wrap.getType() == AETypePage.disambigua) {
-                System.out.println("La pagina è una disambigua");
-            }
-            if (wrap.getType() == AETypePage.redirect) {
-                System.out.println("La pagina è un redirect");
-            }
-        }
-    }
+//    protected void printWrap(WrapPage wrap) {
+//        System.out.println(VUOTA);
+//        String message = VUOTA;
+//
+//        System.out.println(String.format("La query è: %s", wrap.getDomain()));
+//        System.out.println(String.format("Il title è: %s", wrap.getTitle()));
+//        if (wrap.isValida()) {
+//            System.out.println("Il wrap è valido");
+//            message = wrap.getType() == AETypePage.testoConTmpl ? "Usa solo il template come testo" : message;
+//            message = wrap.getType() == AETypePage.testoSenzaTmpl ? "Usa tutta la pagina come testo" : message;
+//            System.out.println(String.format("La pageid è: %s", wrap.getPageid()));
+//            System.out.println(String.format("Il timestamp è: %s", wrap.getTime()));
+//            System.out.println(message);
+//            if (wrap.getType() == AETypePage.testoConTmpl) {
+//                System.out.println(String.format("Il template è: %s", wrap.getTmpl().substring(0, Math.min(wrap.getTmpl().length(), WIDTH_WRAP))));
+//            }
+//            if (wrap.getType() == AETypePage.testoSenzaTmpl) {
+//                System.out.println(String.format("Il testo è: %s", wrap.getText().substring(0, Math.min(wrap.getText().length(), WIDTH_WRAP))));
+//            }
+//        }
+//        else {
+//            System.out.println("Il wrap non è valido");
+//            if (wrap.getType() == AETypePage.nonEsiste) {
+//                System.out.println("La pagina non esiste");
+//            }
+//            if (wrap.getType() == AETypePage.disambigua) {
+//                System.out.println("La pagina è una disambigua");
+//            }
+//            if (wrap.getType() == AETypePage.redirect) {
+//                System.out.println("La pagina è un redirect");
+//            }
+//        }
+//    }
 
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");

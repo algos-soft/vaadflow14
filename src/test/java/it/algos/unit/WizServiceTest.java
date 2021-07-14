@@ -1,9 +1,9 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.NAME_VAADFLOW;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import static it.algos.vaadflow14.wizard.scripts.WizCost.*;
 import it.algos.vaadflow14.wizard.scripts.*;
@@ -26,9 +26,9 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test di controllo sulle costanti AEWizCost, in parte tramite WizService")
+@DisplayName("WizService - Wizard e costanti AEWizCost.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class WizCostTest extends ATest {
+public class WizServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
@@ -53,6 +53,12 @@ public class WizCostTest extends ATest {
         service.text = text;
         service.array = array;
         service.file = file;
+
+        for (AEWizCost cost : AEWizCost.values()) {
+            cost.setText(text);
+            cost.setFile(file);
+            cost.setLogger(logger);
+        }
     }
 
 
@@ -236,7 +242,6 @@ public class WizCostTest extends ATest {
     }
 
 
-
     @Test
     @Order(17)
     @DisplayName("17 - getValide")
@@ -258,30 +263,27 @@ public class WizCostTest extends ATest {
     @Order(19)
     @DisplayName("19 - reset")
     void reset() {
-        previstoBooleano = false;
         previsto = VALORE_MANCANTE;
         ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
         ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
-        assertEquals(previstoBooleano, ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
 
+        FlowVar.projectNameUpper = "Simple";
         service.fixAEWizCost();
-
-        previstoBooleano = true;
         previsto = NAME_VAADFLOW;
+        previsto = "Simple";
         ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
         ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
-        assertEquals(previstoBooleano, ottenutoBooleano);
+        assertTrue(ottenutoBooleano);
 
         AEWizCost.reset();
-
-        previstoBooleano = false;
         previsto = VALORE_MANCANTE;
         ottenutoBooleano = AEWizCost.nameCurrentProjectUpper.isValida();
         ottenuto = AEWizCost.nameCurrentProjectUpper.getValue();
         assertEquals(previsto, ottenuto);
-        assertEquals(previstoBooleano, ottenutoBooleano);
+        assertFalse(ottenutoBooleano);
     }
 
 

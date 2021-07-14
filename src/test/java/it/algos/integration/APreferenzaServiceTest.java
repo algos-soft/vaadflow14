@@ -6,7 +6,7 @@ import it.algos.test.ATest;
 import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
-import it.algos.vaadflow14.backend.service.ADateService;
+import it.algos.vaadflow14.backend.service.DateService;
 import it.algos.vaadflow14.backend.service.AMongoService;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
@@ -49,7 +49,7 @@ public class APreferenzaServiceTest extends ATest {
      * The Service.
      */
     @Autowired
-    ADateService date;
+    DateService date;
 
     /**
      * Qui passa una volta sola <br>
