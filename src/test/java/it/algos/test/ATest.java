@@ -105,6 +105,18 @@ public abstract class ATest {
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
 
+    protected static final String PAGINA_PIOZZANO = "Piozzano";
+
+    protected static final String PAGINA_TEST = "Utente:Gac/T17";
+
+    protected static final String PAGINA_NO_ASCI = "Roman Protasevič";
+
+    protected static final String PAGINA_INESISTENTE = "Roman Protellino";
+
+    protected static final String PAGINA_DISAMBIGUA = "Rossi";
+
+    protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
+
     /**
      * The App context.
      */

@@ -845,7 +845,7 @@ public abstract class LogicList extends Logic {
 
         AIResult result = entityService.reset();
         if (result.isValido()) {
-            numRec = result.getValore();
+            numRec = result.getValue();
             type = result.getMessage();
             message = String.format("Nella collezione %s sono stati re-inseriti %d elementi %s", collection, numRec, type);
             logger.log(AETypeLog.reset, message);

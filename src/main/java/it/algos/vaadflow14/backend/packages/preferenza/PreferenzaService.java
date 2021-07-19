@@ -220,7 +220,7 @@ public class PreferenzaService extends AService {
         if ((numRecGen + numRecSpec) > 0) {
 //            result = super.fixPostResetOnly(AETypeReset.enumeration, numRecGen + numRecSpec);
             message = String.format("Sono state create %d preferenze generali e %d specifiche di questa applicazione", numRecGen, numRecSpec);
-            result.setValidationMessage(message);
+            result.setValidMessage(message);
         }
         else {
             result = AResult.errato();

@@ -27,17 +27,6 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WikiApiServiceTest extends ATest {
 
-    public static final String PAGINA_PIOZZANO = "Piozzano";
-
-    public static final String PAGINA_TEST = "Utente:Gac/T17";
-
-    public static final String PAGINA_NO_ASCI = "Roman Protasevič";
-
-    public static final String PAGINA_INESISTENTE = "Roman Protellino";
-
-    public static final String PAGINA_DISAMBIGUA = "Rossi";
-
-    public static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
     public static final String TEMPL_BIO = "Bio";
 
@@ -271,7 +260,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(6)
-        @DisplayName("6 - legge (come user) una table wiki")
+        @DisplayName("6 - legge (come anonymous) una table wiki")
         public void leggeTable() {
             sorgente = "ISO 3166-2:IT";
             previsto = "{| class=\"wikitable sortable\"";
@@ -312,7 +301,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(7)
-        @DisplayName("7 - legge (come user) un modulo wiki")
+        @DisplayName("7 - legge (come anonymous) un modulo wiki")
         public void leggeModulo() {
             sorgente = "Modulo:Bio/Plurale_attività";
             previsto = "{\n[\"abate\"] =";
@@ -344,7 +333,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(8)
-        @DisplayName("8 - legge (come user) la mappa del modulo Attività")
+        @DisplayName("8 - legge (come anonymous) la mappa del modulo Attività")
         public void leggeMappaModulo() {
             sorgente = "Modulo:Bio/Plurale attività";
             sorgente2 = "abate";
@@ -379,7 +368,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(9)
-        @DisplayName("9 - legge (come user) la mappa del modulo Attività/Genere")
+        @DisplayName("9 - legge (come anonymous) la mappa del modulo Attività/Genere")
         public void leggeMappaModulo2() {
             sorgente = "Modulo:Bio/Plurale attività genere";
             sorgente2 = "abate";
@@ -413,7 +402,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(10)
-        @DisplayName("10 - legge (come user) un template amministrativo")
+        @DisplayName("10 - legge (come anonymous) un template amministrativo")
         public void leggeTmpl() {
             sorgente = PAGINA_PIOZZANO;
             previsto = "{{Divisione amministrativa";
@@ -438,7 +427,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(11)
-        @DisplayName("11 - legge (come user) un template bio")
+        @DisplayName("11 - legge (come anonymous) un template bio")
         public void leggeTmpl2() {
             sorgente = "Guido Rossi";
             previsto = "{{Bio";
@@ -463,7 +452,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(12)
-        @DisplayName("12 - legge (come user) una colonna")
+        @DisplayName("12 - legge (come anonymous) una colonna")
         public void getColonna() {
             sorgente = "ISO_3166-2:ES";
             listaStr = service.getColonna(sorgente, 1, 2, 2);
@@ -490,7 +479,7 @@ public class WikiApiServiceTest extends ATest {
 
         @Test
         @Order(13)
-        @DisplayName("13 - legge (come user) una coppia di colonne da una table")
+        @DisplayName("13 - legge (come anonymous) una coppia di colonne da una table")
         public void getDueColonne() {
             sorgente = "ISO_3166-2:ES";
             previstoIntero = 18;
