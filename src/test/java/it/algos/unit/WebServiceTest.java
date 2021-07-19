@@ -25,7 +25,7 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("WebService")
+@Tag("testAllValido")
 @DisplayName("WebService - Collegamenti base del web.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class WebServiceTest extends ATest {
@@ -82,6 +82,7 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isErrato());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(ottenutoRisultato.getErrorCode().equals(UNKNOWN_HOST));
         assertTrue(ottenutoRisultato.getErrorMessage().equals(UNKNOWN_HOST));
         assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
         assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
@@ -108,8 +109,9 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertTrue(text.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getValue() == 0);
@@ -143,8 +145,9 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertTrue(text.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getResponse().endsWith(previsto2));
@@ -178,10 +181,11 @@ public class WebServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertEquals(SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertTrue(text.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
@@ -215,8 +219,9 @@ public class WebServiceTest extends ATest {
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertTrue(text.isValid(ottenutoRisultato.getUrl()));
         assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
-        assertEquals(SUCCESS, ottenutoRisultato.getValidMessage());
+        assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
         assertTrue(text.isValid(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getResponse().startsWith(previsto));
         assertTrue(ottenutoRisultato.getValue() == 0);
@@ -251,6 +256,7 @@ public class WebServiceTest extends ATest {
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
         assertTrue(text.isValid(ottenutoRisultato.getUrl()));
         assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorMessage());
         assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
         assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));

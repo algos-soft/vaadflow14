@@ -380,9 +380,11 @@ public abstract class FlowCost {
     public static final String KEY_MAPPA_GIORNI_MESE_MESE = "meseMese";
 
     //--chiavi mappa eventi
-    public static final String SUCCESS = "Success";
+    public static final String JSON_SUCCESS = "Success";
 
-    public static final String ERROR = "error";
+    public static final String JSON_ERROR = "error";
+
+    public static final String JSON_CODE = "code";
 
     public static final String ERROR_FILE_WIKI = "java.io.FileNotFoundException: https://it.wikipedia.org/wiki/";
 

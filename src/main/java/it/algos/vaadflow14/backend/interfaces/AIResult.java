@@ -30,6 +30,10 @@ public interface AIResult {
 
     AIResult setErrorMessage(final String message);
 
+    String getErrorCode();
+
+    void setErrorCode(String errorCode);
+
     String getValidMessage();
 
     void setValidMessage(String validMessage);

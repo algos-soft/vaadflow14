@@ -24,6 +24,8 @@ public class AResult implements AIResult {
 
     private String url = VUOTA;
 
+    private String errorCode = VUOTA;
+
     private String errorMessage = VUOTA;
 
     private String validMessage = VUOTA;
@@ -70,7 +72,7 @@ public class AResult implements AIResult {
         if (text != null && text.length() > 0) {
             result.setValido(true);
             result.setResponse(text);
-            result.setValidMessage(SUCCESS);
+            result.setValidMessage(JSON_SUCCESS);
         }
         else {
             result.setValido(false);
@@ -92,7 +94,9 @@ public class AResult implements AIResult {
     }
 
     public static AIResult errato(final String errorMessage) {
-        return new AResult(false, errorMessage);
+        AResult result = new AResult(false, errorMessage);
+        result.setErrorCode(errorMessage);
+        return result;
     }
 
     @Override
@@ -124,6 +128,16 @@ public class AResult implements AIResult {
         else {
             setErrorMessage(message);
         }
+    }
+
+    @Override
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    @Override
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
     @Override

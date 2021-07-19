@@ -573,7 +573,7 @@ public class AWikiApiService extends AbstractService {
     }
 
     public boolean jsonValida(final JSONObject jsonRisposta) {
-        return jsonRisposta.get(ERROR) == null;
+        return jsonRisposta.get(JSON_ERROR) == null;
     }
 
     /**
