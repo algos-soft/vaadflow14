@@ -54,7 +54,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaCreazione = true, usaModifica = true, usaCompany = @USACOMPANY@)
+@AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaBoot = false, usaNew = true, usaCompany = @USACOMPANY@)
 @AIView(menuName = "@ENTITYUPPER@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)
 @AIForm(fields = @PROPERTIES@, operationForm = AEOperation.showOnly, usaSpostamentoTraSchede = false)

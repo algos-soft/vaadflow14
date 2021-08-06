@@ -282,6 +282,10 @@ public abstract class FlowCost {
 
     public static final String KEY_JSON_QUERY = "query";
 
+    public static final String KEY_JSON_CONTINUE = "continue";
+
+    public static final String KEY_JSON_CONTINUE_CM = "cmcontinue";
+
     public static final String KEY_JSON_PAGES = "pages";
 
     public static final String KEY_JSON_PAGE_ID = "pageid";
@@ -299,6 +303,10 @@ public abstract class FlowCost {
     public static final String KEY_JSON_MAIN = "main";
 
     public static final String KEY_JSON_CONTENT = "content";
+
+    public static final String KEY_JSON_VALID = "batchcomplete";
+
+    public static final String KEY_JSON_MEMBERS = "categorymembers";
 
     public static final String QUADRA_INI = "[";
 
@@ -384,7 +392,27 @@ public abstract class FlowCost {
 
     public static final String JSON_ERROR = "error";
 
+    public static final String JSON_REASON = "reason";
+
+    public static final String JSON_FAILED = "Failed";
+
+    public static final String JSON_COOKIES = "cookies";
+
+    public static final String JSON_BOT_LOGIN = "botLogin";
+
+    public static final String JSON_NOT_QUERY_LOGIN = "notQueryLogin";
+
+    public static final String JSON_NO_BOT = "assertbotfailed";
+
     public static final String JSON_CODE = "code";
+
+    public static final String JSON_INFO = "info";
+
+    public static final String ERROR_WIKI_TITLE = "Manca il titolo wiki";
+
+    public static final String ERROR_WIKI_PAGINA = "Manca la pagina wiki";
+
+    public static final String ERROR_WIKI_CATEGORIA = "Manca la categoria wiki";
 
     public static final String ERROR_FILE_WIKI = "java.io.FileNotFoundException: https://it.wikipedia.org/wiki/";
 

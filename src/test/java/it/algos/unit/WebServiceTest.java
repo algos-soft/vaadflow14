@@ -81,14 +81,14 @@ public class WebServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isErrato());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(ottenutoRisultato.getErrorCode().equals(UNKNOWN_HOST));
         assertTrue(ottenutoRisultato.getErrorMessage().equals(UNKNOWN_HOST));
         assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));
         assertTrue(text.isEmpty(ottenutoRisultato.getResponse()));
         assertTrue(ottenutoRisultato.getValue() == 0);
 
-        System.out.println(String.format("Non ha trovato il domain '%s' richiesto", ottenutoRisultato.getUrl()));
+        System.out.println(String.format("Non ha trovato il domain '%s' richiesto", ottenutoRisultato.getUrlRequest()));
         System.out.println("Genera un messaggio di errore:");
         System.out.println(ottenutoRisultato.getErrorMessage());
 
@@ -108,7 +108,7 @@ public class WebServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
@@ -123,7 +123,7 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenuto.startsWith(previsto));
 
         System.out.println(String.format("2 - Legge il testo grezzo di una pagina web"));
-        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrlRequest()));
         System.out.println("Risultato restituito in formato html");
         System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
@@ -144,7 +144,7 @@ public class WebServiceTest extends ATest {
         assertNotNull(ottenutoRisultato);
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
-        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
@@ -161,7 +161,7 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenuto.endsWith(previsto2));
 
         System.out.println(String.format("3 - Legge il body di una pagina web"));
-        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrlRequest()));
         System.out.println("Risultato restituito in formato html");
         System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio e la fine, perché troppo lungo");
@@ -182,7 +182,7 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isEmpty(ottenutoRisultato.getWikiTitle()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
-        assertEquals(sorgente, ottenutoRisultato.getUrl());
+        assertEquals(sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
@@ -195,7 +195,7 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenuto.equals(ottenutoRisultato.getResponse()));
 
         System.out.println(String.format("4 - Legge il sorgente di una pagina wiki letta come url e non come titolo"));
-        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrl()));
+        System.out.println(String.format("La pagina web è: %s", ottenutoRisultato.getUrlRequest()));
         System.out.println("Risultato restituito in formato html");
         System.out.println(String.format("Tempo impiegato per leggere la pagina: %s", getTime()));
         System.out.println("Faccio vedere solo l'inizio, perché troppo lungo");
@@ -217,8 +217,8 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isValido());
         assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertTrue(text.isValid(ottenutoRisultato.getUrl()));
-        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isValid(ottenutoRisultato.getUrlRequest()));
+        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrlRequest());
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorCode()));
         assertTrue(text.isEmpty(ottenutoRisultato.getErrorMessage()));
         assertEquals(JSON_SUCCESS, ottenutoRisultato.getValidMessage());
@@ -254,8 +254,8 @@ public class WebServiceTest extends ATest {
         assertTrue(ottenutoRisultato.isErrato());
         assertTrue(text.isValid(ottenutoRisultato.getWikiTitle()));
         assertEquals(sorgente, ottenutoRisultato.getWikiTitle());
-        assertTrue(text.isValid(ottenutoRisultato.getUrl()));
-        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrl());
+        assertTrue(text.isValid(ottenutoRisultato.getUrlRequest()));
+        assertEquals(TAG_WIKI + sorgente, ottenutoRisultato.getUrlRequest());
         assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorCode());
         assertEquals(ERROR_FILE_WIKI + sorgente.replaceAll(SPAZIO, UNDERSCORE), ottenutoRisultato.getErrorMessage());
         assertTrue(text.isEmpty(ottenutoRisultato.getValidMessage()));

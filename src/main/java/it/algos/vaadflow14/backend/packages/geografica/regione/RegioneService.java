@@ -377,7 +377,7 @@ public class RegioneService extends AService {
             return resultCollectionPropedeutica;
         }
 
-//        creaRegioniAllStati();
+        //        creaRegioniAllStati();
         creaRegioniDiUnoStato(statoService.findByKey("Italia"));
         return AResult.valido(AETypeReset.wikipedia.get(), numRec);
     }

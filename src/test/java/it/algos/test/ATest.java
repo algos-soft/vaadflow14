@@ -4,6 +4,7 @@ import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -85,6 +86,18 @@ public abstract class ATest {
 
     protected static final int WIDTH_WRAP = 40;
 
+    protected static final String PAGINA_PIOZZANO = "Piozzano";
+
+    protected static final String PAGINA_TEST = "Utente:Gac/T17";
+
+    protected static final String PAGINA_NO_ASCI = "Roman Protasevič";
+
+    protected static final String PAGINA_INESISTENTE = "Roman Protellino";
+
+    protected static final String PAGINA_DISAMBIGUA = "Rossi";
+
+    protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
+
     protected static Class<? extends AEntity> VIA_ENTITY_CLASS = Via.class;
 
     protected static Class<? extends AEntity> ANNO_ENTITY_CLASS = Anno.class;
@@ -104,18 +117,6 @@ public abstract class ATest {
     protected static Field FIELD_NOME;
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
-
-    protected static final String PAGINA_PIOZZANO = "Piozzano";
-
-    protected static final String PAGINA_TEST = "Utente:Gac/T17";
-
-    protected static final String PAGINA_NO_ASCI = "Roman Protasevič";
-
-    protected static final String PAGINA_INESISTENTE = "Roman Protellino";
-
-    protected static final String PAGINA_DISAMBIGUA = "Rossi";
-
-    protected static final String PAGINA_REDIRECT = "Regno di Napoli (1805-1815)";
 
     /**
      * The App context.
@@ -382,6 +383,7 @@ public abstract class ATest {
         Assertions.assertNotNull(logger);
 
         MockitoAnnotations.initMocks(date);
+        Assertions.assertNotNull(date);
 
         adminLogger = LoggerFactory.getLogger("wam.admin");
         Assertions.assertNotNull(adminLogger);
@@ -462,6 +464,7 @@ public abstract class ATest {
         preferenzaService.mongo = mongo;
         utilityService.text = text;
         html.text = text;
+        date.text = text;
         sorgenteArray = null;
         previstoArray = null;
         ottenutoArray = null;
@@ -621,5 +624,29 @@ public abstract class ATest {
         }
     }
 
+    protected void printRisultato(AIResult result) {
+        List lista = result.getLista();
+        lista = lista!=null&&lista.size() > 20 ? lista.subList(0, 10) : lista;
+
+        System.out.println(VUOTA);
+        System.out.println("Risultato");
+        System.out.println(String.format("Status: %s", result.isValido() ? "true" : "false"));
+        System.out.println(String.format("Query: %s", result.getQueryType()));
+        System.out.println(String.format("Title: %s", result.getWikiTitle()));
+        System.out.println(String.format("Preliminary url: %s", result.getUrlPreliminary()));
+        System.out.println(String.format("Secondary url: %s", result.getUrlRequest()));
+        System.out.println(String.format("Preliminary response: %s", result.getPreliminaryResponse()));
+        System.out.println(String.format("Token: %s", result.getToken()));
+        System.out.println(String.format("Secondary response: %s", result.getResponse()));
+        System.out.println(String.format("Message code: %s", result.getCodeMessage()));
+        System.out.println(String.format("Message: %s", result.getMessage()));
+        System.out.println(String.format("Error code: %s", result.getErrorCode()));
+        System.out.println(String.format("Error message: %s", result.getErrorMessage()));
+        System.out.println(String.format("Valid message: %s", result.getValidMessage()));
+        System.out.println(String.format("Numeric value: %s", text.format(result.getValue())));
+        System.out.println(String.format("List value: %s", lista));
+        System.out.println(String.format("Map value: %s", result.getMappa()));
+        System.out.println(String.format("Risultato ottenuto in %s", date.deltaText(inizio)));
+    }
 
 }// end of class
