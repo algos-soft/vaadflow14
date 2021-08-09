@@ -6,6 +6,7 @@ import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -107,7 +108,10 @@ public class SimpleData extends FlowData {
         if (mongo.isNotEsiste(Bolla.class, code)) {
             bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
             bolla.setId(code);
-            mongo.save(bolla);
+            try {
+                mongo.save(bolla);
+            } catch (AMongoException unErrore) {
+            }
             status = true;
         }
 

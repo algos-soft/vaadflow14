@@ -7,6 +7,7 @@ import it.algos.simple.ui.enumeration.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
@@ -244,7 +245,10 @@ public class FatturaLogicList extends LogicList {
     private void pippo(Object o) {
         Fattura fattura= new Fattura();
         fattura.code="x";
-        mongo.save(fattura);
+        try {
+            mongo.save(fattura);
+        } catch (AMongoException unErrore) {
+        }
     }
 
     private  void pippo() {

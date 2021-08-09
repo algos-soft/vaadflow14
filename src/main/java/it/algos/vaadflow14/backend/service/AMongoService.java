@@ -8,6 +8,7 @@ import com.mongodb.client.result.*;
 import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.AMongoException;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
@@ -1535,7 +1536,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
-    public AEntity save(AEntity entityBean) {
+    public AEntity save(AEntity entityBean) throws AMongoException {
         try {
             return mongoOp.save(entityBean);
         } catch (Exception unErrore) {

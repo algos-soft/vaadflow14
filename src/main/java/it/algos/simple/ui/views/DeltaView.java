@@ -7,6 +7,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
 import it.algos.simple.backend.packages.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
@@ -68,7 +69,10 @@ public class DeltaView extends VerticalLayout {
         Delta deltaUno = (Delta) mongo.findById(Delta.class, "alfa");
         if (deltaUno != null) {
             deltaUno.immagine = valoreCodificato;
-            mongo.save(deltaUno);
+            try {
+                mongo.save(deltaUno);
+            } catch (AMongoException unErrore) {
+            }
         }
 
         add(VaadinIcon.HOSPITAL.create());
