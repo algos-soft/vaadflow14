@@ -8,7 +8,7 @@ import com.mongodb.client.result.*;
 import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
-import it.algos.vaadflow14.backend.exceptions.AMongoException;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
@@ -1541,7 +1541,7 @@ public class AMongoService<capture> extends AbstractService {
             return mongoOp.save(entityBean);
         } catch (Exception unErrore) {
             logger.warn(unErrore, this.getClass(), "save");
-            return null;
+            throw new AMongoException(unErrore, entityBean);
         }
     }
 

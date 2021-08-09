@@ -13,6 +13,11 @@ public class AMongoException extends Exception {
 
     private AEntity entityBean;
 
+    public AMongoException(Throwable cause, AEntity entityBean) {
+        super(cause);
+        this.entityBean = entityBean;
+    }
+
     public AMongoException(String message, Throwable cause, AEntity entityBean) {
         super(message, cause);
         this.entityBean = entityBean;
