@@ -347,7 +347,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return numero di entities eventualmente filtrate
      */
-    public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) {
+    public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AQueryException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return count(entityClazz, mappaFiltri);
     }
@@ -360,29 +360,11 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return numero di entities eventualmente filtrate
      */
-    public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) {
-        Map<String, AFiltro> filter = mappaFiltri;
-        Query query = new Query();
-        Criteria criteriaFiltro;
-        Criteria criteriaQuery = null;
+    public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AQueryException {
+        Query query = getQuery(mappaFiltri);
 
         //@todo purtroppo per adesso funziona SOLO per 1 filtro
         //@todo non riesco a clonare AFiltro o Criteria
-
-        if (array.isAllValid(filter)) {
-            for (AFiltro filtro : filter.values()) {
-                criteriaFiltro = filtro.getCriteria();
-
-                if (criteriaQuery == null) {
-                    criteriaQuery = criteriaFiltro;
-                }
-                else {
-                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-                    criteriaQuery.andOperator(criteriaFiltro);
-                }
-            }
-            query.addCriteria(criteriaQuery);
-        }
 
         return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
     }
@@ -628,7 +610,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AQueryException {
         return fetch(entityClazz, (AFiltro) null);
     }
 
@@ -641,7 +623,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AQueryException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return fetch(entityClazz, mappaFiltri);
     }
@@ -655,7 +637,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AQueryException {
         return fetch(entityClazz, mappaFiltri, (Sort) null);
     }
 
@@ -669,7 +651,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AQueryException {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
     }
 
@@ -686,7 +668,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AQueryException {
         return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
     }
 
@@ -706,33 +688,11 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) {
-        Query query = new Query();
-        Criteria criteriaFiltro;
-        Criteria criteriaQuery = null;
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AQueryException {
+        Query query = getQuery(mappaFiltri);
 
         //@todo purtroppo per adesso funziona SOLO per 1 filtro
         //@todo non riesco a clonare AFiltro o Criteria
-
-        if (array.isAllValid(mappaFiltri)) {
-            for (AFiltro filtro : mappaFiltri.values()) {
-                criteriaFiltro = filtro.getCriteria();
-
-                if (criteriaQuery == null) {
-                    criteriaQuery = criteriaFiltro;
-                }
-                else {
-                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-                    }
-                    else {
-                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-                    }
-                }
-                query.addCriteria(filtro.getCriteria());
-            }
-        }
 
         if (sortSpring != null) {
             query.with(sortSpring);
@@ -746,6 +706,41 @@ public class AMongoService<capture> extends AbstractService {
 
         return (List<AEntity>) mongoOp.find(query, entityClazz);
     }
+
+
+    public Query getQuery(Map<String, AFiltro> mappaFiltri) throws AQueryException {
+        Query query = new Query();
+        Criteria criteriaFiltro;
+        Criteria criteriaQuery = null;
+
+        //@todo purtroppo per adesso funziona SOLO per 1 filtro
+        //@todo non riesco a clonare AFiltro o Criteria
+
+        if (array.isAllValid(mappaFiltri)) {
+            for (AFiltro filtro : mappaFiltri.values()) {
+                criteriaFiltro = filtro.getCriteria();
+
+                if (criteriaQuery == null) {
+                    criteriaQuery = criteriaFiltro;
+                    query.addCriteria(criteriaQuery);
+                }
+                else {
+                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+                    //@todo Funzionalità ancora da implementare
+                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+                        //                        criteriaQuery.andOperator(criteriaFiltro);
+                        throw new AQueryException("Non riesco a gestire i filtri multipli");
+                    }
+                    else {
+                        query.addCriteria(criteriaFiltro);
+                    }
+                }
+            }
+        }
+
+        return query;
+    }
+
 
     /**
      * Crea un set di entities da una collection. <br>
@@ -1230,7 +1225,7 @@ public class AMongoService<capture> extends AbstractService {
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
     public AEntity findOneFirst(Class<? extends AEntity> entityClazz, String propertyName, Serializable
-                                        propertyValue) {
+            propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -1463,7 +1458,8 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.insert/)
      */
-    public AEntity insert(AEntity newEntityBean) {AEntity entityBean = null;
+    public AEntity insert(AEntity newEntityBean) {
+        AEntity entityBean = null;
 
         try {
             entityBean = mongoOp.insert(newEntityBean);

@@ -18,7 +18,7 @@ public class AMongoException extends Exception {
         this.entityBean = entityBean;
     }
 
-    public AMongoException(String message, Throwable cause, AEntity entityBean) {
+    public AMongoException(Throwable cause, AEntity entityBean, String message) {
         super(message, cause);
         this.entityBean = entityBean;
     }
