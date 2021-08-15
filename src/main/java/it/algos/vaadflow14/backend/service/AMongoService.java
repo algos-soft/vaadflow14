@@ -711,22 +711,25 @@ public class AMongoService<capture> extends AbstractService {
         Criteria criteriaFiltro;
         Criteria criteriaQuery = null;
 
+        //@todo purtroppo per adesso funziona SOLO per 1 filtro
+        //@todo non riesco a clonare AFiltro o Criteria
+
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteriaFiltro = filtro.getCriteria();
 
-                //                if (criteriaQuery == null) {
-                //                    criteriaQuery = criteriaFiltro;
-                //                }
-                //                else {
-                //                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-                //                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                //                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-                //                    }
-                //                    else {
-                //                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
-                //                    }
-                //                }
+                if (criteriaQuery == null) {
+                    criteriaQuery = criteriaFiltro;
+                }
+                else {
+                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+                    }
+                    else {
+                        criteriaQuery.andOperator(criteriaFiltro);//@todo Funzionalità ancora da implementare
+                    }
+                }
                 query.addCriteria(filtro.getCriteria());
             }
         }
@@ -755,8 +758,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz,
-                                 int offset, int limit) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit) {
         return findSet(entityClazz, offset, limit, new BasicDBObject());
     }
 
@@ -771,8 +773,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz,
-                                 int offset, int limit, BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject sort) {
         return findSet(entityClazz, offset, limit, new BasicDBObject(), sort);
     }
 
@@ -873,8 +874,7 @@ public class AMongoService<capture> extends AbstractService {
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz,
-                                  int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -955,8 +955,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return entityBean regolato
      */
-    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity
-            entityBean, String value) {
+    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity entityBean, String value) {
         int number;
         char c;
         byte[] bytes;
@@ -983,8 +982,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return entityBean regolato
      */
-    private AEntity fixDbRef(Document doc, Gson gSon, AEntity
-            entityBean, List<Field> listaRef) {
+    private AEntity fixDbRef(Document doc, Gson gSon, AEntity entityBean, List<Field> listaRef) {
         JsonElement element = gSon.toJsonTree(doc);
         JsonObject objDoc = element.getAsJsonObject();
         String key = VUOTA;
@@ -1101,8 +1099,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findNext(final Class<? extends AEntity> entityClazz,
-                            final String keyIdValue) {
+    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
         return findNext(entityClazz, FIELD_ID, keyIdValue);
     }
 
@@ -1115,8 +1112,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public String findNextID(final Class<? extends AEntity> entityClazz,
-                             final String sortProperty, final Object valueProperty) {
+    public String findNextID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
         AEntity nextEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
         return nextEntity != null ? nextEntity.id : VUOTA;
     }
@@ -1130,8 +1126,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findNext(final Class<? extends AEntity> entityClazz,
-                            final String sortProperty, final Object valueProperty) {
+    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
         return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
     }
 
@@ -1143,8 +1138,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findPrevious(
-            final Class<? extends AEntity> entityClazz, final String keyIdValue) {
+    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
         return findPrevious(entityClazz, FIELD_ID, keyIdValue);
     }
 
@@ -1157,9 +1151,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public String findPreviousID(
-            final Class<? extends AEntity> entityClazz, final String sortProperty,
-            final Object valueProperty) {
+    public String findPreviousID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
         AEntity previousEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
         return previousEntity != null ? previousEntity.id : VUOTA;
     }
@@ -1173,9 +1165,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    public AEntity findPrevious(
-            final Class<? extends AEntity> entityClazz, final String sortProperty,
-            final Object valueProperty) {
+    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
         return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
     }
 
@@ -1188,9 +1178,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz,
-                             final String sortProperty, final Object valueProperty,
-                             final Sort.Direction sortDir) {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty, final Sort.Direction sortDir) {
         AEntity nextEntity = null;
         List<AEntity> listaOrdinata = null;
         Query query = new Query();
@@ -1241,8 +1229,8 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneFirst(Class<? extends
-            AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+    public AEntity findOneFirst(Class<? extends AEntity> entityClazz, String propertyName, Serializable
+                                        propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -1283,8 +1271,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneFirst(Class<? extends
-            AEntity> entityClazz, Query query) {
+    public AEntity findOneFirst(Class<? extends AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1304,8 +1291,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneUnique(Class<? extends
-            AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+    public AEntity findOneUnique(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -1329,8 +1315,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneUnique(Class<? extends
-            AEntity> entityClazz, Query query) {
+    public AEntity findOneUnique(Class<? extends AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1353,8 +1338,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByUniqueKey(Class<? extends
-            AEntity> entityClazz, Query query) {
+    public AEntity findByUniqueKey(Class<? extends AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1479,8 +1463,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.insert/)
      */
-    public AEntity insert(AEntity newEntityBean) {
-        AEntity entityBean = null;
+    public AEntity insert(AEntity newEntityBean) {AEntity entityBean = null;
 
         try {
             entityBean = mongoOp.insert(newEntityBean);
@@ -1540,7 +1523,6 @@ public class AMongoService<capture> extends AbstractService {
         try {
             return mongoOp.save(entityBean);
         } catch (Exception unErrore) {
-            logger.warn(unErrore, this.getClass(), "save");
             throw new AMongoException(unErrore, entityBean);
         }
     }
@@ -1623,8 +1605,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista
      */
-    public DeleteResult deleteBulk(List<String> listaId, Class<? extends
-            AEntity> clazz) {
+    public DeleteResult deleteBulk(List<String> listaId, Class<? extends AEntity> clazz) {
         Bson condition = new Document("$in", listaId);
         Bson filter = new Document("_id", condition);
         return getCollection(clazz).deleteMany(filter);
