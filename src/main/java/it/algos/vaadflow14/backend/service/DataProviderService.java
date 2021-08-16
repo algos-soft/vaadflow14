@@ -75,6 +75,9 @@ public class DataProviderService extends AbstractService {
                     } catch (AQueryException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
                     }
                 },
 
@@ -112,6 +115,9 @@ public class DataProviderService extends AbstractService {
 
                     try {
                         return mongo.fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
                     } catch (AQueryException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
@@ -123,10 +129,15 @@ public class DataProviderService extends AbstractService {
                 countCallback -> {
                     try {
                         return mongo.fetch(entityClazz, mappaFiltri).size();
+                    } catch (AMongoException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return 0;
                     } catch (AQueryException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return 0;
                     }
+
+
                 }
         );
 

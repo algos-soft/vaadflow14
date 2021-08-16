@@ -276,6 +276,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = 26;
         try {
             listaBean = service.fetch(clazz);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -307,6 +309,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, (AFiltro) null);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -322,6 +326,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -338,6 +344,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = service.count(VIA_ENTITY_CLASS);
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -355,6 +363,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -373,6 +383,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -391,6 +403,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -408,6 +422,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -426,6 +442,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -444,6 +462,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -463,6 +483,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -490,6 +512,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         }
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -512,6 +536,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         }
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -536,6 +562,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         }
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -568,6 +596,9 @@ public class AMongoServiceIntegrationTest extends ATest {
             assertNotNull(listaBean);
             assertEquals(previstoIntero, listaBean.size());
             print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
+        } catch (AMongoException unErrore) {
+            assertTrue(true);
+            System.out.println(unErrore);
         } catch (AQueryException unErrore) {
             assertTrue(true);
             System.out.println(unErrore);
@@ -591,6 +622,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         mappaFiltri.put(fieldName, filtro2);
         try {
             listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -610,6 +643,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -621,6 +656,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
         try {
             listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -641,6 +678,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = totRec;
         try {
             listaBean = service.fetch(ANNO_ENTITY_CLASS);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -652,6 +691,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         previstoIntero = totRec;
         try {
             listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -673,6 +714,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         filtro = AFiltro.ugualeObj(fieldName, unSecolo);
         try {
             listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }
@@ -686,6 +729,8 @@ public class AMongoServiceIntegrationTest extends ATest {
         mappaFiltri.put("keyNonUsata", filtro);
         try {
             listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
+        } catch (AMongoException unErrore) {
+            assertTrue(false);
         } catch (AQueryException unErrore) {
             assertTrue(false);
         }

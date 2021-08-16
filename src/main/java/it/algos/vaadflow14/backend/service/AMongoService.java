@@ -610,7 +610,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AMongoException, AQueryException {
         return fetch(entityClazz, (AFiltro) null);
     }
 
@@ -623,7 +623,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AMongoException, AQueryException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return fetch(entityClazz, mappaFiltri);
     }
@@ -637,7 +637,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AMongoException, AQueryException {
         return fetch(entityClazz, mappaFiltri, (Sort) null);
     }
 
@@ -651,7 +651,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AMongoException, AQueryException {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
     }
 
@@ -668,7 +668,7 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AMongoException, AQueryException {
         return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
     }
 
@@ -688,7 +688,8 @@ public class AMongoService<capture> extends AbstractService {
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AMongoException, AQueryException {
+        List<AEntity> listaEntities = null;
         Query query = getQuery(mappaFiltri);
 
         //@todo purtroppo per adesso funziona SOLO per 1 filtro
@@ -704,7 +705,13 @@ public class AMongoService<capture> extends AbstractService {
             query.limit(limit);
         }
 
-        return (List<AEntity>) mongoOp.find(query, entityClazz);
+        try {
+            listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
+        } catch (Exception unErrore) {
+            throw new AMongoException(unErrore,null);
+        }
+
+        return listaEntities;
     }
 
 
