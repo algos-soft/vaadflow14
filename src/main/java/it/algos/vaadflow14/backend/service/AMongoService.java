@@ -643,9 +643,8 @@ public class AMongoService<capture> extends AbstractService {
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AMongoException, AQueryException {
         List<AEntity> listaEntities = null;
         AEntity entityBean;
-        MongoCollection<Document> collection = getCollection(entityClazz);;
+        MongoCollection<Document> collection = getCollection(entityClazz);
         FindIterable<Document> iterable = null;
-        String jSONObjectAsString;
 
         if (collection != null) {
             iterable = collection.find();
@@ -654,13 +653,7 @@ public class AMongoService<capture> extends AbstractService {
         if (iterable != null) {
             listaEntities = new ArrayList<>();
             for (Document doc : iterable) {
-                jSONObjectAsString = doc.toJson();
-                jSONObjectAsString = jSONObjectAsString.replace("_id", "id");
-                try {
-                    entityBean = new Gson().fromJson(jSONObjectAsString, entityClazz);
-                } catch (Exception unErrore) {
-                    throw new AMongoException(unErrore,null,entityClazz.getSimpleName());
-                }
+                entityBean = gSonService.crea(doc, entityClazz);
                 listaEntities.add(entityBean);
             }
         }

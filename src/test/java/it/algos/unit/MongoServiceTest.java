@@ -43,6 +43,9 @@ public class MongoServiceTest extends ATest {
     @InjectMocks
     private AMongoService service;
 
+    @InjectMocks
+    private GsonService gSonService;
+
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
     }
@@ -59,11 +62,22 @@ public class MongoServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
+
+        MockitoAnnotations.initMocks(gSonService);
+        Assertions.assertNotNull(gSonService);
+
         service.text = text;
         service.array = array;
         service.annotation = annotation;
+        service.gSonService = gSonService;
+
+        gSonService.text = text;
+        gSonService.array = array;
+        gSonService.reflection = reflection;
+        gSonService.annotation = annotation;
 
         service.fixProperties(DATA_BASE_NAME);
+        gSonService.fixProperties(DATA_BASE_NAME);
     }
 
 
@@ -83,7 +97,7 @@ public class MongoServiceTest extends ATest {
     @DisplayName("1 - Stato del database")
     void status() {
         System.out.println("1- Stato del database");
-        MongoDatabase dataBase = null;
+        MongoDatabase dataBase;
 
         previsto = DATA_BASE_NAME;
         ottenuto = service.getDatabaseName();
