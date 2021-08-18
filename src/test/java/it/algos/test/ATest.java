@@ -4,7 +4,6 @@ import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -164,7 +163,7 @@ public abstract class ATest {
     protected MathService math;
 
     @InjectMocks
-    protected AGSonService gSonService;
+    protected GsonService gSonService;
 
     @InjectMocks
     protected ClassService classService;
