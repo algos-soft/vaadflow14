@@ -52,12 +52,12 @@ public abstract class ATest {
      */
     protected static final String[] ARRAY_SHORT_STRING = {CONTENUTO};
 
-    protected static final String[] ARRAY_SHORT_STRING_DUE = {CONTENUTO_DUE};
-
     /**
      * The constant LIST_STRING.
      */
     protected static final List<String> LIST_SHORT_STRING = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING));
+
+    protected static final String[] ARRAY_SHORT_STRING_DUE = {CONTENUTO_DUE};
 
     protected static final List<String> LIST_SHORT_STRING_DUE = new ArrayList(Arrays.asList(ARRAY_SHORT_STRING_DUE));
 
@@ -598,6 +598,8 @@ public abstract class ATest {
     //        }
     //    }
 
+
+
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");
         if (array.isAllValid(listaWrap)) {
@@ -627,7 +629,7 @@ public abstract class ATest {
 
     protected void printRisultato(AIResult result) {
         List lista = result.getLista();
-        lista = lista!=null&&lista.size() > 20 ? lista.subList(0, 10) : lista;
+        lista = lista != null && lista.size() > 20 ? lista.subList(0, 10) : lista;
 
         System.out.println(VUOTA);
         System.out.println("Risultato");

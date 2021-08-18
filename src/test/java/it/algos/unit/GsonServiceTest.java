@@ -1,12 +1,16 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -48,6 +52,9 @@ public class GsonServiceTest extends ATest {
         Assertions.assertNotNull(service);
         service.text = text;
         service.array = array;
+        service.logger = logger;
+        service.reflection = reflection;
+        service.annotation = annotation;
 
         service.fixProperties(DATA_BASE_NAME);
     }
@@ -98,7 +105,15 @@ public class GsonServiceTest extends ATest {
     @Order(2)
     @DisplayName("2 - estraeGraffa")
     void estraeGraffa() {
-        sorgente = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno";
+        sorgente = VUOTA;
+        ottenuto = service.estraeGraffa(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        ottenuto = service.estraeGraffa(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
         previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
         ottenuto = service.estraeGraffa(sorgente);
         assertEquals(previsto, ottenuto);
@@ -109,55 +124,114 @@ public class GsonServiceTest extends ATest {
     @Order(3)
     @DisplayName("3 - eliminaGraffa")
     void eliminaGraffa() {
-        sorgente = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno";
-        previsto = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno";
+        sorgente = VUOTA;
+        ottenuto = service.eliminaGraffa(sorgente);
+        assertTrue(text.isEmpty(ottenuto));
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        previsto = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        ottenuto = service.eliminaGraffa(sorgente);
+        assertEquals(previsto, ottenuto);
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
+        previsto = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
         ottenuto = service.eliminaGraffa(sorgente);
         assertEquals(previsto, ottenuto);
     }
+
 
     @Test
     @Order(4)
     @DisplayName("4 - estraeGraffe (nessuna)")
     void estraeGraffe() {
-        System.out.println("2 - Esistenza delle collezioni");
+        System.out.println("4 - estraeGraffe (nessuna)");
 
-        sorgente = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno";
-        previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
+        System.out.println(VUOTA);
+        System.out.println("sorgente nullo, array nullo");
+        sorgente = VUOTA;
         ottenutoArray = service.estraeGraffe(sorgente);
-        assertEquals(previsto, ottenuto);
+        assertNull(ottenutoArray);
+
+        System.out.println(VUOTA);
+        System.out.println("array di un solo elemento col testo originale completo");
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        previstoIntero = 1;
+        previstoArray = array.creaArraySingolo(sorgente);
+        ottenutoArray = service.estraeGraffe(sorgente);
+        assertEquals(previstoIntero, ottenutoArray.size());
+        assertEquals(previstoArray, ottenutoArray);
+        print(ottenutoArray);
     }
+
 
     @Test
     @Order(5)
     @DisplayName("5 - estraeGraffe (una)")
     void estraeGraffe1() {
-        sorgente = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno";
-        previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
+        System.out.println("5 - estraeGraffe (una)");
+        System.out.println(VUOTA);
+        System.out.println("array di due elementi col testo senza graffe nel primo e il contenuto interno della graffa nel secondo");
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
+        previstoIntero = 2;
+        previstoArray = new ArrayList<>();
+        previstoArray.add("{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}");
+        previstoArray.add("\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"}");
         ottenutoArray = service.estraeGraffe(sorgente);
-        assertEquals(previsto, ottenuto);
+        assertEquals(previstoIntero, ottenutoArray.size());
+        assertEquals(previstoArray, ottenutoArray);
+        print(ottenutoArray);
     }
 
     @Test
     @Order(6)
     @DisplayName("6 - estraeGraffe (due)")
     void estraeGraffe2() {
-        sorgente = "id\":\"5gennaio\",\"ordine\":5,\"giorno\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno";
-        previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
+        System.out.println("6 - estraeGraffe (due)");
+        System.out.println(VUOTA);
+        System.out.println("array di tre elementi col testo senza graffe nel primo e i contenuti interni delle due graffe nel secondo e nel terzo");
+
+        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"anno\":{\"id\":\"1876\",\"collectionName\":\"anno\"},\"class\":\"giorno\"}";
+        previstoIntero = 3;
+        previstoArray = new ArrayList<>();
+        previstoArray.add("{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}");
+        previstoArray.add("\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"}");
+        previstoArray.add("\"anno\":{\"id\":\"1876\",\"collectionName\":\"anno\"}");
         ottenutoArray = service.estraeGraffe(sorgente);
-        assertEquals(previsto, ottenuto);
+        assertEquals(previstoIntero, ottenutoArray.size());
+        assertEquals(previstoArray, ottenutoArray);
+        print(ottenutoArray);
     }
 
-    //    @Test
-    @Order(8)
-    @DisplayName("crea")
+    @Test
+    @Order(7)
+    @DisplayName("7 - creazione di un entityBean da un testo jSon")
     void crea() {
+        System.out.println("7 - creazione di un entityBean da un testo jSon");
+
         sorgente = "piazza";
-        entityBean = service.crea(Via.class, sorgente);
+        clazz = Via.class;
+        entityBean = service.crea(clazz, sorgente);
         assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
 
         sorgente = "5gennaio";
-        entityBean = service.crea(Giorno.class, sorgente);
+        clazz = Giorno.class;
+        entityBean = service.crea(clazz, sorgente);
         assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "1786";
+        clazz = Anno.class;
+        entityBean = service.crea(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
     }
 
     /**

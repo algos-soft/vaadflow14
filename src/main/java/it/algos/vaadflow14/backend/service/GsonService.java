@@ -156,15 +156,15 @@ public class GsonService extends AbstractService {
         int end;
 
         if (text.isEmpty(jsonString)) {
-            return null;
+            return VUOTA;
         }
 
         testoOut = jsonString.trim();
         if (countGraffe(testoOut) < 0) {
-            return null;
+            return VUOTA;
         }
         if (countGraffe(testoOut) == 0) {
-            return testoOut;
+            return VUOTA;
         }
 
         testoOut = text.setNoGraffe(testoOut);
@@ -205,7 +205,7 @@ public class GsonService extends AbstractService {
      * @return lista di sub-contenuti, null se non ci sono graffe interne
      */
     public List<String> estraeGraffe(final String jsonString) {
-        List<String> lista;
+        List<String> lista = new ArrayList<>();
         String testo;
         String contenuto;
 
@@ -213,28 +213,24 @@ public class GsonService extends AbstractService {
             return null;
         }
 
-        testo = jsonString.trim();
-        if (countGraffe(testo) <= 0) {
-            return null;
+        if (countGraffe(jsonString) <= 0) {
+            return array.creaArraySingolo(jsonString);
         }
 
-        lista = new ArrayList<>();
+        testo = jsonString.trim();
         testo = text.setNoGraffe(testo);
-        testo = text.setNoDoppiApici(testo);
         while (countGraffe(testo) > 0) {
             contenuto = estraeGraffa(testo);
-            //            testo = testo.replace("\"" + contenuto + VIRGOLA, VUOTA);
-            testo = testo.replace(contenuto + VIRGOLA, VUOTA);
+            testo = testo.replace(contenuto, VUOTA);
+            contenuto = text.levaCoda(contenuto, VIRGOLA);
 
             if (lista.size() == 0) {
-                lista.add(testo);
-                lista.add(contenuto);
+                lista.add(text.setGraffe(testo));
             }
             else {
-                lista.remove(0);
-                lista.add(0, testo);
-                lista.add(contenuto);
+                lista.set(0, text.setGraffe(testo));
             }
+            lista.add(contenuto);
         }
 
         return lista;
@@ -299,7 +295,7 @@ public class GsonService extends AbstractService {
         query = new BasicDBObject();
         query.put("_id", valueID);
 
-        doc = (Document) collection.find(query).first();
+        doc = collection.find(query).first();
         entityBean = this.crea(doc, entityClazz);
 
         return entityBean;
@@ -317,9 +313,12 @@ public class GsonService extends AbstractService {
      */
     public AEntity crea(final Document doc, final Class entityClazz) {
         AEntity entityBean = null;
+        String jsonString = this.fixDoc(doc);
+        List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
 
         if (entityClazz != null && doc != null) {
-            entityBean = creaNoDbRef(doc, entityClazz);
+
+            entityBean = creaNoDbRef(entityClazz, listaNoDbRefAndGraffe.get(0));
 
             if (isEsistonoDBRef(doc)) {
                 entityBean = addAllDBRef(doc, entityBean);
@@ -357,7 +356,7 @@ public class GsonService extends AbstractService {
      * @return new entityBean
      */
     public AEntity creaNoDbRef(final Class entityClazz, final String jsonString) {
-        AEntity entityBean;
+        AEntity entityBean = null;
         Gson gSon;
         GsonBuilder builder = new GsonBuilder();
 
@@ -384,7 +383,11 @@ public class GsonService extends AbstractService {
         });
         gSon = builder.create();
 
-        entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
+        try {
+            entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
+        } catch (JsonSyntaxException unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
 
         return entityBean;
     }
