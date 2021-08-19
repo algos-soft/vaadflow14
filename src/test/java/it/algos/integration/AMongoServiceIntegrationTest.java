@@ -1021,11 +1021,11 @@ public class AMongoServiceIntegrationTest extends ATest {
         System.out.println("singola entity recuperata da keyID");
         System.out.println(VUOTA);
 
-        entityBean = service.findById(Mese.class, "brumaio");
+        entityBean = service.findByIdOld(Mese.class, "brumaio");
         Assert.assertNull(entityBean);
 
         previsto = "ottobre";
-        entityBean = service.findById(Mese.class, "ottobre");
+        entityBean = service.findByIdOld(Mese.class, "ottobre");
         Assert.assertNotNull(entityBean);
         Assert.assertEquals(((Mese) entityBean).mese, previsto);
         System.out.println(entityBean);

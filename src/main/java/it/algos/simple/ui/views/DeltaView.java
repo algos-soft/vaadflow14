@@ -66,7 +66,7 @@ public class DeltaView extends VerticalLayout {
 
         //--registra su mongo
         String valoreCodificato = resourceService.getSrcBandieraPng("fo");
-        Delta deltaUno = (Delta) mongo.findById(Delta.class, "alfa");
+        Delta deltaUno = (Delta) mongo.findByIdOld(Delta.class, "alfa");
         if (deltaUno != null) {
             deltaUno.immagine = valoreCodificato;
             try {
