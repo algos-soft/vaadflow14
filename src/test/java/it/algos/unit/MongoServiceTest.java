@@ -1,7 +1,6 @@
 package it.algos.unit;
 
 import com.mongodb.client.*;
-import it.algos.simple.backend.packages.alfa.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -129,14 +128,6 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non esiste");
 
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoBooleano = service.isExists(sorgente);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, "esiste");
-        ottenutoBooleano = service.isExists(Alfa.class);
-        assertTrue(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) esiste ");
-
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isExists(sorgente);
         assertTrue(ottenutoBooleano);
@@ -154,14 +145,6 @@ public class MongoServiceTest extends ATest {
         assertFalse(ottenutoBooleano);
         printCollection(sorgente, "non è valida");
 
-        sorgente = COLLEZIONE_VUOTA;
-        ottenutoBooleano = service.isValid(sorgente);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, "esiste ma non è valida");
-        ottenutoBooleano = service.isValid(Alfa.class);
-        assertFalse(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) esiste ma non è valida");
-
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isValid(sorgente);
         assertTrue(ottenutoBooleano);
@@ -174,7 +157,7 @@ public class MongoServiceTest extends ATest {
     @Test
     @Order(3)
     @DisplayName("3 - Singola entity")
-    void find() {
+    void findById() {
         System.out.println("3 - Singola entity");
 
         sorgente = "piazza";
@@ -186,11 +169,29 @@ public class MongoServiceTest extends ATest {
         System.out.println(entityBean);
     }
 
+
     @Test
     @Order(4)
-    @DisplayName("4 - Lista di tutte le entities")
+    @DisplayName("4 - Singola entity by key")
+    void findByKey() {
+        System.out.println("4 - Singola entity by key");
+
+        clazz = Via.class;
+        sorgente = "nome";
+        sorgente2 = "piazza";
+        entityBean = service.findByKey(clazz, sorgente, sorgente2);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della property '%s'", clazz.getSimpleName(), sorgente2, sorgente));
+        System.out.println(entityBean);
+    }
+
+
+//    @Test
+    @Order(5)
+    @DisplayName("5 - Lista di tutte le entities")
     void fetch() {
-        System.out.println("4 - Lista di tutte le entities");
+        System.out.println("5 - Lista di tutte le entities");
 
         sorgenteClasse = Via.class;
         previstoIntero = 26;

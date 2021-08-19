@@ -45,7 +45,7 @@ public class PiUnoView extends VerticalLayout {
         PiGrid grid = new PiGrid();
 
         grid.addColumn(Anno::getId).setHeader("Id");
-        grid.addColumn(Anno::getAnno).setHeader("Anno");
+        grid.addColumn(Anno::getTitolo).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
         DataProvider dataProvider = piService.createDataProvider(Anno.class);
@@ -61,7 +61,7 @@ public class PiUnoView extends VerticalLayout {
         Grid<Anno> grid = new Grid<Anno>(Anno.class,false);
 
         grid.addColumn(Anno::getId).setHeader("Id");
-        grid.addColumn(Anno::getAnno).setHeader("Anno");
+        grid.addColumn(Anno::getTitolo).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
         DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,(BasicDBObject)null);
