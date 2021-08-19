@@ -44,8 +44,8 @@ public class HtmlServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
+//        service.text = text;
+//        service.array = array;
     }
 
 

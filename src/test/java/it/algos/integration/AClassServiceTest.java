@@ -51,10 +51,10 @@ public class AClassServiceTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
-        service.logger = logger;
-        service.fileService = file;
-        service.text = text;
-        service.annotation = annotation;
+//        service.logger = logger;
+//        service.fileService = file;
+//        service.text = text;
+//        service.annotation = annotation;
     }
 
 

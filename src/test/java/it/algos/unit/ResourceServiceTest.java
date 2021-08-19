@@ -52,9 +52,9 @@ public class ResourceServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.fileService = file;
+//        service.text = text;
+//        service.array = array;
+//        service.fileService = file;
     }
 
 
@@ -79,11 +79,11 @@ public class ResourceServiceTest extends ATest {
 
         sorgente = "styles.shared-styles.css";
         ottenuto = service.leggeFrontend(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "styles/shared-styles.css";
         ottenuto = service.leggeFrontend(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertTrue(ottenuto.startsWith(previsto));
     }
 
@@ -94,19 +94,19 @@ public class ResourceServiceTest extends ATest {
     void leggeMetaInf() {
         sorgente = "rainbow.png";
         ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "img.rainbow.png";
         ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "img/rainbow.png";
         ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         sorgente = "bandiere/at.png";
         ottenuto = service.leggeMetaInf(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
     }
 
 
@@ -144,7 +144,7 @@ public class ResourceServiceTest extends ATest {
 
         sorgente = "rainbow.png";
         ottenuto = service.getSrc(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "src/main/resources/META-INF/resources/img/" + sorgente;
         ottenuto = service.getSrc(sorgente);
@@ -165,36 +165,36 @@ public class ResourceServiceTest extends ATest {
 
         sorgente = "config.password.txt";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "/config.password.txt";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "/config/password.txt";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "config/password.txt";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgente = "password.txt";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
 
         sorgente = "at.png";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         sorgente = "africa";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         sorgente = "regioni";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
     }
 
@@ -205,7 +205,7 @@ public class ResourceServiceTest extends ATest {
     void leggeListaConfig() {
         sorgente = "regioni";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         listaStr = service.leggeListaConfig(sorgente, true);
         assertNotNull(listaStr);
@@ -240,7 +240,7 @@ public class ResourceServiceTest extends ATest {
     void leggeMappaConfig() {
         sorgente = "regioni";
         ottenuto = service.leggeConfig(sorgente);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
 
         mappa = service.leggeMappaConfig(sorgente);
         assertNotNull(mappa);

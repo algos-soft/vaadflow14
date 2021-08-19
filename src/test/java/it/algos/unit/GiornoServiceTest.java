@@ -20,7 +20,7 @@ import org.mockito.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Giorno service")
+@DisplayName("GiornoService - Entity cronologica")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GiornoServiceTest extends ATest {
 
@@ -29,7 +29,7 @@ public class GiornoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    GiornoService service;
+    private GiornoService service;
 
 
     /**
@@ -38,16 +38,8 @@ public class GiornoServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
-
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.mongo = mongoService;
-        ;
     }
 
 
@@ -59,6 +51,11 @@ public class GiornoServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
+
+        service.mongo = mongoService;
+        mongoService.gSonService=gSonService;
+        gSonService.reflection=reflectionService;
+        gSonService.annotation=annotationService;
     }
 
 
@@ -66,7 +63,7 @@ public class GiornoServiceTest extends ATest {
     @Order(1)
     @DisplayName("1 - findById")
     void findById() {
-        sorgente = "29 gennaio";
+        sorgente = "29gennaio";
         entityBean = service.findById(sorgente);
         assertNotNull(entityBean);
     }

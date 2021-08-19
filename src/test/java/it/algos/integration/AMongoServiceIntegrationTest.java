@@ -90,19 +90,19 @@ public class AMongoServiceIntegrationTest extends ATest {
         Assertions.assertNotNull(secoloService);
         Assertions.assertNotNull(mongoOp);
 
-        service.annotation = annotation;
-        service.text = text;
-        service.array = array;
-        service.logger = logger;
-        service.mongo = mongoService;
-        service.mongoOp = mongoOp;
-        annotation.text = text;
-        meseService.text = text;
-        secoloService.text = text;
-        meseService.mongo = mongoService;
-        secoloService.mongo = mongoService;
-        secoloService.keyPropertyName = "secolo";
-        mongoService.mongoOp = mongoOp;
+//        service.annotation = annotation;
+//        service.text = text;
+//        service.array = array;
+//        service.logger = logger;
+//        service.mongo = mongoService;
+//        service.mongoOp = mongoOp;
+//        annotation.text = text;
+//        meseService.text = text;
+//        secoloService.text = text;
+//        meseService.mongo = mongoService;
+//        secoloService.mongo = mongoService;
+//        secoloService.keyPropertyName = "secolo";
+//        mongoService.mongoOp = mongoOp;
 
         this.cancellazioneEntitiesProvvisorie();
         this.creazioneInizialeEntitiesProvvisorie();
@@ -1900,7 +1900,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         int cont = 0;
 
         if (lista != null) {
-            if (text.isValid(message)) {
+            if (textService.isValid(message)) {
                 System.out.println(VUOTA);
                 System.out.println(message);
             }

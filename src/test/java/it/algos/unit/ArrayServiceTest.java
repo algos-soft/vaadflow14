@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -23,6 +22,7 @@ import java.util.*;
  * User: gac
  * Date: mer, 29-apr-2020
  * Time: 14:46
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -69,7 +69,8 @@ public class ArrayServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    ArrayService service;
+    private ArrayService service;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -80,20 +81,13 @@ public class ArrayServiceTest extends ATest {
     void setUpIniziale() {
         super.setUpStartUp();
 
-        //--reidirizzo l'istanza della superclasse
+        //--reindirizzo l'istanza della superclasse
         service = arrayService;
-        //        MockitoAnnotations.initMocks(this);
-        //        MockitoAnnotations.initMocks(service);
-        //        Assertions.assertNotNull(service);
-        //        service.text = text;
-        //        service.array = array;
-        //        service.web = web;
-        //        service.html = html;
     }
 
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */

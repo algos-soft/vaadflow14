@@ -48,7 +48,7 @@ public class EntityTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
-        service.text = text;
+//        service.text = text;
     }
 
 

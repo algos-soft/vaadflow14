@@ -74,13 +74,13 @@ public class RegioneLogicTest extends ATest {
         Assertions.assertNotNull(resource);
         MockitoAnnotations.initMocks(fileService);
         Assertions.assertNotNull(fileService);
-        service.text = text;
-        service.array = array;
-        service.web = web;
-        service.logger = logger;
-        fileService.text = text;
+        service.text = textService;
+        service.array = arrayService;
+        service.web = webService;
+        service.logger = loggerService;
+        fileService.text = textService;
         resource.fileService = fileService;
-        fileService.logger = logger;
+        fileService.logger = loggerService;
 
         creazioneLista();
     }
@@ -112,8 +112,8 @@ public class RegioneLogicTest extends ATest {
         if (parti != null && parti.length > 0) {
             listaAlfaDue = new ArrayList<>();
             for (String riga : parti) {
-                riga = text.estrae(riga, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
-                riga = text.levaTestoPrimaDi(riga, PIPE);
+                riga = textService.estrae(riga, DOPPIE_QUADRE_INI, DOPPIE_QUADRE_END);
+                riga = textService.levaTestoPrimaDi(riga, PIPE);
                 listaAlfaDue.add(riga);
             }
         }
@@ -183,7 +183,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = geografic.getRegioni(sorgente);
+                listaWrap = geograficService.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());
@@ -211,7 +211,7 @@ public class RegioneLogicTest extends ATest {
             alfaDue = listaAlfaDue.get(k);
             sorgente = ISO + alfaDue;
             try {
-                listaWrap = geografic.getRegioni(sorgente);
+                listaWrap = geograficService.getRegioni(sorgente);
             } catch (Exception unErrore) {
                 System.out.println(VUOTA);
                 System.out.println(unErrore.getMessage());

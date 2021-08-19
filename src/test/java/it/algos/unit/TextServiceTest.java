@@ -3,6 +3,7 @@ package it.algos.unit;
 import com.vaadin.flow.component.html.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +29,12 @@ public class TextServiceTest extends ATest {
 
 
     /**
+     * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
+     */
+    TextService text;
+
+    /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
@@ -35,6 +42,9 @@ public class TextServiceTest extends ATest {
     @BeforeAll
     void setUpAll() {
         super.setUpStartUp();
+
+        //--reidirizzo l'istanza della superclasse
+        text = textService;
     }
 
 

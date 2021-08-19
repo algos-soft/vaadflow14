@@ -78,7 +78,7 @@ public class AnnotationServiceTest extends ATest {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);
-        service = annotation;
+//        service = annotation;
     }
 
 
@@ -119,7 +119,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIEntity() {
-        aiEntity = annotation.getAIEntity(VIA_ENTITY_CLASS);
+        aiEntity = service.getAIEntity(VIA_ENTITY_CLASS);
         assertNotNull(aiEntity);
 
     }// end of single test
@@ -135,7 +135,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIList() {
-        aiList = annotation.getAIList(VIA_ENTITY_CLASS);
+        aiList = service.getAIList(VIA_ENTITY_CLASS);
         assertNotNull(aiList);
     }// end of single test
 
@@ -150,7 +150,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIForm() {
-        aiForm = annotation.getAIForm(VIA_ENTITY_CLASS);
+        aiForm = service.getAIForm(VIA_ENTITY_CLASS);
         assertNotNull(aiForm);
     }// end of single test
 
@@ -165,7 +165,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIView() {
-        aiView = annotation.getAIView(VIA_ENTITY_CLASS);
+        aiView = service.getAIView(VIA_ENTITY_CLASS);
         assertNotNull(aiView);
 
     }// end of single test
@@ -181,7 +181,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIColumn() {
-        aiColumn = annotation.getAIColumn(FIELD_NOME);
+        aiColumn = service.getAIColumn(FIELD_NOME);
         assertNotNull(aiColumn);
     }// end of single test
 
@@ -196,7 +196,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIColumn2() {
-        aiColumn = annotation.getAIColumn(VIA_ENTITY_CLASS, FIELD_NAME_NOTE);
+        aiColumn = service.getAIColumn(VIA_ENTITY_CLASS, FIELD_NAME_NOTE);
         assertNull(aiColumn);
     }// end of single test
 
@@ -211,7 +211,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIField() {
-        aiField = annotation.getAIField(FIELD_NOME);
+        aiField = service.getAIField(FIELD_NOME);
         assertNotNull(aiField);
     }// end of single test
 
@@ -227,7 +227,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIField2() {
-        aiField = annotation.getAIField(VIA_ENTITY_CLASS, FIELD_NAME_NOTE);
+        aiField = service.getAIField(VIA_ENTITY_CLASS, FIELD_NAME_NOTE);
         assertNull(aiField);
     }// end of single test
 
@@ -242,7 +242,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getDocument() {
-        document = annotation.getDocument(VIA_ENTITY_CLASS);
+        document = service.getDocument(VIA_ENTITY_CLASS);
         assertNotNull(document);
     }// end of single test
 
@@ -272,7 +272,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getRoute() {
-        route = annotation.getRoute(VIA_ENTITY_CLASS);
+        route = service.getRoute(VIA_ENTITY_CLASS);
         assertNull(route);
     }// end of single test
 
@@ -286,7 +286,7 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getNotNull() {
-        notNull = annotation.getNotNull(FIELD_NOME);
+        notNull = service.getNotNull(FIELD_NOME);
         assertNull(notNull);
     }// end of single test
 
@@ -302,7 +302,7 @@ public class AnnotationServiceTest extends ATest {
     @Test
     public void getViewName() {
         previsto = "Via";
-        ottenuto = annotation.getMenuName(VIA_ENTITY_CLASS);
+        ottenuto = service.getMenuName(VIA_ENTITY_CLASS);
         assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -340,14 +340,14 @@ public class AnnotationServiceTest extends ATest {
         String[] stringArray = {"ordine", "nome"};
         previstoArray = new ArrayList(Arrays.asList(stringArray));
 
-        ottenutoArray = annotation.getGridColumns(VIA_ENTITY_CLASS);
+        ottenutoArray = service.getGridColumns(VIA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
         System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
         String[] stringArray2 = {"pageId","code", "descrizione","lastModifica"};
         previstoArray = new ArrayList(Arrays.asList(stringArray2));
-        ottenutoArray = annotation.getGridColumns(FATTURA_ENTITY_CLASS);
+        ottenutoArray = service.getGridColumns(FATTURA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
         System.out.println(VUOTA);
         System.out.println("Colonne previste per la Entity " + FATTURA_ENTITY_CLASS.getSimpleName() + ":");
@@ -355,7 +355,7 @@ public class AnnotationServiceTest extends ATest {
 
         String[] stringArray3 = {"code", "descrizione"};
         previstoArray = new ArrayList(Arrays.asList(stringArray3));
-        ottenutoArray = annotation.getGridColumns(OMEGA_ENTITY_CLASS);
+        ottenutoArray = service.getGridColumns(OMEGA_ENTITY_CLASS);
         //        assertEquals(previstoArray, ottenutoArray);
         System.out.println(VUOTA);
         System.out.println("Colonne previste per la Entity " + OMEGA_ENTITY_CLASS.getSimpleName() + ":");
@@ -396,7 +396,7 @@ public class AnnotationServiceTest extends ATest {
         String[] stringArray = {"ordine", "nome"};
         previstoArray = new ArrayList(Arrays.asList(stringArray));
 
-        ottenutoArray = annotation.getListaPropertiesForm(VIA_ENTITY_CLASS);
+        ottenutoArray = service.getListaPropertiesForm(VIA_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
 
         //        ottenutoList = service.getFormFieldsName(USER_ENTITY_CLASS);
@@ -417,11 +417,11 @@ public class AnnotationServiceTest extends ATest {
     @Test
     public void getColumnName() {
         previsto = HEADER_ORDINE;
-        ottenuto = annotation.getColumnHeader(FIELD_ORDINE);
+        ottenuto = service.getColumnHeader(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
 
         previsto = HEADER_NOME;
-        ottenuto = annotation.getColumnHeader(FIELD_NOME);
+        ottenuto = service.getColumnHeader(FIELD_NOME);
         assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -493,12 +493,12 @@ public class AnnotationServiceTest extends ATest {
      */
     @Test
     public void getFormFieldName() {
-        previsto = text.primaMaiuscola(NAME_ORDINE);
-        ottenuto = annotation.getFormFieldNameCapital(FIELD_ORDINE);
+        previsto = textService.primaMaiuscola(NAME_ORDINE);
+        ottenuto = service.getFormFieldNameCapital(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
 
-        previsto = text.primaMaiuscola(NAME_NOME);
-        ottenuto = annotation.getFormFieldNameCapital(FIELD_NOME);
+        previsto = textService.primaMaiuscola(NAME_NOME);
+        ottenuto = service.getFormFieldNameCapital(FIELD_NOME);
         assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -514,12 +514,12 @@ public class AnnotationServiceTest extends ATest {
     @Test
     public void getMessage() {
         previsto = FIELD_NAME_ORDINE + INT_NULL;
-        previsto = text.primaMaiuscola(previsto);
+        previsto = textService.primaMaiuscola(previsto);
 
-        ottenuto = annotation.getMessage(FIELD_ORDINE);
+        ottenuto = service.getMessage(FIELD_ORDINE);
         assertEquals(VUOTA, ottenuto);
 
-        ottenuto = annotation.getMessageNull(FIELD_ORDINE);
+        ottenuto = service.getMessageNull(FIELD_ORDINE);
         assertEquals(VUOTA, ottenuto);
 
         //        previsto = "";
@@ -640,11 +640,11 @@ public class AnnotationServiceTest extends ATest {
     @Test
     public void getWidthEM() {
         previsto = "8.0em";
-        ottenuto = annotation.getFormWith(FIELD_ORDINE);
+        ottenuto = service.getFormWith(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
 
         previsto = "14.0em";
-        ottenuto = annotation.getFormWith(FIELD_NOME);
+        ottenuto = service.getFormWith(FIELD_NOME);
         assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -660,11 +660,11 @@ public class AnnotationServiceTest extends ATest {
     @Test
     public void isRequired() {
         previstoBooleano = false;
-        ottenutoBooleano = annotation.isRequired(FIELD_ORDINE);
+        ottenutoBooleano = service.isRequired(FIELD_ORDINE);
         assertEquals(previstoBooleano, ottenutoBooleano);
 
         previstoBooleano = true;
-        ottenutoBooleano = annotation.isRequired(FIELD_NOME);
+        ottenutoBooleano = service.isRequired(FIELD_NOME);
         assertEquals(previstoBooleano, ottenutoBooleano);
     }// end of single test
 

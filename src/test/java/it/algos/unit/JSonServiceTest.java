@@ -50,8 +50,8 @@ public class JSonServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         assertNotNull(service);
-        service.text = text;
-        service.array = array;
+        service.text = textService;
+        service.array = arrayService;
     }
 
 

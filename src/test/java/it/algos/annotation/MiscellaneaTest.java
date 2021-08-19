@@ -44,7 +44,7 @@ public class MiscellaneaTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
-        service.text = text;
+        service.text = textService;
     }
 
 

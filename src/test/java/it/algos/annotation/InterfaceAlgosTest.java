@@ -165,7 +165,7 @@ public class InterfaceAlgosTest extends ATest {
         AIField field;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         field = ottenutoField.getAnnotation(AIField.class);
         assertNotNull(field);
         field = service.getAIField(ottenutoField);
@@ -179,7 +179,7 @@ public class InterfaceAlgosTest extends ATest {
         AIColumn column;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         column = ottenutoField.getAnnotation(AIColumn.class);
         assertNotNull(column);
         column = service.getAIColumn(ottenutoField);

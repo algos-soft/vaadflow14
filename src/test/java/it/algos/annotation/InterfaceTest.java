@@ -134,14 +134,14 @@ public class InterfaceTest extends ATest {
         NotNull notNull;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         notNull = ottenutoField.getAnnotation(NotNull.class);
         assertNull(notNull);
         notNull = service.getNotNull(ottenutoField);
         assertNull(notNull);
 
         sorgente = "secolo";
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         notNull = ottenutoField.getAnnotation(NotNull.class);
         assertNotNull(notNull);
         notNull = service.getNotNull(ottenutoField);
@@ -156,14 +156,14 @@ public class InterfaceTest extends ATest {
         NotBlank notBlank;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         notBlank = ottenutoField.getAnnotation(NotBlank.class);
         assertNull(notBlank);
         notBlank = service.getNotBlank(ottenutoField);
         assertNull(notBlank);
 
         sorgente = "anno";
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         notBlank = ottenutoField.getAnnotation(NotBlank.class);
         assertNotNull(notBlank);
         notBlank = service.getNotBlank(ottenutoField);
@@ -177,14 +177,14 @@ public class InterfaceTest extends ATest {
         Indexed indexed;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         indexed = ottenutoField.getAnnotation(Indexed.class);
         assertNotNull(indexed);
         indexed = service.getIndexed(ottenutoField);
         assertNotNull(indexed);
 
         sorgente = "secolo";
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         indexed = ottenutoField.getAnnotation(Indexed.class);
         assertNull(indexed);
         indexed = service.getIndexed(ottenutoField);
@@ -198,14 +198,14 @@ public class InterfaceTest extends ATest {
         Size size;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(MESE_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
         size = ottenutoField.getAnnotation(Size.class);
         assertNull(size);
         size = service.getSize(ottenutoField);
         assertNull(size);
 
         sorgente = "sigla";
-        ottenutoField = reflection.getField(MESE_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
         size = ottenutoField.getAnnotation(Size.class);
         assertNotNull(size);
         size = service.getSize(ottenutoField);
@@ -219,14 +219,14 @@ public class InterfaceTest extends ATest {
         Range range;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(MESE_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
         range = ottenutoField.getAnnotation(Range.class);
         assertNull(range);
         range = service.getRange(ottenutoField);
         assertNull(range);
 
         sorgente = "giorni";
-        ottenutoField = reflection.getField(MESE_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
         range = ottenutoField.getAnnotation(Range.class);
         assertNotNull(range);
         range = service.getRange(ottenutoField);
@@ -240,14 +240,14 @@ public class InterfaceTest extends ATest {
         DBRef dbRef;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         dbRef = ottenutoField.getAnnotation(DBRef.class);
         assertNull(dbRef);
         dbRef = service.getDBRef(ottenutoField);
         assertNull(dbRef);
 
         sorgente = "secolo";
-        ottenutoField = reflection.getField(ANNO_ENTITY_CLASS, sorgente);
+        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
         dbRef = ottenutoField.getAnnotation(DBRef.class);
         assertNotNull(dbRef);
         dbRef = service.getDBRef(ottenutoField);

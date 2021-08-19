@@ -66,15 +66,15 @@ public class MongoServiceTest extends ATest {
         MockitoAnnotations.initMocks(gSonService);
         Assertions.assertNotNull(gSonService);
 
-        service.text = text;
-        service.array = array;
-        service.annotation = annotation;
-        service.gSonService = gSonService;
-
-        gSonService.text = text;
-        gSonService.array = array;
-        gSonService.reflection = reflection;
-        gSonService.annotation = annotation;
+//        service.text = text;
+//        service.array = array;
+//        service.annotation = annotation;
+//        service.gSonService = gSonService;
+//
+//        gSonService.text = text;
+//        gSonService.array = array;
+//        gSonService.reflection = reflection;
+//        gSonService.annotation = annotation;
 
         service.fixProperties(DATA_BASE_NAME);
         gSonService.fixProperties(DATA_BASE_NAME);
@@ -101,7 +101,7 @@ public class MongoServiceTest extends ATest {
 
         previsto = DATA_BASE_NAME;
         ottenuto = service.getDatabaseName();
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
         System.out.println(String.format("Nome del dataBase corrente: [%s]", ottenuto));
@@ -199,11 +199,11 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
 
         sorgenteClasse = Giorno.class;
         previstoIntero = 366;
@@ -211,13 +211,13 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
 
         sorgenteClasse = Anno.class;
         previstoIntero = 3030;
@@ -225,13 +225,13 @@ public class MongoServiceTest extends ATest {
         try {
             listaBean = service.fetch(sorgenteClasse);
         } catch (AQueryException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         } catch (AMongoException unErrore) {
-            logger.error(unErrore, this.getClass(), "fetch");
+            loggerService.error(unErrore, this.getClass(), "fetch");
         }
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
-        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
     }
 
     //    @ParameterizedTest

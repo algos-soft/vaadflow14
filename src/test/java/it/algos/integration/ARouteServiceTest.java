@@ -50,8 +50,8 @@ public class ARouteServiceTest extends ATest {
         MockitoAnnotations.initMocks(service);
         assertNotNull(service);
 
-        service.text = text;
-        service.array = array;
+//        service.text = text;
+//        service.array = array;
         service.classService = classService;
     }
 
@@ -123,7 +123,7 @@ public class ARouteServiceTest extends ATest {
 
     void printQueryParameters(String titolo,QueryParameters queryParameters) {
         Map<String, List<String>> mappa = queryParameters.getParameters();
-        if (text.isValid(titolo)) {
+        if (textService.isValid(titolo)) {
             System.out.println(titolo);
         }
 
@@ -131,7 +131,7 @@ public class ARouteServiceTest extends ATest {
         System.out.println("Numero di parametri: " + mappa.size());
         if (mappa.size() > 0) {
             for (String key : mappa.keySet()) {
-                System.out.println("Parametro: " + key + " = " + text.setNoQuadre((String)mappa.get(key).get(0)));
+                System.out.println("Parametro: " + key + " = " + textService.setNoQuadre((String)mappa.get(key).get(0)));
             }
         }
         System.out.println(VUOTA);

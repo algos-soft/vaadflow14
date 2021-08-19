@@ -66,9 +66,9 @@ public class ReflectionServiceTest extends ATest {
         MockitoAnnotations.initMocks(this);
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.logger = logger;
+//        service.text = text;
+//        service.array = array;
+//        service.logger = logger;
     }
 
 
