@@ -6,6 +6,7 @@ import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
@@ -24,8 +25,8 @@ import org.mockito.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("MongoServiceTest")
-@DisplayName("Test di unit")
+@Tag("testAllValido")
+@DisplayName("Mongo service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoServiceTest extends ATest {
 
@@ -134,7 +135,7 @@ public class MongoServiceTest extends ATest {
         printCollection(sorgente, "esiste");
         ottenutoBooleano = service.isExists(Alfa.class);
         assertTrue(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) esiste");
+        printCollection(sorgente, " (letta dalla classe) esiste ");
 
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isExists(sorgente);
@@ -159,7 +160,7 @@ public class MongoServiceTest extends ATest {
         printCollection(sorgente, "esiste ma non è valida");
         ottenutoBooleano = service.isValid(Alfa.class);
         assertFalse(ottenutoBooleano);
-        printCollection(sorgente, " (letta dalla classe) esiste non è valida");
+        printCollection(sorgente, " (letta dalla classe) esiste ma non è valida");
 
         sorgente = COLLEZIONE_VALIDA;
         ottenutoBooleano = service.isValid(sorgente);
@@ -201,7 +202,22 @@ public class MongoServiceTest extends ATest {
         assertNotNull(listaBean);
         assertEquals(previstoIntero, listaBean.size());
         System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
+
+        sorgenteClasse = Anno.class;
+        previstoIntero = 3030;
+        inizio = System.currentTimeMillis();
+        try {
+            listaBean = service.fetch(sorgenteClasse);
+        } catch (AQueryException unErrore) {
+            logger.error(unErrore, this.getClass(), "fetch");
+        } catch (AMongoException unErrore) {
+            logger.error(unErrore, this.getClass(), "fetch");
+        }
+        assertNotNull(listaBean);
+        assertEquals(previstoIntero, listaBean.size());
+        System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), text.format(listaBean.size()), date.deltaTextEsatto(inizio)));
     }
+
 
     //    @ParameterizedTest
     //    @MethodSource(value = "COLLEZIONI")

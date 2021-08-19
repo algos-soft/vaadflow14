@@ -25,7 +25,7 @@ import java.util.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Test Gson")
+@DisplayName("Gson service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GsonServiceTest extends ATest {
 
