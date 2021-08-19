@@ -1,22 +1,20 @@
 package it.algos.unit;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.button.*;
+import com.vaadin.flow.component.grid.*;
+import com.vaadin.flow.component.html.*;
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.enumeration.AECrono;
-import it.algos.vaadflow14.backend.enumeration.AEGeografia;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.Via;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.*;
-
-import java.util.*;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.mockito.*;
+
+import java.util.*;
 
 
 /**
@@ -69,8 +67,8 @@ public class ArrayServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
     ArrayService service;
 
     /**
@@ -82,13 +80,15 @@ public class ArrayServiceTest extends ATest {
     void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-        service.text = text;
-        service.array = array;
-        service.web = web;
-        service.html = html;
+        //--reidirizzo l'istanza della superclasse
+        service = arrayService;
+        //        MockitoAnnotations.initMocks(this);
+        //        MockitoAnnotations.initMocks(service);
+        //        Assertions.assertNotNull(service);
+        //        service.text = text;
+        //        service.array = array;
+        //        service.web = web;
+        //        service.html = html;
     }
 
 
@@ -212,14 +212,14 @@ public class ArrayServiceTest extends ATest {
         mappaSorgente.put("beta", "irrilevante");
         mappaSorgente.put(null, "irrilevante2");
         mappaSorgente.put("delta", "irrilevante3");
-        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        ottenutoBooleano = service.isAllValid(mappaSorgente);
         assertFalse(ottenutoBooleano);
 
         mappaSorgente = new LinkedHashMap();
         mappaSorgente.put("beta", "irrilevante");
         mappaSorgente.put(VUOTA, "irrilevante2");
         mappaSorgente.put("delta", "irrilevante3");
-        ottenutoBooleano = array.isAllValid(mappaSorgente);
+        ottenutoBooleano = service.isAllValid(mappaSorgente);
         assertFalse(ottenutoBooleano);
 
         mappaSorgente = new LinkedHashMap();
@@ -524,13 +524,13 @@ public class ArrayServiceTest extends ATest {
         previsto = "alfa,beta,gamma,delta";
 
         ottenuto = service.toStringaVirgola(null);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.toStringaVirgola(new ArrayList());
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.toStringaVirgola(sorgenteArray);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }
 
@@ -539,21 +539,21 @@ public class ArrayServiceTest extends ATest {
     @DisplayName("12 - toStringaPipe (since Java 11)")
     void toStringaPipe() {
         ottenuto = service.toStringaPipe(null);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.toStringaPipe(new ArrayList());
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         sorgenteArray = List.of("alfa", "beta", "gamma", "delta");
         previsto = "alfa|beta|gamma|delta";
         ottenuto = service.toStringaPipe(sorgenteArray);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
 
-        sorgenteArrayLong = List.of(Long.valueOf(876876),Long.valueOf(793444),Long.valueOf(22223),Long.valueOf(50030044));
+        sorgenteArrayLong = List.of(Long.valueOf(876876), Long.valueOf(793444), Long.valueOf(22223), Long.valueOf(50030044));
         previsto = "876876|793444|22223|50030044";
-        ottenuto = array.toStringaPipe(sorgenteArrayLong);
-        assertTrue(text.isValid(ottenuto));
+        ottenuto = service.toStringaPipe(sorgenteArrayLong);
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }
 
@@ -565,13 +565,13 @@ public class ArrayServiceTest extends ATest {
         previsto = "alfa, beta, gamma, delta";
 
         ottenuto = service.toStringa(null);
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.toStringa(new ArrayList());
-        assertTrue(text.isEmpty(ottenuto));
+        assertTrue(textService.isEmpty(ottenuto));
 
         ottenuto = service.toStringa(sorgenteArray);
-        assertTrue(text.isValid(ottenuto));
+        assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
     }
 
@@ -608,11 +608,11 @@ public class ArrayServiceTest extends ATest {
     @DisplayName("15 - getColumnArray")
     void getColumnArray() {
         Grid<Via> grid = new Grid();
-        Grid.Column[] colonne=service.getColumnArray(grid);
+        Grid.Column[] colonne = service.getColumnArray(grid);
         Assertions.assertNotNull(colonne);
 
-//        Grid.Column[] matrix = grid.getColumns().toArray((Grid.Column));
-//        Assertions.assertNotNull(colonne);
+        //        Grid.Column[] matrix = grid.getColumns().toArray((Grid.Column));
+        //        Assertions.assertNotNull(colonne);
     }
 
     @Test

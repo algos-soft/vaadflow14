@@ -50,8 +50,8 @@ public class ViewTest extends ATest {
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
-        service.text = text;
-        service.reflection = reflection;
+        service.text = textService;
+        service.reflection = reflectionService;
     }
 
 

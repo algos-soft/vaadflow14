@@ -55,7 +55,7 @@ public class ADataProviderServiceIntegrationTest extends ATest {
     @DisplayName("Primo test")
     void getLabelHost() {
         sorgente = "black";
-        Label label = text.getLabelAdmin(sorgente);
+        Label label = textService.getLabelAdmin(sorgente);
         Assertions.assertNotNull(label);
         System.out.println(label.getText());
     }

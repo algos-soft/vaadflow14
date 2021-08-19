@@ -94,16 +94,15 @@ public class AMongoServiceIntegrationTest extends ATest {
         service.text = text;
         service.array = array;
         service.logger = logger;
-        service.mongo = mongo;
+        service.mongo = mongoService;
         service.mongoOp = mongoOp;
         annotation.text = text;
         meseService.text = text;
         secoloService.text = text;
-        meseService.mongo = mongo;
-        secoloService.mongo = mongo;
+        meseService.mongo = mongoService;
+        secoloService.mongo = mongoService;
         secoloService.keyPropertyName = "secolo";
-        mongo.mongoOp = mongoOp;
-        mongo.logger = logger;
+        mongoService.mongoOp = mongoOp;
 
         this.cancellazioneEntitiesProvvisorie();
         this.creazioneInizialeEntitiesProvvisorie();
@@ -1387,7 +1386,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         AEntity entity;
         String clazzName = clazz.getSimpleName().toLowerCase();
         List<AEntity> lista = new ArrayList();
-        Collection<Document> documents = mongo.mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
+        Collection<Document> documents = mongoService.mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
 
         for (Document doc : documents) {
             try {
