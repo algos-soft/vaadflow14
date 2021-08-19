@@ -159,7 +159,6 @@ public class AnnoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Anno findByKey(final String keyValue) {
         return (Anno) super.findByKey(keyValue);
     }

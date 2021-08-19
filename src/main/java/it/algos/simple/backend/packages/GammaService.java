@@ -133,7 +133,6 @@ public class GammaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Gamma findByKey(final String keyValue) {
         return (Gamma) super.findByKey(keyValue);
     }

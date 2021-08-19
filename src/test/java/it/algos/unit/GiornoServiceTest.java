@@ -53,9 +53,8 @@ public class GiornoServiceTest extends ATest {
         super.setUp();
 
         service.mongo = mongoService;
-        mongoService.gSonService=gSonService;
-        gSonService.reflection=reflectionService;
-        gSonService.annotation=annotationService;
+        service.text = textService;
+        service.annotation = annotationService;
     }
 
 
@@ -65,6 +64,27 @@ public class GiornoServiceTest extends ATest {
     void findById() {
         sorgente = "29gennaio";
         entityBean = service.findById(sorgente);
+        assertNotNull(entityBean);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - findByProperty")
+    void findByKey() {
+        sorgente = "29 gennaio";
+        sorgente2 = "titolo";
+        entityBean = service.findByProperty( sorgente2, sorgente);
+        assertNotNull(entityBean);
+    }
+
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - findByKey")
+    void findByKey3() {
+        sorgente = "29 gennaio";
+        entityBean = service.findByKey( sorgente);
         assertNotNull(entityBean);
     }
 

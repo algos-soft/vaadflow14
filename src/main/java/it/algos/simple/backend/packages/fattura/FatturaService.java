@@ -138,7 +138,6 @@ public class FatturaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Fattura findByKey(final String keyValue) {
         return (Fattura) super.findByKey(keyValue);
     }

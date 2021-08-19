@@ -138,7 +138,6 @@ public class VialeService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    @Override
     public Via findByKey(final String keyValue) {
         return (Via) super.findByKey(keyValue);
     }

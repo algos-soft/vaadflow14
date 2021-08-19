@@ -503,6 +503,9 @@ public abstract class ATest {
         utilityService.text = textService;
         htmlService.text = textService;
         dateService.text = textService;
+        mongoService.gSonService = gSonService;
+        gSonService.reflection = reflectionService;
+        gSonService.annotation = annotationService;
     }
 
 
