@@ -45,7 +45,6 @@ public class AnnotationServiceTest extends ATest {
 
     protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
-    AnnotationService service;
 
     private AIEntity aiEntity;
 
@@ -69,16 +68,23 @@ public class AnnotationServiceTest extends ATest {
 
 
     /**
+     * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
+     */
+    private AnnotationService service;
+
+
+    /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-//        service = annotation;
+        //--reindirizzo l'istanza della superclasse
+        service = annotationService;
     }
 
 

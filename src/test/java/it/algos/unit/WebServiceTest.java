@@ -6,10 +6,9 @@ import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.WebService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.mockito.*;
+import org.junit.jupiter.api.*;
 
 import java.util.*;
 
@@ -19,6 +18,7 @@ import java.util.*;
  * User: gac
  * Date: gio, 07-mag-2020
  * Time: 07:56
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -38,11 +38,13 @@ public class WebServiceTest extends ATest {
 
     private static String PAGINA = "ISO 3166-2:IT";
 
+
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    protected WebService service;
+    private WebService service;
+
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -50,8 +52,11 @@ public class WebServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
+
+        //--reindirizzo l'istanza della superclasse
+        service = webService;
     }
 
 
@@ -63,11 +68,6 @@ public class WebServiceTest extends ATest {
     @BeforeEach
     void setUpEach() {
         super.setUp();
-
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-//        service.text = text;
     }
 
 

@@ -10,7 +10,6 @@ import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 /**
  * Project vaadflow14
@@ -18,6 +17,7 @@ import org.mockito.*;
  * User: gac
  * Date: ven, 30-apr-2021
  * Time: 07:51
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -39,12 +39,9 @@ public class MongoServiceTest extends ATest {
 
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
     private AMongoService service;
-
-    @InjectMocks
-    private GsonService gSonService;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -56,28 +53,11 @@ public class MongoServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-
-        MockitoAnnotations.initMocks(gSonService);
-        Assertions.assertNotNull(gSonService);
-
-//        service.text = text;
-//        service.array = array;
-//        service.annotation = annotation;
-//        service.gSonService = gSonService;
-//
-//        gSonService.text = text;
-//        gSonService.array = array;
-//        gSonService.reflection = reflection;
-//        gSonService.annotation = annotation;
-
-        service.fixProperties(DATA_BASE_NAME);
-        gSonService.fixProperties(DATA_BASE_NAME);
+        //--reindirizzo l'istanza della superclasse
+        service = mongoService;
     }
 
 
@@ -187,7 +167,7 @@ public class MongoServiceTest extends ATest {
     }
 
 
-//    @Test
+    //    @Test
     @Order(5)
     @DisplayName("5 - Lista di tutte le entities")
     void fetch() {

@@ -16,6 +16,7 @@ import java.util.*;
  * User: gac
  * Date: mar, 28-apr-2020
  * Time: 20:42
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -1024,8 +1025,8 @@ public class TextServiceTest extends ATest {
     @Order(30)
     @DisplayName("30 - fixSlashToPunto")
     public void fixSlashToPunto() {
-        previsto  = "it.algos.vaadflow14.wizard.enumeration";
-        sorgente  = "it/algos/vaadflow14/wizard/enumeration";
+        previsto = "it.algos.vaadflow14.wizard.enumeration";
+        sorgente = "it/algos/vaadflow14/wizard/enumeration";
 
         ottenuto = text.sostituisce(sorgente, SLASH, PUNTO);
         assertNotNull(ottenuto);

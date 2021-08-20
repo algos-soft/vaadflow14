@@ -2,6 +2,7 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -62,6 +63,10 @@ public class GiornoServiceTest extends ATest {
     @Order(1)
     @DisplayName("1 - findById")
     void findById() {
+        sorgente = "29 gennaio";
+        entityBean = service.findById(sorgente);
+        assertNull(entityBean);
+
         sorgente = "29gennaio";
         entityBean = service.findById(sorgente);
         assertNotNull(entityBean);
@@ -72,6 +77,15 @@ public class GiornoServiceTest extends ATest {
     @Order(2)
     @DisplayName("2 - findByProperty")
     void findByKey() {
+        sorgente = "29gennaio";
+        entityBean = service.findByProperty( sorgente2, sorgente);
+        assertNull(entityBean);
+
+        sorgente = "29gennaio";
+        sorgente2 = "titolo";
+        entityBean = service.findByProperty( sorgente2, sorgente);
+        assertNull(entityBean);
+
         sorgente = "29 gennaio";
         sorgente2 = "titolo";
         entityBean = service.findByProperty( sorgente2, sorgente);
@@ -83,6 +97,10 @@ public class GiornoServiceTest extends ATest {
     @Order(3)
     @DisplayName("3 - findByKey")
     void findByKey3() {
+        sorgente = "29gennaio";
+        entityBean = service.findByKey( sorgente);
+        assertNull(entityBean);
+
         sorgente = "29 gennaio";
         entityBean = service.findByKey( sorgente);
         assertNotNull(entityBean);

@@ -6,7 +6,6 @@ import it.algos.vaadflow14.wiki.*;
 import static it.algos.vaadflow14.wiki.AWikiApiService.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.*;
 
 import java.util.*;
 
@@ -16,6 +15,7 @@ import java.util.*;
  * User: gac
  * Date: sab, 12-set-2020
  * Time: 20:25
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -44,11 +44,12 @@ public class WikiApiServiceTest extends ATest {
 
     public static final String CAT_ROMANI = "Personaggi della storia romana";
 
+
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    AWikiApiService service;
+    private AWikiApiService service;
 
 
     /**
@@ -57,16 +58,11 @@ public class WikiApiServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-//        service.text = text;
-//        service.array = array;
-//        service.web = web;
-//        service.html = html;
+        //--reindirizzo l'istanza della superclasse
+        service = wikiApiService;
     }
 
 
@@ -637,7 +633,7 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(String.format("La pagina '%s' è un #redirect ad un altra pagina che è stata letta", sorgente));
-        System.out.println("Inizio pagina effettiva: "+previsto);
+        System.out.println("Inizio pagina effettiva: " + previsto);
 
         sorgente = "6 Dicembre";
         previsto = "{{dicembre}}\nIl '''6 dicembre''' è il 340º giorno";
@@ -651,7 +647,7 @@ public class WikiApiServiceTest extends ATest {
         System.out.println(String.format("La pagina wiki è: %s", sorgente));
         System.out.println(String.format("Tempo impiegato per leggere %d pagine: %s", cicli, getTime()));
         System.out.println(String.format("La pagina '%s' è un #redirect ad un altra pagina che è stata letta", sorgente));
-        System.out.println("Inizio pagina effettiva: "+previsto);
+        System.out.println("Inizio pagina effettiva: " + previsto);
     }
 
     private void printColonna(List<String> listaColonna) {

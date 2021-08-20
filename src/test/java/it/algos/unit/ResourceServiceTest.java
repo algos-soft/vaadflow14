@@ -1,17 +1,13 @@
 package it.algos.unit;
 
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.*;
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.service.ResourceService;
-import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-
-import java.util.List;
-import java.util.Map;
-
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
+
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -19,6 +15,7 @@ import static org.junit.Assert.*;
  * User: gac
  * Date: gio, 24-set-2020
  * Time: 21:13
+ * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
@@ -31,13 +28,14 @@ import static org.junit.Assert.*;
 public class ResourceServiceTest extends ATest {
 
 
+    private Map<String, List<String>> mappa;
+
+
     /**
      * Classe principale di riferimento <br>
+     * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    ResourceService service;
-
-    private Map<String, List<String>> mappa;
+    private ResourceService service;
 
 
     /**
@@ -46,15 +44,11 @@ public class ResourceServiceTest extends ATest {
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
-        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(service);
-        Assertions.assertNotNull(service);
-//        service.text = text;
-//        service.array = array;
-//        service.fileService = file;
+        //--reindirizzo l'istanza della superclasse
+        service = resourceService;
     }
 
 
@@ -223,7 +217,6 @@ public class ResourceServiceTest extends ATest {
         System.out.println(VUOTA);
         printVuota(listaStr);
 
-
         listaStr = service.leggeListaConfig(sorgente);
         assertNotNull(listaStr);
         System.out.println(VUOTA);
@@ -247,7 +240,6 @@ public class ResourceServiceTest extends ATest {
         printMappa(mappa);
     }
 
-
     //    @Test
     //    @Order(6)
     //    @DisplayName("6 - Costruisce una Image da un file")
@@ -269,8 +261,6 @@ public class ResourceServiceTest extends ATest {
     //    }
 
     ;
-
-
 
 
     /**

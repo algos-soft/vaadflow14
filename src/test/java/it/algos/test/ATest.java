@@ -186,6 +186,9 @@ public abstract class ATest {
     @InjectMocks
     protected EnumerationService enumerationService;
 
+    @InjectMocks
+    protected ResourceService resourceService;
+
     protected Logger adminLogger;
 
     /**
@@ -455,6 +458,9 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(enumerationService);
         Assertions.assertNotNull(enumerationService);
+
+        MockitoAnnotations.initMocks(resourceService);
+        Assertions.assertNotNull(resourceService);
     }
 
     /**
@@ -473,6 +479,7 @@ public abstract class ATest {
         annotationService.reflection = reflectionService;
         reflectionService.array = arrayService;
         reflectionService.text = textService;
+        reflectionService.logger = loggerService;
         gSonService.text = textService;
         gSonService.array = arrayService;
         jSonService.text = textService;
@@ -506,6 +513,13 @@ public abstract class ATest {
         mongoService.gSonService = gSonService;
         gSonService.reflection = reflectionService;
         gSonService.annotation = annotationService;
+        resourceService.fileService = fileService;
+        resourceService.text = textService;
+        utilityService.annotation = annotationService;
+        wikiApiService.array = arrayService;
+        enumerationService.text = textService;
+        enumerationService.array = arrayService;
+        dateService.math = mathService;
     }
 
 
