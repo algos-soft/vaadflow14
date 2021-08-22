@@ -5,7 +5,6 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
 import it.algos.simple.ui.enumeration.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
@@ -246,7 +245,7 @@ public class FatturaLogicList extends LogicList {
         Fattura fattura= new Fattura();
         fattura.code="x";
         try {
-            mongo.save(fattura);
+            mongo.saveOld(fattura);
         } catch (AMongoException unErrore) {
         }
     }

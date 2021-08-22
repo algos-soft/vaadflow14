@@ -61,7 +61,7 @@ public class AMongoServiceIntegrationTest extends ATest {
      * The Service.
      */
     @Autowired
-    AMongoService service;
+    MongoService service;
 
     @InjectMocks
     MeseService meseService;

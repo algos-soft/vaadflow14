@@ -1,18 +1,25 @@
 package it.algos.unit;
 
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
-import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.context.ApplicationContext;
+
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.vaadin.flow.component.textfield.TextField;
 
 /**
  * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 19-ago-2021
- * Time: 18:56
+ * Date: ven, 20-ago-2021
+ * Time: 07:02
  * <p>
  * Unit test di una classe di servizio <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
@@ -21,17 +28,16 @@ import org.mockito.*;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("GiornoService - Entity cronologica")
+@DisplayName("Anno service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GiornoServiceTest extends ATest {
+public class AnnoServiceTest extends ATest {
 
 
     /**
      * Classe principale di riferimento <br>
      */
     @InjectMocks
-    private GiornoService service;
-
+    private AnnoService service;
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -63,11 +69,15 @@ public class GiornoServiceTest extends ATest {
     @Order(1)
     @DisplayName("1 - findById")
     void findById() {
-        sorgente = "29 gennaio";
+        sorgente = "1946dc";
         entityBean = service.findById(sorgente);
         assertNull(entityBean);
 
-        sorgente = "29gennaio";
+        sorgente = "1946";
+        entityBean = service.findById(sorgente);
+        assertNotNull(entityBean);
+
+        sorgente = "847a.c.";
         entityBean = service.findById(sorgente);
         assertNotNull(entityBean);
     }
@@ -77,16 +87,11 @@ public class GiornoServiceTest extends ATest {
     @Order(2)
     @DisplayName("2 - findByProperty")
     void findByKey() {
-        sorgente = "29gennaio";
+        sorgente = "847a.c.";
         entityBean = service.findByProperty( sorgente2, sorgente);
         assertNull(entityBean);
 
-        sorgente = "29gennaio";
-        sorgente2 = "titolo";
-        entityBean = service.findByProperty( sorgente2, sorgente);
-        assertNull(entityBean);
-
-        sorgente = "29 gennaio";
+        sorgente = "847 a.C.";
         sorgente2 = "titolo";
         entityBean = service.findByProperty( sorgente2, sorgente);
         assertNotNull(entityBean);
@@ -97,11 +102,11 @@ public class GiornoServiceTest extends ATest {
     @Order(3)
     @DisplayName("3 - findByKey")
     void findByKey3() {
-        sorgente = "29gennaio";
+        sorgente = "847a.c.";
         entityBean = service.findByKey( sorgente);
         assertNull(entityBean);
 
-        sorgente = "29 gennaio";
+        sorgente = "847 a.C.";
         entityBean = service.findByKey( sorgente);
         assertNotNull(entityBean);
     }

@@ -43,7 +43,7 @@ public class CompanyUserDetailsService implements UserDetailsService {
         Utente utente;
         Company company;
         Collection<? extends GrantedAuthority> authorities;
-        AMongoService mongo = StaticContextAccessor.getBean(AMongoService.class);
+        MongoService mongo = StaticContextAccessor.getBean(MongoService.class);
 
         //        uniqueUserName = uniqueUserName.toLowerCase();
         utente = (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, uniqueUserName);

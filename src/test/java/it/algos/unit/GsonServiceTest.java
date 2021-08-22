@@ -1,5 +1,6 @@
 package it.algos.unit;
 
+import com.google.gson.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -194,6 +195,7 @@ public class GsonServiceTest extends ATest {
         print(ottenutoArray);
     }
 
+
     @Test
     @Order(7)
     @DisplayName("7 - creazione di un entityBean da un testo jSon")
@@ -202,7 +204,8 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "piazza";
         clazz = Via.class;
-        entityBean = service.crea(clazz, sorgente);
+        ottenuto = service.legge(clazz, sorgente);
+        entityBean = service.crea(clazz, ottenuto);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
@@ -210,7 +213,8 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "5gennaio";
         clazz = Giorno.class;
-        entityBean = service.crea(clazz, sorgente);
+        ottenuto = service.legge(clazz, sorgente);
+        entityBean = service.crea(clazz, ottenuto);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
@@ -218,11 +222,72 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "1786";
         clazz = Anno.class;
-        entityBean = service.crea(clazz, sorgente);
+        ottenuto = service.legge(clazz, sorgente);
+        entityBean = service.crea(clazz, ottenuto);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
         System.out.println(entityBean);
+    }
+
+
+    @Test
+    @Order(8)
+    @DisplayName("8 - creazione di un entityBean da keyId")
+    void creaId() {
+        System.out.println("8 - creazione di un entityBean da keyId");
+
+        sorgente = "piazza";
+        clazz = Via.class;
+        entityBean = service.creaId(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "5gennaio";
+        clazz = Giorno.class;
+        entityBean = service.creaId(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "1786";
+        clazz = Anno.class;
+        entityBean = service.creaId(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+    }
+
+
+    @Test
+    @Order(9)
+    @DisplayName("9 - creazione di un testo jSon da un entityBean")
+    void crea2() {
+        System.out.println("9 - creazione di un testo jSon da un entityBean");
+        String jsonInString;
+        Gson gSon = new Gson();
+
+        sorgente = "piazza";
+        clazz = Via.class;
+        jsonInString = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(jsonInString));
+        System.out.println(jsonInString);
+
+        sorgente = "8marzo";
+        clazz = Giorno.class;
+        jsonInString = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(jsonInString));
+        System.out.println(jsonInString);
+
+        sorgente = "23 ottobre";
+        clazz = Giorno.class;
+        jsonInString = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(jsonInString));
+        System.out.println(jsonInString);
     }
 
     /**

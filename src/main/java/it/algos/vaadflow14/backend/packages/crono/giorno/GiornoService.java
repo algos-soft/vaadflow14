@@ -165,8 +165,6 @@ public class GiornoService extends AService {
     }
 
 
-
-
     private AIResult checkMese() {
         String packageName = Giorno.class.getSimpleName().toLowerCase();
         String collection = "mese";

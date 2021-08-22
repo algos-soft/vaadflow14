@@ -603,7 +603,7 @@ public abstract class LogicForm extends Logic {
             }
             oldEntityBean = mongo.find(entityBean);
             try {
-                entityBean = mongo.save(entityBean);
+                entityBean = mongo.saveOld(entityBean);
             } catch (AMongoException unErrore) {
             }
             status = entityBean != null;

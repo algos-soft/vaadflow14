@@ -41,7 +41,7 @@ public class MongoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private AMongoService service;
+    private MongoService service;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -145,7 +145,7 @@ public class MongoServiceTest extends ATest {
         entityBean = service.findById(clazz, sorgente);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
-        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
         System.out.println(entityBean);
     }
 
@@ -164,6 +164,70 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della property '%s'", clazz.getSimpleName(), sorgente2, sorgente));
         System.out.println(entityBean);
+    }
+
+
+    @Test
+    @Order(5)
+    @DisplayName("5 - Save di una entity")
+    void save() {
+        System.out.println("5 - Save di una entity");
+        int originario;
+        int daModificare;
+        int modificato;
+        int finale;
+        String jsonInString;
+
+        //--leggo una entityBean e memorizzo una property
+        clazz = Via.class;
+        sorgente = "piazzale";
+        entityBean = service.findByKey(clazz, sorgente);
+        assertNotNull(entityBean);
+        originario = ((Via) entityBean).getOrdine();
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella entity originale [%s] il valore di 'ordine' è [%s]", sorgente, originario));
+
+        //--modifico la entityBean
+        daModificare = 7350;
+        ((Via) entityBean).setOrdine(daModificare);
+
+        //--registro la entityBean modificata
+//        try {
+//            jsonInString = gSonService.scrive(entityBean);
+//            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
+//            service.save(clazz,jsonInString);
+//        } catch (AMongoException unErrore) {
+//            System.out.println(unErrore);
+//        }
+
+        //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
+        entityBean = service.findById(clazz, entityBean.getId());
+        modificato = ((Via) entityBean).getOrdine();
+        assertEquals(daModificare, modificato);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella entity modificata [%s] il valore di 'ordine' è [%s]", sorgente, modificato));
+
+        //--ri-modifico la entityBean
+        ((Via) entityBean).setOrdine(originario);
+
+        //--ri-registro la entityBean come in origine
+        try {
+            service.saveOld(entityBean);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore);
+        }
+
+        //--ri-leggo la entityBean e ri-controllo la property
+        entityBean = service.findByKey(clazz, sorgente);
+        assertNotNull(entityBean);
+        finale = ((Via) entityBean).getOrdine();
+        assertEquals(originario, finale);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Nella entity ricostruita [%s] il valore di 'ordine' è [%s]", sorgente, finale));
+
+        //        System.out.println(VUOTA);
+        //        System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della key property della classe", clazz.getSimpleName(), sorgente));
+        //        System.out.println(entityBean);
     }
 
 

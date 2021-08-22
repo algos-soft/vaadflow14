@@ -148,7 +148,7 @@ public abstract class ATest {
     protected BeanService beanService;
 
     @InjectMocks
-    protected AMongoService mongoService;
+    protected MongoService mongoService;
 
     @InjectMocks
     protected WebService webService;
@@ -157,7 +157,7 @@ public abstract class ATest {
     protected AWikiApiService wikiApiService;
 
     @InjectMocks
-    protected AGeograficService geograficService;
+    protected GeograficService geograficService;
 
     @InjectMocks
     protected FileService fileService;

@@ -42,7 +42,7 @@ public class DeltaView extends VerticalLayout {
     private SecoloService secoloLogic;
 
     @Autowired
-    private AMongoService mongo;
+    private MongoService mongo;
 
 
     /**
@@ -70,7 +70,7 @@ public class DeltaView extends VerticalLayout {
         if (deltaUno != null) {
             deltaUno.immagine = valoreCodificato;
             try {
-                mongo.save(deltaUno);
+                mongo.saveOld(deltaUno);
             } catch (AMongoException unErrore) {
             }
         }

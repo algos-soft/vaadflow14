@@ -45,7 +45,7 @@ public class SimpleData extends FlowData {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public AMongoService mongo;
+    public MongoService mongo;
 
     /**
      * Istanza di una interfaccia <br>
@@ -109,7 +109,7 @@ public class SimpleData extends FlowData {
             bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
             bolla.setId(code);
             try {
-                mongo.save(bolla);
+                mongo.saveOld(bolla);
             } catch (AMongoException unErrore) {
             }
             status = true;

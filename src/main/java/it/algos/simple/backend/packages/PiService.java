@@ -4,23 +4,17 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.service.AMongoService;
-import org.bson.Document;
+import it.algos.vaadflow14.backend.service.MongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.mongodb.core.query.Query;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class PiService {
 
     @Autowired
-    private AMongoService mongo;
+    private MongoService mongo;
 
 
     public DataProvider createDataProvider(Class<? extends AEntity> entityClazz) {

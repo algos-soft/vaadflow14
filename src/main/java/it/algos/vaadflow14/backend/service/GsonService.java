@@ -281,22 +281,123 @@ public class GsonService extends AbstractService {
         return stringaJSON;
     }
 
+
     /**
      * Costruzione della entity partendo dal valore della keyID <br>
      *
      * @param entityClazz della AEntity
-     * @param valueID     della entityBean
+     * @param keyId       chiave identificativa della entityBean
      *
      * @return new entity
      */
-    public AEntity crea(final Class entityClazz, final String valueID) {
+    @Deprecated
+    public AEntity creaOld(final Class entityClazz, final String keyId) {
         AEntity entityBean = null;
+        String keyPropertyName;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+
         query = new BasicDBObject();
-        query.put("_id", valueID);
+        query.put("_id", keyId);
 
         doc = collection.find(query).first();
-        entityBean = this.crea(doc, entityClazz);
+
+        if (doc != null) {
+            entityBean = this.creaOld(doc, entityClazz);
+            String pippoz = legge(entityClazz, keyId);
+        }
+        else {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+            if (text.isValid(keyPropertyName)) {
+                query = new BasicDBObject();
+                query.put(keyPropertyName, keyId);
+                doc = collection.find(query).first();
+                entityBean = this.creaOld(doc, entityClazz);
+            }
+        }
+
+        return entityBean;
+    }
+
+    /**
+     * Costruzione di un testo JSON partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della entityBean
+     * @param keyId       chiave identificativa della entityBean
+     *
+     * @return stringa json
+     */
+    public String legge(final Class entityClazz, final String keyId) {
+        String jsonString = VUOTA;
+        collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+        Gson gSon;
+        String keyPropertyName;
+
+        if (collection != null) {
+            query = new BasicDBObject();
+            query.put("_id", keyId);
+            doc = collection.find(query).first();
+        }
+
+        if (doc != null) {
+            gSon = new Gson();
+            jsonString = gSon.toJson(doc);
+        }
+        else {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+            if (text.isValid(keyPropertyName)) {
+                query = new BasicDBObject();
+                query.put(keyPropertyName, keyId);
+                doc = collection.find(query).first();
+                if (doc != null) {
+                    gSon = new Gson();
+                    jsonString = gSon.toJson(doc);
+                }
+            }
+        }
+
+        return jsonString;
+    }
+
+    /**
+     * Costruzione della entity partendo da un documento JSON <br>
+     * 1) Non ci sono campi linkati con @DBRef <br>
+     * 2) Ci sono campi linkati con @DBRef <br>
+     *
+     * @param jsonString  'documento' JSon della collezione mongo
+     * @param entityClazz della AEntity
+     *
+     * @return new entity
+     */
+    public AEntity crea(final Class entityClazz, final String jsonString) {
+        AEntity entityBean = null;
+        List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
+
+        if (entityClazz != null && doc != null) {
+
+            entityBean = creaNoDbRef(entityClazz, listaNoDbRefAndGraffe.get(0));
+
+            if (isEsistonoDBRef(doc)) {
+                entityBean = addAllDBRef(doc, entityBean);
+            }
+        }
+
+        return entityBean;
+    }
+
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param keyId       chiave identificativa della entityBean
+     *
+     * @return new entity
+     */
+    public AEntity creaId(final Class entityClazz, final String keyId) {
+        AEntity entityBean;
+
+        String jsonString = this.legge(entityClazz, keyId);
+        entityBean = this.crea(entityClazz, jsonString);
 
         return entityBean;
     }
@@ -311,7 +412,8 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity crea(final Document doc, final Class entityClazz) {
+    @Deprecated
+    public AEntity creaOld(final Document doc, final Class entityClazz) {
         AEntity entityBean = null;
         String jsonString = this.fixDoc(doc);
         List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
@@ -482,7 +584,7 @@ public class GsonService extends AbstractService {
         query.put("_id", valueID);
         document = collection.find(query).first();
 
-        entityBeanLinkata = crea(document, entityLinkClazz);
+        entityBeanLinkata = creaOld(document, entityLinkClazz);
 
         try {
             field.set(entityBeanConDBRef, entityBeanLinkata);
@@ -493,5 +595,16 @@ public class GsonService extends AbstractService {
         return entityBeanConDBRef;
     }
 
+    /**
+     * Costruzione del testo Json per il mongoDB <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     *
+     * @return testo Json
+     */
+    public String scrive(final AEntity entityBeanDaRegistrare) {
+        Gson gSon = new Gson();
+        return gSon.toJson(entityBeanDaRegistrare);
+    }
 
 }

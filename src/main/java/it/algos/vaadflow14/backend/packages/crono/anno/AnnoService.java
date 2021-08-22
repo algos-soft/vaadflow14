@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -151,6 +152,21 @@ public class AnnoService extends AService {
 
 
     /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     */
+    @Override
+    public Anno findByProperty(String propertyName, Serializable propertyValue) {
+        return (Anno) super.findByProperty(propertyName, propertyValue);
+    }
+
+    /**
      * Retrieves an entity by its keyProperty.
      *
      * @param keyValue must not be {@literal null}.
@@ -159,7 +175,8 @@ public class AnnoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Anno findByKey(final String keyValue) {
+    @Override
+    public Anno findByKey(final Serializable keyValue) {
         return (Anno) super.findByKey(keyValue);
     }
 
