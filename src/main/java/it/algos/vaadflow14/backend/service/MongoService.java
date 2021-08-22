@@ -1680,7 +1680,7 @@ public class MongoService<capture> extends AbstractService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
     public void save(AEntity entityBean) throws AMongoException {
-        Class<? extends AEntity> entityClazz=entityBean.getClass();
+        Class<? extends AEntity> entityClazz = entityBean.getClass();
         MongoCollection<Document> collection = getCollection(entityClazz);
         AEntity entityBeanOld;
         String jsonStringNew;
@@ -1688,18 +1688,16 @@ public class MongoService<capture> extends AbstractService {
         Document document;
 
         if (collection != null) {
-            jsonStringNew=gSonService.scrive(entityBean);
+            jsonStringNew = gSonService.legge(entityClazz, entityBean.getId());
             document = Document.parse(jsonStringNew);
             if (isEsiste(entityBean)) {
-                entityBeanOld=findById(entityClazz,entityBean.getId());
-//                jsonStringOld=gSonService.legge(entityClazz,entityBean.getId());
+                entityBeanOld = findById(entityClazz, entityBean.getId());
+                jsonStringOld = gSonService.legge(entityClazz, entityBean.getId());
 //                collection.deleteOne(entityBean);
             }
             else {
+                collection.insertOne(document);
             }
-
-
-            collection.insertOne(document);
         }
     }
 

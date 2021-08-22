@@ -192,13 +192,13 @@ public class MongoServiceTest extends ATest {
         ((Via) entityBean).setOrdine(daModificare);
 
         //--registro la entityBean modificata
-//        try {
-//            jsonInString = gSonService.scrive(entityBean);
+        try {
+//            jsonInString = gSonService.legge(entityBean);
 //            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
-//            service.save(clazz,jsonInString);
-//        } catch (AMongoException unErrore) {
-//            System.out.println(unErrore);
-//        }
+            service.save(entityBean);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore);
+        }
 
         //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
         entityBean = service.findById(clazz, entityBean.getId());

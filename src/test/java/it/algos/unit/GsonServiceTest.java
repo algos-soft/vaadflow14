@@ -1,6 +1,5 @@
 package it.algos.unit;
 
-import com.google.gson.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -265,29 +264,67 @@ public class GsonServiceTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("9 - creazione di un testo jSon da un entityBean")
-    void crea2() {
-        System.out.println("9 - creazione di un testo jSon da un entityBean");
+    @DisplayName("9 - creazione di un testo jSon da mongoDb")
+    void legge() {
+        System.out.println("9 - creazione di un testo jSon da mongoDb");
         String jsonInString;
-        Gson gSon = new Gson();
 
-        sorgente = "piazza";
+        sorgente = "piazzale";
         clazz = Via.class;
-        jsonInString = service.legge(clazz, sorgente);
-        assertTrue(textService.isValid(jsonInString));
-        System.out.println(jsonInString);
+        previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
+        ottenuto = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
 
         sorgente = "8marzo";
         clazz = Giorno.class;
-        jsonInString = service.legge(clazz, sorgente);
-        assertTrue(textService.isValid(jsonInString));
-        System.out.println(jsonInString);
+        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        ottenuto = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
 
         sorgente = "23 ottobre";
         clazz = Giorno.class;
-        jsonInString = service.legge(clazz, sorgente);
-        assertTrue(textService.isValid(jsonInString));
-        System.out.println(jsonInString);
+        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        ottenuto = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(10)
+    @DisplayName("10 - creazione di un testo jSon da entity")
+    void legge2() {
+        System.out.println("10 - creazione di un testo jSon da entity");
+
+        sorgente = "piazzale";
+        clazz = Via.class;
+        previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
+        entityBean = service.creaId(clazz, sorgente);
+        ottenuto = service.legge(entityBean);
+        assertTrue(textService.isValid(ottenuto));
+//        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+
+        sorgente = "8marzo";
+        clazz = Giorno.class;
+        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        ottenuto = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+
+        sorgente = "23 ottobre";
+        clazz = Giorno.class;
+        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        ottenuto = service.legge(clazz, sorgente);
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
     }
 
     /**

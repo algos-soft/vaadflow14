@@ -397,6 +397,7 @@ public class GsonService extends AbstractService {
         AEntity entityBean;
 
         String jsonString = this.legge(entityClazz, keyId);
+        jsonString = fixStringa(jsonString);
         entityBean = this.crea(entityClazz, jsonString);
 
         return entityBean;
@@ -597,14 +598,26 @@ public class GsonService extends AbstractService {
 
     /**
      * Costruzione del testo Json per il mongoDB <br>
+     * Aggiungo:
+     * -id
+     * -class
      *
      * @param entityBeanDaRegistrare (nuova o esistente)
      *
      * @return testo Json
      */
-    public String scrive(final AEntity entityBeanDaRegistrare) {
-        Gson gSon = new Gson();
-        return gSon.toJson(entityBeanDaRegistrare);
+    public String legge(final AEntity entityBeanDaRegistrare) {
+        String jsonString;
+        Gson gSon = new GsonBuilder().create();
+        //        String prev = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
+        String flagId = String.format("\"_id\":\"%s\",", entityBeanDaRegistrare.getId());
+        String flagClass = String.format(",\"_class\":\"%s\"", entityBeanDaRegistrare.getClass().getSimpleName().toLowerCase());
+
+        jsonString = gSon.toJson(entityBeanDaRegistrare);
+        jsonString = text.setNoGraffe(jsonString);
+        jsonString = String.format("%s%s%s%s", GRAFFA_INI, VUOTA, jsonString, flagClass, GRAFFA_END);
+
+        return jsonString;
     }
 
 }
