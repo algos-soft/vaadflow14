@@ -1685,11 +1685,15 @@ public class MongoService<capture> extends AbstractService {
         AEntity entityBeanOld;
         String jsonStringNew;
         String jsonStringOld;
-        Document document;
+        Document document=null;
 
         if (collection != null) {
-            jsonStringNew = gSonService.legge(entityClazz, entityBean.getId());
-            document = Document.parse(jsonStringNew);
+            jsonStringNew = gSonService.legge( entityBean);
+            try {
+                document = Document.parse(jsonStringNew);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
             if (isEsiste(entityBean)) {
                 entityBeanOld = findById(entityClazz, entityBean.getId());
                 jsonStringOld = gSonService.legge(entityClazz, entityBean.getId());

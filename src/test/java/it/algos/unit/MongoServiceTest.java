@@ -156,9 +156,9 @@ public class MongoServiceTest extends ATest {
     void findByKey() {
         System.out.println("4 - Singola entity by key");
 
-        clazz = Via.class;
-        sorgente = "nome";
-        sorgente2 = "piazza";
+        clazz = Giorno.class;
+        sorgente = "titolo";
+        sorgente2 = "4 novembre";
         entityBean = service.findByKey(clazz, sorgente, sorgente2);
         assertNotNull(entityBean);
         System.out.println(VUOTA);

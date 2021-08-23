@@ -609,13 +609,12 @@ public class GsonService extends AbstractService {
     public String legge(final AEntity entityBeanDaRegistrare) {
         String jsonString;
         Gson gSon = new GsonBuilder().create();
-        //        String prev = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
-        String flagId = String.format("\"_id\":\"%s\",", entityBeanDaRegistrare.getId());
+//        String flagId = String.format("\"_id\":\"%s\",", entityBeanDaRegistrare.getId());
         String flagClass = String.format(",\"_class\":\"%s\"", entityBeanDaRegistrare.getClass().getSimpleName().toLowerCase());
 
         jsonString = gSon.toJson(entityBeanDaRegistrare);
         jsonString = text.setNoGraffe(jsonString);
-        jsonString = String.format("%s%s%s%s", GRAFFA_INI, VUOTA, jsonString, flagClass, GRAFFA_END);
+        jsonString = String.format("%s%s%s%s%s", GRAFFA_INI, VUOTA, jsonString, flagClass, GRAFFA_END);
 
         return jsonString;
     }

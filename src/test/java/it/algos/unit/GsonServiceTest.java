@@ -1,5 +1,6 @@
 package it.algos.unit;
 
+import com.fasterxml.jackson.databind.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -307,7 +308,7 @@ public class GsonServiceTest extends ATest {
         entityBean = service.creaId(clazz, sorgente);
         ottenuto = service.legge(entityBean);
         assertTrue(textService.isValid(ottenuto));
-//        assertEquals(previsto, ottenuto);
+        //        assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
 
         sorgente = "8marzo";
@@ -324,6 +325,44 @@ public class GsonServiceTest extends ATest {
         ottenuto = service.legge(clazz, sorgente);
         assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("11 - Java object to JSON string")
+    void mapper() {
+        System.out.println("11 - Java object to JSON string");
+        ObjectMapper mapper = new ObjectMapper();
+
+        sorgente = "piazza";
+        entityBean = mongoService.findByKey(Via.class, sorgente);
+        try {
+            ottenuto = mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, true).writeValueAsString(entityBean);
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+        }
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+
+        sorgente = "piazzale";
+        entityBean = mongoService.findByKey(Via.class, sorgente);
+        try {
+            ottenuto = mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, false).writeValueAsString(entityBean);
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+        }
+        System.out.println(VUOTA);
+        System.out.println(ottenuto);
+
+        sorgente = "12 maggio";
+        entityBean = mongoService.findByKey(Giorno.class, sorgente);
+        try {
+            ottenuto = mapper.writeValueAsString(entityBean);
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+        }
+        System.out.println(VUOTA);
         System.out.println(ottenuto);
     }
 
