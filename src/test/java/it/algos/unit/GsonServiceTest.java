@@ -1,8 +1,8 @@
 package it.algos.unit;
 
-import com.fasterxml.jackson.databind.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
@@ -101,12 +101,12 @@ public class GsonServiceTest extends ATest {
         ottenuto = service.estraeGraffa(sorgente);
         assertTrue(textService.isEmpty(ottenuto));
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}";
         ottenuto = service.estraeGraffa(sorgente);
         assertTrue(textService.isEmpty(ottenuto));
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
-        previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        previsto = "\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"}";
         ottenuto = service.estraeGraffa(sorgente);
         assertEquals(previsto, ottenuto);
     }
@@ -120,13 +120,13 @@ public class GsonServiceTest extends ATest {
         ottenuto = service.eliminaGraffa(sorgente);
         assertTrue(textService.isEmpty(ottenuto));
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
-        previsto = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}";
+        previsto = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}";
         ottenuto = service.eliminaGraffa(sorgente);
         assertEquals(previsto, ottenuto);
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
-        previsto = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"_id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        previsto = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}";
         ottenuto = service.eliminaGraffa(sorgente);
         assertEquals(previsto, ottenuto);
     }
@@ -146,7 +146,7 @@ public class GsonServiceTest extends ATest {
 
         System.out.println(VUOTA);
         System.out.println("array di un solo elemento col testo originale completo");
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}";
         previstoIntero = 1;
         previstoArray = arrayService.creaArraySingolo(sorgente);
         ottenutoArray = service.estraeGraffe(sorgente);
@@ -164,11 +164,11 @@ public class GsonServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("array di due elementi col testo senza graffe nel primo e il contenuto interno della graffa nel secondo");
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"_id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
         previstoIntero = 2;
         previstoArray = new ArrayList<>();
-        previstoArray.add("{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}");
-        previstoArray.add("\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"}");
+        previstoArray.add("{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}");
+        previstoArray.add("\"mese\":{\"_id\":\"gennaio\",\"collectionName\":\"mese\"}");
         ottenutoArray = service.estraeGraffe(sorgente);
         assertEquals(previstoIntero, ottenutoArray.size());
         assertEquals(previstoArray, ottenutoArray);
@@ -183,12 +183,12 @@ public class GsonServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("array di tre elementi col testo senza graffe nel primo e i contenuti interni delle due graffe nel secondo e nel terzo");
 
-        sorgente = "{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"anno\":{\"id\":\"1876\",\"collectionName\":\"anno\"},\"class\":\"giorno\"}";
+        sorgente = "{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"mese\":{\"_id\":\"gennaio\",\"collectionName\":\"mese\"},\"reset\":true,\"anno\":{\"_id\":\"1876\",\"collectionName\":\"anno\"},\"_class\":\"giorno\"}";
         previstoIntero = 3;
         previstoArray = new ArrayList<>();
-        previstoArray.add("{\"id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"class\":\"giorno\"}");
-        previstoArray.add("\"mese\":{\"id\":\"gennaio\",\"collectionName\":\"mese\"}");
-        previstoArray.add("\"anno\":{\"id\":\"1876\",\"collectionName\":\"anno\"}");
+        previstoArray.add("{\"_id\":\"5gennaio\",\"ordine\":5,\"titolo\":\"5 gennaio\",\"reset\":true,\"_class\":\"giorno\"}");
+        previstoArray.add("\"mese\":{\"_id\":\"gennaio\",\"collectionName\":\"mese\"}");
+        previstoArray.add("\"anno\":{\"_id\":\"1876\",\"collectionName\":\"anno\"}");
         ottenutoArray = service.estraeGraffe(sorgente);
         assertEquals(previstoIntero, ottenutoArray.size());
         assertEquals(previstoArray, ottenutoArray);
@@ -201,20 +201,33 @@ public class GsonServiceTest extends ATest {
     @DisplayName("7 - creazione di un entityBean da un testo jSon")
     void crea() {
         System.out.println("7 - creazione di un entityBean da un testo jSon");
+        String mongoToString ;
+        String entityToString ;
+        AEntity entityFromMongoString;
+        AEntity entityFromEntityString;
 
         sorgente = "piazza";
         clazz = Via.class;
-        ottenuto = service.legge(clazz, sorgente);
-        entityBean = service.crea(clazz, ottenuto);
+        entityBean = mongoService.findById(clazz,sorgente);
         assertNotNull(entityBean);
-        System.out.println(VUOTA);
-        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
-        System.out.println(entityBean);
+
+        mongoToString = service.mongoToString(clazz, sorgente);
+        entityToString = service.entityToString(entityBean);
+        System.out.println(String.format("mongoToString: %s", mongoToString));
+        System.out.println(String.format("entityToString: %s", entityToString));
+        entityFromMongoString= service.stringToEntity(clazz,mongoToString);
+        entityFromEntityString= service.stringToEntity(clazz,entityToString);
+        assertNotNull(entityFromMongoString);
+        assertNotNull(entityFromEntityString);
+
+        //        System.out.println(VUOTA);
+//        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+//        System.out.println(entityBean);
 
         sorgente = "5gennaio";
         clazz = Giorno.class;
-        ottenuto = service.legge(clazz, sorgente);
-        entityBean = service.crea(clazz, ottenuto);
+        ottenuto = service.mongoToString(clazz, sorgente);
+        entityBean = service.stringToEntity(clazz, ottenuto);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
@@ -222,8 +235,19 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "1786";
         clazz = Anno.class;
-        ottenuto = service.legge(clazz, sorgente);
-        entityBean = service.crea(clazz, ottenuto);
+        ottenuto = service.mongoToString(clazz, sorgente);
+        entityBean = service.stringToEntity(clazz, ottenuto);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "5gennaio";
+        clazz = Giorno.class;
+        entityBean = mongoService.findById(clazz, sorgente);
+        ottenuto = service.entityToString(entityBean);
+
+        entityBean = service.stringToEntity(clazz, ottenuto);
         assertNotNull(entityBean);
         System.out.println(VUOTA);
         System.out.println(String.format("Creazione di un bean di classe %s", clazz.getSimpleName()));
@@ -270,10 +294,10 @@ public class GsonServiceTest extends ATest {
         System.out.println("9 - creazione di un testo jSon da mongoDb");
         String jsonInString;
 
-        sorgente = "piazzale";
+        sorgente = "campiello";
         clazz = Via.class;
-        previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
-        ottenuto = service.legge(clazz, sorgente);
+        previsto = "{\"_id\":\"campiello\",\"ordine\":20,\"nome\":\"campiello\",\"reset\":true,\"_class\":\"via\"}";
+        ottenuto = service.mongoToString(clazz, sorgente);
         assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
@@ -281,7 +305,7 @@ public class GsonServiceTest extends ATest {
         sorgente = "8marzo";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        ottenuto = service.legge(clazz, sorgente);
+        ottenuto = service.mongoToString(clazz, sorgente);
         assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
@@ -289,7 +313,7 @@ public class GsonServiceTest extends ATest {
         sorgente = "23 ottobre";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        ottenuto = service.legge(clazz, sorgente);
+        ottenuto = service.mongoToString(clazz, sorgente);
         assertTrue(textService.isValid(ottenuto));
         assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
@@ -298,15 +322,15 @@ public class GsonServiceTest extends ATest {
 
     @Test
     @Order(10)
-    @DisplayName("10 - creazione di un testo jSon da entity")
-    void legge2() {
-        System.out.println("10 - creazione di un testo jSon da entity");
+    @DisplayName("10 - Java object to JSON string")
+    void writeValueAsString() {
+        System.out.println("10 - Java object to JSON string");
 
         sorgente = "piazzale";
         clazz = Via.class;
         previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
-        entityBean = service.creaId(clazz, sorgente);
-        ottenuto = service.legge(entityBean);
+        entityBean = mongoService.findById(clazz, sorgente);
+        ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
         //        assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
@@ -314,56 +338,44 @@ public class GsonServiceTest extends ATest {
         sorgente = "8marzo";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        ottenuto = service.legge(clazz, sorgente);
+        entityBean = mongoService.findById(clazz, sorgente);
+        ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
+        //        assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
 
         sorgente = "23 ottobre";
         clazz = Giorno.class;
         previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        ottenuto = service.legge(clazz, sorgente);
+        entityBean = mongoService.findByKey(clazz, sorgente);
+        ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
+        //        assertEquals(previsto, ottenuto);
         System.out.println(ottenuto);
     }
 
     @Test
     @Order(11)
-    @DisplayName("11 - Java object to JSON string")
-    void mapper() {
-        System.out.println("11 - Java object to JSON string");
-        ObjectMapper mapper = new ObjectMapper();
+    @DisplayName("11 - prove")
+    void finale() {
+        sorgente = "quartiere";
+        clazz = Via.class;
 
-        sorgente = "piazza";
-        entityBean = mongoService.findByKey(Via.class, sorgente);
-        try {
-            ottenuto = mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, true).writeValueAsString(entityBean);
-        } catch (Exception unErrore) {
-            System.out.println(unErrore);
-        }
-        System.out.println(VUOTA);
+        System.out.println("11 - From mongoDB to string passando da Doc");
+        ottenuto = service.mongoToString(clazz, sorgente);
         System.out.println(ottenuto);
+        System.out.println("11 - Crea una entity col jsonString appena ottenuto");
+        entityBean = service.stringToEntity(clazz, ottenuto);
+        System.out.println(entityBean);
 
-        sorgente = "piazzale";
-        entityBean = mongoService.findByKey(Via.class, sorgente);
-        try {
-            ottenuto = mapper.configure(SerializationFeature.CLOSE_CLOSEABLE, false).writeValueAsString(entityBean);
-        } catch (Exception unErrore) {
-            System.out.println(unErrore);
-        }
         System.out.println(VUOTA);
+        System.out.println("11 - From entityBean to string ");
+        entityBean = mongoService.findById(clazz, sorgente);
+        ottenuto = service.entityToString(entityBean);
         System.out.println(ottenuto);
-
-        sorgente = "12 maggio";
-        entityBean = mongoService.findByKey(Giorno.class, sorgente);
-        try {
-            ottenuto = mapper.writeValueAsString(entityBean);
-        } catch (Exception unErrore) {
-            System.out.println(unErrore);
-        }
-        System.out.println(VUOTA);
-        System.out.println(ottenuto);
+        System.out.println("11 - Crea una entity col jsonString appena ottenuto");
+        entityBean = service.stringToEntity(clazz, ottenuto);
+        System.out.println(entityBean);
     }
 
     /**

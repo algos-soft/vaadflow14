@@ -513,6 +513,7 @@ public abstract class ATest {
         mongoService.gSonService = gSonService;
         gSonService.reflection = reflectionService;
         gSonService.annotation = annotationService;
+        gSonService.logger = loggerService;
         resourceService.fileService = fileService;
         resourceService.text = textService;
         utilityService.annotation = annotationService;

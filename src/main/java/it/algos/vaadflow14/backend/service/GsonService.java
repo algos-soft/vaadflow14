@@ -1,5 +1,10 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonParseException;
 import com.google.gson.*;
 import com.mongodb.*;
 import com.mongodb.client.MongoClient;
@@ -169,10 +174,13 @@ public class GsonService extends AbstractService {
 
         testoOut = text.setNoGraffe(testoOut);
         ini = testoOut.indexOf(GRAFFA_INI);
-        end = testoOut.indexOf(GRAFFA_END, ini) + 2; //graffa più virgola
+        end = testoOut.indexOf(GRAFFA_END, ini) + 1; //graffa
         ini = testoOut.lastIndexOf(VIRGOLA, ini) + 1;
-        testoOut = testoOut.substring(ini, end);
-        //        testoOut = text.setNoDoppiApici(testoOut);
+        try {
+            testoOut = testoOut.substring(ini, end);
+        } catch (Exception unErrore) {
+            int a = 87;
+        }
 
         return testoOut.trim();
     }
@@ -186,9 +194,12 @@ public class GsonService extends AbstractService {
      * @return contenuto della graffa COMPRESI gli estremi e il nome del paragrafo
      */
     public String eliminaGraffa(final String jsonString) {
-        String testoOut;
+        String testoOut = jsonString;
         String testoGraffa = estraeGraffa(jsonString);
-        testoOut = jsonString.replace(testoGraffa, VUOTA);
+
+        if (text.isValid(testoGraffa)) {
+            testoOut = jsonString.replace(VIRGOLA + testoGraffa, VUOTA);
+        }
 
         return testoOut.trim();
     }
@@ -221,7 +232,7 @@ public class GsonService extends AbstractService {
         testo = text.setNoGraffe(testo);
         while (countGraffe(testo) > 0) {
             contenuto = estraeGraffa(testo);
-            testo = testo.replace(contenuto, VUOTA);
+            testo = testo.replace(VIRGOLA + contenuto, VUOTA);
             contenuto = text.levaCoda(contenuto, VIRGOLA);
 
             if (lista.size() == 0) {
@@ -303,7 +314,7 @@ public class GsonService extends AbstractService {
 
         if (doc != null) {
             entityBean = this.creaOld(doc, entityClazz);
-            String pippoz = legge(entityClazz, keyId);
+            String pippoz = mongoToString(entityClazz, keyId);
         }
         else {
             keyPropertyName = annotation.getKeyPropertyName(entityClazz);
@@ -326,7 +337,7 @@ public class GsonService extends AbstractService {
      *
      * @return stringa json
      */
-    public String legge(final Class entityClazz, final String keyId) {
+    public String mongoToString(final Class entityClazz, final String keyId) {
         String jsonString = VUOTA;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
         Gson gSon;
@@ -368,7 +379,7 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity crea(final Class entityClazz, final String jsonString) {
+    public AEntity stringToEntity(final Class entityClazz, final String jsonString) {
         AEntity entityBean = null;
         List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
 
@@ -396,9 +407,9 @@ public class GsonService extends AbstractService {
     public AEntity creaId(final Class entityClazz, final String keyId) {
         AEntity entityBean;
 
-        String jsonString = this.legge(entityClazz, keyId);
+        String jsonString = this.mongoToString(entityClazz, keyId);
         jsonString = fixStringa(jsonString);
-        entityBean = this.crea(entityClazz, jsonString);
+        entityBean = this.stringToEntity(entityClazz, jsonString);
 
         return entityBean;
     }
@@ -458,7 +469,7 @@ public class GsonService extends AbstractService {
      *
      * @return new entityBean
      */
-    public AEntity creaNoDbRef(final Class entityClazz, final String jsonString) {
+    public AEntity creaNoDbRef(final Class entityClazz, String jsonString) {
         AEntity entityBean = null;
         Gson gSon;
         GsonBuilder builder = new GsonBuilder();
@@ -485,7 +496,7 @@ public class GsonService extends AbstractService {
             }
         });
         gSon = builder.create();
-
+        jsonString = jsonString.replace("_id", "id");
         try {
             entityBean = (AEntity) gSon.fromJson(jsonString, entityClazz);
         } catch (JsonSyntaxException unErrore) {
@@ -598,23 +609,23 @@ public class GsonService extends AbstractService {
 
     /**
      * Costruzione del testo Json per il mongoDB <br>
-     * Aggiungo:
-     * -id
-     * -class
+     * Aggiungo: -class
+     * Modifica: -id
      *
-     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param entityBean (nuova o esistente)
      *
      * @return testo Json
      */
-    public String legge(final AEntity entityBeanDaRegistrare) {
-        String jsonString;
-        Gson gSon = new GsonBuilder().create();
-//        String flagId = String.format("\"_id\":\"%s\",", entityBeanDaRegistrare.getId());
-        String flagClass = String.format(",\"_class\":\"%s\"", entityBeanDaRegistrare.getClass().getSimpleName().toLowerCase());
+    public String entityToString(final AEntity entityBean) {
+        String jsonString = VUOTA;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        jsonString = gSon.toJson(entityBeanDaRegistrare);
-        jsonString = text.setNoGraffe(jsonString);
-        jsonString = String.format("%s%s%s%s%s", GRAFFA_INI, VUOTA, jsonString, flagClass, GRAFFA_END);
+        try {
+            jsonString = mapper.writeValueAsString(entityBean);
+        } catch (JsonProcessingException unErrore) {
+            System.out.println(unErrore);
+        }
 
         return jsonString;
     }

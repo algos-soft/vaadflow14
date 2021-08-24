@@ -180,7 +180,7 @@ public class MongoServiceTest extends ATest {
 
         //--leggo una entityBean e memorizzo una property
         clazz = Via.class;
-        sorgente = "piazzale";
+        sorgente = "corte";
         entityBean = service.findByKey(clazz, sorgente);
         assertNotNull(entityBean);
         originario = ((Via) entityBean).getOrdine();
@@ -188,13 +188,13 @@ public class MongoServiceTest extends ATest {
         System.out.println(String.format("Nella entity originale [%s] il valore di 'ordine' è [%s]", sorgente, originario));
 
         //--modifico la entityBean
-        daModificare = 7350;
+        daModificare = mathService.random();
         ((Via) entityBean).setOrdine(daModificare);
 
         //--registro la entityBean modificata
         try {
-//            jsonInString = gSonService.legge(entityBean);
-//            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
+            //            jsonInString = gSonService.legge(entityBean);
+            //            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
             service.save(entityBean);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore);
@@ -212,7 +212,7 @@ public class MongoServiceTest extends ATest {
 
         //--ri-registro la entityBean come in origine
         try {
-            service.saveOld(entityBean);
+            service.save(entityBean);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore);
         }
@@ -223,11 +223,8 @@ public class MongoServiceTest extends ATest {
         finale = ((Via) entityBean).getOrdine();
         assertEquals(originario, finale);
         System.out.println(VUOTA);
-        System.out.println(String.format("Nella entity ricostruita [%s] il valore di 'ordine' è [%s]", sorgente, finale));
+        System.out.println(String.format("Nella entity ricostruita [%s] il valore di 'ordine' è [%s], uguale al valore originario [%s]", sorgente, finale, originario));
 
-        //        System.out.println(VUOTA);
-        //        System.out.println(String.format("EntityBean di classe %s recuperato dal valore '%s' della key property della classe", clazz.getSimpleName(), sorgente));
-        //        System.out.println(entityBean);
     }
 
 

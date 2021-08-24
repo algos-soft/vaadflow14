@@ -148,7 +148,7 @@ public abstract class FlowBoot implements ServletContextListener {
 
         this.fixDBMongo();
         this.fixVariabili();
-//        this.fixPreferenze();
+        this.fixPreferenze();
         this.fixData();
         this.fixMenuRoutes();
         this.fixSchedules();

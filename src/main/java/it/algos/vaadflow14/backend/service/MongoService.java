@@ -1198,7 +1198,7 @@ public class MongoService<capture> extends AbstractService {
         if (iterable != null) {
             for (Document doc : iterable) {
                 entityBean = gSonService.creaOld(doc, entityClazz);
-                break;
+                  break;
             }
         }
 
@@ -1685,24 +1685,31 @@ public class MongoService<capture> extends AbstractService {
         AEntity entityBeanOld;
         String jsonStringNew;
         String jsonStringOld;
-        Document document=null;
+        Document document = null;
+        Bson bson;
 
         if (collection != null) {
-            jsonStringNew = gSonService.legge( entityBean);
+            jsonStringNew = gSonService.entityToString(entityBean);
+            jsonStringNew=jsonStringNew.replace("id","_id");
+            jsonStringNew=jsonStringNew.replace("}",",\"_class\":\"via\"}");
             try {
                 document = Document.parse(jsonStringNew);
             } catch (Exception unErrore) {
-                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
-            }
-            if (isEsiste(entityBean)) {
-                entityBeanOld = findById(entityClazz, entityBean.getId());
-                jsonStringOld = gSonService.legge(entityClazz, entityBean.getId());
-//                collection.deleteOne(entityBean);
-            }
-            else {
-                collection.insertOne(document);
+                logger.error(unErrore, this.getClass(), "save");
             }
         }
+
+        if (document == null) {
+            return;
+        }
+
+        if (isEsiste(entityBean)) {
+            entityBeanOld = findById(entityClazz, entityBean.getId());
+            jsonStringOld = gSonService.mongoToString(entityClazz, entityBean.getId());
+            bson = BsonDocument.parse(jsonStringOld);
+            collection.deleteOne(bson);
+        }
+        collection.insertOne(document);
     }
 
     /**
