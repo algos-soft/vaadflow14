@@ -1198,7 +1198,7 @@ public class MongoService<capture> extends AbstractService {
         if (iterable != null) {
             for (Document doc : iterable) {
                 entityBean = gSonService.creaOld(doc, entityClazz);
-                  break;
+                break;
             }
         }
 
@@ -1657,8 +1657,8 @@ public class MongoService<capture> extends AbstractService {
      */
     public AEntity saveOld(AEntity entityBean) throws AMongoException {
         try {
-            return mongo.saveOld(entityBean);
-            //            return mongoOp.save(entityBean);
+            //            return mongo.save(entityBean);
+            return mongoOp.save(entityBean);
         } catch (Exception unErrore) {
             throw new AMongoException(unErrore, entityBean);
         }
@@ -1679,10 +1679,11 @@ public class MongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
-    public void save(AEntity entityBean) throws AMongoException {
+    public AEntity save(AEntity entityBean) throws AMongoException {
         Class<? extends AEntity> entityClazz = entityBean.getClass();
         MongoCollection<Document> collection = getCollection(entityClazz);
         AEntity entityBeanOld;
+        AEntity entityBeanSaved = null;
         String jsonStringNew;
         String jsonStringOld;
         Document document = null;
@@ -1690,8 +1691,8 @@ public class MongoService<capture> extends AbstractService {
 
         if (collection != null) {
             jsonStringNew = gSonService.entityToString(entityBean);
-            jsonStringNew=jsonStringNew.replace("id","_id");
-            jsonStringNew=jsonStringNew.replace("}",",\"_class\":\"via\"}");
+            jsonStringNew = jsonStringNew.replace("id", "_id");
+            jsonStringNew = jsonStringNew.replace("}", ",\"_class\":\"via\"}");
             try {
                 document = Document.parse(jsonStringNew);
             } catch (Exception unErrore) {
@@ -1700,7 +1701,7 @@ public class MongoService<capture> extends AbstractService {
         }
 
         if (document == null) {
-            return;
+            return entityBeanSaved;
         }
 
         if (isEsiste(entityBean)) {
@@ -1710,6 +1711,8 @@ public class MongoService<capture> extends AbstractService {
             collection.deleteOne(bson);
         }
         collection.insertOne(document);
+
+        return entityBeanSaved;
     }
 
     /**

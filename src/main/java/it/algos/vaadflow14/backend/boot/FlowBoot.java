@@ -456,7 +456,7 @@ public abstract class FlowBoot implements ServletContextListener {
             entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
             entityBean.id = codeVersione;
             try {
-                mongo.saveOld(entityBean);
+                mongo.save(entityBean);
             } catch (AMongoException unErrore) {
                 logger.error(unErrore, this.getClass(), "fixVersioni");
             }
