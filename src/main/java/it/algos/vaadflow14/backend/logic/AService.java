@@ -197,6 +197,7 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
         AEntity entityBean;
         AEntity entityBeanOld = mongo.find(entityBeanDaRegistrare);
+        String message;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
         entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
@@ -206,8 +207,9 @@ public abstract class AService extends AbstractService implements AIService {
         //--e gestione dell'eventuale errore
         try {
             mongo.save(entityBean);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore);
+        } catch (AMongoException mongoError) {
+            message = String.format("La entity %s non è stata salvata perché: %s", mongoError.getEntityBean(),mongoError.getCause().getMessage());
+            System.out.println(message);
         }
 
         //--operazioni eseguite DOPO la registrazione (new o modifica)

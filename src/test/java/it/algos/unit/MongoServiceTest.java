@@ -41,7 +41,7 @@ public class MongoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    private MongoService service;
+    protected MongoService service;
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -79,10 +79,8 @@ public class MongoServiceTest extends ATest {
         System.out.println("1- Stato del database");
         MongoDatabase dataBase;
 
-        previsto = DATA_BASE_NAME;
         ottenuto = service.getDatabaseName();
         assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
         System.out.println(VUOTA);
         System.out.println(String.format("Nome del dataBase corrente: [%s]", ottenuto));
 
@@ -136,11 +134,19 @@ public class MongoServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - Singola entity")
+    @DisplayName("3 - Trova singola entity by id")
     void findById() {
-        System.out.println("3 - Singola entity");
+        System.out.println("3 - Trova singola entity by id");
 
-        sorgente = "piazza";
+        sorgente = "104";
+        clazz = Anno.class;
+        entityBean = service.findById(clazz, sorgente);
+        assertNotNull(entityBean);
+        System.out.println(VUOTA);
+        System.out.println(String.format("Recupero di un bean di classe %s", clazz.getSimpleName()));
+        System.out.println(entityBean);
+
+        sorgente = "piazzale";
         clazz = Via.class;
         entityBean = service.findById(clazz, sorgente);
         assertNotNull(entityBean);
@@ -152,9 +158,9 @@ public class MongoServiceTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("4 - Singola entity by key")
+    @DisplayName("4 - Trova singola entity by key")
     void findByKey() {
-        System.out.println("4 - Singola entity by key");
+        System.out.println("4 - Trova singola entity by key");
 
         clazz = Giorno.class;
         sorgente = "titolo";
@@ -227,6 +233,25 @@ public class MongoServiceTest extends ATest {
 
     }
 
+    @Test
+    @Order(6)
+    @DisplayName("6 - Trova l'ordine successivo")
+    void sss() {
+        System.out.println("6 - Trova l'ordine successivo\"");
+
+        clazz = Via.class;
+        sorgente = "ordine";
+        entityBean = service.findByKey(clazz, sorgente);
+
+        //--il database mongoDB potrebbe anche essere vuoto
+        if (service.isExists(clazz.getSimpleName().toLowerCase())) {
+            ottenutoIntero = service.getNewOrder(clazz, sorgente);
+            System.out.println(String.format("Successivo ordine %d", ottenutoIntero));
+        }
+        else {
+            System.out.println("Il database 'via' è vuoto");
+        }
+    }
 
     //    @Test
     @Order(5)

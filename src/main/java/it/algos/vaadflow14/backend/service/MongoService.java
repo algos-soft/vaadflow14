@@ -1111,21 +1111,27 @@ public class MongoService<capture> extends AbstractService {
         AEntity entityBean = null;
         MongoCollection<Document> collection = getCollection(entityClazz);
         FindIterable<Document> iterable = null;
+        Document doc = null;
 
         if (entityClazz == null) {
             return null;
         }
 
-        if (collection != null) {
-            Bson condition = new Document("_id", keyId);
-            iterable = getCollection(entityClazz).find(condition);
+        if (mongoOp != null) {
+            entityBean = findByIdOld(entityClazz, keyId);
+            return entityBean;
         }
 
+        if (collection != null) {
+            Bson condition = new Document("_id", keyId);
+            iterable = collection.find(condition);
+        }
         if (iterable != null) {
-            for (Document doc : iterable) {
-                entityBean = gSonService.creaOld(doc, entityClazz);
-                break;
-            }
+            doc = iterable.first();
+        }
+
+        if (doc != null) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
         }
 
         return entityBean;
@@ -1681,7 +1687,8 @@ public class MongoService<capture> extends AbstractService {
      */
     public AEntity save(AEntity entityBean) throws AMongoException {
         Class<? extends AEntity> entityClazz = entityBean.getClass();
-        MongoCollection<Document> collection = getCollection(entityClazz);
+        String collectionName = annotation.getCollectionName(entityClazz);
+        MongoCollection<Document> collection = getCollection(collectionName);
         AEntity entityBeanOld;
         AEntity entityBeanSaved = null;
         String jsonStringNew;
@@ -1692,7 +1699,8 @@ public class MongoService<capture> extends AbstractService {
         if (collection != null) {
             jsonStringNew = gSonService.entityToString(entityBean);
             jsonStringNew = jsonStringNew.replace("id", "_id");
-            jsonStringNew = jsonStringNew.replace("}", ",\"_class\":\"via\"}");
+            jsonStringNew = text.levaCoda(jsonStringNew, "}");
+            jsonStringNew += String.format(",\"_class\":\"%s\"}", collectionName);
             try {
                 document = Document.parse(jsonStringNew);
             } catch (Exception unErrore) {
@@ -1710,7 +1718,13 @@ public class MongoService<capture> extends AbstractService {
             bson = BsonDocument.parse(jsonStringOld);
             collection.deleteOne(bson);
         }
-        collection.insertOne(document);
+
+        try {
+            collection.insertOne(document);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            throw new AMongoException(unErrore, entityBean, "Pipopoz");
+        }
 
         return entityBeanSaved;
     }
