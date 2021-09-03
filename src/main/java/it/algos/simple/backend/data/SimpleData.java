@@ -45,7 +45,7 @@ public class SimpleData extends FlowData {
      * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public MongoService mongo;
+    public AIMongoService mongo;
 
     /**
      * Istanza di una interfaccia <br>
@@ -105,11 +105,11 @@ public class SimpleData extends FlowData {
         boolean status = false;
         Bolla bolla;
 
-        if (mongo.isNotEsiste(Bolla.class, code)) {
+        if (  ((MongoService) mongo).isNotEsiste(Bolla.class, code)) {//@todo da controllare
             bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
             bolla.setId(code);
             try {
-                mongo.saveOld(bolla);
+                ((MongoService) mongo).saveOld(bolla);//@todo da controllare
             } catch (AMongoException unErrore) {
             }
             status = true;

@@ -12,6 +12,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -160,7 +161,7 @@ public class StatoService extends AService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
     public List<Stato> findAllStato() {
-        return mongo.findAll(Stato.class, Sort.by(Sort.Direction.ASC, "ordine"));
+        return   ((MongoService) mongo).findAll(Stato.class, Sort.by(Sort.Direction.ASC, "ordine"));//@todo da controllare
     }
 
 
@@ -277,7 +278,7 @@ public class StatoService extends AService {
         String packageName = Stato.class.getSimpleName().toLowerCase();
         String collection = "continente";
 
-        if (mongo.isValid(collection)) {
+        if (  ((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -324,7 +325,7 @@ public class StatoService extends AService {
         Sort sort = Sort.by("ordine");
         List items;
 
-        items = mongo.findAll(Stato.class, sort);
+        items =   ((MongoService) mongo).findAll(Stato.class, sort);//@todo da controllare
         combo.setWidth(widthEM);
         combo.setPreventInvalidInput(true);
         combo.setAllowCustomValue(false);

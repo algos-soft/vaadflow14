@@ -245,7 +245,7 @@ public class FatturaLogicList extends LogicList {
         Fattura fattura= new Fattura();
         fattura.code="x";
         try {
-            mongo.saveOld(fattura);
+            ((MongoService) mongo).saveOld(fattura);//@todo da controllare
         } catch (AMongoException unErrore) {
         }
     }

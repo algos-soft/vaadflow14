@@ -42,7 +42,7 @@ public class DeltaView extends VerticalLayout {
     private SecoloService secoloLogic;
 
     @Autowired
-    private MongoService mongo;
+    private AIMongoService mongo;
 
 
     /**
@@ -66,11 +66,11 @@ public class DeltaView extends VerticalLayout {
 
         //--registra su mongo
         String valoreCodificato = resourceService.getSrcBandieraPng("fo");
-        Delta deltaUno = (Delta) mongo.findByIdOld(Delta.class, "alfa");
+        Delta deltaUno = (Delta)  ((MongoService) mongo).findByIdOld(Delta.class, "alfa");//@todo da controllare
         if (deltaUno != null) {
             deltaUno.immagine = valoreCodificato;
             try {
-                mongo.saveOld(deltaUno);
+                ((MongoService) mongo).saveOld(deltaUno);//@todo da controllare
             } catch (AMongoException unErrore) {
             }
         }
@@ -83,7 +83,7 @@ public class DeltaView extends VerticalLayout {
         setAlignItems(FlexComponent.Alignment.CENTER);
 
         //--legge da mongo
-        Delta deltaDue = (Delta) mongo.findOneFirst(Delta.class);
+        Delta deltaDue = (Delta)  ((MongoService) mongo).findOneFirst(Delta.class);//@todo da controllare
         String imageTxt = deltaDue.immagine;
         Image imageTre= resourceService.getBandieraFromMongo(imageTxt);
         add(imageTre);

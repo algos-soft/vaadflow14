@@ -43,10 +43,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
         Utente utente;
         Company company;
         Collection<? extends GrantedAuthority> authorities;
-        MongoService mongo = StaticContextAccessor.getBean(MongoService.class);
+        AIMongoService mongo = StaticContextAccessor.getBean(AIMongoService.class);
 
         uniqueUserName = uniqueUserName.toLowerCase();
-        utente = (Utente) mongo.findByIdOld(Utente.class, uniqueUserName);
+        utente = (Utente) ((MongoService) mongo).findByIdOld(Utente.class, uniqueUserName);//@todo da controllare
 //        utente = (Utente) mongo.findOneUnique(Utente.class, FlowCost.FIELD_USER, uniqueUserName);
 
         if (utente != null) {

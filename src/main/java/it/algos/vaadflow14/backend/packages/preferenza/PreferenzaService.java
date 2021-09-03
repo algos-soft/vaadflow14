@@ -5,6 +5,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -175,7 +176,7 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     public Preferenza findByKey(final String keyValue) {
-                return (Preferenza) mongo.findOneUnique(Preferenza.class, "code", keyValue);
+        return (Preferenza) ((MongoService) mongo).findOneUnique(Preferenza.class, "code", keyValue);//@todo da controllare
 //        return (Preferenza) super.findByKey(keyValue);
     }
 

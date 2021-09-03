@@ -7,7 +7,7 @@ import it.algos.vaadflow14.backend.application.FlowCost;
 import it.algos.vaadflow14.backend.enumeration.AEPreferenza;
 import it.algos.vaadflow14.backend.packages.preferenza.PreferenzaService;
 import it.algos.vaadflow14.backend.service.DateService;
-import it.algos.vaadflow14.backend.service.MongoService;
+import it.algos.vaadflow14.backend.service.AIMongoService;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +43,7 @@ public class APreferenzaServiceTest extends ATest {
      * The Service.
      */
     @Autowired
-    MongoService mongo;
+    AIMongoService mongo;
 
     /**
      * The Service.

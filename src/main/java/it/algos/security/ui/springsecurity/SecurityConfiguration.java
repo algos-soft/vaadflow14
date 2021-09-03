@@ -64,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public Utente currentUser(MongoService mongo) {
+    public Utente currentUser(AIMongoService mongo) {
 //        return userRepository.findByKeyUnica(SecurityUtils.getUsername()); //@todo Linea di codice provvisoriamente commentata e DA RIMETTERE
         return null;
     }

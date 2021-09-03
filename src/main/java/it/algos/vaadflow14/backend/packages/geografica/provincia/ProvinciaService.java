@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -164,7 +165,7 @@ public class ProvinciaService extends AService {
         String packageName = Provincia.class.getSimpleName().toLowerCase();
         String collection = "regione";
 
-        if (mongo.isValid(collection)) {
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {

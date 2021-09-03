@@ -3,9 +3,12 @@ package it.algos.vaadflow14.backend.packages.company;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -156,6 +159,27 @@ public class CompanyService extends AService {
         return (Company) super.findByKey(keyValue);
     }
 
+    /**
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     * @param operation              del dialogo (new o modifica)
+     *
+     * @return la entityBean appena registrata, null se non registrata
+     *
+     * @throws
+     */
+    @Override
+    public AEntity save(AEntity entityBeanDaRegistrare, AEOperation operation) throws AMongoException {
+        AEntity  entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
+        return ((MongoService)mongo).mongoOp.save(entityBean);
+    }
 
     /**
      * Creazione o ricreazione di alcuni dati iniziali standard <br>

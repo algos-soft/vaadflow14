@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -197,7 +198,7 @@ public class UtenteService extends AService {
      * @param userName must not be {@literal null}.
      */
     public Utente findByUser(final String userName) {
-        return (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, userName);
+        return (Utente) ((MongoService) mongo).findOneUnique(Utente.class, MONGO_FIELD_USER, userName);//@todo da controllare
     }
 
 
@@ -221,7 +222,7 @@ public class UtenteService extends AService {
      */
     //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 0;
 

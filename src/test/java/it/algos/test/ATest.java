@@ -482,10 +482,10 @@ public abstract class ATest {
         jSonService.array = arrayService;
         beanService.mongo = mongoService;
 
-        mongoService.text = textService;
-        mongoService.annotation = annotationService;
-        mongoService.reflection = reflectionService;
-        mongoService.logger = loggerService;
+        ((MongoService) mongoService).text = textService;
+        ((MongoService) mongoService).annotation = annotationService;
+        ((MongoService) mongoService).reflection = reflectionService;
+        ((MongoService) mongoService).logger = loggerService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -506,10 +506,11 @@ public abstract class ATest {
         utilityService.text = textService;
         htmlService.text = textService;
         dateService.text = textService;
-        mongoService.gSonService = gSonService;
+        ((MongoService) mongoService).gSonService = gSonService;
         gSonService.reflection = reflectionService;
         gSonService.annotation = annotationService;
         gSonService.logger = loggerService;
+        gSonService.date = dateService;
         resourceService.fileService = fileService;
         resourceService.text = textService;
         utilityService.annotation = annotationService;
@@ -518,7 +519,7 @@ public abstract class ATest {
         enumerationService.array = arrayService;
         dateService.math = mathService;
 
-        mongoService.fixProperties(classService.getProjectName());
+        ((MongoService) mongoService).fixProperties(classService.getProjectName());
         gSonService.fixProperties(classService.getProjectName());
     }
 

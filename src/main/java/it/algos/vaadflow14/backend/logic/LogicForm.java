@@ -459,7 +459,7 @@ public abstract class LogicForm extends Logic {
         boolean status = false;
         AEntity entityBean = (currentForm != null) ? currentForm.getValidBean() : null;
 
-        if (mongo.delete(entityBean)) {
+        if (((MongoService) mongo).delete(entityBean)) {//@todo da controllare
             status = true;
             logger.delete(entityBean);
         }
@@ -484,7 +484,7 @@ public abstract class LogicForm extends Logic {
         }
 
         if (currentForm.isModificato()) {
-            if (mongo.isValid(entityClazz)) {
+            if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
                 messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
                 messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
                 messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> backToList()).closeOnClick();
@@ -522,20 +522,20 @@ public abstract class LogicForm extends Logic {
             return;
         }
         backSteps += -1;
-        final AEntity newEntityBean = mongo.findByIdOld(entityClazz, newEntityBeanID);
+        final AEntity newEntityBean = ((MongoService) mongo).findByIdOld(entityClazz, newEntityBeanID);//@todo da controllare
         final Object valueProperty = reflection.getPropertyValue(newEntityBean, sortProperty);
-        final String beanPrevID = mongo.findPreviousID(entityClazz, sortProperty, valueProperty);
-        final String beanNextID = mongo.findNextID(entityClazz, sortProperty, valueProperty);
+        final String beanPrevID = ((MongoService) mongo).findPreviousID(entityClazz, sortProperty, valueProperty);//@todo da controllare
+        final String beanNextID = ((MongoService) mongo).findNextID(entityClazz, sortProperty, valueProperty);//@todo da controllare
 
         executeRoute(newEntityBeanID, beanPrevID, beanNextID);
     }
 
     protected boolean isNotPrimo() {
-        return mongo.findPrevious(entityClazz, entityBean.id) != null;
+        return ((MongoService) mongo).findPrevious(entityClazz, entityBean.id) != null;//@todo da controllare
     }
 
     protected boolean isNotUltimo() {
-        return mongo.findNext(entityClazz, entityBean.id) != null;
+        return ((MongoService) mongo).findNext(entityClazz, entityBean.id) != null;//@todo da controllare
     }
 
     /**
@@ -601,9 +601,9 @@ public abstract class LogicForm extends Logic {
             if (operationForm == AEOperation.addNew && entityBean.id == null) {
                 entityBean = entityService.fixKey(entityBean);
             }
-            oldEntityBean = mongo.find(entityBean);
+            oldEntityBean = ((MongoService) mongo).find(entityBean);//@todo da controllare
             try {
-                mongo.save(entityBean);
+                ((MongoService) mongo).save(entityBean);//@todo da controllare
             } catch (AMongoException unErrore) {
             }
             status = entityBean != null;

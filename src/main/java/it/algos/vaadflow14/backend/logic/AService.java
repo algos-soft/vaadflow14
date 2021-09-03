@@ -155,7 +155,7 @@ public abstract class AService extends AbstractService implements AIService {
 
         if (valido) {
             entityBean = beforeSave(newEntityBean, AEOperation.addNew);
-            valido = mongo.insert(entityBean) != null;
+            valido = ((MongoService) mongo).insert(entityBean) != null; //@todo da controllare
             return entityBean;
         }
         else {
@@ -174,7 +174,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @return true if exist
      */
     public boolean isEsiste(final String keyId) {
-        return mongo.isEsiste(entityClazz, keyId);
+        return ((MongoService) mongo).isEsiste(entityClazz, keyId);//@todo da controllare
     }
 
     /**
@@ -196,7 +196,7 @@ public abstract class AService extends AbstractService implements AIService {
     @Override
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
         AEntity entityBean;
-        AEntity entityBeanOld = mongo.find(entityBeanDaRegistrare);
+        AEntity entityBeanOld = ((MongoService) mongo).find(entityBeanDaRegistrare);//@todo da controllare
         String message;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
@@ -206,9 +206,9 @@ public abstract class AService extends AbstractService implements AIService {
         //--con un controllo finale di congruità
         //--e gestione dell'eventuale errore
         try {
-            mongo.save(entityBean);
+            ((MongoService) mongo).save(entityBean);//@todo da controllare
         } catch (AMongoException mongoError) {
-            message = String.format("La entity %s non è stata salvata perché: %s", mongoError.getEntityBean(),mongoError.getCause().getMessage());
+            message = String.format("La entity %s non è stata salvata perché: %s", mongoError.getEntityBean(), mongoError.getCause().getMessage());
             System.out.println(message);
         }
 
@@ -326,10 +326,10 @@ public abstract class AService extends AbstractService implements AIService {
         }
 
         if (sort != null) {
-            lista = mongo.findAll(entityClazz, sort);
+            lista = ((MongoService) mongo).findAll(entityClazz, sort);//@todo da controllare
         }
         else {
-            lista = mongo.findAll(entityClazz, (Sort) null);
+            lista = ((MongoService) mongo).findAll(entityClazz, (Sort) null);//@todo da controllare
         }
 
         return lista;
@@ -452,8 +452,8 @@ public abstract class AService extends AbstractService implements AIService {
     @Override
     public boolean deleteAll() {
 
-        if (mongo.isExists(annotation.getCollectionName(entityClazz))) {
-            mongo.mongoOp.remove(new Query(), entityClazz);
+        if (entityClazz != null && mongo.isExistsCollection(annotation.getCollectionName(entityClazz))) {
+            ((MongoService) mongo).mongoOp.remove(new Query(), entityClazz);
             return true;
         }
         else {
@@ -542,7 +542,7 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public int getNewOrdine() {
-        return mongo.getNewOrder(entityClazz, FIELD_ORDINE);
+        return   ((MongoService) mongo).getNewOrder(entityClazz, FIELD_ORDINE);//@todo da controllare
     }
 
     /**

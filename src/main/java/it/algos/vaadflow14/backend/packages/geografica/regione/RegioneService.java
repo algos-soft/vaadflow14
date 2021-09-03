@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -161,7 +162,7 @@ public class RegioneService extends AService {
 
         query.addCriteria(Criteria.where("stato.id").is(statoKeyID));
         query.with(Sort.by(Sort.Direction.ASC, "ordine"));
-        items = mongo.findAll(entityClazz, query);
+        items = ((MongoService) mongo).findAll(entityClazz, query);//@todo da controllare
 
         return items;
     }
@@ -174,7 +175,7 @@ public class RegioneService extends AService {
      * @return the entity with the given id or {@literal null} if none found
      */
     public Regione findByIsoItalian(final String key) {
-        return (Regione) mongo.findOneUnique(Regione.class, "iso", "IT-" + key);
+        return (Regione) ((MongoService) mongo).findOneUnique(Regione.class, "iso", "IT-" + key);//@todo da controllare
     }
 
 
@@ -221,7 +222,7 @@ public class RegioneService extends AService {
         String packageName = Regione.class.getSimpleName().toLowerCase();
         String collection = "stato";
 
-        if (mongo.isValid(collection)) {
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -283,7 +284,7 @@ public class RegioneService extends AService {
         WrapDueStringhe wrapTitoli;
         List<Regione> regioniDaResettare = findAllByStato(stato);
         if (regioniDaResettare != null && regioniDaResettare.size() > 0) {
-            mongo.delete(regioniDaResettare, Regione.class);
+            ((MongoService) mongo).delete(regioniDaResettare, Regione.class);//@todo da controllare
         }
 
         alfaDue = stato.alfadue;

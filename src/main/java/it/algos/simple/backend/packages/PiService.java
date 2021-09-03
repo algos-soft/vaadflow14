@@ -4,7 +4,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
-import it.algos.vaadflow14.backend.service.MongoService;
+import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Scope;
 public class PiService {
 
     @Autowired
-    private MongoService mongo;
+    private AIMongoService mongo;
 
 
     public DataProvider createDataProvider(Class<? extends AEntity> entityClazz) {
@@ -23,12 +23,12 @@ public class PiService {
 
                 // First callback fetches items based on a query
                 query -> {
-                    return mongo.findSet(entityClazz, query.getOffset(), query.getLimit()).stream();
+                    return ((MongoService) mongo).findSet(entityClazz, query.getOffset(), query.getLimit()).stream();//@todo da controllare
                 },
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> mongo.count(entityClazz));
+                query -> ((MongoService) mongo).count(entityClazz));//@todo da controllare
 
         return dataProvider;
     }

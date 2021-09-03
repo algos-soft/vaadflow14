@@ -86,7 +86,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin usando il metodo setter() <br>
      * al termine del ciclo init() del costruttore di questa classe <br>
      */
-    public MongoService mongo;
+    public AIMongoService mongo;
 
 
     /**
@@ -165,8 +165,8 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixDBMongo() {
-        mongo.getMaxBlockingSortBytes();
-        mongo.fixMaxBytes();
+        ((MongoService) mongo).getMaxBlockingSortBytes();//@todo da controllare
+        ((MongoService) mongo).fixMaxBytes();//@todo da controllare
     }
 
 
@@ -451,12 +451,12 @@ public abstract class FlowBoot implements ServletContextListener {
         //--inizio
         codeVersione = "Setup";
         descVersione = "Creazione ed installazione iniziale dell'applicazione";
-        entityBean = (Versione) mongo.findByKeyOld(Versione.class, codeVersione);
+        entityBean = (Versione) ((MongoService) mongo).findByKeyOld(Versione.class, codeVersione);//@todo da controllare
         if (entityBean == null) {
             entityBean = new Versione(codeVersione, LocalDate.now(), descVersione);
             entityBean.id = codeVersione;
             try {
-                mongo.save(entityBean);
+                ((MongoService) mongo).save(entityBean);//@todo da controllare
             } catch (AMongoException unErrore) {
                 logger.error(unErrore, this.getClass(), "fixVersioni");
             }
@@ -482,7 +482,7 @@ public abstract class FlowBoot implements ServletContextListener {
      * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
      */
     @Autowired
-    public void setMongo(final MongoService mongo) {
+    public void setMongo(final AIMongoService mongo) {
         this.mongo = mongo;
     }
 

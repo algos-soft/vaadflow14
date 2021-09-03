@@ -6,6 +6,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
@@ -169,7 +170,7 @@ public class GiornoService extends AService {
         String packageName = Giorno.class.getSimpleName().toLowerCase();
         String collection = "mese";
 
-        if (mongo.isValid(collection)) {
+        if ( ((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -224,7 +225,7 @@ public class GiornoService extends AService {
         for (HashMap mappaGiorno : lista) {
             titolo = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_TITOLO);
             titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
-            mese = (Mese) mongo.findByIdOld(Mese.class, titoloMese);
+            mese = (Mese)  ((MongoService) mongo).findByIdOld(Mese.class, titoloMese);//@todo da controllare
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
 
             numRec = creaReset(ordine, titolo, mese) ? numRec + 1 : numRec;

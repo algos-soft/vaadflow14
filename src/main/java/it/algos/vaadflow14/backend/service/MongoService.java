@@ -50,11 +50,8 @@ import java.util.*;
  */
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class MongoService<capture> extends AbstractService {
+public class MongoService<capture> extends AbstractService implements AIMongoService {
 
-    public final static int STANDARD_MONGO_MAX_BYTES = 33554432;
-
-    public final static int EXPECTED_ALGOS_MAX_BYTES = 50151432;
 
     /**
      * Versione della classe per la serializzazione
@@ -153,7 +150,8 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return collection if exist
      */
-    private MongoCollection<Document> getCollection(Class<? extends AEntity> entityClazz) {
+    @Override
+    public MongoCollection<Document> getCollection(final Class<? extends AEntity> entityClazz) {
         return getCollection(annotation.getCollectionName(entityClazz));
     }
 
@@ -165,7 +163,8 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return collection if exist
      */
-    private MongoCollection<Document> getCollection(String collectionName) {
+    @Override
+    public MongoCollection<Document> getCollection(final String collectionName) {
         if (text.isValid(collectionName)) {
             return dataBase != null ? dataBase.getCollection(collectionName) : null;
         }
@@ -178,67 +177,52 @@ public class MongoService<capture> extends AbstractService {
     /**
      * Check the existence of a collection. <br>
      *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
      *
-     * @return true if the collection has entities
+     * @return true if the collection exist
      */
-    public boolean isValid(String collectionName) {
-        return isExists(collectionName) ? count(collectionName) > 0 : false;
+    @Override
+    public boolean isExistsCollection(final Class<? extends AEntity> entityClazz) {
+        return isExistsCollection(annotation.getCollectionName(entityClazz));
     }
+
 
     /**
      * Check the existence of a collection. <br>
+     *
+     * @param collectionName corrispondente ad una collection sul database mongoDB
+     *
+     * @return true if the collection exist
+     */
+    @Override
+    public boolean isExistsCollection(final String collectionName) {
+        return collezioni != null && collezioni.contains(collectionName);
+    }
+
+
+    /**
+     * Check the existence (not empty) of a collection. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
      *
      * @return true if the collection has entities
      */
-    public boolean isValid(Class<? extends AEntity> entityClazz) {
-        return count(entityClazz) > 0;
+    @Override
+    public boolean isValidCollection(final Class<? extends AEntity> entityClazz) {
+        return isValidCollection(annotation.getCollectionName(entityClazz));
     }
 
-    /**
-     * Check the existence of a collection. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection exist
-     */
-    public boolean isExists(Class<? extends AEntity> entityClazz) {
-        return isExists(entityClazz.getSimpleName().toLowerCase());
-    }
 
     /**
-     * Check the existence of a collection. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection exist
-     */
-    public boolean isNotExists(Class<? extends AEntity> entityClazz) {
-        return !isExists(entityClazz);
-    }
-
-    /**
-     * Check the existence of a collection. <br>
+     * Check the existence (not empty) of a collection. <br>
      *
      * @param collectionName corrispondente ad una collection sul database mongoDB
      *
-     * @return true if the collection exist
+     * @return true if the collection has entities
      */
-    public boolean isExists(String collectionName) {
-        return collezioni != null ? collezioni.contains(collectionName) : false;
-    }
-
-    /**
-     * Check the existence of a collection. <br>
-     *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection exist
-     */
-    public boolean isNotExists(String collectionName) {
-        return !isExists(collectionName);
+    @Override
+    public boolean isValidCollection(final String collectionName) {
+        return isExistsCollection(collectionName) && count(collectionName) > 0;
     }
 
 
@@ -249,46 +233,22 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return true if the collection is empty
      */
-    public boolean isEmpty(Class<? extends AEntity> entityClazz) {
-        return count(entityClazz) < 1;
+    @Override
+    public boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) {
+        return isEmptyCollection(annotation.getCollectionName(entityClazz));
     }
 
 
     /**
-     * Check the existence of some entities. <br>
+     * Check if a collection is empty. <br>
      *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param propertyName  per costruire la query
-     * @param propertyValue (serializable) per costruire la query
+     * @param collectionName corrispondente ad una collection sul database mongoDB
      *
-     * @return true if the collection has entities requested
+     * @return true if the collection is empty
      */
-    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
-        return count(entityClazz, propertyName, propertyValue) > 0;
-    }
-
-
-    /**
-     * Conteggio di tutte le entities di una collection NON filtrate. <br>
-     *
-     * @param collectionName The name of the collection or view to count
-     *
-     * @return numero totale di entities
-     */
-    public int count(String collectionName) {
-        int totale = 0;
-        MongoCollection<Document> collection = getCollection(collectionName);
-        Long risultato = null;
-
-        if (collection != null) {
-            risultato = collection.estimatedDocumentCount();
-        }
-
-        if (risultato != null) {
-            totale = risultato.intValue();
-        }
-
-        return totale;
+    @Override
+    public boolean isEmptyCollection(final String collectionName) {
+        return !isExistsCollection(collectionName) || count(collectionName) == 0;
     }
 
 
@@ -299,8 +259,22 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return numero totale di entities
      */
-    public int count(Class<? extends AEntity> entityClazz) {
-        return count(entityClazz.getSimpleName().toLowerCase());
+    @Override
+    public int count(final Class<? extends AEntity> entityClazz) {
+        return count(annotation.getCollectionName(entityClazz));
+    }
+
+
+    /**
+     * Conteggio di tutte le entities di una collection NON filtrate. <br>
+     *
+     * @param collectionName The name of the collection or view to count
+     *
+     * @return numero totale di entities
+     */
+    @Override
+    public int count(final String collectionName) {
+        return count(collectionName, (Bson) null);
     }
 
 
@@ -313,17 +287,66 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return numero di entities selezionate
      */
-    public int count(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
-        if (entityClazz == null) {
-            return 0;
-        }
-        if (text.isEmpty(propertyName) || propertyValue == null) {
+    @Override
+    public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) {
+        Bson filter = null;
+
+        if (text.isEmpty(propertyName)) {
             return count(entityClazz);
         }
 
-        Query query = new Query();
-        query.addCriteria(Criteria.where(propertyName).is(propertyValue));
-        return findAll(entityClazz, query).size();
+        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
+            return count(entityClazz);
+        }
+
+        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
+            return count(entityClazz);
+        }
+
+        filter = new Document(propertyName, propertyValue);
+
+        return count(entityClazz, filter);
+    }
+
+    /**
+     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
+     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param filter      Optional. A filter that selects which documents to count in the collection or view.
+     *
+     * @return numero di entities eventualmente filtrate
+     */
+    @Override
+    public int count(final Class<? extends AEntity> entityClazz, final Bson filter) {
+        return count(annotation.getCollectionName(entityClazz), filter);
+    }
+
+
+    /**
+     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
+     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
+     *
+     * @param collectionName The name of the collection or view to count
+     * @param filter         Optional. A filter that selects which documents to count in the collection or view.
+     *
+     * @return numero di entities eventualmente filtrate
+     */
+    @Override
+    public int count(final String collectionName, final Bson filter) {
+        int totale = 0;
+        MongoCollection<Document> collection = getCollection(collectionName);
+        Long risultato = null;
+
+        if (collection != null) {
+            risultato = collection.countDocuments(filter);
+        }
+
+        if (risultato != null) {
+            totale = risultato.intValue();
+        }
+
+        return totale;
     }
 
 
@@ -336,6 +359,7 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return numero di entities eventualmente filtrate
      */
+    @Deprecated
     public int count(Class<? extends AEntity> entityClazz, Query query) {
         return count(annotation.getCollectionName(entityClazz), query);
     }
@@ -357,6 +381,7 @@ public class MongoService<capture> extends AbstractService {
      *
      * @see(https://docs.mongodb.com/manual/reference/command/count/)
      */
+    @Deprecated
     public int count(String collectionName, Query query) {
         if (text.isEmpty(collectionName)) {
             return 0;
@@ -377,6 +402,7 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return numero di entities eventualmente filtrate
      */
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AQueryException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return count(entityClazz, mappaFiltri);
@@ -390,6 +416,7 @@ public class MongoService<capture> extends AbstractService {
      *
      * @return numero di entities eventualmente filtrate
      */
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AQueryException {
         Query query = getQuery(mappaFiltri);
 
@@ -398,6 +425,20 @@ public class MongoService<capture> extends AbstractService {
 
         return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
     }
+
+    /**
+     * Check the existence of some entities. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return true if the collection has entities requested
+     */
+    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+        return count(entityClazz, propertyName, propertyValue) > 0;
+    }
+
 
     /**
      * Controlla che NON ci siano entities con la property rest=true. <br>
@@ -427,9 +468,9 @@ public class MongoService<capture> extends AbstractService {
         String collectionName = annotation.getCollectionName(entityClazz);
         Query query = new Query();
 
-        if (text.isValid(collectionName) && isExists(collectionName)) {
+        if (text.isValid(collectionName) && isExistsCollection(collectionName)) {
             query.addCriteria(Criteria.where(FIELD_NAME_RESET).is(true));
-            numRec = mongo.count(entityClazz, query);
+            numRec = this.count(entityClazz, query);
         }
 
         return numRec;
@@ -1131,7 +1172,8 @@ public class MongoService<capture> extends AbstractService {
         }
 
         if (doc != null) {
-            entityBean = gSonService.creaOld(doc, entityClazz);
+//            entityBean = gSonService.creaOld(doc, entityClazz);
+            entityBean = gSonService.creaId( entityClazz,keyId);
         }
 
         return entityBean;
@@ -1631,7 +1673,7 @@ public class MongoService<capture> extends AbstractService {
         Field field = reflection.getField(entityClazz, propertyName);
         Query query = new Query().with(sort).limit(1);
 
-        if (isEmpty(entityClazz)) {
+        if (isEmptyCollection(entityClazz)) {
             return 1;
         }
 
@@ -1820,7 +1862,7 @@ public class MongoService<capture> extends AbstractService {
      */
     public boolean drop(String collectionName) {
         this.mongoOp.dropCollection(collectionName);
-        return mongo.count(collectionName) == 0;
+        return this.count(collectionName) == 0;
     }
 
     /**
@@ -1921,11 +1963,11 @@ public class MongoService<capture> extends AbstractService {
         numBytes = (int) getParameter("internalQueryExecMaxBlockingSortBytes");
         value = text.format(numBytes);
 
-        if (numBytes == MongoService.STANDARD_MONGO_MAX_BYTES) {
+        if (numBytes == AIMongoService.STANDARD_MONGO_MAX_BYTES) {
             logger.warn("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore standard iniziale settato da mongoDB: " + value);
         }
         else {
-            if (numBytes == MongoService.EXPECTED_ALGOS_MAX_BYTES) {
+            if (numBytes == AIMongoService.EXPECTED_ALGOS_MAX_BYTES) {
                 logger.info("Algos - mongoDB. La variabile internalQueryExecMaxBlockingSortBytes è regolata col valore richiesto da Algos: " + value);
             }
             else {
@@ -1943,14 +1985,32 @@ public class MongoService<capture> extends AbstractService {
         this.setMaxBlockingSortBytes(EXPECTED_ALGOS_MAX_BYTES);
     }
 
+    /**
+     * Nome del database. <br>
+     *
+     * @return nome del database
+     */
+    @Override
     public String getDatabaseName() {
         return databaseName;
     }
 
+    /**
+     * Database. <br>
+     *
+     * @return database
+     */
+    @Override
     public MongoDatabase getDataBase() {
         return dataBase;
     }
 
+    /**
+     * Tutte le collezioni esistenti. <br>
+     *
+     * @return collezioni del database
+     */
+    @Override
     public List<String> getCollezioni() {
         return collezioni;
     }

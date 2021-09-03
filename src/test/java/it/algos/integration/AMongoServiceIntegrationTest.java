@@ -147,28 +147,28 @@ public class AMongoServiceIntegrationTest extends ATest {
         sorgente2 = "alfa";
         sorgente3 = "via";
 
-        ottenutoBooleano = service.isExists(sorgente);
+        ottenutoBooleano =  service.isExistsCollection(sorgente);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isExists(sorgente2);
+        ottenutoBooleano = service.isExistsCollection(sorgente2);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isExists(sorgente3);
+        ottenutoBooleano = service.isExistsCollection(sorgente3);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(Alfa.class);
+        ottenutoBooleano = service.isValidCollection(Alfa.class);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(Via.class);
+        ottenutoBooleano = service.isValidCollection(Via.class);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(sorgente);
+        ottenutoBooleano = service.isValidCollection(sorgente);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(sorgente2);
+        ottenutoBooleano = service.isValidCollection(sorgente2);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(sorgente3);
+        ottenutoBooleano = service.isValidCollection(sorgente3);
         Assert.assertTrue(ottenutoBooleano);
     }
 
@@ -179,16 +179,16 @@ public class AMongoServiceIntegrationTest extends ATest {
     void isValid() {
         System.out.println("isValid() rimanda a count()");
 
-        ottenutoBooleano = service.isValid((Class) null);
+        ottenutoBooleano = service.isValidCollection((Class) null);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(Omega.class);
+        ottenutoBooleano = service.isValidCollection(Omega.class);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(Mese.class);
+        ottenutoBooleano = service.isValidCollection(Mese.class);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isValid(MeseService.class);
+        ottenutoBooleano = service.isValidCollection(MeseService.class);
         Assert.assertFalse(ottenutoBooleano);
     }
 
@@ -199,16 +199,16 @@ public class AMongoServiceIntegrationTest extends ATest {
     void isEmpty() {
         System.out.println("isEmpty() rimanda a count()");
 
-        ottenutoBooleano = service.isEmpty(null);
+//        ottenutoBooleano = service.isEmptyCollection(null);
+//        Assert.assertTrue(ottenutoBooleano);
+
+        ottenutoBooleano = service.isEmptyCollection(Omega.class);
         Assert.assertTrue(ottenutoBooleano);
 
-        ottenutoBooleano = service.isEmpty(Omega.class);
-        Assert.assertTrue(ottenutoBooleano);
-
-        ottenutoBooleano = service.isEmpty(Mese.class);
+        ottenutoBooleano = service.isEmptyCollection(Mese.class);
         Assert.assertFalse(ottenutoBooleano);
 
-        ottenutoBooleano = service.isEmpty(MeseService.class);
+        ottenutoBooleano = service.isEmptyCollection(MeseService.class);
         Assert.assertTrue(ottenutoBooleano);
     }
 
@@ -1386,7 +1386,7 @@ public class AMongoServiceIntegrationTest extends ATest {
         AEntity entity;
         String clazzName = clazz.getSimpleName().toLowerCase();
         List<AEntity> lista = new ArrayList();
-        Collection<Document> documents = mongoService.mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
+        Collection<Document> documents = ((MongoService) mongoService).mongoOp.getCollection(clazzName).find().skip(offset).limit(limit).into(new ArrayList());
 
         for (Document doc : documents) {
             try {

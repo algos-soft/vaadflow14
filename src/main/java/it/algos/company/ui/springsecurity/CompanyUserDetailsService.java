@@ -43,10 +43,10 @@ public class CompanyUserDetailsService implements UserDetailsService {
         Utente utente;
         Company company;
         Collection<? extends GrantedAuthority> authorities;
-        MongoService mongo = StaticContextAccessor.getBean(MongoService.class);
+        AIMongoService mongo = StaticContextAccessor.getBean(AIMongoService.class);
 
         //        uniqueUserName = uniqueUserName.toLowerCase();
-        utente = (Utente) mongo.findOneUnique(Utente.class, MONGO_FIELD_USER, uniqueUserName);
+        utente = (Utente) ((MongoService) mongo).findOneUnique(Utente.class, MONGO_FIELD_USER, uniqueUserName);//@todo da controllare
 
         if (utente != null) {
             passwordHash = passwordEncoder.encode(utente.getPassword());
