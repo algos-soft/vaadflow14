@@ -4,6 +4,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.company.*;
@@ -174,7 +175,7 @@ public class UtenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Utente findById(final String keyID) {
+    public Utente findById(final String keyID) throws AMongoException {
         return (Utente) super.findById(keyID);
     }
 
@@ -188,7 +189,7 @@ public class UtenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Utente findByKey(final String keyValue) {
+    public Utente findByKey(final String keyValue) throws AMongoException {
         return (Utente) super.findByKey(keyValue);
     }
 

@@ -273,6 +273,13 @@ public abstract class FlowBoot implements ServletContextListener {
         FlowVar.dataClazz = FlowData.class;
 
         /**
+         * Type da usare per la serializzazione dei dati in mongoDB  <br>
+         * Di default AETypeSerializing.spring <br>
+         * Deve essere regolato in backend.boot.xxxBoot.fixVariabili() del progetto corrente <br>
+         */
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+
+        /**
          * Classe da usare per le Company (o sottoclassi) <br>
          * Di default 'company' oppure eventuale sottoclasse specializzata per Company particolari <br>
          * Eventuale casting a carico del chiamante <br>

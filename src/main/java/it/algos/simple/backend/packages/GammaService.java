@@ -2,7 +2,7 @@ package it.algos.simple.backend.packages;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
@@ -119,7 +119,7 @@ public class GammaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Gamma findById(final String keyID) {
+    public Gamma findById(final String keyID) throws AMongoException {
         return (Gamma) super.findById(keyID);
     }
 
@@ -133,7 +133,7 @@ public class GammaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Gamma findByKey(final String keyValue) {
+    public Gamma findByKey(final String keyValue) throws AMongoException {
         return (Gamma) super.findByKey(keyValue);
     }
 
@@ -157,17 +157,30 @@ public class GammaService extends AService {
      */
     //    @Override
     public AIResult resetEmptyOnly() {
-        AIResult result=null;
+        AIResult result = null;
         //        AIResult result = super.resetEmptyOnly();
         int numRec = 6;
-        Mese mese1 = (Mese)meseService.findByKey("aprile");
-        Mese mese2 = (Mese)meseService.findByKey("ottobre");
-        Mese mese3 = (Mese)meseService.findByKey("gennaio");
-        Mese mese4 = (Mese)meseService.findByKey("marzo");
-        Secolo secolo1 = (Secolo)secoloService.findByKey("XVII secolo a.C.");
-        Secolo secolo2 = (Secolo)secoloService.findByKey("X secolo");
-        Secolo secolo3 = (Secolo)secoloService.findByKey("XIV secolo");
-        Secolo secolo4 = (Secolo)secoloService.findByKey("XX secolo");
+        Mese mese1 = null;
+        Mese mese2 = null;
+        Mese mese3 = null;
+        Mese mese4 = null;
+        Secolo secolo1 = null;
+        Secolo secolo2 = null;
+        Secolo secolo3 = null;
+        Secolo secolo4 = null;
+
+        try {
+            mese1 = (Mese) meseService.findByKey("aprile");
+            mese2 = (Mese) meseService.findByKey("ottobre");
+            mese3 = (Mese) meseService.findByKey("gennaio");
+            mese4 = (Mese) meseService.findByKey("marzo");
+            secolo1 = (Secolo) secoloService.findByKey("XVII secolo a.C.");
+            secolo2 = (Secolo) secoloService.findByKey("X secolo");
+            secolo3 = (Secolo) secoloService.findByKey("XIV secolo");
+            secolo4 = (Secolo) secoloService.findByKey("XX secolo");
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "resetEmptyOnly");
+        }
 
         if (result.isErrato()) {
             return result;

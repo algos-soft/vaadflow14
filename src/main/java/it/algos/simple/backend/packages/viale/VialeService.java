@@ -2,6 +2,7 @@ package it.algos.simple.backend.packages.viale;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -100,8 +101,8 @@ public class VialeService extends AService {
      * Usa il @Builder di Lombok <br>
      * Eventuali regolazioni iniziali delle property <br>
      *
-     * @param code di riferimento (obbligatorio, unico)
-	 * @param descrizione (facoltativo, non unico)
+     * @param code        di riferimento (obbligatorio, unico)
+     * @param descrizione (facoltativo, non unico)
      *
      * @return la nuova entityBean appena creata (non salvata)
      */
@@ -124,7 +125,7 @@ public class VialeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Via findById(final String keyID) {
+    public Via findById(final String keyID) throws AMongoException {
         return (Via) super.findById(keyID);
     }
 
@@ -138,10 +139,9 @@ public class VialeService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Via findByKey(final String keyValue) {
+    public Via findByKey(final String keyValue) throws AMongoException {
         return (Via) super.findByKey(keyValue);
     }
-
 
 
 }// end of singleton class

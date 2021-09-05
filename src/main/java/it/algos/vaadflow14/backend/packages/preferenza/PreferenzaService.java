@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.packages.preferenza;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -160,8 +161,7 @@ public class PreferenzaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Preferenza findById(final String keyID) {
-        //        return (Preferenza) mongo.findById(Preferenza.class, keyID);
+    public Preferenza findById(final String keyID) throws AMongoException {
         return (Preferenza) super.findById(keyID);
     }
 

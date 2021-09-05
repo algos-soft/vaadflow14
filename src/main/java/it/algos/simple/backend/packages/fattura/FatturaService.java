@@ -2,6 +2,7 @@ package it.algos.simple.backend.packages.fattura;
 
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -114,19 +115,19 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Fattura findById(final String keyID) {
+    public Fattura findById(final String keyID) throws AMongoException {
         Fattura fattura = (Fattura) super.findById(keyID);
-        fixTransienti(fattura);
-        return fattura;
+        return fixTransienti(fattura);
     }
 
 
-    public void fixTransienti(Fattura fattura) {
+    public Fattura fixTransienti(final Fattura fattura) {
         Map mappa = new HashMap<>();
         mappa.put("nome", "Alfonso");
         mappa.put("nato", "a gennaio");
         fattura.mappa = mappa;
 
+        return fattura;
     }
 
     /**
@@ -138,7 +139,7 @@ public class FatturaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Fattura findByKey(final String keyValue) {
+    public Fattura findByKey(final String keyValue) throws AMongoException {
         return (Fattura) super.findByKey(keyValue);
     }
 

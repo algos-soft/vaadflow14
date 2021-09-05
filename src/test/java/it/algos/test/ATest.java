@@ -189,6 +189,9 @@ public abstract class ATest {
     @InjectMocks
     protected ResourceService resourceService;
 
+    @InjectMocks
+    protected CompanyService companyService;
+
     protected Logger adminLogger;
 
     /**
@@ -457,6 +460,9 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(resourceService);
         Assertions.assertNotNull(resourceService);
+
+        MockitoAnnotations.initMocks(companyService);
+        Assertions.assertNotNull(companyService);
     }
 
     /**
@@ -483,6 +489,7 @@ public abstract class ATest {
         beanService.mongo = mongoService;
 
         ((MongoService) mongoService).text = textService;
+        ((MongoService) mongoService).array = arrayService;
         ((MongoService) mongoService).annotation = annotationService;
         ((MongoService) mongoService).reflection = reflectionService;
         ((MongoService) mongoService).logger = loggerService;
@@ -521,6 +528,14 @@ public abstract class ATest {
 
         ((MongoService) mongoService).fixProperties(classService.getProjectName());
         gSonService.fixProperties(classService.getProjectName());
+
+
+        companyService.text = textService;
+        companyService.logger = loggerService;
+        companyService.annotation = annotationService;
+        companyService.reflection = reflectionService;
+        companyService.mongo = mongoService;
+        companyService.beanService = beanService;
     }
 
 
@@ -702,6 +717,22 @@ public abstract class ATest {
         System.out.println(String.format("List value: %s", lista));
         System.out.println(String.format("Map value: %s", result.getMappa()));
         System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
+    }
+
+    protected void printCollection(final Class clazz, final String status) {
+        System.out.println(String.format("La collezione '%s' %s", clazz != null ? clazz.getSimpleName() : VUOTA, status));
+    }
+
+    protected void printCollection(final String collectionName, final String status) {
+        System.out.println(String.format("La collezione '%s' %s", collectionName, status));
+    }
+
+    protected void printCount(final Class clazz, final int records) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", clazz != null ? clazz.getSimpleName() : VUOTA, records));
+    }
+
+    protected void printCount(final String collectionName, final int records) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", collectionName, records));
     }
 
 }// end of class

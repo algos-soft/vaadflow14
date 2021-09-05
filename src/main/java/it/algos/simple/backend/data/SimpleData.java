@@ -6,7 +6,6 @@ import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -97,7 +96,7 @@ public class SimpleData extends FlowData {
         numRec = creaBolla("quattro", "quarta riga") ? numRec + 1 : numRec;
 
         logger.log(AETypeLog.checkData, result.getMessage());
-        return ;
+        return;
     }
 
 
@@ -105,14 +104,15 @@ public class SimpleData extends FlowData {
         boolean status = false;
         Bolla bolla;
 
-        if (  ((MongoService) mongo).isNotEsiste(Bolla.class, code)) {//@todo da controllare
-            bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
-            bolla.setId(code);
-            try {
+        try {
+            if (((MongoService) mongo).isNotEsiste(Bolla.class, code)) {//@todo da controllare
+                bolla = Bolla.builderBolla().code(code).descrizione(descrizione).build();
+                bolla.setId(code);
                 ((MongoService) mongo).saveOld(bolla);//@todo da controllare
-            } catch (AMongoException unErrore) {
+                status = true;
             }
-            status = true;
+        } catch (Exception unErrore) {
+            logger.warn(unErrore, this.getClass(), "creaBolla");
         }
 
         return status;

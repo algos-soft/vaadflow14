@@ -147,8 +147,12 @@ public abstract class AService extends AbstractService implements AIService {
         String message = VUOTA;
 
         //--controlla che la newEntityBean non esista già
-        if (isEsiste(newEntityBean.id)) {
-            return null;
+        try {
+            if (isEsiste(newEntityBean.id)) {
+                return null;
+            }
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "checkAndSave");
         }
 
         valido = true;
@@ -173,9 +177,30 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @return true if exist
      */
-    public boolean isEsiste(final String keyId) {
+    public boolean isEsiste(final String keyId) throws AMongoException {
         return ((MongoService) mongo).isEsiste(entityClazz, keyId);//@todo da controllare
     }
+
+
+    /**
+     * Crea e registra una entityBean <br>
+     * A livello UI i fields sono già stati verificati <br>
+     * Prevede un punto di controllo PRIMA della registrazione,
+     * per eventuale congruità dei parametri o per valori particolari in base alla BusinessLogic <br>
+     * Esegue la registrazione sul database mongoDB con un controllo finale di congruità <br>
+     * Prevede un punto di controllo DOPO la registrazione,
+     * per eventuali side effects su altre collections collegate o dipendenti <br>
+     *
+     * @param entityBeanDaRegistrare (nuova o esistente)
+     *
+     * @return la entityBean appena registrata, null se non registrata
+     *
+     * @throws
+     */
+    public AEntity save(final AEntity entityBeanDaRegistrare) throws AMongoException {
+        return save(entityBeanDaRegistrare, null);
+    }
+
 
     /**
      * Crea e registra una entityBean <br>
@@ -196,21 +221,18 @@ public abstract class AService extends AbstractService implements AIService {
     @Override
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
         AEntity entityBean;
-        AEntity entityBeanOld = ((MongoService) mongo).find(entityBeanDaRegistrare);//@todo da controllare
-        String message;
+        AEntity entityBeanOld;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
         entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
 
+        //--precedenti (eventuali) valori per evidenziare le modifiche
+        entityBeanOld = mongo.find(entityBeanDaRegistrare);//@todo da controllare QUI CE UN ERRORE
+
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
         //--e gestione dell'eventuale errore
-        try {
-            ((MongoService) mongo).save(entityBean);//@todo da controllare
-        } catch (AMongoException mongoError) {
-            message = String.format("La entity %s non è stata salvata perché: %s", mongoError.getEntityBean(), mongoError.getCause().getMessage());
-            System.out.println(message);
-        }
+        entityBean = mongo.save(entityBean);
 
         //--operazioni eseguite DOPO la registrazione (new o modifica)
         entityBean = entityBean != null ? this.afterSave(entityBean, operation) : null;
@@ -378,8 +400,16 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findById(final String keyID) {
-        return mongo.findById(entityClazz, keyID);
+    public AEntity findById(final String keyID) throws AMongoException {
+        AEntity entityBean = null;
+
+        try {
+            entityBean = mongo.findById(entityClazz, keyID);
+        } catch (AMongoException unErrore) {
+            logger.error(unErrore, this.getClass(), "findById");
+        }
+
+        return entityBean;
     }
 
 
@@ -393,7 +423,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findByKey(final Serializable keyPropertyValue) {
+    public AEntity findByKey(final Serializable keyPropertyValue) throws AMongoException {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
 
         if (text.isValid(keyPropertyName)) {
@@ -417,7 +447,7 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByProperty(String propertyName, Serializable propertyValue) {
+    public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return mongo.findByKey(entityClazz, propertyName, propertyValue);
     }
 
@@ -542,7 +572,15 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public int getNewOrdine() {
-        return   ((MongoService) mongo).getNewOrder(entityClazz, FIELD_ORDINE);//@todo da controllare
+        int newOrder = 0;
+
+        try {
+            newOrder = mongo.getNewOrder(entityClazz, FIELD_ORDINE);
+        } catch (AMongoException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getNewOrdine");
+        }
+
+        return newOrder;
     }
 
     /**

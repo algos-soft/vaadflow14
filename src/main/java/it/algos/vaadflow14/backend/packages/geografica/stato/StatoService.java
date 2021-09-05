@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
@@ -161,7 +162,7 @@ public class StatoService extends AService {
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find/)
      */
     public List<Stato> findAllStato() {
-        return   ((MongoService) mongo).findAll(Stato.class, Sort.by(Sort.Direction.ASC, "ordine"));//@todo da controllare
+        return ((MongoService) mongo).findAll(Stato.class, Sort.by(Sort.Direction.ASC, "ordine"));//@todo da controllare
     }
 
 
@@ -175,7 +176,7 @@ public class StatoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Stato findById(final String keyID) {
+    public Stato findById(final String keyID) throws AMongoException {
         return (Stato) super.findById(keyID);
     }
 
@@ -189,7 +190,7 @@ public class StatoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Stato findByKey(final String keyValue) {
+    public Stato findByKey(final String keyValue)  throws AMongoException {
         return (Stato) super.findByKey(keyValue);
     }
 
@@ -219,12 +220,18 @@ public class StatoService extends AService {
         boolean ue;
         String bandieraTxt = VUOTA;
         Map<String, Continente> mappa;
-        Continente continente ;
-        Continente continenteDefault = continenteService.findById(AEContinente.antartide.getNome());
+        Continente continente;
+        Continente continenteDefault = null;
         String alfaTre = VUOTA;
 
         if (result.isErrato()) {
             return result;
+        }
+
+        try {
+            continenteDefault = continenteService.findById(AEContinente.antartide.getNome());
+        } catch (Exception unErrore) {
+            logger.warn(unErrore, this.getClass(), "reset");
         }
 
         resultCollectionPropedeutica = checkContinente();
@@ -278,7 +285,7 @@ public class StatoService extends AService {
         String packageName = Stato.class.getSimpleName().toLowerCase();
         String collection = "continente";
 
-        if (  ((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
@@ -294,12 +301,16 @@ public class StatoService extends AService {
     private Map<String, Continente> creaMappa() {
         Map<String, Continente> mappa = new HashMap<>();
         List<String> lista;
-        Continente continente;
+        Continente continente = null;
         String keyTag;
 
         for (AEContinente aeContinente : AEContinente.values()) {
             keyTag = aeContinente.name();
-            continente = continenteService.findById(keyTag);
+            try {
+                continente = continenteService.findById(keyTag);
+            } catch (Exception unErrore) {
+                logger.warn(unErrore, this.getClass(), "creaMappa");
+            }
             lista = resourceService.leggeListaConfig(keyTag, false);
             if (array.isAllValid(lista)) {
                 for (String riga : lista) {
@@ -325,7 +336,7 @@ public class StatoService extends AService {
         Sort sort = Sort.by("ordine");
         List items;
 
-        items =   ((MongoService) mongo).findAll(Stato.class, sort);//@todo da controllare
+        items = ((MongoService) mongo).findAll(Stato.class, sort);//@todo da controllare
         combo.setWidth(widthEM);
         combo.setPreventInvalidInput(true);
         combo.setAllowCustomValue(false);

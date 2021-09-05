@@ -4,6 +4,7 @@ import com.google.gson.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
@@ -87,7 +88,7 @@ public class AnnoService extends AService {
      * Crea e registra una entityBean col flag reset=true <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param titolo   (obbligatorio, unico)
+     * @param titolo    (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
@@ -119,7 +120,7 @@ public class AnnoService extends AService {
      * All properties <br>
      *
      * @param ordine    (obbligatorio, unico)
-     * @param titolo      (obbligatorio, unico)
+     * @param titolo    (obbligatorio, unico)
      * @param bisestile (obbligatorio)
      * @param secolo    di riferimento (obbligatorio)
      *
@@ -147,7 +148,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findById(final String keyID) {
+    public Anno findById(final String keyID) throws AMongoException {
         return (Anno) super.findById(keyID);
     }
 
@@ -163,7 +164,7 @@ public class AnnoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Anno findByProperty(String propertyName, Serializable propertyValue) {
+    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
         return (Anno) super.findByProperty(propertyName, propertyValue);
     }
 
@@ -177,7 +178,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final Serializable keyValue) {
+    public Anno findByKey(final Serializable keyValue) throws AMongoException {
         return (Anno) super.findByKey(keyValue);
     }
 
