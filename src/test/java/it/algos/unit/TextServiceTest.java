@@ -499,6 +499,13 @@ public class TextServiceTest extends ATest {
         assertNotNull(ottenuto);
         assertEquals(previsto, ottenuto);
         print(sorgente, ottenuto);
+
+        previsto = "mario [interne]";
+        sorgente = "mario [interne]";
+        ottenuto = text.setNoQuadre(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
     }
 
 
