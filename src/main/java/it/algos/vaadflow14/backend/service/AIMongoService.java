@@ -278,14 +278,15 @@ public interface AIMongoService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    AEntity findByKey(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AMongoException;
+    AEntity findByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AMongoException;
 
 
     /**
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>
      *
-     * @param entityClazz  corrispondente ad una collection sul database mongoDB
+     * @param entityClazz  corrispondente ad una collection sul dat
+     *                     abase mongoDB
      * @param propertyName dell'ordinamento
      */
     int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException;
