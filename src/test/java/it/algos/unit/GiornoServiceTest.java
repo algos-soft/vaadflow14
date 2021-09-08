@@ -71,7 +71,7 @@ public class GiornoServiceTest extends ATest {
     @Order(1)
     @DisplayName("1 - findById (gson)")
     void findById() {
-        System.out.println("1 - findByKey (gson)");
+        System.out.println("1 - findById (gson)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
 
         sorgente = "43 novembre";
