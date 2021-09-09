@@ -1,5 +1,9 @@
 package it.algos.vaadflow14.backend.service;
 
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
@@ -248,6 +252,37 @@ public abstract class AbstractService {
     @Autowired
     public JSonService jSonService;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public GiornoService giornoService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public MeseService meseService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AnnoService annoService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
+     * al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public SecoloService secoloService;
 
     @Autowired
     public Environment env;
