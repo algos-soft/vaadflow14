@@ -67,6 +67,8 @@ public abstract class FlowCost {
 
     public static final String NOTE = "<!--";
 
+    public static final String NO_WIKI = "<nowiki>";
+
     public static final String CIRCA = "circa";
 
     public static final String DOPPIO_SPAZIO = SPAZIO + SPAZIO;
@@ -316,9 +318,13 @@ public abstract class FlowCost {
 
     public static final String QUADRA_INI = "[";
 
+    public static final String QUADRA_INI_REGEX = "\\[";
+
     public static final String DOPPIE_QUADRE_INI = QUADRA_INI + QUADRA_INI;
 
     public static final String QUADRA_END = "]";
+
+    public static final String QUADRA_END_REGEX = "\\]";
 
     public static final String DOPPIE_QUADRE_END = QUADRA_END + QUADRA_END;
 
