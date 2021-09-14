@@ -1,7 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.vaadin.flow.component.icon.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import org.springframework.beans.factory.config.*;
@@ -85,12 +84,13 @@ public class ReflectionService extends AbstractService {
     /**
      * Lista dei fields statici PUBBLICI dichiarati in una classe di tipo AEntity. <br>
      * Controlla che il parametro in ingresso non sia nullo <br>
-     * Ricorsivo. Comprende la entity e tutte le sue superclassi (fino a ACEntity e AEntity) <br>
+     * Ricorsivo. Comprende la entity e tutte le sue superClassi (fino a ACEntity e AEntity) <br>
      * Esclusi i fields: PROPERTY_SERIAL, PROPERT_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA <br>
      * Esclusi i fields PRIVATI <br>
      * Fields NON ordinati <br>
      * Class.getDeclaredFields() prende fields pubblici e privati della classe <br>
-     * Class.getFields() prende fields pubblici della classe e delle superclassi     * Nomi NON ordinati <br>
+     * Class.getFields() prende fields pubblici della classe e delle superClassi <br>
+     * Nomi NON ordinati <br>
      * ATTENZIONE - Comprende ANCHE eventuali fields statici pubblici che NON siano property per il DB <br>
      *
      * @param entityClazz da cui estrarre i fields statici
@@ -112,9 +112,19 @@ public class ReflectionService extends AbstractService {
         if (fieldsArray != null) {
             listaFields = new ArrayList<>();
             for (Field field : fieldsArray) {
-                if (!FlowCost.ESCLUSI_ALL.contains(field.getName())) {
-                    listaFields.add(field);
+                if (ESCLUSI_SEMPRE.contains(field.getName())) {
+                    continue;
                 }
+                if (field.getName().equalsIgnoreCase(PROPERTY_NOTE) && !annotation.usaNote(entityClazz)) {
+                    continue;
+                }
+                if (field.getName().equalsIgnoreCase(PROPERTY_CREAZIONE) && !annotation.usaTimeStamp(entityClazz)) {
+                    continue;
+                }
+                if (field.getName().equalsIgnoreCase(PROPERTY_MODIFICA) && !annotation.usaTimeStamp(entityClazz)) {
+                    continue;
+                }
+                listaFields.add(field);
             }
         }
 

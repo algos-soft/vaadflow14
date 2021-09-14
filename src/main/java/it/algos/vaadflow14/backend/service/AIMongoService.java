@@ -242,6 +242,28 @@ public interface AIMongoService {
      */
     AEntity find(final AEntity entityBeanToBeFound) throws AMongoException;
 
+
+    /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded document
+     */
+    Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException;
+
+
+    /**
+     * Crea una singola entity da un document. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param doc         recuperato da mongoDB
+     *
+     * @return the entity
+     */
+    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AMongoException;
+
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>
      *

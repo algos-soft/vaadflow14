@@ -815,7 +815,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         try {
             listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
         } catch (Exception unErrore) {
-            throw new AMongoException(unErrore, null);
+            throw new AMongoException(unErrore, "null");
         }
 
         return listaEntities;
@@ -1169,6 +1169,37 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return findByIdOld(entityClazz, keyId) != null;
     }
 
+    /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded document
+     */
+    public Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException {
+        Document doc = null;
+        FindIterable<Document> iterable = null;
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        Bson condition = new Document("_id", keyId);
+
+        if (collection == null) {
+            throw new AMongoException(String.format("Su mongoDB manca la collezione per la classe %s", entityClazz.getSimpleName()));
+        }
+
+        try {
+            iterable = collection.find(condition);
+            doc = iterable.first();
+        } catch (Exception unErrore) {
+            throw new AMongoException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", entityClazz.getSimpleName(), keyId));
+        }
+
+        if (doc == null) {
+            throw new AMongoException(String.format("Nella collezione %s non esiste la entity '%s'", entityClazz.getSimpleName(), keyId));
+        }
+
+        return doc;
+    }
 
     /**
      * Find single entity. <br>
@@ -1194,6 +1225,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public AEntity find(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
         return findById(entityClazz, keyId);
+    }
+
+    /**
+     * Crea una singola entity da un document. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param doc         recuperato da mongoDB
+     *
+     * @return the entity
+     */
+    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AMongoException {
+        List<Field> alfa3 = reflection.getAllFields(entityClazz);
+        return null;
     }
 
 

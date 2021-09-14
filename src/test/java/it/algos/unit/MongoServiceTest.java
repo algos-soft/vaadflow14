@@ -4,21 +4,24 @@ import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.mongodb.client.*;
 import it.algos.test.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.service.*;
+import org.bson.*;
 import org.bson.conversions.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 
 import java.text.*;
 import java.time.*;
+import java.util.*;
 
 /**
  * Project vaadflow14
@@ -56,6 +59,8 @@ public class MongoServiceTest extends ATest {
 
     protected Bson bSon;
 
+    protected Document doc;
+
 
     private static String[] COLLEZIONI() {
         return new String[]{"pomeriggio", "alfa", "via"};
@@ -86,6 +91,101 @@ public class MongoServiceTest extends ATest {
 
         collection = null;
         bSon = null;
+        doc = null;
+    }
+
+    @Test
+    @Order(1)
+    @DisplayName("1 - Crea un Doc da mongoDb con keyId")
+    void findDocById() {
+        System.out.println("1 - Crea un Doc da mongoDb con keyId");
+
+        System.out.println(VUOTA);
+        clazz = FlowCost.class;
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+
+        System.out.println(VUOTA);
+        clazz = Via.class;
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+
+        System.out.println(VUOTA);
+        clazz = Via.class;
+        sorgente = "sbagliata";
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+
+        System.out.println(VUOTA);
+        clazz = Via.class;
+        sorgente = "piazza";
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+            System.out.println(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+
+        System.out.println(VUOTA);
+        clazz = Regione.class;
+        sorgente = "calabria";
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+            System.out.println(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Crea una entity da un Doc")
+    void creaByDoc() {
+        System.out.println("2 - Crea un Doc da mongoDb con keyId");
+
+        System.out.println(VUOTA);
+        clazz = Via.class;
+        sorgente = "piazza";
+        try {
+            doc = service.findDocById(clazz, sorgente);
+            assertNotNull(doc);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
+        printDoc(doc);
+        try {
+            entityBean = service.creaByDoc(clazz, doc);
+            assertNotNull(entityBean);
+        } catch (AMongoException unErrore) {
+            System.out.println(unErrore.getMessage());
+            System.out.println(unErrore);
+        }
     }
 
 
@@ -102,7 +202,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "doppia";
         sorgente2 = "Porta Valori Associato";
         company = companyService.newEntity(sorgente, sorgente2, VUOTA, VUOTA);
-                company.setCreazione(LocalDateTime.now());
+        company.setCreazione(LocalDateTime.now());
         assertNotNull(company);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -123,7 +223,7 @@ public class MongoServiceTest extends ATest {
             //            ((MongoService) service).save(company);
             companyService.save(company);
         } catch (AMongoException unErrore) {
-//            System.out.println(unErrore);
+            //            System.out.println(unErrore);
             loggerService.info(unErrore.getMessage());
         }
     }
@@ -351,6 +451,25 @@ public class MongoServiceTest extends ATest {
      */
     @AfterAll
     void tearDownAll() {
+    }
+
+    void printDoc(final Document doc) {
+        String key;
+        Object value;
+        System.out.println(VUOTA);
+
+        if (doc != null) {
+            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe",doc.size()-2));
+            System.out.println(VUOTA);
+            for (Map.Entry<String, Object> mappa : doc.entrySet()) {
+                key = mappa.getKey();
+                value = mappa.getValue();
+                System.out.println(String.format("%s: %s", key, value));
+            }
+        }
+        else {
+            System.out.println(String.format("Nessun documento trovato"));
+        }
     }
 
 }

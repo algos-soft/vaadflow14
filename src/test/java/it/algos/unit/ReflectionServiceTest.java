@@ -83,10 +83,80 @@ public class ReflectionServiceTest extends ATest {
         listaFields = null;
     }
 
-
     @Test
     @Order(1)
-    @DisplayName("1 - Fields pubblici della entity")
+    @DisplayName("1 - Nomi dei fields pubblici della entity")
+    void getFieldsName() {
+        previstoIntero = 7;
+        listaStr = service.getFieldsName(UTENTE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(UTENTE_CLASS, "getFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 4;
+        listaStr = service.getFieldsName(COMPANY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(COMPANY_CLASS, "getFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 5;
+        listaStr = service.getFieldsName(MESE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(MESE_CLASS, "getFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 5;
+        listaStr = service.getFieldsName(SECOLO_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 2;
+        listaStr = service.getFieldsName(VIA_ENTITY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+    }
+
+
+    @Test
+    @Order(2)
+    @DisplayName("2 - Nomi dei fields pubblici della entity e delle superclassi")
+    void getAllFieldsName() {
+        previstoIntero = 12;
+        listaStr = service.getAllFieldsName(UTENTE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(UTENTE_CLASS, "getAllFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 8;
+        listaStr = service.getAllFieldsName(COMPANY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(COMPANY_CLASS, "getAllFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 7;
+        listaStr = service.getAllFieldsName(MESE_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(MESE_CLASS, "getAllFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 7;
+        listaStr = service.getAllFieldsName(SECOLO_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getAllFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+
+        previstoIntero = 6;
+        listaStr = service.getAllFieldsName(VIA_ENTITY_CLASS);
+        Assertions.assertNotNull(listaStr);
+        printName(SECOLO_CLASS, "getAllFieldsName", listaStr);
+        assertEquals(previstoIntero, listaStr.size());
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3 - Fields pubblici della entity")
     void getFields() {
         previstoIntero = 7;
         listaFields = service.getFields(UTENTE_CLASS);
@@ -111,20 +181,26 @@ public class ReflectionServiceTest extends ATest {
         Assertions.assertNotNull(listaFields);
         printField(SECOLO_CLASS, "getFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
+
+        previstoIntero = 2;
+        listaFields = service.getFields(VIA_ENTITY_CLASS);
+        Assertions.assertNotNull(listaFields);
+        printField(SECOLO_CLASS, "getFields", listaFields);
+        assertEquals(previstoIntero, listaFields.size());
     }
 
 
     @Test
-    @Order(2)
-    @DisplayName("2 - Fields pubblici della entity e delle superclassi")
+    @Order(4)
+    @DisplayName("4 - Fields pubblici della entity e delle superclassi")
     void getAllFields() {
-        previstoIntero = 9;
+        previstoIntero = 12;
         listaFields = service.getAllFields(UTENTE_CLASS);
         Assertions.assertNotNull(listaFields);
         printField(UTENTE_CLASS, "getAllFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
 
-        previstoIntero = 5;
+        previstoIntero = 8;
         listaFields = service.getAllFields(COMPANY_CLASS);
         Assertions.assertNotNull(listaFields);
         printField(COMPANY_CLASS, "getAllFields", listaFields);
@@ -141,66 +217,12 @@ public class ReflectionServiceTest extends ATest {
         Assertions.assertNotNull(listaFields);
         printField(SECOLO_CLASS, "getAllFields", listaFields);
         assertEquals(previstoIntero, listaFields.size());
-    }
 
-
-    @Test
-    @Order(3)
-    @DisplayName("3 - Nomi dei fields pubblici della entity")
-    void getFieldsName() {
-        previstoIntero = 7;
-        listaStr = service.getFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(UTENTE_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 4;
-        listaStr = service.getFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(COMPANY_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 5;
-        listaStr = service.getFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(MESE_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 5;
-        listaStr = service.getFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-    }
-
-
-    @Test
-    @Order(4)
-    @DisplayName("4 - Nomi dei fields pubblici della entity e delle superclassi")
-    void getAllFieldsName() {
-        previstoIntero = 9;
-        listaStr = service.getAllFieldsName(UTENTE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(UTENTE_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 5;
-        listaStr = service.getAllFieldsName(COMPANY_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(COMPANY_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 7;
-        listaStr = service.getAllFieldsName(MESE_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(MESE_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
-
-        previstoIntero = 7;
-        listaStr = service.getAllFieldsName(SECOLO_CLASS);
-        Assertions.assertNotNull(listaStr);
-        printName(SECOLO_CLASS, "getFields", listaStr);
-        assertEquals(previstoIntero, listaStr.size());
+        previstoIntero = 6;
+        listaFields = service.getAllFields(VIA_ENTITY_CLASS);
+        Assertions.assertNotNull(listaFields);
+        printField(SECOLO_CLASS, "getAllFields", listaFields);
+        assertEquals(previstoIntero, listaFields.size());
     }
 
 
