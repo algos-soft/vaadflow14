@@ -1227,6 +1227,29 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return findById(entityClazz, keyId);
     }
 
+
+    public Document fixDoc(final Document doc) {
+        String key;
+        Object value;
+
+        //--ID
+        key = FIELD_ID;
+        if (doc.get(key) != null) {
+            value = doc.get(key);
+            doc.remove(key);
+            doc.put(FIELD_ID_PROPERTY, value);
+        }
+
+        //--Class
+        key = FIELD_CLASS;
+        if (doc.get(key) != null) {
+            doc.remove(key);
+        }
+
+        return doc;
+    }
+
+
     /**
      * Crea una singola entity da un document. <br>
      *
@@ -1235,9 +1258,52 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the entity
      */
-    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AMongoException {
-        List<Field> alfa3 = reflection.getAllFields(entityClazz);
-        return null;
+    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc) throws AlgosException {
+        return creaByDoc(entityClazz, doc, null);
+    }
+
+    /**
+     * Crea una singola entity da un document. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param doc           recuperato da mongoDB
+     * @param entityService per la creazione della entityBean
+     *
+     * @return the entity
+     */
+    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc, final AIService entityService) throws AlgosException {
+        AEntity entityBean = null;
+        List<Field> fields = reflection.getAllFields(entityClazz);
+        String key;
+        Object value;
+        AIService service;
+
+        if (fields != null && doc != null) {
+            doc = fixDoc(doc);
+            service = entityService != null ? entityService : classService.getServiceFromEntityClazz(entityClazz);
+            if (service == null) {
+                return null;
+            }
+            entityBean = service.newEntity();
+            for (Field field : fields) {
+                key = field.getName();
+                value = doc.get(key);
+
+                //--provvisorio - spostare in altro metodo
+                if (value instanceof Date) {
+                    value = date.dateToLocalDateTime((Date) value);
+                }
+                //--provvisorio - spostare in altro metodo
+
+                try {
+                    reflection.setPropertyValue(entityBean, key, value);
+                } catch (AlgosException unErrore) {
+                    throw unErrore;
+                }
+            }
+        }
+
+        return entityBean;
     }
 
 

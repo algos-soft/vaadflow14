@@ -13,6 +13,8 @@ public class AlgosException extends Exception {
 
     private AEntity entityBean;
 
+    private String stack;
+
     public AlgosException(String message) {
         super(message);
     }
@@ -25,6 +27,20 @@ public class AlgosException extends Exception {
     public AlgosException(Throwable cause, AEntity entityBean, String message) {
         super(message, cause);
         this.entityBean = entityBean;
+    }
+
+    public AlgosException(Throwable cause, AEntity entityBean, String message, String stack) {
+        super(message, cause);
+        this.entityBean = entityBean;
+        this.stack = stack;
+    }
+
+    public AEntity getEntityBean() {
+        return entityBean;
+    }
+
+    public String getStack() {
+        return stack;
     }
 
 }

@@ -18,6 +18,7 @@ import org.bson.*;
 import org.bson.conversions.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+import org.mockito.*;
 
 import java.text.*;
 import java.time.*;
@@ -55,6 +56,9 @@ public class MongoServiceTest extends ATest {
      */
     protected AIMongoService service;
 
+    @InjectMocks
+    protected ViaService viaService;
+
     protected MongoCollection collection;
 
     protected Bson bSon;
@@ -77,6 +81,14 @@ public class MongoServiceTest extends ATest {
 
         //--reindirizzo l'istanza della superclasse
         service = mongoService;
+
+        MockitoAnnotations.initMocks(viaService);
+        Assertions.assertNotNull(viaService);
+        viaService.text = textService;
+        viaService.mongo = mongoService;
+        viaService.logger = loggerService;
+        viaService.annotation = annotationService;
+        viaService.reflection = reflectionService;
     }
 
 
@@ -179,12 +191,14 @@ public class MongoServiceTest extends ATest {
             System.out.println(unErrore);
         }
         printDoc(doc);
+        System.out.println(VUOTA);
         try {
-            entityBean = service.creaByDoc(clazz, doc);
+            entityBean = service.creaByDoc(clazz, doc, viaService);
             assertNotNull(entityBean);
-        } catch (AMongoException unErrore) {
-            System.out.println(unErrore.getMessage());
-            System.out.println(unErrore);
+            assertNotNull(entityBean.id);
+            System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
         }
     }
 
@@ -459,7 +473,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
 
         if (doc != null) {
-            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe",doc.size()-2));
+            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe", doc.size() - 2));
             System.out.println(VUOTA);
             for (Map.Entry<String, Object> mappa : doc.entrySet()) {
                 key = mappa.getKey();

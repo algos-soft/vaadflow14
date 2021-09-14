@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -406,28 +407,28 @@ public class ReflectionService extends AbstractService {
     //        return mappa;
     //    }// end of method
 
-    //    /**
-    //     * Valore della property di una classe
-    //     *
-    //     * @param entityBean      oggetto su cui operare la riflessione
-    //     * @param publicFieldName property statica e pubblica
-    //     * @param value           da inserire nella property
-    //     */
-    //    public boolean setPropertyValue(final AEntity entityBean, final String publicFieldName, Object value) {
-    //        boolean status = false;
-    //        Field field = getField(entityBean.getClass(), publicFieldName);
-    //
-    //        if (field != null) {
-    //            try { // prova ad eseguire il codice
-    //                field.set(entityBean, value);
-    //                status = true;
-    //            } catch (Exception unErrore) { // intercetta l'errore
-    //                log.error(unErrore.toString());
-    //            }// fine del blocco try-catch
-    //        }// end of if cycle
-    //
-    //        return status;
-    //    }// end of method
+    /**
+     * Valore della property di una classe
+     *
+     * @param entityBean      oggetto su cui operare la riflessione
+     * @param publicFieldName property statica e pubblica
+     * @param value           da inserire nella property
+     */
+    public boolean setPropertyValue(final AEntity entityBean, final String publicFieldName, final Object value) throws AlgosException {
+        boolean status = false;
+        Field field = getField(entityBean.getClass(), publicFieldName);
+
+        if (field != null) {
+            try {
+                field.set(entityBean, value);
+                status = true;
+            } catch (Exception unErrore) {
+                throw new AlgosException(unErrore, entityBean, field.getName(), "ReflectionService.setPropertyValue()");
+            }
+        }
+
+        return status;
+    }
 
     //    /**
     //     * Fields dichiarati nella View

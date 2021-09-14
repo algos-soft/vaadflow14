@@ -445,6 +445,10 @@ public abstract class FlowCost {
     //--fields tipici
     public static final String FIELD_ID = "_id";
 
+    public static final String FIELD_CLASS = "_class";
+
+    public static final String FIELD_ID_PROPERTY = "id";
+
     public static final String FIELD_COMPANY = "company";
 
     public static final String FIELD_NOTE = "note";

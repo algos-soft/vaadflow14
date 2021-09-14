@@ -262,7 +262,17 @@ public interface AIMongoService {
      *
      * @return the entity
      */
-    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AMongoException;
+    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AlgosException;
+
+    /**
+     * Crea una singola entity da un document. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param doc         recuperato da mongoDB
+     *
+     * @return the entity
+     */
+    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc, final AIService entityService) throws AlgosException;
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>

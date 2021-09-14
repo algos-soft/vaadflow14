@@ -130,6 +130,9 @@ public abstract class ATest {
     protected ApplicationContext appContext;
 
     @InjectMocks
+    protected StaticContextAccessor staticContextAccessor;
+
+    @InjectMocks
     protected TextService textService;
 
     @InjectMocks
@@ -384,6 +387,7 @@ public abstract class ATest {
 
     protected AETypeSerializing oldType;
 
+
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      */
@@ -399,6 +403,11 @@ public abstract class ATest {
      */
     protected void initMocks() {
         MockitoAnnotations.initMocks(this);
+
+        MockitoAnnotations.initMocks(staticContextAccessor);
+        Assertions.assertNotNull(staticContextAccessor);
+        staticContextAccessor.registerInstance();
+
         MockitoAnnotations.initMocks(appContext);
         Assertions.assertNotNull(appContext);
 
@@ -501,6 +510,8 @@ public abstract class ATest {
         ((MongoService) mongoService).annotation = annotationService;
         ((MongoService) mongoService).reflection = reflectionService;
         ((MongoService) mongoService).logger = loggerService;
+        ((MongoService) mongoService).date = dateService;
+        ((MongoService) mongoService).classService = classService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -513,10 +524,13 @@ public abstract class ATest {
         fileService.logger = loggerService;
         fileService.math = mathService;
         sortSpring = null;
+
         classService.fileService = fileService;
         classService.text = textService;
         classService.logger = loggerService;
         classService.annotation = annotationService;
+        classService.appContext = appContext;
+
         preferenzaService.mongo = mongoService;
         utilityService.text = textService;
         htmlService.text = textService;
