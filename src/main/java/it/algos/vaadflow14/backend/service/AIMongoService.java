@@ -179,39 +179,6 @@ public interface AIMongoService {
 
 
     /**
-     * Conteggio di tutte le entities di una collection filtrate con una query. <br>
-     * Se la query è nulla o vuota, restituisce il totale dell'intera collection <br>
-     * Usa mongoOP <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param query       Optional. A query that selects which documents to count in the collection or view.
-     *
-     * @return numero di entities eventualmente filtrate
-     */
-    int count(final Class<? extends AEntity> entityClazz, final Query query);
-
-
-    /**
-     * Conteggio di tutte le entities di una collection filtrate con una query. <br>
-     * Se la query è nulla o vuota, restituisce il totale dell'intera collection <br>
-     * Usa mongoOP <br>
-     * <p>
-     * Counts the number of documents in a collection or a view. <br>
-     * Returns a document that contains this count and as well as the command status. <br>
-     * Avoid using the count and its wrapper methods without a query predicate since without the query predicate, <br>
-     * these operations return results based on the collection’s metadata, which may result in an approximate count. <br>
-     *
-     * @param collectionName The name of the collection or view to count
-     * @param query          Optional. A query that selects which documents to count in the collection or view.
-     *
-     * @return numero di entities eventualmente filtrate
-     *
-     * @see(https://docs.mongodb.com/manual/reference/command/count/)
-     */
-    int count(final String collectionName, final Query query);
-
-
-    /**
      * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
@@ -231,6 +198,37 @@ public interface AIMongoService {
      * @return numero di entities eventualmente filtrate
      */
     int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AQueryException;
+
+    /**
+     * Controlla che NON ci siano entities con la property rest=true. <br>
+     * Controlla che esista la collezione <br>
+     * Controlla che esista la property 'reset' <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     *
+     * @return true se non ci sono properties con reset=true
+     */
+    boolean isResetVuoto(Class<? extends AEntity> entityClazz);
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param valueID     della entityBean
+     *
+     * @return new entity
+     */
+    AEntity crea(final Class entityClazz, final String valueID) throws Exception;
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param collectionName The name of the collection or view to count
+     * @param valueID        della entityBean
+     *
+     * @return new entity
+     */
+    AEntity crea(final String collectionName, final String valueID) throws Exception;
 
     /**
      * Find single entity. <br>
@@ -255,14 +253,15 @@ public interface AIMongoService {
 
 
     /**
-     * Crea una singola entity da un document. <br>
+     * Cerca un Document da una collection con una determinata chiave. <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param doc         recuperato da mongoDB
+     * @param collectionName The name of the collection or view
+     * @param keyId          chiave identificativa
      *
-     * @return the entity
+     * @return the founded document
      */
-    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AlgosException;
+    Document findDocById(final String collectionName, final String keyId) throws AMongoException;
+
 
     /**
      * Crea una singola entity da un document. <br>
@@ -272,7 +271,8 @@ public interface AIMongoService {
      *
      * @return the entity
      */
-    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc, final AIService entityService) throws AlgosException;
+    AEntity creaByDoc(final Class<? extends AEntity> entityClazz, final Document doc) throws AlgosException;
+
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>

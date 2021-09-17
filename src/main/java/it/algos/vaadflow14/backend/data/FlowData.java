@@ -191,7 +191,7 @@ public class FlowData implements AIData {
         }
         if (annotation.usaReset(entityClazz)) {
             metodo = "reset";
-            if (((MongoService) mongo).isResetVuoto(entityClazz)) {//@todo da controllare
+            if (mongo.isResetVuoto(entityClazz)) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();

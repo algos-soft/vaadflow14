@@ -98,6 +98,9 @@ public class FileServiceTest extends ATest {
 
     private static String DELETE_DIRECTORY = " deleteDirectory() ";
 
+    //    @InjectMocks
+    //    public WizService wizService;
+
     /**
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
@@ -135,6 +138,22 @@ public class FileServiceTest extends ATest {
 
         //--reindirizzo l'istanza della superclasse
         service = fileService;
+
+        //        MockitoAnnotations.initMocks(wizService);
+        //        Assertions.assertNotNull(wizService);
+        //        wizService.text = textService;
+        //        wizService.file = fileService;
+        //
+        //        for (AEWizCost cost : AEWizCost.values()) {
+        //            cost.setText(textService);
+        //            cost.setFile(fileService);
+        //            cost.setLogger(loggerService);
+        //        }
+        //        for (AEDir aeDir : AEDir.values()) {
+        //            aeDir.setText(textService);
+        //            aeDir.setFile(fileService);
+        //            aeDir.setLogger(loggerService);
+        //        }
 
         if (FLAG_CREAZIONE_INIZIALE) {
             creazioneListe();
@@ -1660,6 +1679,77 @@ public class FileServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println(sorgente);
         System.out.println(sorgente2);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(42)
+    @DisplayName("42 - getPathModuloPackageFiles")
+    public void getPathModuloPackageFiles() {
+        System.out.println("42 - getPathModuloPackageFiles");
+        System.out.println("path completo di ogni files (Entity, List, Form, Service) della directory 'package' e delle sue subdirectories");
+
+        System.out.println(VUOTA);
+        System.out.println("modulo base simple");
+        listaStr = service.getPathModuloPackageFiles("simple");
+        print(listaStr);
+
+        System.out.println(VUOTA);
+        System.out.println("modulo base vaadflow14");
+        listaStr = service.getPathModuloPackageFiles("vaadflow14");
+        print(listaStr);
+    }
+
+
+    @Test
+    @Order(43)
+    @DisplayName("43 - getPathBreveAllPackageFiles")
+    public void getPathBreveAllPackageFiles() {
+        System.out.println("43 - getPathBreveAllPackageFiles");
+        System.out.println("path completo di ogni files (Entity, List, Form, Service) della directory 'package' e delle sue subdirectories");
+        System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
+        System.out.println(VUOTA);
+
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        FlowVar.projectNameModulo = "simple";
+
+        listaStr = service.getPathBreveAllPackageFiles();
+        print(listaStr);
+    }
+
+
+    @Test
+    @Order(44)
+    @DisplayName("44 - getPath")
+    public void getPath() {
+        System.out.println("44 - getPath");
+        System.out.println("path completo di una singola classe esistente nella directory 'package' delle sue subdirectories");
+        System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
+        System.out.println(VUOTA);
+
+        sorgente = "Via";
+        ottenuto = service.getPath(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "Bolla";
+        ottenuto = service.getPath(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "Mese";
+        ottenuto = service.getPath(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "StatoLogicList";
+        ottenuto = service.getPath(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
         System.out.println(ottenuto);
     }
 

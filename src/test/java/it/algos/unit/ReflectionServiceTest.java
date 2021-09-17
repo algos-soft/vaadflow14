@@ -87,6 +87,9 @@ public class ReflectionServiceTest extends ATest {
     @Order(1)
     @DisplayName("1 - Nomi dei fields pubblici della entity")
     void getFieldsName() {
+        System.out.println("1 - Nomi dei fields pubblici della entity");
+        System.out.println(VUOTA);
+
         previstoIntero = 7;
         listaStr = service.getFieldsName(UTENTE_CLASS);
         Assertions.assertNotNull(listaStr);
@@ -121,8 +124,11 @@ public class ReflectionServiceTest extends ATest {
 
     @Test
     @Order(2)
-    @DisplayName("2 - Nomi dei fields pubblici della entity e delle superclassi")
+    @DisplayName("2 - Nomi dei fields pubblici della entity e delle superClassi")
     void getAllFieldsName() {
+        System.out.println("2 - Nomi dei fields pubblici della entity e delle superClassi");
+        System.out.println(VUOTA);
+
         previstoIntero = 12;
         listaStr = service.getAllFieldsName(UTENTE_CLASS);
         Assertions.assertNotNull(listaStr);
@@ -158,6 +164,9 @@ public class ReflectionServiceTest extends ATest {
     @Order(3)
     @DisplayName("3 - Fields pubblici della entity")
     void getFields() {
+        System.out.println("3 - Fields pubblici della entity");
+        System.out.println(VUOTA);
+
         previstoIntero = 7;
         listaFields = service.getFields(UTENTE_CLASS);
         Assertions.assertNotNull(listaFields);
@@ -192,8 +201,11 @@ public class ReflectionServiceTest extends ATest {
 
     @Test
     @Order(4)
-    @DisplayName("4 - Fields pubblici della entity e delle superclassi")
+    @DisplayName("4 - Fields pubblici della entity e delle superClassi")
     void getAllFields() {
+        System.out.println("4 - Fields pubblici della entity e delle superClassi");
+        System.out.println(VUOTA);
+
         previstoIntero = 12;
         listaFields = service.getAllFields(UTENTE_CLASS);
         Assertions.assertNotNull(listaFields);
@@ -228,10 +240,10 @@ public class ReflectionServiceTest extends ATest {
 
     @Test
     @Order(5)
-    @DisplayName("4 - Singolo field di una classe")
+    @DisplayName("5 - Singolo field di una classe")
     void getField() {
-        System.out.println("Singolo field di una classe");
-        System.out.println("");
+        System.out.println("5 - Singolo field di una classe");
+        System.out.println(VUOTA);
 
         sorgente = FlowCost.FIELD_CODE;
         ottenutoField = service.getField(UTENTE_CLASS, sorgente);
@@ -259,24 +271,71 @@ public class ReflectionServiceTest extends ATest {
         System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO + sorgente);
     }
 
+    @Test
+    @Order(6)
+    @DisplayName("6 - getListStaticFieldsName")
+    void getStaticFields() {
+        System.out.println("6 - getListStaticFieldsName");
+        System.out.println(VUOTA);
+
+        clazz = FlowVar.class;
+        listaStr = service.getListStaticFieldsName(clazz);
+        printListaCostanti(clazz, listaStr);
+    }
+
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - getMapStaticFieldsValue")
+    void getMapStaticFieldsValue() {
+        System.out.println("7 - getMapStaticFieldsValue");
+        System.out.println(VUOTA);
+
+        FlowVar.projectNameDirectoryIdea = "Valore_Di_Prova_Che_Verra_Cancellato_Al_Termine_Del_Test";
+
+        clazz = FlowVar.class;
+        mappa = service.getMapStaticFieldsValue(clazz);
+        printMappaCostanti(clazz, mappa);
+    }
+
 
     private void printField(Class<? extends AEntity> clazz, String methodName, List<Field> lista) {
         int pos = 1;
         System.out.println("Scandagliando " + clazz.getSimpleName() + " col metodo " + methodName + " trovo " + lista.size() + " fields");
         for (Field field : lista) {
-            System.out.println((pos++) + FlowCost.SEP + field.getName());
+            System.out.println((pos++) + SEP + field.getName());
         }
         System.out.println("");
     }
 
-
-    private void printName(Class<? extends AEntity> clazz, String methodName, List<String> lista) {
+    private void printName(final Class<? extends AEntity> clazz, final String methodName, final List<String> lista) {
         int pos = 1;
-        System.out.println("Scandagliando " + clazz.getSimpleName() + " col metodo " + methodName + " trovo " + lista.size() + " fields");
+        System.out.println(String.format("Scandagliando %s col metodo %s trovo %d fields", clazz.getSimpleName(), methodName, lista.size()));
         for (String nome : lista) {
-            System.out.println((pos++) + FlowCost.SEP + nome);
+            System.out.println((pos++) + SEP + nome);
         }
-        System.out.println("");
+        System.out.println(VUOTA);
+    }
+
+    private void printListaCostanti(final Class clazz, final List<String> lista) {
+        int pos = 1;
+        System.out.println(String.format("Scandagliando %s trovo %d variabili statiche", clazz.getSimpleName(), lista.size()));
+        for (String nome : lista) {
+            System.out.println((pos++) + SEP + nome);
+        }
+        System.out.println(VUOTA);
+    }
+
+    private void printMappaCostanti(final Class clazz, final Map<String, Object> mappa) {
+        int pos = 1;
+        System.out.println(String.format("Scandagliando %s trovo %d variabili statiche", clazz.getSimpleName(), mappa.size()));
+        for (String key : mappa.keySet()) {
+            System.out.print((pos++) + PARENTESI_TONDA_END + SPAZIO);
+            System.out.print(key);
+            System.out.print(UGUALE_SPAZIATO);
+            System.out.println(mappa.get(key));
+        }
+        System.out.println(VUOTA);
     }
 
 

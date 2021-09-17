@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.service;
 
-import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -10,6 +9,8 @@ import it.algos.vaadflow14.backend.packages.preferenza.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
+
+import java.lang.reflect.*;
 
 
 /**
@@ -324,11 +325,11 @@ public class ClassService extends AbstractService {
      *
      * @return classe individuata
      */
-    public Class getClazzFromName(String canonicalName) {
+    public Class getClazzFromCanonicalName(String canonicalName) {
         Class clazz = null;
 
         if (text.isEmpty(canonicalName)) {
-            return clazz;
+            return null;
         }
 
         if (canonicalName.endsWith(JAVA_SUFFIX)) {
@@ -338,7 +339,37 @@ public class ClassService extends AbstractService {
         try {
             clazz = Class.forName(canonicalName);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getClazzFromName");
+            logger.error(unErrore, this.getClass(), "getClazzFromCanonicalName");
+        }
+
+        return clazz;
+    }
+
+
+    /**
+     * Recupera la clazz dal nome Java <br>
+     * Il simpleName termina SENZA JAVA_SUFFIX <br>
+     *
+     * @param simpleName della classe
+     *
+     * @return classe individuata
+     */
+    public Class getClazzFromSimpleName(String simpleName) {
+        Class clazz = null;
+        String canonicalName = simpleName;
+
+        if (text.isEmpty(simpleName)) {
+            return null;
+        }
+
+        if (simpleName.endsWith(JAVA_SUFFIX)) {
+            simpleName = text.levaCoda(simpleName, JAVA_SUFFIX);
+        }
+
+        try {
+            clazz = Class.forName(canonicalName);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getClazzFromSimpleName");
         }
 
         return clazz;
@@ -375,7 +406,7 @@ public class ClassService extends AbstractService {
     public Class getClazzFromPath(final String pathCompleto) {
         String canonicalName = getNameFromPath(pathCompleto);
         canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
-        return getClazzFromName(canonicalName);
+        return getClazzFromCanonicalName(canonicalName);
     }
 
 
@@ -464,6 +495,30 @@ public class ClassService extends AbstractService {
         }
 
         return projectName;
+    }
+
+    /**
+     * Crea una nuova entity (vuota) dalla classe <br>
+     *
+     * @param entityClazz the entity class
+     *
+     * @return new entity
+     */
+    public AEntity getEntityFromClazz(final Class entityClazz) {
+        AEntity entityBean = null;
+        Constructor constructor = null;
+
+        if (entityClazz == null) {
+            return null;
+        }
+
+        try {
+            constructor = entityClazz.getDeclaredConstructor(null);
+            entityBean = (AEntity) constructor.newInstance(null);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getEntityFromClazz");
+        }
+        return entityBean;
     }
 
 }

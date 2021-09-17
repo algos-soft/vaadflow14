@@ -4,7 +4,9 @@ import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.apache.commons.io.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -2102,7 +2104,7 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di soli files ricorsiva nelle sub-directory <br>
      *
-     * @return path name completo
+     * @return lista
      */
     public List<String> getAllSubPathFiles(String path) {
         List<String> listaPathNamesOnlyFiles = new ArrayList<>();
@@ -2125,6 +2127,71 @@ public class FileService extends AbstractService {
         }
 
         return listaPathNamesOnlyFiles;
+    }
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo indicato <br>
+     *
+     * @return lista dei path completi
+     */
+    public List<String> getPathModuloPackageFiles(final String nomeModulo) {
+        String pathPackage = VUOTA;
+
+        pathPackage += System.getProperty("user.dir") + SLASH;
+        pathPackage += AEWizCost.dirModulo.get();
+        pathPackage += nomeModulo + SLASH;
+        pathPackage += AEWizCost.dirPackages.get();
+
+        return getAllSubPathFiles(pathPackage);
+    }
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
+     *
+     * @return lista dei path completi
+     */
+    public List<String> getPathAllPackageFiles() {
+        List<String> lista = new ArrayList<>();
+
+        lista.addAll(getPathModuloPackageFiles(AEWizCost.nameVaadFlow14Lower.get()));
+        lista.addAll(getPathModuloPackageFiles(FlowVar.projectNameModulo));
+
+        return lista;
+    }
+
+    /**
+     * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
+     * Senza il suffisso JAVA_SUFFIX <br>
+     * @return lista dei path completi
+     */
+    public List<String> getPathBreveAllPackageFiles() {
+        List<String> listaTroncata = new ArrayList<>();
+        List<String> listaEstesa = getPathAllPackageFiles();
+
+        for (String path : listaEstesa) {
+            listaTroncata.add(text.levaCoda(path,JAVA_SUFFIX));
+        }
+
+        return listaTroncata;
+    }
+
+    /**
+     * Path completo di un file 'AEntity' esistente nella directory package <br>
+     *
+     * @return  path completo del file
+     */
+    public String getPath(String simpleName) {
+        String pathCompleto = VUOTA;
+        List<String> lista = getPathBreveAllPackageFiles();
+
+        for (String path : lista) {
+            if (path.endsWith(simpleName)) {
+                pathCompleto=path;
+                break;
+            }
+        }
+
+        return pathCompleto;
     }
 
     /**
@@ -2172,7 +2239,7 @@ public class FileService extends AbstractService {
 
 
     /**
-     * Sposta un file da una directoy ad un'altra <br>
+     * Sposta un file da una directory ad un'altra <br>
      * Esegue solo se il path sorgente esiste <br>
      * Esegue solo se il path destinazione NON esiste <br>
      * Viene cancellato il file sorgente <br>

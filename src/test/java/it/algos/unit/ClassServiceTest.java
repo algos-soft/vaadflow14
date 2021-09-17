@@ -2,6 +2,7 @@ package it.algos.unit;
 
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -97,15 +98,15 @@ public class ClassServiceTest extends ATest {
 
     @Test
     @Order(3)
-    @DisplayName("3 - getClazzFromName")
-    void getClazzFromName() {
+    @DisplayName("3 - getClazzFromCanonicalName")
+    void getClazzFromCanonicalName() {
         Class clazz;
         sorgente = VIA_ENTITY_CLASS.getCanonicalName();
 
-        clazz = service.getClazzFromName(VUOTA);
+        clazz = service.getClazzFromCanonicalName(VUOTA);
         assertNull(clazz);
 
-        clazz = service.getClazzFromName(sorgente);
+        clazz = service.getClazzFromCanonicalName(sorgente);
         assertNotNull(clazz);
         System.out.println(sorgente);
         System.out.println(clazz.getSimpleName());
@@ -114,7 +115,38 @@ public class ClassServiceTest extends ATest {
         System.out.println(VUOTA);
 
         sorgente2 = sorgente + JAVA_SUFFIX;
-        clazz = service.getClazzFromName(sorgente2);
+        clazz = service.getClazzFromCanonicalName(sorgente2);
+        assertNotNull(clazz);
+        System.out.println(sorgente2);
+        System.out.println(clazz.getSimpleName());
+        System.out.println(clazz.getName());
+        System.out.println(clazz.getCanonicalName());
+        System.out.println(VUOTA);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("4 - getClazzFromSimpleName")
+    void getClazzFromSimpleName() {
+        Class clazz;
+        sorgente = VIA_ENTITY_CLASS.getSimpleName();
+
+        String alfa=System.getProperty("user.dir");
+       String beta = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
+
+        clazz = service.getClazzFromSimpleName(VUOTA);
+        assertNull(clazz);
+
+        clazz = service.getClazzFromSimpleName(sorgente);
+        assertNotNull(clazz);
+        System.out.println(sorgente);
+        System.out.println(clazz.getSimpleName());
+        System.out.println(clazz.getName());
+        System.out.println(clazz.getCanonicalName());
+        System.out.println(VUOTA);
+
+        sorgente2 = sorgente + JAVA_SUFFIX;
+        clazz = service.getClazzFromSimpleName(sorgente2);
         assertNotNull(clazz);
         System.out.println(sorgente2);
         System.out.println(clazz.getSimpleName());
@@ -125,8 +157,8 @@ public class ClassServiceTest extends ATest {
 
 
     @Test
-    @Order(4)
-    @DisplayName("4 - getClazzFromPath")
+    @Order(5)
+    @DisplayName("5 - getClazzFromPath")
     void getClazzFromPath() {
         Class clazz;
         sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
@@ -144,8 +176,18 @@ public class ClassServiceTest extends ATest {
     }
 
     @Test
-    @Order(5)
-    @DisplayName("5 - getProjectName")
+    @Order(6)
+    @DisplayName("6 - getEntityFromClazz")
+    void getEntityFromClazz() {
+        clazz = Via.class;
+        entityBean = service.getEntityFromClazz(clazz);
+        assertNotNull(entityBean);
+        System.out.println(entityBean);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("7 - getProjectName")
     void getProjectName() {
         ottenuto = service.getProjectName();
         assertTrue(textService.isValid(ottenuto));

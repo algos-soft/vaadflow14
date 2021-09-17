@@ -430,6 +430,58 @@ public class ReflectionService extends AbstractService {
         return status;
     }
 
+
+    /**
+     * Lista dei nomi delle variabili statiche di una classe (generica). <br>
+     *
+     * @param genericClazz da cui estrarre le variabili statiche
+     *
+     * @return la lista dei nomi delle variabili
+     */
+    public List<String> getListStaticFieldsName(final Class<?> genericClazz) {
+        List<String> lista = new ArrayList<>();
+        Field[] fields = null;
+
+        if (genericClazz != null) {
+            fields = genericClazz.getFields();
+            for (Field field : fields) {
+                lista.add(field.getName());
+            }
+        }
+
+        return lista;
+    }
+
+
+    /**
+     * Mappa dei valori delle variabili statiche di una classe (generica). <br>
+     *
+     * @param genericClazz da cui estrarre le variabili statiche
+     *
+     * @return la mappa chiave=valore delle variabili
+     */
+    public Map<String, Object> getMapStaticFieldsValue(final Class<?> genericClazz) {
+        Map<String, Object> mappa = new LinkedHashMap<>();
+        Field[] fields = null;
+        String key;
+        Object value;
+
+        if (genericClazz != null) {
+            fields = genericClazz.getFields();
+            for (Field field : fields) {
+                key = field.getName();
+                try {
+                    value = genericClazz.getField(key).get(null);
+                    mappa.put(key, value);
+                } catch (Exception unErrore) {
+                    logger.error(unErrore);
+                }
+            }
+        }
+
+        return mappa;
+    }
+
     //    /**
     //     * Fields dichiarati nella View
     //     * Non ordinati

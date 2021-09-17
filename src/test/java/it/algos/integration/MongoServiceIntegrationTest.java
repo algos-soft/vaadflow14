@@ -68,7 +68,6 @@ public class MongoServiceIntegrationTest extends ATest {
     /**
      * Inietta da Spring
      */
-    //    public MongoOperations mongoOp;
     @Autowired
     public MongoTemplate mongoOp;
 
@@ -533,7 +532,7 @@ public class MongoServiceIntegrationTest extends ATest {
         previstoIntero = 7;
         ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
         assertEquals(previstoIntero, ottenutoIntero);
-        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
+        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
     }
 
 
@@ -587,28 +586,28 @@ public class MongoServiceIntegrationTest extends ATest {
     }
 
 
-    @Test
-    @Order(10)
-    @DisplayName("10 - Count spring filtrato (query) dalla classe")
-    void countQuery() {
-        System.out.println("10 - Count spring filtrato (query) dalla classe");
-
-        Query query = new Query();
-
-        previstoIntero = 0;
-        ottenutoIntero = service.count((Class) null, (Query) null);
-        Assert.assertTrue(ottenutoIntero == 0);
-
-        query.addCriteria(Criteria.where("mese.$id").is("maggio"));
-        ottenutoIntero = service.count(Giorno.class, (Query) null);
-        Assert.assertTrue(ottenutoIntero == 0);
-        Assert.assertEquals(previstoIntero, ottenutoIntero);
-
-        previstoIntero = 31;
-        ottenutoIntero = service.count(Giorno.class, query);
-        Assert.assertTrue(ottenutoIntero > 0);
-        Assert.assertEquals(previstoIntero, ottenutoIntero);
-    }
+//    @Test
+//    @Order(10)
+//    @DisplayName("10 - Count spring filtrato (query) dalla classe")
+//    void countQuery() {
+//        System.out.println("10 - Count spring filtrato (query) dalla classe");
+//
+//        Query query = new Query();
+//
+//        previstoIntero = 0;
+//        ottenutoIntero = service.count((Class) null, (Query) null);
+//        Assert.assertTrue(ottenutoIntero == 0);
+//
+//        query.addCriteria(Criteria.where("mese.$id").is("maggio"));
+//        ottenutoIntero = service.count(Giorno.class, (Query) null);
+//        Assert.assertTrue(ottenutoIntero == 0);
+//        Assert.assertEquals(previstoIntero, ottenutoIntero);
+//
+//        previstoIntero = 31;
+//        ottenutoIntero = service.count(Giorno.class, query);
+//        Assert.assertTrue(ottenutoIntero > 0);
+//        Assert.assertEquals(previstoIntero, ottenutoIntero);
+//    }
 
     @Test
     @Order(11)

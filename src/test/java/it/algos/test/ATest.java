@@ -606,6 +606,7 @@ public abstract class ATest {
         clazz = null;
         previstoRisultato = null;
         ottenutoRisultato = null;
+        listaStr = new ArrayList<>();
     }
 
     protected String getTime() {
@@ -618,6 +619,13 @@ public abstract class ATest {
     }
 
     protected void print(List<String> lista) {
+        if (lista != null && lista.size() > 0) {
+            System.out.println(String.format("Ci sono %d elementi nella lista", lista.size()));
+        }
+        else {
+            System.out.println("La lista è vuota");
+        }
+        System.out.println(VUOTA);
         if (arrayService.isAllValid(lista)) {
             for (String stringa : lista) {
                 System.out.println(stringa);
