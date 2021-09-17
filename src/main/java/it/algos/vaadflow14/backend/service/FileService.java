@@ -3,6 +3,7 @@ package it.algos.vaadflow14.backend.service;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
@@ -2037,7 +2038,7 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di tutte le Entity esistenti nel modulo indicato <br>
      */
-    public List<String> getModuleSubFilesEntity(String moduleName) {
+    public List<String> getModuleSubFilesEntity(String moduleName) throws AlgosException {
         String tagIniziale = "src/main/java/it/algos/";
         String tagFinale = "/backend/packages";
 
@@ -2047,7 +2048,7 @@ public class FileService extends AbstractService {
     /**
      * Crea una lista di tutte le Entity esistenti nella directory packages <br>
      */
-    public List<String> getAllSubFilesEntity(String path) {
+    public List<String> getAllSubFilesEntity(String path) throws AlgosException {
         List<String> listaCanonicalNamesOnlyEntity = new ArrayList<>();
         List<String> listaNamesOnlyFilesJava = getAllSubFilesJava(path);
         String simpleName;
@@ -2079,7 +2080,7 @@ public class FileService extends AbstractService {
      *
      * @return canonicalName con i PUNTI di separazione e NON lo SLASH
      */
-    public List<String> getAllSubFilesJava(String path) {
+    public List<String> getAllSubFilesJava(String path) throws AlgosException {
         List<String> listaCanonicalNamesOnlyFilesJava = new ArrayList<>();
         List<String> listaPathNamesOnlyFiles = getAllSubPathFiles(path);
         String tag = ".it.";
@@ -2105,16 +2106,16 @@ public class FileService extends AbstractService {
      *
      * @return lista
      */
-    public List<String> getAllSubPathFiles(String path) {
+    public List<String> getAllSubPathFiles(String path) throws AlgosException {
         List<String> listaPathNamesOnlyFiles = new ArrayList<>();
-        List<String> listaAllPathNames = null;
+        List<String> listaAllPathNames;
         File unaDirectory = new File(path);
         Path start = Paths.get(unaDirectory.getAbsolutePath());
 
         try {
             listaAllPathNames = recursionSubPathNames(start);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getAllEntityClass");
+            throw AlgosException.stack(unErrore, String.format("Stack in %s.%s", this.getClass().getSimpleName(), "getAllSubPathFiles()"));
         }
 
         if (array.isAllValid(listaAllPathNames)) {
@@ -2133,7 +2134,7 @@ public class FileService extends AbstractService {
      *
      * @return lista dei path completi
      */
-    public List<String> getPathModuloPackageFiles(final String nomeModulo) {
+    public List<String> getPathModuloPackageFiles(final String nomeModulo) throws AlgosException {
         String pathPackage = VUOTA;
 
         pathPackage += System.getProperty("user.dir") + SLASH;
@@ -2149,10 +2150,20 @@ public class FileService extends AbstractService {
      *
      * @return lista dei path completi
      */
-    public List<String> getPathAllPackageFiles() {
+    public List<String> getPathAllPackageFiles() throws AlgosException {
         List<String> lista = new ArrayList<>();
+        String nomeModulo;
 
-        lista.addAll(getPathModuloPackageFiles(AEWizCost.nameVaadFlow14Lower.get()));
+        nomeModulo = AEWizCost.nameVaadFlow14Lower.get();
+        if (text.isEmpty(nomeModulo)) {
+            throw AlgosException.message(String.format("Manca il nome del modulo in %s.%s", this.getClass().getSimpleName(), "getPathAllPackageFiles()"));
+        }
+        lista.addAll(getPathModuloPackageFiles(nomeModulo));
+
+        nomeModulo = FlowVar.projectNameModulo;
+        if (text.isEmpty(nomeModulo)) {
+            throw AlgosException.message(String.format("Manca il nome del modulo in %s.%s", this.getClass().getSimpleName(), "getPathAllPackageFiles()"));
+        }
         lista.addAll(getPathModuloPackageFiles(FlowVar.projectNameModulo));
 
         return lista;
@@ -2165,7 +2176,7 @@ public class FileService extends AbstractService {
      *
      * @return lista dei path completi
      */
-    public List<String> getPathBreveAllPackageFiles() {
+    public List<String> getPathBreveAllPackageFiles() throws AlgosException {
         List<String> listaTroncata = new ArrayList<>();
         List<String> listaEstesa = getPathAllPackageFiles();
 
@@ -2181,7 +2192,7 @@ public class FileService extends AbstractService {
      *
      * @return path completo del file
      */
-    public String getPath(String simpleName) {
+    public String getPath(String simpleName) throws AlgosException {
         String pathCompleto = VUOTA;
         List<String> lista = getPathBreveAllPackageFiles();
 
@@ -2201,7 +2212,7 @@ public class FileService extends AbstractService {
      *
      * @return lista dei canonicalName
      */
-    public List<String> getCanonicalModuloPackageFiles(final String nomeModulo) {
+    public List<String> getCanonicalModuloPackageFiles(final String nomeModulo) throws AlgosException {
         List<String> listaCanonical = new ArrayList<>();
         List<String> listaPath = getPathModuloPackageFiles(nomeModulo);
         String canonicalName;
@@ -2220,7 +2231,7 @@ public class FileService extends AbstractService {
      *
      * @return lista dei canonicalName
      */
-    public List<String> getCanonicalAllPackageFiles() {
+    public List<String> getCanonicalAllPackageFiles() throws AlgosException {
         List<String> lista = new ArrayList<>();
 
         lista.addAll(getCanonicalModuloPackageFiles(AEWizCost.nameVaadFlow14Lower.get()));
@@ -2235,7 +2246,7 @@ public class FileService extends AbstractService {
      *
      * @return canonicalName del file
      */
-    public String getCanonicalName(String simpleName) {
+    public String getCanonicalName(String simpleName) throws AlgosException {
         String canonicalName = VUOTA;
         List<String> lista = getPathBreveAllPackageFiles();
 

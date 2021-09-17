@@ -1528,9 +1528,10 @@ public class FileServiceTest extends ATest {
         String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
         File unaDirectory = new File(tag);
         String pathName = unaDirectory.getAbsolutePath();
-
-        lista = service.getAllSubPathFiles(pathName);
-
+        try {
+            lista = service.getAllSubPathFiles(pathName);
+        } catch (Exception unErrore) {
+        }
         assertTrue(arrayService.isAllValid(lista));
         System.out.println(VUOTA);
         System.out.println("getAllSubPathFiles");
@@ -1550,7 +1551,10 @@ public class FileServiceTest extends ATest {
         File unaDirectory = new File(tag);
         String pathName = unaDirectory.getAbsolutePath();
 
-        lista = service.getAllSubFilesJava(pathName);
+        try {
+            lista = service.getAllSubFilesJava(pathName);
+        } catch (Exception unErrore) {
+        }
 
         assertTrue(arrayService.isAllValid(lista));
         System.out.println(VUOTA);
@@ -1570,7 +1574,10 @@ public class FileServiceTest extends ATest {
         String tag = "src/main/java/it/algos/vaadflow14/backend/packages";
         File unaDirectory = new File(tag);
         String pathName = unaDirectory.getAbsolutePath();
-        lista = service.getAllSubFilesEntity(pathName);
+        try {
+            lista = service.getAllSubFilesEntity(pathName);
+        } catch (Exception unErrore) {
+        }
 
         assertTrue(arrayService.isAllValid(lista));
         System.out.println(VUOTA);
@@ -1692,12 +1699,18 @@ public class FileServiceTest extends ATest {
 
         System.out.println(VUOTA);
         System.out.println("modulo base simple");
-        listaStr = service.getPathModuloPackageFiles("simple");
+        try {
+            listaStr = service.getPathModuloPackageFiles("simple");
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
 
         System.out.println(VUOTA);
         System.out.println("modulo base vaadflow14");
-        listaStr = service.getPathModuloPackageFiles("vaadflow14");
+        try {
+            listaStr = service.getPathModuloPackageFiles("vaadflow14");
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
     }
 
@@ -1714,7 +1727,10 @@ public class FileServiceTest extends ATest {
         FlowVar.projectNameDirectoryIdea = "vaadflow14";
         FlowVar.projectNameModulo = "simple";
 
-        listaStr = service.getPathBreveAllPackageFiles();
+        try {
+            listaStr = service.getPathBreveAllPackageFiles();
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
     }
 
@@ -1728,25 +1744,37 @@ public class FileServiceTest extends ATest {
         System.out.println(VUOTA);
 
         sorgente = "Via";
-        ottenuto = service.getPath(sorgente);
+        try {
+            ottenuto = service.getPath(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "Bolla";
-        ottenuto = service.getPath(sorgente);
+        try {
+            ottenuto = service.getPath(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "Mese";
-        ottenuto = service.getPath(sorgente);
+        try {
+            ottenuto = service.getPath(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "StatoLogicList";
-        ottenuto = service.getPath(sorgente);
+        try {
+            ottenuto = service.getPath(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
@@ -1762,12 +1790,18 @@ public class FileServiceTest extends ATest {
 
         System.out.println(VUOTA);
         System.out.println("modulo base simple");
-        listaStr = service.getCanonicalModuloPackageFiles("simple");
+        try {
+            listaStr = service.getCanonicalModuloPackageFiles("simple");
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
 
         System.out.println(VUOTA);
         System.out.println("modulo base vaadflow14");
-        listaStr = service.getCanonicalModuloPackageFiles("vaadflow14");
+        try {
+            listaStr = service.getCanonicalModuloPackageFiles("vaadflow14");
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
     }
 
@@ -1784,7 +1818,10 @@ public class FileServiceTest extends ATest {
         FlowVar.projectNameDirectoryIdea = "vaadflow14";
         FlowVar.projectNameModulo = "simple";
 
-        listaStr = service.getCanonicalAllPackageFiles();
+        try {
+            listaStr = service.getCanonicalAllPackageFiles();
+        } catch (Exception unErrore) {
+        }
         print(listaStr);
     }
 
@@ -1798,25 +1835,37 @@ public class FileServiceTest extends ATest {
         System.out.println(VUOTA);
 
         sorgente = "Via";
-        ottenuto = service.getCanonicalName(sorgente);
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "Bolla";
-        ottenuto = service.getCanonicalName(sorgente);
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "Mese";
-        ottenuto = service.getCanonicalName(sorgente);
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);
 
         sorgente = "StatoLogicList";
-        ottenuto = service.getCanonicalName(sorgente);
+        try {
+            ottenuto = service.getCanonicalName(sorgente);
+        } catch (Exception unErrore) {
+        }
         System.out.print(sorgente);
         System.out.print(FORWARD);
         System.out.println(ottenuto);

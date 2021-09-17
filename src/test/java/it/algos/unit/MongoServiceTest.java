@@ -600,6 +600,7 @@ public class MongoServiceTest extends ATest {
             ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         } catch (InvalidMongoDbApiUsageException | AQueryException unErrore) {
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         assertEquals(previstoIntero, ottenutoIntero);
 
@@ -610,6 +611,7 @@ public class MongoServiceTest extends ATest {
             ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
         } catch (InvalidMongoDbApiUsageException | AQueryException unErrore) {
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         Assertions.assertEquals(previstoIntero, ottenutoIntero);
     }
@@ -636,6 +638,7 @@ public class MongoServiceTest extends ATest {
         } catch (AQueryException unErrore) {
             System.out.println(unErrore.getCause().getMessage());
             System.out.println(unErrore.getMessage());
+            assertNotNull(null);
         }
         Assertions.assertEquals(previstoIntero, ottenutoIntero);
     }
@@ -650,6 +653,7 @@ public class MongoServiceTest extends ATest {
 
         System.out.println(VUOTA);
         clazz = FlowCost.class;
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -661,6 +665,7 @@ public class MongoServiceTest extends ATest {
 
         System.out.println(VUOTA);
         clazz = Via.class;
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -673,6 +678,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "sbagliata";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -685,6 +691,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "piazza";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -692,12 +699,14 @@ public class MongoServiceTest extends ATest {
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
 
         System.out.println(VUOTA);
         clazz = Regione.class;
         sorgente = "calabria";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -705,6 +714,7 @@ public class MongoServiceTest extends ATest {
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
     }
@@ -719,6 +729,7 @@ public class MongoServiceTest extends ATest {
 
         System.out.println(VUOTA);
         clazz = FlowCost.class;
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -730,6 +741,7 @@ public class MongoServiceTest extends ATest {
 
         System.out.println(VUOTA);
         clazz = Via.class;
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -742,6 +754,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "sbagliata";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -754,6 +767,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "piazza";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -761,12 +775,14 @@ public class MongoServiceTest extends ATest {
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
 
         System.out.println(VUOTA);
         clazz = Regione.class;
         sorgente = "calabria";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
@@ -774,6 +790,7 @@ public class MongoServiceTest extends ATest {
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
     }
@@ -785,8 +802,11 @@ public class MongoServiceTest extends ATest {
     void creaByDoc() {
         System.out.println("14 - Crea una entity (spring) da un Doc con keyId");
         FlowVar.typeSerializing = AETypeSerializing.spring;
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        FlowVar.projectNameModulo = "simple";
 
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(sorgente, doc);
             assertNull(entityBean);
@@ -795,7 +815,8 @@ public class MongoServiceTest extends ATest {
         }
 
         System.out.println(VUOTA);
-        sorgente="Via";
+        sorgente = "Via";
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(sorgente, doc);
             assertNull(entityBean);
@@ -806,15 +827,18 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "piazza";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -822,20 +846,24 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Mese.class;
         sorgente = "marzo";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -843,20 +871,24 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Giorno.class;
         sorgente = "2agosto";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -864,6 +896,8 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(entityBean);
+            assertNotNull(null);
         }
     }
 
@@ -878,15 +912,18 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "piazza";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -894,20 +931,24 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Mese.class;
         sorgente = "marzo";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -915,20 +956,24 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Giorno.class;
         sorgente = "2agosto";
+        doc = null;
         try {
             doc = service.findDocById(clazz, sorgente);
             assertNotNull(doc);
         } catch (AMongoException unErrore) {
             System.out.println(unErrore.getMessage());
             System.out.println(unErrore);
+            assertNotNull(null);
         }
         printDoc(doc);
         System.out.println(VUOTA);
+        entityBean = null;
         try {
             entityBean = service.creaByDoc(clazz, doc);
             assertNotNull(entityBean);
@@ -936,6 +981,7 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (AlgosException unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), unErrore.getEntityBean(), unErrore.getStack()));
+            assertNotNull(null);
         }
     }
 
@@ -949,6 +995,7 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
         clazz = Via.class;
         sorgente = "piazza";
+        entityBean = null;
         try {
             entityBean = service.crea(clazz, sorgente);
             assertNotNull(entityBean);
@@ -956,11 +1003,13 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Giorno.class;
         sorgente = "2agosto";
+        entityBean = null;
         try {
             entityBean = service.crea(clazz, sorgente);
             assertNotNull(entityBean);
@@ -968,11 +1017,13 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
         }
 
         System.out.println(VUOTA);
         clazz = Regione.class;
         sorgente = "calabria";
+        entityBean = null;
         try {
             entityBean = service.crea(clazz, sorgente);
             assertNotNull(entityBean);
@@ -980,6 +1031,7 @@ public class MongoServiceTest extends ATest {
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
         } catch (Exception unErrore) {
             System.out.println(String.format("%s per la entity [%s] nel metodo '%s'", unErrore.getCause(), ((AlgosException) unErrore).getEntityBean(), ((AlgosException) unErrore).getStack()));
+            assertNotNull(null);
         }
     }
 
@@ -1009,6 +1061,7 @@ public class MongoServiceTest extends ATest {
             System.out.println(json);
         } catch (JsonProcessingException unErrore) {
             System.out.println(unErrore);
+            assertNotNull(null);
         }
 
         //        collection.insertOne(Document.parse(json));

@@ -9,6 +9,7 @@ import com.vaadin.flow.data.provider.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -1268,6 +1269,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 key = field.getName();
                 value = doc.get(key);
 
+                if (value == null) {
+                    continue;
+                }
+
                 //--provvisorio - spostare in altro metodo
                 if (value instanceof Date) {
                     value = date.dateToLocalDateTime((Date) value);
@@ -1281,16 +1286,25 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                     String refID = (String) refDb.getId();
                     try {
                         value = crea(refName, refID);
+                        int a = 87;
                     } catch (Exception unErrore) {
-                        logger.error(unErrore, this.getClass(), "creaByDoc");
+                        throw AlgosException.stack(unErrore, String.format("Non funziona la DBRef property %s in %s.%s", key, this.getClass().getSimpleName(), "creaByDoc()"));
                     }
+                }
+                //--provvisorio - spostare in altro metodo
+
+                //--provvisorio - spostare in altro metodo
+                if (annotation.getFormType(field) == AETypeField.enumeration) {
+                    Class clazz = annotation.getEnumClass(field);
+                   value=AEStatus.get((String)value);
+                    int a = 87;
                 }
                 //--provvisorio - spostare in altro metodo
 
                 try {
                     reflection.setPropertyValue(entityBean, key, value);
                 } catch (AlgosException unErrore) {
-                    throw unErrore;
+                    throw AlgosException.stack(unErrore, String.format("Non funziona la reflection della property %s in %s.%s", key, this.getClass().getSimpleName(), "creaByDoc()"));
                 }
             }
         }
@@ -1303,7 +1317,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * Crea una singola entity da un document. <br>
      *
      * @param collectionName The name of the collection or view
-     * @param doc         recuperato da mongoDB
+     * @param doc            recuperato da mongoDB
      *
      * @return the entity
      */
@@ -1314,15 +1328,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw new AlgosException("Manca il collectionName");
         }
 
-        if ( doc == null) {
+        if (doc == null) {
             throw new AlgosException("Manca il doc");
         }
 
-        try {
-            entityClazz = classService.getClazzFromSimpleName(collectionName);
-        } catch (Exception unErrore) {
-            throw new AlgosException(unErrore,null);
-        }
+        entityClazz = classService.getClazzFromSimpleName(collectionName);
 
         return entityClazz != null ? creaByDoc(entityClazz, doc) : null;
     }
