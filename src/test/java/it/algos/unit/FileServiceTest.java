@@ -1753,6 +1753,43 @@ public class FileServiceTest extends ATest {
         System.out.println(ottenuto);
     }
 
+
+    @Test
+    @Order(45)
+    @DisplayName("45 - getCanonicalModuloPackageFiles")
+    public void getCanonicalModuloPackageFiles() {
+        System.out.println("45 - getCanonicalModuloPackageFiles");
+        System.out.println("canonicalName di ogni files (Entity, List, Form, Service) della directory 'package' e delle sue subdirectories");
+
+        System.out.println(VUOTA);
+        System.out.println("modulo base simple");
+        listaStr = service.getCanonicalModuloPackageFiles("simple");
+        print(listaStr);
+
+        System.out.println(VUOTA);
+        System.out.println("modulo base vaadflow14");
+        listaStr = service.getCanonicalModuloPackageFiles("vaadflow14");
+        print(listaStr);
+    }
+
+
+    @Test
+    @Order(46)
+    @DisplayName("46 - getCanonicalAllPackageFiles")
+    public void getCanonicalAllPackageFiles() {
+        System.out.println("46 - getCanonicalAllPackageFiles");
+        System.out.println("canonicalName di ogni files (Entity, List, Form, Service) della directory 'package' e delle sue subdirectories");
+        System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
+        System.out.println(VUOTA);
+
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        FlowVar.projectNameModulo = "simple";
+
+        listaStr = service.getCanonicalAllPackageFiles();
+        print(listaStr);
+    }
+
+
     private void printPath(String path, String dir, String pathOttenuto) {
         System.out.println("Path completo: " + path);
         System.out.println("Directory interessata: " + dir);

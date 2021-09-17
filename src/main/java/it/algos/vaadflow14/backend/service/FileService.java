@@ -2159,6 +2159,18 @@ public class FileService extends AbstractService {
         return lista;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
      * Senza il suffisso JAVA_SUFFIX <br>
@@ -2193,6 +2205,45 @@ public class FileService extends AbstractService {
 
         return pathCompleto;
     }
+
+
+
+
+
+
+
+
+
+    /**
+     * Crea una lista (canonicalName) di tutti i files della directory package del modulo indicato <br>
+     *
+     * @return lista dei canonicalName
+     */
+    public List<String> getCanonicalModuloPackageFiles(final String nomeModulo) {
+        List<String> listaCanonical = new ArrayList<>();
+        List<String> listaPath=  getPathModuloPackageFiles(nomeModulo);
+
+        for (String nome : listaPath) {
+            listaCanonical.add(text.levaTestoPrimaDi(nome,DIR_PROGETTO_VUOTO));
+        }
+
+        return listaCanonical;
+    }
+
+    /**
+     * Crea una lista (canonicalName) di tutti i files della directory package del modulo corrente <br>
+     *
+     * @return lista dei canonicalName
+     */
+    public List<String> getCanonicalAllPackageFiles() {
+        List<String> lista = new ArrayList<>();
+
+        lista.addAll(getCanonicalModuloPackageFiles(AEWizCost.nameVaadFlow14Lower.get()));
+        lista.addAll(getCanonicalModuloPackageFiles(FlowVar.projectNameModulo));
+
+        return lista;
+    }
+
 
     /**
      * Crea una lista di files/directory ricorsiva nelle sub-directory <br>

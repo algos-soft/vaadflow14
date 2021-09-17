@@ -366,6 +366,8 @@ public class ClassService extends AbstractService {
             simpleName = text.levaCoda(simpleName, JAVA_SUFFIX);
         }
 
+        canonicalName = fileService.getPath(simpleName);
+        canonicalName += JAVA_SUFFIX;
         try {
             clazz = Class.forName(canonicalName);
         } catch (Exception unErrore) {
