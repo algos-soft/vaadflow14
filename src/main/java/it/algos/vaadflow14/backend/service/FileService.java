@@ -4,7 +4,6 @@ import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.apache.commons.io.*;
@@ -2160,20 +2159,10 @@ public class FileService extends AbstractService {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Crea una lista (path completo) di tutti i files della directory package del modulo corrente <br>
      * Senza il suffisso JAVA_SUFFIX <br>
+     *
      * @return lista dei path completi
      */
     public List<String> getPathBreveAllPackageFiles() {
@@ -2181,16 +2170,16 @@ public class FileService extends AbstractService {
         List<String> listaEstesa = getPathAllPackageFiles();
 
         for (String path : listaEstesa) {
-            listaTroncata.add(text.levaCoda(path,JAVA_SUFFIX));
+            listaTroncata.add(text.levaCoda(path, JAVA_SUFFIX));
         }
 
         return listaTroncata;
     }
 
     /**
-     * Path completo di un file 'AEntity' esistente nella directory package <br>
+     * Path completo di un file esistente nella directory package <br>
      *
-     * @return  path completo del file
+     * @return path completo del file
      */
     public String getPath(String simpleName) {
         String pathCompleto = VUOTA;
@@ -2198,20 +2187,13 @@ public class FileService extends AbstractService {
 
         for (String path : lista) {
             if (path.endsWith(simpleName)) {
-                pathCompleto=path;
+                pathCompleto = path;
                 break;
             }
         }
 
         return pathCompleto;
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -2221,10 +2203,13 @@ public class FileService extends AbstractService {
      */
     public List<String> getCanonicalModuloPackageFiles(final String nomeModulo) {
         List<String> listaCanonical = new ArrayList<>();
-        List<String> listaPath=  getPathModuloPackageFiles(nomeModulo);
+        List<String> listaPath = getPathModuloPackageFiles(nomeModulo);
+        String canonicalName;
 
         for (String nome : listaPath) {
-            listaCanonical.add(text.levaTestoPrimaDi(nome,DIR_PROGETTO_VUOTO));
+            canonicalName = text.levaTestoPrimaDi(nome, DIR_PROGETTO_VUOTO);
+            canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+            listaCanonical.add(canonicalName);
         }
 
         return listaCanonical;
@@ -2242,6 +2227,27 @@ public class FileService extends AbstractService {
         lista.addAll(getCanonicalModuloPackageFiles(FlowVar.projectNameModulo));
 
         return lista;
+    }
+
+
+    /**
+     * Nome 'canonicalName' di un file  esistente nella directory package <br>
+     *
+     * @return canonicalName del file
+     */
+    public String getCanonicalName(String simpleName) {
+        String canonicalName = VUOTA;
+        List<String> lista = getPathBreveAllPackageFiles();
+
+        for (String path : lista) {
+            if (path.endsWith(simpleName)) {
+                canonicalName = text.levaTestoPrimaDi(path, DIR_PROGETTO_VUOTO);
+                canonicalName = canonicalName.replaceAll(SLASH, PUNTO);
+                break;
+            }
+        }
+
+        return canonicalName;
     }
 
 

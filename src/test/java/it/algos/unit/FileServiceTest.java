@@ -1725,7 +1725,6 @@ public class FileServiceTest extends ATest {
     public void getPath() {
         System.out.println("44 - getPath");
         System.out.println("path completo di una singola classe esistente nella directory 'package' delle sue subdirectories");
-        System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
         System.out.println(VUOTA);
 
         sorgente = "Via";
@@ -1789,6 +1788,39 @@ public class FileServiceTest extends ATest {
         print(listaStr);
     }
 
+
+    @Test
+    @Order(47)
+    @DisplayName("47 - getCanonicalName")
+    public void getCanonicalName() {
+        System.out.println("47 - getCanonicalName");
+        System.out.println("canonicalName di una singola classe esistente nella directory 'package' delle sue subdirectories");
+        System.out.println(VUOTA);
+
+        sorgente = "Via";
+        ottenuto = service.getCanonicalName(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "Bolla";
+        ottenuto = service.getCanonicalName(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "Mese";
+        ottenuto = service.getCanonicalName(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+
+        sorgente = "StatoLogicList";
+        ottenuto = service.getCanonicalName(sorgente);
+        System.out.print(sorgente);
+        System.out.print(FORWARD);
+        System.out.println(ottenuto);
+    }
 
     private void printPath(String path, String dir, String pathOttenuto) {
         System.out.println("Path completo: " + path);

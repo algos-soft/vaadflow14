@@ -10,7 +10,6 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
@@ -1129,7 +1128,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * Costruzione della entity partendo dal valore della keyID <br>
      *
      * @param collectionName The name of the collection or view to count
-     * @param valueID     della entityBean
+     * @param valueID        della entityBean
      *
      * @return new entity
      */
@@ -1249,8 +1248,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     /**
      * Crea una singola entity da un document. <br>
      *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param doc           recuperato da mongoDB
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param doc         recuperato da mongoDB
      *
      * @return the entity
      */
@@ -1280,13 +1279,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                     DBRef refDb = (DBRef) value;
                     String refName = refDb.getCollectionName();
                     String refID = (String) refDb.getId();
-                    //                    value=find()
-                    Document refDoc;
                     try {
-                        refDoc = findDocById(refName, refID);
-                        int a = 87;
                         value = crea(refName, refID);
-                        int b = 87;
                     } catch (Exception unErrore) {
                         logger.error(unErrore, this.getClass(), "creaByDoc");
                     }
@@ -1308,58 +1302,29 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     /**
      * Crea una singola entity da un document. <br>
      *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param doc           recuperato da mongoDB
+     * @param collectionName The name of the collection or view
+     * @param doc         recuperato da mongoDB
      *
      * @return the entity
      */
     public AEntity creaByDoc(final String collectionName, Document doc) throws AlgosException {
-        AEntity entityBean = null;
-        List<Field> fields = reflection.getAllFields(null);
-        String key;
-        Object value;
-        AIService service;
+        Class<? extends AEntity> entityClazz;
 
-        if (fields != null && doc != null) {
-            doc = fixDoc(doc);
-            entityBean = classService.getEntityFromClazz(null);
-            for (Field field : fields) {
-                key = field.getName();
-                value = doc.get(key);
-
-                //--provvisorio - spostare in altro metodo
-                if (value instanceof Date) {
-                    value = date.dateToLocalDateTime((Date) value);
-                }
-                //--provvisorio - spostare in altro metodo
-
-                //--provvisorio - spostare in altro metodo
-                if (value instanceof DBRef) {
-                    DBRef refDb = (DBRef) value;
-                    String refName = refDb.getCollectionName();
-                    String refID = (String) refDb.getId();
-                    //                    value=find()
-                    Document refDoc;
-                    try {
-                        refDoc = findDocById(refName, refID);
-                        int a = 87;
-                        value = crea(refName, refID);
-                        int b = 87;
-                    } catch (Exception unErrore) {
-                        logger.error(unErrore, this.getClass(), "creaByDoc");
-                    }
-                }
-                //--provvisorio - spostare in altro metodo
-
-                try {
-                    reflection.setPropertyValue(entityBean, key, value);
-                } catch (AlgosException unErrore) {
-                    throw unErrore;
-                }
-            }
+        if (text.isEmpty(collectionName)) {
+            throw new AlgosException("Manca il collectionName");
         }
 
-        return entityBean;
+        if ( doc == null) {
+            throw new AlgosException("Manca il doc");
+        }
+
+        try {
+            entityClazz = classService.getClazzFromSimpleName(collectionName);
+        } catch (Exception unErrore) {
+            throw new AlgosException(unErrore,null);
+        }
+
+        return entityClazz != null ? creaByDoc(entityClazz, doc) : null;
     }
 
     /**
