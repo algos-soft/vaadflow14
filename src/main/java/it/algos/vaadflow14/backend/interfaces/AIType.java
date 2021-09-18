@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.enumeration;
+package it.algos.vaadflow14.backend.interfaces;
 
 /**
  * Project vaadflow14
@@ -9,9 +9,9 @@ package it.algos.vaadflow14.backend.enumeration;
  */
 public interface AIType {
 
-    public String getTag();
+     String getTag();
 
-    public String get();
+     String get();
 
 }// end of interface
 

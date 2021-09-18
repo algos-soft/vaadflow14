@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
@@ -1260,7 +1261,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         List<Field> fields = reflection.getAllFields(entityClazz);
         String key;
         Object value;
-        AIService service;
+        List<AIEnum> enumItems;
 
         if (fields != null && doc != null) {
             doc = fixDoc(doc);
@@ -1295,9 +1296,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
                 //--provvisorio - spostare in altro metodo
                 if (annotation.getFormType(field) == AETypeField.enumeration) {
-                    Class clazz = annotation.getEnumClass(field);
-                   value=AEStatus.get((String)value);
-                    int a = 87;
+                    enumItems = fieldService.getEnumerationItems(field);
+
+                    for (AIEnum item : enumItems) {
+                        if (item.get().equals(value)) {
+                            value = item;
+                            break;
+                        }
+                    }
                 }
                 //--provvisorio - spostare in altro metodo
 

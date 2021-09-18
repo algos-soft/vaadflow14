@@ -15,6 +15,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -194,6 +195,9 @@ public abstract class ATest {
 
     @InjectMocks
     protected ResourceService resourceService;
+
+    @InjectMocks
+    protected AFieldService fieldService;
 
     @InjectMocks
     protected CompanyService companyService;
@@ -477,6 +481,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(resourceService);
         Assertions.assertNotNull(resourceService);
 
+        MockitoAnnotations.initMocks(fieldService);
+        Assertions.assertNotNull(fieldService);
+
         MockitoAnnotations.initMocks(companyService);
         Assertions.assertNotNull(companyService);
     }
@@ -512,6 +519,7 @@ public abstract class ATest {
         ((MongoService) mongoService).logger = loggerService;
         ((MongoService) mongoService).date = dateService;
         ((MongoService) mongoService).classService = classService;
+        ((MongoService) mongoService).fieldService = fieldService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -550,6 +558,9 @@ public abstract class ATest {
 
         ((MongoService) mongoService).fixProperties(classService.getProjectName());
         gSonService.fixProperties(classService.getProjectName());
+
+        fieldService.annotation = annotationService;
+        fieldService.array = arrayService;
 
         companyService.text = textService;
         companyService.logger = loggerService;
