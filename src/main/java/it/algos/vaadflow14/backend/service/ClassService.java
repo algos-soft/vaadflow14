@@ -327,10 +327,11 @@ public class ClassService extends AbstractService {
      * @return classe individuata
      */
     public Class getClazzFromCanonicalName(String canonicalName) throws AlgosException {
-        Class clazz = null;
+        Class clazz;
+        String message;
 
         if (text.isEmpty(canonicalName)) {
-            return null;
+            throw AlgosException.stack("Manca il canonicalName in ingresso", getClass(), "getClazzFromCanonicalName");
         }
 
         if (canonicalName.endsWith(JAVA_SUFFIX)) {
@@ -340,7 +341,8 @@ public class ClassService extends AbstractService {
         try {
             clazz = Class.forName(canonicalName);
         } catch (Exception unErrore) {
-            throw new AlgosException(unErrore, null);
+            message = String.format("Non esiste la classe [%s] nella directory package", canonicalName);
+            throw AlgosException.stack(unErrore, message, getClass(), "getClazzFromCanonicalName");
         }
 
         return clazz;
@@ -355,11 +357,12 @@ public class ClassService extends AbstractService {
      *
      * @return classe individuata
      */
-    public Class getClazzFromSimpleName(String simpleName) throws AlgosException{
+    public Class getClazzFromSimpleName(String simpleName) throws AlgosException {
         String canonicalName;
+        String message;
 
         if (text.isEmpty(simpleName)) {
-            return null;
+            throw AlgosException.stack("Manca il simpleName in ingresso", getClass(), "getClazzFromSimpleName");
         }
 
         if (simpleName.endsWith(JAVA_SUFFIX)) {
@@ -368,6 +371,11 @@ public class ClassService extends AbstractService {
 
         simpleName = text.primaMaiuscola(simpleName);
         canonicalName = fileService.getCanonicalName(simpleName);
+
+        if (text.isEmpty(canonicalName)) {
+            message = String.format("Non esiste la classe [%s] nella directory package", simpleName);
+            throw AlgosException.stack(message, getClass(), "getClazzFromSimpleName");
+        }
 
         return getClazzFromCanonicalName(canonicalName);
     }
@@ -400,7 +408,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe individuata
      */
-    public Class getClazzFromPath(final String pathCompleto) throws AlgosException{
+    public Class getClazzFromPath(final String pathCompleto) throws AlgosException {
         String canonicalName = getNameFromPath(pathCompleto);
         canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
         return getClazzFromCanonicalName(canonicalName);

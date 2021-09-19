@@ -6,8 +6,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
 import com.mongodb.client.result.*;
 import com.vaadin.flow.data.provider.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -1122,7 +1122,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return new entity
      */
     @Override
-    public AEntity crea(final Class entityClazz, final String valueID) throws Exception {
+    public AEntity crea(final Class entityClazz, final String valueID) throws AlgosException {
         return crea(annotation.getCollectionName(entityClazz), valueID);
     }
 
@@ -1135,7 +1135,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return new entity
      */
     @Override
-    public AEntity crea(final String collectionName, final String valueID) throws Exception {
+    public AEntity crea(final String collectionName, final String valueID) throws AlgosException {
         Document doc = findDocById(collectionName, valueID);
         return creaByDoc(collectionName, doc);
     }
@@ -1161,7 +1161,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException {
+    public Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AlgosException {
         return findDocById(annotation.getCollectionName(entityClazz), keyId);
     }
 
@@ -1174,29 +1174,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocById(final String collectionName, final String keyId) throws AMongoException {
-        Document doc = null;
-        FindIterable<Document> iterable = null;
-        MongoCollection<Document> collection = getCollection(collectionName);
-        Bson condition = new Document("_id", keyId);
-
-        if (collection == null) {
-            throw new AMongoException(String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName)));
-        }
-
-        try {
-            iterable = collection.find(condition);
-            doc = iterable.first();
-        } catch (Exception unErrore) {
-            throw new AMongoException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), keyId));
-        }
-
-        if (doc == null) {
-            throw new AMongoException(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), keyId));
-        }
-
-        return doc;
+    public Document findDocById(final String collectionName, final String keyId) throws AlgosException {
+        return findDocByProperty(collectionName, FlowCost.FIELD_ID, keyId);
     }
+
+    /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param collectionName The name of the collection or view
+     * @param propertyName   per costruire la condition
+     * @param propertyValue  (serializable) per costruire la condition
+     *
+     * @return the founded document
+     */
+    public Document findDocByProperty(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        Bson condition = new Document(propertyName, propertyValue);
+        return findDoc(collectionName, condition);
+    }
+
 
     /**
      * Cerca un Document da una collection con una determinata chiave. <br>
@@ -1206,24 +1201,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded document
      */
-    public Document findDoc(final String collectionName, final Bson condition) throws AMongoException {
+    public Document findDoc(final String collectionName, final Bson condition) throws AlgosException {
         Document doc;
         FindIterable<Document> iterable;
         MongoCollection<Document> collection = getCollection(collectionName);
 
         if (collection == null) {
-            throw new AMongoException(String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName)));
+            throw new AlgosException(String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName)));
         }
 
         try {
             iterable = collection.find(condition);
             doc = iterable.first();
         } catch (Exception unErrore) {
-            throw new AMongoException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
+            throw new AlgosException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
         }
 
         if (doc == null) {
-            throw new AMongoException(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
+            throw AlgosException.stack(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition),getClass(),"findDoc");
         }
 
         return doc;
@@ -1345,7 +1340,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                         value = crea(refName, refID);
                         int a = 87;
                     } catch (Exception unErrore) {
-                        throw AlgosException.stack(unErrore, String.format("Non funziona la DBRef property %s in %s.%s", key, this.getClass().getSimpleName(), "creaByDoc()"));
+                        throw AlgosException.stack(unErrore, String.format("Non funziona la DBRef property %s", key), this.getClass(), "creaByDoc");
                     }
                 }
                 //--provvisorio - spostare in altro metodo
@@ -1366,7 +1361,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 try {
                     reflection.setPropertyValue(entityBean, key, value);
                 } catch (AlgosException unErrore) {
-                    throw AlgosException.stack(unErrore, String.format("Non funziona la reflection della property %s in %s.%s", key, this.getClass().getSimpleName(), "creaByDoc()"));
+                    throw AlgosException.stack(unErrore, String.format("Non funziona la reflection della property %s", key), this.getClass(), "creaByDoc");
                 }
             }
         }

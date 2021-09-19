@@ -249,7 +249,7 @@ public interface AIMongoService {
      *
      * @return the founded document
      */
-    Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException;
+    Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AlgosException;
 
 
     /**
@@ -260,7 +260,7 @@ public interface AIMongoService {
      *
      * @return the founded document
      */
-    Document findDocById(final String collectionName, final String keyId) throws AMongoException;
+    Document findDocById(final String collectionName, final String keyId) throws AlgosException;
 
 
     /**

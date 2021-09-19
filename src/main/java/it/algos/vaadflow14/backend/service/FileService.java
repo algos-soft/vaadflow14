@@ -2115,7 +2115,7 @@ public class FileService extends AbstractService {
         try {
             listaAllPathNames = recursionSubPathNames(start);
         } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, String.format("Stack in %s.%s", this.getClass().getSimpleName(), "getAllSubPathFiles()"));
+            throw AlgosException.stack(unErrore,  getClass(), "getAllSubPathFiles");
         }
 
         if (array.isAllValid(listaAllPathNames)) {

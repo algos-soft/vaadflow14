@@ -7,6 +7,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
@@ -781,6 +782,24 @@ public abstract class ATest {
 
     protected void printCount(final String collectionName, final int records) {
         System.out.println(String.format("La collezione '%s' contiene %s records (entities)", collectionName, records));
+    }
+
+    protected void printError(final AlgosException unErrore) {
+        System.out.println("Errore");
+        if (unErrore.getCause() != null) {
+            System.out.println(String.format("Cause %s %s", FlowCost.FORWARD, unErrore.getCause().getClass().getSimpleName()));
+        }
+        System.out.println(String.format("Message %s %s", FlowCost.FORWARD, unErrore.getMessage()));
+        if (unErrore.getEntityBean() != null) {
+            System.out.println(String.format("EntityBean %s %s", FlowCost.FORWARD, unErrore.getEntityBean().toString()));
+        }
+        if (unErrore.getClazz() != null) {
+            System.out.println(String.format("Clazz %s %s", FlowCost.FORWARD, unErrore.getClazz().getSimpleName()));
+        }
+        if (textService.isValid(unErrore.getMethod())) {
+            System.out.println(String.format("Method %s %s()", FlowCost.FORWARD, unErrore.getMethod()));
+        }
+        System.out.println(VUOTA);
     }
 
 }// end of class

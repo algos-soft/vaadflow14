@@ -423,7 +423,7 @@ public class ReflectionService extends AbstractService {
                 field.set(entityBean, value);
                 status = true;
             } catch (Exception unErrore) {
-                throw new AlgosException(unErrore, entityBean, field.getName(), "ReflectionService.setPropertyValue()");
+                throw AlgosException.stack(unErrore, entityBean, field.getName(),getClass(), "setPropertyValue");
             }
         }
 

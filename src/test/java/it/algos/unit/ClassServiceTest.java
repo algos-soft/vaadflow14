@@ -7,6 +7,8 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 /**
  * Project vaadflow14
@@ -32,6 +34,14 @@ public class ClassServiceTest extends ATest {
      * Gia 'costruita' nella superclasse <br>
      */
     private ClassService service;
+
+    private static String[] CANONICAL() {
+        return new String[]{VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
+    }
+
+    private static String[] SIMPLE() {
+        return new String[]{VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "Via", "via", "Bolla"};
+    }
 
 
     /**
@@ -96,117 +106,69 @@ public class ClassServiceTest extends ATest {
         System.out.println(ottenuto);
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "CANONICAL")
     @Order(3)
     @DisplayName("3 - getClazzFromCanonicalName")
-    void getClazzFromCanonicalName() {
-        sorgente = VUOTA;
-        clazz = null;
-        try {
-            clazz = service.getClazzFromCanonicalName(VUOTA);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
+    void getClazzFromCanonicalName(String canonicalName) {
+        System.out.println("3 - Ricerca di una classe dal canonicalName");
 
-        sorgente = VIA_ENTITY_CLASS.getCanonicalName();
-        clazz = null;
         try {
-            clazz = service.getClazzFromCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
+            clazz = service.getClazzFromCanonicalName(canonicalName);
+            printClazz(canonicalName, clazz);
+            Assertions.assertNotNull(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+            Assertions.assertNull(clazz);
         }
-        printClazz(sorgente, clazz);
-
-        sorgente = sorgente + JAVA_SUFFIX;
-        clazz = null;
-        try {
-            clazz = service.getClazzFromCanonicalName(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
     }
 
-    @Test
+
+    @ParameterizedTest
+    @MethodSource(value = "SIMPLE")
     @Order(4)
     @DisplayName("4 - getClazzFromSimpleName")
-    void getClazzFromSimpleName() {
-        System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
-        System.out.println(VUOTA);
+    void getClazzFromSimpleName(String simpleName) {
+        System.out.println("4 - Ricerca di una classe dal simpleName");
 
-        sorgente = VUOTA;
-        clazz = null;
         try {
-            clazz = service.getClazzFromSimpleName(VUOTA);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
-
-        sorgente = "Via";
-        clazz = null;
-        try {
-            clazz = service.getClazzFromSimpleName(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
-
-        sorgente = "Via" + JAVA_SUFFIX;
-        clazz = null;
-        try {
-            clazz = service.getClazzFromSimpleName(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
-
-        sorgente = "via";
-        clazz = null;
-        try {
-            clazz = service.getClazzFromSimpleName(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-        }
-        printClazz(sorgente, clazz);
-
-        sorgente = "Bolla";
-        clazz = null;
-        try {
-            clazz = service.getClazzFromSimpleName(sorgente);
+            clazz = service.getClazzFromSimpleName(simpleName);
+            printClazz(simpleName, clazz);
+            Assertions.assertNotNull(clazz);
         } catch (AlgosException unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
-            System.out.println(String.format(unErrore.getStack()));
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
+            printError(unErrore);
+            Assertions.assertNull(clazz);
         }
-        printClazz(sorgente, clazz);
     }
+
 
 
     @Test
     @Order(5)
     @DisplayName("5 - getClazzFromPath")
     void getClazzFromPath() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
+        System.out.println("5 - Ricerca di una classe dal path completo");
 
         clazz = null;
+        sorgente = VUOTA;
         try {
-            clazz = service.getClazzFromPath(VUOTA);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
+            clazz = service.getClazzFromPath(sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
         assertNull(clazz);
 
         clazz = null;
+        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
         try {
             clazz = service.getClazzFromPath(sorgente);
-        } catch (Exception unErrore) {
-            System.out.println(String.format(unErrore.getMessage()));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
         printClazz(sorgente, clazz);
     }
+
 
     @Test
     @Order(6)
@@ -218,6 +180,7 @@ public class ClassServiceTest extends ATest {
         System.out.println(entityBean);
     }
 
+
     @Test
     @Order(7)
     @DisplayName("7 - getProjectName")
@@ -228,13 +191,12 @@ public class ClassServiceTest extends ATest {
     }
 
     void printClazz(final String sorgente, final Class clazz) {
-        System.out.println("Classe trovata");
-
-        System.out.print("Sorgente");
-        System.out.print(FORWARD);
-        System.out.println(sorgente);
-
         if (clazz != null) {
+            System.out.println("Classe trovata");
+            System.out.print("Sorgente");
+            System.out.print(FORWARD);
+            System.out.println(sorgente);
+
             System.out.print("Name");
             System.out.print(FORWARD);
             System.out.println(clazz.getName());
