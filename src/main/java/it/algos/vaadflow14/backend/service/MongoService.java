@@ -1199,6 +1199,38 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     }
 
     /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param collectionName The name of the collection or view
+     * @param condition      di ricerca
+     *
+     * @return the founded document
+     */
+    public Document findDoc(final String collectionName, final Bson condition) throws AMongoException {
+        Document doc;
+        FindIterable<Document> iterable;
+        MongoCollection<Document> collection = getCollection(collectionName);
+
+        if (collection == null) {
+            throw new AMongoException(String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName)));
+        }
+
+        try {
+            iterable = collection.find(condition);
+            doc = iterable.first();
+        } catch (Exception unErrore) {
+            throw new AMongoException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
+        }
+
+        if (doc == null) {
+            throw new AMongoException(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
+        }
+
+        return doc;
+    }
+
+
+    /**
      * Find single entity. <br>
      * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
      *
@@ -1244,6 +1276,30 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         return doc;
+    }
+
+    /**
+     * Crea una singola entity da un document. <br>
+     *
+     * @param collectionName The name of the collection or view
+     * @param doc            recuperato da mongoDB
+     *
+     * @return the entity
+     */
+    public AEntity creaByDoc(final String collectionName, Document doc) throws AlgosException {
+        Class<? extends AEntity> entityClazz;
+
+        if (text.isEmpty(collectionName)) {
+            throw new AlgosException("Manca il collectionName");
+        }
+
+        if (doc == null) {
+            throw new AlgosException("Manca il doc");
+        }
+
+        entityClazz = classService.getClazzFromSimpleName(collectionName);
+
+        return entityClazz != null ? creaByDoc(entityClazz, doc) : null;
     }
 
 
@@ -1318,30 +1374,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return entityBean;
     }
 
-
-    /**
-     * Crea una singola entity da un document. <br>
-     *
-     * @param collectionName The name of the collection or view
-     * @param doc            recuperato da mongoDB
-     *
-     * @return the entity
-     */
-    public AEntity creaByDoc(final String collectionName, Document doc) throws AlgosException {
-        Class<? extends AEntity> entityClazz;
-
-        if (text.isEmpty(collectionName)) {
-            throw new AlgosException("Manca il collectionName");
-        }
-
-        if (doc == null) {
-            throw new AlgosException("Manca il doc");
-        }
-
-        entityClazz = classService.getClazzFromSimpleName(collectionName);
-
-        return entityClazz != null ? creaByDoc(entityClazz, doc) : null;
-    }
 
     /**
      * Cerca una singola entity di una collection con una determinata chiave. <br>

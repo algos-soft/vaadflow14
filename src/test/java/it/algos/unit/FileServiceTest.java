@@ -1724,9 +1724,6 @@ public class FileServiceTest extends ATest {
         System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
         System.out.println(VUOTA);
 
-        FlowVar.projectNameDirectoryIdea = "vaadflow14";
-        FlowVar.projectNameModulo = "simple";
-
         try {
             listaStr = service.getPathBreveAllPackageFiles();
         } catch (Exception unErrore) {
@@ -1814,9 +1811,6 @@ public class FileServiceTest extends ATest {
         System.out.println("canonicalName di ogni files (Entity, List, Form, Service) della directory 'package' e delle sue subdirectories");
         System.out.println("il progetto corrente viene simulato regolando (provvisoriamente) la property statica FlowVar.projectNameDirectoryIdea");
         System.out.println(VUOTA);
-
-        FlowVar.projectNameDirectoryIdea = "vaadflow14";
-        FlowVar.projectNameModulo = "simple";
 
         try {
             listaStr = service.getCanonicalAllPackageFiles();

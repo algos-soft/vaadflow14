@@ -1,20 +1,15 @@
-package it.algos.simple;
+package it.algos.unit;
 
 import com.vaadin.flow.router.*;
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
-import it.algos.simple.backend.packages.fattura.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.service.*;
 import static it.algos.vaadflow14.backend.service.AnnotationService.*;
 import org.junit.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.mapping.*;
@@ -38,13 +33,6 @@ import java.util.*;
 @DisplayName("AnnotationService - Annotazioni delle AEntity.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AnnotationServiceTest extends ATest {
-
-    protected static Class<? extends AEntity> OMEGA_ENTITY_CLASS = Omega.class;
-
-    protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
-
-    protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
-
 
     private AIEntity aiEntity;
 
@@ -351,20 +339,20 @@ public class AnnotationServiceTest extends ATest {
         System.out.println("Colonne previste per la Entity " + VIA_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
-        String[] stringArray2 = {"pageId","code", "descrizione","lastModifica"};
+        String[] stringArray2 = {"ordine","mese", "giorni","giorniBisestile","sigla"};
         previstoArray = new ArrayList(Arrays.asList(stringArray2));
-        ottenutoArray = service.getGridColumns(FATTURA_ENTITY_CLASS);
+        ottenutoArray = service.getGridColumns(MESE_ENTITY_CLASS);
         assertEquals(previstoArray, ottenutoArray);
         System.out.println(VUOTA);
-        System.out.println("Colonne previste per la Entity " + FATTURA_ENTITY_CLASS.getSimpleName() + ":");
+        System.out.println("Colonne previste per la Entity " + MESE_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
 
         String[] stringArray3 = {"code", "descrizione"};
         previstoArray = new ArrayList(Arrays.asList(stringArray3));
-        ottenutoArray = service.getGridColumns(OMEGA_ENTITY_CLASS);
+        ottenutoArray = service.getGridColumns(COMPANY_ENTITY_CLASS);
         //        assertEquals(previstoArray, ottenutoArray);
         System.out.println(VUOTA);
-        System.out.println("Colonne previste per la Entity " + OMEGA_ENTITY_CLASS.getSimpleName() + ":");
+        System.out.println("Colonne previste per la Entity " + COMPANY_ENTITY_CLASS.getSimpleName() + ":");
         print(ottenutoArray);
     }
 

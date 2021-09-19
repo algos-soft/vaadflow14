@@ -398,6 +398,14 @@ public abstract class ATest {
     protected void setUpStartUp() {
         initMocks();
         fixRiferimentiIncrociati();
+
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        if (classService.getProjectName().equals(FlowVar.projectNameDirectoryIdea)) {
+            FlowVar.projectNameModulo = "simple";
+        }
+        else {
+            FlowVar.projectNameModulo = classService.getProjectName();
+        }
     }
 
 
