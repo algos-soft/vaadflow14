@@ -865,6 +865,7 @@ public abstract class ATest {
         System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali", collectionName, totRecords));
     }
 
+
     protected void printError(final AlgosException unErrore) {
         System.out.println("Errore");
         if (unErrore.getCause() != null) {
@@ -880,7 +881,6 @@ public abstract class ATest {
         if (textService.isValid(unErrore.getMethod())) {
             System.out.println(String.format("Method %s %s()", FlowCost.FORWARD, unErrore.getMethod()));
         }
-        System.out.println(VUOTA);
     }
 
 }// end of class
