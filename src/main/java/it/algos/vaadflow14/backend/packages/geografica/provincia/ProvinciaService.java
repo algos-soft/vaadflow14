@@ -165,8 +165,15 @@ public class ProvinciaService extends AService {
     private AIResult checkRegione() {
         String packageName = Provincia.class.getSimpleName().toLowerCase();
         String collection = "regione";
+        boolean isValidCollection = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "checkRegione");
+        }
+
+        if (isValidCollection) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {

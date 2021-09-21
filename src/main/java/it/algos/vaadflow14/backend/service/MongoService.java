@@ -169,8 +169,17 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     @Override
     public MongoCollection<Document> getCollection(final String collectionName) {
-        if (text.isValid(collectionName)) {
-            return dataBase != null ? dataBase.getCollection(collectionName) : null;
+        if (text.isEmpty(collectionName)) {
+            return null;
+        }
+
+        String shortName = fileService.estraeClasseFinale(collectionName).toLowerCase();
+
+        if (text.isValid(shortName)) {
+            if (collezioni != null && collezioni.contains(shortName)) {
+                return dataBase != null ? dataBase.getCollection(shortName) : null;
+            }
+            return null;
         }
         else {
             return null;
@@ -186,7 +195,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection exist
      */
     @Override
-    public boolean isExistsCollection(final Class<? extends AEntity> entityClazz) {
+    public boolean isExistsCollection(final Class<? extends AEntity> entityClazz) throws AlgosException {
         return isExistsCollection(annotation.getCollectionName(entityClazz));
     }
 
@@ -199,8 +208,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection exist
      */
     @Override
-    public boolean isExistsCollection(final String collectionName) {
-        return collezioni != null && collezioni.contains(collectionName);
+    public boolean isExistsCollection(final String collectionName) throws AlgosException {
+        if (text.isEmpty(collectionName)) {
+            throw AlgosException.stack("Manca la collection", this.getClass(), "isExistsCollection");
+        }
+
+        String shortName = fileService.estraeClasseFinale(collectionName).toLowerCase();
+        return collezioni != null && collezioni.contains(shortName);
     }
 
 
@@ -212,7 +226,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection has entities
      */
     @Override
-    public boolean isValidCollection(final Class<? extends AEntity> entityClazz) {
+    public boolean isValidCollection(final Class<? extends AEntity> entityClazz) throws AlgosException {
         return isValidCollection(annotation.getCollectionName(entityClazz));
     }
 
@@ -225,8 +239,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection has entities
      */
     @Override
-    public boolean isValidCollection(final String collectionName) {
-        return isExistsCollection(collectionName) && count(collectionName) > 0;
+    public boolean isValidCollection(final String collectionName) throws AlgosException {
+        return isExistsCollection(collectionName.toLowerCase()) && count(collectionName.toLowerCase()) > 0;
     }
 
 
@@ -238,7 +252,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection is empty
      */
     @Override
-    public boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) {
+    public boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) throws AlgosException {
         return isEmptyCollection(annotation.getCollectionName(entityClazz));
     }
 
@@ -251,7 +265,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true if the collection is empty
      */
     @Override
-    public boolean isEmptyCollection(final String collectionName) {
+    public boolean isEmptyCollection(final String collectionName) throws AlgosException {
         return !isExistsCollection(collectionName) || count(collectionName) == 0;
     }
 
@@ -264,7 +278,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero totale di entities
      */
     @Override
-    public int count(final Class<? extends AEntity> entityClazz) {
+    public int count(final Class<? extends AEntity> entityClazz) throws AlgosException {
         return count(annotation.getCollectionName(entityClazz));
     }
 
@@ -277,8 +291,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero totale di entities
      */
     @Override
-    public int count(final String collectionName) {
-        return count(collectionName, (Bson) null);
+    public int count(final String collectionName) throws AlgosException {
+        return count(collectionName, VUOTA, VUOTA);
     }
 
 
@@ -292,58 +306,65 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities selezionate
      */
     @Override
-    public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) {
-        Query query;
-        Bson filter;
-
-        if (text.isEmpty(propertyName)) {
-            return count(entityClazz);
-        }
-
-        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
-            return count(entityClazz);
-        }
-
-        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
-            return count(entityClazz);
-        }
-
-        switch (FlowVar.typeSerializing) {
-            case spring:
-                if (mongoOp != null) {
-                    query = getQuery(propertyName, propertyValue);
-                    return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
+    public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+                if (entityClazz == null) {
+                    throw AlgosException.stack("Manca la entityClazz", getClass(), "count");
                 }
-                else {
-                    filter = getFilter(propertyName, propertyValue);
-                    return count(entityClazz, filter);
-                }
-            case gson:
-                filter = getFilter(propertyName, propertyValue);
-                return count(entityClazz, filter);
-            case jackson:
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "count");
-                break;
-        }
-
-        return 0;
+        //        Query query;
+        //        Bson filter;
+        //
+        //        if (entityClazz==null) {
+        //            throw AlgosException.stack("Manca la entityClazz",getClass(),"count");
+        //        }
+        //
+        //        if (text.isEmpty(propertyName)) {
+        //            return count(entityClazz);
+        //        }
+        //
+        //        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
+        //            return count(entityClazz);
+        //        }
+        //
+        //        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
+        //            return count(entityClazz);
+        //        }
+        //
+        //        switch (FlowVar.typeSerializing) {
+        //            case spring:
+        //                if (mongoOp != null) {
+        //                    query = getQuery(propertyName, propertyValue);
+        //                    return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
+        //                }
+        //                else {
+        //                    return count(entityClazz, propertyName, propertyValue);
+        //                }
+        //            case gson:
+        //                filter = getFilter(propertyName, propertyValue);
+        //                return count(entityClazz, filter);
+        //            case jackson:
+        //                break;
+        //            default:
+        //                logger.warn("Switch - caso non definito", this.getClass(), "count");
+        //                break;
+        //        }
+        //
+        //        return 0;
+        return count(annotation.getCollectionName(entityClazz), propertyName, propertyValue);
     }
 
-    /**
-     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
-     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param filter      Optional. A filter that selects which documents to count in the collection or view.
-     *
-     * @return numero di entities eventualmente filtrate
-     */
-    @Override
-    public int count(final Class<? extends AEntity> entityClazz, final Bson filter) {
-        return count(annotation.getCollectionName(entityClazz), filter);
-    }
+    //    /**
+    //     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
+    //     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
+    //     *
+    //     * @param entityClazz corrispondente ad una collection sul database mongoDB
+    //     * @param filter      Optional. A filter that selects which documents to count in the collection or view.
+    //     *
+    //     * @return numero di entities eventualmente filtrate
+    //     */
+    //    @Override
+    //    public int count(final Class<? extends AEntity> entityClazz, final Bson filter) throws AlgosException {
+    //        return count(annotation.getCollectionName(entityClazz), filter);
+    //    }
 
 
     /**
@@ -351,22 +372,75 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
      *
      * @param collectionName The name of the collection or view to count
-     * @param filter         Optional. A filter that selects which documents to count in the collection or view.
+     * @param propertyName   per costruire la query
+     * @param propertyValue  (serializable) per costruire la query
      *
      * @return numero di entities eventualmente filtrate
      */
-    @Override
-    public int count(final String collectionName, final Bson filter) {
+    public int count(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         int totale = 0;
-        MongoCollection<Document> collection = getCollection(collectionName);
-        Long risultato = null;
+        MongoCollection<Document> collection;
+        Long risultato;
+        Query query;
+        Bson filter;
 
-        if (collection != null) {
-            risultato = collection.countDocuments(filter);
+        if (text.isEmpty(collectionName)) {
+            throw new AlgosException(String.format("Manca il nome della collezione %s", collectionName));
         }
 
-        if (risultato != null) {
-            totale = risultato.intValue();
+        collection = getCollection(collectionName);
+        if (collection == null) {
+            throw new AlgosException(String.format("Su mongoDb non esiste la collezione %s", collectionName));
+        }
+
+        if (text.isEmpty(propertyName)) {
+            risultato = collection.countDocuments();
+            if (risultato != null) {
+                return risultato.intValue();
+            }
+            return 0;
+        }
+
+        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
+            risultato = collection.countDocuments();
+            if (risultato != null) {
+                return risultato.intValue();
+            }
+            return 0;
+        }
+
+        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
+            risultato = collection.countDocuments();
+            if (risultato != null) {
+                return risultato.intValue();
+            }
+            return 0;
+        }
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (mongoOp != null) {
+                    query = getQuery(propertyName, propertyValue);
+                    return (int) mongoOp.count(query, collectionName);
+                }
+                else {
+                    filter = getFilter(propertyName, propertyValue);
+                    risultato = collection.countDocuments(filter);
+                    if (risultato != null) {
+                        totale = risultato.intValue();
+                    }
+                }
+            case gson:
+                filter = getFilter(propertyName, propertyValue);
+                risultato = collection.countDocuments(filter);
+                if (risultato != null) {
+                    totale = risultato.intValue();
+                }
+            case jackson:
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "count");
+                break;
         }
 
         return totale;
@@ -382,7 +456,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities eventualmente filtrate
      */
     @Override
-    public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AQueryException, InvalidMongoDbApiUsageException {
+    public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AlgosException, InvalidMongoDbApiUsageException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return count(entityClazz, mappaFiltri);
     }
@@ -396,9 +470,18 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities eventualmente filtrate
      */
     @Override
-    public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AQueryException {
+    public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query;
         Bson filter;
+        MongoCollection<Document> collection;
+        String collectionName;
+        Long risultato;
+
+        collectionName = annotation.getCollectionName(entityClazz);
+        collection = getCollection(collectionName);
+        if (collection == null) {
+            throw new AlgosException(String.format("Su mongoDb non esiste la collezione %s", collectionName));
+        }
 
         switch (FlowVar.typeSerializing) {
             case spring:
@@ -408,11 +491,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 }
                 else {
                     filter = getFilter(mappaFiltri);
-                    return count(entityClazz, filter);
+                    risultato = collection.countDocuments(filter);
+                    if (risultato != null) {
+                        return risultato.intValue();
+                    }
+                    return 0;
                 }
             case gson:
                 filter = getFilter(mappaFiltri);
-                return count(entityClazz, filter);
+                risultato = collection.countDocuments(filter);
+                if (risultato != null) {
+                    return risultato.intValue();
+                }
+                return 0;
             case jackson:
                 break;
             default:
@@ -432,7 +523,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection has entities requested
      */
-    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AlgosException {
         return count(entityClazz, propertyName, propertyValue) > 0;
     }
 
@@ -447,7 +538,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return true se non ci sono properties con reset=true
      */
     @Override
-    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) {
+    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException {
         return countReset(entityClazz) == 0;
     }
 
@@ -461,7 +552,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true se non ci sono properties con reset=true
      */
-    public int countReset(Class<? extends AEntity> entityClazz) {
+    public int countReset(Class<? extends AEntity> entityClazz) throws AlgosException {
         return count(entityClazz, FIELD_NAME_RESET, true);
     }
 
@@ -698,7 +789,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AMongoException, AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AlgosException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return fetch(entityClazz, mappaFiltri);
     }
@@ -712,7 +803,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AMongoException, AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, (Sort) null);
     }
 
@@ -726,7 +817,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AMongoException, AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
     }
 
@@ -743,7 +834,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AMongoException, AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
     }
 
@@ -763,7 +854,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
-    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AMongoException, AQueryException {
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AlgosException {
         List<AEntity> listaEntities = null;
         Query query = getQuery(mappaFiltri);
 
@@ -783,14 +874,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         try {
             listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
         } catch (Exception unErrore) {
-            throw new AMongoException(unErrore, "null");
+            throw new AlgosException(unErrore, "null");
         }
 
         return listaEntities;
     }
 
 
-    public Query getQuery(Map<String, AFiltro> mappaFiltri) throws AQueryException {
+    public Query getQuery(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query = new Query();
         Criteria criteriaFiltro;
         Criteria criteriaQuery = null;
@@ -820,7 +911,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return query;
     }
 
-    protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AQueryException {
+    protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Document docFilter = null;
         Criteria criteria = null;
         Criteria criteriaFilter = new Criteria();
@@ -839,7 +930,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             try {
                 docFilter = criteriaFilter.getCriteriaObject();
             } catch (Exception unErrore) {
-                throw new AQueryException(unErrore, null, "MongoService.getFilter()");
+                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
             }
         }
 
@@ -1218,7 +1309,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         if (doc == null) {
-            throw AlgosException.stack(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition),getClass(),"findDoc");
+            throw AlgosException.stack(String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition), getClass(), "findDoc");
         }
 
         return doc;
@@ -1912,9 +2003,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Field field = reflection.getField(entityClazz, propertyName);
         Query query = new Query().with(sort).limit(1);
 
-        if (isEmptyCollection(entityClazz)) {
-            return 1;
-        }
+        //        if (isEmptyCollection(entityClazz)) {
+        //            return 1;
+        //        }
 
         switch (FlowVar.typeSerializing) {
             case spring:
@@ -2147,7 +2238,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @param collectionName della collezione
      */
-    public boolean drop(String collectionName) {
+    public boolean drop(String collectionName) throws AlgosException {
         this.mongoOp.dropCollection(collectionName);
         return this.count(collectionName) == 0;
     }
@@ -2159,7 +2250,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true se la collection è stata cancellata
      */
-    public boolean drop(Class<? extends AEntity> entityClazz) {
+    public boolean drop(Class<? extends AEntity> entityClazz) throws AlgosException {
         return drop(annotation.getCollectionName(entityClazz));
     }
 

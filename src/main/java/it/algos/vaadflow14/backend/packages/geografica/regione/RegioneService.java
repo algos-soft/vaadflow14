@@ -222,8 +222,15 @@ public class RegioneService extends AService {
     private AIResult checkStato() {
         String packageName = Regione.class.getSimpleName().toLowerCase();
         String collection = "stato";
+        boolean isValidCollection = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "checkStato");
+        }
+
+        if (isValidCollection) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {

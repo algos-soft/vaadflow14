@@ -409,7 +409,17 @@ public class ClassService extends AbstractService {
      * @return classe individuata
      */
     public Class getClazzFromPath(final String pathCompleto) throws AlgosException {
+        String message;
+        if (text.isEmpty(pathCompleto)) {
+            throw AlgosException.stack("Manca il pathCompleto in ingresso", getClass(), "getClazzFromPath");
+        }
+
         String canonicalName = getNameFromPath(pathCompleto);
+        if (text.isEmpty(canonicalName)) {
+            message = String.format("Il path [%s] non esiste", pathCompleto);
+            throw AlgosException.stack(message, getClass(), "getClazzFromPath");
+        }
+
         canonicalName = canonicalName.replaceAll(FlowCost.SLASH, FlowCost.PUNTO);
         return getClazzFromCanonicalName(canonicalName);
     }
@@ -509,19 +519,26 @@ public class ClassService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity getEntityFromClazz(final Class entityClazz) {
-        AEntity entityBean = null;
-        Constructor constructor = null;
+    public AEntity getEntityFromClazz(final Class entityClazz) throws AlgosException {
+        AEntity entityBean;
+        Constructor constructor;
+        String message;
 
         if (entityClazz == null) {
-            return null;
+            throw AlgosException.stack("Manca la entityClazz in ingresso", getClass(), "getEntityFromClazz");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            message = String.format("La classe %s non è una sottoclasse di AEntity", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "getEntityFromClazz");
         }
 
         try {
-            constructor = entityClazz.getDeclaredConstructor(null);
+            constructor = entityClazz.getDeclaredConstructor();
             entityBean = (AEntity) constructor.newInstance(null);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getEntityFromClazz");
+            message = String.format("Non sono riuscito a costruire una entityBean di classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(unErrore, message, getClass(), "getEntityFromClazz");
         }
         return entityBean;
     }

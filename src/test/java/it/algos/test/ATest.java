@@ -1,10 +1,11 @@
 package it.algos.test;
 
 import com.mongodb.*;
+import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -39,6 +40,8 @@ import java.util.*;
  * Time: 21:18
  * <p>
  * Classe astratta per i test <br>
+ *
+ * @see https://www.baeldung.com/parameterized-tests-junit-5
  */
 @AIScript(sovraScrivibile = false)
 public abstract class ATest {
@@ -529,6 +532,7 @@ public abstract class ATest {
         ((MongoService) mongoService).date = dateService;
         ((MongoService) mongoService).classService = classService;
         ((MongoService) mongoService).fieldService = fieldService;
+        ((MongoService) mongoService).fileService = fileService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -586,6 +590,7 @@ public abstract class ATest {
     protected void setUp() {
         inizio = System.currentTimeMillis();
         cicli = 1;
+        ottenutoIntero = 0;
         caratteriVisibili = 80;
         previstoBooleano = false;
         ottenutoBooleano = false;
@@ -768,6 +773,82 @@ public abstract class ATest {
         System.out.println(String.format("Risultato ottenuto in %s", dateService.deltaText(inizio)));
     }
 
+    protected void printCollection(final Class clazz, final boolean esiste) {
+        printCollection(clazz != null ? clazz.getSimpleName() : VUOTA, esiste);
+    }
+
+
+    protected void printCollection(final String simpleName, final boolean esiste) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Esistenza: manca la classe"));
+            return;
+        }
+
+        if (esiste) {
+            System.out.println(String.format("Esistenza: la collezione '%s' %s", simpleName, "esiste"));
+        }
+        else {
+            System.out.println(String.format("Esistenza: la collezione '%s' non è valida (non ci sono entities)", simpleName));
+        }
+    }
+
+
+    protected void printCollection(final Class clazz, final MongoCollection collection) {
+        printCollection(clazz != null ? clazz.getSimpleName() : VUOTA, collection);
+    }
+
+
+    protected void printCollection(final String simpleName, final MongoCollection collection) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Collezione: manca la classe"));
+            return;
+        }
+
+        if (collection != null) {
+            System.out.println(String.format("Collezione: '%s'%s%s", simpleName, FORWARD, collection.toString()));
+        }
+        else {
+            System.out.println(String.format("La collezione '%s' %s", simpleName, "non esiste"));
+        }
+    }
+
+    protected void printCollectionValida(final Class clazz, final boolean valida) {
+        printCollectionValida(clazz != null ? clazz.getSimpleName() : VUOTA, valida);
+    }
+
+    protected void printCollectionValida(final String simpleName, final boolean valida) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Validità: manca la classe"));
+            return;
+        }
+
+        if (valida) {
+            System.out.println(String.format("Validità: la collezione '%s' ha una o più entities", simpleName));
+        }
+        else {
+            System.out.println(String.format("Validità: la collezione '%s' non è valida (non ci sono entities)", simpleName));
+        }
+    }
+
+
+    protected void printCollectionVuota(final Class clazz, final boolean vuota) {
+        printCollectionVuota(clazz != null ? clazz.getSimpleName() : VUOTA, vuota);
+    }
+
+    protected void printCollectionVuota(final String simpleName, final boolean vuota) {
+        if (textService.isEmpty(simpleName)) {
+            System.out.println(String.format("Vuota: manca la classe"));
+            return;
+        }
+
+        if (vuota) {
+            System.out.println(String.format("Vuota: la collezione '%s' è vuota", simpleName));
+        }
+        else {
+            System.out.println(String.format("Vuota: la collezione '%s' non è vuota", simpleName));
+        }
+    }
+
     protected void printCollection(final Class clazz, final String status) {
         System.out.println(String.format("La collezione '%s' %s", clazz != null ? clazz.getSimpleName() : VUOTA, status));
     }
@@ -776,12 +857,12 @@ public abstract class ATest {
         System.out.println(String.format("La collezione '%s' %s", collectionName, status));
     }
 
-    protected void printCount(final Class clazz, final int records) {
-        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", clazz != null ? clazz.getSimpleName() : VUOTA, records));
+    protected void printCount(final Class clazz, final int totRecords) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali", clazz != null ? clazz.getSimpleName() : VUOTA, totRecords));
     }
 
-    protected void printCount(final String collectionName, final int records) {
-        System.out.println(String.format("La collezione '%s' contiene %s records (entities)", collectionName, records));
+    protected void printCount(final String collectionName, final int totRecords) {
+        System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali", collectionName, totRecords));
     }
 
     protected void printError(final AlgosException unErrore) {

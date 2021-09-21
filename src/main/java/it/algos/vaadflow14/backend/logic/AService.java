@@ -495,14 +495,21 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public boolean deleteAll() {
+        boolean status = false;
+        boolean isExistsCollection = false;
 
-        if (entityClazz != null && mongo.isExistsCollection(annotation.getCollectionName(entityClazz))) {
+        try {
+            isExistsCollection = mongo.isExistsCollection(annotation.getCollectionName(entityClazz));
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "deleteAll");
+        }
+
+        if (entityClazz != null && isExistsCollection) {
             ((MongoService) mongo).mongoOp.remove(new Query(), entityClazz);
-            return true;
+            status = true;
         }
-        else {
-            return true;
-        }
+
+        return status;
     }
 
     //    @Deprecated

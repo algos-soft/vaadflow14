@@ -14,6 +14,7 @@ import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -781,7 +782,15 @@ public abstract class LogicList extends Logic {
         String message = "Vuoi veramente cancellare tutto? L' operazione non è reversibile.";
         VaadinIcon icon = VaadinIcon.WARNING;
 
-        if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
+        boolean isValidCollection = false;
+
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "openConfirmDeleteAll");
+        }
+
+        if (isValidCollection) {
             messageDialog = new MessageDialog().setTitle("Delete").setMessage(message);
             messageDialog.addButton().text("Cancella").icon(icon).error().onClick(e -> clickDeleteAll()).closeOnClick();
             messageDialog.addButtonToLeft().text("Annulla").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();

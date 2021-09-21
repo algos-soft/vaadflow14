@@ -11,6 +11,7 @@ import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -247,13 +248,18 @@ public class AGrid {
      */
     protected String getWidth() {
         String indexWidth = VUOTA;
+        int dim = 0;
         int dim1 = 100;
         int dim2 = 1000;
         String tag1 = "3.0" + TAG_EM;
         String tag2 = "4.0" + TAG_EM;
         String tag3 = "5.0" + TAG_EM;
 
-        int dim =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        try {
+            dim = ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "getWidth");
+        }
 
         if (dim < dim1) {
             indexWidth = tag1;
@@ -385,9 +391,15 @@ public class AGrid {
      * DataProvider è già filtrato (a monte) e vuole una query nulla <br>
      */
     public void fixGridHeader() {
-        int totRec =  ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        int totRec = 0;
         int itemsFiltrati = grid.getDataProvider().size(null);
-        String message = VUOTA;
+        String message;
+
+        try {
+            totRec = ((MongoService) mongo).count(entityClazz);//@todo da controllare
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "fixGridHeader");
+        }
 
         if (true) {//@todo Funzionalità ancora da implementare con preferenza locale
             message = annotation.getTitleList(entityClazz).toUpperCase() + SEP;

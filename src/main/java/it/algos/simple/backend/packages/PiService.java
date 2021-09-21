@@ -3,6 +3,7 @@ package it.algos.simple.backend.packages;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.entity.AEntity;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.Anno;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,14 @@ public class PiService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> ((MongoService) mongo).count(entityClazz));//@todo da controllare
-
+                query -> {
+                    try {
+                        return mongo.count(Anno.class);
+                    } catch (AlgosException unErrore) {
+                        return 0;
+                    }
+                }
+        );
         return dataProvider;
     }
 

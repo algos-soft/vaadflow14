@@ -73,10 +73,7 @@ public class DataProviderService extends AbstractService {
                     //@todo da controllare
                     try {
                         return ((MongoService) mongo).fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();//@todo da controllare
-                    } catch (AQueryException unErrore) {
-                        logger.error(unErrore, this.getClass(), "fromCallbacks");
-                        return null;
-                    } catch (AMongoException unErrore) {
+                    } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
                     }
@@ -84,7 +81,14 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
+                query -> {
+                    try {
+                        return mongo.count(entityClazz);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
         );
 
         return dataProvider;
@@ -116,10 +120,7 @@ public class DataProviderService extends AbstractService {
 
                     try {
                         return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
-                    } catch (AMongoException unErrore) {
-                        logger.error(unErrore, this.getClass(), "fromCallbacks");
-                        return null;
-                    } catch (AQueryException unErrore) {
+                    } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
                     }
@@ -127,18 +128,13 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                countCallback -> {
+                query -> {
                     try {
-                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri).size();//@todo da controllare
-                    } catch (AMongoException unErrore) {
-                        logger.error(unErrore, this.getClass(), "fromCallbacks");
-                        return 0;
-                    } catch (AQueryException unErrore) {
-                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return mongo.count(entityClazz);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
                         return 0;
                     }
-
-
                 }
         );
 
@@ -164,7 +160,14 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
+                query -> {
+                    try {
+                        return mongo.count(entityClazz);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
         );
 
         return dataProvider;
@@ -189,7 +192,14 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> ((MongoService) mongo).count(entityClazz)//@todo da controllare
+                query -> {
+                    try {
+                        return mongo.count(entityClazz);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
         );
 
         return dataProvider;
@@ -217,7 +227,14 @@ public class DataProviderService extends AbstractService {
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
                 //                query -> mongo.count(T);
-                query -> ((MongoService) mongo).count(Mese.class)//@todo da controllare
+                query -> {
+                    try {
+                        return mongo.count(Mese.class);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
         );
 
         return dataProvider;
@@ -265,7 +282,14 @@ public class DataProviderService extends AbstractService {
 
                 // Second callback fetches the total number of items currently in the Grid.
                 // The grid can then use it to properly adjust the scrollbars.
-                query -> ((MongoService) mongo).count(Anno.class)//@todo da controllare
+                query -> {
+                    try {
+                        return mongo.count(Anno.class);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
         );
 
         return dataProvider;

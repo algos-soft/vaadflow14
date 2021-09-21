@@ -170,7 +170,8 @@ public class FlowData implements AIData {
         int numRec;
         String type;
         String metodo = VUOTA;
-
+        boolean isResetVuoto = false;
+        boolean isEmptyCollection = false;
         try {
             entityClazz = Class.forName(canonicalEntityName);
         } catch (Exception unErrore) {
@@ -191,7 +192,12 @@ public class FlowData implements AIData {
         }
         if (annotation.usaReset(entityClazz)) {
             metodo = "reset";
-            if (mongo.isResetVuoto(entityClazz)) {
+            try {
+                isResetVuoto = mongo.isResetVuoto(entityClazz);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "bootReset");
+            }
+            if (isResetVuoto) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();
@@ -205,12 +211,21 @@ public class FlowData implements AIData {
                 }
             }
             else {
-                result = AResult.errato(((MongoService) mongo).countReset(entityClazz));//@todo da controllare
+                try {
+                    result = AResult.errato(((MongoService) mongo).countReset(entityClazz));//@todo da controllare
+                } catch (Exception unErrore) {
+                    logger.error(unErrore, this.getClass(), "bootReset");
+                }
             }
         }
         else {
             metodo = "download";
-            if (((MongoService) mongo).isEmptyCollection(entityClazz)) {//@todo da controllare
+            try {
+                isEmptyCollection = mongo.isEmptyCollection(entityClazz);
+            } catch (Exception unErrore) {
+                logger.error(unErrore, this.getClass(), "bootReset");
+            }
+            if (isEmptyCollection) {
                 try {
                     entityService.getClass().getDeclaredMethod("reset");
                     result = entityService.reset();
@@ -224,7 +239,11 @@ public class FlowData implements AIData {
                 }
             }
             else {
-                result = AResult.errato(((MongoService) mongo).count(entityClazz));//@todo da controllare
+                try {
+                    result = AResult.errato(((MongoService) mongo).count(entityClazz));//@todo da controllare
+                } catch (Exception unErrore) {
+                    logger.error(unErrore, this.getClass(), "bootReset");
+                }
             }
         }
 
@@ -288,8 +307,8 @@ public class FlowData implements AIData {
      * @since java 8
      */
     protected void resetData(final String moduleName) {
-        List<String> allModulePackagesClasses=null;
-        List<Object> allEntityClasses=null;
+        List<String> allModulePackagesClasses = null;
+        List<Object> allEntityClasses = null;
         List<Object> allUsaBootEntityClasses;
         List<Object> allEntityClassesRicreabiliResetDownload;
         String message;
@@ -302,7 +321,6 @@ public class FlowData implements AIData {
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "resetData");
         }
-
 
         //--seleziona le classes che estendono AEntity
         logger.log(AETypeLog.checkData, VUOTA);

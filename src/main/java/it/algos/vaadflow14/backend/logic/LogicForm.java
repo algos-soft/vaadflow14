@@ -495,14 +495,21 @@ public abstract class LogicForm extends Logic {
         MessageDialog messageDialog;
         String message = "La entity è stata modificata. Sei sicuro di voler perdere le modifiche? L' operazione non è reversibile.";
         VaadinIcon iconBack = VaadinIcon.ARROW_LEFT;
+        boolean isValidCollection = false;
 
         if (operationForm == AEOperation.addNew) {
             backToList();
             return;
         }
 
+        try {
+            isValidCollection = ((MongoService) mongo).isValidCollection(entityClazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "openConfirmExitForm");
+        }
+
         if (currentForm.isModificato()) {
-            if (((MongoService) mongo).isValidCollection(entityClazz)) {//@todo da controllare
+            if (isValidCollection) {
                 messageDialog = new MessageDialog().setTitle("Ritorno alla lista").setMessage(message);
                 messageDialog.addButton().text("Rimani").primary().clickShortcutEscape().clickShortcutEnter().closeOnClick();
                 messageDialog.addButtonToLeft().text("Back").icon(iconBack).error().onClick(e -> backToList()).closeOnClick();

@@ -160,12 +160,18 @@ public class GiornoService extends AService {
     }
 
 
-
     private AIResult checkMese() {
         String packageName = Giorno.class.getSimpleName().toLowerCase();
         String collection = "mese";
+        boolean isValida = false;
 
-        if (((MongoService) mongo).isValidCollection(collection)) {//@todo da controllare
+        try {
+            isValida = mongo.isValidCollection(collection);
+        } catch (Exception unErrore) {
+            logger.error(unErrore, this.getClass(), "checkMese");
+        }
+
+        if (isValida) {
             return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
         }
         else {
