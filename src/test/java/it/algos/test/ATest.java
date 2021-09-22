@@ -395,6 +395,17 @@ public abstract class ATest {
 
     protected AETypeSerializing oldType;
 
+    protected static String[] CANONICAL() {
+        return new String[]{null,VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
+    }
+
+    protected static String[] SIMPLE() {
+        return new String[]{null,VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList","AnnoLogicList"};
+    }
+
+    protected static String[] PATH() {
+        return new String[]{null,VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
+    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -637,6 +648,11 @@ public abstract class ATest {
     protected String getTime() {
         return dateService.deltaTextEsatto(inizio);
     }
+
+    protected void printOttenuto(final String sorgente, final String ottenuto) {
+        System.out.println(String.format("%s%s%s", sorgente, FORWARD, ottenuto));
+    }
+
 
     protected void printVuota(List<String> lista) {
         System.out.println(VUOTA);

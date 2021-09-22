@@ -132,6 +132,7 @@ public interface AIMongoService {
      */
     int count(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
+
     /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
      *

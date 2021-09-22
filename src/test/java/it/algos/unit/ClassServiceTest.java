@@ -39,17 +39,6 @@ public class ClassServiceTest extends ATest {
      */
     private ClassService service;
 
-    private static String[] CANONICAL() {
-        return new String[]{VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
-    }
-
-    private static String[] SIMPLE() {
-        return new String[]{VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "Via", "via", "Bolla"};
-    }
-
-    private static String[] PATH() {
-        return new String[]{VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
-    }
 
     private static Class[] CLAZZ() {
         return new Class[]{null, Via.class, Bolla.class, AIType.class, GammaService.class};
@@ -100,76 +89,85 @@ public class ClassServiceTest extends ATest {
         System.out.println(clazz2.getCanonicalName());
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("2 - getNameFromPath")
-    void getNameFromPath() {
-        sorgente = "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java";
-
-        ottenuto = service.getNameFromPath(VUOTA);
-        assertTrue(textService.isEmpty(ottenuto));
-
-        previsto = "it/algos/vaadflow14/backend/packages/anagrafica/via/Via";
-        ottenuto = service.getNameFromPath(sorgente);
-        assertEquals(previsto, ottenuto);
-        System.out.println(sorgente);
-        System.out.println(previsto);
-        System.out.println(ottenuto);
-    }
-
-
-    @ParameterizedTest
-    @MethodSource(value = "CANONICAL")
-    @Order(3)
-    @DisplayName("3 - getClazzFromCanonicalName")
-    void getClazzFromCanonicalName(String canonicalName) {
-        System.out.println("3 - Ricerca di una classe dal canonicalName");
-
-        try {
-            clazz = service.getClazzFromCanonicalName(canonicalName);
-            printClazz(canonicalName, clazz);
-            Assertions.assertNotNull(clazz);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-            Assertions.assertNull(clazz);
-        }
-    }
-
-
     @ParameterizedTest
     @MethodSource(value = "SIMPLE")
-    @Order(4)
-    @DisplayName("4 - getClazzFromSimpleName")
+    @EmptySource
+    @Order(2)
+    @DisplayName("2 - clazz from simpleName")
+    /*
+      2 - getClazzFromSimpleName
+      Ricerca di una classe dal simpleName
+     */
     void getClazzFromSimpleName(String simpleName) {
-        System.out.println("4 - Ricerca di una classe dal simpleName");
-
+        clazz = null;
+        sorgente = simpleName;
         try {
-            clazz = service.getClazzFromSimpleName(simpleName);
-            printClazz(simpleName, clazz);
-            Assertions.assertNotNull(clazz);
+            clazz = service.getClazzFromSimpleName(sorgente);
         } catch (AlgosException unErrore) {
             printError(unErrore);
-            Assertions.assertNull(clazz);
         }
+        printClazz(sorgente, clazz);
     }
-
 
     @ParameterizedTest
     @MethodSource(value = "PATH")
-    @Order(5)
-    @DisplayName("5 - getClazzFromPath")
-    void getClazzFromPath(String pathCompleto) {
-        System.out.println("5 - Ricerca di una classe dal path completo");
-
+    @EmptySource
+    @Order(3)
+    @DisplayName("3 - clazz from pathName")
+    /*
+      3 - getClazzFromPathName
+      Ricerca di una classe dal pathName
+     */
+    void getClazzFromPathName(String pathName) {
+        clazz = null;
+        sorgente = pathName;
         try {
-            clazz = service.getClazzFromPath(pathCompleto);
-            printClazz(pathCompleto, clazz);
-            Assertions.assertNotNull(clazz);
+            clazz = service.getClazzFromPath(sorgente);
         } catch (AlgosException unErrore) {
             printError(unErrore);
-            Assertions.assertNull(clazz);
         }
+        printClazz(sorgente, clazz);
     }
+
+    @ParameterizedTest
+    @MethodSource(value = "CANONICAL")
+    @EmptySource
+    @Order(4)
+    @DisplayName("4 - clazz from canonicalName")
+    /*
+      4 - getClazzFromCanonicalName
+      Ricerca di una classe dal canonicalName
+     */
+    void getClazzFromCanonicalName(String canonicalName) {
+        clazz = null;
+        sorgente = canonicalName;
+        try {
+            clazz = service.getClazzFromCanonicalName(sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printClazz(sorgente, clazz);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
+    @Order(5)
+    @DisplayName("5 - getEntityFromClazz")
+    /*
+      4 - getClazzFromCanonicalName
+      Creazione della entityBean di una classe
+     */
+    void getEntityFromClazz(Class clazz) {
+        entityBean = null;
+        try {
+            entityBean = service.getEntityFromClazz(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printEntityBeanFromClazz(clazz, entityBean);
+    }
+
 
     @Test
     @Order(6)
@@ -181,31 +179,22 @@ public class ClassServiceTest extends ATest {
     }
 
 
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ")
-    @Order(7)
-    @DisplayName("7 - getEntityFromClazz")
-    void getEntityFromClazz(Class clazz) {
-        System.out.println("7 - Creazione della entityBean di una classe");
-
-        try {
-            entityBean = service.getEntityFromClazz(clazz);
-            printEntityBeanFromClazz(clazz);
-            Assertions.assertNotNull(entityBean);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-            Assertions.assertNull(entityBean);
-        }
-    }
-
-
-    void printEntityBeanFromClazz(final Class clazz) {
-        if (clazz != null) {
-            System.out.println(String.format("Creata una entityBean (vuota) di classe %s", clazz.getSimpleName()));
+    void printEntityBeanFromClazz(final Class clazz, final AEntity entityBean) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
         }
         else {
-            System.out.print("Non esiste la classe indicata");
+            if (entityBean != null) {
+                System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+            }
+            else {
+                System.out.println(String.format("Non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
         }
+
         System.out.println(VUOTA);
     }
 
