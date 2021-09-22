@@ -159,7 +159,8 @@ public abstract class ATest {
     protected BeanService beanService;
 
     @InjectMocks
-    protected MongoService mongoService;
+    protected MongoService mongoServiceImpl;
+    protected AIMongoService mongoService;
 
     @InjectMocks
     protected WebService webService;
@@ -211,64 +212,28 @@ public abstract class ATest {
 
     protected Logger adminLogger;
 
-    /**
-     * The Previsto booleano.
-     */
     protected boolean previstoBooleano;
 
-    /**
-     * The Ottenuto booleano.
-     */
     protected boolean ottenutoBooleano;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente2;
 
-    /**
-     * The Sorgente.
-     */
     protected String sorgente3;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto2;
 
-    /**
-     * The Previsto.
-     */
     protected String previsto3;
 
-    /**
-     * The Ottenuto.
-     */
     protected String ottenuto;
 
-    /**
-     * The Ottenuto.
-     */
     protected String ottenuto2;
 
-    /**
-     * The Sorgente classe.
-     */
     protected Class sorgenteClasse;
 
-    /**
-     * The Sorgente field.
-     */
     protected Field sorgenteField;
 
     protected Field ottenutoField;
@@ -396,15 +361,15 @@ public abstract class ATest {
     protected AETypeSerializing oldType;
 
     protected static String[] CANONICAL() {
-        return new String[]{null,VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
+        return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
 
     protected static String[] SIMPLE() {
-        return new String[]{null,VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList","AnnoLogicList"};
+        return new String[]{null, VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList", "AnnoLogicList"};
     }
 
     protected static String[] PATH() {
-        return new String[]{null,VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
+        return new String[]{null, VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
     }
 
     /**
@@ -462,8 +427,9 @@ public abstract class ATest {
         MockitoAnnotations.initMocks(beanService);
         Assertions.assertNotNull(beanService);
 
-        MockitoAnnotations.initMocks(mongoService);
-        Assertions.assertNotNull(mongoService);
+        MockitoAnnotations.initMocks(mongoServiceImpl);
+        Assertions.assertNotNull(mongoServiceImpl);
+        mongoService=mongoServiceImpl;
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -535,15 +501,15 @@ public abstract class ATest {
         jSonService.array = arrayService;
         beanService.mongo = mongoService;
 
-        ((MongoService) mongoService).text = textService;
-        ((MongoService) mongoService).array = arrayService;
-        ((MongoService) mongoService).annotation = annotationService;
-        ((MongoService) mongoService).reflection = reflectionService;
-        ((MongoService) mongoService).logger = loggerService;
-        ((MongoService) mongoService).date = dateService;
-        ((MongoService) mongoService).classService = classService;
-        ((MongoService) mongoService).fieldService = fieldService;
-        ((MongoService) mongoService).fileService = fileService;
+        ((MongoService)mongoService).text = textService;
+        ((MongoService)mongoService).array = arrayService;
+        ((MongoService)mongoService).annotation = annotationService;
+        ((MongoService)mongoService).reflection = reflectionService;
+        ((MongoService)mongoService).logger = loggerService;
+        ((MongoService)mongoService).date = dateService;
+        ((MongoService)mongoService).classService = classService;
+        ((MongoService)mongoService).fieldService = fieldService;
+        ((MongoService)mongoService).fileService = fileService;
 
         webService.text = textService;
         webService.logger = loggerService;

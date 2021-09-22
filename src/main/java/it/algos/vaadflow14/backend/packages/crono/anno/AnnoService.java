@@ -203,17 +203,17 @@ public class AnnoService extends AService {
 
     private AIResult checkSecolo() {
         String packageName = Anno.class.getSimpleName().toLowerCase();
-        String collection = "secolo";
+        Class clazz = Secolo.class;
         boolean isValida = false;
 
         try {
-            isValida = mongo.isValidCollection(collection);
+            isValida = mongo.isValidCollection(clazz);
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "checkSecolo");
         }
 
         if (isValida) {
-            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, collection));
+            return AResult.valido(String.format("Nel package %s la collezione %s esiste già e non è stata modificata", packageName, clazz.getSimpleName()));
         }
         else {
             if (secoloService == null) {

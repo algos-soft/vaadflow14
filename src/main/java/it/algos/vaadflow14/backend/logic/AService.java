@@ -499,7 +499,7 @@ public abstract class AService extends AbstractService implements AIService {
         boolean isExistsCollection = false;
 
         try {
-            isExistsCollection = mongo.isExistsCollection(annotation.getCollectionName(entityClazz));
+            isExistsCollection = mongo.isExistsCollection(entityClazz);
         } catch (AlgosException unErrore) {
             logger.error(unErrore, this.getClass(), "deleteAll");
         }

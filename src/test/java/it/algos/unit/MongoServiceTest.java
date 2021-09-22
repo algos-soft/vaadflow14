@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.mongodb.core.*;
 
@@ -77,8 +76,8 @@ public class MongoServiceTest extends ATest {
      * Classe principale di riferimento <br>
      * Gia 'costruita' nella superclasse <br>
      */
-    @InjectMocks
-    protected MongoService service;
+    //    @InjectMocks
+    protected AIMongoService service;
 
     protected MongoCollection collection;
 
@@ -216,42 +215,42 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
-    @ParameterizedTest
-    @MethodSource(value = "NOMI")
-    @EmptySource
-    @Order(3)
-    @DisplayName("3 - Collezioni per nome")
-    /*
-      3 - Collezioni per nome
-      Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
-      Recupera la collezione
-      Controlla l'esistenza della collezione (dal numero di entities presenti)
-      Controlla se la collezione è vuota (dal numero di entities presenti)
-     */
-    void collectionName(String nome) {
-        try {
-            ottenutoBooleano = service.isExistsCollection(nome);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printCollection(nome, ottenutoBooleano);
-        collection = service.getCollection(nome);
-        printCollection(nome, collection);
-        try {
-            ottenutoBooleano = service.isValidCollection(nome);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printCollectionValida(nome, ottenutoBooleano);
-        try {
-            ottenutoBooleano = service.isEmptyCollection(nome);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printCollectionVuota(nome, ottenutoBooleano);
-
-        System.out.println(VUOTA);
-    }
+    //    @ParameterizedTest
+    //    @MethodSource(value = "NOMI")
+    //    @EmptySource
+    //    @Order(3)
+    //    @DisplayName("3 - Collezioni per nome")
+    //    /*
+    //      3 - Collezioni per nome
+    //      Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
+    //      Recupera la collezione
+    //      Controlla l'esistenza della collezione (dal numero di entities presenti)
+    //      Controlla se la collezione è vuota (dal numero di entities presenti)
+    //     */
+    //    void collectionName(String nome) {
+    //        try {
+    //            ottenutoBooleano = service.isExistsCollection(nome);
+    //        } catch (AlgosException unErrore) {
+    //            printError(unErrore);
+    //        }
+    //        printCollection(nome, ottenutoBooleano);
+    //        collection = service.getCollection(nome);
+    //        printCollection(nome, collection);
+    //        try {
+    //            ottenutoBooleano = service.isValidCollection(nome);
+    //        } catch (AlgosException unErrore) {
+    //            printError(unErrore);
+    //        }
+    //        printCollectionValida(nome, ottenutoBooleano);
+    //        try {
+    //            ottenutoBooleano = service.isEmptyCollection(nome);
+    //        } catch (AlgosException unErrore) {
+    //            printError(unErrore);
+    //        }
+    //        printCollectionVuota(nome, ottenutoBooleano);
+    //
+    //        System.out.println(VUOTA);
+    //    }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
@@ -260,8 +259,8 @@ public class MongoServiceTest extends ATest {
     /*
       4 - Count totale per clazz
       metodo semplice per l'intera collection
-      rimanda al metodo base con filtro (Bson) nullo
-      non usa ne gson ne spring ma collection.countDocuments(bSon)
+      rimanda al metodo base collection.countDocuments();
+      non usa ne gson ne spring
      */
     void countClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
         try {
@@ -334,13 +333,15 @@ public class MongoServiceTest extends ATest {
 
     void count78() {
         AFiltro filtro;
+        Map<String, AFiltro> mappaFiltri;
 
         clazz = VIA_ENTITY_CLASS;
         String filtroContains = "co";
         filtro = AFiltro.contains(NAME_NOME, filtroContains);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
         previstoIntero = 6;
         try {
-            ottenutoIntero = service.count(clazz, filtro);
+            ottenutoIntero = service.count(clazz, mappaFiltri);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -351,9 +352,10 @@ public class MongoServiceTest extends ATest {
         clazz = VIA_ENTITY_CLASS;
         String filtroStart = "v";
         filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
         previstoIntero = 4;
         try {
-            ottenutoIntero = service.count(clazz, filtro);
+            ottenutoIntero = service.count(clazz, mappaFiltri);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -363,9 +365,10 @@ public class MongoServiceTest extends ATest {
         clazz = VIA_ENTITY_CLASS;
         filtroStart = "c";
         filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
         previstoIntero = 3;
         try {
-            ottenutoIntero = service.count(clazz, filtro);
+            ottenutoIntero = service.count(clazz, mappaFiltri);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -559,19 +562,20 @@ public class MongoServiceTest extends ATest {
         FlowVar.typeSerializing = AETypeSerializing.spring;
 
         System.out.println(VUOTA);
+        clazz = null;
         entityBean = null;
         try {
-            entityBean = service.creaByDoc(sorgente, doc);
+            entityBean = service.creaByDoc(clazz, doc);
             assertNull(entityBean);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
 
         System.out.println(VUOTA);
-        sorgente = "Via";
+        clazz = Via.class;
         entityBean = null;
         try {
-            entityBean = service.creaByDoc(sorgente, doc);
+            entityBean = service.creaByDoc(clazz, doc);
             assertNull(entityBean);
         } catch (AlgosException unErrore) {
             printError(unErrore);
@@ -947,7 +951,7 @@ public class MongoServiceTest extends ATest {
 
         //--il database mongoDB potrebbe anche essere vuoto
         try {
-            isExistsCollection = service.isExistsCollection(clazz.getSimpleName().toLowerCase());
+            isExistsCollection = service.isExistsCollection(clazz);
         } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }

@@ -5,7 +5,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
-import org.bson.conversions.*;
 import org.springframework.data.mongodb.core.query.*;
 
 import java.io.*;
@@ -57,16 +56,6 @@ public interface AIMongoService {
 
 
     /**
-     * Collection del database. <br>
-     *
-     * @param collectionName The name of the collection or view
-     *
-     * @return collection if exist
-     */
-    MongoCollection<Document> getCollection(final String collectionName);
-
-
-    /**
      * Check the existence of a collection. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
@@ -74,15 +63,6 @@ public interface AIMongoService {
      * @return true if the collection exist
      */
     boolean isExistsCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
-
-    /**
-     * Check the existence of a collection. <br>
-     *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection exist
-     */
-    boolean isExistsCollection(final String collectionName) throws AlgosException;
 
 
     /**
@@ -96,16 +76,6 @@ public interface AIMongoService {
 
 
     /**
-     * Check the existence (not empty) of a collection. <br>
-     *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection has entities
-     */
-    boolean isValidCollection(final String collectionName) throws AlgosException;
-
-
-    /**
      * Check if a collection is empty. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
@@ -114,14 +84,6 @@ public interface AIMongoService {
      */
     boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
-    /**
-     * Check if a collection is empty. <br>
-     *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection is empty
-     */
-    boolean isEmptyCollection(final String collectionName) throws AlgosException;
 
     /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
@@ -134,17 +96,9 @@ public interface AIMongoService {
 
 
     /**
-     * Conteggio di tutte le entities di una collection NON filtrate. <br>
-     *
-     * @param collectionName The name of the collection or view to count
-     *
-     * @return numero totale di entities
-     */
-    int count(final String collectionName) throws AlgosException;
-
-
-    /**
      * Conteggio di alcune entities selezionate di una collection. <br>
+     * La selezione è propertyName=propertyValue <br>
+     * Se la propertyName o la propertyValue non sono valide, restituisce TUTTE le entities della collezione <br>
      *
      * @param entityClazz   corrispondente ad una collection sul database mongoDB
      * @param propertyName  per costruire la query
@@ -153,41 +107,6 @@ public interface AIMongoService {
      * @return numero di entities selezionate
      */
     int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
-
-
-//    /**
-//     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
-//     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
-//     *
-//     * @param entityClazz corrispondente ad una collection sul database mongoDB
-//     * @param filter      Optional. A filter that selects which documents to count in the collection or view.
-//     *
-//     * @return numero di entities eventualmente filtrate
-//     */
-//    int count(final Class<? extends AEntity> entityClazz, final Bson filter) throws AlgosException;
-
-
-//    /**
-//     * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
-//     * Se il filtro è nullo o vuoto, restituisce il totale dell'intera collection <br>
-//     *
-//     * @param collectionName The name of the collection or view to count
-//     * @param filter         Optional. A filter that selects which documents to count in the collection or view.
-//     *
-//     * @return numero di entities eventualmente filtrate
-//     */
-//    int count(final String collectionName, final Bson filter) throws AlgosException;
-
-
-    /**
-     * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param filtro      eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
-     *
-     * @return numero di entities eventualmente filtrate
-     */
-    int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AlgosException;
 
 
     /**
@@ -199,6 +118,7 @@ public interface AIMongoService {
      * @return numero di entities eventualmente filtrate
      */
     int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
+
 
     /**
      * Controlla che NON ci siano entities con la property rest=true. <br>
@@ -219,17 +139,8 @@ public interface AIMongoService {
      *
      * @return new entity
      */
-    AEntity crea(final Class entityClazz, final String valueID) throws Exception;
+    AEntity crea(final Class entityClazz, final String valueID) throws AlgosException;
 
-    /**
-     * Costruzione della entity partendo dal valore della keyID <br>
-     *
-     * @param collectionName The name of the collection or view to count
-     * @param valueID        della entityBean
-     *
-     * @return new entity
-     */
-    AEntity crea(final String collectionName, final String valueID) throws Exception;
 
     /**
      * Find single entity. <br>

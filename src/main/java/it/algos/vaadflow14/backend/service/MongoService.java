@@ -167,8 +167,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return collection if exist
      */
-    @Override
-    public MongoCollection<Document> getCollection(final String collectionName) {
+    private MongoCollection<Document> getCollection(final String collectionName) {
         if (text.isEmpty(collectionName)) {
             return null;
         }
@@ -207,8 +206,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection exist
      */
-    @Override
-    public boolean isExistsCollection(final String collectionName) throws AlgosException {
+    private boolean isExistsCollection(final String collectionName) throws AlgosException {
         if (text.isEmpty(collectionName)) {
             throw AlgosException.stack("Manca la collection", this.getClass(), "isExistsCollection");
         }
@@ -238,8 +236,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection has entities
      */
-    @Override
-    public boolean isValidCollection(final String collectionName) throws AlgosException {
+    private boolean isValidCollection(final String collectionName) throws AlgosException {
         return isExistsCollection(collectionName.toLowerCase()) && count(collectionName.toLowerCase()) > 0;
     }
 
@@ -264,8 +261,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection is empty
      */
-    @Override
-    public boolean isEmptyCollection(final String collectionName) throws AlgosException {
+    private boolean isEmptyCollection(final String collectionName) throws AlgosException {
         return !isExistsCollection(collectionName) || count(collectionName) == 0;
     }
 
@@ -293,6 +289,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     /**
      * Conteggio di alcune entities selezionate di una collection. <br>
+     * La selezione è propertyName=propertyValue <br>
      * Se la propertyName o la propertyValue non sono valide, restituisce TUTTE le entities della collezione <br>
      *
      * @param entityClazz   corrispondente ad una collection sul database mongoDB
@@ -303,7 +300,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
-        Field field;
         String message;
 
         if (entityClazz == null) {
@@ -328,7 +324,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities eventualmente filtrate
      */
-    public int count(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    private int count(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         int totale = 0;
         String message;
         MongoCollection<Document> collection;
@@ -350,11 +346,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             message = String.format("Manca la propertyName %s", propertyName);
             throw AlgosException.stack(message, getClass(), "count");
         }
-
-//        if (propertyValue == null) {
-//            message = String.format("La propertyValue è nulla");
-//            throw AlgosException.stack(message, getClass(), "count");
-//        }
 
         switch (FlowVar.typeSerializing) {
             case spring:
@@ -379,20 +370,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return totale;
     }
 
-
-    /**
-     * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param filtro      eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
-     *
-     * @return numero di entities eventualmente filtrate
-     */
-    @Override
-    public int count(final Class<? extends AEntity> entityClazz, final AFiltro filtro) throws AlgosException, InvalidMongoDbApiUsageException {
-        Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
-        return count(entityClazz, mappaFiltri);
-    }
 
     /**
      * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
@@ -454,7 +431,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities totali
      */
-    public int count(final String collectionName) throws AlgosException {
+    private int count(final String collectionName) throws AlgosException {
         MongoCollection<Document> collection = getCollection(collectionName);
 
         return count(collection);
@@ -468,7 +445,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities totali
      */
-    public int count(final MongoCollection<Document> collection) throws AlgosException {
+    private int count(final MongoCollection<Document> collection) throws AlgosException {
         Long risultato;
 
         if (collection == null) {
@@ -490,7 +467,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities filtrate
      */
-    public int count(final MongoCollection<Document> collection, Bson filter) throws AlgosException {
+    private int count(final MongoCollection<Document> collection, Bson filter) throws AlgosException {
         Long risultato;
 
         if (collection == null) {
@@ -1216,8 +1193,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    @Override
-    public AEntity crea(final String collectionName, final String valueID) throws AlgosException {
+    private AEntity crea(final String collectionName, final String valueID) throws AlgosException {
         Document doc = findDocById(collectionName, valueID);
         return creaByDoc(collectionName, doc);
     }
