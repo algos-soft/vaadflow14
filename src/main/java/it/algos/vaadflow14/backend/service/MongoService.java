@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.*;
-import org.springframework.data.mongodb.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.*;
@@ -242,31 +241,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
 
     /**
-     * Check if a collection is empty. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection is empty
-     */
-    @Override
-    public boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) throws AlgosException {
-        return isEmptyCollection(annotation.getCollectionName(entityClazz));
-    }
-
-
-    /**
-     * Check if a collection is empty. <br>
-     *
-     * @param collectionName corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection is empty
-     */
-    private boolean isEmptyCollection(final String collectionName) throws AlgosException {
-        return !isExistsCollection(collectionName) || count(collectionName) == 0;
-    }
-
-
-    /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
@@ -359,7 +333,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 }
             case gson:
                 filter = getFilter(propertyName, propertyValue);
-            return count(collection, filter);
+                return count(collection, filter);
             case jackson:
                 break;
             default:
@@ -372,7 +346,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
 
     /**
-     * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
+     * Conteggio di alcune entities di una collection filtrate con una mappa di filtri. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
@@ -482,33 +456,20 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     }
 
 
-    /**
-     * Check the existence of some entities. <br>
-     *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param propertyName  per costruire la query
-     * @param propertyValue (serializable) per costruire la query
-     *
-     * @return true if the collection has entities requested
-     */
-    public boolean esistono(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AlgosException {
-        return count(entityClazz, propertyName, propertyValue) > 0;
-    }
 
-
-    /**
-     * Controlla che NON ci siano entities con la property rest=true. <br>
-     * Controlla che esista la collezione <br>
-     * Controlla che esista la property 'reset' <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     *
-     * @return true se non ci sono properties con reset=true
-     */
-    @Override
-    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException {
-        return countReset(entityClazz) == 0;
-    }
+//    /**
+//     * Controlla che NON ci siano entities con la property rest=true. <br>
+//     * Controlla che esista la collezione <br>
+//     * Controlla che esista la property 'reset' <br>
+//     *
+//     * @param entityClazz corrispondente ad una collection sul database mongoDB
+//     *
+//     * @return true se non ci sono properties con reset=true
+//     */
+//    @Override
+//    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException {
+//        return countReset(entityClazz) == 0;
+//    }
 
 
     /**
@@ -522,6 +483,153 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public int countReset(Class<? extends AEntity> entityClazz) throws AlgosException {
         return count(entityClazz, FIELD_NAME_RESET, true);
+    }
+
+
+    /**
+     * Find single entity. <br>
+     * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
+     *
+     * @param entityBeanToBeFound on mongoDb
+     *
+     * @return the founded entity
+     */
+    @Override
+    public AEntity find(final AEntity entityBeanToBeFound) throws AlgosException {
+        return entityBeanToBeFound != null ? findById(entityBeanToBeFound.getClass(), entityBeanToBeFound.getId()) : null;
+    }
+
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz      corrispondente ad una collection sul database mongoDB
+     * @param keyPropertyValue must not be {@literal null}.
+     *
+     * @return the entity with the given id or {@literal null} if none found
+     *
+     * @throws AMongoException if {@keyPropertyValue id} is {@literal null}
+     */
+    @Override
+    public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AlgosException {
+        return findById(entityClazz, keyPropertyValue);
+    }
+
+
+    /**
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyId       chiave identificativa
+     *
+     * @return the founded entity
+     */
+    private AEntity findById(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
+        AEntity entityBean = null;
+        MongoCollection<Document> collection;
+        FindIterable<Document> iterable = null;
+        Document doc = null;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Non esiste la classe indicata",getClass(),"findById");
+        }
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                try {
+                    entityBean = mongoOp.findById(keyId, entityClazz);
+                } catch (Exception unErrore) {
+                    throw new AlgosException(unErrore);
+                }
+                break;
+            case gson:
+                collection = getCollection(entityClazz);
+                if (collection != null) {
+                    Bson condition = new Document("_id", keyId);
+                    iterable = collection.find(condition);
+                }
+                if (iterable != null) {
+                    doc = iterable.first();
+                }
+
+                if (doc != null) {
+                    try {
+                        entityBean = gSonService.creaId(entityClazz, (String) keyId);
+                    } catch (Exception unErrore) {
+                        throw new AlgosException(unErrore, null, (String) keyId);
+                    }
+                }
+                else {
+                    throw new AlgosException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", keyId));
+                }
+                break;
+            case jackson:
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "count");
+                break;
+        }
+
+        return entityBean;
+    }
+
+    /**
+     * Retrieves an entity by a keyProperty.
+     * Cerca una singola entity di una collection con una query. <br>
+     * Restituisce un valore valido SOLO se ne esiste una sola <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return the founded entity unique or {@literal null} if none found
+     *
+     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
+     */
+    @Override
+    public AEntity find(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        AEntity entityBean = null;
+        MongoCollection<Document> collection;
+        FindIterable<Document> iterable = null;
+        Document doc = null;
+
+        if (entityClazz == null) {
+            return null;
+        }
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                entityBean = findBase(entityClazz, propertyName, propertyValue);
+                break;
+            case gson:
+                collection = getCollection(entityClazz);
+                if (collection != null) {
+                    Bson condition = new Document(propertyName, propertyValue);
+                    iterable = collection.find(condition);
+                }
+                if (iterable != null) {
+                    doc = iterable.first();
+                }
+
+                if (doc != null) {
+                    try {
+                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
+                    } catch (Exception unErrore) {
+                        throw new AlgosException(unErrore, null, (String) propertyValue);
+                    }
+                }
+                else {
+                    throw new AlgosException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", (String) propertyValue));
+                }
+                break;
+            case jackson:
+                break;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "findByProperty");
+                break;
+        }
+
+        return entityBean;
     }
 
     /**
@@ -1180,7 +1288,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    @Override
     public AEntity crea(final Class entityClazz, final String valueID) throws AlgosException {
         return crea(annotation.getCollectionName(entityClazz), valueID);
     }
@@ -1280,33 +1387,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         return doc;
-    }
-
-
-    /**
-     * Find single entity. <br>
-     * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
-     *
-     * @param entityBeanToBeFound on mongoDb
-     *
-     * @return the founded entity
-     */
-    @Override
-    public AEntity find(final AEntity entityBeanToBeFound) throws AMongoException {
-        return entityBeanToBeFound != null ? findById(entityBeanToBeFound.getClass(), entityBeanToBeFound.getId()) : null;
-    }
-
-
-    /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
-     *
-     * @return the founded entity
-     */
-    public AEntity find(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
-        return findById(entityClazz, keyId);
     }
 
 
@@ -1427,139 +1507,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return entityBean;
     }
 
-
-    /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
-     *
-     * @return the founded entity
-     */
-    @Override
-    public AEntity findById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException {
-        AEntity entityBean = null;
-        MongoCollection<Document> collection;
-        FindIterable<Document> iterable = null;
-        Document doc = null;
-
-        if (entityClazz == null) {
-            return null;
-        }
-
-        switch (FlowVar.typeSerializing) {
-            case spring:
-                try {
-                    entityBean = mongoOp.findById(keyId, entityClazz);
-                } catch (Exception unErrore) {
-                    throw new AMongoException(unErrore);
-                }
-                break;
-            case gson:
-                collection = getCollection(entityClazz);
-                if (collection != null) {
-                    Bson condition = new Document("_id", keyId);
-                    iterable = collection.find(condition);
-                }
-                if (iterable != null) {
-                    doc = iterable.first();
-                }
-
-                if (doc != null) {
-                    try {
-                        entityBean = gSonService.creaId(entityClazz, keyId);
-                    } catch (Exception unErrore) {
-                        throw new AMongoException(unErrore, null, keyId);
-                    }
-                }
-                else {
-                    throw new AMongoException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", keyId));
-                }
-                break;
-            case jackson:
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "count");
-                break;
-        }
-
-        return entityBean;
-    }
-
-
-    /**
-     * Retrieves an entity by its keyProperty.
-     *
-     * @param keyPropertyValue must not be {@literal null}.
-     *
-     * @return the entity with the given id or {@literal null} if none found
-     *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
-     */
-    @Override
-    public AEntity findByKey(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AMongoException {
-        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-        return findByProperty(entityClazz, keyPropertyName, keyPropertyValue);
-    }
-
-    /**
-     * Retrieves an entity by a keyProperty.
-     * Cerca una singola entity di una collection con una query. <br>
-     * Restituisce un valore valido SOLO se ne esiste una sola <br>
-     *
-     * @param entityClazz   corrispondente ad una collection sul database mongoDB
-     * @param propertyName  per costruire la query
-     * @param propertyValue must not be {@literal null}
-     *
-     * @return the founded entity unique or {@literal null} if none found
-     *
-     * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
-     */
-    @Override
-    public AEntity findByProperty(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) throws AMongoException {
-        AEntity entityBean = null;
-        MongoCollection<Document> collection;
-        FindIterable<Document> iterable = null;
-        Document doc = null;
-
-        if (entityClazz == null) {
-            return null;
-        }
-
-        switch (FlowVar.typeSerializing) {
-            case spring:
-                entityBean = findBase(entityClazz, propertyName, propertyValue);
-                break;
-            case gson:
-                collection = getCollection(entityClazz);
-                if (collection != null) {
-                    Bson condition = new Document(propertyName, propertyValue);
-                    iterable = collection.find(condition);
-                }
-                if (iterable != null) {
-                    doc = iterable.first();
-                }
-
-                if (doc != null) {
-                    try {
-                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
-                    } catch (Exception unErrore) {
-                        throw new AMongoException(unErrore, null, (String) propertyValue);
-                    }
-                }
-                else {
-                    throw new AMongoException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", (String) propertyValue));
-                }
-                break;
-            case jackson:
-                break;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "findByProperty");
-                break;
-        }
-
-        return entityBean;
-    }
+    //    /**
+    //     * Retrieves an entity by its keyProperty.
+    //     *
+    //     * @param keyPropertyValue must not be {@literal null}.
+    //     *
+    //     * @return the entity with the given id or {@literal null} if none found
+    //     *
+    //     * @throws IllegalArgumentException if {@code id} is {@literal null}
+    //     */
+    //    public AEntity findByKey(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AMongoException {
+    //        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+    //        return findByProperty(entityClazz, keyPropertyName, keyPropertyValue);
+    //    }
 
 
     /**
@@ -1782,6 +1742,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
+    @Deprecated
     public AEntity findOneUnique(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
         if (entityClazz == null) {
             return null;
@@ -1872,7 +1833,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(AEntity entityBean) throws AMongoException {
+    public boolean isEsiste(AEntity entityBean) throws AlgosException {
         return find(entityBean) != null;
     }
 
@@ -1884,7 +1845,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AMongoException {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
         return findById(entityClazz, Long.toString(keyId)) != null;
     }
 
@@ -1896,7 +1857,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AlgosException {
         return findById(entityClazz, keyId) != null;
     }
 
@@ -1908,7 +1869,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AMongoException {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -1920,7 +1881,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AMongoException {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -2038,12 +1999,12 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
     @Override
-    public AEntity save(AEntity entityBean) throws AMongoException {
+    public AEntity save(AEntity entityBean) throws AlgosException {
         switch (FlowVar.typeSerializing) {
             case spring:
                 return saveSpring(entityBean);
             case gson:
-                return saveGson(entityBean);
+                //                return saveGson(entityBean);
             case jackson:
                 return saveJackson(entityBean);
             default:
@@ -2055,19 +2016,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     }
 
 
-    public AEntity saveSpring(AEntity entityBean) throws AMongoException {
+    public AEntity saveSpring(AEntity entityBean) throws AlgosException {
         AEntity entityBeanSaved;
 
         try {
             entityBeanSaved = mongoOp.save(entityBean);
         } catch (Exception unErrore) {
-            throw new AMongoException(unErrore, entityBean);
+            throw new AlgosException(unErrore, entityBean);
         }
 
         return entityBeanSaved;
     }
 
-    public AEntity saveGson(AEntity entityBean) throws AMongoException {
+    public AEntity saveGson(AEntity entityBean) throws AlgosException {
         AEntity entityBeanSaved = null;
         Class<? extends AEntity> entityClazz = entityBean.getClass();
         String collectionName = annotation.getCollectionName(entityClazz);
@@ -2077,6 +2038,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         String jsonStringOld;
         Document document = null;
         Bson bson;
+        boolean esiste = false;
 
         if (collection != null) {
             jsonStringNew = gSonService.entityToString(entityBean);
@@ -2094,8 +2056,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             return entityBeanSaved;
         }
 
-        if (isEsiste(entityBean)) {
-            entityBeanOld = findById(entityClazz, entityBean.getId());
+        try {
+            esiste = isEsiste(entityBean);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+        }
+
+        if (esiste) {
+            try {
+                entityBeanOld = find(entityClazz, entityBean.getId());
+            } catch (AlgosException unErrore) {
+                throw AlgosException.crea(unErrore, "");
+            }
+
             jsonStringOld = gSonService.mongoToString(entityClazz, entityBean.getId());
             bson = BsonDocument.parse(jsonStringOld);
             collection.deleteOne(bson);
@@ -2105,13 +2078,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             collection.insertOne(document);
         } catch (Exception unErrore) {
             logger.error(unErrore, this.getClass(), "saveGson");
-            throw new AMongoException(unErrore, entityBean, "Pipopoz");
+            throw new AlgosException(unErrore, entityBean, "Pipopoz");
         }
 
         return entityBeanSaved;
     }
 
-    public AEntity saveJackson(AEntity entityBean) throws AMongoException {
+    public AEntity saveJackson(AEntity entityBean) throws AlgosException {
         AEntity entityBeanSaved = null;
         return entityBeanSaved;
     }

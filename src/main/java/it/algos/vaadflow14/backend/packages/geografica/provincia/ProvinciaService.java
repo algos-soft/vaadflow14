@@ -143,7 +143,7 @@ public class ProvinciaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Provincia findById(final String keyID) throws AMongoException {
+    public Provincia findById(final String keyID) throws AlgosException {
         return (Provincia) super.findById(keyID);
     }
 
@@ -157,7 +157,7 @@ public class ProvinciaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Provincia findByKey(final String keyValue) throws AMongoException {
+    public Provincia findByKey(final String keyValue) throws AlgosException {
         return (Provincia) super.findByKey(keyValue);
     }
 
@@ -211,7 +211,7 @@ public class ProvinciaService extends AService {
                     regione = regioneService.findById(regioneTxt);
                     status = AETypeProvincia.findByIso(Integer.parseInt(regione.sigla));
                     status = wrap.isValido() ? AETypeProvincia.metropolitana : status;
-                } catch (AMongoException unErrore) {
+                } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "creaProvinceItaliane");
                 }
 

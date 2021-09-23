@@ -90,7 +90,7 @@ public abstract class LogicForm extends Logic {
             clazzName = text.primaMaiuscola(getClass().getSimpleName());
             try {
                 entityBean = entityService.findById(keyID);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "fixEntityBean");
                 logger.error(AETypeLog.mongo, message);
             }
@@ -590,7 +590,7 @@ public abstract class LogicForm extends Logic {
             //--passa al service per la registrazione della entityBean
             try {
                 entityService.save(entityBean, operationForm);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 message = String.format("%s.%s: %s --- %s.%s()", entityClazz.getSimpleName(), entityBean, unErrore.getMessage(), clazzName, "saveClicked");
                 logger.error(AETypeLog.mongo, message);
             }
@@ -637,12 +637,12 @@ public abstract class LogicForm extends Logic {
             }
             try {
                 oldEntityBean = ((MongoService) mongo).find(entityBean);//@todo da controllare
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "save");
             }
             try {
                 ((MongoService) mongo).save(entityBean);//@todo da controllare
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "save");
             }
             status = entityBean != null;

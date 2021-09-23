@@ -115,7 +115,7 @@ public class FatturaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Fattura findById(final String keyID) throws AMongoException {
+    public Fattura findById(final String keyID) throws AlgosException {
         Fattura fattura = (Fattura) super.findById(keyID);
         return fixTransienti(fattura);
     }
@@ -139,7 +139,7 @@ public class FatturaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Fattura findByKey(final String keyValue) throws AMongoException {
+    public Fattura findByKey(final String keyValue) throws AlgosException {
         return (Fattura) super.findByKey(keyValue);
     }
 

@@ -124,7 +124,7 @@ public class GiornoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Giorno findById(final String keyID) throws AMongoException {
+    public Giorno findById(final String keyID) throws AlgosException {
         return (Giorno) super.findById(keyID);
     }
 
@@ -139,7 +139,7 @@ public class GiornoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Giorno findByKey(final Serializable keyValue) throws AMongoException {
+    public Giorno findByKey(final Serializable keyValue) throws AlgosException {
         return (Giorno) super.findByKey(keyValue);
     }
 
@@ -155,7 +155,7 @@ public class GiornoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Giorno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Giorno findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Giorno) super.findByProperty(propertyName, propertyValue);
     }
 

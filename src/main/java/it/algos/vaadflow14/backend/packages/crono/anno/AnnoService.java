@@ -147,7 +147,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findById(final String keyID) throws AMongoException {
+    public Anno findById(final String keyID) throws AlgosException {
         return (Anno) super.findById(keyID);
     }
 
@@ -162,7 +162,7 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final Serializable keyValue) throws AMongoException {
+    public Anno findByKey(final Serializable keyValue) throws AlgosException {
         return (Anno) super.findByKey(keyValue);
     }
 
@@ -178,7 +178,7 @@ public class AnnoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
+    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
         return (Anno) super.findByProperty(propertyName, propertyValue);
     }
 

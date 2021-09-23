@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -193,7 +194,7 @@ public class FlowData implements AIData {
         if (annotation.usaReset(entityClazz)) {
             metodo = "reset";
             try {
-                isResetVuoto = mongo.isResetVuoto(entityClazz);
+                isResetVuoto = mongo.countReset(entityClazz) == 0;
             } catch (Exception unErrore) {
                 logger.error(unErrore, this.getClass(), "bootReset");
             }
@@ -221,8 +222,8 @@ public class FlowData implements AIData {
         else {
             metodo = "download";
             try {
-                isEmptyCollection = mongo.isEmptyCollection(entityClazz);
-            } catch (Exception unErrore) {
+                isEmptyCollection = !mongo.isValidCollection(entityClazz);
+            } catch (AlgosException unErrore) {
                 logger.error(unErrore, this.getClass(), "bootReset");
             }
             if (isEmptyCollection) {

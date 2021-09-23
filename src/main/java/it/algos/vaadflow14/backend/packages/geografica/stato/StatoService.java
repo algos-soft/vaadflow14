@@ -176,7 +176,7 @@ public class StatoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Stato findById(final String keyID) throws AMongoException {
+    public Stato findById(final String keyID) throws AlgosException {
         return (Stato) super.findById(keyID);
     }
 
@@ -190,7 +190,7 @@ public class StatoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Stato findByKey(final String keyValue)  throws AMongoException {
+    public Stato findByKey(final String keyValue)  throws AlgosException {
         return (Stato) super.findByKey(keyValue);
     }
 

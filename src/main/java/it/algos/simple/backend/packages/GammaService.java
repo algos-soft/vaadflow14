@@ -119,7 +119,7 @@ public class GammaService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Gamma findById(final String keyID) throws AMongoException {
+    public Gamma findById(final String keyID) throws AlgosException {
         return (Gamma) super.findById(keyID);
     }
 
@@ -133,7 +133,7 @@ public class GammaService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Gamma findByKey(final String keyValue) throws AMongoException {
+    public Gamma findByKey(final String keyValue) throws AlgosException {
         return (Gamma) super.findByKey(keyValue);
     }
 
@@ -178,7 +178,7 @@ public class GammaService extends AService {
             secolo2 = (Secolo) secoloService.findByKey("X secolo");
             secolo3 = (Secolo) secoloService.findByKey("XIV secolo");
             secolo4 = (Secolo) secoloService.findByKey("XX secolo");
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "resetEmptyOnly");
         }
 

@@ -106,6 +106,18 @@ public class MongoServiceTest extends ATest {
         );
     }
 
+    private static Stream<Arguments> CLAZZ_KEY_ID() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA),
+                Arguments.of(Utente.class, VUOTA),
+                Arguments.of(Mese.class, null),
+                Arguments.of(Mese.class, VUOTA),
+                Arguments.of(Mese.class, "marzo"),
+                Arguments.of(Mese.class, "termidoro"),
+                Arguments.of(Mese.class, "Marzo"),
+                Arguments.of(Mese.class, "marzo esatto")
+        );
+    }
     private static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, null, 0),
@@ -206,7 +218,7 @@ public class MongoServiceTest extends ATest {
         }
         printCollectionValida(clazz, ottenutoBooleano);
         try {
-            ottenutoBooleano = service.isEmptyCollection(clazz);
+            ottenutoBooleano = !service.isValidCollection(clazz);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -215,42 +227,6 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
-    //    @ParameterizedTest
-    //    @MethodSource(value = "NOMI")
-    //    @EmptySource
-    //    @Order(3)
-    //    @DisplayName("3 - Collezioni per nome")
-    //    /*
-    //      3 - Collezioni per nome
-    //      Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
-    //      Recupera la collezione
-    //      Controlla l'esistenza della collezione (dal numero di entities presenti)
-    //      Controlla se la collezione è vuota (dal numero di entities presenti)
-    //     */
-    //    void collectionName(String nome) {
-    //        try {
-    //            ottenutoBooleano = service.isExistsCollection(nome);
-    //        } catch (AlgosException unErrore) {
-    //            printError(unErrore);
-    //        }
-    //        printCollection(nome, ottenutoBooleano);
-    //        collection = service.getCollection(nome);
-    //        printCollection(nome, collection);
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(nome);
-    //        } catch (AlgosException unErrore) {
-    //            printError(unErrore);
-    //        }
-    //        printCollectionValida(nome, ottenutoBooleano);
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(nome);
-    //        } catch (AlgosException unErrore) {
-    //            printError(unErrore);
-    //        }
-    //        printCollectionVuota(nome, ottenutoBooleano);
-    //
-    //        System.out.println(VUOTA);
-    //    }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
@@ -735,7 +711,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "piazza";
         entityBean = null;
         try {
-            entityBean = service.crea(clazz, sorgente);
+            entityBean = service.find(clazz, sorgente);
             assertNotNull(entityBean);
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
@@ -748,7 +724,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "2agosto";
         entityBean = null;
         try {
-            entityBean = service.crea(clazz, sorgente);
+            entityBean = service.find(clazz, sorgente);
             assertNotNull(entityBean);
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
@@ -761,7 +737,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "calabria";
         entityBean = null;
         try {
-            entityBean = service.crea(clazz, sorgente);
+            entityBean = service.find(clazz, sorgente);
             assertNotNull(entityBean);
             assertNotNull(entityBean.id);
             System.out.println(String.format("Creata la entity [%s] della classe '%s'", entityBean.id, clazz.getSimpleName()));
@@ -770,12 +746,29 @@ public class MongoServiceTest extends ATest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(20)
+    @DisplayName("20 - Find una entityBean by keyId")
+    /*
+      20 - Find una entityBean by keyId
+    */
+    void find(final Class clazz,  final Serializable keyPropertyValue) {
+        try {
+            entityBean = service.find(clazz, keyPropertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printEntityBeanFromClazz(clazz, entityBean);
+    }
+
+
 
     @Test
-    @Order(18)
-    @DisplayName("18 - Save base (gson) di una entity")
+    @Order(30)
+    @DisplayName("30 - Save base (gson) di una entity")
     void save() {
-        System.out.println("18 - Save base (gson) di una entity");
+        System.out.println("30 - Save base (gson) di una entity");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         Company company = null;
         Company companyReborn = null;
@@ -805,7 +798,7 @@ public class MongoServiceTest extends ATest {
         try {
             //            ((MongoService) service).save(company);
             companyService.save(company);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             //            System.out.println(unErrore);
             loggerService.info(unErrore.getMessage());
         }
@@ -836,7 +829,7 @@ public class MongoServiceTest extends ATest {
         sorgente = "terzo";
         clazz = Company.class;
         try {
-            entityBean = service.findById(clazz, sorgente);
+            entityBean = service.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(entityBean);
@@ -856,8 +849,8 @@ public class MongoServiceTest extends ATest {
         sorgente = "titolo";
         sorgente2 = "4 novembre";
         try {
-            entityBean = service.findByProperty(clazz, sorgente, sorgente2);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente, sorgente2);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         System.out.println(VUOTA);
@@ -881,8 +874,8 @@ public class MongoServiceTest extends ATest {
         clazz = Via.class;
         sorgente = "corte";
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         originario = ((Via) entityBean).getOrdine();
@@ -898,13 +891,13 @@ public class MongoServiceTest extends ATest {
             //            jsonInString = gSonService.legge(entityBean);
             //            System.out.println(String.format("Stringa in formato json -> %s", jsonInString));
             ((MongoService) service).save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean (dal vecchio id) controllo la property per vedere se è stata modificata e registrata
         try {
-            entityBean = service.findById(clazz, entityBean.getId());
+            entityBean = service.find(clazz, entityBean.getId());
         } catch (Exception unErrore) {
         }
         modificato = ((Via) entityBean).getOrdine();
@@ -918,14 +911,14 @@ public class MongoServiceTest extends ATest {
         //--ri-registro la entityBean come in origine
         try {
             ((MongoService) service).save(entityBean);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             System.out.println(unErrore);
         }
 
         //--ri-leggo la entityBean e ri-controllo la property
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         assertNotNull(entityBean);
         finale = ((Via) entityBean).getOrdine();
@@ -945,8 +938,8 @@ public class MongoServiceTest extends ATest {
         clazz = Via.class;
         sorgente = "ordine";
         try {
-            entityBean = service.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = service.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
 
         //--il database mongoDB potrebbe anche essere vuoto

@@ -125,7 +125,7 @@ public class VialeService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Via findById(final String keyID) throws AMongoException {
+    public Via findById(final String keyID) throws AlgosException {
         return (Via) super.findById(keyID);
     }
 
@@ -139,7 +139,7 @@ public class VialeService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Via findByKey(final String keyValue) throws AMongoException {
+    public Via findByKey(final String keyValue) throws AlgosException {
         return (Via) super.findByKey(keyValue);
     }
 

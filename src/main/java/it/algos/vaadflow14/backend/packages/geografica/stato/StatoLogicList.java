@@ -139,7 +139,7 @@ public class StatoLogicList extends LogicList {
             return lista;
         }
         try {
-            esistonoRegioni = ((MongoService) mongo).esistono(Regione.class, propertyStato, entityBean);
+            esistonoRegioni=  mongo.count(Regione.class, propertyStato, entityBean) > 0;
         } catch (AlgosException unErrore) {
             logger.error(unErrore, this.getClass(), "getFormPropertyNamesList");
         }

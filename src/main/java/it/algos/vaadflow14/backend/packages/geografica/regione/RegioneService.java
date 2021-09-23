@@ -200,7 +200,7 @@ public class RegioneService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Regione findById(final String keyID) throws AMongoException {
+    public Regione findById(final String keyID) throws AlgosException {
         return (Regione) super.findById(keyID);
     }
 
@@ -214,7 +214,7 @@ public class RegioneService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Regione findByKey(final String keyValue) throws AMongoException {
+    public Regione findByKey(final String keyValue) throws AlgosException {
         return (Regione) super.findByKey(keyValue);
     }
 
@@ -388,7 +388,7 @@ public class RegioneService extends AService {
         //        creaRegioniAllStati();
         try {
             creaRegioniDiUnoStato(statoService.findByKey("Italia"));
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "reset");
         }
         return AResult.valido(AETypeReset.wikipedia.get(), numRec);

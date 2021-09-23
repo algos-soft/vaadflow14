@@ -125,7 +125,7 @@ public abstract class AService extends AbstractService implements AIService {
 
         try {
             status = save(newEntity, AEOperation.addNew) != null;
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.error(unErrore, this.getClass(), "creaReset");
         }
 
@@ -151,7 +151,7 @@ public abstract class AService extends AbstractService implements AIService {
             if (isEsiste(newEntityBean.id)) {
                 return null;
             }
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "checkAndSave");
         }
 
@@ -177,8 +177,9 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @return true if exist
      */
-    public boolean isEsiste(final String keyId) throws AMongoException {
-        return ((MongoService) mongo).isEsiste(entityClazz, keyId);//@todo da controllare
+    @Override
+    public boolean isEsiste(final Serializable keyId) throws AlgosException {
+        return mongo.find(entityClazz, keyId) != null;
     }
 
 
@@ -197,7 +198,7 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @throws
      */
-    public AEntity save(final AEntity entityBeanDaRegistrare) throws AMongoException {
+    public AEntity save(final AEntity entityBeanDaRegistrare) throws AlgosException {
         return save(entityBeanDaRegistrare, null);
     }
 
@@ -219,7 +220,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws
      */
     @Override
-    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AMongoException {
+    public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AlgosException {
         AEntity entityBean;
         AEntity entityBeanOld;
 
@@ -408,10 +409,10 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findById(final String keyID) throws AMongoException {
+    public AEntity findById(final String keyID) throws AlgosException {
         AEntity entityBean = null;
 
-        entityBean = mongo.findById(entityClazz, keyID);
+        entityBean = mongo.find(entityClazz, keyID);
         //        try {
         //            entityBean = mongo.findById(entityClazz, keyID);
         //        } catch (AMongoException unErrore) {
@@ -437,7 +438,7 @@ public abstract class AService extends AbstractService implements AIService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity findByKey(final Serializable keyPropertyValue) throws AMongoException {
+    public AEntity findByKey(final Serializable keyPropertyValue) throws AlgosException {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
 
         if (text.isValid(keyPropertyName)) {
@@ -461,8 +462,8 @@ public abstract class AService extends AbstractService implements AIService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AMongoException {
-        return mongo.findByProperty(entityClazz, propertyName, propertyValue);
+    public AEntity findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
+        return mongo.find(entityClazz, propertyName, propertyValue);
     }
 
 

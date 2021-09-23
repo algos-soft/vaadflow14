@@ -110,7 +110,7 @@ public class ContinenteService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Continente findById(final String keyID) throws AMongoException {
+    public Continente findById(final String keyID) throws AlgosException {
         return (Continente) super.findById(keyID);
     }
 
@@ -124,7 +124,7 @@ public class ContinenteService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Continente findByKey(final String keyValue) throws AMongoException {
+    public Continente findByKey(final String keyValue) throws AlgosException {
         return (Continente) super.findByKey(keyValue);
     }
 

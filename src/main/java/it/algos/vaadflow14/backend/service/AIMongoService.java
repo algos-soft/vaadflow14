@@ -74,15 +74,14 @@ public interface AIMongoService {
      */
     boolean isValidCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
-
-    /**
-     * Check if a collection is empty. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     *
-     * @return true if the collection is empty
-     */
-    boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
+    //    /**
+    //     * Check if a collection is empty. <br>
+    //     *
+    //     * @param entityClazz corrispondente ad una collection sul database mongoDB
+    //     *
+    //     * @return true if the collection is empty
+    //     */
+    //    boolean isEmptyCollection(final Class<? extends AEntity> entityClazz) throws AlgosException;
 
 
     /**
@@ -110,7 +109,7 @@ public interface AIMongoService {
 
 
     /**
-     * Conteggio di tutte le entities di una collection filtrate con una mappa di filtri. <br>
+     * Conteggio di alcune entities di una collection filtrate con una mappa di filtri. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
@@ -119,9 +118,8 @@ public interface AIMongoService {
      */
     int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
 
-
     /**
-     * Controlla che NON ci siano entities con la property rest=true. <br>
+     * Conta tutte le entities con la property rest=true. <br>
      * Controlla che esista la collezione <br>
      * Controlla che esista la property 'reset' <br>
      *
@@ -129,28 +127,28 @@ public interface AIMongoService {
      *
      * @return true se non ci sono properties con reset=true
      */
-    boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException;
+    int countReset(Class<? extends AEntity> entityClazz) throws AlgosException;
 
-    /**
-     * Costruzione della entity partendo dal valore della keyID <br>
-     *
-     * @param entityClazz della AEntity
-     * @param valueID     della entityBean
-     *
-     * @return new entity
-     */
-    AEntity crea(final Class entityClazz, final String valueID) throws AlgosException;
+    //    /**
+    //     * Controlla che NON ci siano entities con la property rest=true. <br>
+    //     * Controlla che esista la collezione <br>
+    //     * Controlla che esista la property 'reset' <br>
+    //     *
+    //     * @param entityClazz corrispondente ad una collection sul database mongoDB
+    //     *
+    //     * @return true se non ci sono properties con reset=true
+    //     */
+    //    boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException;
 
-
-    /**
-     * Find single entity. <br>
-     * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
-     *
-     * @param entityBeanToBeFound on mongoDb
-     *
-     * @return the founded entity
-     */
-    AEntity find(final AEntity entityBeanToBeFound) throws AMongoException;
+    //    /**
+    //     * Costruzione della entity partendo dal valore della keyID <br>
+    //     *
+    //     * @param entityClazz della AEntity
+    //     * @param valueID     della entityBean
+    //     *
+    //     * @return new entity
+    //     */
+    //    AEntity crea(final Class entityClazz, final String valueID) throws AlgosException;
 
 
     /**
@@ -187,26 +185,27 @@ public interface AIMongoService {
 
 
     /**
-     * Cerca una singola entity di una collection con una determinata chiave. <br>
+     * Find single entity. <br>
+     * Cerca sul database (mongo) la versione registrata di una entity in memoria <br>
      *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       chiave identificativa
+     * @param entityBeanToBeFound on mongoDb
      *
      * @return the founded entity
      */
-    AEntity findById(final Class<? extends AEntity> entityClazz, final String keyId) throws AMongoException;
+    AEntity find(final AEntity entityBeanToBeFound) throws AlgosException;
 
 
     /**
-     * Retrieves an entity by its keyProperty.
+     * Cerca una singola entity di una collection con una determinata chiave. <br>
      *
+     * @param entityClazz      corrispondente ad una collection sul database mongoDB
      * @param keyPropertyValue must not be {@literal null}.
      *
      * @return the entity with the given id or {@literal null} if none found
      *
-     * @throws IllegalArgumentException if {@code id} is {@literal null}
+     * @throws AMongoException if {@keyPropertyValue id} is {@literal null}
      */
-    AEntity findByKey(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AMongoException;
+    AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyPropertyValue) throws AlgosException;
 
 
     /**
@@ -222,7 +221,7 @@ public interface AIMongoService {
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    AEntity findByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AMongoException;
+    AEntity find(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
 
     /**
@@ -250,7 +249,7 @@ public interface AIMongoService {
      *
      * @see(https://docs.mongodb.com/manual/reference/method/db.collection.save/)
      */
-    AEntity save(AEntity entityBean) throws AMongoException;
+    AEntity save(AEntity entityBean) throws AlgosException;
 
 
     /**

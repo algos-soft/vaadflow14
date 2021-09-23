@@ -702,6 +702,24 @@ public abstract class ATest {
     //        }
     //    }
 
+    protected void printEntityBeanFromClazz(final Class clazz, final AEntity entityBean) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+        else {
+            if (entityBean != null) {
+                System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+            }
+            else {
+                System.out.println(String.format("Non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
+        }
+
+        System.out.println(VUOTA);
+    }
 
     protected void printWrap(List<WrapDueStringhe> listaWrap) {
         System.out.println("********");

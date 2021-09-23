@@ -207,7 +207,7 @@ public enum AEPreferenza implements AIPreferenza {
         pref.setValue(pref.type.objectToBytes(value));
         try {
             preferenzaService.save(pref,AEOperation.newEdit);
-        } catch (AMongoException unErrore) {
+        } catch (AlgosException unErrore) {
         }
     }
 

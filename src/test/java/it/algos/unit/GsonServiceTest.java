@@ -213,7 +213,7 @@ public class GsonServiceTest extends ATest {
         sorgente = "piazza";
         clazz = Via.class;
         try {
-            entityBean = mongoService.findById(clazz, sorgente);
+            entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         assertNotNull(entityBean);
@@ -248,7 +248,7 @@ public class GsonServiceTest extends ATest {
         sorgente = "5gennaio";
         clazz = Giorno.class;
         try {
-            entityBean = mongoService.findById(clazz, sorgente);
+            entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         ottenuto = service.entityToString(entityBean);
@@ -327,7 +327,7 @@ public class GsonServiceTest extends ATest {
         clazz = Via.class;
         previsto = "{\"_id\":\"piazzale\",\"ordine\":6,\"nome\":\"piazzale\",\"reset\":true,\"_class\":\"via\"}";
         try {
-            entityBean = mongoService.findById(clazz, sorgente);
+            entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         ottenuto = service.entityToString(entityBean);
@@ -339,7 +339,7 @@ public class GsonServiceTest extends ATest {
         clazz = Giorno.class;
         previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
         try {
-            entityBean = mongoService.findById(clazz, sorgente);
+            entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         ottenuto = service.entityToString(entityBean);
@@ -351,8 +351,8 @@ public class GsonServiceTest extends ATest {
         clazz = Giorno.class;
         previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
         try {
-            entityBean = mongoService.findByKey(clazz, sorgente);
-        } catch (AMongoException unErrore) {
+            entityBean = mongoService.find(clazz, sorgente);
+        } catch (AlgosException unErrore) {
         }
         ottenuto = service.entityToString(entityBean);
         assertTrue(textService.isValid(ottenuto));
@@ -377,7 +377,7 @@ public class GsonServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println("11 - From entityBean to string ");
         try {
-            entityBean = mongoService.findById(clazz, sorgente);
+            entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         ottenuto = service.entityToString(entityBean);

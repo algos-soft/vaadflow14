@@ -275,7 +275,7 @@ public class UtilityService extends AbstractService {
             serviceClazz = classService.getServiceFromEntityClazz(comboClazz);
             try {
                 initialValue = serviceClazz.findByKey(textInitialValue);
-            } catch (AMongoException unErrore) {
+            } catch (AlgosException unErrore) {
                 logger.warn(unErrore, this.getClass(), "creaComboBox");
             }
         }
