@@ -14,6 +14,7 @@ import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
+import jdk.jshell.spi.*;
 import org.bson.*;
 import org.bson.conversions.*;
 import org.springframework.beans.factory.annotation.*;
@@ -617,11 +618,16 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                     try {
                         entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
                     } catch (Exception unErrore) {
-                        throw new AlgosException(unErrore, null, (String) propertyValue);
+                        if (propertyValue==null) {
+                            throw  AlgosException.stack(unErrore, "La propertyValue è nulla",getClass(), "find");
+                        }
+                        else {
+                            throw  AlgosException.stack(unErrore, getClass(), "find");
+                        }
                     }
                 }
                 else {
-                    throw new AlgosException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", (String) propertyValue));
+                    throw AlgosException.stack( String.format("Non sono riuscito a trovare una entity con keyId=%s", propertyValue),getClass(),"find");
                 }
                 break;
             case jackson:

@@ -8,6 +8,7 @@ import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -106,37 +107,7 @@ public class MongoServiceTest extends ATest {
         );
     }
 
-    private static Stream<Arguments> CLAZZ_KEY_ID() {
-        return Stream.of(
-                Arguments.of((Class) null, VUOTA),
-                Arguments.of(Utente.class, VUOTA),
-                Arguments.of(Mese.class, null),
-                Arguments.of(Mese.class, VUOTA),
-                Arguments.of(Mese.class, "marzo"),
-                Arguments.of(Mese.class, "termidoro"),
-                Arguments.of(Mese.class, "Marzo"),
-                Arguments.of(Mese.class, "marzo esatto")
-        );
-    }
 
-    private static Stream<Arguments> CLAZZ_PROPERTY() {
-        return Stream.of(
-                Arguments.of((Class) null, VUOTA, null, 0),
-                Arguments.of(Utente.class, VUOTA, null, 0),
-                Arguments.of(Mese.class, VUOTA, null, 0),
-                Arguments.of(Mese.class, "manca", null, 0),
-                Arguments.of(Mese.class, "manca", 31, 0),
-                Arguments.of(Mese.class, "mese", "pippoz", 0),
-                Arguments.of(Mese.class, "mese", null, 0),
-                Arguments.of(Mese.class, "mese", VUOTA, 12),
-                Arguments.of(Mese.class, "giorni", 31, 7),
-                Arguments.of(Mese.class, "giorni", 30, 4),
-                Arguments.of(Mese.class, "giorni", 28, 1),
-                Arguments.of(Via.class, "belzebù", "piazza", 0),
-                Arguments.of(Via.class, "nome", "belzebù", 0),
-                Arguments.of(Via.class, "nome", "piazza", 1)
-        );
-    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -763,11 +734,11 @@ public class MongoServiceTest extends ATest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(20)
-    @DisplayName("20 - Find una entityBean by keyId")
+    @DisplayName("20 - Find (gson) una entityBean by keyId")
     /*
-      20 - Find una entityBean by keyId
+      20 - Find (gson) una entityBean by keyId
     */
-    void find(final Class clazz, final Serializable keyPropertyValue) {
+    void findKeyIdGson(final Class clazz, final Serializable keyPropertyValue) {
         FlowVar.typeSerializing = AETypeSerializing.gson;
         try {
             entityBean = service.find(clazz, keyPropertyValue);
@@ -780,11 +751,11 @@ public class MongoServiceTest extends ATest {
     //    @ParameterizedTest
     //    @MethodSource(value = "CLAZZ_KEY_ID")
     //    @Order(21)
-    //    @DisplayName("21 - Find una entityBean by keyId")
+    //    @DisplayName("21 - Find (spring) una entityBean")
     //    /*
-    //      20 - Find una entityBean by keyId
+    //      21 - Find (spring) una entityBean
     //    */
-    //    void find(final Class clazz,  final Serializable keyPropertyValue) {
+    //    void findKeyIdSpring(final Class clazz,  final Serializable keyPropertyValue) {
     //        FlowVar.typeSerializing = AETypeSerializing.spring;
     //        try {
     //            entityBean = service.find(clazz, keyPropertyValue);
@@ -795,6 +766,22 @@ public class MongoServiceTest extends ATest {
     //    }
 
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(22)
+    @DisplayName("22 - Find (gson) una entityBean by property")
+    /*
+      22 - Find (gson) una entityBean by property
+    */
+    void findPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        try {
+            entityBean = service.find(clazz, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printEntityBeanFromProperty(clazz, (String) propertyName, propertyValue, entityBean, previstoIntero);
+    }
 
     @Test
     @Order(30)
@@ -1215,6 +1202,27 @@ public class MongoServiceTest extends ATest {
                 System.out.println(String.format("Filtro %s = %s", property, value));
             }
         }
+    }
+
+    protected void printEntityBeanFromProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final AEntity entityBean, final int previstoIntero) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+        else {
+            System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
+
+            if (entityBean != null) {
+                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+            }
+            else {
+                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
+        }
+
+        System.out.println(VUOTA);
     }
 
 }

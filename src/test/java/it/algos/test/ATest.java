@@ -15,11 +15,13 @@ import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -28,9 +30,11 @@ import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.time.*;
 import java.util.*;
+import java.util.stream.*;
 
 
 /**
@@ -377,6 +381,38 @@ public abstract class ATest {
 
     protected static String[] PATH() {
         return new String[]{null, VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
+    }
+    protected static Stream<Arguments> CLAZZ_KEY_ID() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA),
+                Arguments.of(Utente.class, VUOTA),
+                Arguments.of(Mese.class, null),
+                Arguments.of(Mese.class, VUOTA),
+                Arguments.of(Mese.class, "marzo"),
+                Arguments.of(Mese.class, "termidoro"),
+                Arguments.of(Mese.class, "Marzo"),
+                Arguments.of(Mese.class, "marzo esatto")
+        );
+    }
+
+
+    protected static Stream<Arguments> CLAZZ_PROPERTY() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA, null, 0),
+                Arguments.of(Utente.class, VUOTA, null, 0),
+                Arguments.of(Mese.class, VUOTA, null, 0),
+                Arguments.of(Mese.class, "manca", null, 0),
+                Arguments.of(Mese.class, "manca", 31, 0),
+                Arguments.of(Mese.class, "mese", "pippoz", 0),
+                Arguments.of(Mese.class, "mese", null, 0),
+                Arguments.of(Mese.class, "mese", VUOTA, 12),
+                Arguments.of(Mese.class, "giorni", 31, 7),
+                Arguments.of(Mese.class, "giorni", 30, 4),
+                Arguments.of(Mese.class, "giorni", 28, 1),
+                Arguments.of(Via.class, "belzebù", "piazza", 0),
+                Arguments.of(Via.class, "nome", "belzebù", 0),
+                Arguments.of(Via.class, "nome", "piazza", 1)
+        );
     }
 
     /**
@@ -725,6 +761,28 @@ public abstract class ATest {
         }
         else {
             System.out.print(String.format("%s: ", keyPropertyValue));
+
+            if (entityBean != null) {
+                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+            }
+            else {
+                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            }
+        }
+
+        System.out.println(VUOTA);
+    }
+
+
+    protected void printEntityBeanFromProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final AEntity entityBean, final int previstoIntero) {
+        if (clazz == null) {
+            System.out.print("Non esiste la classe indicata");
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+        else {
+            System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
 
             if (entityBean != null) {
                 System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));

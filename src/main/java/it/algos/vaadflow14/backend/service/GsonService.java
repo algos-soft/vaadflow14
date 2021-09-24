@@ -11,6 +11,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.*;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.*;
+import java.io.*;
 import java.lang.reflect.*;
 import java.time.*;
 import java.util.*;
@@ -318,7 +320,11 @@ public class GsonService extends AbstractService {
 
         if (doc != null) {
             entityBean = this.creaOld(doc, entityClazz);
-            String pippoz = mongoToString(entityClazz, keyId);
+            try {
+                String pippoz = mongoToString(entityClazz, keyId);
+            } catch (AlgosException unErrore) {
+                logger.error(unErrore, this.getClass(), "nomeDelMetodo");
+            }
         }
         else {
             keyPropertyName = annotation.getKeyPropertyName(entityClazz);
@@ -341,12 +347,17 @@ public class GsonService extends AbstractService {
      *
      * @return stringa json
      */
-    public String mongoToString(final Class entityClazz, final String keyId) {
+    public String mongoToString(final Class entityClazz,  Serializable keyId) throws AlgosException{
         String jsonString = VUOTA;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
         Gson gSon;
         String keyPropertyName;
 
+        if (keyId == null) {
+            throw AlgosException.stack("Non è stato fornito nessun valore per 'keyId'", getClass(), "mongoToString");
+        }
+
+        keyId = keyId.toString().toLowerCase();
         if (collection != null) {
             query = new BasicDBObject();
             query.put("_id", keyId);
@@ -373,6 +384,64 @@ public class GsonService extends AbstractService {
         return jsonString;
     }
 
+
+    /**
+     * Costruzione di un testo JSON partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della entityBean
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return stringa json
+     */
+    public String mongoToString(final Class entityClazz,  final String propertyName, final Serializable propertyValue) throws AlgosException{
+        String jsonString = VUOTA;
+        collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
+        Gson gSon;
+
+        if (text.isEmpty(propertyName)) {
+            throw AlgosException.stack("Manca la propertyName", getClass(), "mongoToString");
+        }
+
+        if (propertyValue!=null) {
+            query = new BasicDBObject();
+            query.put(propertyName, propertyValue);
+            if (collection.countDocuments(query)==1) {
+                doc = collection.find(query).first();
+                if (doc != null) {
+                    gSon = new Gson();
+                    jsonString = gSon.toJson(doc);
+                }
+            }
+        }
+
+//        keyId = keyId.toString().toLowerCase();
+//        if (collection != null) {
+//            query = new BasicDBObject();
+//            query.put("_id", keyId);
+//            doc = collection.find(query).first();
+//        }
+//
+//        if (doc != null) {
+//            gSon = new Gson();
+//            jsonString = gSon.toJson(doc);
+//        }
+//        else {
+//            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+//            if (text.isValid(keyPropertyName)) {
+//                query = new BasicDBObject();
+//                query.put(keyPropertyName, propertyValue);
+//                doc = collection.find(query).first();
+//                if (doc != null) {
+//                    gSon = new Gson();
+//                    jsonString = gSon.toJson(doc);
+//                }
+//            }
+//        }
+
+        return jsonString;
+    }
+
     /**
      * Costruzione della entity partendo da un documento JSON <br>
      * 1) Non ci sono campi linkati con @DBRef <br>
@@ -383,9 +452,13 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity stringToEntity(final Class entityClazz, final String jsonString) {
+    public AEntity stringToEntity(final Class entityClazz, final String jsonString) throws AlgosException{
         AEntity entityBean = null;
         List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
+
+        if (listaNoDbRefAndGraffe==null) {
+            return entityBean;
+        }
 
         if (entityClazz != null && doc != null) {
 
@@ -408,10 +481,38 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity creaId(final Class entityClazz, final String keyId) {
+    public AEntity creaId(final Class entityClazz, final Serializable keyId) throws AlgosException {
         AEntity entityBean;
 
+        if (entityClazz == null) {
+            throw AlgosException.stack("Non esiste la classe indicata", getClass(), "creaId");
+        }
+
         String jsonString = this.mongoToString(entityClazz, keyId);
+        jsonString = fixStringa(jsonString);
+        entityBean = this.stringToEntity(entityClazz, jsonString);
+
+        return entityBean;
+    }
+
+
+    /**
+     * Costruzione della entity partendo dal valore della keyID <br>
+     *
+     * @param entityClazz della AEntity
+     * @param propertyName  per costruire la query
+     * @param propertyValue must not be {@literal null}
+     *
+     * @return new entity
+     */
+    public AEntity creaProperty(final Class entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        AEntity entityBean;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Non esiste la classe indicata", getClass(), "creaProperty");
+        }
+
+        String jsonString = this.mongoToString(entityClazz, propertyName,propertyValue);
         jsonString = fixStringa(jsonString);
         entityBean = this.stringToEntity(entityClazz, jsonString);
 
