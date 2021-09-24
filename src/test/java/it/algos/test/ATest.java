@@ -25,6 +25,7 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
 import org.springframework.data.domain.*;
+import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.reflect.Field;
@@ -160,7 +161,13 @@ public abstract class ATest {
 
     @InjectMocks
     protected MongoService mongoServiceImpl;
+
     protected AIMongoService mongoService;
+
+    @Mock
+    protected MongoTemplate mongoTemplate;
+
+    protected MongoOperations mongoOp;
 
     @InjectMocks
     protected WebService webService;
@@ -429,7 +436,14 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(mongoServiceImpl);
         Assertions.assertNotNull(mongoServiceImpl);
-        mongoService=mongoServiceImpl;
+        mongoService = mongoServiceImpl;
+
+        MockitoAnnotations.initMocks(mongoTemplate);
+        Assertions.assertNotNull(mongoTemplate);
+        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
+        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
+        mongoOp = mongoTemplate;
+        mongoServiceImpl.mongoOp = mongoTemplate;
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -501,15 +515,15 @@ public abstract class ATest {
         jSonService.array = arrayService;
         beanService.mongo = mongoService;
 
-        ((MongoService)mongoService).text = textService;
-        ((MongoService)mongoService).array = arrayService;
-        ((MongoService)mongoService).annotation = annotationService;
-        ((MongoService)mongoService).reflection = reflectionService;
-        ((MongoService)mongoService).logger = loggerService;
-        ((MongoService)mongoService).date = dateService;
-        ((MongoService)mongoService).classService = classService;
-        ((MongoService)mongoService).fieldService = fieldService;
-        ((MongoService)mongoService).fileService = fileService;
+        ((MongoService) mongoService).text = textService;
+        ((MongoService) mongoService).array = arrayService;
+        ((MongoService) mongoService).annotation = annotationService;
+        ((MongoService) mongoService).reflection = reflectionService;
+        ((MongoService) mongoService).logger = loggerService;
+        ((MongoService) mongoService).date = dateService;
+        ((MongoService) mongoService).classService = classService;
+        ((MongoService) mongoService).fieldService = fieldService;
+        ((MongoService) mongoService).fileService = fileService;
 
         webService.text = textService;
         webService.logger = loggerService;
@@ -702,7 +716,7 @@ public abstract class ATest {
     //        }
     //    }
 
-    protected void printEntityBeanFromClazz(final Class clazz, final AEntity entityBean) {
+    protected void printEntityBeanFromClazz(final String keyPropertyValue, final Class clazz, final AEntity entityBean) {
         if (clazz == null) {
             System.out.print("Non esiste la classe indicata");
             System.out.println(VUOTA);
@@ -710,11 +724,13 @@ public abstract class ATest {
             return;
         }
         else {
+            System.out.print(String.format("%s: ", keyPropertyValue));
+
             if (entityBean != null) {
-                System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
             }
             else {
-                System.out.println(String.format("Non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
             }
         }
 

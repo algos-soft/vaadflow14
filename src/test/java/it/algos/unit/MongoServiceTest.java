@@ -118,6 +118,7 @@ public class MongoServiceTest extends ATest {
                 Arguments.of(Mese.class, "marzo esatto")
         );
     }
+
     private static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, null, 0),
@@ -339,10 +340,23 @@ public class MongoServiceTest extends ATest {
         assertEquals(previstoIntero, ottenutoIntero);
 
         clazz = VIA_ENTITY_CLASS;
+        filtroStart = "circ";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = 1;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, filtro, previstoIntero, ottenutoIntero);
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        clazz = VIA_ENTITY_CLASS;
         filtroStart = "c";
         filtro = AFiltro.start(NAME_NOME, filtroStart);
         mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
-        previstoIntero = 3;
+        previstoIntero = 452;
         try {
             ottenutoIntero = service.count(clazz, mappaFiltri);
         } catch (AlgosException unErrore) {
@@ -753,14 +767,32 @@ public class MongoServiceTest extends ATest {
     /*
       20 - Find una entityBean by keyId
     */
-    void find(final Class clazz,  final Serializable keyPropertyValue) {
+    void find(final Class clazz, final Serializable keyPropertyValue) {
+        FlowVar.typeSerializing = AETypeSerializing.gson;
         try {
             entityBean = service.find(clazz, keyPropertyValue);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        printEntityBeanFromClazz(clazz, entityBean);
+        printEntityBeanFromClazz((String) keyPropertyValue, clazz, entityBean);
     }
+
+    //    @ParameterizedTest
+    //    @MethodSource(value = "CLAZZ_KEY_ID")
+    //    @Order(21)
+    //    @DisplayName("21 - Find una entityBean by keyId")
+    //    /*
+    //      20 - Find una entityBean by keyId
+    //    */
+    //    void find(final Class clazz,  final Serializable keyPropertyValue) {
+    //        FlowVar.typeSerializing = AETypeSerializing.spring;
+    //        try {
+    //            entityBean = service.find(clazz, keyPropertyValue);
+    //        } catch (AlgosException unErrore) {
+    //            printError(unErrore);
+    //        }
+    //    printEntityBeanFromClazz((String)keyPropertyValue,clazz, entityBean);
+    //    }
 
 
 

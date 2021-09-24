@@ -165,7 +165,7 @@ public class ClassServiceTest extends ATest {
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        printEntityBeanFromClazz(clazz, entityBean);
+        printEntityBeanFromClazz("New",clazz, entityBean);
     }
 
 

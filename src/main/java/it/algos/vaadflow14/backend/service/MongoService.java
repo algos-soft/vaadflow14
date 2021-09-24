@@ -455,21 +455,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return 0;
     }
 
-
-
-//    /**
-//     * Controlla che NON ci siano entities con la property rest=true. <br>
-//     * Controlla che esista la collezione <br>
-//     * Controlla che esista la property 'reset' <br>
-//     *
-//     * @param entityClazz corrispondente ad una collection sul database mongoDB
-//     *
-//     * @return true se non ci sono properties con reset=true
-//     */
-//    @Override
-//    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException {
-//        return countReset(entityClazz) == 0;
-//    }
+    //    /**
+    //     * Controlla che NON ci siano entities con la property rest=true. <br>
+    //     * Controlla che esista la collezione <br>
+    //     * Controlla che esista la property 'reset' <br>
+    //     *
+    //     * @param entityClazz corrispondente ad una collection sul database mongoDB
+    //     *
+    //     * @return true se non ci sono properties con reset=true
+    //     */
+    //    @Override
+    //    public boolean isResetVuoto(Class<? extends AEntity> entityClazz) throws AlgosException {
+    //        return countReset(entityClazz) == 0;
+    //    }
 
 
     /**
@@ -524,16 +522,20 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findById(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
+    private AEntity findById(final Class<? extends AEntity> entityClazz, Serializable keyId) throws AlgosException {
         AEntity entityBean = null;
         MongoCollection<Document> collection;
         FindIterable<Document> iterable = null;
         Document doc = null;
 
         if (entityClazz == null) {
-            throw AlgosException.stack("Non esiste la classe indicata",getClass(),"findById");
+            throw AlgosException.stack("Non esiste la classe indicata", getClass(), "findById");
+        }
+        if (keyId == null) {
+            throw AlgosException.stack("Non è stato fornito nessun valore per 'keyId'", getClass(), "findById");
         }
 
+        keyId = keyId.toString().toLowerCase();
         switch (FlowVar.typeSerializing) {
             case spring:
                 try {
