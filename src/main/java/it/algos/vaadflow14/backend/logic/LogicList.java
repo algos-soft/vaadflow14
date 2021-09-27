@@ -23,7 +23,6 @@ import it.algos.vaadflow14.ui.enumeration.*;
 import it.algos.vaadflow14.ui.header.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 import it.algos.vaadflow14.ui.list.*;
-import org.vaadin.haijian.*;
 
 import java.util.*;
 
@@ -911,20 +910,20 @@ public abstract class LogicList extends Logic {
     }
 
     protected void export() {
-        Grid grid = new Grid(entityClazz, false);
-        grid.setColumns("nome");
-        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
-
-        String message = "Export";
-        InputStreamFactory factory = Exporter.exportAsExcel(grid);
-        StreamResource streamRes = new StreamResource(message + ".xls", factory);
-
-        Anchor anchorEsporta = new Anchor(streamRes, "Download");
-        anchorEsporta.getElement().setAttribute("style", "color: red");
-        anchorEsporta.getElement().setAttribute("Export", true);
-        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
-        button.getElement().setAttribute("style", "color: red");
-        anchorEsporta.add(button);
+//        Grid grid = new Grid(entityClazz, false);
+//        grid.setColumns("nome");
+//        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
+//
+//        String message = "Export";
+//        InputStreamFactory factory = Exporter.exportAsExcel(grid);
+//        StreamResource streamRes = new StreamResource(message + ".xls", factory);
+//
+//        Anchor anchorEsporta = new Anchor(streamRes, "Download");
+//        anchorEsporta.getElement().setAttribute("style", "color: red");
+//        anchorEsporta.getElement().setAttribute("Export", true);
+//        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+//        button.getElement().setAttribute("style", "color: red");
+//        anchorEsporta.add(button);
         //        exportPlaceholder.removeAll();
         //        exportPlaceholder.add(anchorEsporta);
 

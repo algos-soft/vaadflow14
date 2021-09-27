@@ -10,10 +10,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <parent>
+        <!-- Va tenuta aggiornata la versione di spring-boot anche qui, perchè nel <parent> non accetta properties -->
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.0.RELEASE</version>
+        <version>2.5.5</version>
     </parent>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
@@ -23,11 +24,18 @@
         </project.reporting.outputEncoding>
 
         <!-- Va controllata la versione di JAVA -->
-        <java.version>11</java.version>
+        <java.version>15</java.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
 
         <!-- Va tenuta aggiornata la versione di VAADIN -->
-        <vaadin.version>14.6.8</vaadin.version>
+        <vaadin.version>21.0.0</vaadin.version>
+
+        <!-- Standard -->
+        <webapp.directory>src/main/webapp</webapp.directory>
+        <drivers.dir>${project.basedir}/drivers</drivers.dir>
+        <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
     </properties>
 
 
@@ -84,38 +92,45 @@
     <dependencies>
 
         <!-- Vaadin -->
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <!-- Replace artifactId with vaadin-core to use only free components -->
-            <artifactId>vaadin-core</artifactId>
-            <exclusions>
-                <!-- Webjars are only needed when running in Vaadin 13 compatibility mode -->
-                <exclusion>
-                    <groupId>com.vaadin.webjar</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.insites</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.polymer</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.polymerelements</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.vaadin</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.bowergithub.webcomponents</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.vaadin</groupId>-->
+        <!--            &lt;!&ndash; Replace artifactId with vaadin-core to use only free components &ndash;&gt;-->
+        <!--            <artifactId>vaadin-core</artifactId>-->
+        <!--            <exclusions>-->
+        <!--                &lt;!&ndash; Webjars are only needed when running in Vaadin 13 compatibility mode &ndash;&gt;-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>com.vaadin.webjar</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.webjars.bowergithub.insites</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.webjars.bowergithub.polymer</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.webjars.bowergithub.polymerelements</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.webjars.bowergithub.vaadin</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--                <exclusion>-->
+        <!--                    <groupId>org.webjars.bowergithub.webcomponents</groupId>-->
+        <!--                    <artifactId>*</artifactId>-->
+        <!--                </exclusion>-->
+        <!--            </exclusions>-->
+        <!--        </dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/com.vaadin.componentfactory/enhanced-dialog -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.vaadin.componentfactory</groupId>-->
+        <!--            <artifactId>enhanced-dialog</artifactId>-->
+        <!--        </dependency>-->
+
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
@@ -127,36 +142,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.vaadin.componentfactory</groupId>
-            <artifactId>tooltip</artifactId>
-            <version>1.2.2</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.vaadin.artur/a-vaadin-helper -->
         <dependency>
             <groupId>org.vaadin.artur</groupId>
             <artifactId>a-vaadin-helper</artifactId>
-            <version>1.6.0</version>
+            <version>1.7.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.vaadin.componentfactory/enhanced-dialog -->
-        <dependency>
-            <groupId>com.vaadin.componentfactory</groupId>
-            <artifactId>enhanced-dialog</artifactId>
-            <version>1.0.4</version>
-        </dependency>
         <!-- Vaadin -->
 
         <!-- Security -->
@@ -165,6 +171,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!-- Security -->
+
 
         <!-- Logback requires the Janino library for conditional logging -->
         <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
@@ -188,19 +195,27 @@
         <!--            <scope>provided</scope>-->
         <!--        </dependency>-->
 
-        <!--        <dependency>-->
-        <!--            <groupId>javax.validation</groupId>-->
-        <!--            <artifactId>validation-api</artifactId>-->
-        <!--            <version>2.0.1.Final</version>-->
-        <!--        </dependency>-->
-
         <!-- Bean validation implementation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>2.5.5</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.0.Final</version>
+            <version>7.0.1.Final</version>
         </dependency>
+        <!-- Bean validation -->
 
 
         <!-- Vaadin Testbench -->
@@ -282,22 +297,15 @@
         </dependency>
         <!-- gson -->
 
-        <!-- MultiSelectCombo DA  ELIMINARE -->
-        <!-- Da cambiare in 2.0.0.rc3 -->
-        <dependency>
-            <groupId>org.vaadin.gatanaso</groupId>
-            <artifactId>multiselect-combo-box-flow</artifactId>
-            <version>1.0.1</version>
-        </dependency>
 
         <!--         jackson -->
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <!--        <dependency>-->
         <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
         <!--            <artifactId>jackson-core</artifactId>-->
         <!--            <version>2.12.0</version>-->
         <!--        </dependency>-->
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <!--        <dependency>-->
         <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
         <!--            <artifactId>jackson-databind</artifactId>-->
@@ -308,7 +316,7 @@
         <!--            <artifactId>jackson-annotations</artifactId>-->
         <!--            <version>2.12.0</version>-->
         <!--        </dependency>-->
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
         <!--        <dependency>-->
         <!--            <groupId>com.fasterxml.jackson.datatype</groupId>-->
         <!--            <artifactId>jackson-datatype-jsr310</artifactId>-->
@@ -363,22 +371,14 @@
         </dependency>
         <!-- mokito -->
 
-        <!-- pagination -->
-        <!-- https://mvnrepository.com/artifact/org.vaadin.klaudeta/grid-pagination -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.vaadin.klaudeta</groupId>-->
-        <!--            <artifactId>grid-pagination</artifactId>-->
-        <!--            <version>2.0.7</version>-->
-        <!--        </dependency>-->
-        <!-- pagination -->
 
         <!-- excel -->
         <!-- https://mvnrepository.com/artifact/org.vaadin.haijian/exporter -->
-        <dependency>
-            <groupId>org.vaadin.haijian</groupId>
-            <artifactId>exporter</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.vaadin.haijian</groupId>-->
+        <!--            <artifactId>exporter</artifactId>-->
+        <!--            <version>3.0.1</version>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/net.bull.javamelody/javamelody-core -->
         <dependency>
@@ -386,13 +386,6 @@
             <artifactId>javamelody-core</artifactId>
             <version>1.86.0</version>
         </dependency>
-
-        <!-- FontAwesome Iron Iconset -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.flowingcode.addons</groupId>-->
-        <!--            <artifactId>font-awesome-iron-iconset</artifactId>-->
-        <!--            <version>2.1.2</version>-->
-        <!--        </dependency>-->
 
         <!-- indeterminate-checkbox 3 vie -->
         <dependency>
@@ -405,7 +398,7 @@
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>5.5</version>
+            <version>5.5.2</version>
         </dependency>
 
     </dependencies>
@@ -441,6 +434,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>15</source>
+                    <target>15</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

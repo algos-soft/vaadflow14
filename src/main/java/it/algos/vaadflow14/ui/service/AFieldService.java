@@ -12,7 +12,6 @@ import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.exception.*;
 import it.algos.vaadflow14.ui.fields.*;
 import it.algos.vaadflow14.ui.validator.*;
-import org.apache.poi.ss.formula.functions.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -416,7 +415,7 @@ public class AFieldService extends AbstractService {
      *
      */
     public ComboBox getCombo(Field reflectionJavaField) {
-        ComboBox<T> combo = new ComboBox();
+        ComboBox combo = new ComboBox();
         boolean usaComboMethod;
         Class<AEntity> comboClazz;
         Class<AService> logicClazz;
@@ -440,7 +439,7 @@ public class AFieldService extends AbstractService {
         }
         else {
             items = ((MongoService) mongo).findAll(comboClazz);//@todo da controllare
-            combo = new ComboBox<>();
+            combo = new ComboBox();
             if (array.isEmpty(items)) {
                 items = new ArrayList();
                 items.add("test");

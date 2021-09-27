@@ -25,7 +25,7 @@ import java.util.*;
  * Time: 21:03
  * The main view is a top-level placeholder for other views.
  */
-@Theme(value = Lumo.class)
+//@Theme(value = Lumo.class)
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
 public class MainLayout extends AppLayout {

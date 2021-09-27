@@ -143,15 +143,15 @@ public class JavaTest extends ATest {
         System.out.println(student);
     }
 
-    //    @Test
-    //    @Order(8)
-    //    @DisplayName("8 - Supplier strings")
-    //    void supplier8() {
-    //        System.out.println("Java8 Supplier strings\n");
+    //        @Test
+    //        @Order(8)
+    //        @DisplayName("8 - Supplier strings")
+    //        void supplier8() {
+    //            System.out.println("Java8 Supplier strings\n");
     //
-    //        List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
-    //        names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
-    //    }
+    //            List<String> names = Arrays.asList("Harry", "Daniel", "Lucifer", "April O' Neil");
+    //            names.stream().forEach((item) -> { printNamesSupplier(() -> item); });
+    //        }
 
     @Test
     @Order(9)
@@ -173,17 +173,18 @@ public class JavaTest extends ATest {
         var lista = List.of("one", "two", "three");
         lista.forEach(System.out::println);
         Object obj = null;
-        //        if (obj instanceof String ) {
-        //            System.out.println(s.contains("hello"));
-        //        }
 
-        //        System.out.println("Java10 \n");
-        //
-        //        var str = "a test string";
-        //        var aVariable = "Marco";
-        //        System.out.println(aVariable);
-        //        var anotherVariable = 182;
-        //        System.out.println(anotherVariable);
+//        if (obj instanceof String stringa) {
+//            System.out.println(stringa.contains("hello"));
+//        }
+
+        System.out.println("Java10 \n");
+
+        var str = "a test string";
+        var aVariable = "Marco";
+        System.out.println(aVariable);
+        var anotherVariable = 182;
+        System.out.println(anotherVariable);
     }
 
     @Test
