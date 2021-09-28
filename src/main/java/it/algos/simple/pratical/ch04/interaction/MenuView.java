@@ -19,16 +19,12 @@ public class MenuView extends Composite<Component> {
         file.getSubMenu().addItem("Open");
 
         MenuItem edit = menuBar.addItem("Edit");
-        edit.getSubMenu().addItem("Copy", event ->
-                Notification.show("Copy selected"));
+        edit.getSubMenu().addItem("Copy", event -> Notification.show("Copy selected"));
         MenuItem paste = edit.getSubMenu().addItem("Paste");
-        paste.addClickListener(event ->
-                Notification.show("Paste selected"));
+        paste.addClickListener(event -> Notification.show("Paste selected"));
         paste.setEnabled(false);
 
-        HorizontalLayout target = new HorizontalLayout(
-                new Text("Right click here")
-        );
+        HorizontalLayout target = new HorizontalLayout(new Text("Right click here"));
         ContextMenu contextMenu = new ContextMenu(target);
         contextMenu.addItem("Copy");
         contextMenu.addItem("Paste");
