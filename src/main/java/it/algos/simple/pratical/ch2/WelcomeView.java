@@ -53,6 +53,7 @@ public class WelcomeView extends VerticalLayout {
         addCh05(menuBar);
         addCh06(menuBar);
         addCh07(menuBar);
+        addCh10(menuBar);
 
         return menuBar;
     }
@@ -243,6 +244,44 @@ public class WelcomeView extends VerticalLayout {
         menu.getSubMenu().addItem("QueryParameter", event -> getUI().ifPresent(ui -> ui.navigate("query-parameter")));
         menu.getSubMenu().addItem("TemplateParameter", event -> getUI().ifPresent(ui -> ui.navigate("template-parameter/:value?")));
         menu.getSubMenu().addItem("TypedParameter", event -> getUI().ifPresent(ui -> ui.navigate("typed-parameter")));
+
+        return menu;
+    }
+
+
+    public MenuItem addCh10(MenuBar menuBar) {
+        MenuItem menu = menuBar.addItem("Capitolo 10");
+
+        addCh10Css(menu.getSubMenu());
+        addCh10Responsiveness(menu.getSubMenu());
+        addCh10Themes(menu.getSubMenu());
+
+        return menu;
+    }
+
+    public MenuItem addCh10Css(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Css");
+
+        menu.getSubMenu().addItem("CssClasses", event -> getUI().ifPresent(ui -> ui.navigate("css-classes")));
+        menu.getSubMenu().addItem("Lumo", event -> getUI().ifPresent(ui -> ui.navigate("lumo-properties")));
+
+        return menu;
+    }
+
+    public MenuItem addCh10Responsiveness(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Responsiveness");
+
+        menu.getSubMenu().addItem("AppLayout", event -> getUI().ifPresent(ui -> ui.navigate("app-layout")));
+        menu.getSubMenu().addItem("Css", event -> getUI().ifPresent(ui -> ui.navigate("css")));
+        menu.getSubMenu().addItem("FormLayout", event -> getUI().ifPresent(ui -> ui.navigate("form-layout")));
+
+        return menu;
+    }
+
+    public MenuItem addCh10Themes(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Themes");
+
+        menu.getSubMenu().addItem("Theme", event -> getUI().ifPresent(ui -> ui.navigate("theme")));
 
         return menu;
     }
