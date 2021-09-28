@@ -174,13 +174,14 @@ public class JavaTest extends ATest {
         lista.forEach(System.out::println);
         Object obj = null;
 
-        //        if (obj instanceof String stringa) {
-        //            System.out.println(stringa.contains("hello"));
-        //        }
+//        if (obj instanceof String stringa) {
+//            System.out.println(stringa.contains("hello"));
+//        }
 
         System.out.println("Java10 \n");
 
         var str = "a test string";
+        System.out.println(str);
         var aVariable = "Marco";
         System.out.println(aVariable);
         var anotherVariable = 182;

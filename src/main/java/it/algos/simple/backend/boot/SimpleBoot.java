@@ -7,6 +7,7 @@ import it.algos.simple.backend.enumeration.*;
 import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.simple.backend.packages.fattura.*;
+import it.algos.simple.pratical.ch2.*;
 import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
@@ -126,6 +127,12 @@ public class SimpleBoot extends FlowBoot {
     protected void fixMenuRoutes() {
         FlowVar.menuRouteList.add(Fattura.class);
         FlowVar.menuRouteList.add(Bolla.class);
+        FlowVar.menuRouteList.add(WelcomeView.class);
+        //        FlowVar.menuRouteList.add(ProductManagementBinderView.class);
+        //        FlowVar.menuRouteList.add(ProductManagementCoversionView.class);
+        //        FlowVar.menuRouteList.add(ProductManagementJakartaView.class);
+        //        FlowVar.menuRouteList.add(ProductManagementManualView.class);
+        //        FlowVar.menuRouteList.add(ProductManagementNestedView.class);
 
         super.fixMenuRoutes();
 
