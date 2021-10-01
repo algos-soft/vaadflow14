@@ -347,7 +347,10 @@ public abstract class LogicForm extends Logic {
         List<String> fieldsNameList = annotation.getListaPropertiesForm(entityClazz);
 
         if (array.isEmpty(fieldsNameList)) {
-            reflection.getFieldsName(entityBean.getClass());
+            try {
+                reflection.getFieldsName(entityBean.getClass());
+            } catch (AlgosException unErrore) {
+            }
         }
 
         if (FlowVar.usaCompany && annotation.usaCompany(entityBean.getClass())) {

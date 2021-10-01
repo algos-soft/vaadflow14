@@ -328,8 +328,8 @@ public class AnnotationServiceTest extends ATest {
      * @return nomi dei fields, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     @Test
-    @Order(1)
-    @DisplayName("1 - getGridColumns")
+    @Order(98)
+    @DisplayName("98 - getGridColumns")
     public void getGridColumns() {
         String[] stringArray = {"ordine", "nome"};
         previstoArray = new ArrayList(Arrays.asList(stringArray));

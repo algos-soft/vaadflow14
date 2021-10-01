@@ -40,10 +40,6 @@ public class ClassServiceTest extends ATest {
     private ClassService service;
 
 
-    private static Class[] CLAZZ() {
-        return new Class[]{null, Via.class, Bolla.class, AIType.class, GammaService.class};
-    }
-
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
      * Invocare PRIMA il metodo setUpStartUp() della superclasse <br>

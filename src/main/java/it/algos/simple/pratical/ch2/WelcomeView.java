@@ -53,6 +53,8 @@ public class WelcomeView extends VerticalLayout {
         addCh05(menuBar);
         addCh06(menuBar);
         addCh07(menuBar);
+        addCh08(menuBar);
+        addCh09(menuBar);
         addCh10(menuBar);
 
         return menuBar;
@@ -247,7 +249,59 @@ public class WelcomeView extends VerticalLayout {
 
         return menu;
     }
+    public MenuItem addCh08(MenuBar menuBar) {
+        MenuItem menu = menuBar.addItem("Capitolo 8");
 
+        addCh08Manual(menu.getSubMenu());
+        addCh08Push(menu.getSubMenu());
+        addCh08Thread(menu.getSubMenu());
+
+        return menu;
+    }
+    public MenuItem addCh08Manual(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Manual");
+
+        menu.getSubMenu().addItem("ManualPush", event -> getUI().ifPresent(ui -> ui.navigate("manual-push")));
+
+        return menu;
+    }
+    public MenuItem addCh08Push(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Push");
+
+        menu.getSubMenu().addItem("NoPush", event -> getUI().ifPresent(ui -> ui.navigate("no-push")));
+
+        return menu;
+    }
+    public MenuItem addCh08Thread(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Thread");
+
+        return menu;
+    }
+
+    public MenuItem addCh09(MenuBar menuBar) {
+        MenuItem menu = menuBar.addItem("Capitolo 9");
+
+        addCh9Dom(menu.getSubMenu());
+        addCh9JavaScript(menu.getSubMenu());
+
+        return menu;
+    }
+    public MenuItem addCh9Dom(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Dom");
+
+        menu.getSubMenu().addItem("CreatingDomElements", event -> getUI().ifPresent(ui -> ui.navigate("creating-dom-elements")));
+        menu.getSubMenu().addItem("CustomComponent", event -> getUI().ifPresent(ui -> ui.navigate("custom-component")));
+        menu.getSubMenu().addItem("WithComponents", event -> getUI().ifPresent(ui -> ui.navigate("with-components")));
+
+        return menu;
+    }
+    public MenuItem addCh9JavaScript(SubMenu menuItem) {
+        MenuItem menu = menuItem.addItem("Javascript");
+
+        menu.getSubMenu().addItem("JavascriptIntegration", event -> getUI().ifPresent(ui -> ui.navigate("javascript-integration")));
+
+        return menu;
+    }
 
     public MenuItem addCh10(MenuBar menuBar) {
         MenuItem menu = menuBar.addItem("Capitolo 10");

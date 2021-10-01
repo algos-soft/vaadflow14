@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.ui.view.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import org.hibernate.validator.constraints.Range;
@@ -1139,7 +1140,7 @@ public class AnnotationService extends AbstractService {
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     public List<String> getGridColumns(final Class<? extends AEntity> entityClazz) {
-        List listaNomi;
+        List listaNomi = null;
         String stringaMultipla;
         AIList annotationEntity = this.getAIList(entityClazz);
 
@@ -1149,11 +1150,18 @@ public class AnnotationService extends AbstractService {
                 listaNomi = text.getArray(stringaMultipla);
             }
             else {
-                listaNomi = reflection.getFieldsName(entityClazz);
+                try {
+                    listaNomi = reflection.getFieldsName(entityClazz);
+                } catch (AlgosException unErrore) {
+                }
+
             }
         }
         else {
-            listaNomi = reflection.getFieldsName(entityClazz);
+            try {
+                listaNomi = reflection.getFieldsName(entityClazz);
+            } catch (AlgosException unErrore) {
+            }
         }
 
         return listaNomi;
@@ -1212,11 +1220,18 @@ public class AnnotationService extends AbstractService {
                 listaNomi = text.getArray(stringaMultipla);
             }
             else {
-                listaNomi = reflection.getFieldsName(entityClazz);
+                try {
+                    listaNomi = reflection.getFieldsName(entityClazz);
+                } catch (AlgosException unErrore) {
+                }
+
             }
         }
         else {
-            listaNomi = reflection.getFieldsName(entityClazz);
+            try {
+                listaNomi = reflection.getFieldsName(entityClazz);
+            } catch (AlgosException unErrore) {
+            }
         }
 
         return listaNomi;
@@ -2676,7 +2691,11 @@ public class AnnotationService extends AbstractService {
             return null;
         }
 
-        listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
+        try {
+            listaGrezza = listaGrezza = reflection.getAllFields(entityClazz);
+        } catch (AlgosException unErrore) {
+        }
+
         if (array.isAllValid(listaGrezza)) {
             listaFields = new ArrayList<>();
             for (Field field : listaGrezza) {

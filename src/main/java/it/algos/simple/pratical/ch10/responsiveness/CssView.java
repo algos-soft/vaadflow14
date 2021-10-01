@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
 @Route("css")
-@CssImport("../src/main/java/it/algos/simple/pratical/ch10/responsiveness/frontend/styles.css")
+@CssImport("../src/main/java/it/algos/simple/pratical/ch10/frontend/styles.css")
 public class CssView extends Composite<Component> {
 
   @Override

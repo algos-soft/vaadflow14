@@ -11,8 +11,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 
 @Route("css-classes")
-@CssImport("../src/main/java/it/algos/simple/pratical/ch10/css/frontend/custom-classes.css")
-@CssImport(value = "../src/main/java/it/algos/simple/pratical/ch10/css/frontend/vaadin-grid.css", themeFor = "vaadin-grid")
+@CssImport("../src/main/java/it/algos/simple/pratical/ch10/frontend/custom-classes.css")
+@CssImport(value = "../src/main/java/it/algos/simple/pratical/ch10/frontend/vaadin-grid.css", themeFor = "vaadin-grid")
 public class CssClassesView extends Composite<Component> {
 
   @Override

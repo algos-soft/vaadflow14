@@ -11,7 +11,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route("custom-css")
-@CssImport("../src/main/java/it/algos/simple/pratical/ch10/css/frontend/custom-styles.css")
+@CssImport("../src/main/java/it/algos/simple/pratical/ch10/frontend/custom-styles.css")
 public class CustomCss extends Composite<Component> {
 
   @Override

@@ -44,7 +44,7 @@ public class VialeView extends VerticalLayout implements BeforeEnterObserver {
 
     public void primaGrid() {
         Grid<Via> grid = new Grid<>(Via.class, false);
-        DataProvider dataProvider = service.creaDataProvider(Via.class, (BasicDBObject)null);
+        DataProvider dataProvider = service.creaDataProvider(Via.class, null);
         grid.setDataProvider(dataProvider);
 
         // Will be sortable by the user

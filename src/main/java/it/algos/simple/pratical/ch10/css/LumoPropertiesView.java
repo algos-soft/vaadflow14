@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
 @Route("lumo-properties")
-@CssImport("../src/main/java/it/algos/simple/pratical/ch10/css/frontend/custom-properties.css")
+@CssImport("../src/main/java/it/algos/simple/pratical/ch10/frontend/custom-properties.css")
 public class LumoPropertiesView extends Composite<Component> {
 
   @Override

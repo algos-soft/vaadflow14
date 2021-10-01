@@ -174,6 +174,17 @@ public interface AIMongoService {
 
 
     /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la condition
+     * @param propertyValue (serializable) per costruire la condition
+     *
+     * @return the founded document
+     */
+    Document findDocByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
+
+    /**
      * Crea una singola entity da un document. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB

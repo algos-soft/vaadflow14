@@ -3,6 +3,8 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
+import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -10,10 +12,13 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -382,36 +387,46 @@ public abstract class ATest {
     protected static String[] PATH() {
         return new String[]{null, VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
     }
+
+    protected static Class[] CLAZZ() {
+        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Secolo.class};
+    }
+
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
         return Stream.of(
-                Arguments.of((Class) null, VUOTA),
-                Arguments.of(Utente.class, VUOTA),
-                Arguments.of(Mese.class, null),
-                Arguments.of(Mese.class, VUOTA),
-                Arguments.of(Mese.class, "marzo"),
-                Arguments.of(Mese.class, "termidoro"),
-                Arguments.of(Mese.class, "Marzo"),
-                Arguments.of(Mese.class, "marzo esatto")
+                Arguments.of((Class) null, VUOTA, false),
+                Arguments.of(Utente.class, VUOTA, false),
+                Arguments.of(Mese.class, null, false),
+                Arguments.of(Mese.class, VUOTA, false),
+                Arguments.of(Mese.class, "termidoro", false),
+                Arguments.of(Giorno.class, "2agosto", true),
+                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Mese.class, "marzo", true),
+                Arguments.of(Mese.class, "Marzo", true),
+                Arguments.of(Mese.class, "marzo esatto", false)
         );
     }
 
 
     protected static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
-                Arguments.of((Class) null, VUOTA, null, 0),
-                Arguments.of(Utente.class, VUOTA, null, 0),
-                Arguments.of(Mese.class, VUOTA, null, 0),
-                Arguments.of(Mese.class, "manca", null, 0),
-                Arguments.of(Mese.class, "manca", 31, 0),
-                Arguments.of(Mese.class, "mese", "pippoz", 0),
-                Arguments.of(Mese.class, "mese", null, 0),
-                Arguments.of(Mese.class, "mese", VUOTA, 12),
-                Arguments.of(Mese.class, "giorni", 31, 7),
-                Arguments.of(Mese.class, "giorni", 30, 4),
-                Arguments.of(Mese.class, "giorni", 28, 1),
-                Arguments.of(Via.class, "belzebù", "piazza", 0),
-                Arguments.of(Via.class, "nome", "belzebù", 0),
-                Arguments.of(Via.class, "nome", "piazza", 1)
+                Arguments.of((Class) null, VUOTA, null, 0, false),
+                Arguments.of(Utente.class, VUOTA, null, 0, false),
+                Arguments.of(Mese.class, VUOTA, null, 0, false),
+                Arguments.of(Mese.class, "manca", null, 0, false),
+                Arguments.of(Mese.class, "manca", 31, 0, false),
+                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
+                Arguments.of(Mese.class, "mese", null, 0, false),
+                Arguments.of(Mese.class, "mese", VUOTA, 12, false),
+                Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
+                Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
+                Arguments.of(Mese.class, "mese", "ottobre", 1, true),
+                Arguments.of(Mese.class, "giorni", 31, 7, false),
+                Arguments.of(Mese.class, "giorni", 30, 4, false),
+                Arguments.of(Mese.class, "giorni", 28, 1, true),
+                Arguments.of(Via.class, "belzebù", "piazza", 0, false),
+                Arguments.of(Via.class, "nome", "belzebù", 0, false),
+                Arguments.of(Via.class, "nome", "piazza", 1, true)
         );
     }
 

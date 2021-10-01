@@ -2,7 +2,6 @@ package it.algos.vaadflow14.backend.service;
 
 import com.google.gson.*;
 import com.mongodb.*;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
 import com.mongodb.client.result.*;
 import com.vaadin.flow.data.provider.*;
@@ -14,7 +13,6 @@ import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import jdk.jshell.spi.*;
 import org.bson.*;
 import org.bson.conversions.*;
 import org.springframework.beans.factory.annotation.*;
@@ -595,6 +593,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         MongoCollection<Document> collection;
         FindIterable<Document> iterable = null;
         Document doc = null;
+        String collectionName = annotation.getCollectionName(entityClazz);
 
         if (entityClazz == null) {
             return null;
@@ -605,30 +604,32 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 entityBean = findBase(entityClazz, propertyName, propertyValue);
                 break;
             case gson:
-                collection = getCollection(entityClazz);
-                if (collection != null) {
-                    Bson condition = new Document(propertyName, propertyValue);
-                    iterable = collection.find(condition);
-                }
-                if (iterable != null) {
-                    doc = iterable.first();
-                }
-
-                if (doc != null) {
-                    try {
-                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
-                    } catch (Exception unErrore) {
-                        if (propertyValue==null) {
-                            throw  AlgosException.stack(unErrore, "La propertyValue è nulla",getClass(), "find");
-                        }
-                        else {
-                            throw  AlgosException.stack(unErrore, getClass(), "find");
-                        }
-                    }
-                }
-                else {
-                    throw AlgosException.stack( String.format("Non sono riuscito a trovare una entity con keyId=%s", propertyValue),getClass(),"find");
-                }
+                doc = findDocByProperty(collectionName, propertyName, propertyValue);
+                entityBean = creaByDoc(entityClazz, doc);
+                //                collection = getCollection(entityClazz);
+                //                if (collection != null) {
+                //                    Bson condition = new Document(propertyName, propertyValue);
+                //                    iterable = collection.find(condition);
+                //                }
+                //                if (iterable != null) {
+                //                    doc = iterable.first();
+                //                }
+                //
+                //                if (doc != null) {
+                //                    try {
+                //                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
+                //                    } catch (Exception unErrore) {
+                //                        if (propertyValue == null) {
+                //                            throw AlgosException.stack(unErrore, "La propertyValue è nulla", getClass(), "find");
+                //                        }
+                //                        else {
+                //                            throw AlgosException.stack(unErrore, getClass(), "find");
+                //                        }
+                //                    }
+                //                }
+                //                else {
+                //                    throw AlgosException.stack(String.format("Non sono riuscito a trovare una entity con keyId=%s", propertyValue), getClass(), "find");
+                //                }
                 break;
             case jackson:
                 break;
@@ -1335,7 +1336,25 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     @Override
     public Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AlgosException {
-        return findDocById(annotation.getCollectionName(entityClazz), keyId);
+        String collectionName = annotation.getCollectionName(entityClazz);
+        String message;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "findDocById");
+        }
+
+        if (text.isEmpty(keyId)) {
+            message = String.format("La entityClazz %s esiste ma manca la keyId", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "findDocById");
+        }
+
+        if (text.isEmpty(collectionName)) {
+            message = String.format("La entityClazz %s esiste ma non è valido il nome della collezione", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "findDocById");
+        }
+        else {
+            return findDocById(collectionName, keyId);
+        }
     }
 
     /**
@@ -1348,7 +1367,43 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     @Override
     public Document findDocById(final String collectionName, final String keyId) throws AlgosException {
-        return findDocByProperty(collectionName, FlowCost.FIELD_ID, keyId);
+        return findDocByProperty(collectionName, FlowCost.FIELD_ID, keyId.toLowerCase());
+    }
+
+    /**
+     * Cerca un Document da una collection con una determinata chiave. <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la condition
+     * @param propertyValue (serializable) per costruire la condition
+     *
+     * @return the founded document
+     */
+    @Override
+    public Document findDocByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        String collectionName = annotation.getCollectionName(entityClazz);
+        String message;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "findDocByProperty");
+        }
+
+        if (text.isEmpty(propertyName)) {
+            message = String.format("La entityClazz %s esiste ma manca la propertyName", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+        }
+
+        if (text.isEmpty(collectionName)) {
+            message = String.format("La entityClazz %s esiste ma non è valido il nome della collezione", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+        }
+
+        if (!reflection.isEsiste(entityClazz, propertyName)) {
+            message = String.format("La entityClazz %s esiste ma non esiste la property %s", entityClazz.getSimpleName(), propertyName);
+            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+        }
+
+        return findDocByProperty(collectionName, propertyName, propertyValue);
     }
 
     /**
@@ -1361,7 +1416,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     public Document findDocByProperty(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
-        Bson condition = new Document(propertyName, propertyValue);
+        String message;
+        Bson condition;
+        int recordsTrovati = count(collectionName, propertyName, propertyValue);
+        if (recordsTrovati == 0) {
+            message = String.format("Nella collection %s non ci sono entity con %s=%s", collectionName, propertyName, propertyValue);
+            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+        }
+        if (recordsTrovati > 1) {
+            message = String.format("Nella collection %s ci sono diverse entities con %s=%s", collectionName, propertyName, propertyValue);
+            throw AlgosException.stack(message, getClass(), "findDocByProperty");
+        }
+
+        condition = new Document(propertyName, propertyValue);
         return findDoc(collectionName, condition);
     }
 
@@ -1376,18 +1443,21 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public Document findDoc(final String collectionName, final Bson condition) throws AlgosException {
         Document doc;
+        String message;
         FindIterable<Document> iterable;
         MongoCollection<Document> collection = getCollection(collectionName);
 
         if (collection == null) {
-            throw new AlgosException(String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName)));
+            message = String.format("Su mongoDB manca la collezione per la classe %s", text.primaMaiuscola(collectionName));
+            throw AlgosException.stack(message, getClass(), "findDoc");
         }
 
         try {
             iterable = collection.find(condition);
             doc = iterable.first();
         } catch (Exception unErrore) {
-            throw new AlgosException(unErrore, String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName), condition));
+            message = String.format("Nella collezione %s non esiste la entity '%s'", text.primaMaiuscola(collectionName));
+            throw AlgosException.stack(unErrore, message, getClass(), "findDoc");
         }
 
         if (doc == null) {
@@ -1455,10 +1525,20 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc) throws AlgosException {
         AEntity entityBean = null;
+        String message;
         List<Field> fields = reflection.getAllFields(entityClazz);
         String key;
         Object value;
         List<AIEnum> enumItems;
+
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "creaByDoc");
+        }
+
+        if (doc == null) {
+            message = String.format("Manca il documento della entityClazz %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "creaByDoc");
+        }
 
         if (fields != null && doc != null) {
             doc = fixDoc(doc);

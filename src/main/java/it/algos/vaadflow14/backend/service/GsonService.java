@@ -185,7 +185,6 @@ public class GsonService extends AbstractService {
         try {
             testoOut = testoOut.substring(ini, end);
         } catch (Exception unErrore) {
-            int a = 87;
         }
 
         return testoOut.trim();
