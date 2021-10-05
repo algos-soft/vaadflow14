@@ -3,22 +3,19 @@ package it.algos.unit;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.mongodb.client.*;
-import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
@@ -58,13 +55,13 @@ import java.util.stream.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoServiceTest extends ATest {
 
-    protected static final String COLLEZIONE_INESISTENTE = "pomeriggio";
-
-    protected static final String COLLEZIONE_VUOTA = "utente";
-
-    protected static final String COLLEZIONE_VALIDA = "giorno";
-
-    private static final String DATA_BASE_NAME = "vaadflow14";
+    //    protected static final String COLLEZIONE_INESISTENTE = "pomeriggio";
+    //
+    //    protected static final String COLLEZIONE_VUOTA = "utente";
+    //
+    //    protected static final String COLLEZIONE_VALIDA = "giorno";
+    //
+    //    private static final String DATA_BASE_NAME = "vaadflow14";
 
     //    static Stream<Class> classi = Stream.of(Via.class, Bolla.class, AIType.class, GammaService.class, Utente.class, LogicList.class);
 
@@ -171,7 +168,6 @@ public class MongoServiceTest extends ATest {
     @Order(2)
     @DisplayName("2 - Collezioni per clazz")
     /*
-      2 - Collezioni per clazz
       Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
       Recupera la collezione
       Controlla l'esistenza della collezione (dal numero di entities presenti)
@@ -208,7 +204,6 @@ public class MongoServiceTest extends ATest {
     @Order(4)
     @DisplayName("4 - Count totale per clazz")
     /*
-      4 - Count totale per clazz
       metodo semplice per l'intera collection
       rimanda al metodo base collection.countDocuments();
       non usa ne gson ne spring
@@ -226,36 +221,24 @@ public class MongoServiceTest extends ATest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(5)
-    @DisplayName("5 - Count spring filtrato (propertyName, propertyValue) per clazz")
-    /*
-      5 - Count filtrato (propertyName, propertyValue) per clazz
-      FlowVar.typeSerializing = AETypeSerializing.spring
-    */
-    void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        FlowVar.typeSerializing = AETypeSerializing.spring;
-        try {
-            ottenutoIntero = service.count(clazz, propertyName, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
-        if (flagRisultatiEsattiObbligatori) {
-            assertEquals(previstoIntero, ottenutoIntero);
-        }
-        System.out.println(VUOTA);
+    @DisplayName("5 - Count gson filtrato (propertyName, propertyValue) per clazz")
+    void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("7 - Count gson filtrato (propertyName, propertyValue) per clazz");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        count56(clazz, propertyName, propertyValue, previstoIntero);
     }
-
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(6)
-    @DisplayName("6 - Count gson filtrato (propertyName, propertyValue) per clazz")
-    /*
-      6 - Count filtrato (propertyName, propertyValue) per clazz
-      FlowVar.typeSerializing = AETypeSerializing.gson
-    */
-    void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        FlowVar.typeSerializing = AETypeSerializing.gson;
+    @DisplayName("6 - Count spring filtrato (propertyName, propertyValue) per clazz")
+    void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("7 - Count spring filtrato (propertyName, propertyValue) per clazz");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        count56(clazz, propertyName, propertyValue, previstoIntero);
+    }
+
+    void count56(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
         } catch (AlgosException unErrore) {
@@ -268,22 +251,23 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
+
     @Test
     @Order(7)
-    @DisplayName("7 - Count spring filtrato (AFiltro) singolo")
-    void countFiltroSpring() {
-        System.out.println("7 - Count spring filtrato (AFiltro) singolo");
-        FlowVar.typeSerializing = AETypeSerializing.spring;
+    @DisplayName("7 - Count gson filtrato (AFiltro) singolo")
+    void countFiltroGson() {
+        System.out.println("7 - Count gson filtrato (AFiltro) singolo");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
         this.count78();
     }
 
 
     @Test
     @Order(8)
-    @DisplayName("8 - Count gson filtrato (AFiltro) singolo")
-    void countFiltroGson() {
-        System.out.println("8 - Count gson filtrato (AFiltro) singolo");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
+    @DisplayName("8 - Count spring filtrato (AFiltro) singolo")
+    void countFiltroSpring() {
+        System.out.println("8 - Count spring filtrato (AFiltro) singolo");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
         this.count78();
     }
 
@@ -349,19 +333,19 @@ public class MongoServiceTest extends ATest {
 
     @Test
     @Order(9)
-    @DisplayName("9 - Count spring filtrato (mappaFiltri)")
-    void countFiltroMappaSpring() {
-        System.out.println("9 - Count spring filtrato (mappaFiltri)");
-        FlowVar.typeSerializing = AETypeSerializing.spring;
+    @DisplayName("9 - Count gson filtrato (mappaFiltri)")
+    void countFiltroMappaGson() {
+        System.out.println("9 - Count gson filtrato (mappaFiltri)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
         this.count910();
     }
 
     @Test
     @Order(10)
-    @DisplayName("10 - Count gson filtrato (mappaFiltri)")
-    void countFiltroMappaGson() {
-        System.out.println("10 - Count gson filtrato (mappaFiltri)");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
+    @DisplayName("10 - Count spring filtrato (mappaFiltri)")
+    void countFiltroMappaSpring() {
+        System.out.println("10 - Count spring filtrato (mappaFiltri)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
         this.count910();
     }
 
@@ -390,11 +374,8 @@ public class MongoServiceTest extends ATest {
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(12)
     @DisplayName("12 - Crea un Doc (gson) da mongoDb con keyId")
-    /*
-      12 - Crea un Doc (gson) da mongoDb con keyId
-    */
     void creaDocById(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
-        FlowVar.typeSerializing = AETypeSerializing.gson;
+        FlowVar.typeSerializing = AETypeSerializing.spring;
         sorgente = (String) keyPropertyValue;
         try {
             doc = service.findDocById(clazz, sorgente);
@@ -415,9 +396,6 @@ public class MongoServiceTest extends ATest {
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(13)
     @DisplayName("13 - Crea un Doc (gson) da mongoDb con propertyName")
-    /*
-      13 - Crea un Doc (gson) da mongoDb con propertyName
-    */
     void creaDocByProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final int count, final boolean valida) {
         FlowVar.typeSerializing = AETypeSerializing.gson;
         try {
@@ -440,45 +418,24 @@ public class MongoServiceTest extends ATest {
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(14)
     @DisplayName("14 - Crea una entity (gson) da un Doc con keyId")
-    /*
-      14 - Crea una entity (gson) da un Doc con keyId
-    */
     void creaEntityByDocGson(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("14 - Crea una entity (gson) da un Doc con keyId");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        sorgente = (String) keyPropertyValue;
-        doc = null;
-        entityBean = null;
-
-        try {
-            doc = service.findDocById(clazz, sorgente);
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, sorgente));
-            printError(unErrore);
-        }
-        if (valida) {
-            assertNotNull(doc);
-        }
-        else {
-            assertNull(doc);
-        }
-        try {
-            entityBean = service.creaByDoc(clazz, doc);
-            System.out.println(String.format("Creata la entity [%s] della classe '%s'", sorgente, clazz.getSimpleName()));
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        System.out.println(VUOTA);
+        creaEntity1415(clazz, keyPropertyValue, valida);
     }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(15)
     @DisplayName("15 - Crea una entity (spring) da un Doc con keyId")
-    /*
-      15 - Crea una entity (spring) da un Doc con keyId
-    */
     void creaEntityByDocSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("15 - Crea una entity (spring) da un Doc con keyId");
         FlowVar.typeSerializing = AETypeSerializing.spring;
+        creaEntity1415(clazz, keyPropertyValue, valida);
+    }
+
+
+    void creaEntity1415(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
         sorgente = (String) keyPropertyValue;
         doc = null;
         entityBean = null;
@@ -504,16 +461,30 @@ public class MongoServiceTest extends ATest {
         System.out.println(VUOTA);
     }
 
-
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(16)
-    @DisplayName("16 - Crea una entity (gson) da mongoDb con keyId")
-    /*
-      16 - Crea una entity (gson) da mongoDb con keyId
-    */
-    void creaEntityById(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+    @DisplayName("16 - Find (gson) entityBean by keyId")
+    void findByIdGson(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("16 - Find (gson) entityBean by keyId");
         FlowVar.typeSerializing = AETypeSerializing.gson;
+        findById1617(clazz, keyPropertyValue, valida);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(17)
+    @DisplayName("17 - Find (spring) entityBean by keyId")
+    void findByIdSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("17 - Find (spring) entityBean by keyId");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        findById1617(clazz, keyPropertyValue, valida);
+    }
+
+
+    void findById1617(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        FlowVar.typeSerializing = AETypeSerializing.spring;
         sorgente = (String) keyPropertyValue;
         try {
             entityBean = service.find(clazz, sorgente);
@@ -527,6 +498,80 @@ public class MongoServiceTest extends ATest {
         }
         else {
             assertNull(entityBean);
+        }
+        printEntityBeanFromKeyId(clazz, keyPropertyValue, entityBean, previstoIntero);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(22)
+    @DisplayName("22 - Find (gson) entityBean by property")
+    void findByPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("22 - Find (gson) entityBean by property");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        findByProperty2223(clazz, propertyName, propertyValue, previstoIntero);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(23)
+    @DisplayName("23 - Find (spring) una entityBean by property")
+    void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("23 - Find (spring) entityBean by property");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        findByProperty2223(clazz, propertyName, propertyValue, previstoIntero);
+    }
+
+
+    void findByProperty2223(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        try {
+            entityBean = service.find(clazz, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printEntityBeanFromProperty(clazz, (String) propertyName, propertyValue, entityBean, previstoIntero);
+    }
+
+
+    @Test
+    @Order(30)
+    @DisplayName("30 - Save base (gson) di una entity")
+    void save() {
+        System.out.println("30 - Save base (gson) di una entity");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        Company company = null;
+        Company companyReborn = null;
+
+        //--costruisco una entityBean
+        sorgente = "doppia";
+        sorgente2 = "Porta Valori Associato";
+        company = companyService.newEntity(sorgente, sorgente2, VUOTA, VUOTA);
+        company.setCreazione(LocalDateTime.now());
+        assertNotNull(company);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+            mapper.setDateFormat(format);
+            json = mapper.writeValueAsString(company);
+            System.out.println(json);
+        } catch (JsonProcessingException unErrore) {
+            System.out.println(unErrore);
+            assertNotNull(null);
+        }
+
+        //        collection.insertOne(Document.parse(json));
+
+        //        --salvo la entityBean
+        try {
+            //            ((MongoService) service).save(company);
+            companyService.save(company);
+        } catch (AlgosException unErrore) {
+            //            System.out.println(unErrore);
+            loggerService.info(unErrore.getMessage());
         }
     }
 
@@ -577,116 +622,6 @@ public class MongoServiceTest extends ATest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_KEY_ID")
-    @Order(20)
-    @DisplayName("20 - Find (gson) una entityBean by keyId")
-    /*
-      20 - Find (gson) una entityBean by keyId
-    */
-    void findKeyIdGson(final Class clazz, final Serializable keyPropertyValue) {
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-        try {
-            entityBean = service.find(clazz, keyPropertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printEntityBeanFromClazz((String) keyPropertyValue, clazz, entityBean);
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_KEY_ID")
-    @Order(21)
-    @DisplayName("21 - Find (spring) una entityBean")
-        /*
-          21 - Find (spring) una entityBean
-        */
-    void findKeyIdSpring(final Class clazz, final Serializable keyPropertyValue) {
-        FlowVar.typeSerializing = AETypeSerializing.spring;
-        try {
-            entityBean = service.find(clazz, keyPropertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printEntityBeanFromClazz((String) keyPropertyValue, clazz, entityBean);
-    }
-
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(22)
-    @DisplayName("22 - Find (gson) una entityBean by property")
-    /*
-      22 - Find (gson) una entityBean by property
-    */
-    void findPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-        try {
-            entityBean = service.find(clazz, propertyName, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printEntityBeanFromProperty(clazz, (String) propertyName, propertyValue, entityBean, previstoIntero);
-    }
-
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(23)
-    @DisplayName("23 - Find (spring) una entityBean by property")
-    /*
-      23 - Find (spring) una entityBean by property
-    */
-    void findPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        FlowVar.typeSerializing = AETypeSerializing.spring;
-        try {
-            entityBean = service.find(clazz, propertyName, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        printEntityBeanFromProperty(clazz, (String) propertyName, propertyValue, entityBean, previstoIntero);
-    }
-
-
-    @Test
-    @Order(30)
-    @DisplayName("30 - Save base (gson) di una entity")
-    void save() {
-        System.out.println("30 - Save base (gson) di una entity");
-        FlowVar.typeSerializing = AETypeSerializing.gson;
-        Company company = null;
-        Company companyReborn = null;
-
-        //--costruisco una entityBean
-        sorgente = "doppia";
-        sorgente2 = "Porta Valori Associato";
-        company = companyService.newEntity(sorgente, sorgente2, VUOTA, VUOTA);
-        company.setCreazione(LocalDateTime.now());
-        assertNotNull(company);
-
-        ObjectMapper mapper = new ObjectMapper();
-        String json;
-        try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
-            mapper.setDateFormat(format);
-            json = mapper.writeValueAsString(company);
-            System.out.println(json);
-        } catch (JsonProcessingException unErrore) {
-            System.out.println(unErrore);
-            assertNotNull(null);
-        }
-
-        //        collection.insertOne(Document.parse(json));
-
-        //        --salvo la entityBean
-        try {
-            //            ((MongoService) service).save(company);
-            companyService.save(company);
-        } catch (AlgosException unErrore) {
-            //            System.out.println(unErrore);
-            loggerService.info(unErrore.getMessage());
-        }
-    }
 
     //    @Test
     @Order(13)
@@ -942,7 +877,7 @@ public class MongoServiceTest extends ATest {
 
 
     void printDoc(final Class clazz, final String keyId, final Document doc) {
-        printDoc(clazz, "_id", keyId, doc);
+        printDoc(clazz, FlowCost.FIELD_ID, keyId, doc);
     }
 
 
@@ -1094,53 +1029,43 @@ public class MongoServiceTest extends ATest {
         }
     }
 
+    protected void printEntityBeanFromKeyId(final Class clazz, final Serializable keyPropertyValue, final AEntity entityBean, final int previstoIntero) {
+        printEntityBeanFromProperty(clazz, FlowCost.FIELD_ID, keyPropertyValue, entityBean, previstoIntero);
+    }
+
+
     protected void printEntityBeanFromProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final AEntity entityBean, final int previstoIntero) {
+        Map<String, Object> mappa;
+
         if (clazz == null) {
             System.out.print("Non esiste la classe indicata");
             System.out.println(VUOTA);
             System.out.println(VUOTA);
             return;
         }
-        else {
-            System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
 
-            if (entityBean != null) {
-                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
-                if (entityBean instanceof Mese) {
-                    printMese((Mese) entityBean);
-                }
-                if (entityBean instanceof Via) {
-                    printVia((Via) entityBean);
-                }
+        if (entityBean == null) {
+            System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+            System.out.println(VUOTA);
+            System.out.println(VUOTA);
+            return;
+        }
+
+        System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
+        System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+        try {
+            mappa = reflectionService.getMappaEntity(entityBean);
+            for (String key : mappa.keySet()) {
+                System.out.print(key);
+                System.out.print(UGUALE_SPAZIATO);
+                System.out.println(mappa.get(key));
             }
-            else {
-                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
-            }
+
+        } catch (AlgosException unErrore) {
         }
 
         System.out.println(VUOTA);
     }
 
-    protected void printMese(final Mese entity) {
-        if (entity == null) {
-            return;
-        }
-        //        reflectionService.
-        System.out.println(entity.id);
-        System.out.println(entity.ordine);
-        System.out.println(entity.creazione);
-        System.out.println(entity.modifica);
-    }
-
-    protected void printVia(final Via entity) {
-        if (entity == null) {
-            return;
-        }
-        System.out.println(entity.id);
-        System.out.println(entity.ordine);
-        System.out.println(entity.nome);
-        System.out.println(entity.creazione);
-        System.out.println(entity.modifica);
-    }
 
 }

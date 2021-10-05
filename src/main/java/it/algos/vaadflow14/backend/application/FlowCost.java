@@ -165,7 +165,9 @@ public abstract class FlowCost {
     /**
      * Nomi delle properties.
      */
-    public final static String FIELD_NAME_ID = "id";
+    public final static String FIELD_NAME_ID_SENZA = "id";
+
+    public final static String FIELD_NAME_ID_CON = "_id";
 
     public final static String FIELD_NAME_ORDINE = "ordine";
 

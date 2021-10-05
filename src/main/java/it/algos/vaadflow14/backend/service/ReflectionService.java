@@ -1,5 +1,6 @@
 package it.algos.vaadflow14.backend.service;
 
+import com.fasterxml.jackson.databind.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -423,7 +424,7 @@ public class ReflectionService extends AbstractService {
      * @return true se esiste
      */
     public boolean isEsisteFieldOnClass(Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
-        List<String> listaNomi = null;
+        List<String> listaNomi;
 
         if (entityClazz == null) {
             throw AlgosException.stack("Manca la entityClazz", getClass(), "isEsisteFieldOnClass");
@@ -431,6 +432,14 @@ public class ReflectionService extends AbstractService {
 
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
             throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (publicFieldName == null) {
+            throw AlgosException.stack("Il publicFieldName è nullo", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (text.isEmpty(publicFieldName)) {
+            throw AlgosException.stack("Manca il publicFieldName", getClass(), "isEsisteFieldOnClass");
         }
 
         listaNomi = getFieldsName(entityClazz);
@@ -455,7 +464,8 @@ public class ReflectionService extends AbstractService {
      * @return true se esiste
      */
     public boolean isEsisteFieldOnSuperClass(Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
-        List<String> listaNomi = null;
+        List<String> listaNomi;
+        String propertyName = publicFieldName;
 
         if (entityClazz == null) {
             throw AlgosException.stack("Manca la entityClazz", getClass(), "isEsisteFieldOnSuperClass");
@@ -465,12 +475,23 @@ public class ReflectionService extends AbstractService {
             throw AlgosException.stack(String.format("La classe %s non è una classe di tipo AEntity", entityClazz.getSimpleName()), this.getClass(), "isEsisteFieldOnSuperClass");
         }
 
+        if (publicFieldName == null) {
+            throw AlgosException.stack("Il publicFieldName è nullo", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (text.isEmpty(publicFieldName)) {
+            throw AlgosException.stack("Manca il publicFieldName", getClass(), "isEsisteFieldOnClass");
+        }
+
+        if (propertyName.equals(FIELD_NAME_ID_CON)) {
+            propertyName = FIELD_NAME_ID_SENZA;
+        }
         listaNomi = getAllFieldsName(entityClazz);
         if (listaNomi == null || listaNomi.size() == 0) {
             throw AlgosException.stack("La entityClazz %s esiste ma non ha fields", getClass(), "isEsisteFieldOnSuperClass");
         }
 
-        if (listaNomi.contains(publicFieldName)) {
+        if (listaNomi.contains(propertyName)) {
             return true;
         }
 
@@ -581,11 +602,15 @@ public class ReflectionService extends AbstractService {
      * @return la mappa chiave=valore delle properties
      */
     public Map<String, Object> getMappaEntity(final AEntity entityBean) throws AlgosException {
-        Map<String, Object> mappa = new LinkedHashMap<>();
+        Map<String, Object> mappa;
+        ObjectMapper mapper = null;
 
         if (entityBean == null) {
             throw AlgosException.stack("Manca la entityBean", getClass(), "getMappaEntity");
         }
+
+        mapper = new ObjectMapper();
+        mappa = mapper.convertValue(entityBean, Map.class);
 
         return mappa;
     }

@@ -240,7 +240,7 @@ public class ReflectionServiceTest extends ATest {
         if (flagRisultatiEsattiObbligatori) {
             assertEquals(esisteClasse, ottenutoBooleano);
         }
-        printEsiste(clazz,propertyName,ottenutoBooleano);
+        printEsiste(clazz, propertyName, ottenutoBooleano);
 
         System.out.println(VUOTA);
         System.out.println(String.format("Esistenza nella classe %s e superClassi del field %s", clazzName, propertyName));
@@ -252,7 +252,7 @@ public class ReflectionServiceTest extends ATest {
         if (flagRisultatiEsattiObbligatori) {
             assertEquals(esisteSuperclassi, ottenutoBooleano);
         }
-        printEsiste(clazz,propertyName,ottenutoBooleano);
+        printEsiste(clazz, propertyName, ottenutoBooleano);
     }
 
     @Test
@@ -333,6 +333,7 @@ public class ReflectionServiceTest extends ATest {
             } catch (AlgosException unErrore) {
                 printError(unErrore);
             }
+            assertTrue(mappa.size() > 0);
             printMappaEntity(entityBean, mappa);
         }
         else {
@@ -410,10 +411,10 @@ public class ReflectionServiceTest extends ATest {
         }
 
         if (esiste) {
-            System.out.println(String.format("Nella classe %s esiste il field %s",clazz.getSimpleName(),propertyName));
+            System.out.println(String.format("Nella classe %s esiste il field %s", clazz.getSimpleName(), propertyName));
         }
         else {
-            System.out.println(String.format("Nella classe %s non esiste il field %s",clazz.getSimpleName(),propertyName));
+            System.out.println(String.format("Nella classe %s non esiste il field %s", clazz.getSimpleName(), propertyName));
         }
     }
 

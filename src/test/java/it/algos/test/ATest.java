@@ -3,7 +3,6 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
-import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -407,7 +406,11 @@ public abstract class ATest {
         );
     }
 
-
+    //--clazz
+    //--propertyName
+    //--propertyValue
+    //--previstoIntero
+    //--doc valido
     protected static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, null, 0, false),
@@ -417,13 +420,14 @@ public abstract class ATest {
                 Arguments.of(Mese.class, "manca", 31, 0, false),
                 Arguments.of(Mese.class, "mese", "pippoz", 0, false),
                 Arguments.of(Mese.class, "mese", null, 0, false),
-                Arguments.of(Mese.class, "mese", VUOTA, 12, false),
+                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
                 Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
                 Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
                 Arguments.of(Mese.class, "mese", "ottobre", 1, true),
                 Arguments.of(Mese.class, "giorni", 31, 7, false),
                 Arguments.of(Mese.class, "giorni", 30, 4, false),
                 Arguments.of(Mese.class, "giorni", 28, 1, true),
+                Arguments.of(Mese.class, "giorni", 32, 0, false),
                 Arguments.of(Via.class, "belzebù", "piazza", 0, false),
                 Arguments.of(Via.class, "nome", "belzebù", 0, false),
                 Arguments.of(Via.class, "nome", "piazza", 1, true)

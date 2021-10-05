@@ -262,14 +262,15 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     /**
      * Conteggio di alcune entities selezionate di una collection. <br>
-     * La selezione è propertyName=propertyValue <br>
-     * Se la propertyName o la propertyValue non sono valide, restituisce TUTTE le entities della collezione <br>
+     * <p>
+     * Se la propertyName non esiste, restituisce il numero totale di entities esistenti nella collezione <br>
+     * Se la propertyName esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
      *
      * @param entityClazz   corrispondente ad una collection sul database mongoDB
      * @param propertyName  per costruire la query
      * @param propertyValue (serializable) per costruire la query
      *
-     * @return numero di entities selezionate
+     * @return numero di entities eventualmente filtrate (se esiste la propertyName)
      */
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
@@ -278,7 +279,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         if (entityClazz == null) {
             throw AlgosException.stack("Manca la entityClazz", getClass(), "count");
         }
-        if (!reflection.isEsiste(entityClazz, propertyName)) {
+
+
+        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
             message = String.format("Nella entityClazz %s non esiste la property '%s'", entityClazz.getSimpleName(), text.isValid(propertyName) ? propertyName : "null");
             throw AlgosException.stack(message, getClass(), "count");
         }
@@ -289,13 +292,18 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     /**
      * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
-     * Se la propertyName o la propertyValue non sono valide, restituisce il totale delle entities della collezione <br>
+     * <p>
+     * Se la propertyName non esiste, restituisce il numero totale di entities esistenti nella collezione <br>
+     * Se la propertyName esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     * <p>
+     * Se i filtri non esistono o non sono validi, restituisce il numero totale di entities esistenti nella collezione <br>
+     * Se i filtri sono validi, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
      *
      * @param collectionName The name of the collection or view to count
      * @param propertyName   per costruire la query
      * @param propertyValue  (serializable) per costruire la query
      *
-     * @return numero di entities eventualmente filtrate
+     * @return numero di entities eventualmente filtrate (se esiste la propertyName)
      */
     private int count(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         int totale = 0;
@@ -320,9 +328,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack(message, getClass(), "count");
         }
 
+        if (propertyValue == null) {
+            message = String.format("La propertyValue è nulla");
+            throw AlgosException.stack(message, getClass(), "count");
+        }
+
         switch (FlowVar.typeSerializing) {
             case spring:
-                if (mongoOp != null) {
+                if (isMongoOpValido()) {
                     query = getQuery(propertyName, propertyValue);
                     return (int) mongoOp.count(query, collectionName);
                 }
@@ -346,11 +359,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     /**
      * Conteggio di alcune entities di una collection filtrate con una mappa di filtri. <br>
+     * <p>
+     * Se i filtri non esistono o non sono validi, restituisce il numero totale di entities esistenti nella collezione <br>
+     * Se i filtri sono validi, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
      * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
      *
-     * @return numero di entities eventualmente filtrate
+     * @return numero di entities eventualmente filtrate (da un filtro valido)
      */
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException {
@@ -368,7 +384,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         switch (FlowVar.typeSerializing) {
             case spring:
-                if (mongoOp != null) {
+                if (isMongoOpValido()) {
                     query = getQuery(mappaFiltri);
                     return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
                 }
@@ -537,10 +553,33 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         keyId = keyId.toString().toLowerCase();
         switch (FlowVar.typeSerializing) {
             case spring:
-                try {
-                    entityBean = mongoOp.findById(keyId, entityClazz);
-                } catch (Exception unErrore) {
-                    throw new AlgosException(unErrore);
+                if (isMongoOpValido()) {
+                    try {
+                        entityBean = mongoOp.findById(keyId, entityClazz);
+                    } catch (Exception unErrore) {
+                        throw new AlgosException(unErrore);
+                    }
+                }
+                else {
+                    collection = getCollection(entityClazz);
+                    if (collection != null) {
+                        Bson condition = new Document("_id", keyId);
+                        iterable = collection.find(condition);
+                    }
+                    if (iterable != null) {
+                        doc = iterable.first();
+                    }
+
+                    if (doc != null) {
+                        try {
+                            entityBean = gSonService.creaId(entityClazz, (String) keyId);
+                        } catch (Exception unErrore) {
+                            throw new AlgosException(unErrore, null, (String) keyId);
+                        }
+                    }
+                    else {
+                        throw new AlgosException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", keyId));
+                    }
                 }
                 break;
             case gson:
@@ -601,35 +640,17 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         switch (FlowVar.typeSerializing) {
             case spring:
-                entityBean = findBase(entityClazz, propertyName, propertyValue);
+                if (isMongoOpValido()) {
+                    entityBean = findBase(entityClazz, propertyName, propertyValue);
+                }
+                else {
+                    doc = findDocByProperty(collectionName, propertyName, propertyValue);
+                    entityBean = creaByDoc(entityClazz, doc);
+                }
                 break;
             case gson:
                 doc = findDocByProperty(collectionName, propertyName, propertyValue);
                 entityBean = creaByDoc(entityClazz, doc);
-                //                collection = getCollection(entityClazz);
-                //                if (collection != null) {
-                //                    Bson condition = new Document(propertyName, propertyValue);
-                //                    iterable = collection.find(condition);
-                //                }
-                //                if (iterable != null) {
-                //                    doc = iterable.first();
-                //                }
-                //
-                //                if (doc != null) {
-                //                    try {
-                //                        entityBean = gSonService.creaId(entityClazz, (String) propertyValue);
-                //                    } catch (Exception unErrore) {
-                //                        if (propertyValue == null) {
-                //                            throw AlgosException.stack(unErrore, "La propertyValue è nulla", getClass(), "find");
-                //                        }
-                //                        else {
-                //                            throw AlgosException.stack(unErrore, getClass(), "find");
-                //                        }
-                //                    }
-                //                }
-                //                else {
-                //                    throw AlgosException.stack(String.format("Non sono riuscito a trovare una entity con keyId=%s", propertyValue), getClass(), "find");
-                //                }
                 break;
             case jackson:
                 break;
@@ -1398,7 +1419,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack(message, getClass(), "findDocByProperty");
         }
 
-        if (!reflection.isEsiste(entityClazz, propertyName)) {
+        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
             message = String.format("La entityClazz %s esiste ma non esiste la property %s", entityClazz.getSimpleName(), propertyName);
             throw AlgosException.stack(message, getClass(), "findDocByProperty");
         }
@@ -2446,13 +2467,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             return null;
         }
 
-        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
-            return null;
-        }
-
-        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
-            return null;
-        }
+//        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
+//            return null;
+//        }
+//
+//        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
+//            return null;
+//        }
 
         return new Document(propertyName, propertyValue);
     }
@@ -2506,6 +2527,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public List<String> getCollezioni() {
         return collezioni;
+    }
+
+
+    public boolean isMongoOpValido() {
+        return Optional.ofNullable(mongoOp).filter(op -> !op.getCollectionNames().isEmpty()).isPresent();
     }
 
 }
