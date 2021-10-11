@@ -3,12 +3,10 @@ package it.algos.unit;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.mongodb.client.*;
-import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
@@ -54,7 +52,7 @@ import java.util.stream.*;
 @Tag("testAllValido")
 @DisplayName("Mongo Service (senza mongoOp)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MongoServiceTest extends ATest {
+public class MongoServiceTest extends MongoTest {
 
     /**
      * Inietta da Spring
@@ -521,7 +519,7 @@ public class MongoServiceTest extends ATest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(23)
-    @DisplayName("23 - Find (spring) una entityBean by property")
+    @DisplayName("23 - Find (spring) entityBean by property")
     void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         System.out.println("23 - Find (spring) entityBean by property");
         FlowVar.typeSerializing = AETypeSerializing.spring;
@@ -537,16 +535,16 @@ public class MongoServiceTest extends ATest {
             printError(unErrore);
         }
 
-//        AEntity  entityBean2 = null;
-//        try {
-//            entityBean2 = gSonService.creaId(clazz,  propertyValue);
-//            int a=87;
-//            AEntity  entityBean3= entityBean;
-//        } catch (AlgosException unErrore) {
-//        }
+        //        AEntity  entityBean2 = null;
+        //        try {
+        //            entityBean2 = gSonService.creaId(clazz,  propertyValue);
+        //            int a=87;
+        //            AEntity  entityBean3= entityBean;
+        //        } catch (AlgosException unErrore) {
+        //        }
     }
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(25)
     @DisplayName("25 - Fetch (gson) tutte le entities di una classe")
@@ -575,10 +573,10 @@ public class MongoServiceTest extends ATest {
             printError(unErrore);
         }
         if (listaBean != null) {
-//            System.out.println("Tutto ok");
+            //            System.out.println("Tutto ok");
         }
         else {
-//            System.out.println("Qualcosa non ha funzionato");
+            //            System.out.println("Qualcosa non ha funzionato");
         }
     }
 
@@ -769,18 +767,6 @@ public class MongoServiceTest extends ATest {
         System.out.println(String.format("Nella collezione '%s' ci sono %s entities recuperate in %s", sorgenteClasse.getSimpleName(), textService.format(listaBean.size()), dateService.deltaTextEsatto(inizio)));
     }
 
-    //    @ParameterizedTest
-    //    @MethodSource(value = "COLLEZIONI")
-    //    @Order(2)
-    //    @DisplayName("2 - Stato delle collezioni")
-    //    void testWithStringParameterOld(String collectionName) {
-    //        System.out.println("2 - Stato delle collezioni");
-    //
-    //        sorgente = collectionName;
-    //        ottenutoBooleano = service.isExists(sorgente);
-    //        assertFalse(ottenutoBooleano);
-    //    }
-
 
     /**
      * Qui passa al termine di ogni singolo test <br>
@@ -797,24 +783,15 @@ public class MongoServiceTest extends ATest {
     void tearDownAll() {
     }
 
-    void printCount(final Class clazz, final int size, final Document bSon) {
-        printCount(clazz.getSimpleName(), size, bSon);
-    }
+//    void printCount(final Class clazz, final int size, final Document bSon) {
+//        printCount(clazz.getSimpleName(), size, bSon);
+//    }
 
 
     void printCount(final String simpleName, final int size, final Document bSon) {
         String key = (String) bSon.keySet().toArray()[0];
         int value = (int) bSon.values().toArray()[0];
         printCount(clazz.getSimpleName(), size, key, value);
-    }
-
-    void printCount(final Class clazz, final int size, final String property, final Object value) {
-        printCount(clazz.getSimpleName(), size, property, value);
-    }
-
-    void printCount(final String simpleName, final int size, final String property, final Object value) {
-        System.out.println(String.format(String.format("La classe %s ha %s entities filtrate con %s=%s", simpleName, size, property, value)));
-        System.out.println(VUOTA);
     }
 
 
@@ -841,156 +818,5 @@ public class MongoServiceTest extends ATest {
         }
         System.out.println(VUOTA);
     }
-
-
-    protected void printCount(final Class clazz, final int previstoIntero, final int ottenutoIntero, final boolean risultatoEsatto) {
-        if (clazz == null) {
-            System.out.println("Manca la entityClazz");
-            return;
-        }
-        if (ottenutoIntero == previstoIntero) {
-            if (risultatoEsatto) {
-                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono esattamente quelli previsti (obbligatori)", clazz.getSimpleName(), ottenutoIntero));
-            }
-            else {
-                System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono uguali a quelli indicativamente previsti (facoltativi)", clazz.getSimpleName(), ottenutoIntero));
-            }
-        }
-        else {
-            if (ottenutoIntero > previstoIntero) {
-                if (risultatoEsatto) {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s previsti e non va bene", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-                else {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono più dei %s indicativamente previsti", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-            }
-            else {
-                if (risultatoEsatto) {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s previsti e non va bene", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-                else {
-                    System.out.println(String.format("La collezione '%s' contiene %s records (entities) totali che sono meno dei %s indicativamente previsti", clazz.getSimpleName(), ottenutoIntero, previstoIntero));
-                }
-            }
-        }
-
-        if (risultatoEsatto) {
-            assertEquals(previstoIntero, ottenutoIntero);
-        }
-    }
-
-
-    protected void printCount(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final int ottenutoIntero) {
-        String clazzName;
-        if (clazz == null) {
-            System.out.println(String.format("Manca la entityClazz"));
-            return;
-        }
-        else {
-            clazzName = clazz.getSimpleName();
-        }
-
-        if (ottenutoIntero == previstoIntero) {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s=%s che sono quelli previsti", clazzName, ottenutoIntero, propertyName, propertyValue));
-        }
-        else {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s=%s che non sono i %s previsti", clazzName, ottenutoIntero, propertyName, propertyValue, previstoIntero));
-        }
-    }
-
-    protected void printCount(final Class clazz, AFiltro filtro, final int previstoIntero, final int ottenutoIntero) {
-        String clazzName;
-        String key = filtro.getCriteria().getCriteriaObject().keySet().toString();
-        String value = filtro.getCriteria().getCriteriaObject().values().toString();
-
-        if (clazz == null) {
-            System.out.println(String.format("Manca la entityClazz"));
-            return;
-        }
-        else {
-            clazzName = clazz.getSimpleName();
-        }
-
-        if (ottenutoIntero == previstoIntero) {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s = %s che sono quelli previsti", clazzName, ottenutoIntero, key, value));
-        }
-        else {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) filtrati con %s = %s che non sono i %s previsti", clazzName, ottenutoIntero, key, value, previstoIntero));
-        }
-    }
-
-    protected void printCount(final Class clazz, Map<String, AFiltro> mappaFiltri, final int previstoIntero, final int ottenutoIntero) {
-        String clazzName;
-        AFiltro filtro;
-        String property;
-        String value;
-        if (clazz == null) {
-            System.out.println(String.format("Manca la entityClazz"));
-            return;
-        }
-        else {
-            clazzName = clazz.getSimpleName();
-        }
-
-        if (ottenutoIntero == previstoIntero) {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) che sono quelli previsti", clazzName, ottenutoIntero));
-            for (String key : mappaFiltri.keySet()) {
-                filtro = mappaFiltri.get(key);
-                property = filtro.getCriteria().getCriteriaObject().keySet().toString();
-                value = filtro.getCriteria().getCriteriaObject().values().toString();
-                System.out.println(String.format("Filtro %s = %s", property, value));
-            }
-        }
-        else {
-            System.out.println(String.format("La collezione '%s' contiene %s records (entities) che non sono i %s previsti", clazzName, ottenutoIntero, previstoIntero));
-            for (String key : mappaFiltri.keySet()) {
-                filtro = mappaFiltri.get(key);
-                property = filtro.getCriteria().getCriteriaObject().keySet().toString();
-                value = filtro.getCriteria().getCriteriaObject().values().toString();
-                System.out.println(String.format("Filtro %s = %s", property, value));
-            }
-        }
-    }
-
-    protected void printEntityBeanFromKeyId(final Class clazz, final Serializable keyPropertyValue, final AEntity entityBean, final int previstoIntero) {
-        printEntityBeanFromProperty(clazz, FlowCost.FIELD_ID, keyPropertyValue, entityBean, previstoIntero);
-    }
-
-
-    protected void printEntityBeanFromProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final AEntity entityBean, final int previstoIntero) {
-        Map<String, Object> mappa;
-
-        if (clazz == null) {
-            System.out.print("Non esiste la classe indicata");
-            System.out.println(VUOTA);
-            System.out.println(VUOTA);
-            return;
-        }
-
-        if (entityBean == null) {
-            System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
-            System.out.println(VUOTA);
-            System.out.println(VUOTA);
-            return;
-        }
-
-        System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
-        printMappa(entityBean);
-//        System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
-//        try {
-//            mappa = reflectionService.getMappaEntity(entityBean);
-//            for (String key : mappa.keySet()) {
-//                System.out.print(key);
-//                System.out.print(UGUALE_SPAZIATO);
-//                System.out.println(mappa.get(key));
-//            }
-//
-//        } catch (AlgosException unErrore) {
-//        }
-//
-//        System.out.println(VUOTA);
-    }
-
 
 }

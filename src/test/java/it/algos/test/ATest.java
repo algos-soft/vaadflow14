@@ -3,6 +3,7 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
+import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -418,7 +419,7 @@ public abstract class ATest {
     //--propertyName
     //--propertyValue
     //--previstoIntero
-    //--doc valido
+    //--doc e/o entityBean valida
     protected static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, null, 0, false),
@@ -440,7 +441,8 @@ public abstract class ATest {
                 Arguments.of(Mese.class, "giorni", 32, 0, false),
                 Arguments.of(Via.class, "belzebù", "piazza", 0, false),
                 Arguments.of(Via.class, "nome", "belzebù", 0, false),
-                Arguments.of(Via.class, "nome", "piazza", 1, true)
+                Arguments.of(Via.class, "nome", "piazza", 1, true),
+                Arguments.of(Delta.class, "immagine", VUOTA, 0, false)
         );
     }
 
@@ -814,10 +816,17 @@ public abstract class ATest {
             System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
 
             if (entityBean != null) {
-                System.out.println(String.format("creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                if (entityBean.id != null && textService.isValid(entityBean.id)) {
+                    System.out.println(String.format("recuperata una entityBean di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                    printMappa(entityBean);
+                }
+                else {
+                    System.out.println(String.format("recuperata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+                    printMappa(entityBean);
+                }
             }
             else {
-                System.out.println(String.format("non è stata creata nessuna entityBean di classe %s", clazz.getSimpleName()));
+                System.out.println(String.format("nel mongoDB non è stata trovata nessuna entityBean di classe %s", clazz.getSimpleName()));
             }
         }
 
@@ -1015,7 +1024,7 @@ public abstract class ATest {
 
         clazz = entityBean.getClass();
         System.out.println(VUOTA);
-        System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+        System.out.println(String.format("Creata una entityBean di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
         try {
             mappa = reflectionService.getMappaEntity(entityBean);
             for (String key : mappa.keySet()) {

@@ -542,32 +542,33 @@ public class GsonServiceTest extends ATest {
         System.out.println(entityBean);
     }
 
-    @Test
-    @Order(98)
-    @DisplayName("98 - timestamp versus UTC Datetime")
-    void saveDate() {
-        Delta delta = Delta.builderDelta().build();
-        delta.id = "due";
-        delta.code = "pippone";
-        delta.uno = LocalDateTime.now();
-        delta.quattro = Timestamp.valueOf(LocalDateTime.now());
-        String jSonText;
-        Class<? extends AEntity> entityClazz = delta.getClass();
-        MongoCollection<Document> collection = mongoService.getCollection(entityClazz);
-
-        jSonText = service.entityToString(delta);
-        jSonText = jSonText.replace(FIELD_NAME_ID_SENZA, FIELD_NAME_ID_CON);
-        doc = textService.isValid(jSonText) ? Document.parse(jSonText) : null;
-        printDoc(doc);
-        try {
-            if (doc!=null) {
-                collection.insertOne(doc);
-            }
-        } catch (Exception unErrore) {
-            System.out.println(unErrore);
-        }
-
-    }
+//    @Test
+//    @Order(98)
+//    @DisplayName("98 - timestamp versus UTC Datetime")
+//    void saveDate() {
+//        Delta delta = Delta.builderDelta().build();
+//        delta.id = "tre";
+//        delta.code = "topolino";
+//        delta.immagine="";
+//        delta.uno = LocalDateTime.now();
+//        delta.quattro = Timestamp.valueOf(LocalDateTime.now());
+//        String jSonText;
+//        Class<? extends AEntity> entityClazz = delta.getClass();
+//        MongoCollection<Document> collection = mongoService.getCollection(entityClazz);
+//
+//        jSonText = service.entityToString(delta);
+//        jSonText = jSonText.replace(FIELD_NAME_ID_SENZA, FIELD_NAME_ID_CON);
+//        doc = textService.isValid(jSonText) ? Document.parse(jSonText) : null;
+//        printDoc(doc);
+//        try {
+//            if (doc!=null) {
+//                collection.insertOne(doc);
+//            }
+//        } catch (Exception unErrore) {
+//            System.out.println(unErrore);
+//        }
+//
+//    }
 
     private Document getDoc(Class clazz, String sorgente) {
         Document doc;

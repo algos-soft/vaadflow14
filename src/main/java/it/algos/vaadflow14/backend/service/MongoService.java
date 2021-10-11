@@ -266,8 +266,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     /**
      * Conteggio di alcune entities selezionate di una collection. <br>
      * <p>
-     * Se la propertyName non esiste, restituisce il numero totale di entities esistenti nella collezione <br>
-     * Se la propertyName esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     * Se la propertyName non esiste, restituisce il valore zero <br>
+     * Se la propertyValue non esiste, restituisce il valore zero <br>
+     * Se la propertyValue esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
      *
      * @param entityClazz   corrispondente ad una collection sul database mongoDB
      * @param propertyName  per costruire la query
@@ -299,11 +300,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     /**
      * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
      * <p>
-     * Se la propertyName non esiste, restituisce il numero totale di entities esistenti nella collezione <br>
-     * Se la propertyName esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
-     * <p>
-     * Se i filtri non esistono o non sono validi, restituisce il numero totale di entities esistenti nella collezione <br>
-     * Se i filtri sono validi, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     * Se la propertyName non esiste, restituisce il valore zero <br>
+     * Se la propertyValue non esiste, restituisce il valore zero <br>
+     * Se la propertyValue esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
      *
      * @param collectionName The name of the collection or view to count
      * @param propertyName   per costruire la query
@@ -316,7 +315,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         String message;
         MongoCollection<Document> collection;
         Query query;
-        Bson filter;
 
         if (text.isEmpty(collectionName)) {
             message = String.format("Manca il nome della collezione %s", collectionName);
@@ -554,6 +552,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     public AEntity find(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         AEntity entityBean = null;
         Document doc;
+        String message;
         String collectionName = annotation.getCollectionName(entityClazz);
 
         if (entityClazz == null) {
@@ -562,6 +561,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
             throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), getClass(), "find");
+        }
+
+        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
+            message = String.format("La entityClazz %s esiste ma non esiste la property %s", entityClazz.getSimpleName(), propertyName);
+            throw AlgosException.stack(message, getClass(), "find");
         }
 
         switch (FlowVar.typeSerializing) {
@@ -1722,15 +1726,32 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         Query query = new Query();
+        int totRecords = 0;
+        String message;
 
-        if (entityClazz == null || text.isEmpty(propertyName)) {
-            return null;
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", getClass(), "findBase");
+        }
+
+        if (text.isEmpty(propertyName)) {
+            throw AlgosException.stack("Manca la propertyName", getClass(), "findBase");
         }
 
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
-        return mongoOp.findOne(query, entityClazz);
+
+        totRecords = (int) mongoOp.count(query, entityClazz);
+        switch (totRecords) {
+            case 0:
+                message = String.format("Nella entityClazz %s non esiste nessuna entity con %s=%s", entityClazz.getSimpleName(), propertyName, propertyValue);
+                throw AlgosException.stack(message, getClass(), "findBase");
+            case 1:
+                return mongoOp.findOne(query, entityClazz);
+            default:
+                message = String.format("Nella entityClazz %s ci sono diverse entities con %s=%s", entityClazz.getSimpleName(), propertyName, propertyValue);
+                throw AlgosException.stack(message, getClass(), "findBase");
+        }
     }
 
     /**
@@ -2425,13 +2446,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             return query;
         }
 
-        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
-            return query;
-        }
-
-        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
-            return query;
-        }
+        //        if (propertyValue instanceof String && text.isEmpty((String) propertyValue)) {
+        //            return query;
+        //        }
+        //
+        //        if (propertyValue instanceof Number && ((Number) propertyValue).intValue() < 1) {
+        //            return query;
+        //        }
 
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
 

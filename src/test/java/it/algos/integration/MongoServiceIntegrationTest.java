@@ -2,24 +2,38 @@ package it.algos.integration;
 
 import com.mongodb.client.*;
 import it.algos.simple.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
-import static junit.framework.TestCase.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.conversions.*;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.test.context.junit.jupiter.*;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
 
 
 /**
@@ -34,15 +48,8 @@ import org.springframework.test.context.junit.jupiter.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Mongo Service Integration (con mongoOp)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MongoServiceIntegrationTest extends ATest {
+public class MongoServiceIntegrationTest extends MongoTest {
 
-    protected static final String COLLEZIONE_INESISTENTE = "pomeriggio";
-
-    protected static final String COLLEZIONE_VUOTA = "utente";
-
-    protected static final String COLLEZIONE_VALIDA = "giorno";
-
-    private static final String DATA_BASE_NAME = "vaadflow14";
 
     /**
      * Inietta da Spring
@@ -72,11 +79,34 @@ public class MongoServiceIntegrationTest extends ATest {
 
     private AETypeSerializing oldType;
 
+    //--da regolare per mostrare errori previsti oppure nasconderli per velocizzare
+    //--da usare SOLO come controllo per errori previsti
+    private boolean flagRisultatiEsattiObbligatori = true;
+
+    //--clazz
+    //--previstoIntero
+    //--risultatoEsatto
+    private static Stream<Arguments> CLAZZ_COUNT() {
+        return Stream.of(
+                Arguments.of(null, 0, false),
+                Arguments.of(LogicList.class, 0, false),
+                Arguments.of(Utente.class, 0, false),
+                Arguments.of(Bolla.class, 5, false),
+                Arguments.of(Mese.class, 12, true),
+                Arguments.of(Giorno.class, 366, true),
+                Arguments.of(Via.class, 26, false),
+                Arguments.of(AIType.class, 0, true),
+                Arguments.of(Company.class, 3, false),
+                Arguments.of(Stato.class, 249, true),
+                Arguments.of(Continente.class, 7, true)
+        );
+    }
+
     /**
      * Qui passa una volta sola <br>
      */
     @BeforeAll
-    void setUpAll() {
+    void setUpIniziale() {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);
@@ -94,7 +124,7 @@ public class MongoServiceIntegrationTest extends ATest {
 
         //        this.cancellazioneEntitiesProvvisorie();
         //        this.creazioneInizialeEntitiesProvvisorie();
-        oldType = FlowVar.typeSerializing;
+        //        oldType = FlowVar.typeSerializing;
 
         companyService.mongo = service;
         //        service.mongoOp = mongoOp;
@@ -107,7 +137,7 @@ public class MongoServiceIntegrationTest extends ATest {
 
         collection = null;
         bSon = null;
-        FlowVar.typeSerializing = oldType;
+        //        FlowVar.typeSerializing = oldType;
     }
 
 
@@ -134,655 +164,215 @@ public class MongoServiceIntegrationTest extends ATest {
         System.out.println(String.format("Collezioni esistenti: %s", listaStr));
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ")
+    @NullSource
     @Order(2)
-    @DisplayName("2 - Collezioni")
-    void getCollection() {
-        System.out.println("2- Collezioni");
-
-        clazz = null;
-        collection = service.getCollection(clazz);
-        assertNull(collection);
-        System.out.println(String.format("La collezione %s non esiste", clazz));
-
-        clazz = Via.class;
-        collection = service.getCollection(clazz);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", clazz));
-
-        //        collection = service.getCollection(sorgente);
-        //        assertNull(collection);
-        //        System.out.println(String.format("La collezione %s non esiste", sorgente));
-
-        sorgente = "via";
+    @DisplayName("2 - Collezioni per clazz")
+    /*
+      Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
+      Recupera la collezione
+      Controlla l'esistenza della collezione (dal numero di entities presenti)
+      Controlla se la collezione è vuota (dal numero di entities presenti)
+     */
+    void collectionClazz(Class clazz) {
         try {
-            clazz = classService.getClazzFromSimpleName(sorgente);
+            ottenutoBooleano = service.isExistsCollection(clazz);
         } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
+        printCollection(clazz, ottenutoBooleano);
         collection = service.getCollection(clazz);
-        assertNotNull(collection);
-        System.out.println(String.format("La collezione %s esiste", sorgente));
+        printCollection(clazz, collection);
+        try {
+            ottenutoBooleano = service.isValidCollection(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCollectionValida(clazz, ottenutoBooleano);
+        try {
+            ottenutoBooleano = !service.isValidCollection(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCollectionVuota(clazz, ottenutoBooleano);
 
-        //        sorgente = Via.class.getCanonicalName();
-        //        collection = service.getCollection(sorgente);
-        //        assertNotNull(collection);
-        //        System.out.println(String.format("La collezione %s esiste", sorgente));
-        //
-        //        sorgente = Via.class.getName();
-        //        collection = service.getCollection(sorgente);
-        //        assertNotNull(collection);
-        //        System.out.println(String.format("La collezione %s esiste", sorgente));
-        //
-        //        sorgente = Via.class.getSimpleName().toLowerCase(Locale.ROOT);
-        //        collection = service.getCollection(sorgente);
-        //        assertNotNull(collection);
-        //        System.out.println(String.format("La collezione %s esiste", sorgente));
+        System.out.println(VUOTA);
     }
 
-    //    @Test
-    //    @Order(3)
-    //    @DisplayName("3 - Esistenza delle collezioni")
-    //    void isExistsCollection() {
-    //        System.out.println("3 - Esistenza delle collezioni dalla classe");
-    //        clazz = null;
-    //        ottenutoBooleano = service.isExistsCollection(clazz);
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(clazz, "non esiste");
-    //
-    //        clazz = Utente.class;
-    //        ottenutoBooleano = service.isExistsCollection(clazz);
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(clazz, "esiste");
-    //
-    //        clazz = Via.class;
-    //        ottenutoBooleano = service.isExistsCollection(clazz);
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(clazz, "esiste");
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("3 - Esistenza delle collezioni dal nome");
-    //        sorgente = COLLEZIONE_INESISTENTE;
-    //        ottenutoBooleano = service.isExistsCollection(sorgente);
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(sorgente, "non esiste");
-    //
-    //        sorgente = COLLEZIONE_VUOTA;
-    //        ottenutoBooleano = service.isExistsCollection(sorgente);
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(sorgente, "esiste");
-    //
-    //        sorgente = COLLEZIONE_VALIDA;
-    //        ottenutoBooleano = service.isExistsCollection(sorgente);
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(sorgente, "esiste");
-    //    }
-    //
-    //    @Test
-    //    @Order(4)
-    //    @DisplayName("4 - Validità delle collezioni")
-    //    void isValidCollection() {
-    //        System.out.println("4 - Validità delle collezioni dalla classe");
-    //
-    //        clazz = null;
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(clazz, "non è valida");
-    //
-    //        clazz = Utente.class;
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(clazz, "non è valida");
-    //
-    //        clazz = Via.class;
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(clazz, "è valida");
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("4 - Validità delle collezioni dal nome");
-    //
-    //        sorgente = COLLEZIONE_INESISTENTE;
-    //        try {
-    //            ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(sorgente, "non è valida");
-    //
-    //        sorgente = COLLEZIONE_VUOTA;
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(sorgente, "non è valida");
-    //
-    //        sorgente = COLLEZIONE_VALIDA;
-    //        try {
-    //            ottenutoBooleano = service.isValidCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(sorgente, "è valida");
-    //    }
-    //
-    //    @Test
-    //    @Order(5)
-    //    @DisplayName("5 - Check collezione vuota")
-    //    void isEmptyCollection() {
-    //        System.out.println("5 - Check collezione vuota dalla classe");
-    //
-    //        clazz = null;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(clazz, "è vuota");
-    //
-    //        clazz = Utente.class;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(clazz, "è vuota");
-    //
-    //        clazz = Via.class;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(clazz, "non è vuota");
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("5 - Check collezione vuota dal nome");
-    //
-    //        sorgente = COLLEZIONE_INESISTENTE;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(sorgente, "è vuota");
-    //
-    //        sorgente = COLLEZIONE_VUOTA;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoBooleano);
-    //        printCollection(sorgente, "non è vuota");
-    //
-    //        sorgente = COLLEZIONE_VALIDA;
-    //        try {
-    //            ottenutoBooleano = service.isEmptyCollection(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertFalse(ottenutoBooleano);
-    //        printCollection(sorgente, "non è vuota");
-    //    }
-    //
-    //    @Test
-    //    @Order(6)
-    //    @DisplayName("6 - Count totale della classe (gson e spring)")
-    //    void count() {
-    //        System.out.println("6 - Count totale della collezione dalla classe");
-    //        System.out.println("metodo semplice per l'intera collection");
-    //        System.out.println("rimanda al metodo base con filtro (query) nullo");
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println("Test eseguito con typeSerializing=gson");
-    //        FlowVar.typeSerializing = AETypeSerializing.gson;
-    //        clazz = null;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        clazz = Utente.class;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        clazz = Giorno.class;
-    //        previstoIntero = 366;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("6 - Count totale della collezione dal nome");
-    //
-    //        sorgente = VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_INESISTENTE;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_VALIDA;
-    //        previstoIntero = 366;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("Test eseguito con typeSerializing=spring");
-    //        FlowVar.typeSerializing = AETypeSerializing.spring;
-    //        clazz = null;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        clazz = Utente.class;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        clazz = Giorno.class;
-    //        previstoIntero = 366;
-    //        try {
-    //            ottenutoIntero = service.count(clazz);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        printCount(clazz, ottenutoIntero);
-    //
-    //        System.out.println(VUOTA);
-    //        System.out.println(VUOTA);
-    //        System.out.println("6 - Count totale della collezione dal nome");
-    //
-    //        sorgente = VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_INESISTENTE;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        printCount(sorgente, ottenutoIntero);
-    //
-    //        sorgente = COLLEZIONE_VALIDA;
-    //        previstoIntero = 366;
-    //        try {
-    //            ottenutoIntero = service.count(sorgente);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        printCount(sorgente, ottenutoIntero);
-    //    }
-    //
-    //    @Test
-    //    @Order(7)
-    //    @DisplayName("7 - Count filtrato (gson e spring) dalla classe")
-    //    void count2() {
-    //        System.out.println("7 - Count filtrato (gson e spring) dalla classe");
-    //        FlowVar.typeSerializing = AETypeSerializing.gson;
-    //
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        System.out.println(String.format("Manca la classe"));
-    //
-    //        clazz = Utente.class;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        System.out.println(String.format("La collezione %s ha %s entities", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        clazz = Mese.class;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca il valore di bSon; l'intera collezione %s ha %s entities", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 30;
-    //        previstoIntero = 4;
-    //        bSon = new Document(sorgente, sorgenteIntero);
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        System.out.println(VUOTA);
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 31;
-    //        previstoIntero = 7;
-    //        bSon = new Document(sorgente, sorgenteIntero);
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        System.out.println(VUOTA);
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 28;
-    //        previstoIntero = 1;
-    //        bSon = new Document(sorgente, sorgenteIntero);
-    //        try {
-    //            ottenutoIntero = service.count(clazz, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        System.out.println(VUOTA);
-    //        sorgente2 = Mese.class.getSimpleName().toLowerCase(Locale.ROOT);
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 28;
-    //        previstoIntero = 1;
-    //        bSon = new Document(sorgente, sorgenteIntero);
-    //        try {
-    //            ottenutoIntero = service.count(sorgente2, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-    //
-    //        System.out.println(VUOTA);
-    //        sorgente2 = "non esiste";
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 28;
-    //        previstoIntero = 0;
-    //        bSon = new Document(sorgente, sorgenteIntero);
-    //        try {
-    //            ottenutoIntero = service.count(sorgente2, bSon);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate", clazz.getSimpleName(), ottenutoIntero));
-    //    }
-    //
-    //
-    //    @Test
-    //    @Order(8)
-    //    @DisplayName("8 - Count gson filtrato (propertyName, propertyValue) dalla classe")
-    //    void count3() {
-    //        System.out.println("8 - Count gson filtrato (propertyName, propertyValue) dalla classe");
-    //        FlowVar.typeSerializing = AETypeSerializing.gson;
-    //
-    //        clazz = null;
-    //        sorgente = VUOTA;
-    //        sorgente2 = VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        System.out.println(String.format("Manca la classe"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = VUOTA;
-    //        sorgente2 = VUOTA;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyName e anche la propertyValue e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgente2 = VUOTA;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyValue e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = VUOTA;
-    //        sorgenteIntero = 28;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 31;
-    //        previstoIntero = 7;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("La classe %s ha %s entities filtrate con %s=%s", clazz.getSimpleName(), ottenutoIntero, sorgente, sorgenteIntero));
-    //    }
-    //
-    //
-    //    @Test
-    //    @Order(9)
-    //    @DisplayName("9 - Count spring filtrato (propertyName, propertyValue) dalla classe")
-    //    void count4() {
-    //        System.out.println("9 - Count spring filtrato (propertyName, propertyValue) dalla classe");
-    //        System.out.println("9 - Funziona SOLO in MongoServiceIntegrationTest");
-    //        System.out.println(VUOTA);
-    //        FlowVar.typeSerializing = AETypeSerializing.spring;
-    //
-    //        clazz = null;
-    //        sorgente = VUOTA;
-    //        sorgente2 = VUOTA;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertTrue(ottenutoIntero == 0);
-    //        System.out.println(String.format("Manca la classe"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = VUOTA;
-    //        sorgente2 = VUOTA;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyName e anche la propertyValue e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgente2 = VUOTA;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgente2);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyValue e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = VUOTA;
-    //        sorgenteIntero = 28;
-    //        previstoIntero = 12;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
-    //
-    //        clazz = Mese.class;
-    //        sorgente = "giorni";
-    //        sorgenteIntero = 31;
-    //        previstoIntero = 7;
-    //        try {
-    //            ottenutoIntero = service.count(clazz, sorgente, sorgenteIntero);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //        System.out.println(String.format("Manca la propertyName e restituisce tutta la collection"));
-    //    }
-    //
-    //    //    @Test
-    //    //    @Order(10)
-    //    //    @DisplayName("10 - Count spring filtrato (query) dalla classe")
-    //    //    void countQuery() {
-    //    //        System.out.println("10 - Count spring filtrato (query) dalla classe");
-    //    //
-    //    //        Query query = new Query();
-    //    //
-    //    //        previstoIntero = 0;
-    //    //        ottenutoIntero = service.count((Class) null, (Query) null);
-    //    //        Assert.assertTrue(ottenutoIntero == 0);
-    //    //
-    //    //        query.addCriteria(Criteria.where("mese.$id").is("maggio"));
-    //    //        ottenutoIntero = service.count(Giorno.class, (Query) null);
-    //    //        Assert.assertTrue(ottenutoIntero == 0);
-    //    //        Assert.assertEquals(previstoIntero, ottenutoIntero);
-    //    //
-    //    //        previstoIntero = 31;
-    //    //        ottenutoIntero = service.count(Giorno.class, query);
-    //    //        Assert.assertTrue(ottenutoIntero > 0);
-    //    //        Assert.assertEquals(previstoIntero, ottenutoIntero);
-    //    //    }
-    //
-    //    @Test
-    //    @Order(11)
-    //    @DisplayName("11 - Count gson filtrato (AFiltro) singolo")
-    //    void count5() {
-    //        System.out.println("11 - Count gson filtrato (AFiltro) singolo");
-    //        FlowVar.typeSerializing = AETypeSerializing.gson;
-    //        AFiltro filtro;
-    //
-    //        String filtroText = "co";
-    //        filtro = AFiltro.contains(NAME_NOME, filtroText);
-    //        previstoIntero = 6;
-    //        try {
-    //            ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-    //        } catch (AlgosException unErrore) {
-    //            System.out.println(unErrore);
-    //        }
-    //        assertEquals(previstoIntero, ottenutoIntero);
-    //
-    //        String filtroStart = "v";
-    //        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    //        previstoIntero = 4;
-    //        try {
-    //            ottenutoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-    //        } catch (AlgosException unErrore) {
-    //            System.out.println(unErrore);
-    //        }
-    //        Assertions.assertEquals(previstoIntero, ottenutoIntero);
-    //    }
-    //
-    //    @Test
-    //    @Order(12)
-    //    @DisplayName("12 - Count gson filtrato (mappaFiltri)")
-    //    void count6() {
-    //        System.out.println("12 - Count gson filtrato (mappaFiltri)");
-    //        System.out.println(VUOTA);
-    //        FlowVar.typeSerializing = AETypeSerializing.gson;
-    //        AFiltro filtro;
-    //
-    //        String filtroStart = "v";
-    //        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    //        mappaFiltri.put("a", filtro);
-    //
-    //        String filtroText = "co";
-    //        AFiltro filtro2 = AFiltro.contains(NAME_NOME, filtroText);
-    //        mappaFiltri.put("b", filtro2);
-    //        previstoIntero = 2;
-    //        try {
-    //            ottenutoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-    //        } catch (AlgosException unErrore) {
-    //            System.out.println(unErrore.getCause().getMessage());
-    //            System.out.println(unErrore.getMessage());
-    //        }
-    //        Assertions.assertEquals(previstoIntero, ottenutoIntero);
-    //    }
-    //
-    //
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_COUNT")
+    @Order(4)
+    @DisplayName("4 - Count totale per clazz")
+    /*
+      metodo semplice per l'intera collection
+      rimanda al metodo base collection.countDocuments();
+      non usa ne gson ne spring
+     */
+    void countClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("4 - Count totale per clazz");
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz);
+            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(6)
+    @DisplayName("6 - Count filtrato (propertyName, propertyValue) per clazz")
+    void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("6 - Count filtrato (propertyName, propertyValue) per clazz");
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz, propertyName, propertyValue);
+            printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (flagRisultatiEsattiObbligatori) {
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
+        System.out.println(VUOTA);
+    }
+
+
+    @Test
+    @Order(8)
+    @DisplayName("8 - Count filtrato (AFiltro) singolo")
+    void countFiltroSpring() {
+        System.out.println("8 - Count filtrato (AFiltro) singolo");
+        AFiltro filtro;
+        Map<String, AFiltro> mappaFiltri;
+
+        clazz = VIA_ENTITY_CLASS;
+        String filtroContains = "co";
+        filtro = AFiltro.contains(NAME_NOME, filtroContains);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = 6;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, filtro, previstoIntero, ottenutoIntero);
+        System.out.println(VUOTA);
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        clazz = VIA_ENTITY_CLASS;
+        String filtroStart = "v";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = 4;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, filtro, previstoIntero, ottenutoIntero);
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        clazz = VIA_ENTITY_CLASS;
+        filtroStart = "circ";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = 1;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, filtro, previstoIntero, ottenutoIntero);
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        clazz = VIA_ENTITY_CLASS;
+        filtroStart = "c";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
+        previstoIntero = 452;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, filtro, previstoIntero, ottenutoIntero);
+        System.out.println("(Esempio volutamente sbagliato)");
+        assertNotEquals(previstoIntero, ottenutoIntero);
+    }
+
+
+    @Test
+    @Order(10)
+    @DisplayName("10 - Count filtrato (mappaFiltri)")
+    void countFiltroMappaSpring() {
+        System.out.println("10 - Count filtrato (mappaFiltri)");
+        AFiltro filtro;
+        clazz = VIA_ENTITY_CLASS;
+
+        String filtroStart = "v";
+        filtro = AFiltro.start(NAME_NOME, filtroStart);
+        mappaFiltri.put("a", filtro);
+
+        String filtroContains = "co";
+        AFiltro filtro2 = AFiltro.contains(NAME_NOME, filtroContains);
+        mappaFiltri.put("b", filtro2);
+        previstoIntero = 2;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        printCount(clazz, mappaFiltri, previstoIntero, ottenutoIntero);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(17)
+    @DisplayName("17 - Find entityBean by keyId")
+    void findByIdSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("17 - Find entityBean by keyId");
+        entityBean = null;
+        try {
+            entityBean = service.find(clazz, keyPropertyValue);
+            printEntityBeanFromKeyId(clazz, keyPropertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(entityBean);
+        }
+        else {
+            assertNull(entityBean);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(23)
+    @DisplayName("23 - Find entityBean by property")
+    void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final boolean entityBeanValida) {
+        System.out.println("23 - Find entityBean by property");
+        try {
+            entityBean = service.find(clazz, propertyName, propertyValue);
+            printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (entityBeanValida) {
+            assertNotNull(entityBean);
+        }
+        else {
+            assertNull(entityBean);
+        }
+    }
+
+
+
     //    @Test
     //    @Order(13)
     //    @DisplayName("13 - Save base di una entity")
@@ -2518,5 +2108,6 @@ public class MongoServiceIntegrationTest extends ATest {
     //    private void cancellazioneEntitiesProvvisorie() {
     //        //        roleLogic.reset();
     //    }
+
 
 }
