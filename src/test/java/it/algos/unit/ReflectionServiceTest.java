@@ -1,5 +1,6 @@
 package it.algos.unit;
 
+import it.algos.simple.backend.packages.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -94,17 +95,19 @@ public class ReflectionServiceTest extends ATest {
     //--valida
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
         return Stream.of(
-                Arguments.of((Class) null, VUOTA, false),
-                Arguments.of(Utente.class, VUOTA, false),
-                Arguments.of(Mese.class, null, false),
-                Arguments.of(Mese.class, VUOTA, false),
-                Arguments.of(Mese.class, "termidoro", false),
-                Arguments.of(Giorno.class, "2agosto", true),
-                Arguments.of(Giorno.class, "2 agosto", false),
-                Arguments.of(Mese.class, "marzo", true),
-                Arguments.of(Mese.class, "Marzo", true),
-                Arguments.of(Mese.class, "marzo esatto", false)
-        );
+//                Arguments.of((Class) null, VUOTA, false),
+//                Arguments.of(Utente.class, VUOTA, false),
+//                Arguments.of(Mese.class, null, false),
+//                Arguments.of(Mese.class, VUOTA, false),
+//                Arguments.of(Mese.class, "termidoro", false),
+//                Arguments.of(Giorno.class, "2agosto", true),
+//                Arguments.of(Giorno.class, "2 agosto", false),
+//                Arguments.of(Mese.class, "marzo", true),
+//                Arguments.of(Mese.class, "Marzo", true),
+//                Arguments.of(Mese.class, "marzo esatto", false),
+                Arguments.of(Delta.class, "due", true),
+                Arguments.of(Via.class, "piazza", true)
+                );
     }
 
 

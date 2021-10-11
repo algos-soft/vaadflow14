@@ -1,10 +1,13 @@
 package it.algos.vaadflow14.backend.service;
 
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jdk8.*;
+import com.fasterxml.jackson.datatype.jsr310.*;
 import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -603,14 +606,20 @@ public class ReflectionService extends AbstractService {
      */
     public Map<String, Object> getMappaEntity(final AEntity entityBean) throws AlgosException {
         Map<String, Object> mappa;
-        ObjectMapper mapper = null;
+        ObjectMapper mapper;
 
         if (entityBean == null) {
             throw AlgosException.stack("Manca la entityBean", getClass(), "getMappaEntity");
         }
 
         mapper = new ObjectMapper();
-        mappa = mapper.convertValue(entityBean, Map.class);
+        mapper.registerModule(new Jdk8Module());
+        mapper.registerModule(new JavaTimeModule());
+        try {
+            mappa = mapper.convertValue(entityBean, Map.class);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "getMappaEntity");
+        }
 
         return mappa;
     }

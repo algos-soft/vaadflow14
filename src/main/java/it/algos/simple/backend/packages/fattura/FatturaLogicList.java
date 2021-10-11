@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.*;
 import it.algos.vaadflow14.ui.button.*;
@@ -88,6 +89,12 @@ public class FatturaLogicList extends LogicList {
     @Override
     protected void fixPreferenze() {
         super.fixPreferenze();
+
+//        try {
+//           Object listaBean = mongo.fetch(Mese.class);
+//        } catch (AlgosException unErrore) {
+//        }
+
 
         super.usaBottoneDeleteAll = true;
         super.usaBottoneResetList = true;

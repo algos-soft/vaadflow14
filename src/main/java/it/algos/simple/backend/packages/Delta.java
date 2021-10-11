@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.index.*;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import javax.validation.constraints.*;
+import java.sql.*;
 import java.time.*;
 
 /**
@@ -93,6 +94,9 @@ public class Delta extends AEntity {
     @AIField(type = AETypeField.localTime, caption = "Settimana estesa")
     @AIColumn(typeData = AETypeData.orario, header = "orario")
     public LocalTime tre;
+
+    @AIField(type = AETypeField.timestamp)
+    public Timestamp quattro;
 
     /**
      * @return a string representation of the object.

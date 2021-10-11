@@ -3,11 +3,12 @@ package it.algos.vaadflow14.backend.service;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jdk8.*;
+import com.fasterxml.jackson.datatype.jsr310.*;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonParseException;
 import com.google.gson.*;
 import com.mongodb.*;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.sql.*;
 import java.time.*;
 import java.util.*;
 
@@ -346,7 +348,7 @@ public class GsonService extends AbstractService {
      *
      * @return stringa json
      */
-    public String mongoToString(final Class entityClazz,  Serializable keyId) throws AlgosException{
+    public String mongoToString(final Class entityClazz, Serializable keyId) throws AlgosException {
         String jsonString = VUOTA;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
         Gson gSon;
@@ -387,13 +389,13 @@ public class GsonService extends AbstractService {
     /**
      * Costruzione di un testo JSON partendo dal valore della keyID <br>
      *
-     * @param entityClazz della entityBean
+     * @param entityClazz   della entityBean
      * @param propertyName  per costruire la query
      * @param propertyValue must not be {@literal null}
      *
      * @return stringa json
      */
-    public String mongoToString(final Class entityClazz,  final String propertyName, final Serializable propertyValue) throws AlgosException{
+    public String mongoToString(final Class entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         String jsonString = VUOTA;
         collection = dataBase.getCollection(entityClazz.getSimpleName().toLowerCase());
         Gson gSon;
@@ -402,10 +404,10 @@ public class GsonService extends AbstractService {
             throw AlgosException.stack("Manca la propertyName", getClass(), "mongoToString");
         }
 
-        if (propertyValue!=null) {
+        if (propertyValue != null) {
             query = new BasicDBObject();
             query.put(propertyName, propertyValue);
-            if (collection.countDocuments(query)==1) {
+            if (collection.countDocuments(query) == 1) {
                 doc = collection.find(query).first();
                 if (doc != null) {
                     gSon = new Gson();
@@ -414,29 +416,29 @@ public class GsonService extends AbstractService {
             }
         }
 
-//        keyId = keyId.toString().toLowerCase();
-//        if (collection != null) {
-//            query = new BasicDBObject();
-//            query.put("_id", keyId);
-//            doc = collection.find(query).first();
-//        }
-//
-//        if (doc != null) {
-//            gSon = new Gson();
-//            jsonString = gSon.toJson(doc);
-//        }
-//        else {
-//            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
-//            if (text.isValid(keyPropertyName)) {
-//                query = new BasicDBObject();
-//                query.put(keyPropertyName, propertyValue);
-//                doc = collection.find(query).first();
-//                if (doc != null) {
-//                    gSon = new Gson();
-//                    jsonString = gSon.toJson(doc);
-//                }
-//            }
-//        }
+        //        keyId = keyId.toString().toLowerCase();
+        //        if (collection != null) {
+        //            query = new BasicDBObject();
+        //            query.put("_id", keyId);
+        //            doc = collection.find(query).first();
+        //        }
+        //
+        //        if (doc != null) {
+        //            gSon = new Gson();
+        //            jsonString = gSon.toJson(doc);
+        //        }
+        //        else {
+        //            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        //            if (text.isValid(keyPropertyName)) {
+        //                query = new BasicDBObject();
+        //                query.put(keyPropertyName, propertyValue);
+        //                doc = collection.find(query).first();
+        //                if (doc != null) {
+        //                    gSon = new Gson();
+        //                    jsonString = gSon.toJson(doc);
+        //                }
+        //            }
+        //        }
 
         return jsonString;
     }
@@ -451,11 +453,11 @@ public class GsonService extends AbstractService {
      *
      * @return new entity
      */
-    public AEntity stringToEntity(final Class entityClazz, final String jsonString) throws AlgosException{
+    public AEntity stringToEntity(final Class entityClazz, final String jsonString) throws AlgosException {
         AEntity entityBean = null;
         List<String> listaNoDbRefAndGraffe = estraeGraffe(jsonString);
 
-        if (listaNoDbRefAndGraffe==null) {
+        if (listaNoDbRefAndGraffe == null) {
             return entityBean;
         }
 
@@ -498,7 +500,7 @@ public class GsonService extends AbstractService {
     /**
      * Costruzione della entity partendo dal valore della keyID <br>
      *
-     * @param entityClazz della AEntity
+     * @param entityClazz   della AEntity
      * @param propertyName  per costruire la query
      * @param propertyValue must not be {@literal null}
      *
@@ -511,7 +513,7 @@ public class GsonService extends AbstractService {
             throw AlgosException.stack("Non esiste la classe indicata", getClass(), "creaProperty");
         }
 
-        String jsonString = this.mongoToString(entityClazz, propertyName,propertyValue);
+        String jsonString = this.mongoToString(entityClazz, propertyName, propertyValue);
         jsonString = fixStringa(jsonString);
         entityBean = this.stringToEntity(entityClazz, jsonString);
 
@@ -597,6 +599,13 @@ public class GsonService extends AbstractService {
             @Override
             public LocalTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
                 return date.deserializeLocalTime(json);
+            }
+        });
+        builder.registerTypeAdapter(Timestamp.class, new JsonDeserializer<Timestamp>() {
+
+            @Override
+            public Timestamp deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                return date.deserializeTimestamp(json);
             }
         });
         gSon = builder.create();
@@ -723,7 +732,15 @@ public class GsonService extends AbstractService {
     public String entityToString(final AEntity entityBean) {
         String jsonString = VUOTA;
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Jdk8Module());
+        mapper.registerModule(new JavaTimeModule());
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        try {
+            Map<String, Object> mappa = reflection.getMappaEntity(entityBean);
+            int a=87;
+        } catch (AlgosException unErrore) {
+        }
 
         try {
             jsonString = mapper.writeValueAsString(entityBean);

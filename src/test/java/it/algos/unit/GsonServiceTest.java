@@ -1,5 +1,8 @@
 package it.algos.unit;
 
+import com.mongodb.*;
+import com.mongodb.client.*;
+import it.algos.simple.backend.packages.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -10,12 +13,16 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.service.*;
+import org.bson.*;
 import static org.junit.Assert.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
 import java.io.*;
+import java.sql.*;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -207,17 +214,20 @@ public class GsonServiceTest extends ATest {
     @DisplayName("7 - crea una entityBean da un testo jSon di mongoDB")
     void crea() {
         System.out.println("7 - crea una entityBean da un testo jSon di mongoDB");
+        System.out.println(VUOTA);
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        String mongoToString=VUOTA;
+        String mongoToString = VUOTA;
         String entityToString;
         AEntity entityFromMongoString;
         AEntity entityFromEntityString;
 
         sorgente = "piazza";
         clazz = Via.class;
+
         try {
             entityBean = mongoService.find(clazz, sorgente);
-        } catch (Exception unErrore) {
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
         assertNotNull(entityBean);
 
@@ -227,12 +237,16 @@ public class GsonServiceTest extends ATest {
             printError(unErrore);
         }
         entityToString = service.entityToString(entityBean);
+
+        System.out.println(VUOTA);
         System.out.println(String.format("mongoToString: %s", mongoToString));
         System.out.println(String.format("entityToString: %s", entityToString));
-//        entityFromMongoString = service.stringToEntity(clazz, mongoToString);
-//        entityFromEntityString = service.stringToEntity(clazz, entityToString);
-//        assertNotNull(entityFromMongoString);
-//        assertNotNull(entityFromEntityString);
+        System.out.println(VUOTA);
+
+        //        entityFromMongoString = service.stringToEntity(clazz, mongoToString);
+        //        entityFromEntityString = service.stringToEntity(clazz, entityToString);
+        //        assertNotNull(entityFromMongoString);
+        //        assertNotNull(entityFromEntityString);
 
         sorgente = "5gennaio";
         clazz = Giorno.class;
@@ -331,11 +345,11 @@ public class GsonServiceTest extends ATest {
     void creaPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         FlowVar.typeSerializing = AETypeSerializing.gson;
         try {
-            entityBean = service.creaProperty(clazz, propertyName,propertyValue);
+            entityBean = service.creaProperty(clazz, propertyName, propertyValue);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        printEntityBeanFromProperty(clazz,  propertyName, propertyValue, entityBean, previstoIntero);
+        printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
     }
 
 
@@ -349,44 +363,11 @@ public class GsonServiceTest extends ATest {
     void creaPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         FlowVar.typeSerializing = AETypeSerializing.spring;
         try {
-            entityBean = service.creaProperty(clazz, propertyName,propertyValue);
+            entityBean = service.creaProperty(clazz, propertyName, propertyValue);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        printEntityBeanFromProperty(clazz,  propertyName, propertyValue, entityBean, previstoIntero);
-    }
-
-
-
-    @Test
-    @Order(15)
-    @DisplayName("15 - creazione di un testo jSon da mongoDb")
-    void legge() {
-        System.out.println("15 - creazione di un testo jSon da mongoDb");
-
-        sorgente = "8marzo";
-        clazz = Giorno.class;
-        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        try {
-            ottenuto = service.mongoToString(clazz, sorgente);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
-        System.out.println(ottenuto);
-
-        sorgente = "23 ottobre";
-        clazz = Giorno.class;
-        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
-        try {
-            ottenuto = service.mongoToString(clazz, sorgente);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
-        System.out.println(ottenuto);
+        printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
     }
 
 
@@ -435,19 +416,108 @@ public class GsonServiceTest extends ATest {
 
     @Test
     @Order(15)
-    @DisplayName("15 - prove")
+    @DisplayName("15 - creazione di un testo jSon da mongoDb")
+    void legge() {
+        System.out.println("15 - creazione di un testo jSon da mongoDb");
+
+        sorgente = "8marzo";
+        clazz = Giorno.class;
+        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        try {
+            ottenuto = service.mongoToString(clazz, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+
+        sorgente = "23 ottobre";
+        clazz = Giorno.class;
+        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        try {
+            ottenuto = service.mongoToString(clazz, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+
+        sorgente = "quartiere";
+        clazz = Via.class;
+        previsto = "{\"_id\":\"quartiere\",\"ordine\":11,\"nome\":\"quartiere\",\"reset\":true,\"creazione\":\"Sep 6, 2021, 8:35:08 PM\",\"modifica\":\"Sep 6, 2021, 8:35:08 PM\",\"_class\":\"via\"}";
+        try {
+            ottenuto = service.mongoToString(clazz, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertTrue(textService.isValid(ottenuto));
+        assertEquals(previsto, ottenuto);
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - legge doc from mongo")
+    void leggeDoc() {
+        clazz = Via.class;
+        sorgente = "quartiere";
+        doc = getDoc(clazz, sorgente);
+        System.out.println(String.format("Documento ricavato da %s.%s", clazz.getSimpleName(), sorgente));
+        printDoc(doc);
+
+        clazz = Delta.class;
+        sorgente = "uno";
+        doc = getDoc(clazz, sorgente);
+        System.out.println(String.format("Documento ricavato da %s.%s", clazz.getSimpleName(), sorgente));
+        printDoc(doc);
+    }
+
+
+    @Test
+    @Order(21)
+    @DisplayName("21 - crea entity from doc")
+    void creaEntity() {
+        clazz = Via.class;
+        sorgente = "quartiere";
+        doc = getDoc(clazz, sorgente);
+        entityBean = service.creaOld(doc, clazz);
+        printDoc(doc);
+        printMappa(entityBean);
+
+        clazz = Delta.class;
+        sorgente = "uno";
+        doc = getDoc(clazz, sorgente);
+        entityBean = service.creaOld(doc, clazz);
+        printDoc(doc);
+        printMappa(entityBean);
+    }
+
+    @Test
+    @Order(31)
+    @DisplayName("31 - crea doc from entity")
+    void finalexx() {
+    }
+
+    @Test
+    @Order(37)
+    @DisplayName("37 - prove")
     void finale() {
         sorgente = "quartiere";
         clazz = Via.class;
 
-        System.out.println("15 - From mongoDB to string passando da Doc");
+        System.out.println("37 - From mongoDB to string passando da Doc");
         try {
             ottenuto = service.mongoToString(clazz, sorgente);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
         System.out.println(ottenuto);
-        System.out.println("15 - Crea una entity col jsonString appena ottenuto");
+
+        System.out.println(VUOTA);
+        System.out.println("16 - Crea una entity col jsonString appena ottenuto");
         try {
             entityBean = service.stringToEntity(clazz, ottenuto);
         } catch (AlgosException unErrore) {
@@ -456,20 +526,59 @@ public class GsonServiceTest extends ATest {
         System.out.println(entityBean);
 
         System.out.println(VUOTA);
-        System.out.println("15 - From entityBean to string ");
+        System.out.println("16 - From entityBean to string ");
         try {
             entityBean = mongoService.find(clazz, sorgente);
         } catch (Exception unErrore) {
         }
         ottenuto = service.entityToString(entityBean);
         System.out.println(ottenuto);
-        System.out.println("15 - Crea una entity col jsonString appena ottenuto");
+        System.out.println("16 - Crea una entity col jsonString appena ottenuto");
         try {
             entityBean = service.stringToEntity(clazz, ottenuto);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
         System.out.println(entityBean);
+    }
+
+    @Test
+    @Order(98)
+    @DisplayName("98 - timestamp versus UTC Datetime")
+    void saveDate() {
+        Delta delta = Delta.builderDelta().build();
+        delta.id = "due";
+        delta.code = "pippone";
+        delta.uno = LocalDateTime.now();
+        delta.quattro = Timestamp.valueOf(LocalDateTime.now());
+        String jSonText;
+        Class<? extends AEntity> entityClazz = delta.getClass();
+        MongoCollection<Document> collection = mongoService.getCollection(entityClazz);
+
+        jSonText = service.entityToString(delta);
+        jSonText = jSonText.replace(FIELD_NAME_ID_SENZA, FIELD_NAME_ID_CON);
+        doc = textService.isValid(jSonText) ? Document.parse(jSonText) : null;
+        printDoc(doc);
+        try {
+            if (doc!=null) {
+                collection.insertOne(doc);
+            }
+        } catch (Exception unErrore) {
+            System.out.println(unErrore);
+        }
+
+    }
+
+    private Document getDoc(Class clazz, String sorgente) {
+        Document doc;
+        MongoCollection<Document> collection;
+        collection = mongoService.getCollection(clazz);
+
+        objectQuery = new BasicDBObject();
+        objectQuery.put(FIELD_NAME_ID_CON, sorgente);
+        doc = collection.find(objectQuery).first();
+
+        return doc;
     }
 
     /**

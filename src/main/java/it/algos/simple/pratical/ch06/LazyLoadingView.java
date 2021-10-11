@@ -16,9 +16,9 @@ public class LazyLoadingView extends Composite<Component> {
     grid.addColumn(Book::getAuthor).setHeader("Author");
     grid.addColumn(Book::getQuantity).setHeader("Quantity");
 
-    grid.setItems(query -> BookService.findAll(
-        query.getOffset(), query.getLimit()).stream()
-    );
+//    grid.setItems(query -> BookService.findAll(
+//        query.getOffset(), query.getLimit()).stream()
+//    );
 
     return new VerticalLayout(grid);
   }

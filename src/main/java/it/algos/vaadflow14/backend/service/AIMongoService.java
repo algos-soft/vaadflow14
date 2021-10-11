@@ -159,7 +159,7 @@ public interface AIMongoService {
      *
      * @return the founded document
      */
-    Document findDocById(final Class<? extends AEntity> entityClazz, final String keyId) throws AlgosException;
+    Document findDocById(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException;
 
 
     /**
@@ -170,7 +170,7 @@ public interface AIMongoService {
      *
      * @return the founded document
      */
-    Document findDocById(final String collectionName, final String keyId) throws AlgosException;
+    Document findDocById(final String collectionName, final Serializable keyId) throws AlgosException;
 
 
     /**
@@ -235,14 +235,25 @@ public interface AIMongoService {
     AEntity find(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
 
+
     /**
-     * Recupera dal DB il valore massimo pre-esistente della property <br>
-     * Incrementa di uno il risultato <br>
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
      *
-     * @param entityClazz  corrispondente ad una collection sul dat
-     *                     abase mongoDB
-     * @param propertyName dell'ordinamento
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
+     *
+     * @return lista di entityBeans
      */
+     List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException ;
+
+        /**
+         * Recupera dal DB il valore massimo pre-esistente della property <br>
+         * Incrementa di uno il risultato <br>
+         *
+         * @param entityClazz  corrispondente ad una collection sul dat
+         *                     abase mongoDB
+         * @param propertyName dell'ordinamento
+         */
     int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException;
 
     /**

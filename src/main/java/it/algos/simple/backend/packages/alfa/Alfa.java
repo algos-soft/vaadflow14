@@ -126,6 +126,7 @@ public class Alfa extends AREntity {
     @AIColumn(type = AETypeField.text)
     private String columnComeField4;
 
+
     private String nessuno;
 
 

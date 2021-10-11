@@ -17,13 +17,16 @@ import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
+import org.bson.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
@@ -329,6 +332,8 @@ public abstract class ATest {
 
     protected Query query;
 
+    protected Document doc;
+
     protected BasicDBObject objectQuery;
 
     protected Sort sortSpring;
@@ -388,7 +393,7 @@ public abstract class ATest {
     }
 
     protected static Class[] CLAZZ() {
-        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Secolo.class};
+        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
     }
 
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
@@ -400,9 +405,12 @@ public abstract class ATest {
                 Arguments.of(Mese.class, "termidoro", false),
                 Arguments.of(Giorno.class, "2agosto", true),
                 Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Anno.class, "104", true),
                 Arguments.of(Mese.class, "marzo", true),
                 Arguments.of(Mese.class, "Marzo", true),
-                Arguments.of(Mese.class, "marzo esatto", false)
+                Arguments.of(Mese.class, "marzo esatto", false),
+                Arguments.of(Regione.class, "calabria", true),
+                Arguments.of(Regione.class, "Calabria", true)
         );
     }
 
@@ -415,6 +423,8 @@ public abstract class ATest {
         return Stream.of(
                 Arguments.of((Class) null, VUOTA, null, 0, false),
                 Arguments.of(Utente.class, VUOTA, null, 0, false),
+                Arguments.of(LogicList.class, null, null, 0, false),
+                Arguments.of(AIType.class, null, null, 0, false),
                 Arguments.of(Mese.class, VUOTA, null, 0, false),
                 Arguments.of(Mese.class, "manca", null, 0, false),
                 Arguments.of(Mese.class, "manca", 31, 0, false),
@@ -960,6 +970,7 @@ public abstract class ATest {
 
 
     protected void printError(final AlgosException unErrore) {
+        System.out.println(VUOTA);
         System.out.println("Errore");
         if (unErrore.getCause() != null) {
             System.out.println(String.format("Cause %s %s", FlowCost.FORWARD, unErrore.getCause().getClass().getSimpleName()));
@@ -974,6 +985,49 @@ public abstract class ATest {
         if (textService.isValid(unErrore.getMethod())) {
             System.out.println(String.format("Method %s %s()", FlowCost.FORWARD, unErrore.getMethod()));
         }
+    }
+
+    protected void printDoc(final Document doc) {
+        String key;
+        Object value;
+        System.out.println(VUOTA);
+
+        if (doc != null) {
+            System.out.println(String.format("Il documento contiene %s parametri chiave=valore, più keyID e classe", doc.size() - 2));
+            for (Map.Entry<String, Object> mappa : doc.entrySet()) {
+                key = mappa.getKey();
+                value = mappa.getValue();
+                System.out.println(String.format("%s: %s", key, value));
+            }
+        }
+        else {
+            System.out.println(String.format("Nessun documento trovato"));
+        }
+    }
+
+    protected void printMappa(final AEntity entityBean) {
+        Class clazz;
+
+        if (entityBean == null) {
+            System.out.print("La entityBean è nulla");
+            return;
+        }
+
+        clazz = entityBean.getClass();
+        System.out.println(VUOTA);
+        System.out.println(String.format("Creata una entityBean (vuota) di classe %s%s%s", clazz.getSimpleName(), FORWARD, entityBean));
+        try {
+            mappa = reflectionService.getMappaEntity(entityBean);
+            for (String key : mappa.keySet()) {
+                System.out.print(key);
+                System.out.print(UGUALE_SPAZIATO);
+                System.out.println(mappa.get(key));
+            }
+
+        } catch (AlgosException unErrore) {
+        }
+
+        System.out.println(VUOTA);
     }
 
 }// end of class
