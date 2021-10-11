@@ -797,6 +797,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException {
         List<? extends AEntity> listaEntities = null;
+        List<AEntity> listaGson = null;
         String message;
         AEntity entityBean;
         MongoCollection<Document> collection;
@@ -811,26 +812,54 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack(message, getClass(), "fetch");
         }
 
-        listaEntities = mongoOp.findAll(entityClazz);
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    listaEntities = mongoOp.findAll(entityClazz);
+                    return listaEntities;
+                }
+                else {
+                    collection = getCollection(entityClazz);
+                    if (collection == null) {
+                        message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+                        throw AlgosException.stack(message, getClass(), "fetch");
+                    }
+                    iterable = collection.find();
+                    if (iterable == null) {
+                        message = String.format("La collection %s è vuota", collection.toString());
+                        throw AlgosException.stack(message, getClass(), "fetch");
+                    }
+                    listaGson = new ArrayList<>();
+                    for (Document doc : iterable) {
+                        entityBean = gSonService.creaOld(doc, entityClazz);
+                        listaGson.add(entityBean);
+                    }
+                    return listaGson;
+                }
+            case gson:
+                collection = getCollection(entityClazz);
+                if (collection == null) {
+                    message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+                    throw AlgosException.stack(message, getClass(), "fetch");
+                }
+                iterable = collection.find();
+                if (iterable == null) {
+                    message = String.format("La collection %s è vuota", collection.toString());
+                    throw AlgosException.stack(message, getClass(), "fetch");
+                }
 
-        //        collection = getCollection(entityClazz);
-        //        if (collection == null) {
-        //            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-        //            throw AlgosException.stack(message, getClass(), "fetch");
-        //        }
-        //        iterable = collection.find();
-        //        if (iterable == null) {
-        //            message = String.format("La collection %s è vuota", collection.toString());
-        //            throw AlgosException.stack(message, getClass(), "fetch");
-        //        }
-        //
-        //        listaEntities = new ArrayList<>();
-        //        for (Document doc : iterable) {
-        //            entityBean = gSonService.creaOld(doc, entityClazz);
-        //            listaEntities.add(entityBean);
-        //        }
-
-        return listaEntities;
+                listaGson = new ArrayList<>();
+                for (Document doc : iterable) {
+                    entityBean = gSonService.creaOld(doc, entityClazz);
+                    listaGson.add(entityBean);
+                }
+                return listaGson;
+            case jackson:
+                return null;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
+                return null;
+        }
     }
 
     /**

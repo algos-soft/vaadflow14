@@ -536,7 +536,7 @@ public class MongoServiceTest extends MongoTest {
         }
     }
 
-    //    @ParameterizedTest
+    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(25)
     @DisplayName("25 - Fetch (gson) tutte le entities di una classe")
@@ -560,15 +560,29 @@ public class MongoServiceTest extends MongoTest {
 
     void fetch2526(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
         try {
+            ottenutoIntero = service.count(clazz);
+            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+            return;
+        }
+        try {
             listaBean = service.fetch(clazz);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
         if (listaBean != null) {
-            //            System.out.println("Tutto ok");
+            if (ottenutoIntero == listaBean.size()) {
+                printLista(listaBean);
+            }
+            else {
+                System.out.println("Qualcosa non quadra perché il fetch è diverso dal count");
+            }
         }
         else {
-            //            System.out.println("Qualcosa non ha funzionato");
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
         }
     }
 
@@ -775,9 +789,9 @@ public class MongoServiceTest extends MongoTest {
     void tearDownAll() {
     }
 
-//    void printCount(final Class clazz, final int size, final Document bSon) {
-//        printCount(clazz.getSimpleName(), size, bSon);
-//    }
+    //    void printCount(final Class clazz, final int size, final Document bSon) {
+    //        printCount(clazz.getSimpleName(), size, bSon);
+    //    }
 
 
     void printCount(final String simpleName, final int size, final Document bSon) {
