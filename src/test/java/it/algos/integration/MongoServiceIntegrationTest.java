@@ -371,7 +371,39 @@ public class MongoServiceIntegrationTest extends MongoTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_COUNT")
+    @Order(26)
+    @DisplayName("26 - Fetch completo di una classe")
+    void fetch(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("26 - Fetch completo di una classe");
 
+        try {
+            ottenutoIntero = service.count(clazz);
+            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+            return;
+        }
+        try {
+            listaBean = service.fetch(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (listaBean != null) {
+            if (ottenutoIntero == listaBean.size()) {
+                printLista(listaBean);
+            }
+            else {
+                System.out.println("Qualcosa non quadra perché il fetch è diverso dal count");
+            }
+        }
+        else {
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
+        }
+    }
 
     //    @Test
     //    @Order(13)

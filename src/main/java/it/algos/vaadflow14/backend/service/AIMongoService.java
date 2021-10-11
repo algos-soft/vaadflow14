@@ -244,7 +244,7 @@ public interface AIMongoService {
      *
      * @return lista di entityBeans
      */
-     List<AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException ;
+     List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException ;
 
         /**
          * Recupera dal DB il valore massimo pre-esistente della property <br>

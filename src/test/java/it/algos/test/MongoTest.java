@@ -1,13 +1,10 @@
 package it.algos.test;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static org.junit.Assert.*;
-import org.springframework.context.annotation.Scope;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.io.*;
 import java.util.*;
@@ -19,7 +16,7 @@ import java.util.*;
  * Date: lun, 11-ott-2021
  * Time: 17:13
  */
-public abstract class MongoTest extends ATest{
+public abstract class MongoTest extends ATest {
 
     protected void printCount(final String simpleName, final int size, final String property, final Object value) {
         System.out.println(String.format(String.format("La classe %s ha %s entities filtrate con %s=%s", simpleName, size, property, value)));
@@ -158,6 +155,12 @@ public abstract class MongoTest extends ATest{
 
         System.out.print(String.format("%s%s%s: ", propertyName, UGUALE_SEMPLICE, propertyValue));
         printMappa(entityBean);
+    }
+
+    protected void printLista(final List<AEntity> listaBean) {
+        for (AEntity bean : listaBean) {
+            System.out.println(bean);
+        }
     }
 
 }

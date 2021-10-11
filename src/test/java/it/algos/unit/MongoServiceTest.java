@@ -534,14 +534,6 @@ public class MongoServiceTest extends MongoTest {
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-
-        //        AEntity  entityBean2 = null;
-        //        try {
-        //            entityBean2 = gSonService.creaId(clazz,  propertyValue);
-        //            int a=87;
-        //            AEntity  entityBean3= entityBean;
-        //        } catch (AlgosException unErrore) {
-        //        }
     }
 
     //    @ParameterizedTest
