@@ -118,6 +118,9 @@ public interface AIMongoService {
      */
     int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
 
+    int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException;
+
+
     /**
      * Conta tutte le entities con la property rest=true. <br>
      * Controlla che esista la collezione <br>
@@ -235,7 +238,6 @@ public interface AIMongoService {
     AEntity find(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
 
-
     /**
      * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
      * Rimanda al metodo base 'fetch' (unico usato) <br>
@@ -244,16 +246,28 @@ public interface AIMongoService {
      *
      * @return lista di entityBeans
      */
-     List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException ;
+    List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException;
 
-        /**
-         * Recupera dal DB il valore massimo pre-esistente della property <br>
-         * Incrementa di uno il risultato <br>
-         *
-         * @param entityClazz  corrispondente ad una collection sul dat
-         *                     abase mongoDB
-         * @param propertyName dell'ordinamento
-         */
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri insieme di filtri.
+     *
+     * @return lista di entityBeans
+     */
+    List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException;
+
+
+    /**
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     *
+     * @param entityClazz  corrispondente ad una collection sul dat
+     *                     abase mongoDB
+     * @param propertyName dell'ordinamento
+     */
     int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException;
 
     /**

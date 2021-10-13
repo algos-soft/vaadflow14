@@ -2,21 +2,12 @@ package it.algos.integration;
 
 import com.mongodb.client.*;
 import it.algos.simple.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.logic.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
-import it.algos.vaadflow14.backend.packages.company.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
-import it.algos.vaadflow14.backend.packages.geografica.continente.*;
-import it.algos.vaadflow14.backend.packages.geografica.stato.*;
-import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.conversions.*;
@@ -33,7 +24,6 @@ import org.springframework.test.context.junit.jupiter.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.*;
 
 
 /**
@@ -79,28 +69,6 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     private AETypeSerializing oldType;
 
-    //--da regolare per mostrare errori previsti oppure nasconderli per velocizzare
-    //--da usare SOLO come controllo per errori previsti
-    private boolean flagRisultatiEsattiObbligatori = true;
-
-    //--clazz
-    //--previstoIntero
-    //--risultatoEsatto
-    private static Stream<Arguments> CLAZZ_COUNT() {
-        return Stream.of(
-                Arguments.of(null, 0, false),
-                Arguments.of(LogicList.class, 0, false),
-                Arguments.of(Utente.class, 0, false),
-                Arguments.of(Bolla.class, 5, false),
-                Arguments.of(Mese.class, 12, true),
-                Arguments.of(Giorno.class, 366, true),
-                Arguments.of(Via.class, 26, false),
-                Arguments.of(AIType.class, 0, true),
-                Arguments.of(Company.class, 3, false),
-                Arguments.of(Stato.class, 249, true),
-                Arguments.of(Continente.class, 7, true)
-        );
-    }
 
     /**
      * Qui passa una volta sola <br>
@@ -137,7 +105,6 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
         collection = null;
         bSon = null;
-        //        FlowVar.typeSerializing = oldType;
     }
 
 
@@ -329,6 +296,32 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
     @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(11)
+    @DisplayName("11 - Count filtrato (WrapFiltro)")
+    void countWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("11 - Count filtrato (WrapFiltro)");
+        WrapFiltri wrapFiltri = null;
+
+        try {
+            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (wrapFiltri != null) {
+            try {
+                ottenutoIntero = service.count(clazz, wrapFiltri);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            assertEquals(previstoIntero, ottenutoIntero);
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero);
+        }
+    }
+
+    @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(17)
     @DisplayName("17 - Find entityBean by keyId")
@@ -373,10 +366,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
-    @Order(26)
-    @DisplayName("26 - Fetch completo di una classe")
+    @Order(24)
+    @DisplayName("24 - Fetch completo di una classe")
     void fetch(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("26 - Fetch completo di una classe");
+        System.out.println("24 - Fetch completo di una classe");
 
         try {
             ottenutoIntero = service.count(clazz);
@@ -402,6 +395,33 @@ public class MongoServiceIntegrationTest extends MongoTest {
             if (previstoIntero != 0) {
                 System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
             }
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(26)
+    @DisplayName("26 - Fetch filtrato")
+    void fetchSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("26 - Fetch filtrato");
+        WrapFiltri wrapFiltri = null;
+
+        try {
+            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (wrapFiltri != null) {
+            try {
+                listaBean = service.fetch(clazz, wrapFiltri);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            assertEquals(previstoIntero, listaBean.size());
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean);
         }
     }
 

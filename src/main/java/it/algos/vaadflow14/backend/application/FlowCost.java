@@ -29,6 +29,8 @@ public abstract class FlowCost {
 
     public static final int MAX = 2147483647;
 
+    public static final int LIMIT_QUERY_ENTITIES_STANDARD = 50;
+
     public static final String NAME_VAADFLOW = "vaadflow14";
 
     public static final String PATH_RISORSE = "src/main/resources/META-INF/resources/";

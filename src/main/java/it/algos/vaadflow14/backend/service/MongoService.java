@@ -403,6 +403,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return 0;
     }
 
+    @Override
+    public int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
+        return count(entityClazz, wrapFiltri.getMappaFiltri());
+    }
+
     /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
      *
@@ -796,12 +801,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException {
-        List<? extends AEntity> listaEntities = null;
-        List<AEntity> listaGson = null;
+        List<? extends AEntity> listaEntities;
         String message;
-        AEntity entityBean;
-        MongoCollection<Document> collection;
-        FindIterable<Document> iterable;
 
         if (entityClazz == null) {
             throw AlgosException.stack("La entityClazz è nulla", getClass(), "fetch");
@@ -815,45 +816,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         switch (FlowVar.typeSerializing) {
             case spring:
                 if (isMongoOpValido()) {
-                    listaEntities = mongoOp.findAll(entityClazz);
-                    return listaEntities;
+                    return mongoOp.findAll(entityClazz);
                 }
                 else {
-                    collection = getCollection(entityClazz);
-                    if (collection == null) {
-                        message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-                        throw AlgosException.stack(message, getClass(), "fetch");
-                    }
-                    iterable = collection.find();
-                    if (iterable == null) {
-                        message = String.format("La collection %s è vuota", collection.toString());
-                        throw AlgosException.stack(message, getClass(), "fetch");
-                    }
-                    listaGson = new ArrayList<>();
-                    for (Document doc : iterable) {
-                        entityBean = gSonService.creaOld(doc, entityClazz);
-                        listaGson.add(entityBean);
-                    }
-                    return listaGson;
+                    return fetchGson(entityClazz);
                 }
             case gson:
-                collection = getCollection(entityClazz);
-                if (collection == null) {
-                    message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-                    throw AlgosException.stack(message, getClass(), "fetch");
-                }
-                iterable = collection.find();
-                if (iterable == null) {
-                    message = String.format("La collection %s è vuota", collection.toString());
-                    throw AlgosException.stack(message, getClass(), "fetch");
-                }
-
-                listaGson = new ArrayList<>();
-                for (Document doc : iterable) {
-                    entityBean = gSonService.creaOld(doc, entityClazz);
-                    listaGson.add(entityBean);
-                }
-                return listaGson;
+                return fetchGson(entityClazz);
             case jackson:
                 return null;
             default:
@@ -861,6 +830,200 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 return null;
         }
     }
+
+    private List<AEntity> fetchGson(Class<? extends AEntity> entityClazz) throws AlgosException {
+        List<AEntity> listaGson;
+        MongoCollection<Document> collection;
+        String message;
+        FindIterable<Document> iterable;
+        AEntity entityBean;
+
+        collection = getCollection(entityClazz);
+        if (collection == null) {
+            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+        iterable = collection.find();
+        if (iterable == null) {
+            message = String.format("La collection %s è vuota", collection.toString());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        listaGson = new ArrayList<>();
+        for (Document doc : iterable) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
+            listaGson.add(entityBean);
+        }
+        return listaGson;
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     *
+     * @return lista di entityBeans
+     */
+    public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
+        return fetch(entityClazz, wrapFiltri, 0, LIMIT_QUERY_ENTITIES_STANDARD);
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * <p>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
+        List<AEntity> listaEntities = null;
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    return fetchSpring(entityClazz, wrapFiltri, offset, limit);
+                }
+                else {
+                    return fetchGson(entityClazz, wrapFiltri, offset, limit);
+                }
+            case gson:
+                return fetchGson(entityClazz, wrapFiltri, offset, limit);
+            case jackson:
+                return listaEntities;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
+                return listaEntities;
+        }
+    }
+
+    private List<AEntity> fetchSpring(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
+        List<AEntity> listaEntities;
+        Query query = getQuery(wrapFiltri.getMappaFiltri());
+
+        if (offset > 0) {
+            query.skip(offset);
+        }
+        if (limit > 0) {
+            query.limit(limit);
+        }
+
+        try {
+            listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchSpring");
+        }
+
+        return listaEntities;
+    }
+
+    private List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
+        List<AEntity> listaGson;
+        MongoCollection<Document> collection;
+        String message;
+        FindIterable<Document> iterable;
+        AEntity entityBean;
+        Bson filter;
+        Bson sort = null;
+
+        collection = getCollection(entityClazz);
+        if (collection == null) {
+            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        try {
+            filter = getFilter(wrapFiltri);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
+        }
+
+        try {
+            iterable = collection.find().filter(filter).sort(sort).skip(skip).limit(limit);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
+        }
+
+        if (iterable == null) {
+            message = String.format("La collection %s è vuota", collection.toString());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        listaGson = new ArrayList<>();
+        for (Document doc : iterable) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
+            listaGson.add(entityBean);
+        }
+        return listaGson;
+    }
+
+    public Query getQuery(final WrapFiltri wrapFiltri) throws AlgosException {
+        Query query = new Query();
+        Criteria criteriaFiltro;
+        Criteria criteriaQuery = null;
+
+        //        if (array.isAllValid(mappaFiltri)) {
+        //            for (AFiltro filtro : mappaFiltri.values()) {
+        //                criteriaFiltro = filtro.getCriteria();
+        //
+        //                if (criteriaQuery == null) {
+        //                    criteriaQuery = criteriaFiltro;
+        //                    query.addCriteria(criteriaQuery);
+        //                }
+        //                else {
+        //                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+        //                    //@todo Funzionalità ancora da implementare
+        //                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+        //                        criteriaQuery.andOperator(criteriaFiltro);
+        //                        //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
+        //                    }
+        //                    else {
+        //                        query.addCriteria(criteriaFiltro);
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        return query;
+    }
+
+
+    protected Bson getFilter(final WrapFiltri wrapFiltri) throws AlgosException {
+        Document docFilter = null;
+        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        Criteria criteria ;
+        Criteria criteriaFilter = new Criteria();
+
+        if (array.isAllValid(mappaFiltri)) {
+            for (AFiltro filtro : mappaFiltri.values()) {
+                criteria = filtro.getCriteria();
+                if (criteriaFilter.equals(new Criteria())) {
+                    criteriaFilter = criteria;
+                }
+                else {
+                    criteriaFilter.andOperator(criteria);
+                }
+            }
+
+            try {
+                docFilter = criteriaFilter.getCriteriaObject();
+            } catch (Exception unErrore) {
+                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
+            }
+        }
+
+        return docFilter;
+    }
+
 
     /**
      * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
@@ -871,6 +1034,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
+    @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, AFiltro filtro) throws AlgosException {
         Map<String, AFiltro> mappaFiltri = filtro != null ? Collections.singletonMap(filtro.getCriteria().getKey(), filtro) : null;
         return fetch(entityClazz, mappaFiltri);
@@ -885,6 +1049,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
+    @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, (Sort) null);
     }
@@ -899,6 +1064,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
+    @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sort) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, sort, 0, 0);
     }
@@ -916,6 +1082,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
+    @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, List<QuerySortOrder> sortVaadinList, int offset, int limit) throws AlgosException {
         return fetch(entityClazz, mappaFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
     }
@@ -936,8 +1103,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://mkyong.com/java/due-to-limitations-of-the-basicdbobject-you-cant-add-a-second-and/)
      */
+    @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AlgosException {
-        List<AEntity> listaEntities = null;
+        List<AEntity> listaEntities;
         Query query = getQuery(mappaFiltri);
 
         //@todo purtroppo per adesso funziona SOLO per 1 filtro
@@ -992,6 +1160,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         return query;
     }
+
 
     protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Document docFilter = null;
@@ -1060,7 +1229,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz,
+                                 int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -1146,7 +1316,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz,
+                                  int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -1227,7 +1398,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return entityBean regolato
      */
-    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity entityBean, String value) {
+    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity
+            entityBean, String value) {
         int number;
         char c;
         byte[] bytes;
@@ -1294,7 +1466,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    public AEntity crea(final Class entityClazz, final String valueID) throws AlgosException {
+    public AEntity crea(final Class entityClazz, final String valueID) throws
+            AlgosException {
         return crea(annotation.getCollectionName(entityClazz), valueID);
     }
 
@@ -1306,7 +1479,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    private AEntity crea(final String collectionName, final String valueID) throws AlgosException {
+    private AEntity crea(final String collectionName, final String valueID) throws
+            AlgosException {
         Document doc = findDocById(collectionName, valueID);
         return creaByDoc(collectionName, doc);
     }
@@ -1319,7 +1493,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return if the entity exist
      */
-    public boolean isExist(Class<? extends AEntity> entityClazz, String keyId) {
+    public boolean isExist(Class<? extends AEntity> entityClazz, String
+            keyId) {
         return findByIdOld(entityClazz, keyId) != null;
     }
 
@@ -1332,7 +1507,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocById(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
+    public Document findDocById(
+            final Class<? extends AEntity> entityClazz, final Serializable keyId) throws
+            AlgosException {
         String collectionName = annotation.getCollectionName(entityClazz);
         String message;
 
@@ -1367,7 +1544,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocById(final String collectionName, final Serializable keyId) throws AlgosException {
+    public Document findDocById(final String collectionName,
+                                final Serializable keyId) throws AlgosException {
         return findDocByProperty(collectionName, FlowCost.FIELD_ID, keyId instanceof String ? ((String) keyId).toLowerCase() : keyId);
     }
 
@@ -1381,7 +1559,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    public Document findDocByProperty(
+            final Class<? extends AEntity> entityClazz, final String propertyName,
+            final Serializable propertyValue) throws AlgosException {
         String collectionName = annotation.getCollectionName(entityClazz);
         String message;
 
@@ -1420,7 +1600,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded document
      */
-    public Document findDocByProperty(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    public Document findDocByProperty(final String collectionName,
+                                      final String propertyName, final Serializable propertyValue) throws
+            AlgosException {
         String message;
         Bson condition;
         int recordsTrovati = count(collectionName, propertyName, propertyValue);
@@ -1437,7 +1619,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return findDoc(collectionName, condition);
     }
 
-
     /**
      * Cerca un Document da una collection con una determinata chiave. <br>
      *
@@ -1446,7 +1627,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded document
      */
-    public Document findDoc(final String collectionName, final Bson condition) throws AlgosException {
+    public Document findDoc(final String collectionName,
+                            final Bson condition) throws AlgosException {
         Document doc;
         String message;
         FindIterable<Document> iterable;
@@ -1471,7 +1653,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         return doc;
     }
-
 
     public Document fixDoc(final Document doc) {
         String key;
@@ -1502,7 +1683,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the entity
      */
-    public AEntity creaByDoc(final String collectionName, Document doc) throws AlgosException {
+    public AEntity creaByDoc(final String collectionName, Document doc) throws
+            AlgosException {
         Class<? extends AEntity> entityClazz;
 
         if (text.isEmpty(collectionName)) {
@@ -1518,7 +1700,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return entityClazz != null ? creaByDoc(entityClazz, doc) : null;
     }
 
-
     /**
      * Crea una singola entity da un document. <br>
      *
@@ -1528,7 +1709,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the entity
      */
     @Override
-    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc) throws AlgosException {
+    public AEntity creaByDoc(
+            final Class<? extends AEntity> entityClazz, Document doc) throws
+            AlgosException {
         AEntity entityBean = null;
         String message;
         List<Field> fields = reflection.getAllFields(entityClazz);
@@ -1626,7 +1809,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return entityBean;
     }
 
-
     /**
      * Cerca la entity successiva in una collection con un dato ordine. <br>
      *
@@ -1635,7 +1817,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
+    public AEntity findNext(final Class<? extends AEntity> entityClazz,
+                            final String keyIdValue) {
         return findNext(entityClazz, FIELD_ID, keyIdValue);
     }
 
@@ -1648,7 +1831,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public String findNextID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+    public String findNextID(final Class<? extends AEntity> entityClazz,
+                             final String sortProperty, final Object valueProperty) {
         AEntity nextEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
         return nextEntity != null ? nextEntity.id : VUOTA;
     }
@@ -1662,7 +1846,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public AEntity findNext(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+    public AEntity findNext(final Class<? extends AEntity> entityClazz,
+                            final String sortProperty, final Object valueProperty) {
         return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.ASC);
     }
 
@@ -1674,7 +1859,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String keyIdValue) {
+    public AEntity findPrevious(
+            final Class<? extends AEntity> entityClazz, final String keyIdValue) {
         return findPrevious(entityClazz, FIELD_ID, keyIdValue);
     }
 
@@ -1687,7 +1873,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public String findPreviousID(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+    public String findPreviousID(
+            final Class<? extends AEntity> entityClazz, final String sortProperty,
+            final Object valueProperty) {
         AEntity previousEntity = findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
         return previousEntity != null ? previousEntity.id : VUOTA;
     }
@@ -1701,7 +1889,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    public AEntity findPrevious(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty) {
+    public AEntity findPrevious(
+            final Class<? extends AEntity> entityClazz, final String sortProperty,
+            final Object valueProperty) {
         return findBase(entityClazz, sortProperty, valueProperty, Sort.Direction.DESC);
     }
 
@@ -1714,7 +1904,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String sortProperty, final Object valueProperty, final Sort.Direction sortDir) {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz,
+                             final String sortProperty, final Object valueProperty,
+                             final Sort.Direction sortDir) {
         AEntity nextEntity = null;
         List<AEntity> listaOrdinata = null;
         Query query = new Query();
@@ -1757,7 +1949,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz,
+                             final String propertyName, final Serializable propertyValue) throws
+            AlgosException {
         Query query = new Query();
         int totRecords = 0;
         String message;
@@ -1802,8 +1996,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneFirst(Class<? extends AEntity> entityClazz, String propertyName, Serializable
-            propertyValue) {
+    public AEntity findOneFirst(Class<? extends
+            AEntity> entityClazz, String propertyName, Serializable
+                                        propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -1844,7 +2039,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneFirst(Class<? extends AEntity> entityClazz, Query query) {
+    public AEntity findOneFirst(Class<? extends
+            AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1865,7 +2061,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
     @Deprecated
-    public AEntity findOneUnique(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue) {
+    public AEntity findOneUnique(Class<? extends
+            AEntity> entityClazz, String propertyName, Serializable propertyValue) {
         if (entityClazz == null) {
             return null;
         }
@@ -1889,7 +2086,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findOneUnique(Class<? extends AEntity> entityClazz, Query query) {
+    public AEntity findOneUnique(Class<? extends
+            AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1912,7 +2110,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @see(https://docs.mongodb.com/realm/mongodb/actions/collection.findOne//)
      */
-    public AEntity findByUniqueKey(Class<? extends AEntity> entityClazz, Query query) {
+    public AEntity findByUniqueKey(Class<? extends
+            AEntity> entityClazz, Query query) {
         if (entityClazz == null || query == null) {
             return null;
         }
@@ -1934,7 +2133,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private List<AEntity> findLista(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue, Sort sort) {
+    private List<AEntity> findLista(Class<? extends
+            AEntity> entityClazz, String propertyName, Serializable
+                                            propertyValue, Sort sort) {
         List<AEntity> lista = null;
         Query query = new Query();
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
@@ -1945,7 +2146,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         return findAll(entityClazz, query);
     }
-
 
     /**
      * Check the existence of a single entity. <br>
@@ -1967,7 +2167,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz,
+                            long keyId) throws AlgosException {
         return find(entityClazz, Long.toString(keyId)) != null;
     }
 
@@ -1979,7 +2180,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AlgosException {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, String
+            keyId) throws AlgosException {
         return find(entityClazz, keyId) != null;
     }
 
@@ -1991,7 +2193,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AlgosException {
+    public boolean isNotEsiste(Class<? extends
+            AEntity> entityClazz, String keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -2003,7 +2206,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz,
+                               long keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -2045,7 +2249,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @param entityClazz  corrispondente ad una collection sul database mongoDB
      * @param propertyName dell'ordinamento
      */
-    public int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException {
+    public int getNewOrder(Class<? extends AEntity> entityClazz, String
+            propertyName) throws AMongoException {
         int ordine = 0;
         AEntity entityBean;
         Object value;
@@ -2132,7 +2337,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return null;
     }
 
-
     public AEntity saveSpring(AEntity entityBean) throws AlgosException {
         AEntity entityBeanSaved;
 
@@ -2213,7 +2417,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true se la entity esisteva ed è stata cancellata
      */
-    public boolean delete(Class<? extends AEntity> entityClazz, Query query) {
+    public boolean delete(Class<? extends AEntity> entityClazz, Query
+            query) {
         boolean status = false;
         DeleteResult result = null;
 
@@ -2261,7 +2466,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista
      */
-    public DeleteResult delete(List<? extends AEntity> listaEntities, Class<? extends AEntity> clazz) {
+    public DeleteResult delete(List<? extends
+            AEntity> listaEntities, Class<? extends AEntity> clazz) {
         ArrayList<String> listaId = new ArrayList<String>();
 
         for (AEntity entity : listaEntities) {
@@ -2284,7 +2490,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista
      */
-    public DeleteResult deleteBulk(List<String> listaId, Class<? extends AEntity> clazz) {
+    public DeleteResult deleteBulk(List<String> listaId, Class<? extends
+            AEntity> clazz) {
         Bson condition = new Document("$in", listaId);
         Bson filter = new Document("_id", condition);
         return getCollection(clazz).deleteMany(filter);
@@ -2307,7 +2514,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true se la collection è stata cancellata
      */
-    public boolean drop(Class<? extends AEntity> entityClazz) throws AlgosException {
+    public boolean drop(Class<? extends AEntity> entityClazz) throws
+            AlgosException {
         return drop(annotation.getCollectionName(entityClazz));
     }
 
@@ -2429,7 +2637,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded entity
      */
     @Deprecated
-    public AEntity findByIdOld(Class<? extends AEntity> entityClazz, String keyId) {
+    public AEntity findByIdOld(Class<? extends
+            AEntity> entityClazz, String keyId) {
         AEntity entity = null;
         if (entityClazz == null) {
             return null;
@@ -2447,7 +2656,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return entity;
     }
 
-
     /**
      * Retrieves an entity by its keyProperty.
      *
@@ -2459,7 +2667,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Deprecated
-    public AEntity findByKeyOld(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
+    public AEntity findByKeyOld(Class<? extends
+            AEntity> entityClazz, String keyPropertyValue) {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
@@ -2469,8 +2678,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
     }
 
-
-    public Query getQuery(final String propertyName, final Serializable propertyValue) {
+    public Query getQuery(final String propertyName,
+                          final Serializable propertyValue) {
         Query query = new Query();
 
         if (text.isEmpty(propertyName)) {
@@ -2519,7 +2728,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     public List<String> getCollezioni() {
         return collezioni;
     }
-
 
     public boolean isMongoOpValido() {
         return Optional.ofNullable(mongoOp).filter(op -> !op.getCollectionNames().isEmpty()).isPresent();

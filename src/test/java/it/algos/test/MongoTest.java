@@ -1,13 +1,29 @@
 package it.algos.test;
 
+import it.algos.simple.backend.packages.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.regione.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static org.junit.Assert.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Project vaadflow14
@@ -17,6 +33,105 @@ import java.util.*;
  * Time: 17:13
  */
 public abstract class MongoTest extends ATest {
+
+    //--da regolare per mostrare errori previsti oppure nasconderli per velocizzare
+    //--da usare SOLO come controllo per errori previsti
+    protected boolean flagRisultatiEsattiObbligatori = true;
+
+    protected static Class[] CLAZZ() {
+        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
+    }
+
+    protected static String[] NOMI() {
+        return new String[]{VUOTA, "pomeriggio", Via.class.getSimpleName(), Via.class.getCanonicalName(), "via", "Via", Via.class.getSimpleName().toLowerCase(Locale.ROOT), "Utente", "LogicList"};
+    }
+
+    //--clazz
+    //--previstoIntero
+    //--risultatoEsatto
+    private static Stream<Arguments> CLAZZ_COUNT() {
+        return Stream.of(
+                Arguments.of(null, 0, false),
+                Arguments.of(LogicList.class, 0, false),
+                Arguments.of(Utente.class, 0, false),
+                Arguments.of(Bolla.class, 5, false),
+                Arguments.of(Mese.class, 12, true),
+                Arguments.of(Giorno.class, 366, true),
+                Arguments.of(Via.class, 26, false),
+                Arguments.of(AIType.class, 0, true),
+                Arguments.of(Company.class, 3, false),
+                Arguments.of(Stato.class, 249, true),
+                Arguments.of(Continente.class, 7, true)
+        );
+    }
+
+    protected static Stream<Arguments> CLAZZ_KEY_ID() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA, false),
+                Arguments.of(Utente.class, VUOTA, false),
+                Arguments.of(Mese.class, null, false),
+                Arguments.of(Mese.class, VUOTA, false),
+                Arguments.of(Mese.class, "termidoro", false),
+                Arguments.of(Giorno.class, "2agosto", true),
+                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Anno.class, "104", true),
+                Arguments.of(Mese.class, "marzo", true),
+                Arguments.of(Mese.class, "Marzo", true),
+                Arguments.of(Mese.class, "marzo esatto", false),
+                Arguments.of(Regione.class, "calabria", true),
+                Arguments.of(Regione.class, "Calabria", true)
+        );
+    }
+
+    //--clazz
+    //--propertyName
+    //--propertyValue
+    //--previstoIntero
+    //--doc e/o entityBean valida
+    protected static Stream<Arguments> CLAZZ_PROPERTY() {
+        return Stream.of(
+                Arguments.of((Class) null, VUOTA, null, 0, false),
+                Arguments.of(Utente.class, VUOTA, null, 0, false),
+                Arguments.of(LogicList.class, null, null, 0, false),
+                Arguments.of(AIType.class, null, null, 0, false),
+                Arguments.of(Mese.class, VUOTA, null, 0, false),
+                Arguments.of(Mese.class, "manca", null, 0, false),
+                Arguments.of(Mese.class, "manca", 31, 0, false),
+                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
+                Arguments.of(Mese.class, "mese", null, 0, false),
+                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
+                Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
+                Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
+                Arguments.of(Mese.class, "mese", "ottobre", 1, true),
+                Arguments.of(Mese.class, "giorni", 31, 7, false),
+                Arguments.of(Mese.class, "giorni", 30, 4, false),
+                Arguments.of(Mese.class, "giorni", 28, 1, true),
+                Arguments.of(Mese.class, "giorni", 32, 0, false),
+                Arguments.of(Via.class, "belzebù", "piazza", 0, false),
+                Arguments.of(Via.class, "nome", "belzebù", 0, false),
+                Arguments.of(Via.class, "nome", "piazza", 1, true),
+                Arguments.of(Delta.class, "immagine", VUOTA, 0, false)
+        );
+    }
+
+    //--clazz
+    //--typeFilter
+    //--propertyName
+    //--propertyValue
+    //--previstoIntero
+    protected static Stream<Arguments> CLAZZ_FILTER() {
+        return Stream.of(
+                Arguments.of((Class) null, null, VUOTA, VUOTA, 0),
+                Arguments.of(Utente.class, null, null, null, 0),
+                Arguments.of(Utente.class, AETypeFilter.contiene, null, null, 0),
+                Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
+                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
+                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
+                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "belzebù", 0),
+                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
+                Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4)
+        );
+    }
 
     protected void printCount(final String simpleName, final int size, final String property, final Object value) {
         System.out.println(String.format(String.format("La classe %s ha %s entities filtrate con %s=%s", simpleName, size, property, value)));
@@ -160,6 +275,30 @@ public abstract class MongoTest extends ATest {
     protected void printLista(final List<AEntity> listaBean) {
         for (AEntity bean : listaBean) {
             System.out.println(bean);
+        }
+    }
+
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, null);
+    }
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean) {
+        String message;
+        String nota = filter.getOperazione(propertyName, propertyValue);
+
+        if (previstoIntero == 0) {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities %s", clazz.getSimpleName(), nota);
+            System.out.println(message);
+        }
+        else {
+            message = String.format("Nella entityClass %s ho trovato %d entities %s", clazz.getSimpleName(), previstoIntero, nota);
+            System.out.println(message);
+            if (listaBean != null && listaBean.size() > 0) {
+                for (AEntity entityBean : listaBean) {
+                    System.out.println(entityBean.id);
+                }
+            }
         }
     }
 

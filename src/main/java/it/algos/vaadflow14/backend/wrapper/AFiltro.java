@@ -65,7 +65,7 @@ public class AFiltro implements Serializable {
 
 
     public static AFiltro ugualeStr(String fieldName, String value) {
-        return new AFiltro(AETypeBson.uguale.getCriteria(fieldName, value));
+        return new AFiltro(AETypeFilter.uguale.getCriteria(fieldName, value));
     }
 
 
@@ -107,9 +107,6 @@ public class AFiltro implements Serializable {
         return sort;
     }
 
-    //    public BasicDBObject getQuery() {
-    //        return query;
-    //    }
 
     public String getTag() {
         return tag;

@@ -3,8 +3,6 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -12,24 +10,17 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.geografica.continente.*;
-import it.algos.vaadflow14.backend.packages.geografica.regione.*;
-import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
-import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.bson.*;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -42,7 +33,6 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.time.*;
 import java.util.*;
-import java.util.stream.*;
 
 
 /**
@@ -229,6 +219,9 @@ public abstract class ATest {
     @Autowired
     protected FlowVar flowVar;
 
+    @InjectMocks
+    protected WrapFiltri wrapFiltri;
+
     protected Logger adminLogger;
 
     protected boolean previstoBooleano;
@@ -381,6 +374,7 @@ public abstract class ATest {
 
     protected AETypeSerializing oldType;
 
+
     protected static String[] CANONICAL() {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
@@ -391,59 +385,6 @@ public abstract class ATest {
 
     protected static String[] PATH() {
         return new String[]{null, VUOTA, "PathErrato", "/Users/gac/IdeaProjects/operativi/vaadwiki/src/main/java/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via", "/Users/gac/Documents/IdeaProjects/operativi/vaadwiki/src/main/java/it/algos/vaadflow14/backend/packages/anagrafica/via/Via.java"};
-    }
-
-    protected static Class[] CLAZZ() {
-        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
-    }
-
-    protected static Stream<Arguments> CLAZZ_KEY_ID() {
-        return Stream.of(
-                Arguments.of((Class) null, VUOTA, false),
-                Arguments.of(Utente.class, VUOTA, false),
-                Arguments.of(Mese.class, null, false),
-                Arguments.of(Mese.class, VUOTA, false),
-                Arguments.of(Mese.class, "termidoro", false),
-                Arguments.of(Giorno.class, "2agosto", true),
-                Arguments.of(Giorno.class, "2 agosto", false),
-                Arguments.of(Anno.class, "104", true),
-                Arguments.of(Mese.class, "marzo", true),
-                Arguments.of(Mese.class, "Marzo", true),
-                Arguments.of(Mese.class, "marzo esatto", false),
-                Arguments.of(Regione.class, "calabria", true),
-                Arguments.of(Regione.class, "Calabria", true)
-        );
-    }
-
-    //--clazz
-    //--propertyName
-    //--propertyValue
-    //--previstoIntero
-    //--doc e/o entityBean valida
-    protected static Stream<Arguments> CLAZZ_PROPERTY() {
-        return Stream.of(
-                Arguments.of((Class) null, VUOTA, null, 0, false),
-                Arguments.of(Utente.class, VUOTA, null, 0, false),
-                Arguments.of(LogicList.class, null, null, 0, false),
-                Arguments.of(AIType.class, null, null, 0, false),
-                Arguments.of(Mese.class, VUOTA, null, 0, false),
-                Arguments.of(Mese.class, "manca", null, 0, false),
-                Arguments.of(Mese.class, "manca", 31, 0, false),
-                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
-                Arguments.of(Mese.class, "mese", null, 0, false),
-                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
-                Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
-                Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
-                Arguments.of(Mese.class, "mese", "ottobre", 1, true),
-                Arguments.of(Mese.class, "giorni", 31, 7, false),
-                Arguments.of(Mese.class, "giorni", 30, 4, false),
-                Arguments.of(Mese.class, "giorni", 28, 1, true),
-                Arguments.of(Mese.class, "giorni", 32, 0, false),
-                Arguments.of(Via.class, "belzebù", "piazza", 0, false),
-                Arguments.of(Via.class, "nome", "belzebù", 0, false),
-                Arguments.of(Via.class, "nome", "piazza", 1, true),
-                Arguments.of(Delta.class, "immagine", VUOTA, 0, false)
-        );
     }
 
     /**
@@ -639,6 +580,9 @@ public abstract class ATest {
         companyService.reflection = reflectionService;
         companyService.mongo = mongoService;
         companyService.beanService = beanService;
+
+        WrapFiltri.text = textService;
+        WrapFiltri.reflection = reflectionService;
     }
 
 
@@ -690,6 +634,7 @@ public abstract class ATest {
         previstoRisultato = null;
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
+        wrapFiltri = null;
     }
 
     protected String getTime() {
