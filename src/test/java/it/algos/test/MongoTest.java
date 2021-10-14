@@ -279,26 +279,50 @@ public abstract class MongoTest extends ATest {
     }
 
 
-    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, null);
-    }
-
-    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean) {
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final int ottenutoIntero) {
         String message;
-        String nota = filter.getOperazione(propertyName, propertyValue);
+        String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;
 
         if (previstoIntero == 0) {
             message = String.format("Nella entityClass %s non ho trovato nessuna entities %s", clazz.getSimpleName(), nota);
             System.out.println(message);
         }
         else {
-            message = String.format("Nella entityClass %s ho trovato %d entities %s", clazz.getSimpleName(), previstoIntero, nota);
+            message = String.format("Nella entityClass %s ho trovato %d entities %s", clazz.getSimpleName(), ottenutoIntero, nota);
             System.out.println(message);
-            if (listaBean != null && listaBean.size() > 0) {
-                for (AEntity entityBean : listaBean) {
-                    System.out.println(entityBean.id);
-                }
+        }
+    }
+
+    protected void printWrapFiltro(final Class clazz, final int previstoIntero, final List<AEntity> listaBean, final boolean risultatoEsatto) {
+        printWrapFiltro(clazz, null, VUOTA, VUOTA, previstoIntero, listaBean, risultatoEsatto);
+    }
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, null);
+    }
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean) {
+        printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean, false);
+    }
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean, final boolean risultatoEsatto) {
+        String message;
+        String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;
+        nota = textService.isValid(nota) ? SPAZIO + nota + SPAZIO : SPAZIO;
+
+        if (previstoIntero == 0) {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities%s", clazz.getSimpleName(), SPAZIO + nota);
+            System.out.println(message);
+        }
+        else {
+            if (risultatoEsatto) {
+                message = String.format("Nella entityClass %s ho trovato %d entities%sche sono esattamente quelle previste (obbligatorio)", clazz.getSimpleName(), listaBean.size(), nota);
             }
+            else {
+                message = String.format("Nella entityClass %s ho trovato %d entities%sche sono indicativamente quelle previste (facoltativo)", clazz.getSimpleName(), listaBean.size(), nota);
+            }
+            System.out.println(message);
+            printLista(listaBean);
         }
     }
 

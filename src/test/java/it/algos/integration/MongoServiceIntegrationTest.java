@@ -3,6 +3,7 @@ package it.algos.integration;
 import com.mongodb.client.*;
 import it.algos.simple.*;
 import it.algos.test.*;
+import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -135,7 +136,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     @MethodSource(value = "CLAZZ")
     @NullSource
     @Order(2)
-    @DisplayName("2 - Collezioni per clazz")
+    @DisplayName("2 - Collezioni del database")
     /*
       Controlla l'esistenza della collezione (dall'elenco di tutte le condizioni esistenti nel mongoDB)
       Recupera la collezione
@@ -169,18 +170,23 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
-    @Order(4)
-    @DisplayName("4 - Count totale per clazz")
+    @Order(3)
+    @DisplayName("3 - Count totale per clazz")
     /*
       metodo semplice per l'intera collection
       rimanda al metodo base collection.countDocuments();
       non usa ne gson ne spring
      */
     void countClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("4 - Count totale per clazz");
+        System.out.println("3 - Count totale per clazz");
+        String message = String.format("Count totale di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz);
+            System.out.println(String.format("Risultato -> %d", ottenutoIntero));
+            System.out.println(VUOTA);
             printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
         } catch (AlgosException unErrore) {
             printError(unErrore);
@@ -189,13 +195,25 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(6)
-    @DisplayName("6 - Count filtrato (propertyName, propertyValue) per clazz")
-    void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        System.out.println("6 - Count filtrato (propertyName, propertyValue) per clazz");
+    @Order(5)
+    @DisplayName("5 - Count spring filtrato (propertyName, propertyValue)")
+    void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("5 - Count spring filtrato (propertyName, propertyValue)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        count45(clazz, propertyName, propertyValue, previstoIntero);
+    }
+
+    private void count45(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        message = String.format("Query -> %s=%s", propertyName, propertyValue);
+        System.out.println(message);
+
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
+            System.out.println(String.format("Risultato = %d", ottenutoIntero));
+            System.out.println(VUOTA);
             printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         } catch (AlgosException unErrore) {
             printError(unErrore);
@@ -206,8 +224,156 @@ public class MongoServiceIntegrationTest extends MongoTest {
         System.out.println(VUOTA);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(7)
+    @DisplayName("7 - Count spring filtrato (WrapFiltro)")
+    void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("7 - Count spring filtrato (WrapFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        count67(clazz, filter,propertyName, propertyValue, previstoIntero);
+    }
 
-    @Test
+
+    private void count67(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        WrapFiltri wrapFiltri = null;
+
+        try {
+            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            message = String.format("Query -> %s", filter.getOperazione(propertyName, propertyValue));
+            System.out.println(message);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (wrapFiltri != null) {
+            try {
+                ottenutoIntero = service.count(clazz, wrapFiltri);
+                System.out.println(String.format("Risultato = %d", ottenutoIntero));
+                System.out.println(VUOTA);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            assertEquals(previstoIntero, ottenutoIntero);
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+        }
+    }
+
+
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_KEY_ID")
+    @Order(17)
+    @DisplayName("17 - Find entityBean by keyId")
+    void findByIdSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
+        System.out.println("17 - Find entityBean by keyId");
+        entityBean = null;
+        try {
+            entityBean = service.find(clazz, keyPropertyValue);
+            printEntityBeanFromKeyId(clazz, keyPropertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
+            printError(unErrore);
+        }
+        if (valida) {
+            assertNotNull(entityBean);
+        }
+        else {
+            assertNull(entityBean);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_PROPERTY")
+    @Order(23)
+    @DisplayName("23 - Find entityBean by property")
+    void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final boolean entityBeanValida) {
+        System.out.println("23 - Find entityBean by property");
+        try {
+            entityBean = service.find(clazz, propertyName, propertyValue);
+            printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (entityBeanValida) {
+            assertNotNull(entityBean);
+        }
+        else {
+            assertNull(entityBean);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_COUNT")
+    @Order(24)
+    @DisplayName("24 - Fetch completo di una classe")
+    void fetch(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("24 - Fetch completo di una classe");
+        String message;
+
+        try {
+            ottenutoIntero = service.count(clazz);
+            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+            return;
+        }
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        try {
+            listaBean = service.fetch(clazz);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (listaBean != null) {
+            if (ottenutoIntero == listaBean.size()) {
+                printLista(listaBean);
+            }
+            else {
+                message = String.format("Qualcosa non quadra perché il fetch ha recuperato %d entities mentre avrebbero dovuto essere %d secondo le previsioni", listaBean.size(), previstoIntero);
+                System.out.println(message);
+                assertEquals(previstoIntero, listaBean.size());
+            }
+        }
+        else {
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(26)
+    @DisplayName("26 - Fetch filtrato")
+    void fetchSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+        System.out.println("26 - Fetch filtrato");
+        WrapFiltri wrapFiltri = null;
+
+        try {
+            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (wrapFiltri != null) {
+            try {
+                listaBean = service.fetch(clazz, wrapFiltri);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            System.out.println(VUOTA);
+            assertEquals(previstoIntero, listaBean.size());
+            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean);
+        }
+    }
+    //    @Test
     @Order(8)
     @DisplayName("8 - Count filtrato (AFiltro) singolo")
     void countFiltroSpring() {
@@ -271,7 +437,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
 
-    @Test
+    //    @Test
     @Order(10)
     @DisplayName("10 - Count filtrato (mappaFiltri)")
     void countFiltroMappaSpring() {
@@ -293,136 +459,6 @@ public class MongoServiceIntegrationTest extends MongoTest {
             printError(unErrore);
         }
         printCount(clazz, mappaFiltri, previstoIntero, ottenutoIntero);
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_FILTER")
-    @Order(11)
-    @DisplayName("11 - Count filtrato (WrapFiltro)")
-    void countWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("11 - Count filtrato (WrapFiltro)");
-        WrapFiltri wrapFiltri = null;
-
-        try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-
-        if (wrapFiltri != null) {
-            try {
-                ottenutoIntero = service.count(clazz, wrapFiltri);
-            } catch (AlgosException unErrore) {
-                printError(unErrore);
-            }
-            System.out.println(VUOTA);
-            assertEquals(previstoIntero, ottenutoIntero);
-            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero);
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_KEY_ID")
-    @Order(17)
-    @DisplayName("17 - Find entityBean by keyId")
-    void findByIdSpring(final Class clazz, final Serializable keyPropertyValue, final boolean valida) {
-        System.out.println("17 - Find entityBean by keyId");
-        entityBean = null;
-        try {
-            entityBean = service.find(clazz, keyPropertyValue);
-            printEntityBeanFromKeyId(clazz, keyPropertyValue, entityBean, previstoIntero);
-        } catch (AlgosException unErrore) {
-            System.out.println(String.format("Ricerca di %s.%s", clazz != null ? clazz.getSimpleName() : VUOTA, keyPropertyValue));
-            printError(unErrore);
-        }
-        if (valida) {
-            assertNotNull(entityBean);
-        }
-        else {
-            assertNull(entityBean);
-        }
-    }
-
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(23)
-    @DisplayName("23 - Find entityBean by property")
-    void findByPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final boolean entityBeanValida) {
-        System.out.println("23 - Find entityBean by property");
-        try {
-            entityBean = service.find(clazz, propertyName, propertyValue);
-            printEntityBeanFromProperty(clazz, propertyName, propertyValue, entityBean, previstoIntero);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        if (entityBeanValida) {
-            assertNotNull(entityBean);
-        }
-        else {
-            assertNull(entityBean);
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_COUNT")
-    @Order(24)
-    @DisplayName("24 - Fetch completo di una classe")
-    void fetch(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("24 - Fetch completo di una classe");
-
-        try {
-            ottenutoIntero = service.count(clazz);
-            printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-            return;
-        }
-        try {
-            listaBean = service.fetch(clazz);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        if (listaBean != null) {
-            if (ottenutoIntero == listaBean.size()) {
-                printLista(listaBean);
-            }
-            else {
-                System.out.println("Qualcosa non quadra perché il fetch è diverso dal count");
-            }
-        }
-        else {
-            if (previstoIntero != 0) {
-                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
-            }
-        }
-    }
-
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_FILTER")
-    @Order(26)
-    @DisplayName("26 - Fetch filtrato")
-    void fetchSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("26 - Fetch filtrato");
-        WrapFiltri wrapFiltri = null;
-
-        try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-
-        if (wrapFiltri != null) {
-            try {
-                listaBean = service.fetch(clazz, wrapFiltri);
-            } catch (AlgosException unErrore) {
-                printError(unErrore);
-            }
-            System.out.println(VUOTA);
-            assertEquals(previstoIntero, listaBean.size());
-            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean);
-        }
     }
 
     //    @Test

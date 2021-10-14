@@ -801,61 +801,61 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException {
-        List<? extends AEntity> listaEntities;
-        String message;
-
-        if (entityClazz == null) {
-            throw AlgosException.stack("La entityClazz è nulla", getClass(), "fetch");
-        }
-
-        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            message = String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName());
-            throw AlgosException.stack(message, getClass(), "fetch");
-        }
-
-        switch (FlowVar.typeSerializing) {
-            case spring:
-                if (isMongoOpValido()) {
-                    return mongoOp.findAll(entityClazz);
-                }
-                else {
-                    return fetchGson(entityClazz);
-                }
-            case gson:
-                return fetchGson(entityClazz);
-            case jackson:
-                return null;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
-                return null;
-        }
+        return fetch(entityClazz, (WrapFiltri) null);
+        //        String message;
+        //
+        //        if (entityClazz == null) {
+        //            throw AlgosException.stack("La entityClazz è nulla", getClass(), "fetch");
+        //        }
+        //
+        //        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+        //            message = String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName());
+        //            throw AlgosException.stack(message, getClass(), "fetch");
+        //        }
+        //
+        //        switch (FlowVar.typeSerializing) {
+        //            case spring:
+        //                if (isMongoOpValido()) {
+        //                    return mongoOp.findAll(entityClazz);
+        //                }
+        //                else {
+        //                    return fetchGson(entityClazz);
+        //                }
+        //            case gson:
+        //                return fetchGson(entityClazz);
+        //            case jackson:
+        //                return null;
+        //            default:
+        //                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
+        //                return null;
+        //        }
     }
 
-    private List<AEntity> fetchGson(Class<? extends AEntity> entityClazz) throws AlgosException {
-        List<AEntity> listaGson;
-        MongoCollection<Document> collection;
-        String message;
-        FindIterable<Document> iterable;
-        AEntity entityBean;
-
-        collection = getCollection(entityClazz);
-        if (collection == null) {
-            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-            throw AlgosException.stack(message, getClass(), "fetchGson");
-        }
-        iterable = collection.find();
-        if (iterable == null) {
-            message = String.format("La collection %s è vuota", collection.toString());
-            throw AlgosException.stack(message, getClass(), "fetchGson");
-        }
-
-        listaGson = new ArrayList<>();
-        for (Document doc : iterable) {
-            entityBean = gSonService.creaOld(doc, entityClazz);
-            listaGson.add(entityBean);
-        }
-        return listaGson;
-    }
+    //    private List<AEntity> fetchGson(Class<? extends AEntity> entityClazz) throws AlgosException {
+    //        List<AEntity> listaGson;
+    //        MongoCollection<Document> collection;
+    //        String message;
+    //        FindIterable<Document> iterable;
+    //        AEntity entityBean;
+    //
+    //        collection = getCollection(entityClazz);
+    //        if (collection == null) {
+    //            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+    //            throw AlgosException.stack(message, getClass(), "fetchGson");
+    //        }
+    //        iterable = collection.find();
+    //        if (iterable == null) {
+    //            message = String.format("La collection %s è vuota", collection.toString());
+    //            throw AlgosException.stack(message, getClass(), "fetchGson");
+    //        }
+    //
+    //        listaGson = new ArrayList<>();
+    //        for (Document doc : iterable) {
+    //            entityBean = gSonService.creaOld(doc, entityClazz);
+    //            listaGson.add(entityBean);
+    //        }
+    //        return listaGson;
+    //    }
 
 
     /**
@@ -868,7 +868,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
-        return fetch(entityClazz, wrapFiltri, 0, LIMIT_QUERY_ENTITIES_STANDARD);
+        return fetch(entityClazz, wrapFiltri, 0, MAX);
     }
 
 
@@ -908,7 +908,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     private List<AEntity> fetchSpring(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
         List<AEntity> listaEntities;
-        Query query = getQuery(wrapFiltri.getMappaFiltri());
+        Query query = getQuery(wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null);
 
         if (offset > 0) {
             query.skip(offset);
@@ -966,41 +966,41 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return listaGson;
     }
 
-    public Query getQuery(final WrapFiltri wrapFiltri) throws AlgosException {
-        Query query = new Query();
-        Criteria criteriaFiltro;
-        Criteria criteriaQuery = null;
-
-        //        if (array.isAllValid(mappaFiltri)) {
-        //            for (AFiltro filtro : mappaFiltri.values()) {
-        //                criteriaFiltro = filtro.getCriteria();
-        //
-        //                if (criteriaQuery == null) {
-        //                    criteriaQuery = criteriaFiltro;
-        //                    query.addCriteria(criteriaQuery);
-        //                }
-        //                else {
-        //                    //--For multiple criteria on the same field, uses a “comma” to combine them.
-        //                    //@todo Funzionalità ancora da implementare
-        //                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-        //                        criteriaQuery.andOperator(criteriaFiltro);
-        //                        //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
-        //                    }
-        //                    else {
-        //                        query.addCriteria(criteriaFiltro);
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        return query;
-    }
+    //    public Query getQuery(final WrapFiltri wrapFiltri) throws AlgosException {
+    //        Query query = new Query();
+    //        Criteria criteriaFiltro;
+    //        Criteria criteriaQuery = null;
+    //
+    //        //        if (array.isAllValid(mappaFiltri)) {
+    //        //            for (AFiltro filtro : mappaFiltri.values()) {
+    //        //                criteriaFiltro = filtro.getCriteria();
+    //        //
+    //        //                if (criteriaQuery == null) {
+    //        //                    criteriaQuery = criteriaFiltro;
+    //        //                    query.addCriteria(criteriaQuery);
+    //        //                }
+    //        //                else {
+    //        //                    //--For multiple criteria on the same field, uses a “comma” to combine them.
+    //        //                    //@todo Funzionalità ancora da implementare
+    //        //                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
+    //        //                        criteriaQuery.andOperator(criteriaFiltro);
+    //        //                        //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
+    //        //                    }
+    //        //                    else {
+    //        //                        query.addCriteria(criteriaFiltro);
+    //        //                    }
+    //        //                }
+    //        //            }
+    //        //        }
+    //
+    //        return query;
+    //    }
 
 
     protected Bson getFilter(final WrapFiltri wrapFiltri) throws AlgosException {
         Document docFilter = null;
-        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
-        Criteria criteria ;
+        Map<String, AFiltro> mappaFiltri = wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null;
+        Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
         if (array.isAllValid(mappaFiltri)) {
@@ -1181,8 +1181,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             try {
                 docFilter = criteriaFilter.getCriteriaObject();
             } catch (Exception unErrore) {
-                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
+                throw AlgosException.stack(unErrore, this.getClass(), "getFilter");
             }
+
         }
 
         return docFilter;
