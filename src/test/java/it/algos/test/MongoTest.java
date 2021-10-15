@@ -305,6 +305,7 @@ public abstract class MongoTest extends ATest {
         printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean, false);
     }
 
+
     protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean, final boolean risultatoEsatto) {
         String message;
         String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;

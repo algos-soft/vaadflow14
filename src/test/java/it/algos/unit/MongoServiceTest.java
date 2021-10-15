@@ -160,14 +160,14 @@ public class MongoServiceTest extends MongoTest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(3)
-    @DisplayName("3 - Count totale per clazz")
+    @DisplayName("3 - Count totale (gson/spring) per clazz")
     /*
       metodo semplice per l'intera collection
       rimanda al metodo base collection.countDocuments();
       non usa ne gson ne spring
      */
     void countClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("3 - Count totale per clazz");
+        System.out.println("3 - Count totale (gson/spring) per clazz");
         String message = String.format("Count totale di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
 
@@ -232,7 +232,7 @@ public class MongoServiceTest extends MongoTest {
     void countWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         System.out.println("6 - Count gson filtrato (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        count67(clazz, filter,propertyName, propertyValue, previstoIntero);
+        count67(clazz, filter, propertyName, propertyValue, previstoIntero);
     }
 
 
@@ -243,7 +243,7 @@ public class MongoServiceTest extends MongoTest {
     void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         System.out.println("7 - Count spring filtrato (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
-        count67(clazz, filter,propertyName, propertyValue, previstoIntero);
+        count67(clazz, filter, propertyName, propertyValue, previstoIntero);
     }
 
 
@@ -446,10 +446,24 @@ public class MongoServiceTest extends MongoTest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(24)
-    @DisplayName("24 - Fetch completo di una classe")
-    void fetch(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("24 - Fetch completo di una classe");
+    @DisplayName("24 - Fetch completo (gson) di una classe")
+    void fetchGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("24 - Fetch completo (gson) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetch2425(clazz, previstoIntero, risultatoEsatto);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_COUNT")
+    @Order(25)
+    @DisplayName("25 - Fetch completo (gson) di una classe")
+    void fetchSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
+        System.out.println("25 - Fetch completo (gson) di una classe");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetch2425(clazz, previstoIntero, risultatoEsatto);
+    }
+
+    private void fetch2425(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
         String message;
 
         message = String.format("Fetch completo di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
@@ -489,31 +503,34 @@ public class MongoServiceTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(25)
-    @DisplayName("25 - Fetch gson filtrato")
+    @Order(26)
+    @DisplayName("26 - Fetch gson filtrato (WrapFiltro)")
     void fetchGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("25 - Fetch gson filtrato");
+        System.out.println("26 - Fetch gson filtrato (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        fetch2526(clazz, filter, propertyName, propertyValue, previstoIntero);
+        fetch2627(clazz, filter, propertyName, propertyValue, previstoIntero);
     }
 
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(26)
-    @DisplayName("26 - Fetch spring filtrato")
+    @Order(27)
+    @DisplayName("27 - Fetch spring filtrato (WrapFiltro)")
     void fetchSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("26 - Fetch spring filtrato");
+        System.out.println("27 - Fetch spring filtrato (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
-        fetch2526(clazz, filter, propertyName, propertyValue, previstoIntero);
+        fetch2627(clazz, filter, propertyName, propertyValue, previstoIntero);
     }
 
 
-    void fetch2526(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+    void fetch2627(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         WrapFiltri wrapFiltri = null;
+        String message;
 
         try {
             wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            message = String.format("Query -> %s", filter.getOperazione(propertyName, propertyValue));
+            System.out.println(message);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -521,6 +538,8 @@ public class MongoServiceTest extends MongoTest {
         if (wrapFiltri != null) {
             try {
                 listaBean = service.fetch(clazz, wrapFiltri);
+                System.out.println(String.format("Risultato = %d", listaBean.size()));
+                System.out.println(VUOTA);
             } catch (AlgosException unErrore) {
                 printError(unErrore);
             }
