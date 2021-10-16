@@ -103,7 +103,7 @@ public class StatoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) {
+    private boolean creaReset(final int ordine, final String stato, final boolean ue, final String numerico, final String alfatre, final String alfadue, final String locale, final String bandiera, final Continente continente) throws AlgosException {
         return super.creaReset(newEntity(ordine, stato, ue, numerico, alfatre, alfadue, locale, bandiera, continente));
     }
 
@@ -190,7 +190,7 @@ public class StatoService extends AService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public Stato findByKey(final String keyValue)  throws AlgosException {
+    public Stato findByKey(final String keyValue) throws AlgosException {
         return (Stato) super.findByKey(keyValue);
     }
 
@@ -270,9 +270,11 @@ public class StatoService extends AService {
                     }
                 }
                 continente = continente != null ? continente : continenteDefault;
-
-                if (creaReset(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente)) {
+                try {
+                    creaReset(posCorrente, nome, ue, riga.get(1), riga.get(2), riga.get(3), riga.get(4), bandieraTxt, continente);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }

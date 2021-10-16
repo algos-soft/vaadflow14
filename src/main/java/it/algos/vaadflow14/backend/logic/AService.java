@@ -114,19 +114,20 @@ public abstract class AService extends AbstractService implements AIService {
     /**
      * Crea e registra una entityBean col flag reset=true <br>
      * Esegue SOLO se la entity è sottoclasse di AREntity <br>
+     * Se esiste il field 'ordine', lo incrementa <br>
      *
      * @param newEntity appena creata, da regolare e da salvare
      *
      * @return true se la entity è stata creata e salvata
      */
-    protected boolean creaReset(final AREntity newEntity) {
+    protected boolean creaReset(final AREntity newEntity) throws AlgosException {
         boolean status = false;
         newEntity.reset = true;
 
         try {
             status = save(newEntity, AEOperation.addNew) != null;
         } catch (AlgosException unErrore) {
-            logger.error(unErrore, this.getClass(), "creaReset");
+            throw AlgosException.stack(unErrore, this.getClass(), "creaReset");
         }
 
         return status;
@@ -222,13 +223,18 @@ public abstract class AService extends AbstractService implements AIService {
     @Override
     public AEntity save(final AEntity entityBeanDaRegistrare, final AEOperation operation) throws AlgosException {
         AEntity entityBean;
-        AEntity entityBeanOld;
+        AEntity entityBeanOld=null;
 
         //--eventuali operazioni eseguite PRIMA di registrare (new o modifica)
         entityBean = this.beforeSave(entityBeanDaRegistrare, operation);
 
         //--precedenti (eventuali) valori per evidenziare le modifiche
-        entityBeanOld = mongo.find(entityBeanDaRegistrare);//@todo da controllare QUI CE UN ERRORE
+        try {
+            entityBeanOld = mongo.find(entityBeanDaRegistrare);
+        } catch (AlgosException unErrore) {
+//            throw AlgosException.stack(unErrore, this.getClass(), "save");
+        }
+
 
         //--esegue la registrazione sul database mongoDB
         //--con un controllo finale di congruità
@@ -594,7 +600,7 @@ public abstract class AService extends AbstractService implements AIService {
      */
     @Override
     public int getNewOrdine() {
-        int newOrder = 0;
+        int newOrder = 1;
 
         try {
             newOrder = mongo.getNewOrder(entityClazz, FIELD_ORDINE);

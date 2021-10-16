@@ -72,11 +72,13 @@ public class GiornoService extends AService {
      * @param titolo (obbligatorio, unico)
      * @param ordine (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
+     * @param inizio (facoltativo, unico)
+     * @param fine   (facoltativo, unico)
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String titolo, final Mese mese) {
-        return super.creaReset(newEntity(ordine, titolo, mese));
+    private boolean creaReset(final int ordine, final String titolo, final Mese mese, final int inizio, final int fine) throws AlgosException {
+        return super.creaReset(newEntity(ordine, titolo, mese, inizio, fine));
     }
 
 
@@ -89,7 +91,7 @@ public class GiornoService extends AService {
      */
     @Override
     public Giorno newEntity() {
-        return newEntity(0, VUOTA, (Mese) null);
+        return newEntity(0, VUOTA, (Mese) null, 0, 0);
     }
 
 
@@ -101,14 +103,18 @@ public class GiornoService extends AService {
      * @param ordine (obbligatorio, unico)
      * @param titolo (obbligatorio, unico)
      * @param mese   di riferimento (obbligatorio)
+     * @param inizio (facoltativo, unico)
+     * @param fine   (facoltativo, unico)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Giorno newEntity(final int ordine, final String titolo, final Mese mese) {
+    public Giorno newEntity(final int ordine, final String titolo, final Mese mese, final int inizio, final int fine) {
         Giorno newEntityBean = Giorno.builderGiorno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .titolo(text.isValid(titolo) ? titolo : null)
                 .mese(mese)
+                .inizio(inizio)
+                .fine(fine)
                 .build();
 
         return (Giorno) fixKey(newEntityBean);
@@ -168,7 +174,7 @@ public class GiornoService extends AService {
         try {
             isValida = mongo.isValidCollection(clazz);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "checkMese");
+            logger.warn(unErrore, this.getClass(), "checkMese");
         }
 
         if (isValida) {
@@ -208,6 +214,9 @@ public class GiornoService extends AService {
         String titoloMese;
         List<HashMap> lista;
         Mese mese;
+        int inizio = 0;
+        int fine = 0;
+        int tot = 365;
 
         if (result.isErrato()) {
             return result;
@@ -228,8 +237,15 @@ public class GiornoService extends AService {
             titoloMese = (String) mappaGiorno.get(KEY_MAPPA_GIORNI_MESE_TESTO);
             mese = (Mese) ((MongoService) mongo).findByIdOld(Mese.class, titoloMese);//@todo da controllare
             ordine = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_BISESTILE);
+            inizio = (int) mappaGiorno.get(KEY_MAPPA_GIORNI_NORMALE);
+            fine = inizio > 0 ? tot - inizio : 0;
 
-            numRec = creaReset(ordine, titolo, mese) ? numRec + 1 : numRec;
+            try {
+                creaReset(ordine, titolo, mese, inizio, fine);
+                numRec++;
+            } catch (AlgosException unErrore) {
+                logger.warn(unErrore, this.getClass(), "reset");
+            }
         }
 
         return AResult.valido(AETypeReset.hardCoded.get(), numRec);

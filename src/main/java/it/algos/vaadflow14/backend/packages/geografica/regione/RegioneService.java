@@ -95,7 +95,7 @@ public class RegioneService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) {
+    private boolean creaReset(final String divisione, final Stato stato, final String iso, final String sigla, final AEStatus status) throws AlgosException {
         return super.creaReset(newEntity(divisione, stato, iso, sigla, status));
     }
 
@@ -316,8 +316,11 @@ public class RegioneService extends AService {
                 sigla = text.levaTestoPrimaDi(iso, TRATTINO);
                 aeStatus = stato.id.equals("italia") ? fixStatusItalia(nome) : aeStatus;
                 if (text.isValid(nome) && stato != null && text.isValid(iso) && text.isValid(sigla)) {
-                    if (creaReset(nome, stato, iso, sigla, aeStatus)) {
+                    try {
+                        creaReset(nome, stato, iso, sigla, aeStatus);
                         numRec++;
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "creaRegioniDiUnoStato");
                     }
                 }
                 else {

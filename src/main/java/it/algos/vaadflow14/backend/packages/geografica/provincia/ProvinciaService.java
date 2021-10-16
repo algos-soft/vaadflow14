@@ -86,7 +86,7 @@ public class ProvinciaService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) {
+    private boolean creaReset(final String nome, final String sigla, final Regione regione, final Stato stato, final String iso, final AETypeProvincia status) throws  AlgosException {
         return super.creaReset(newEntity(nome, sigla, regione, stato, iso, status));
     }
 
@@ -216,10 +216,14 @@ public class ProvinciaService extends AService {
                 }
 
                 if (text.isValid(nome) && stato != null && regione != null && text.isValid(iso) && text.isValid(sigla)) {
-                    if (creaReset(nome, sigla, regione, stato, iso, status)) {
-                    }
-                    else {
-                        logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                    try {
+                        if (creaReset(nome, sigla, regione, stato, iso, status)) {
+                        }
+                        else {
+                            logger.log(String.format("Provincia non registrata. Nome:%s, Sigla:%s, Regione:%s", nome, sigla, regioneTxt));
+                        }
+                    } catch (AlgosException unErrore) {
+                        logger.warn(unErrore, this.getClass(), "reset");
                     }
                 }
                 else {

@@ -62,12 +62,12 @@ public class AnnoService extends AService {
      */
     private static final long serialVersionUID = 1L;
 
-//    /**
-//     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-//     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
-//     * al termine del ciclo init() del costruttore di questa classe <br>
-//     */
-//    private SecoloService secoloService;
+    //    /**
+    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+    //     * Iniettata dal framework SpringBoot/Vaadin nel costruttore <br>
+    //     * al termine del ciclo init() del costruttore di questa classe <br>
+    //     */
+    //    private SecoloService secoloService;
 
 
     /**
@@ -93,7 +93,7 @@ public class AnnoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
+    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) throws AlgosException {
         return super.creaReset(newEntity(ordine, titolo, bisestile, secolo));
     }
 
@@ -274,8 +274,11 @@ public class AnnoService extends AService {
             secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
-                if (creaReset(ordine, titolo, bisestile, secolo)) {
+                try {
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }
@@ -291,8 +294,11 @@ public class AnnoService extends AService {
             secolo = (Secolo) ((MongoService) mongo).findByIdOld(Secolo.class, titoloSecolo);//@todo da controllare
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
-                if (creaReset(ordine, titolo, bisestile, secolo)) {
+                try {
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "reset");
                 }
             }
         }

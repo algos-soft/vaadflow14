@@ -1,15 +1,12 @@
 package it.algos.vaadflow14.backend.logic;
 
 import ch.carnet.kasparscherrer.*;
-import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.checkbox.*;
 import com.vaadin.flow.component.combobox.*;
-import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
-import com.vaadin.flow.server.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -297,14 +294,18 @@ public abstract class LogicList extends Logic {
     @Override
     protected void creaComandiTop() {
         super.creaComandiTop();
-        ComboBox combo;
+        ComboBox combo = null;
         Checkbox check;
         IndeterminateCheckbox check3Vie;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
 
             if (annotation.usaComboBox(entityClazz, fieldName)) {
-                combo = this.getComboBox(fieldName);
+                try {
+                    combo = this.getComboBox(fieldName);
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "creaComandiTop");
+                }
                 mappaComponentiTop.put(fieldName, combo);
             }
 
@@ -342,7 +343,7 @@ public abstract class LogicList extends Logic {
      *
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      */
-    protected ComboBox getComboBox(final String fieldName) {
+    protected ComboBox getComboBox(final String fieldName) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, 0, null);
     }
 
@@ -355,7 +356,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param dataProvider fornitore degli items. Se manca lo costruisce con la collezione completa
      */
-    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider) {
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider) throws AlgosException {
         return getComboBox(fieldName, dataProvider, 0, null);
     }
 
@@ -368,7 +369,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName (obbligatorio) della property da utilizzare per il ComboBox
      * @param width     larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      */
-    protected ComboBox getComboBox(final String fieldName, final int width) {
+    protected ComboBox getComboBox(final String fieldName, final int width) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, width, null);
     }
 
@@ -381,7 +382,7 @@ public abstract class LogicList extends Logic {
      * @param fieldName    (obbligatorio) della property da utilizzare per il ComboBox
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox getComboBox(final String fieldName, final Object initialValue) {
+    protected ComboBox getComboBox(final String fieldName, final Object initialValue) throws AlgosException {
         return getComboBox(fieldName, (DataProvider) null, 0, initialValue);
     }
 
@@ -395,7 +396,7 @@ public abstract class LogicList extends Logic {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) {
+    protected ComboBox getComboBox(final String fieldName, final DataProvider dataProvider, final int width, final Object initialValue) throws AlgosException {
         return utility.creaComboBox(entityClazz, fieldName, dataProvider, width, initialValue);
     }
 
@@ -839,7 +840,6 @@ public abstract class LogicList extends Logic {
     }
 
 
-
     /**
      * Azione proveniente dal click sul bottone Reset <br>
      * Creazione di alcuni dati iniziali <br>
@@ -910,20 +910,20 @@ public abstract class LogicList extends Logic {
     }
 
     protected void export() {
-//        Grid grid = new Grid(entityClazz, false);
-//        grid.setColumns("nome");
-//        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
-//
-//        String message = "Export";
-//        InputStreamFactory factory = Exporter.exportAsExcel(grid);
-//        StreamResource streamRes = new StreamResource(message + ".xls", factory);
-//
-//        Anchor anchorEsporta = new Anchor(streamRes, "Download");
-//        anchorEsporta.getElement().setAttribute("style", "color: red");
-//        anchorEsporta.getElement().setAttribute("Export", true);
-//        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
-//        button.getElement().setAttribute("style", "color: red");
-//        anchorEsporta.add(button);
+        //        Grid grid = new Grid(entityClazz, false);
+        //        grid.setColumns("nome");
+        //        grid.setItems(((MongoService) mongo).findAll(entityClazz));//@todo da controllare
+        //
+        //        String message = "Export";
+        //        InputStreamFactory factory = Exporter.exportAsExcel(grid);
+        //        StreamResource streamRes = new StreamResource(message + ".xls", factory);
+        //
+        //        Anchor anchorEsporta = new Anchor(streamRes, "Download");
+        //        anchorEsporta.getElement().setAttribute("style", "color: red");
+        //        anchorEsporta.getElement().setAttribute("Export", true);
+        //        Button button = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+        //        button.getElement().setAttribute("style", "color: red");
+        //        anchorEsporta.add(button);
         //        exportPlaceholder.removeAll();
         //        exportPlaceholder.add(anchorEsporta);
 

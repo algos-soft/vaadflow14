@@ -311,9 +311,9 @@ public class MongoServiceIntegrationTest extends MongoTest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(25)
-    @DisplayName("25 - Fetch completo (gson) di una classe")
+    @DisplayName("25 - Fetch completo (spring) di una classe")
     void fetchSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("25 - Fetch completo (gson) di una classe");
+        System.out.println("25 - Fetch completo (spring) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         fetch2425(clazz, previstoIntero, risultatoEsatto);
     }
