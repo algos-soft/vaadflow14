@@ -130,7 +130,7 @@ public class DataProviderService extends AbstractService {
                 // The grid can then use it to properly adjust the scrollbars.
                 query -> {
                     try {
-                        return mongo.count(entityClazz);
+                        return mongo.count(entityClazz,mappaFiltri);
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "creaDataProvider");
                         return 0;
