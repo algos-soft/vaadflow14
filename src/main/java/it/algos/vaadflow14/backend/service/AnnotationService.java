@@ -193,6 +193,19 @@ public class AnnotationService extends AbstractService {
         return reflectionJavaField != null ? reflectionJavaField.getAnnotation(DBRef.class) : null;
     }
 
+    /**
+     * Check if the field is DBRef type. <br>
+     *
+     * @param entityClazz     the class of type AEntity
+     * @param publicFieldName the property name
+     *
+     * @return true if field is of type DBRef
+     */
+    public boolean isDBRef(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        Field reflectionJavaField = reflection.getField(entityClazz, publicFieldName);
+        return reflectionJavaField != null && reflectionJavaField.getAnnotation(DBRef.class) != null;
+    }
+
     //==========================================================================
     // Interfaces Algos
     //==========================================================================
@@ -315,7 +328,7 @@ public class AnnotationService extends AbstractService {
      *
      * @return the specific annotation
      */
-    public AIField getAIField(Class<? extends AEntity> entityClazz, String fieldName) {
+    public AIField getAIField(final Class<? extends AEntity> entityClazz, final String fieldName) {
         AIField annotation = null;
         Field reflectionJavaField;
 

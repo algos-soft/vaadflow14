@@ -344,10 +344,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                     return (int) mongoOp.count(query, collectionName);
                 }
                 else {
-                    return count(collection, new Document(propertyName, propertyValue));
+                    return count(collection, getFilter(collectionName, propertyName, propertyValue));
                 }
             case gson:
-                return count(collection, new Document(propertyName, propertyValue));
+                return count(collection, getFilter(collectionName, propertyName, propertyValue));
             case jackson:
                 break;
             default:
@@ -1189,6 +1189,17 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return docFilter;
     }
 
+    protected Bson getFilter(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        String propertyField = propertyName;
+        Class clazz = classService.getClazzFromSimpleName(collectionName);
+
+        if (annotation.isDBRef(clazz, propertyName)) {
+            propertyField += ".$id";
+        }
+
+        return new Document(propertyField, propertyValue);
+    }
+
     /**
      * Crea un set di entities da una collection. <br>
      * Utilizzato da DataProvider <br>
@@ -1601,9 +1612,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded document
      */
-    public Document findDocByProperty(final String collectionName,
-                                      final String propertyName, final Serializable propertyValue) throws
-            AlgosException {
+    public Document findDocByProperty(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         String message;
         Bson condition;
         int recordsTrovati = count(collectionName, propertyName, propertyValue);
