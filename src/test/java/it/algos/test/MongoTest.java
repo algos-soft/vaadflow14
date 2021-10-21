@@ -90,16 +90,16 @@ public abstract class MongoTest extends ATest {
     //--doc e/o entityBean valida
     protected static Stream<Arguments> CLAZZ_PROPERTY() {
         return Stream.of(
-                Arguments.of((Class) null, VUOTA, null, 0, false),
-                Arguments.of(Utente.class, VUOTA, null, 0, false),
-                Arguments.of(LogicList.class, null, null, 0, false),
-                Arguments.of(AIType.class, null, null, 0, false),
-                Arguments.of(Mese.class, VUOTA, null, 0, false),
-                Arguments.of(Mese.class, "manca", null, 0, false),
-                Arguments.of(Mese.class, "manca", 31, 0, false),
-                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
-                Arguments.of(Mese.class, "mese", null, 0, false),
-                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
+//                Arguments.of((Class) null, VUOTA, null, 0, false),
+//                Arguments.of(Utente.class, VUOTA, null, 0, false),
+//                Arguments.of(LogicList.class, null, null, 0, false),
+//                Arguments.of(AIType.class, null, null, 0, false),
+//                Arguments.of(Mese.class, VUOTA, null, 0, false),
+//                Arguments.of(Mese.class, "manca", null, 0, false),
+//                Arguments.of(Mese.class, "manca", 31, 0, false),
+//                Arguments.of(Mese.class, "mese", "pippoz", 0, false),
+//                Arguments.of(Mese.class, "mese", null, 0, false),
+//                Arguments.of(Mese.class, "mese", VUOTA, 0, false),
                 Arguments.of(Giorno.class, "_id", "2agosto", 1, true),
                 Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
                 Arguments.of(Giorno.class, "mese", "ottobre", 31, true),
@@ -122,12 +122,13 @@ public abstract class MongoTest extends ATest {
     //--previstoIntero
     protected static Stream<Arguments> CLAZZ_FILTER() {
         return Stream.of(
-                Arguments.of((Class) null, null, VUOTA, VUOTA, 0),
-                Arguments.of(Utente.class, null, null, null, 0),
-                Arguments.of(Utente.class, AETypeFilter.contiene, null, null, 0),
-                Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
-                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
-                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
+//                Arguments.of((Class) null, null, VUOTA, VUOTA, 0),
+//                Arguments.of(Utente.class, null, null, null, 0),
+//                Arguments.of(Utente.class, AETypeFilter.contiene, null, null, 0),
+//                Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
+//                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
+//                Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
+                Arguments.of(Giorno.class,AETypeFilter.uguale, "mese.$id", "ottobre", 31),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "belzebù", 0),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
                 Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4)

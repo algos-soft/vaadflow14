@@ -74,6 +74,9 @@ public class WrapFiltri {
         }
 
         switch (filter) {
+            case uguale:
+                wrap.mappaFiltri.put(propertyName, AFiltro.ugualeStr(propertyName, propertyValue));
+                break;
             case inizia:
                 wrap.mappaFiltri.put(propertyName, AFiltro.start(propertyName, propertyValue));
                 break;
@@ -81,18 +84,18 @@ public class WrapFiltri {
                 wrap.mappaFiltri.put(propertyName, AFiltro.contains(propertyName, propertyValue));
                 break;
             default:
-                break;
+                throw AlgosException.stack(String.format("Manca il filtro %s nello switch", filter), WrapFiltri.class, "crea");
         }
 
         return wrap;
     }
 
     public static WrapFiltri start(final Class<? extends AEntity> entityClazz, final String propertyName, final String propertyValue) throws AlgosException {
-        return WrapFiltri.crea(entityClazz,AETypeFilter.inizia, propertyName, propertyValue);
+        return WrapFiltri.crea(entityClazz, AETypeFilter.inizia, propertyName, propertyValue);
     }
 
     public static WrapFiltri contains(final Class<? extends AEntity> entityClazz, final String propertyName, final String propertyValue) throws AlgosException {
-        return WrapFiltri.crea(entityClazz,AETypeFilter.contiene, propertyName, propertyValue);
+        return WrapFiltri.crea(entityClazz, AETypeFilter.contiene, propertyName, propertyValue);
     }
 
     public Map<String, AFiltro> getMappaFiltri() {

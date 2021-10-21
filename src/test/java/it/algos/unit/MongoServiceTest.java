@@ -193,7 +193,7 @@ public class MongoServiceTest extends MongoTest {
         count45(clazz, propertyName, propertyValue, previstoIntero);
     }
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(5)
     @DisplayName("5 - Count spring filtrato (propertyName, propertyValue)")
@@ -225,7 +225,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(6)
     @DisplayName("6 - Count gson filtrato (WrapFiltro)")
@@ -236,7 +236,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(7)
     @DisplayName("7 - Count spring filtrato (WrapFiltro)")
@@ -251,6 +251,7 @@ public class MongoServiceTest extends MongoTest {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         WrapFiltri wrapFiltri = null;
+        ottenutoIntero = 0;
 
         try {
             wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
@@ -269,9 +270,9 @@ public class MongoServiceTest extends MongoTest {
                 printError(unErrore);
             }
             System.out.println(VUOTA);
-            assertEquals(previstoIntero, ottenutoIntero);
             printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         }
+        assertEquals(previstoIntero, ottenutoIntero);
     }
 
 
@@ -370,7 +371,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(16)
     @DisplayName("16 - Find (gson) entityBean by keyId")
@@ -381,7 +382,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(17)
     @DisplayName("17 - Find (spring) entityBean by keyId")
@@ -412,7 +413,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(22)
     @DisplayName("22 - Find (gson) entityBean by property")
@@ -423,7 +424,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(23)
     @DisplayName("23 - Find (spring) entityBean by property")
@@ -443,7 +444,7 @@ public class MongoServiceTest extends MongoTest {
         }
     }
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(24)
     @DisplayName("24 - Fetch completo (gson) di una classe")
@@ -453,7 +454,7 @@ public class MongoServiceTest extends MongoTest {
         fetch2425(clazz, previstoIntero, risultatoEsatto);
     }
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(25)
     @DisplayName("25 - Fetch completo (spring) di una classe")
@@ -501,7 +502,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(26)
     @DisplayName("26 - Fetch gson filtrato (WrapFiltro)")
@@ -512,7 +513,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    @ParameterizedTest
+//    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(27)
     @DisplayName("27 - Fetch spring filtrato (WrapFiltro)")
