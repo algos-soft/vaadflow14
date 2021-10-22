@@ -112,13 +112,12 @@ public interface AIMongoService {
      * Conteggio di alcune entities di una collection filtrate con una mappa di filtri. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param mappaFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param wrapFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
      *
      * @return numero di entities eventualmente filtrate
      */
-    int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
-
     int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException;
+    int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
 
 
     /**

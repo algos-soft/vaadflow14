@@ -370,7 +370,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities eventualmente filtrate (da un filtro valido)
      */
-    @Override
+    @Deprecated
     public int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query;
         MongoCollection<Document> collection;
@@ -1003,9 +1003,18 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
+        //        String propertyField ;
+        //        Class clazz = classService.getClazzFromSimpleName(collectionName);
+
+        //        if (annotation.isDBRef(clazz, propertyName)) {
+        //            propertyField += ".$id";
+        //        }
+
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteria = filtro.getCriteria();
+                Object alfa = criteria.getCriteriaObject();
+                Object beta = criteria.getKey();
                 if (criteriaFilter.equals(new Criteria())) {
                     criteriaFilter = criteria;
                 }
@@ -1161,10 +1170,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return query;
     }
 
-
+    @Deprecated
     protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Document docFilter = null;
-        Criteria criteria = null;
+        Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
         if (array.isAllValid(mappaFiltri)) {
@@ -1189,6 +1198,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return docFilter;
     }
 
+    @Deprecated
     protected Bson getFilter(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         String propertyField = propertyName;
         Class clazz = classService.getClazzFromSimpleName(collectionName);
@@ -1199,6 +1209,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         return new Document(propertyField, propertyValue);
     }
+
 
     /**
      * Crea un set di entities da una collection. <br>
