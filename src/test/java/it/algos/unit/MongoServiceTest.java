@@ -172,6 +172,7 @@ public class MongoServiceTest extends MongoTest {
         System.out.println(message);
 
         ottenutoIntero = 0;
+
         try {
             ottenutoIntero = service.count(clazz);
             System.out.println(String.format("Risultato -> %d", ottenutoIntero));
