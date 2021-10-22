@@ -251,15 +251,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     @Override
     public int count(final Class<? extends AEntity> entityClazz) throws AlgosException {
-        if (entityClazz == null) {
-            throw AlgosException.stack("La entityClazz è nulla", getClass(), "count");
-        }
-
-        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), getClass(), "count");
-        }
-
-        return count(annotation.getCollectionName(entityClazz));
+        return count(entityClazz,VUOTA,VUOTA);
     }
 
 
@@ -277,23 +269,23 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return numero di entities eventualmente filtrate (se esiste la propertyName)
      */
     @Override
-    public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
-        String message;
+    public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {String message;
 
-        if (entityClazz == null) {
-            throw AlgosException.stack("La entityClazz è nulla", getClass(), "count");
-        }
-
-        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), getClass(), "count");
-        }
-
-        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
-            message = String.format("Nella entityClazz %s non esiste la property '%s'", entityClazz.getSimpleName(), text.isValid(propertyName) ? propertyName : "null");
-            throw AlgosException.stack(message, getClass(), "count");
-        }
-
-        return count(annotation.getCollectionName(entityClazz), propertyName, propertyValue);
+//        if (entityClazz == null) {
+//            throw AlgosException.stack("La entityClazz è nulla", getClass(), "count");
+//        }
+//
+//        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+//            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), getClass(), "count");
+//        }
+//
+//        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
+//            message = String.format("Nella entityClazz %s non esiste la property '%s'", entityClazz.getSimpleName(), text.isValid(propertyName) ? propertyName : "null");
+//            throw AlgosException.stack(message, getClass(), "count");
+//        }
+//
+//        return count(annotation.getCollectionName(entityClazz), propertyName, propertyValue);
+        return count(entityClazz,WrapFiltri.crea(entityClazz, AETypeFilter.uguale, propertyName, propertyValue));
     }
 
 
@@ -310,6 +302,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return numero di entities eventualmente filtrate (se esiste la propertyName)
      */
+    @Deprecated
     private int count(final String collectionName, final String propertyName, final Serializable propertyValue) throws AlgosException {
         int totale = 0;
         String message;
@@ -1489,8 +1482,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    public AEntity crea(final Class entityClazz, final String valueID) throws
-            AlgosException {
+    public AEntity crea(final Class entityClazz, final String valueID) throws AlgosException {
         return crea(annotation.getCollectionName(entityClazz), valueID);
     }
 
@@ -1502,8 +1494,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return new entity
      */
-    private AEntity crea(final String collectionName, final String valueID) throws
-            AlgosException {
+    private AEntity crea(final String collectionName, final String valueID) throws AlgosException {
         Document doc = findDocById(collectionName, valueID);
         return creaByDoc(collectionName, doc);
     }

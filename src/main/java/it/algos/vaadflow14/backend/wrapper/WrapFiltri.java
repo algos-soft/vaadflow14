@@ -8,6 +8,7 @@ import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.data.domain.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -48,7 +49,7 @@ public class WrapFiltri {
         this.mappaFiltri = new HashMap<>();
     }
 
-    public static WrapFiltri crea(final Class<? extends AEntity> entityClazz, final AETypeFilter filter, final String propertyName, final String propertyValue) throws AlgosException {
+    public static WrapFiltri crea(final Class<? extends AEntity> entityClazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue) throws AlgosException {
         WrapFiltri wrap = new WrapFiltri();
         String message;
 
@@ -69,19 +70,24 @@ public class WrapFiltri {
             throw AlgosException.stack(message, WrapFiltri.class, "crea");
         }
 
-        if (text.isEmpty(propertyValue)) {
+        if (propertyValue == null) {
             throw AlgosException.stack("Manca la propertyValue del filtro", WrapFiltri.class, "crea");
         }
 
         switch (filter) {
             case uguale:
-                wrap.mappaFiltri.put(propertyName, AFiltro.ugualeStr(propertyName, propertyValue));
+                if (propertyValue instanceof String) {
+                    wrap.mappaFiltri.put(propertyName, AFiltro.ugualeStr(propertyName, (String)propertyValue));
+                }
+                else {
+                    wrap.mappaFiltri.put(propertyName, AFiltro.ugualeObj(propertyName, propertyValue));
+                }
                 break;
             case inizia:
-                wrap.mappaFiltri.put(propertyName, AFiltro.start(propertyName, propertyValue));
+                wrap.mappaFiltri.put(propertyName, AFiltro.start(propertyName, (String) propertyValue));
                 break;
             case contiene:
-                wrap.mappaFiltri.put(propertyName, AFiltro.contains(propertyName, propertyValue));
+                wrap.mappaFiltri.put(propertyName, AFiltro.contains(propertyName, (String) propertyValue));
                 break;
             default:
                 throw AlgosException.stack(String.format("Manca il filtro %s nello switch", filter), WrapFiltri.class, "crea");

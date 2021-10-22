@@ -193,7 +193,7 @@ public class MongoServiceTest extends MongoTest {
         count45(clazz, propertyName, propertyValue, previstoIntero);
     }
 
-//    @ParameterizedTest
+    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(5)
     @DisplayName("5 - Count spring filtrato (propertyName, propertyValue)")
@@ -225,7 +225,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(6)
     @DisplayName("6 - Count gson filtrato (WrapFiltro)")
@@ -236,7 +236,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(7)
     @DisplayName("7 - Count spring filtrato (WrapFiltro)")
