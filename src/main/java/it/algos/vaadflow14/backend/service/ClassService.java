@@ -350,7 +350,7 @@ public class ClassService extends AbstractService {
 
 
     /**
-     * Recupera la clazz dal nome Java <br>
+     * Recupera la clazz dal nome Java nel package <br>
      * Il simpleName termina SENZA JAVA_SUFFIX <br>
      *
      * @param simpleName della classe
@@ -361,8 +361,12 @@ public class ClassService extends AbstractService {
         String canonicalName;
         String message;
 
+        if (simpleName == null) {
+            throw AlgosException.stack("Il simpleName in ingresso è nullo", getClass(), "getClazzFromSimpleName");
+        }
+
         if (text.isEmpty(simpleName)) {
-            throw AlgosException.stack("Manca il simpleName in ingresso", getClass(), "getClazzFromSimpleName");
+            throw AlgosException.stack("Il simpleName in ingresso è vuoto", getClass(), "getClazzFromSimpleName");
         }
 
         if (simpleName.endsWith(JAVA_SUFFIX)) {
@@ -378,6 +382,18 @@ public class ClassService extends AbstractService {
         }
 
         return getClazzFromCanonicalName(canonicalName);
+    }
+
+    /**
+     * Esistenza della clazz dal nome Java nel package <br>
+     * Il simpleName termina SENZA JAVA_SUFFIX <br>
+     *
+     * @param simpleName della classe
+     *
+     * @return classe individuata
+     */
+    public boolean isEsiste(String simpleName) throws AlgosException {
+        return getClazzFromSimpleName(simpleName) != null;
     }
 
     /**

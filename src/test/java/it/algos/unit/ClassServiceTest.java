@@ -1,13 +1,9 @@
 package it.algos.unit;
 
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -85,16 +81,12 @@ public class ClassServiceTest extends ATest {
         System.out.println(clazz2.getCanonicalName());
     }
 
+
     @ParameterizedTest
     @MethodSource(value = "SIMPLE")
-    @EmptySource
     @Order(2)
-    @DisplayName("2 - clazz from simpleName")
-    /*
-      2 - getClazzFromSimpleName
-      Ricerca di una classe dal simpleName
-     */
-    void getClazzFromSimpleName(String simpleName) {
+    @DisplayName("2 - clazz and canonicalName from simpleName")
+    void getClazzFromSimpleName(final String simpleName, final boolean esistePackage) {
         clazz = null;
         sorgente = simpleName;
         try {
@@ -102,18 +94,33 @@ public class ClassServiceTest extends ATest {
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
+        assertFalse(esistePackage && clazz == null);
+
         printClazz(sorgente, clazz);
     }
 
     @ParameterizedTest
+    @MethodSource(value = "SIMPLE")
+    @Order(3)
+    @DisplayName("3 - esistenza di una clazz from simpleName")
+    void isEsisteFromSimpleName(final String simpleName, final boolean esistePackage) {
+        clazz = null;
+        sorgente = simpleName;
+        try {
+            ottenutoBooleano = service.isEsiste(sorgente);
+            System.out.println(String.format("La classe %s esiste",sorgente));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertFalse(esistePackage && !ottenutoBooleano);
+    }
+
+
+    @ParameterizedTest
     @MethodSource(value = "PATH")
     @EmptySource
-    @Order(3)
-    @DisplayName("3 - clazz from pathName")
-    /*
-      3 - getClazzFromPathName
-      Ricerca di una classe dal pathName
-     */
+    @Order(4)
+    @DisplayName("4 - clazz and canonicalName from pathName")
     void getClazzFromPathName(String pathName) {
         clazz = null;
         sorgente = pathName;
@@ -128,12 +135,8 @@ public class ClassServiceTest extends ATest {
     @ParameterizedTest
     @MethodSource(value = "CANONICAL")
     @EmptySource
-    @Order(4)
-    @DisplayName("4 - clazz from canonicalName")
-    /*
-      4 - getClazzFromCanonicalName
-      Ricerca di una classe dal canonicalName
-     */
+    @Order(5)
+    @DisplayName("5 - clazz from canonicalName")
     void getClazzFromCanonicalName(String canonicalName) {
         clazz = null;
         sorgente = canonicalName;
@@ -148,12 +151,8 @@ public class ClassServiceTest extends ATest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ")
-    @Order(5)
-    @DisplayName("5 - getEntityFromClazz")
-    /*
-      4 - getClazzFromCanonicalName
-      Creazione della entityBean di una classe
-     */
+    @Order(6)
+    @DisplayName("6 - getEntityFromClazz")
     void getEntityFromClazz(Class clazz) {
         entityBean = null;
         try {
@@ -161,19 +160,18 @@ public class ClassServiceTest extends ATest {
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        printEntityBeanFromClazz("New",clazz, entityBean);
+        printEntityBeanFromClazz("New", clazz, entityBean);
     }
 
 
     @Test
-    @Order(6)
-    @DisplayName("6- getProjectName")
+    @Order(7)
+    @DisplayName("7- getProjectName")
     void getProjectName() {
         ottenuto = service.getProjectName();
         assertTrue(textService.isValid(ottenuto));
         System.out.println(String.format("Nome del progetto corrente: %s", ottenuto));
     }
-
 
 
     void printEntityBean(final AEntity entityBean) {

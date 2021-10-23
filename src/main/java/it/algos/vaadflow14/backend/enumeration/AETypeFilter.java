@@ -121,6 +121,17 @@ public enum AETypeFilter {
             return String.format("col field %s che inizia col testo '%s'", fieldName, value);
         }
     },
+    link("$eq", "Seleziona i documenti che hanno un link (DBRef) alla collezione indicata.") {
+        @Override
+        public Criteria getCriteria(final String fieldName, final String value) {
+            return Criteria.where(fieldName).is(value);
+        }
+
+        @Override
+        public String getOperazione(final String fieldName, final String value) {
+            return String.format("col DBRef field %s linkato alla entity '%s'", fieldName, value);
+        }
+    },
     ;
 
     private String tag;

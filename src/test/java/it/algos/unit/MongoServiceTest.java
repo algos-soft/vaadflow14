@@ -172,14 +172,17 @@ public class MongoServiceTest extends MongoTest {
         System.out.println(message);
 
         ottenutoIntero = 0;
-
         try {
             ottenutoIntero = service.count(clazz);
-            System.out.println(String.format("Risultato -> %d", ottenutoIntero));
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
             printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
         } catch (AlgosException unErrore) {
             printError(unErrore);
+        }
+
+        if (flagRisultatiEsattiObbligatori && risultatoEsatto) {
+            assertEquals(previstoIntero, ottenutoIntero);
         }
     }
 
@@ -191,7 +194,7 @@ public class MongoServiceTest extends MongoTest {
     void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         System.out.println("4 - Count gson filtrato (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        count45(clazz, propertyName, propertyValue, previstoIntero);
+        count45(clazz, propertyName, propertyValue, previstoIntero, "query");
     }
 
     @ParameterizedTest
@@ -201,19 +204,19 @@ public class MongoServiceTest extends MongoTest {
     void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
         System.out.println("5 - Count spring filtrato (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
-        count45(clazz, propertyName, propertyValue, previstoIntero);
+        count45(clazz, propertyName, propertyValue, previstoIntero, "filter");
     }
 
-    private void count45(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+    private void count45(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
-        message = String.format("Query -> %s=%s", propertyName, propertyValue);
+        message = String.format("%s %s %s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
         System.out.println(message);
 
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
-            System.out.println(String.format("Risultato = %d", ottenutoIntero));
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
             printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         } catch (AlgosException unErrore) {
@@ -248,14 +251,17 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-    private void count67(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+    private void count67(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         WrapFiltri wrapFiltri = null;
+        String propertyField;
         ottenutoIntero = 0;
 
         try {
             wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
             message = String.format("Query -> %s", filter.getOperazione(propertyName, propertyValue));
             System.out.println(message);
         } catch (AlgosException unErrore) {
@@ -372,7 +378,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(16)
     @DisplayName("16 - Find (gson) entityBean by keyId")
@@ -383,7 +389,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
     @Order(17)
     @DisplayName("17 - Find (spring) entityBean by keyId")
@@ -414,7 +420,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(22)
     @DisplayName("22 - Find (gson) entityBean by property")
@@ -425,7 +431,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
     @Order(23)
     @DisplayName("23 - Find (spring) entityBean by property")
@@ -445,7 +451,7 @@ public class MongoServiceTest extends MongoTest {
         }
     }
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(24)
     @DisplayName("24 - Fetch completo (gson) di una classe")
@@ -455,7 +461,7 @@ public class MongoServiceTest extends MongoTest {
         fetch2425(clazz, previstoIntero, risultatoEsatto);
     }
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_COUNT")
     @Order(25)
     @DisplayName("25 - Fetch completo (spring) di una classe")
@@ -503,7 +509,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(26)
     @DisplayName("26 - Fetch gson filtrato (WrapFiltro)")
@@ -514,7 +520,7 @@ public class MongoServiceTest extends MongoTest {
     }
 
 
-//    @ParameterizedTest
+    //    @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
     @Order(27)
     @DisplayName("27 - Fetch spring filtrato (WrapFiltro)")

@@ -1,6 +1,7 @@
 package it.algos.vaadflow14.backend.wrapper;
 
 import com.vaadin.flow.data.provider.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -32,6 +33,13 @@ public class WrapFiltri {
      * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
      */
     @Autowired
+    public static AnnotationService annotation;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     */
+    @Autowired
     public static ReflectionService reflection;
 
     /**
@@ -49,24 +57,32 @@ public class WrapFiltri {
         this.mappaFiltri = new HashMap<>();
     }
 
-    public static WrapFiltri crea(final Class<? extends AEntity> entityClazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    public static WrapFiltri crea(final Class<? extends AEntity> entityClazz, AETypeFilter filter, String propertyField, final Serializable propertyValue) throws AlgosException {
         WrapFiltri wrap = new WrapFiltri();
         String message;
+        String keyField;
 
         if (entityClazz == null) {
             throw AlgosException.stack("Manca la entityClazz", WrapFiltri.class, "crea");
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), WrapFiltri.class, "crea");
         }
 
         if (filter == null) {
             throw AlgosException.stack("Manca la tipologia del filtro", WrapFiltri.class, "crea");
         }
 
-        if (text.isEmpty(propertyName)) {
+        if (text.isEmpty(propertyField)) {
             throw AlgosException.stack("Manca la propertyName del filtro", WrapFiltri.class, "crea");
         }
 
-        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
-            message = String.format("La entityClazz %s esiste ma non esiste la property %s", entityClazz.getSimpleName(), propertyName);
+        propertyField = text.levaCoda(propertyField, FIELD_NAME_ID_LINK);
+        keyField = propertyField;
+
+        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyField)) {
+            message = String.format("La entityClazz %s esiste ma non esiste la property %s", entityClazz.getSimpleName(), propertyField);
             throw AlgosException.stack(message, WrapFiltri.class, "crea");
         }
 
@@ -74,25 +90,34 @@ public class WrapFiltri {
             throw AlgosException.stack("Manca la propertyValue del filtro", WrapFiltri.class, "crea");
         }
 
+        if (annotation.isDBRef(entityClazz, propertyField)) {
+            propertyField += FIELD_NAME_ID_LINK;
+            filter = AETypeFilter.link;
+        }
+
         switch (filter) {
             case uguale:
                 if (propertyValue instanceof String) {
-                    wrap.mappaFiltri.put(propertyName, AFiltro.ugualeStr(propertyName, (String)propertyValue));
+                    wrap.mappaFiltri.put(keyField, AFiltro.ugualeStr(propertyField, (String) propertyValue));
                 }
                 else {
-                    wrap.mappaFiltri.put(propertyName, AFiltro.ugualeObj(propertyName, propertyValue));
+                    wrap.mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                 }
                 break;
             case inizia:
-                wrap.mappaFiltri.put(propertyName, AFiltro.start(propertyName, (String) propertyValue));
+                wrap.mappaFiltri.put(keyField, AFiltro.start(propertyField, (String) propertyValue));
                 break;
             case contiene:
-                wrap.mappaFiltri.put(propertyName, AFiltro.contains(propertyName, (String) propertyValue));
+                wrap.mappaFiltri.put(keyField, AFiltro.contains(propertyField, (String) propertyValue));
+                break;
+            case link:
+                wrap.mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                 break;
             default:
                 throw AlgosException.stack(String.format("Manca il filtro %s nello switch", filter), WrapFiltri.class, "crea");
         }
 
+        wrap.mappaFiltri.get(keyField).setType(filter);
         return wrap;
     }
 

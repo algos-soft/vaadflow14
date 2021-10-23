@@ -21,6 +21,7 @@ import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.bson.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
@@ -33,6 +34,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.time.*;
 import java.util.*;
+import java.util.stream.*;
 
 
 /**
@@ -379,8 +381,26 @@ public abstract class ATest {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
 
-    protected static String[] SIMPLE() {
-        return new String[]{null, VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList", "AnnoLogicList"};
+    //    protected static String[] SIMPLE() {
+    //        return new String[]{null, VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList", "AnnoLogicList"};
+    //    }
+
+
+    //--clazz
+    //--esiste nel package
+    protected static Stream<Arguments> SIMPLE() {
+        return Stream.of(
+                Arguments.of((Class) null, false),
+                Arguments.of(VUOTA, false),
+                Arguments.of("NomeClasseInesistente", false),
+                Arguments.of(VIA_ENTITY_CLASS.getSimpleName(), true),
+                Arguments.of(VIA_ENTITY_CLASS.getSimpleName()+JAVA_SUFFIX, true),
+                Arguments.of("via", true),
+                Arguments.of("Bolla", true),
+                Arguments.of("LogicList", false),
+                Arguments.of("ViaLogicList", true),
+                Arguments.of("AnnoLogicList", true)
+        );
     }
 
     protected static String[] PATH() {
@@ -582,6 +602,7 @@ public abstract class ATest {
         companyService.beanService = beanService;
 
         WrapFiltri.text = textService;
+        WrapFiltri.annotation = annotationService;
         WrapFiltri.reflection = reflectionService;
     }
 

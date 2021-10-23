@@ -85,7 +85,7 @@ public interface AIMongoService {
 
 
     /**
-     * Conteggio di tutte le entities di una collection NON filtrate. <br>
+     * Conteggio di TUTTE le entities di una collection NON filtrate. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
      *

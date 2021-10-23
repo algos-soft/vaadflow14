@@ -3,8 +3,8 @@ package it.algos.integration;
 import com.mongodb.client.*;
 import it.algos.simple.*;
 import it.algos.test.*;
-import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
@@ -185,7 +185,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz);
-            System.out.println(String.format("Risultato -> %d", ottenutoIntero));
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
             printCount(clazz, previstoIntero, ottenutoIntero, risultatoEsatto);
         } catch (AlgosException unErrore) {
@@ -212,7 +212,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
-            System.out.println(String.format("Risultato = %d", ottenutoIntero));
+            System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
             printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         } catch (AlgosException unErrore) {
@@ -231,17 +231,21 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         System.out.println("7 - Count spring filtrato (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
-        count67(clazz, filter,propertyName, propertyValue, previstoIntero);
+        count67(clazz, filter, propertyName, propertyValue, previstoIntero);
     }
 
 
-    private void count67(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
+    private void count67(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         WrapFiltri wrapFiltri = null;
+        String propertyField;
+        ottenutoIntero = 0;
 
         try {
             wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
             message = String.format("Query -> %s", filter.getOperazione(propertyName, propertyValue));
             System.out.println(message);
         } catch (AlgosException unErrore) {
@@ -257,12 +261,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
                 printError(unErrore);
             }
             System.out.println(VUOTA);
-            assertEquals(previstoIntero, ottenutoIntero);
             printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, ottenutoIntero);
         }
+        assertEquals(previstoIntero, ottenutoIntero);
     }
-
-
 
 
     @ParameterizedTest

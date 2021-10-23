@@ -128,6 +128,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
+                Arguments.of(Giorno.class,AETypeFilter.uguale, "mese", "ottobre", 31),
                 Arguments.of(Giorno.class,AETypeFilter.uguale, "mese.$id", "ottobre", 31),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "belzebù", 0),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),

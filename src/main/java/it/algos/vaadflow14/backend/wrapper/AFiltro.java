@@ -23,6 +23,8 @@ public class AFiltro implements Serializable {
 
     private String tag;
 
+    private AETypeFilter type;
+
     public AFiltro() {
     }
 
@@ -80,12 +82,12 @@ public class AFiltro implements Serializable {
 
 
     public static AFiltro vero(String fieldName) {
-        return booleano(fieldName,true);
+        return booleano(fieldName, true);
     }
 
 
     public static AFiltro falso(String fieldName) {
-        return booleano(fieldName,false);
+        return booleano(fieldName, false);
     }
 
 
@@ -119,6 +121,14 @@ public class AFiltro implements Serializable {
         deepCopy.criteria = Criteria.byExample(doc);
 
         return deepCopy;
+    }
+
+    public AETypeFilter getType() {
+        return type;
+    }
+
+    public void setType(AETypeFilter type) {
+        this.type = type;
     }
 
 }
