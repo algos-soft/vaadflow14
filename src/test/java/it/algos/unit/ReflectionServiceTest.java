@@ -95,19 +95,19 @@ public class ReflectionServiceTest extends ATest {
     //--valida
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
         return Stream.of(
-//                Arguments.of((Class) null, VUOTA, false),
-//                Arguments.of(Utente.class, VUOTA, false),
-//                Arguments.of(Mese.class, null, false),
-//                Arguments.of(Mese.class, VUOTA, false),
-//                Arguments.of(Mese.class, "termidoro", false),
-//                Arguments.of(Giorno.class, "2agosto", true),
-//                Arguments.of(Giorno.class, "2 agosto", false),
-//                Arguments.of(Mese.class, "marzo", true),
-//                Arguments.of(Mese.class, "Marzo", true),
-//                Arguments.of(Mese.class, "marzo esatto", false),
-                Arguments.of(Delta.class, "due", true),
+                Arguments.of((Class) null, VUOTA, false),
+                Arguments.of(Utente.class, VUOTA, false),
+                Arguments.of(Mese.class, null, false),
+                Arguments.of(Mese.class, VUOTA, false),
+                Arguments.of(Mese.class, "termidoro", false),
+                Arguments.of(Giorno.class, "2agosto", true),
+                Arguments.of(Giorno.class, "2 agosto", false),
+                Arguments.of(Mese.class, "marzo", true),
+                Arguments.of(Mese.class, "Marzo", true),
+                Arguments.of(Mese.class, "marzo esatto", false),
+                Arguments.of(Delta.class, "due", false),
                 Arguments.of(Via.class, "piazza", true)
-                );
+        );
     }
 
 
@@ -266,27 +266,53 @@ public class ReflectionServiceTest extends ATest {
         System.out.println(VUOTA);
 
         sorgente = FlowCost.FIELD_CODE;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
         Assertions.assertNull(ottenutoField);
         System.out.println("Non esiste " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_COMPANY;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
-        ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(UTENTE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + UTENTE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = service.getField(MESE_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(MESE_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNotNull(ottenutoField);
         System.out.println("Trovato " + MESE_CLASS.getSimpleName() + PUNTO + sorgente);
 
         sorgente = FIELD_NOTE;
-        ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
+        ottenutoField = null;
+        try {
+            ottenutoField = service.getField(MESE_LOGIC_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assertions.assertNull(ottenutoField);
         System.out.println("Non esiste " + MESE_LOGIC_CLASS.getSimpleName() + PUNTO + sorgente);
     }

@@ -201,7 +201,7 @@ public class AnnotationService extends AbstractService {
      *
      * @return true if field is of type DBRef
      */
-    public boolean isDBRef(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
+    public boolean isDBRef(final Class<? extends AEntity> entityClazz, final String publicFieldName) throws AlgosException {
         Field reflectionJavaField = reflection.getField(entityClazz, publicFieldName);
         return reflectionJavaField != null && reflectionJavaField.getAnnotation(DBRef.class) != null;
     }
@@ -1281,18 +1281,17 @@ public class AnnotationService extends AbstractService {
         return type;
     }
 
-
-    /**
-     * Get the type (column) of the property.
-     *
-     * @param genericClazz    da cui estrarre il field statico
-     * @param publicFieldName property statica e pubblica
-     *
-     * @return the type for the specific column
-     */
-    public AETypeField getColumnType(final Class<?> genericClazz, final String publicFieldName) {
-        return getColumnType(reflection.getField(genericClazz, publicFieldName));
-    }
+    //    /**
+    //     * Get the type (column) of the property.
+    //     *
+    //     * @param genericClazz    da cui estrarre il field statico
+    //     * @param publicFieldName property statica e pubblica
+    //     *
+    //     * @return the type for the specific column
+    //     */
+    //    public AETypeField getColumnType(final Class<?> genericClazz, final String publicFieldName) {
+    //        return getColumnType(reflection.getField(genericClazz, publicFieldName));
+    //    }
 
     /**
      * Get the name (field) of the property <br>
@@ -1584,7 +1583,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaComboBox(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaComboBox(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaComboBox(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaComboBox");
+            return false;
+        }
     }
 
 
@@ -1689,7 +1693,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaCheckBox(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaCheckBox(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaCheckBox(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaCheckBox");
+            return false;
+        }
     }
 
 
@@ -1723,7 +1732,12 @@ public class AnnotationService extends AbstractService {
      * @return status of field
      */
     public boolean usaCheckBox3Vie(Class<? extends AEntity> entityClazz, String fieldName) {
-        return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+        try {
+            return usaCheckBox3Vie(reflection.getField(entityClazz, fieldName));
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "usaCheckBox3Vie");
+            return false;
+        }
     }
 
 
@@ -2665,8 +2679,11 @@ public class AnnotationService extends AbstractService {
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
             return VUOTA;
         }
-
-        reflectionJavaField = reflection.getField(entityClazz, propertyName);
+        try {
+            reflectionJavaField = reflection.getField(entityClazz, propertyName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getKeyFieldMongo");
+        }
 
         if (reflectionJavaField != null) {
             fieldAnnotation = reflectionJavaField.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);

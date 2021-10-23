@@ -3,6 +3,7 @@ package it.algos.annotation;
 import com.vaadin.flow.router.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.hibernate.validator.constraints.*;
 import static org.junit.Assert.*;
@@ -134,14 +135,22 @@ public class InterfaceTest extends ATest {
         NotNull notNull;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         notNull = ottenutoField.getAnnotation(NotNull.class);
         assertNull(notNull);
         notNull = service.getNotNull(ottenutoField);
         assertNull(notNull);
 
         sorgente = "secolo";
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         notNull = ottenutoField.getAnnotation(NotNull.class);
         assertNotNull(notNull);
         notNull = service.getNotNull(ottenutoField);
@@ -156,14 +165,22 @@ public class InterfaceTest extends ATest {
         NotBlank notBlank;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         notBlank = ottenutoField.getAnnotation(NotBlank.class);
         assertNull(notBlank);
         notBlank = service.getNotBlank(ottenutoField);
         assertNull(notBlank);
 
         sorgente = "anno";
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         notBlank = ottenutoField.getAnnotation(NotBlank.class);
         assertNotNull(notBlank);
         notBlank = service.getNotBlank(ottenutoField);
@@ -177,14 +194,22 @@ public class InterfaceTest extends ATest {
         Indexed indexed;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         indexed = ottenutoField.getAnnotation(Indexed.class);
         assertNotNull(indexed);
         indexed = service.getIndexed(ottenutoField);
         assertNotNull(indexed);
 
         sorgente = "secolo";
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         indexed = ottenutoField.getAnnotation(Indexed.class);
         assertNull(indexed);
         indexed = service.getIndexed(ottenutoField);
@@ -198,14 +223,22 @@ public class InterfaceTest extends ATest {
         Size size;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         size = ottenutoField.getAnnotation(Size.class);
         assertNull(size);
         size = service.getSize(ottenutoField);
         assertNull(size);
 
         sorgente = "sigla";
-        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         size = ottenutoField.getAnnotation(Size.class);
         assertNotNull(size);
         size = service.getSize(ottenutoField);
@@ -219,14 +252,22 @@ public class InterfaceTest extends ATest {
         Range range;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         range = ottenutoField.getAnnotation(Range.class);
         assertNull(range);
         range = service.getRange(ottenutoField);
         assertNull(range);
 
         sorgente = "giorni";
-        ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(MESE_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         range = ottenutoField.getAnnotation(Range.class);
         assertNotNull(range);
         range = service.getRange(ottenutoField);
@@ -240,14 +281,22 @@ public class InterfaceTest extends ATest {
         DBRef dbRef;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         dbRef = ottenutoField.getAnnotation(DBRef.class);
         assertNull(dbRef);
         dbRef = service.getDBRef(ottenutoField);
         assertNull(dbRef);
 
         sorgente = "secolo";
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         dbRef = ottenutoField.getAnnotation(DBRef.class);
         assertNotNull(dbRef);
         dbRef = service.getDBRef(ottenutoField);

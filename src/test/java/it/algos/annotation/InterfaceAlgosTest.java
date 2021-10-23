@@ -4,6 +4,7 @@ import it.algos.simple.backend.packages.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -165,7 +166,12 @@ public class InterfaceAlgosTest extends ATest {
         AIField field;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
         field = ottenutoField.getAnnotation(AIField.class);
         assertNotNull(field);
         field = service.getAIField(ottenutoField);
@@ -179,7 +185,11 @@ public class InterfaceAlgosTest extends ATest {
         AIColumn column;
 
         sorgente = FlowCost.FIELD_ORDINE;
-        ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        try {
+            ottenutoField = reflectionService.getField(ANNO_ENTITY_CLASS, sorgente);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         column = ottenutoField.getAnnotation(AIColumn.class);
         assertNotNull(column);
         column = service.getAIColumn(ottenutoField);

@@ -2323,8 +2323,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         AEntity entityBean;
         Object value;
         Sort sort = Sort.by(Sort.Direction.DESC, propertyName);
-        Field field = reflection.getField(entityClazz, propertyName);
+        Field field = null;
         Query query = new Query().with(sort).limit(1);
+
+        try {
+             field = reflection.getField(entityClazz, propertyName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getNewOrder");
+        }
 
         switch (FlowVar.typeSerializing) {
             case spring:

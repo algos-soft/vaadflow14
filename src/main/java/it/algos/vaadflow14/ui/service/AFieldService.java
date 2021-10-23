@@ -7,6 +7,7 @@ import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.exception.*;
@@ -56,14 +57,20 @@ public class AFieldService extends AbstractService {
      */
     public AField crea(AEntity entityBean, Binder binder, AEOperation operationForm, String fieldKey) {
         AField field = null;
-        Field reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        Field reflectionJavaField = null;
         field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
+
+        try {
+             reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "crea");
+        }
 
         if (field != null) {
             this.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
         }
         else {
-            AETypeField type = annotation.getFormType(reflection.getField(entityBean.getClass(), fieldKey));
+            AETypeField type = annotation.getFormType(reflectionJavaField);
             logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
         }
 

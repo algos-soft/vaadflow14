@@ -38,9 +38,6 @@ public abstract class MongoTest extends ATest {
     //--da usare SOLO come controllo per errori previsti
     protected boolean flagRisultatiEsattiObbligatori = true;
 
-    protected static Class[] CLAZZ() {
-        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
-    }
 
     protected static String[] NOMI() {
         return new String[]{VUOTA, "pomeriggio", Via.class.getSimpleName(), Via.class.getCanonicalName(), "via", "Via", Via.class.getSimpleName().toLowerCase(Locale.ROOT), "Utente", "LogicList"};

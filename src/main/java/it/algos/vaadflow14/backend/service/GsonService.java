@@ -699,9 +699,14 @@ public class GsonService extends AbstractService {
         AEntity entityBeanConDBRef = entityBean;
         AEntity entityBeanLinkata;
         Class entityLinkClazz;
-        Field field;
+        Field field=null;
 
-        field = reflection.getField(entityBean.getClass(), nomeCollezioneLinkata);
+        try {
+            field = reflection.getField(entityBean.getClass(), nomeCollezioneLinkata);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "creaEntityDBRef");
+        }
+
         entityLinkClazz = annotation.getComboClass(field);
         collection = dataBase.getCollection(nomeCollezioneLinkata);
 

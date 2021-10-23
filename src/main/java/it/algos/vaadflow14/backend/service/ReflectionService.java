@@ -7,7 +7,6 @@ import com.vaadin.flow.component.icon.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.*;
@@ -230,30 +229,31 @@ public class ReflectionService extends AbstractService {
      *
      * @return the field
      */
-    public Field getField(final Class<?> genericClazz, final String publicFieldName) {
-        Field field = null;
+    public Field getField(final Class<?> genericClazz, final String publicFieldName) throws AlgosException {
+        Field field;
+        String propertyName = publicFieldName;
 
         try {
-            field = genericClazz.getField(publicFieldName);
+            propertyName = propertyName.replaceAll(FIELD_NAME_ID_CON, FIELD_NAME_ID_SENZA);
+            field = genericClazz.getField(propertyName);
         } catch (Exception unErrore) {
-            logger.error(unErrore, this.getClass(), "getField");
+            throw AlgosException.stack(unErrore, this.getClass(), "getField");
         }
 
         return field;
     }
 
-
-    /**
-     * Controlla l' esistenza di un field statico di una classe generica. <br>
-     *
-     * @param genericClazz    da cui estrarre il field statico da controllare
-     * @param publicFieldName property statica e pubblica
-     *
-     * @return true se esiste
-     */
-    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
-        return getField(genericClazz, publicFieldName) != null;
-    }
+    //    /**
+    //     * Controlla l' esistenza di un field statico di una classe generica. <br>
+    //     *
+    //     * @param genericClazz    da cui estrarre il field statico da controllare
+    //     * @param publicFieldName property statica e pubblica
+    //     *
+    //     * @return true se esiste
+    //     */
+    //    public boolean hasField(final Class<?> genericClazz, final String publicFieldName) {
+    //        return getField(genericClazz, publicFieldName) != null;
+    //    }
 
 
     /**
@@ -272,7 +272,12 @@ public class ReflectionService extends AbstractService {
             return null;
         }
 
-        field = getField(genericClazz, publicFieldName);
+        try {
+            field = getField(genericClazz, publicFieldName);
+        } catch (AlgosException unErrore) {
+            logger.warn(unErrore, this.getClass(), "getStaticPropertyValue");
+        }
+
         if (field != null) {
             try {
                 value = field.get(null);

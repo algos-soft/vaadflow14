@@ -3,6 +3,7 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -10,16 +11,21 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.wiki.*;
 import org.bson.*;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
@@ -381,9 +387,9 @@ public abstract class ATest {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
 
-    //    protected static String[] SIMPLE() {
-    //        return new String[]{null, VUOTA, "NomeClasseInesistente", VIA_ENTITY_CLASS.getSimpleName(), VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, "via", "Bolla", "LogicList", "ViaLogicList", "AnnoLogicList"};
-    //    }
+    protected static Class[] CLAZZ() {
+        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
+    }
 
 
     //--clazz
@@ -394,7 +400,7 @@ public abstract class ATest {
                 Arguments.of(VUOTA, false),
                 Arguments.of("NomeClasseInesistente", false),
                 Arguments.of(VIA_ENTITY_CLASS.getSimpleName(), true),
-                Arguments.of(VIA_ENTITY_CLASS.getSimpleName()+JAVA_SUFFIX, true),
+                Arguments.of(VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, true),
                 Arguments.of("via", true),
                 Arguments.of("Bolla", true),
                 Arguments.of("LogicList", false),
@@ -604,6 +610,13 @@ public abstract class ATest {
         WrapFiltri.text = textService;
         WrapFiltri.annotation = annotationService;
         WrapFiltri.reflection = reflectionService;
+
+        try {
+            FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
+            FIELD_NOME = reflectionService.getField(VIA_ENTITY_CLASS, NAME_NOME);
+        } catch (AlgosException unErrore) {
+            assertFalse(false);
+        }
     }
 
 
@@ -648,8 +661,6 @@ public abstract class ATest {
         listaStr = null;
         listaFields = null;
         bytes = null;
-        FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
-        FIELD_NOME = reflectionService.getField(VIA_ENTITY_CLASS, NAME_NOME);
         entityBean = null;
         clazz = null;
         previstoRisultato = null;
