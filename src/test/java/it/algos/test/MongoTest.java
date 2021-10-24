@@ -46,19 +46,25 @@ public abstract class MongoTest extends ATest {
     //--clazz
     //--previstoIntero
     //--risultatoEsatto
-    private static Stream<Arguments> CLAZZ_COUNT() {
+    //--offset (eventuale)
+    //--limit (eventuale)
+    protected static Stream<Arguments> CLAZZ() {
         return Stream.of(
-                Arguments.of(null, 0, false),
-                Arguments.of(LogicList.class, 0, false),
-                Arguments.of(Utente.class, 0, false),
-                Arguments.of(Bolla.class, 5, false),
-                Arguments.of(Mese.class, 12, true),
-                Arguments.of(Giorno.class, 366, true),
-                Arguments.of(Via.class, 26, false),
-                Arguments.of(AIType.class, 0, true),
-                Arguments.of(Company.class, 3, false),
-                Arguments.of(Stato.class, 249, true),
-                Arguments.of(Continente.class, 7, true)
+                Arguments.of(null, 0, false, 0, 0),
+                Arguments.of(LogicList.class, 0, false, 0, 0),
+                Arguments.of(Utente.class, 0, false, 0, 0),
+                Arguments.of(Bolla.class, 5, false, 0, 0),
+                Arguments.of(Mese.class, 12, true, 0, 0),
+                Arguments.of(Mese.class, 12, true, 5, 2),
+                Arguments.of(Mese.class, 12, true, 2, 0),
+                Arguments.of(Mese.class, 12, true, 0, 2),
+                Arguments.of(Giorno.class, 366, true, 31, 28),
+                Arguments.of(Via.class, 26, false, 8, 4),
+                Arguments.of(AIType.class, 0, true, 0, 0),
+                Arguments.of(Company.class, 3, false, 0, 0),
+                Arguments.of(Stato.class, 249, true, 150, 5),
+                Arguments.of(Stato.class, 249, true, 240, 0),
+                Arguments.of(Continente.class, 7, true, 2, 3)
         );
     }
 
@@ -125,8 +131,8 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
-                Arguments.of(Giorno.class,AETypeFilter.uguale, "mese", "ottobre", 31),
-                Arguments.of(Giorno.class,AETypeFilter.uguale, "mese.$id", "ottobre", 31),
+                Arguments.of(Giorno.class, AETypeFilter.uguale, "mese", "ottobre", 31),
+                Arguments.of(Giorno.class, AETypeFilter.uguale, "mese.$id", "ottobre", 31),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "belzebù", 0),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
                 Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4)

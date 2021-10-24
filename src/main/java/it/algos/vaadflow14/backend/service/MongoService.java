@@ -400,7 +400,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
-        Map<String, AFiltro> mappaFiltri=wrapFiltri.getMappaFiltri();
+        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
         MongoCollection<Document> collection;
         String collectionName;
 
@@ -509,6 +509,219 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return count(entityClazz, FIELD_NAME_RESET, true);
     }
 
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
+     *
+     * @return lista di entityBeans
+     */
+    public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException {
+        checkEntityClazz(entityClazz, "fetch");
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    return mongoOp.findAll(entityClazz);
+                }
+                else {
+                    return fetchGson(entityClazz);
+                }
+            case gson:
+                return fetchGson(entityClazz);
+            case jackson:
+                return null;
+            default:
+                throw AlgosException.stack("Valore dello switch errato", this.getClass(), "fetch");
+        }
+    }
+
+    public List<? extends AEntity> fetchGson(Class<? extends AEntity> entityClazz) throws AlgosException {
+        List<AEntity> listaGson;
+        MongoCollection<Document> collection = getCollection(entityClazz);
+        String message;
+        FindIterable<Document> iterable;
+
+        if (collection == null) {
+            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        try {
+            iterable = collection.find();
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
+        }
+
+        if (iterable == null) {
+            message = String.format("La collection %s è vuota", collection.toString());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        listaGson = getListaFromIterable(entityClazz, iterable);
+        return listaGson;
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * <p>
+     * Se la propertyName non esiste, restituisce il valore zero <br>
+     * Se la propertyValue non esiste, restituisce il valore zero <br>
+     * Se la propertyValue esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return numero di entities eventualmente filtrate (se esiste la propertyName)
+     */
+    @Override
+    public List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        checkEntityClazz(entityClazz, "fetch");
+        return fetch(entityClazz, WrapFiltri.crea(entityClazz, AETypeFilter.uguale, propertyName, propertyValue));
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Rimanda al metodo base 'fetch' (unico usato) <br>
+     *
+     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     *
+     * @return lista di entityBeans
+     */
+    public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
+        checkEntityClazz(entityClazz, "fetch");
+        return fetch(entityClazz, wrapFiltri, 0, MAX);
+    }
+
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * <p>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
+        List<AEntity> listaEntities = null;
+        checkEntityClazz(entityClazz, "fetch");
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    return fetchSpring(entityClazz, wrapFiltri, offset, limit);
+                }
+                else {
+                    return fetchGson(entityClazz, wrapFiltri, offset, limit);
+                }
+            case gson:
+                return fetchGson(entityClazz, wrapFiltri, offset, limit);
+            case jackson:
+                return listaEntities;
+            default:
+                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
+                return listaEntities;
+        }
+    }
+
+    private List<AEntity> fetchSpring(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
+        List<AEntity> listaEntities;
+        Query query = getQuery(wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null);
+
+        if (offset > 0) {
+            query.skip(offset);
+        }
+        if (limit > 0) {
+            query.limit(limit);
+        }
+
+        try {
+            listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchSpring");
+        }
+
+        return listaEntities;
+    }
+
+    private List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
+        List<AEntity> listaGson;
+        MongoCollection<Document> collection;
+        String message;
+        FindIterable<Document> iterable;
+        AEntity entityBean;
+        Bson filter;
+        Bson sort = null;
+
+        collection = getCollection(entityClazz);
+        if (collection == null) {
+            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        try {
+            filter = getFilter(wrapFiltri);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
+        }
+
+        try {
+            if (limit > 0) {
+                iterable = collection.find().filter(filter).sort(sort).skip(skip).limit(limit);
+            }
+            else {
+                iterable = collection.find().filter(filter).sort(sort).skip(skip);
+            }
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
+        }
+
+        if (iterable == null) {
+            message = String.format("La collection %s è vuota", collection.toString());
+            throw AlgosException.stack(message, getClass(), "fetchGson");
+        }
+
+        listaGson = new ArrayList<>();
+        for (Document doc : iterable) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
+            listaGson.add(entityBean);
+        }
+        return listaGson;
+    }
+
+
+    private List<AEntity> getListaFromIterable(Class<? extends AEntity> entityClazz, final FindIterable<Document> iterable) throws AlgosException {
+        List<AEntity> listaGson = new ArrayList<>();
+        ;
+        AEntity entityBean;
+
+        for (Document doc : iterable) {
+            entityBean = gSonService.creaOld(doc, entityClazz);
+            listaGson.add(entityBean);
+        }
+
+        return listaGson;
+    }
+
+
+    private void checkEntityClazz(final Class<? extends AEntity> entityClazz, String callingMethod) throws AlgosException {
+        if (entityClazz == null) {
+            throw AlgosException.stack("Manca la entityClazz", WrapFiltri.class, callingMethod);
+        }
+
+        if (!AEntity.class.isAssignableFrom(entityClazz)) {
+            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), WrapFiltri.class, callingMethod);
+        }
+    }
 
     /**
      * Find single entity. <br>
@@ -806,220 +1019,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 return (List<AEntity>) mongoOp.find(query, entityClazz, projection);
             }
         }
-    }
-
-    /**
-     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
-     * Rimanda al metodo base 'fetch' (unico usato) <br>
-     *
-     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
-     *
-     * @return lista di entityBeans
-     */
-    public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz) throws AlgosException {
-        return fetch(entityClazz, (WrapFiltri) null);
-        //        String message;
-        //
-        //        if (entityClazz == null) {
-        //            throw AlgosException.stack("La entityClazz è nulla", getClass(), "fetch");
-        //        }
-        //
-        //        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-        //            message = String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName());
-        //            throw AlgosException.stack(message, getClass(), "fetch");
-        //        }
-        //
-        //        switch (FlowVar.typeSerializing) {
-        //            case spring:
-        //                if (isMongoOpValido()) {
-        //                    return mongoOp.findAll(entityClazz);
-        //                }
-        //                else {
-        //                    return fetchGson(entityClazz);
-        //                }
-        //            case gson:
-        //                return fetchGson(entityClazz);
-        //            case jackson:
-        //                return null;
-        //            default:
-        //                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
-        //                return null;
-        //        }
-    }
-
-    //    private List<AEntity> fetchGson(Class<? extends AEntity> entityClazz) throws AlgosException {
-    //        List<AEntity> listaGson;
-    //        MongoCollection<Document> collection;
-    //        String message;
-    //        FindIterable<Document> iterable;
-    //        AEntity entityBean;
-    //
-    //        collection = getCollection(entityClazz);
-    //        if (collection == null) {
-    //            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-    //            throw AlgosException.stack(message, getClass(), "fetchGson");
-    //        }
-    //        iterable = collection.find();
-    //        if (iterable == null) {
-    //            message = String.format("La collection %s è vuota", collection.toString());
-    //            throw AlgosException.stack(message, getClass(), "fetchGson");
-    //        }
-    //
-    //        listaGson = new ArrayList<>();
-    //        for (Document doc : iterable) {
-    //            entityBean = gSonService.creaOld(doc, entityClazz);
-    //            listaGson.add(entityBean);
-    //        }
-    //        return listaGson;
-    //    }
-
-
-    /**
-     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
-     * Rimanda al metodo base 'fetch' (unico usato) <br>
-     *
-     * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
-     * @param wrapFiltri  insieme di filtri ed ordinamento.
-     *
-     * @return lista di entityBeans
-     */
-    public List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
-        return fetch(entityClazz, wrapFiltri, 0, MAX);
-    }
-
-
-    /**
-     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
-     * Metodo base 'fetch' (unico usato) <br>
-     * <p>
-     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
-     *
-     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param wrapFiltri  insieme di filtri ed ordinamento.
-     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
-     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
-     *
-     * @return lista di entityBeans
-     */
-    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
-        List<AEntity> listaEntities = null;
-
-        switch (FlowVar.typeSerializing) {
-            case spring:
-                if (isMongoOpValido()) {
-                    return fetchSpring(entityClazz, wrapFiltri, offset, limit);
-                }
-                else {
-                    return fetchGson(entityClazz, wrapFiltri, offset, limit);
-                }
-            case gson:
-                return fetchGson(entityClazz, wrapFiltri, offset, limit);
-            case jackson:
-                return listaEntities;
-            default:
-                logger.warn("Switch - caso non definito", this.getClass(), "fetch");
-                return listaEntities;
-        }
-    }
-
-    private List<AEntity> fetchSpring(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
-        List<AEntity> listaEntities;
-        Query query = getQuery(wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null);
-
-        if (offset > 0) {
-            query.skip(offset);
-        }
-        if (limit > 0) {
-            query.limit(limit);
-        }
-
-        try {
-            listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
-        } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, this.getClass(), "fetchSpring");
-        }
-
-        return listaEntities;
-    }
-
-    private List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
-        List<AEntity> listaGson;
-        MongoCollection<Document> collection;
-        String message;
-        FindIterable<Document> iterable;
-        AEntity entityBean;
-        Bson filter;
-        Bson sort = null;
-
-        collection = getCollection(entityClazz);
-        if (collection == null) {
-            message = String.format("Non esiste la collection della classe %s", entityClazz.getSimpleName());
-            throw AlgosException.stack(message, getClass(), "fetchGson");
-        }
-
-        try {
-            filter = getFilter(wrapFiltri);
-        } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
-        }
-
-        try {
-            iterable = collection.find().filter(filter).sort(sort).skip(skip).limit(limit);
-        } catch (Exception unErrore) {
-            throw AlgosException.stack(unErrore, this.getClass(), "fetchGson");
-        }
-
-        if (iterable == null) {
-            message = String.format("La collection %s è vuota", collection.toString());
-            throw AlgosException.stack(message, getClass(), "fetchGson");
-        }
-
-        listaGson = new ArrayList<>();
-        for (Document doc : iterable) {
-            entityBean = gSonService.creaOld(doc, entityClazz);
-            listaGson.add(entityBean);
-        }
-        return listaGson;
-    }
-
-
-    private void checkEntityClazz(final Class<? extends AEntity> entityClazz, String callingMethod) throws AlgosException {
-        String message;
-        MongoCollection<Document> collection;
-
-        if (entityClazz == null) {
-            throw AlgosException.stack("La entityClazz è nulla", getClass(), callingMethod);
-        }
-
-        if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            throw AlgosException.stack(String.format("La clazz %s non è una entityClazz classe valida", entityClazz.getSimpleName()), getClass(), callingMethod);
-        }
-
-        if (!classService.isEsiste(entityClazz.getSimpleName())) {
-            message = String.format("La clazz %s non esiste nel package delle entityClazz", getClass(), entityClazz);
-            throw AlgosException.stack(message, getClass(), callingMethod);
-        }
-
-        //        if (!reflection.isEsisteFieldOnSuperClass(entityClazz, propertyName)) {
-        //            message = String.format("Nella entityClazz %s non esiste la property '%s'", entityClazz.getSimpleName(), text.isValid(propertyName) ? propertyName : "null");
-        //            throw AlgosException.stack(message, getClass(), "count");
-        //        }
-
-        //        collection = getCollection(collectionName);
-        //        if (collection == null) {
-        //            message = String.format("Su mongoDb non esiste la collezione %s", collectionName);
-        //            throw AlgosException.stack(message, getClass(), "count");
-        //        }
-
-        //        if (text.isEmpty(propertyName)) {
-        //            message = String.format("Manca la propertyName %s", propertyName);
-        //            throw AlgosException.stack(message, getClass(), "count");
-        //        }
-
-        //        if (propertyValue == null) {
-        //            message = String.format("La propertyValue è nulla");
-        //            throw AlgosException.stack(message, getClass(), "count");
-        //        }
     }
 
     //    public Query getQuery(final WrapFiltri wrapFiltri) throws AlgosException {
@@ -1700,8 +1699,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded document
      */
-    public Document findDoc(final String collectionName,
-                            final Bson condition) throws AlgosException {
+    public Document findDoc(final String collectionName, final Bson condition) throws AlgosException {
         Document doc;
         String message;
         FindIterable<Document> iterable;
@@ -2327,7 +2325,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Query query = new Query().with(sort).limit(1);
 
         try {
-             field = reflection.getField(entityClazz, propertyName);
+            field = reflection.getField(entityClazz, propertyName);
         } catch (AlgosException unErrore) {
             logger.warn(unErrore, this.getClass(), "getNewOrder");
         }

@@ -112,11 +112,12 @@ public interface AIMongoService {
      * Conteggio di alcune entities di una collection filtrate con una mappa di filtri. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
-     * @param wrapFiltri eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
+     * @param wrapFiltri  eventuali condizioni di filtro. Se nullo o vuoto recupera tutta la collection.
      *
      * @return numero di entities eventualmente filtrate
      */
     int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException;
+
     int count(final Class<? extends AEntity> entityClazz, final Map<String, AFiltro> mappaFiltri) throws AlgosException;
 
 
@@ -152,6 +153,20 @@ public interface AIMongoService {
     //     */
     //    AEntity crea(final Class entityClazz, final String valueID) throws AlgosException;
 
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * <p>
+     * Se la propertyName non esiste, restituisce il valore zero <br>
+     * Se la propertyValue non esiste, restituisce il valore zero <br>
+     * Se la propertyValue esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return numero di entities eventualmente filtrate (se esiste la propertyName)
+     */
+    List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException;
 
     /**
      * Cerca un Document da una collection con una determinata chiave. <br>
@@ -252,12 +267,26 @@ public interface AIMongoService {
      * Rimanda al metodo base 'fetch' (unico usato) <br>
      *
      * @param entityClazz corrispondente a una collection sul database mongoDB. Obbligatoria.
-     * @param wrapFiltri insieme di filtri.
+     * @param wrapFiltri  insieme di filtri.
      *
      * @return lista di entityBeans
      */
     List<? extends AEntity> fetch(Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException;
 
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * <p>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+     List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException ;
 
     /**
      * Recupera dal DB il valore massimo pre-esistente della property <br>
