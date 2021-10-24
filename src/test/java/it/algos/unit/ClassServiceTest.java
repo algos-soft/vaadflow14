@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.*;
 @Tag("testAllValido")
 @DisplayName("ClassService - Utility di Class e path.")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ClassServiceTest extends ATest {
+public class ClassServiceTest extends MongoTest {
 
 
     /**

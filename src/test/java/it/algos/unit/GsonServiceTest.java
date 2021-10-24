@@ -21,8 +21,6 @@ import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
 import java.io.*;
-import java.sql.*;
-import java.time.*;
 import java.util.*;
 
 /**
@@ -41,7 +39,7 @@ import java.util.*;
 @Tag("testAllValido")
 @DisplayName("Gson service")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GsonServiceTest extends ATest {
+public class GsonServiceTest extends MongoTest {
 
     private static final String DATA_BASE_NAME = "vaadflow14";
 
@@ -422,7 +420,7 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "8marzo";
         clazz = Giorno.class;
-        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        previsto = "{\"_id\":\"8marzo\",\"ordine\":68,\"titolo\":\"8 marzo\",\"mese\":{\"id\":\"marzo\",\"collectionName\":\"mese\"},\"inizio\":67,\"fine\":298,\"reset\":true,\"_class\":\"giorno\"}";
         try {
             ottenuto = service.mongoToString(clazz, sorgente);
         } catch (AlgosException unErrore) {
@@ -434,7 +432,7 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "23 ottobre";
         clazz = Giorno.class;
-        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"reset\":true,\"_class\":\"giorno\"}";
+        previsto = "{\"_id\":\"23ottobre\",\"ordine\":297,\"titolo\":\"23 ottobre\",\"mese\":{\"id\":\"ottobre\",\"collectionName\":\"mese\"},\"inizio\":296,\"fine\":69,\"reset\":true,\"_class\":\"giorno\"}";
         try {
             ottenuto = service.mongoToString(clazz, sorgente);
         } catch (AlgosException unErrore) {
@@ -446,7 +444,7 @@ public class GsonServiceTest extends ATest {
 
         sorgente = "quartiere";
         clazz = Via.class;
-        previsto = "{\"_id\":\"quartiere\",\"ordine\":11,\"nome\":\"quartiere\",\"reset\":true,\"creazione\":\"Sep 6, 2021, 8:35:08 PM\",\"modifica\":\"Sep 6, 2021, 8:35:08 PM\",\"_class\":\"via\"}";
+        previsto = "{\"_id\":\"quartiere\",\"ordine\":11,\"nome\":\"quartiere\",\"reset\":true,\"creazione\":\"Oct 16, 2021, 2:31:17 PM\",\"modifica\":\"Oct 16, 2021, 2:31:17 PM\",\"_class\":\"via\"}";
         try {
             ottenuto = service.mongoToString(clazz, sorgente);
         } catch (AlgosException unErrore) {
@@ -542,42 +540,44 @@ public class GsonServiceTest extends ATest {
         System.out.println(entityBean);
     }
 
-//    @Test
-//    @Order(98)
-//    @DisplayName("98 - timestamp versus UTC Datetime")
-//    void saveDate() {
-//        Delta delta = Delta.builderDelta().build();
-//        delta.id = "tre";
-//        delta.code = "topolino";
-//        delta.immagine="";
-//        delta.uno = LocalDateTime.now();
-//        delta.quattro = Timestamp.valueOf(LocalDateTime.now());
-//        String jSonText;
-//        Class<? extends AEntity> entityClazz = delta.getClass();
-//        MongoCollection<Document> collection = mongoService.getCollection(entityClazz);
-//
-//        jSonText = service.entityToString(delta);
-//        jSonText = jSonText.replace(FIELD_NAME_ID_SENZA, FIELD_NAME_ID_CON);
-//        doc = textService.isValid(jSonText) ? Document.parse(jSonText) : null;
-//        printDoc(doc);
-//        try {
-//            if (doc!=null) {
-//                collection.insertOne(doc);
-//            }
-//        } catch (Exception unErrore) {
-//            System.out.println(unErrore);
-//        }
-//
-//    }
+    //    @Test
+    //    @Order(98)
+    //    @DisplayName("98 - timestamp versus UTC Datetime")
+    //    void saveDate() {
+    //        Delta delta = Delta.builderDelta().build();
+    //        delta.id = "tre";
+    //        delta.code = "topolino";
+    //        delta.immagine="";
+    //        delta.uno = LocalDateTime.now();
+    //        delta.quattro = Timestamp.valueOf(LocalDateTime.now());
+    //        String jSonText;
+    //        Class<? extends AEntity> entityClazz = delta.getClass();
+    //        MongoCollection<Document> collection = mongoService.getCollection(entityClazz);
+    //
+    //        jSonText = service.entityToString(delta);
+    //        jSonText = jSonText.replace(FIELD_NAME_ID_SENZA, FIELD_NAME_ID_CON);
+    //        doc = textService.isValid(jSonText) ? Document.parse(jSonText) : null;
+    //        printDoc(doc);
+    //        try {
+    //            if (doc!=null) {
+    //                collection.insertOne(doc);
+    //            }
+    //        } catch (Exception unErrore) {
+    //            System.out.println(unErrore);
+    //        }
+    //
+    //    }
 
     private Document getDoc(Class clazz, String sorgente) {
-        Document doc;
+        Document doc = null;
         MongoCollection<Document> collection;
         collection = mongoService.getCollection(clazz);
 
-        objectQuery = new BasicDBObject();
-        objectQuery.put(FIELD_NAME_ID_CON, sorgente);
-        doc = collection.find(objectQuery).first();
+        if (collection != null) {
+            objectQuery = new BasicDBObject();
+            objectQuery.put(FIELD_NAME_ID_CON, sorgente);
+            doc = collection.find(objectQuery).first();
+        }
 
         return doc;
     }
