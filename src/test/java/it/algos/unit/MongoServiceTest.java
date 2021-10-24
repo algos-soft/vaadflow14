@@ -290,7 +290,6 @@ public class MongoServiceTest extends MongoTest {
         assertEquals(previstoIntero, ottenutoIntero);
     }
 
-
     @ParameterizedTest
     @MethodSource(value = "CLAZZ")
     @Order(8)
