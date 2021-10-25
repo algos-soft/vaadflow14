@@ -427,6 +427,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
     }
 
+
     /**
      * Conteggio di tutte le entities di una collection NON filtrate. <br>
      *
