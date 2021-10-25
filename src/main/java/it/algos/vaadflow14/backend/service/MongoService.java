@@ -598,6 +598,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return fetch(entityClazz, wrapFiltri, 0, MAX);
     }
 
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * <p>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    @Override
+    public List<AEntity> fetch(Class<? extends AEntity> entityClazz, WrapFiltri wrapFiltri, int offset, int limit) throws AlgosException {
+        checkEntityClazz(entityClazz, "fetch");
+        return fetch(entityClazz, wrapFiltri, (Sort)null, offset, limit);
+    }
 
     /**
      * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
@@ -612,7 +630,24 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return lista di entityBeans
      */
-    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
+    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final List<QuerySortOrder> sortVaadinList, final int offset, final int limit) throws AlgosException {
+        return fetch(entityClazz, wrapFiltri, utility.sortVaadinToSpring(sortVaadinList, entityClazz), offset, limit);
+    }
+
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * Metodo base 'fetch' (unico usato) <br>
+     * <p>
+     * For multiple criteria on the same field, uses a “comma” to combine them. <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB. Obbligatoria.
+     * @param wrapFiltri  insieme di filtri ed ordinamento.
+     * @param offset      eventuale da cui iniziare. Se zero inizia dal primo bean.
+     * @param limit       numero di entityBeans da restituire. Se nullo restituisce tutti quelli esistenti (filtrati).
+     *
+     * @return lista di entityBeans
+     */
+    public List<AEntity> fetch(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final Sort sortSpring, final int offset, final int limit) throws AlgosException {
         List<AEntity> listaEntities = null;
         checkEntityClazz(entityClazz, "fetch");
 

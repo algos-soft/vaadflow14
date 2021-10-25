@@ -1,13 +1,9 @@
 package it.algos.vaadflow14.backend.service;
 
-import com.mongodb.*;
 import com.vaadin.flow.data.provider.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
-import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.wrapper.*;
-import org.bson.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -72,7 +68,7 @@ public class DataProviderService extends AbstractService {
 
                     //@todo da controllare
                     try {
-                        return ((MongoService) mongo).fetch(entityClazz, (Map<String, AFiltro>) null, sortSpring, offset, limit).stream();//@todo da controllare
+                        return mongo.fetch(entityClazz, (WrapFiltri) null, offset, limit).stream();//@todo da controllare
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
@@ -119,9 +115,10 @@ public class DataProviderService extends AbstractService {
                     sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
 
                     try {
-                        List<AEntity> alfa= ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit);
-                        int delta=alfa.size();
-                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
+                        List<AEntity> alfa = ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit);
+                        int delta = alfa.size();
+//                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
+                        return mongo.fetch(entityClazz, null, offset, limit).stream();//@todo da controllare
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;
@@ -132,8 +129,8 @@ public class DataProviderService extends AbstractService {
                 // The grid can then use it to properly adjust the scrollbars.
                 query -> {
                     try {
-                        int beta= mongo.count(entityClazz,mappaFiltri);
-                        return mongo.count(entityClazz,mappaFiltri);
+                        int beta = mongo.count(entityClazz, mappaFiltri);
+                        return mongo.count(entityClazz, mappaFiltri);
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "creaDataProvider");
                         return 0;
