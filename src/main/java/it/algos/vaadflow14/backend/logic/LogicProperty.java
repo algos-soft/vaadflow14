@@ -370,6 +370,7 @@ public abstract class LogicProperty extends VerticalLayout {
      * La mappa si costruisce in regolazioniIniziali() della LogicList <br>
      */
     protected Map<String, AFiltro> mappaFiltri;
+    protected WrapFiltri wrapFiltri;
 
     /**
      * Lista (eventuale) di 'component' da mostrare come header della view <br>

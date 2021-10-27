@@ -91,7 +91,58 @@ public class DataProviderService extends AbstractService {
     }
 
 
-    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> mappaFiltri) {
+    public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, WrapFiltri wrapFiltri) {
+        DataProvider dataProvider = DataProvider.fromCallbacks(
+
+                // First callback fetches items based on a query
+                fetchCallback -> {
+                    // Esistono DUE tipi di Sort: quello di Spring e quello di Vaadin
+                    Sort sortSpring;
+
+                    // The index of the first item to load
+                    int offset = fetchCallback.getOffset();
+
+                    // The number of items to load
+                    int limit = fetchCallback.getLimit();
+
+                    // Ordine delle colonne
+                    // Vaadin/Grid mi manda sempre UNA sola colonna. Perché?
+                    List<QuerySortOrder> sortVaadinList = fetchCallback.getSortOrders();
+
+                    // Alla partenza (se l'ordinamento manca) usa l'ordine base della AEntity
+                    // le volte successive usa l'ordine selezionato da un header della Grid
+                    // Converto il tipo di sort
+                    sortSpring = utility.sortVaadinToSpring(sortVaadinList, entityClazz);
+
+                    try {
+                        List<AEntity> alfa = mongo.fetch(entityClazz, wrapFiltri, offset, limit);
+                        int delta = alfa.size();
+                        //                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
+                        return mongo.fetch(entityClazz, wrapFiltri, offset, limit).stream();//@todo da controllare
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "fromCallbacks");
+                        return null;
+                    }
+                },
+
+                // Second callback fetches the total number of items currently in the Grid.
+                // The grid can then use it to properly adjust the scrollbars.
+                query -> {
+                    try {
+                        int beta = mongo.count(entityClazz, wrapFiltri);
+                        return mongo.count(entityClazz, wrapFiltri);
+                    } catch (AlgosException unErrore) {
+                        logger.error(unErrore, this.getClass(), "creaDataProvider");
+                        return 0;
+                    }
+                }
+        );
+
+        return dataProvider;
+    }
+
+
+        public DataProvider<AEntity, Void> creaDataProvider(Class entityClazz, Map<String, AFiltro> mappaFiltri) {
         DataProvider dataProvider = DataProvider.fromCallbacks(
 
                 // First callback fetches items based on a query

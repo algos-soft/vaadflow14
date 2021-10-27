@@ -46,9 +46,26 @@ public abstract class MongoTest extends ATest {
     //--clazz
     //--previstoIntero
     //--risultatoEsatto
+    protected static Stream<Arguments> CLAZZ() {
+        return Stream.of(
+                Arguments.of(null, 0, false),
+                Arguments.of(LogicList.class, 0, false),
+                Arguments.of(Utente.class, 0, false),
+                Arguments.of(Bolla.class, 5, false),
+                Arguments.of(Mese.class, 12, true),
+                Arguments.of(AIType.class, 0, true),
+                Arguments.of(Company.class, 3, false),
+                Arguments.of(Stato.class, 249, true)
+        );
+    }
+
+
+    //--clazz
+    //--previstoIntero
+    //--risultatoEsatto
     //--offset (eventuale)
     //--limit (eventuale)
-    protected static Stream<Arguments> CLAZZ() {
+    protected static Stream<Arguments> CLAZZ_OFFSET() {
         return Stream.of(
                 Arguments.of(null, 0, false, 0, 0),
                 Arguments.of(LogicList.class, 0, false, 0, 0),
@@ -62,6 +79,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Via.class, 26, false, 8, 4),
                 Arguments.of(AIType.class, 0, true, 0, 0),
                 Arguments.of(Company.class, 3, false, 0, 0),
+                Arguments.of(Stato.class, 249, true, 0, 0),
                 Arguments.of(Stato.class, 249, true, 150, 5),
                 Arguments.of(Stato.class, 249, true, 240, 0),
                 Arguments.of(Continente.class, 7, true, 2, 3)
@@ -131,6 +149,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Utente.class, AETypeFilter.contiene, VUOTA, VUOTA, 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_ANNO, "forse", 0),
                 Arguments.of(Utente.class, AETypeFilter.contiene, NAME_NOME, "forse", 0),
+                Arguments.of(Giorno.class, AETypeFilter.uguale, null, "ottobre", 0),
                 Arguments.of(Giorno.class, AETypeFilter.uguale, "mese", "ottobre", 31),
                 Arguments.of(Giorno.class, AETypeFilter.uguale, "mese.$id", "ottobre", 31),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "belzebù", 0),
@@ -287,6 +306,10 @@ public abstract class MongoTest extends ATest {
 
     protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final int ottenutoIntero) {
         String message;
+        if (clazz == null) {
+            return;
+        }
+
         String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;
 
         if (previstoIntero == 0) {

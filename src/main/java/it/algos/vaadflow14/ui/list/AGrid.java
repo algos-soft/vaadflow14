@@ -105,6 +105,8 @@ public class AGrid {
      */
     protected Map<String, AFiltro> mappaFiltri;
 
+    protected WrapFiltri wrapFiltri;
+
     private AILogic entityLogic;
 
     private List<String> gridPropertyNamesList;
@@ -145,11 +147,31 @@ public class AGrid {
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
      * @param mappaFiltri (obbligatorio)  per selezione e ordinamento
      */
+    @Deprecated
     public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, Map<String, AFiltro> mappaFiltri) {
         super();
         this.entityClazz = entityClazz;
         this.entityLogic = entityLogic;
         this.mappaFiltri = mappaFiltri;
+    }
+
+    /**
+     * Costruttore con parametri <br>
+     * Questa istanza viene costruita partendo da LogicList nel metodo fixBodyLayout() <br>
+     * con -> grid = appContext.getBean(AGrid.class, entityClazz, this, filtri); <br>
+     * <p>
+     * La Grid viene costruita e regolata in postConstruct() <br>
+     * I filtri e la relativa dataProvider possono essere modificati in maniera dinamica <br>
+     *
+     * @param entityClazz (obbligatorio)  the class of type AEntity
+     * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
+     * @param wrapFiltri (obbligatorio)  per selezione e ordinamento
+     */
+    public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, WrapFiltri wrapFiltri) {
+        super();
+        this.entityClazz = entityClazz;
+        this.entityLogic = entityLogic;
+        this.wrapFiltri = wrapFiltri;
     }
 
 
@@ -169,7 +191,8 @@ public class AGrid {
 
         String sortProperty = annotation.getSortProperty(entityClazz);
         BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+//        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+        dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {

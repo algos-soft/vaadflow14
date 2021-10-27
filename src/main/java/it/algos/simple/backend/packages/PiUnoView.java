@@ -64,8 +64,8 @@ public class PiUnoView extends VerticalLayout {
         grid.addColumn(Anno::getTitolo).setHeader("Anno");
         grid.addColumn(Anno::isBisestile).setHeader("bisestile");
 
-        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
-        grid.setDataProvider(dataProvider);
+//        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
+//        grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 
         return grid;
@@ -80,8 +80,8 @@ public class PiUnoView extends VerticalLayout {
         grid.addColumn("anno").setHeader("Anno");
         grid.addColumn("bisestile").setHeader("bisestile");
 
-        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
-        grid.setDataProvider(dataProvider);
+//        DataProvider dataProvider = dataProviderService.creaDataProvider(Anno.class,null);
+//        grid.setDataProvider(dataProvider);
         grid.setHeight("100%");
 
         return grid;

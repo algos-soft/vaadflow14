@@ -121,6 +121,28 @@ public enum AETypeFilter {
             return String.format("col field %s che inizia col testo '%s'", fieldName, value);
         }
     },
+    contieneSearch("$regex", "Seleziona i documenti che contengono il valore indicato.") {
+        @Override
+        public Criteria getCriteria(final String fieldName, final String value) {
+            return Criteria.where(fieldName).in(value);
+        }
+
+        @Override
+        public String getOperazione(final String fieldName, final String value) {
+            return String.format("col field %s che contiene il testo '%s'", fieldName, value);
+        }
+    },
+    iniziaSearch("$regex", "Seleziona i documenti che iniziano col valore indicato.") {
+        @Override
+        public Criteria getCriteria(final String fieldName, final String value) {
+            return Criteria.where(fieldName).in(value);
+        }
+
+        @Override
+        public String getOperazione(final String fieldName, final String value) {
+            return String.format("col field %s che inizia col testo '%s'", fieldName, value);
+        }
+    },
     link("$eq", "Seleziona i documenti che hanno un link (DBRef) alla collezione indicata.") {
         @Override
         public Criteria getCriteria(final String fieldName, final String value) {

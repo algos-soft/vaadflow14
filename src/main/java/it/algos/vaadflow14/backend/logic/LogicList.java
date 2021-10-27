@@ -103,6 +103,9 @@ public abstract class LogicList extends Logic {
 
         //--costruisce una mappa (vuota) di filtri per la Grid
         super.mappaFiltri = new HashMap<>();
+
+        //--costruisce una istanza (vuota) dei filtri per la Grid
+        //        super.wrapFiltri = WrapFiltri.crea(entityClazz);
     }
 
     /**
@@ -407,7 +410,9 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+//                grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+        grid = appContext.getBean(AGrid.class, entityClazz, this, wrapFiltri);
 
         grid.fixGridHeader();
         this.addGridListeners();
@@ -622,7 +627,9 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case valueChanged:
+                Object alfa= wrapFiltri;
                 this.fixFiltroCombo(fieldName, fieldValue);
+                Object beta= wrapFiltri;
                 this.grid.getGrid().getDataProvider().refreshAll();
                 grid.fixGridHeader();
                 break;
@@ -672,16 +679,27 @@ public abstract class LogicList extends Logic {
         AFiltro filtro = null;
         String searchFieldName = annotation.getSearchPropertyName(entityClazz);
 
-        if (text.isValid(searchFieldName)) {
-            filtro = AFiltro.start(searchFieldName, searchFieldValue);
-        }
+//        if (text.isValid(searchFieldName)) {
+//            filtro = AFiltro.start(searchFieldName, searchFieldValue);
+//        }
 
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(KEY_MAPPA_SEARCH);
-            if (filtro != null) {
-                mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
+        if (text.isValid(searchFieldName)) {
+            if (wrapFiltri != null) {
+                try {
+                    wrapFiltri.regola(AETypeFilter.iniziaSearch,searchFieldName,searchFieldValue);
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
+                }
             }
         }
+
+
+//        if (mappaFiltri != null) {
+//            mappaFiltri.remove(KEY_MAPPA_SEARCH);
+//            if (filtro != null) {
+//                mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
+//            }
+//        }
 
         return filtro;
     }
@@ -695,21 +713,29 @@ public abstract class LogicList extends Logic {
      * @param fieldName  nome del field
      * @param fieldValue valore corrente del field
      */
-    protected AFiltro fixFiltroCombo(final String fieldName, final Object fieldValue) {
-        AFiltro filtro = null;
+    protected void fixFiltroCombo(final String fieldName, final Object fieldValue) {
+//        AFiltro filtro = null;
+//        Map<String, AFiltro> mappaFiltri;
+
+//        if (text.isValid(fieldName) && fieldValue != null) {
+//            filtro = AFiltro.ugualeObj(fieldName, fieldValue);
+//        }
 
         if (text.isValid(fieldName) && fieldValue != null) {
-            filtro = AFiltro.ugualeObj(fieldName, fieldValue);
-        }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(fieldName);
-            if (filtro != null) {
-                mappaFiltri.put(fieldName, filtro);
+            if (wrapFiltri != null) {
+                try {
+                    wrapFiltri.regola(AETypeFilter.link,fieldName,fieldValue);
+                } catch (AlgosException unErrore) {
+                    logger.warn(unErrore, this.getClass(), "fixFiltroCombo");
+                }
             }
         }
 
-        return filtro;
+        //            mappaFiltri = wrapFiltri.getMappaFiltri();
+        //            mappaFiltri.remove(fieldName);
+        //            if (filtro != null) {
+        //                mappaFiltri.put(fieldName, filtro);
+        //            }
     }
 
     /**

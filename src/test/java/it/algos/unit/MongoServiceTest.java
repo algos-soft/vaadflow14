@@ -12,6 +12,7 @@ import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.*;
@@ -267,13 +268,14 @@ public class MongoServiceTest extends MongoTest {
         ottenutoIntero = 0;
 
         try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
-            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
+            filter = wrapFiltri.getMappaFiltri() != null ? wrapFiltri.getMappaFiltri().get(propertyField).getType() : null;
             message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
             System.out.println(message);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
+        } catch (Exception unErrore) {
+//            printError(unErrore);
+        int b=88;
         }
 
         if (wrapFiltri != null) {
@@ -437,14 +439,16 @@ public class MongoServiceTest extends MongoTest {
         String propertyField;
 
         try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
             filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
             message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
             System.out.println(message);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
+        } catch (Exception unErrore) {
+//            printError(unErrore);
+            int c=89;
         }
+
 
         if (wrapFiltri != null) {
             ottenutoIntero = 0;
@@ -497,12 +501,47 @@ public class MongoServiceTest extends MongoTest {
         System.out.println(VUOTA);
 
         try {
-            listaBean = service.fetch(clazz,null,offset,limit);
+            listaBean = service.fetch(clazz, null, offset, limit);
             System.out.println(VUOTA);
             printLista(listaBean);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - WrapFiltro")
+    void wrapFiltro() {
+        System.out.println("20 - WrapFiltro");
+        clazz = STATO_ENTITY_CLASS;
+        String keyField = "continente";
+        String propertyField = "continente.$id";
+        Continente propertyValue = null;
+        int offset = 4;
+        int limit = 5;
+
+        try {
+            propertyValue = (Continente) service.find(Continente.class, "Oceania");
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        wrapFiltri.entityClazz = clazz;
+        try {
+            wrapFiltri.regola(AETypeFilter.link, propertyField, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        try {
+            listaBean = service.fetch(clazz, wrapFiltri, offset, limit);
+            System.out.println(VUOTA);
+            printLista(listaBean);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        //        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
     }
 
     //    @ParameterizedTest

@@ -3,7 +3,6 @@ package it.algos.test;
 import com.mongodb.*;
 import com.mongodb.client.*;
 import com.vaadin.flow.data.provider.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -11,15 +10,12 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
-import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -126,6 +122,8 @@ public abstract class ATest {
     protected static Class<? extends AEntity> MESE_ENTITY_CLASS = Mese.class;
 
     protected static Class<? extends AEntity> COMPANY_ENTITY_CLASS = Company.class;
+
+    protected static Class<? extends AEntity> STATO_ENTITY_CLASS = Stato.class;
 
     protected static Class ANNO_LOGIC_LIST = AnnoLogicList.class;
 
@@ -387,9 +385,9 @@ public abstract class ATest {
         return new String[]{null, VUOTA, "CanonicalNameInesistente", VIA_ENTITY_CLASS.getCanonicalName(), VIA_ENTITY_CLASS.getCanonicalName() + JAVA_SUFFIX};
     }
 
-//    protected static Class[] CLAZZ() {
-//        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
-//    }
+    //    protected static Class[] CLAZZ() {
+    //        return new Class[]{null, Via.class, Bolla.class, AIType.class, Utente.class, LogicList.class, Company.class, Mese.class, Stato.class, Continente.class};
+    //    }
 
 
     //--clazz
@@ -523,6 +521,9 @@ public abstract class ATest {
 
         MockitoAnnotations.initMocks(companyService);
         Assertions.assertNotNull(companyService);
+
+        MockitoAnnotations.initMocks(wrapFiltri);
+        Assertions.assertNotNull(wrapFiltri);
     }
 
     /**
@@ -607,9 +608,9 @@ public abstract class ATest {
         companyService.mongo = mongoService;
         companyService.beanService = beanService;
 
-        WrapFiltri.text = textService;
-        WrapFiltri.annotation = annotationService;
-        WrapFiltri.reflection = reflectionService;
+        wrapFiltri.text = textService;
+        wrapFiltri.annotation = annotationService;
+        wrapFiltri.reflection = reflectionService;
 
         try {
             FIELD_ORDINE = reflectionService.getField(VIA_ENTITY_CLASS, NAME_ORDINE);
@@ -666,7 +667,6 @@ public abstract class ATest {
         previstoRisultato = null;
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
-        wrapFiltri = null;
     }
 
     protected String getTime() {

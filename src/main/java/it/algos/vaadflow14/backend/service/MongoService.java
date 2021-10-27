@@ -85,6 +85,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     private List<String> collezioni;
 
+    private WrapFiltri wrapFiltri;
 
     /**
      * Costruttore @Autowired. <br>
@@ -287,7 +288,15 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         checkEntityClazz(entityClazz, "count");
-        return count(entityClazz, WrapFiltri.crea(entityClazz, AETypeFilter.uguale, propertyName, propertyValue));
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+
+        try {
+            wrapFiltri.regola(AETypeFilter.uguale, propertyName, propertyValue);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "count");
+        }
+
+        return count(entityClazz, wrapFiltri);
     }
 
 
@@ -400,9 +409,18 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     @Override
     public int count(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri) throws AlgosException {
-        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        Map<String, AFiltro> mappaFiltri;
         MongoCollection<Document> collection;
         String collectionName;
+
+        if (wrapFiltri == null) {
+            throw new AlgosException(String.format("Manca il wrapFilter"));
+        }
+        mappaFiltri = wrapFiltri.getMappaFiltri();
+
+        if (mappaFiltri == null || mappaFiltri.size() == 0) {
+            return 0;
+        }
 
         collectionName = annotation.getCollectionName(entityClazz);
         collection = getCollection(collectionName);
@@ -475,7 +493,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack("Su mongoDb non esiste la collezione", getClass(), "count");
         }
 
-        risultato = collection.countDocuments(filter);
+        risultato = filter != null ? collection.countDocuments(filter) : 0;
         if (risultato != null) {
             return risultato.intValue();
         }
@@ -580,7 +598,15 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         checkEntityClazz(entityClazz, "fetch");
-        return fetch(entityClazz, WrapFiltri.crea(entityClazz, AETypeFilter.uguale, propertyName, propertyValue));
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+
+        try {
+            wrapFiltri.regola(AETypeFilter.uguale, propertyName, propertyValue);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetch");
+        }
+
+        return fetch(entityClazz, wrapFiltri);
     }
 
 
@@ -614,7 +640,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Override
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, WrapFiltri wrapFiltri, int offset, int limit) throws AlgosException {
         checkEntityClazz(entityClazz, "fetch");
-        return fetch(entityClazz, wrapFiltri, (Sort)null, offset, limit);
+        return fetch(entityClazz, wrapFiltri, (Sort) null, offset, limit);
     }
 
     /**
@@ -751,11 +777,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     private void checkEntityClazz(final Class<? extends AEntity> entityClazz, String callingMethod) throws AlgosException {
         if (entityClazz == null) {
-            throw AlgosException.stack("Manca la entityClazz", WrapFiltri.class, callingMethod);
+            throw AlgosException.stack("Manca la entityClazz", this.getClass(), callingMethod);
         }
 
         if (!AEntity.class.isAssignableFrom(entityClazz)) {
-            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), WrapFiltri.class, callingMethod);
+            throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), this.getClass(), callingMethod);
         }
     }
 

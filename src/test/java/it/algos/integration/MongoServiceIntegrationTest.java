@@ -9,6 +9,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.conversions.*;
@@ -24,7 +25,6 @@ import org.springframework.data.mongodb.core.*;
 import org.springframework.test.context.junit.jupiter.*;
 
 import java.io.*;
-import java.util.*;
 
 
 /**
@@ -184,6 +184,9 @@ public class MongoServiceIntegrationTest extends MongoTest {
       rimanda al metodo base collection.countDocuments();
       non usa ne gson ne spring
      */
+        //--clazz
+        //--previstoIntero
+        //--risultatoEsatto
     void countAllClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
         System.out.println("3 - Count totale (gson/spring) per clazz");
         String message = String.format("Count totale di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
@@ -228,7 +231,8 @@ public class MongoServiceIntegrationTest extends MongoTest {
     private void countProperty(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
-        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        String propertyValueVideo = getPropertyVideo(propertyValue);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValueVideo);
         System.out.println(message);
 
         ottenutoIntero = 0;
@@ -236,7 +240,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
             System.out.println(String.format("Risultato %s %d", UGUALE_SEMPLICE, ottenutoIntero));
             System.out.println(VUOTA);
-            printCount(clazz, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+            printCount(clazz, propertyName, propertyValueVideo, previstoIntero, ottenutoIntero);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -272,15 +276,15 @@ public class MongoServiceIntegrationTest extends MongoTest {
     private void countWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final String tag) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
-        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValue);
+        String propertyValueVideo = getPropertyVideo(propertyValue);
+        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValueVideo);
         System.out.println(message);
 
-        WrapFiltri wrapFiltri = null;
         String propertyField;
         ottenutoIntero = 0;
 
         try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            wrapFiltri.regola(clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
             filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
             message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
@@ -298,7 +302,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
                 printError(unErrore);
             }
             System.out.println(VUOTA);
-            printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, ottenutoIntero);
+            printWrapFiltro(clazz, filter, propertyName, propertyValueVideo, previstoIntero, ottenutoIntero);
         }
         assertEquals(previstoIntero, ottenutoIntero);
     }
@@ -451,13 +455,14 @@ public class MongoServiceIntegrationTest extends MongoTest {
         String propertyField;
 
         try {
-            wrapFiltri = WrapFiltri.crea(clazz, filter, propertyName, propertyValue);
+            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
             filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
             message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
             System.out.println(message);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
+        } catch (Exception unErrore) {
+            //            printError(unErrore);
+            int a = 87;
         }
 
         if (wrapFiltri != null) {
@@ -482,9 +487,14 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
 
     @ParameterizedTest
-    @MethodSource(value = "CLAZZ")
+    @MethodSource(value = "CLAZZ_OFFSET")
     @Order(14)
     @DisplayName("14 - Fetch offsetLimit (gson)")
+        //--clazz
+        //--previstoIntero
+        //--risultatoEsatto
+        //--offset (eventuale)
+        //--limit (eventuale)
     void fetchOffsetLimitGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
         System.out.println("14 - Fetch offsetLimit (gson)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
@@ -493,9 +503,14 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
 
     @ParameterizedTest
-    @MethodSource(value = "CLAZZ")
+    @MethodSource(value = "CLAZZ_OFFSET")
     @Order(15)
     @DisplayName("15 - Fetch offsetLimit (spring)")
+        //--clazz
+        //--previstoIntero
+        //--risultatoEsatto
+        //--offset (eventuale)
+        //--limit (eventuale)
     void fetchOffsetLimitSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
         System.out.println("15 - Fetch offsetLimit (spring)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
@@ -511,12 +526,47 @@ public class MongoServiceIntegrationTest extends MongoTest {
         System.out.println(VUOTA);
 
         try {
-            listaBean = service.fetch(clazz,null,offset,limit);
+            listaBean = service.fetch(clazz, null, offset, limit);
             System.out.println(VUOTA);
             printLista(listaBean);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
+    }
+
+    @Test
+    @Order(20)
+    @DisplayName("20 - WrapFiltro")
+    void wrapFiltro() {
+        System.out.println("20 - WrapFiltro");
+        clazz = STATO_ENTITY_CLASS;
+        String keyField = "continente";
+        String propertyField = "continente.$id";
+        Continente propertyValue = null;
+        int offset = 4;
+        int limit = 5;
+
+        try {
+            propertyValue = (Continente) service.find(Continente.class, "Oceania");
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        wrapFiltri.entityClazz = clazz;
+        try {
+            wrapFiltri.regola(AETypeFilter.link, propertyField, propertyValue);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        try {
+            listaBean = service.fetch(clazz, wrapFiltri, offset, limit);
+            System.out.println(VUOTA);
+            printLista(listaBean);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        //        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
     }
 
     //    @Test
@@ -2246,14 +2296,23 @@ public class MongoServiceIntegrationTest extends MongoTest {
     //        //        roleTre.ordine = 19;
     //        //        service.insert(roleTre);
     //    }
-    //
-    //
-    //    /**
-    //     * Cancellazione finale di tutti i files/directories creati in questo test <br>
-    //     */
-    //    private void cancellazioneEntitiesProvvisorie() {
-    //        //        roleLogic.reset();
-    //    }
+
+    private String getPropertyVideo(final Serializable propertyValue) {
+        String propertyValueVideo;
+        if (propertyValue == null) {
+            propertyValueVideo = "(null)";
+        }
+        else {
+            if (propertyValue instanceof String && (propertyValue).equals(VUOTA)) {
+                propertyValueVideo = "(vuota)";
+            }
+            else {
+                propertyValueVideo = propertyValue + VUOTA;
+            }
+        }
+
+        return propertyValueVideo;
+    }
 
 
 }
