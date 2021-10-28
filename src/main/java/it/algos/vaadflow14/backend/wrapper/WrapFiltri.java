@@ -72,7 +72,7 @@ public class WrapFiltri {
         regola(entityClazz, filter, propertyField, propertyValue);
     }
 
-    public void regola(final Class<? extends AEntity> entityClazz, AETypeFilter filter, String propertyField, final Object propertyValue) throws AlgosException {
+    public void regola(final Class<? extends AEntity> entityClazz, AETypeFilter filter, String propertyField, Object propertyValue) throws AlgosException {
         this.mappaFiltri = new HashMap<>();
         String message;
         String keyField;
@@ -144,6 +144,12 @@ public class WrapFiltri {
                 mappaFiltri.put(KEY_MAPPA_SEARCH, AFiltro.contains(propertyField, (String) propertyValue));
                 break;
             case link:
+                if (!propertyField.endsWith(FIELD_NAME_ID_LINK)) {
+                    propertyField += FIELD_NAME_ID_LINK;
+                }
+                if (propertyValue != null && propertyValue instanceof AEntity) {
+                    propertyValue = ((AEntity) propertyValue).id;
+                }
                 mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
                 break;
             default:
@@ -157,6 +163,10 @@ public class WrapFiltri {
 
     public Map<String, AFiltro> getMappaFiltri() {
         return mappaFiltri;
+    }
+
+    public void setMappaFiltri(Map<String, AFiltro> mappaFiltri) {
+        this.mappaFiltri = mappaFiltri;
     }
 
 }

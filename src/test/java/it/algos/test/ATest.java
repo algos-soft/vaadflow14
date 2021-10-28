@@ -667,6 +667,9 @@ public abstract class ATest {
         previstoRisultato = null;
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
+        wrapFiltri.entityClazz=null;
+        wrapFiltri.setMappaFiltri(null);
+
     }
 
     protected String getTime() {

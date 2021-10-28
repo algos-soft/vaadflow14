@@ -414,7 +414,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         String collectionName;
 
         if (wrapFiltri == null) {
-            throw new AlgosException(String.format("Manca il wrapFilter"));
+            throw AlgosException.stack("Manca il wrapFilter",this.getClass(),"count");
         }
         mappaFiltri = wrapFiltri.getMappaFiltri();
 
@@ -425,7 +425,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         collectionName = annotation.getCollectionName(entityClazz);
         collection = getCollection(collectionName);
         if (collection == null) {
-            throw new AlgosException(String.format("Su mongoDb non esiste la collezione %s", collectionName));
+            throw AlgosException.stack(String.format("Su mongoDb non esiste la collezione %s", collectionName),this.getClass(),"count");
         }
 
         switch (FlowVar.typeSerializing) {
@@ -1321,7 +1321,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Class clazz = classService.getClazzFromSimpleName(collectionName);
 
         if (annotation.isDBRef(clazz, propertyName)) {
-            propertyField += ".$id";
+            propertyField += FIELD_NAME_ID_LINK;
         }
 
         return new Document(propertyField, propertyValue);
@@ -2261,9 +2261,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private List<AEntity> findLista(Class<? extends
-            AEntity> entityClazz, String propertyName, Serializable
-                                            propertyValue, Sort sort) {
+    private List<AEntity> findLista(Class<? extends AEntity> entityClazz, String propertyName, Serializable propertyValue, Sort sort) {
         List<AEntity> lista = null;
         Query query = new Query();
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
@@ -2800,8 +2798,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Deprecated
-    public AEntity findByKeyOld(Class<? extends
-            AEntity> entityClazz, String keyPropertyValue) {
+    public AEntity findByKeyOld(Class<? extends AEntity> entityClazz, String keyPropertyValue) {
         String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
         if (text.isValid(keyPropertyName)) {
             return findOneUnique(entityClazz, keyPropertyName, keyPropertyValue);
@@ -2811,8 +2808,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
     }
 
-    public Query getQuery(final String propertyName,
-                          final Serializable propertyValue) {
+    public Query getQuery(final String propertyName, final Serializable propertyValue) {
         Query query = new Query();
 
         if (text.isEmpty(propertyName)) {

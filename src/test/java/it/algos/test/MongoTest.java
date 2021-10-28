@@ -313,6 +313,7 @@ public abstract class MongoTest extends ATest {
         String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;
 
         if (previstoIntero == 0) {
+            nota = textService.isValid(nota) ? nota : "col filtro indicato";
             message = String.format("Nella entityClass %s non ho trovato nessuna entities %s", clazz.getSimpleName(), nota);
             System.out.println(message);
         }
@@ -334,17 +335,23 @@ public abstract class MongoTest extends ATest {
         printWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, listaBean, false);
     }
 
+    protected void printWrapFiltro(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final List<AEntity> listaBean) {
+        printWrapFiltro(clazz, null, propertyName, propertyValue, previstoIntero, listaBean, true);
+    }
 
-    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final List<AEntity> listaBean, final boolean risultatoEsatto) {
+
+    protected void printWrapFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero, final List<AEntity> listaBean, final boolean risultatoEsatto) {
         String message;
-        String nota = filter != null ? filter.getOperazione(propertyName, propertyValue) : VUOTA;
-        nota = textService.isValid(nota) ? SPAZIO + nota + SPAZIO : SPAZIO;
+        String propertyValueVideo = getPropertyVideo(propertyValue);
+        String nota = filter != null ? filter.getOperazione(propertyName, propertyValueVideo) : VUOTA;
 
         if (previstoIntero == 0) {
+            nota = textService.isValid(nota) ? nota : "col filtro indicato";
             message = String.format("Nella entityClass %s non ho trovato nessuna entities%s", clazz.getSimpleName(), SPAZIO + nota);
             System.out.println(message);
         }
         else {
+            nota = textService.isValid(nota) ? SPAZIO + nota + SPAZIO : SPAZIO;
             if (risultatoEsatto) {
                 message = String.format("Nella entityClass %s ho trovato %d entities%sche sono esattamente quelle previste (obbligatorio)", clazz.getSimpleName(), listaBean.size(), nota);
             }
@@ -354,6 +361,36 @@ public abstract class MongoTest extends ATest {
             System.out.println(message);
             printLista(listaBean);
         }
+    }
+
+    protected void printLimit(final Class clazz, final int limit, final List<AEntity> listaBean) {
+        String message;
+
+        System.out.println(VUOTA);
+        if (limit == 0) {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities perché il filtro è nullo (limit=0)", clazz.getSimpleName());
+            System.out.println(message);
+        }
+        else {
+            printWrapFiltro(clazz, limit, listaBean, true);
+        }
+    }
+
+    protected String getPropertyVideo(final Serializable propertyValue) {
+        String propertyValueVideo;
+        if (propertyValue == null) {
+            propertyValueVideo = "(null)";
+        }
+        else {
+            if (propertyValue instanceof String && (propertyValue).equals(VUOTA)) {
+                propertyValueVideo = "(vuota)";
+            }
+            else {
+                propertyValueVideo = propertyValue + VUOTA;
+            }
+        }
+
+        return propertyValueVideo;
     }
 
 }
