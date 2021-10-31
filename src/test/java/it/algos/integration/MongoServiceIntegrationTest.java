@@ -11,6 +11,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.service.*;
+import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.conversions.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
@@ -24,6 +25,7 @@ import org.springframework.data.mongodb.core.*;
 import org.springframework.test.context.junit.jupiter.*;
 
 import java.io.*;
+import java.util.*;
 
 
 /**
@@ -78,6 +80,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         super.setUpStartUp();
 
         MockitoAnnotations.initMocks(this);
+
         MockitoAnnotations.initMocks(service);
         Assertions.assertNotNull(service);
 
@@ -176,8 +179,8 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ")
-    @Order(3)
-    @DisplayName("3 - Count totale (gson/spring) per clazz")
+    @Order(30)
+    @DisplayName("30 - Count totale (gson/spring) per clazz")
     /*
       metodo semplice per l'intera collection
       rimanda al metodo base collection.countDocuments();
@@ -187,7 +190,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         //--previstoIntero
         //--risultatoEsatto
     void countAllClazz(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("3 - Count totale (gson/spring) per clazz");
+        System.out.println("30 - Count totale (gson/spring) per clazz");
         String message = String.format("Count totale di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
 
@@ -209,20 +212,20 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(4)
-    @DisplayName("4 - Count filtrato (gson) (propertyName, propertyValue)")
+    @Order(32)
+    @DisplayName("32 - Count filtrato (gson) (propertyName, propertyValue)")
     void countPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        System.out.println("4 - Count filtrato (gson) (propertyName, propertyValue)");
+        System.out.println("32 - Count filtrato (gson) (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         countProperty(clazz, propertyName, propertyValue, previstoIntero, "filter");
     }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(5)
-    @DisplayName("5 - Count filtrato (spring) (propertyName, propertyValue)")
+    @Order(33)
+    @DisplayName("33 - Count filtrato (spring) (propertyName, propertyValue)")
     void countPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        System.out.println("5 - Count filtrato (spring) (propertyName, propertyValue)");
+        System.out.println("33 - Count filtrato (spring) (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         countProperty(clazz, propertyName, propertyValue, previstoIntero, "query");
     }
@@ -252,10 +255,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(6)
-    @DisplayName("6 - Count filtrato (gson) (WrapFiltro)")
-    void countWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("6 - Count filtrato (gson) (WrapFiltro)");
+    @Order(34)
+    @DisplayName("34 - Count filtrato (gson) (WrapFiltro)")
+    void countWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("34 - Count filtrato (gson) (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         countWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
     }
@@ -263,20 +266,20 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(7)
-    @DisplayName("7 - Count filtrato (spring) (WrapFiltro)")
-    void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("7 - Count filtrato (spring) (WrapFiltro)");
+    @Order(35)
+    @DisplayName("35 - Count filtrato (spring) (WrapFiltro)")
+    void countWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("35 - Count filtrato (spring) (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         countWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
     }
 
 
-    private void countWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final String tag) {
+    private void countWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
         String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         String propertyValueVideo = getPropertyVideo(propertyValue);
-        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValueVideo);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter != null ? filter.getOperazione(propertyName, propertyValueVideo) : "null");
         System.out.println(message);
 
         String propertyField;
@@ -286,8 +289,6 @@ public class MongoServiceIntegrationTest extends MongoTest {
             wrapFiltri.regola(clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
             filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
-            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
-            System.out.println(message);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -306,23 +307,164 @@ public class MongoServiceIntegrationTest extends MongoTest {
         assertEquals(previstoIntero, ottenutoIntero);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(36)
+    @DisplayName("36 - Count filtrato (gson) (AFiltro)")
+    void countAFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("36 - Count filtrato (gson) (AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        countAFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(37)
+    @DisplayName("37 - Count filtrato (spring) (AFiltro)")
+    void countAFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("37 - Count filtrato (spring) (AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        countAFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
+    }
+
+    private void countAFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        String propertyValueVideo = getPropertyVideo(propertyValue);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter != null ? filter.getOperazione(propertyName, propertyValueVideo) : "null");
+        System.out.println(message);
+        mappaFiltri = new HashMap<>();
+        ottenutoIntero = 0;
+
+        try {
+            filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+            mappaFiltri.put(propertyName, filtro);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (mappaFiltri.size() > 0) {
+            try {
+                ottenutoIntero = service.count(clazz, mappaFiltri);
+                System.out.println(String.format("Risultato = %d", ottenutoIntero));
+                System.out.println(VUOTA);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+            printWrapFiltro(clazz, filter, propertyName, propertyValueVideo, previstoIntero, ottenutoIntero);
+            assertEquals(previstoIntero, ottenutoIntero);
+        }
+    }
+
+
+    @Test
+    @Order(38)
+    @DisplayName("38 - Count filtrato (gson) (Map<String, AFiltro>)")
+    void countMappaFiltroGson() {
+        System.out.println("38 - Count filtrato (gson) (Map<String, AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        countMappaFiltro();
+    }
+
+    @Test
+    @Order(39)
+    @DisplayName("39 - Count filtrato (spring) (Map<String, AFiltro>)")
+    void countMappaFiltroSpring() {
+        System.out.println("39 - Count filtrato (spring) (Map<String, AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        countMappaFiltro();
+    }
+
+
+    private void countMappaFiltro() {
+        //--clazz
+        //--typeFilter
+        //--propertyName
+        //--propertyValue
+        //--previstoIntero
+        Class clazz = null;
+        AETypeFilter filter;
+        String propertyName;
+        Serializable propertyValue;
+        int previstoIntero;
+        Object[] parti;
+        mappaFiltri = new HashMap<>();
+
+        for (Object obj : CLAZZ_FILTER().toArray()) {
+            if (obj instanceof Arguments) {
+                parti = ((Arguments) obj).get();
+
+                //contiene
+                previstoIntero = 6;
+                if (parti[4] instanceof Integer && (Integer) parti[4] == previstoIntero) {
+                    clazz = (Class) parti[0];
+                    filter = (AETypeFilter) parti[1];
+                    propertyName = (String) parti[2];
+                    propertyValue = (Serializable) parti[3];
+                    try {
+                        filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+                        mappaFiltri.put(propertyName, filtro);
+                    } catch (AlgosException unErrore) {
+                        printError(unErrore);
+                    }
+                }
+
+                //inizia
+                previstoIntero = 4;
+                if (parti[4] instanceof Integer && (Integer) parti[4] == previstoIntero) {
+                    clazz = (Class) parti[0];
+                    filter = (AETypeFilter) parti[1];
+                    propertyName = (String) parti[2];
+                    propertyValue = (Serializable) parti[3];
+                    try {
+                        filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+                        mappaFiltri.put(propertyName, filtro);
+                    } catch (AlgosException unErrore) {
+                        printError(unErrore);
+                    }
+                }
+            }
+        }
+
+        if (mappaFiltri != null && mappaFiltri.size() > 0) {
+            countMappaFiltro(clazz, mappaFiltri,17);
+        }
+    }
+
+    private void countMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri,final int previstoIncrociato) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        ottenutoIntero = 0;
+
+        if (mappaFiltri.size() > 0) {
+            try {
+                ottenutoIntero = service.count(clazz, mappaFiltri);
+                System.out.println(String.format("Risultato = %d", ottenutoIntero));
+                System.out.println(VUOTA);
+            } catch (AlgosException unErrore) {
+                printError(unErrore);
+            }
+//                        printWrapFiltro(clazz, filter, propertyName, propertyValueVideo, previstoIntero, ottenutoIntero);
+            assertEquals(previstoIncrociato, ottenutoIntero);
+        }
+    }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ")
-    @Order(8)
-    @DisplayName("8 - Fetch completo (gson) di una classe")
+    @Order(40)
+    @DisplayName("40 - Fetch completo (gson) di una classe")
     void fetchAllGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("8 - Fetch completo (gson) di una classe");
+        System.out.println("40 - Fetch completo (gson) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         fetchAll(clazz, previstoIntero, risultatoEsatto);
     }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ")
-    @Order(9)
-    @DisplayName("9 - Fetch completo (spring) di una classe")
+    @Order(41)
+    @DisplayName("41 - Fetch completo (spring) di una classe")
     void fetchAllSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        System.out.println("9 - Fetch completo (spring) di una classe");
+        System.out.println("41 - Fetch completo (spring) di una classe");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         fetchAll(clazz, previstoIntero, risultatoEsatto);
     }
@@ -366,20 +508,20 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(10)
-    @DisplayName("10 - Fetch filtrato (gson) (propertyName, propertyValue)")
+    @Order(42)
+    @DisplayName("42 - Fetch filtrato (gson) (propertyName, propertyValue)")
     void fetchPropertyGson(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        System.out.println("10 - Fetch filtrato (gson) (propertyName, propertyValue)");
+        System.out.println("42 - Fetch filtrato (gson) (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         fetchProperty(clazz, propertyName, propertyValue, previstoIntero, "filter");
     }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_PROPERTY")
-    @Order(11)
-    @DisplayName("11 - Fetch filtrato (spring) (propertyName, propertyValue)")
+    @Order(43)
+    @DisplayName("43 - Fetch filtrato (spring) (propertyName, propertyValue)")
     void fetchPropertySpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
-        System.out.println("11 - Fetch filtrato (spring) (propertyName, propertyValue)");
+        System.out.println("43 - Fetch filtrato (spring) (propertyName, propertyValue)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         fetchProperty(clazz, propertyName, propertyValue, previstoIntero, "query");
     }
@@ -425,10 +567,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(12)
-    @DisplayName("12 - Fetch filtrato (gson) (WrapFiltro)")
-    void fetchWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("12 - Fetch filtrato (gson) (WrapFiltro)");
+    @Order(44)
+    @DisplayName("44 - Fetch filtrato (gson) (WrapFiltro)")
+    void fetchWrapFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("44 - Fetch filtrato (gson) (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         fetchWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
     }
@@ -436,16 +578,16 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_FILTER")
-    @Order(13)
-    @DisplayName("13 - Fetch filtrato (spring) (WrapFiltro)")
-    void fetchWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero) {
-        System.out.println("13 - Fetch filtrato (spring) (WrapFiltro)");
+    @Order(45)
+    @DisplayName("45 - Fetch filtrato (spring) (WrapFiltro)")
+    void fetchWrapFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("45 - Fetch filtrato (spring) (WrapFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         fetchWrapFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
     }
 
 
-    void fetchWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final String propertyValue, final int previstoIntero, final String tag) {
+    void fetchWrapFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
         String message = String.format("Fetch filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         String propertyValueVideo = getPropertyVideo(propertyValue);
@@ -458,7 +600,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
             wrapFiltri.regola(clazz, filter, propertyName, propertyValue);
             propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
             filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
-            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
+            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValueVideo));
             System.out.println(message);
         } catch (AlgosException unErrore) {
             printError(unErrore);
@@ -501,15 +643,15 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_OFFSET")
-    @Order(14)
-    @DisplayName("14 - Fetch offsetLimit (gson)")
+    @Order(50)
+    @DisplayName("50 - Fetch offsetLimit (gson)")
         //--clazz
         //--previstoIntero
         //--risultatoEsatto
         //--offset (eventuale)
         //--limit (eventuale)
     void fetchOffsetLimitGson(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
-        System.out.println("14 - Fetch offsetLimit (gson)");
+        System.out.println("50 - Fetch offsetLimit (gson)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
         fetchOffsetLimit(clazz, offset, limit);
     }
@@ -517,15 +659,15 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_OFFSET")
-    @Order(15)
-    @DisplayName("15 - Fetch offsetLimit (spring)")
+    @Order(51)
+    @DisplayName("51 - Fetch offsetLimit (spring)")
         //--clazz
         //--previstoIntero
         //--risultatoEsatto
         //--offset (eventuale)
         //--limit (eventuale)
     void fetchOffsetLimitSpring(final Class clazz, final int previstoIntero, final boolean risultatoEsatto, final int offset, final int limit) {
-        System.out.println("15 - Fetch offsetLimit (spring)");
+        System.out.println("51 - Fetch offsetLimit (spring)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         fetchOffsetLimit(clazz, offset, limit);
     }
@@ -546,10 +688,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
     @Test
-    @Order(20)
+    @Order(61)
     @DisplayName("20 - WrapFiltro")
     void wrapFiltro() {
-        System.out.println("20 - WrapFiltro");
+        System.out.println("61 - WrapFiltro");
         clazz = STATO_ENTITY_CLASS;
         String propertyField = "continente";
         Continente propertyValue = null;
@@ -2307,5 +2449,16 @@ public class MongoServiceIntegrationTest extends MongoTest {
     //        //        service.insert(roleTre);
     //    }
 
+    private AFiltro creaFiltro(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue) throws AlgosException {
+        AFiltro filtro = null;
+
+        filtro = new AFiltro(clazz, filter, propertyName, propertyValue);
+        filtro.text = textService;
+        filtro.annotation = annotationService;
+        filtro.reflection = reflectionService;
+        filtro.regola();
+
+        return filtro;
+    }
 
 }

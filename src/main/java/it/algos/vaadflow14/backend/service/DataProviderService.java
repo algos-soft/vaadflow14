@@ -168,8 +168,8 @@ public class DataProviderService extends AbstractService {
                     try {
                         List<AEntity> alfa = ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit);
                         int delta = alfa.size();
-//                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
-                        return mongo.fetch(entityClazz, null, offset, limit).stream();//@todo da controllare
+                        return ((MongoService) mongo).fetch(entityClazz, mappaFiltri, sortSpring, offset, limit).stream();//@todo da controllare
+//                        return mongo.fetch(entityClazz, null, offset, limit).stream();//@todo da controllare
                     } catch (AlgosException unErrore) {
                         logger.error(unErrore, this.getClass(), "fromCallbacks");
                         return null;

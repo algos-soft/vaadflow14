@@ -28,6 +28,7 @@ import org.mockito.*;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.*;
+import org.springframework.context.support.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.query.Query;
@@ -141,7 +142,7 @@ public abstract class ATest {
      * The App context.
      */
     @Mock
-    protected ApplicationContext appContext;
+    protected GenericApplicationContext appContext;
 
     @InjectMocks
     protected StaticContextAccessor staticContextAccessor;
@@ -656,7 +657,6 @@ public abstract class ATest {
         sortVaadin = null;
         filtro = null;
         listaFiltri = new ArrayList<>();
-        mappaFiltri = new HashMap<>();
         mappa = new HashMap<>();
         listaBean = null;
         listaStr = null;
@@ -668,8 +668,8 @@ public abstract class ATest {
         ottenutoRisultato = null;
         listaStr = new ArrayList<>();
         wrapFiltri.entityClazz=null;
+        mappaFiltri = null;
         wrapFiltri.setMappaFiltri(null);
-
     }
 
     protected String getTime() {

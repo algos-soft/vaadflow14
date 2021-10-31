@@ -113,7 +113,7 @@ public class WrapFiltri {
         if (mappaFiltri == null) {
             throw AlgosException.stack("Manca la mappa dei filtri", this.getClass(), "regola");
         }
-        if (filter == AETypeFilter.iniziaSearch || filter == AETypeFilter.contieneSearch) {
+        if (filter == AETypeFilter.inizia || filter == AETypeFilter.contiene) {
             mappaFiltri.remove(KEY_MAPPA_SEARCH);
         }
         else {
@@ -130,18 +130,14 @@ public class WrapFiltri {
                 }
                 break;
             case inizia:
-                mappaFiltri.put(keyField, AFiltro.start(propertyField, (String) propertyValue));
-                break;
-            case contiene:
-                mappaFiltri.put(keyField, AFiltro.contains(propertyField, (String) propertyValue));
-                break;
-            case iniziaSearch:
                 if (text.isValid((String) propertyValue)) {
-                    mappaFiltri.put(KEY_MAPPA_SEARCH, AFiltro.start(propertyField, (String) propertyValue));
+                    mappaFiltri.put(keyField, AFiltro.start(propertyField, (String) propertyValue));
                 }
                 break;
-            case contieneSearch:
-                mappaFiltri.put(KEY_MAPPA_SEARCH, AFiltro.contains(propertyField, (String) propertyValue));
+            case contiene:
+                if (text.isValid((String) propertyValue)) {
+                    mappaFiltri.put(keyField, AFiltro.contains(propertyField, (String) propertyValue));
+                }
                 break;
             case link:
                 if (!propertyField.endsWith(FIELD_NAME_ID_LINK)) {

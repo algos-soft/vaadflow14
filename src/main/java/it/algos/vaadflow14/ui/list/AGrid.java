@@ -191,8 +191,8 @@ public class AGrid {
 
         String sortProperty = annotation.getSortProperty(entityClazz);
         BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-//        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
+        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+//        dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {

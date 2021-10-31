@@ -1369,8 +1369,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet(Class<? extends AEntity> entityClazz,
-                                 int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -1456,8 +1455,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return lista di entityBeans
      */
     @Deprecated
-    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz,
-                                  int offset, int limit, BasicDBObject query, BasicDBObject sort) {
+    public List<AEntity> findSet2(Class<? extends AEntity> entityClazz, int offset, int limit, BasicDBObject query, BasicDBObject sort) {
         List<AEntity> items = null;
         Gson gSon = new Gson();
         String jsonString;
@@ -1538,8 +1536,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return entityBean regolato
      */
-    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity
-            entityBean, String value) {
+    private AEntity fixPrefValue(Document doc, Gson gSon, AEntity entityBean, String value) {
         int number;
         char c;
         byte[] bytes;
@@ -1645,9 +1642,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocById(
-            final Class<? extends AEntity> entityClazz, final Serializable keyId) throws
-            AlgosException {
+    public Document findDocById(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
         String collectionName = annotation.getCollectionName(entityClazz);
         String message;
 
