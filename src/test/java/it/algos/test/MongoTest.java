@@ -162,7 +162,8 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "viale", 1),
                 Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "belzebù", 0),
                 Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
-                Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4)
+                Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4),
+                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", 2)
         );
     }
 

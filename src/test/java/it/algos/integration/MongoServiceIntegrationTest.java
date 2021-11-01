@@ -5,6 +5,7 @@ import it.algos.simple.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
@@ -42,6 +43,9 @@ import java.util.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoServiceIntegrationTest extends MongoTest {
 
+    private static int PREVISTO_ESEMPIO_INCROCIATO;
+
+    private static Class<? extends AEntity> CLASSE_ESEMPIO_INCROCIATO = MESE_ENTITY_CLASS;
 
     /**
      * Inietta da Spring
@@ -363,7 +367,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void countMappaFiltroGson() {
         System.out.println("38 - Count filtrato (gson) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
-        countMappaFiltro();
+        countMappaFiltro("filter");
     }
 
     @Test
@@ -372,67 +376,44 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void countMappaFiltroSpring() {
         System.out.println("39 - Count filtrato (spring) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
-        countMappaFiltro();
+        countMappaFiltro("query");
     }
 
 
-    private void countMappaFiltro() {
-        //--clazz
-        //--typeFilter
-        //--propertyName
-        //--propertyValue
-        //--previstoIntero
-        Class clazz = null;
+    private void countMappaFiltro(final String tag) {
+        String message;
+        Class clazz = CLASSE_ESEMPIO_INCROCIATO;
+        mappaFiltri = getEsempioMappaFiltro();
+
+        if (mappaFiltri != null && mappaFiltri.size() > 0) {
+            countMappaFiltro(clazz, mappaFiltri, tag);
+        }
+        else {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            System.out.println(message);
+        }
+    }
+
+    private void countMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri, final String tag) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
         AETypeFilter filter;
         String propertyName;
         Serializable propertyValue;
-        int previstoIntero;
-        Object[] parti;
-        mappaFiltri = new HashMap<>();
+        String propertyValueVideo;
+        String filterText = VUOTA;
+        String sep = " + ";
 
-        for (Object obj : CLAZZ_FILTER().toArray()) {
-            if (obj instanceof Arguments) {
-                parti = ((Arguments) obj).get();
-
-                //contiene
-                previstoIntero = 6;
-                if (parti[4] instanceof Integer && (Integer) parti[4] == previstoIntero) {
-                    clazz = (Class) parti[0];
-                    filter = (AETypeFilter) parti[1];
-                    propertyName = (String) parti[2];
-                    propertyValue = (Serializable) parti[3];
-                    try {
-                        filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
-                        mappaFiltri.put(propertyName, filtro);
-                    } catch (AlgosException unErrore) {
-                        printError(unErrore);
-                    }
-                }
-
-                //inizia
-                previstoIntero = 4;
-                if (parti[4] instanceof Integer && (Integer) parti[4] == previstoIntero) {
-                    clazz = (Class) parti[0];
-                    filter = (AETypeFilter) parti[1];
-                    propertyName = (String) parti[2];
-                    propertyValue = (Serializable) parti[3];
-                    try {
-                        filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
-                        mappaFiltri.put(propertyName, filtro);
-                    } catch (AlgosException unErrore) {
-                        printError(unErrore);
-                    }
-                }
-            }
+        for (String key : mappaFiltri.keySet()) {
+            filter = mappaFiltri.get(key).getType();
+            propertyName = mappaFiltri.get(key).getPropertyField();
+            propertyValue = (Serializable) mappaFiltri.get(key).getPropertyValue();
+            propertyValueVideo = getPropertyVideo(propertyValue);
+            filterText += filter.getOperazione(propertyName, propertyValueVideo);
+            filterText += sep;
         }
-
-        if (mappaFiltri != null && mappaFiltri.size() > 0) {
-            countMappaFiltro(clazz, mappaFiltri,17);
-        }
-    }
-
-    private void countMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri,final int previstoIncrociato) {
-        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        filterText = textService.levaCoda(filterText, sep);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filterText);
         System.out.println(message);
         ottenutoIntero = 0;
 
@@ -444,9 +425,22 @@ public class MongoServiceIntegrationTest extends MongoTest {
             } catch (AlgosException unErrore) {
                 printError(unErrore);
             }
-//                        printWrapFiltro(clazz, filter, propertyName, propertyValueVideo, previstoIntero, ottenutoIntero);
-            assertEquals(previstoIncrociato, ottenutoIntero);
+
+            if (PREVISTO_ESEMPIO_INCROCIATO == ottenutoIntero) {
+                message = String.format("Nella entityClass %s ho trovato %d entities con %s", clazz.getSimpleName(), ottenutoIntero, filterText);
+            }
+            else {
+                if (ottenutoIntero == 0) {
+                    message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+                }
+                else {
+                    message = String.format("Nella entityClass %s ho trovato %d entities con %s che NON sono le %d previste", clazz.getSimpleName(), ottenutoIntero, filterText, PREVISTO_ESEMPIO_INCROCIATO);
+                }
+            }
+            System.out.println(message);
+            assertEquals(PREVISTO_ESEMPIO_INCROCIATO, ottenutoIntero);
         }
+
     }
 
     @ParameterizedTest
@@ -591,7 +585,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         String message = String.format("Fetch filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
         System.out.println(message);
         String propertyValueVideo = getPropertyVideo(propertyValue);
-        message = String.format("%s%s%s=%s", textService.primaMaiuscola(tag), FORWARD, propertyName, propertyValueVideo);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter != null ? filter.getOperazione(propertyName, propertyValueVideo) : "null");
         System.out.println(message);
         String propertyField;
         boolean prosegui = true;
@@ -640,6 +634,141 @@ public class MongoServiceIntegrationTest extends MongoTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(46)
+    @DisplayName("46 - Fetch filtrato (gson) (AFiltro)")
+    void fetchAFiltroGson(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("46 - Fetch filtrato (gson) (AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchAFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "filter");
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_FILTER")
+    @Order(47)
+    @DisplayName("47 - Fetch filtrato (spring) (AFiltro)")
+    void fetchAFiltroSpring(final Class clazz, final AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero) {
+        System.out.println("47 - Fetch filtrato (spring) (AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchAFiltro(clazz, filter, propertyName, propertyValue, previstoIntero, "query");
+    }
+
+
+    private void fetchAFiltro(final Class clazz, AETypeFilter filter, final String propertyName, final Serializable propertyValue, final int previstoIntero, final String tag) {
+        String message = String.format("Fetch filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        String propertyValueVideo = getPropertyVideo(propertyValue);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter != null ? filter.getOperazione(propertyName, propertyValueVideo) : "null");
+        System.out.println(message);
+        mappaFiltri = new HashMap<>();
+
+        try {
+            filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+            mappaFiltri.put(propertyName, filtro);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        if (mappaFiltri != null && mappaFiltri.size() == 1) {
+            fetchMappaFiltro(clazz, mappaFiltri, tag, previstoIntero);
+        }
+        else {
+            if (clazz != null) {
+                message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            }
+            else {
+                message = String.format("Manca la entityClass");
+            }
+            System.out.println(message);
+        }
+    }
+
+
+    @Test
+    @Order(48)
+    @DisplayName("48 - Fetch filtrato (gson) (Map<String, AFiltro>)")
+    void fetchMappaFiltroGson() {
+        System.out.println("48 - Fetch filtrato (gson) (Map<String, AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchMappaFiltro("filter");
+    }
+
+    @Test
+    @Order(49)
+    @DisplayName("49 - Fetch filtrato (spring) (Map<String, AFiltro>)")
+    void fetchMappaFiltroSpring() {
+        System.out.println("49 - Fetch filtrato (spring) (Map<String, AFiltro)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchMappaFiltro("query");
+    }
+
+    private void fetchMappaFiltro(final String tag) {
+        String message;
+        Class clazz = CLASSE_ESEMPIO_INCROCIATO;
+        mappaFiltri = getEsempioMappaFiltro();
+
+        if (mappaFiltri != null && mappaFiltri.size() > 0) {
+            fetchMappaFiltro(clazz, mappaFiltri, tag, PREVISTO_ESEMPIO_INCROCIATO);
+        }
+        else {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            System.out.println(message);
+        }
+    }
+
+    private void fetchMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri, final String tag, final int previstoIntero) {
+        String message = String.format("Count filtrato di %s", clazz != null ? clazz.getSimpleName() : "(manca la classe)");
+        System.out.println(message);
+        AETypeFilter filter;
+        String propertyName;
+        Serializable propertyValue;
+        String propertyValueVideo;
+        String filterText = VUOTA;
+        String sep = " + ";
+
+        for (String key : mappaFiltri.keySet()) {
+            filter = mappaFiltri.get(key).getType();
+            propertyName = mappaFiltri.get(key).getPropertyField();
+            propertyValue = (Serializable) mappaFiltri.get(key).getPropertyValue();
+            propertyValueVideo = getPropertyVideo(propertyValue);
+            filterText += filter.getOperazione(propertyName, propertyValueVideo);
+            filterText += sep;
+        }
+        filterText = textService.levaCoda(filterText, sep);
+        message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filterText);
+        System.out.println(message);
+
+        ottenutoIntero = 0;
+        try {
+            ottenutoIntero = service.count(clazz, mappaFiltri);
+        } catch (AlgosException unErrore) {
+        }
+
+        try {
+            listaBean = service.fetch(clazz, mappaFiltri);
+            System.out.println(String.format("Risultato count %s %d", UGUALE_SEMPLICE, ottenutoIntero));
+            System.out.println(String.format("Risultato fetch %s %d", UGUALE_SEMPLICE, listaBean.size()));
+            System.out.println(VUOTA);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        if (listaBean != null) {
+            if (ottenutoIntero == listaBean.size()) {
+                printWrapFiltro(clazz, previstoIntero, listaBean, true);
+            }
+            else {
+                message = String.format("Qualcosa non quadra perché il fetch() ha recuperato %d entities mentre avrebbero dovuto essere %d secondo il count()", listaBean.size(), ottenutoIntero);
+                System.out.println(message);
+                assertEquals(previstoIntero, listaBean.size());
+            }
+        }
+        else {
+            if (previstoIntero != 0) {
+                System.out.println("Qualcosa non quadra perché erano previste entities che non sono state trovate");
+            }
+        }
+    }
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_OFFSET")
@@ -687,38 +816,66 @@ public class MongoServiceIntegrationTest extends MongoTest {
         }
     }
 
-    @Test
-    @Order(61)
-    @DisplayName("20 - WrapFiltro")
-    void wrapFiltro() {
-        System.out.println("61 - WrapFiltro");
-        clazz = STATO_ENTITY_CLASS;
-        String propertyField = "continente";
-        Continente propertyValue = null;
-        int offset = 0;
-        int limit = 50;
 
-        try {
-            propertyValue = (Continente) service.find(Continente.class, "Oceania");
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        wrapFiltri.entityClazz = clazz;
-        try {
-            wrapFiltri.regola(AETypeFilter.link, propertyField, propertyValue);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
+    private Map<String, AFiltro> getEsempioMappaFiltro() {
+        Map<String, AFiltro> mappa = new HashMap<>();
+        AFiltro filtro;
+        String message;
+        //--clazz
+        //--typeFilter
+        //--propertyName
+        //--propertyValue
+        //--previstoIntero
+        Class clazz = null;
+        AETypeFilter filter;
+        String propertyName;
+        Serializable propertyValue;
+        int previstoIntero;
+        PREVISTO_ESEMPIO_INCROCIATO = 2;
+        Object[] parti;
+
+        for (Object obj : CLAZZ_FILTER().toArray()) {
+            if (obj instanceof Arguments) {
+                parti = ((Arguments) obj).get();
+                clazz = (Class) parti[0];
+                filter = (AETypeFilter) parti[1];
+                propertyName = (String) parti[2];
+                propertyValue = (Serializable) parti[3];
+                previstoIntero = (Integer) parti[4];
+
+                if (parti[0] instanceof Class && (Class) parti[0] == CLASSE_ESEMPIO_INCROCIATO) {
+
+                    //esempio di 'uguale'
+                    if (previstoIntero == 7) {
+                        try {
+                            filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+                            mappa.put(propertyName, filtro);
+                        } catch (AlgosException unErrore) {
+                            printError(unErrore);
+                        }
+                    }
+
+                    //esempio di 'inizia'
+                    if (previstoIntero == 2) {
+                        try {
+                            filtro = creaFiltro(clazz, filter, propertyName, propertyValue);
+                            mappa.put(propertyName, filtro);
+                        } catch (AlgosException unErrore) {
+                            printError(unErrore);
+                        }
+                    }
+                }
+            }
         }
 
-        try {
-            listaBean = service.fetch(clazz, wrapFiltri, offset, limit);
-            System.out.println(VUOTA);
-            printLista(listaBean);
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
+        if (mappa != null && mappa.size() > 0) {
+            return mappa;
         }
-
-        //        mappaFiltri.put(keyField, AFiltro.ugualeObj(propertyField, propertyValue));
+        else {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            System.out.println(message);
+            return null;
+        }
     }
 
     //    @Test
@@ -758,559 +915,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     //        }
     //    }
     //
-    //    //    @Test
-    //    @Order(105)
-    //    @DisplayName("105 - Via (filtro manca)")
-    //    void fetch5() {
-    //        int offset = 0;
-    //        int limit = 2000;
-    //        List<Via> listaVia = null;
-    //        AFiltro filtro = null;
-    //        Sort.Direction sortDirection;
-    //        String sortProperty = "nome";
-    //        String starting = "vi";
-    //        String contains = "l";
-    //        Sort sort = null;
-    //        Class<? extends AEntity> clazz = Via.class;
-    //        List<AFiltro> filtri = new ArrayList<>();
-    //        previsto = "banchi";
-    //        previsto2 = "vicolo";
-    //        previsto3 = "via";
-    //        //        String alfa = "^" + Pattern.quote(starting) + ".*";
-    //        //        String beta = ".*" + Pattern.quote(contains) + ".*";
-    //
-    //        previstoIntero = 26;
-    //        try {
-    //            listaBean = service.fetch(clazz);
-    //        } catch (AMongoException unErrore) {
-    //            assertTrue(false);
-    //        } catch (AQueryException unErrore) {
-    //            assertTrue(false);
-    //        }
-    //        assertNotNull(listaBean);
-    //        assertEquals(previstoIntero, listaBean.size());
-    //        print(listaBean, String.format("%s records di Via completi (filtro manca)", previstoIntero));
-    //    }
-    //
-    //    //    @Test
-    //    @Order(106)
-    //    @DisplayName("106 - Via (filtro=null)")
-    //    void fetch6() {
-    //        try {
-    //            previstoIntero = service.count(VIA_ENTITY_CLASS);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        try {
-    //            listaBean = service.fetch(VIA_ENTITY_CLASS, (AFiltro) null);
-    //        } catch (AlgosException unErrore) {
-    //            assertTrue(false);
-    //        }
-    //        assertNotNull(listaBean);
-    //        assertEquals(previstoIntero, listaBean.size());
-    //        print(listaBean, String.format("%s records di Via completi (filtro=null)", previstoIntero));
-    //    }
-    //
-    //    //    @Test
-    //    @Order(7)
-    //    @DisplayName("7 - Via (filtri=null)")
-    //    void fetch7() {
-    //        try {
-    //            previstoIntero = service.count(VIA_ENTITY_CLASS);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        try {
-    //            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
-    //        } catch (AlgosException unErrore) {
-    //        }
-    //        assertNotNull(listaBean);
-    //        assertEquals(previstoIntero, listaBean.size());
-    //        print(listaBean, String.format("%s records di Via completi (filtri=null)", previstoIntero));
-    //    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(8)
-    ////    @DisplayName("8 - Via (filtri=null, sort=null)")
-    ////    void fetch8() {
-    ////        previstoIntero = service.count(VIA_ENTITY_CLASS);
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via completi (filtri=null, sort=null)", previstoIntero));
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(9)
-    ////    @DisplayName("9 - Via (filtri=null, sort=null, offset=0, limit=0)")
-    ////    void fetch9() {
-    ////        int offset = 0;
-    ////        int limit = 0;
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(10)
-    ////    @DisplayName("10 - Via (filtri=null, sort=null, offset=0, limit=15)")
-    ////    void fetch10() {
-    ////        int offset = 0;
-    ////        int limit = 15;
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(11)
-    ////    @DisplayName("11 - Via (filtri=null, sort=null, offset=14, limit=0)")
-    ////    void fetch11() {
-    ////        int offset = 14;
-    ////        int limit = 0;
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(12)
-    ////    @DisplayName("12 - Via (filtri=null, sort=null, offset=14, limit=5)")
-    ////    void fetch12() {
-    ////        int offset = 14;
-    ////        int limit = 5;
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(13)
-    ////    @DisplayName("13 - Via (filtri=null, sort=ASC, offset=0, limit=0)")
-    ////    void fetch13() {
-    ////        int offset = 0;
-    ////        int limit = 0;
-    ////        sortSpring = Sort.by(Sort.Direction.ASC, NAME_NOME);
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(14)
-    ////    @DisplayName("14 - Via (filtri=null, sort=DESC, offset=0, limit=0)")
-    ////    void fetch14() {
-    ////        int offset = 0;
-    ////        int limit = 0;
-    ////        sortSpring = Sort.by(Sort.Direction.DESC, NAME_NOME);
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(15)
-    ////    @DisplayName("15 - Via (filtri=null, sort=ordine.ASC, offset=7, limit=4)")
-    ////    void fetch15() {
-    ////        int offset = 7;
-    ////        int limit = 4;
-    ////        sortSpring = Sort.by(Sort.Direction.ASC, NAME_ORDINE);
-    ////        previstoIntero = limit > 0 ? limit : service.count(VIA_ENTITY_CLASS) - offset;
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri, sortSpring, offset, limit);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        System.out.println(String.format("%s records di Via con (filtri=null, sort=%s, offset=%d, limit=%d)", previstoIntero, sortSpring, offset, limit));
-    ////        for (AEntity bean : listaBean) {
-    ////            System.out.print(((Via) bean).ordine);
-    ////            System.out.print(SEP);
-    ////            System.out.print(((Via) bean).nome);
-    ////            System.out.println();
-    ////        }
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(16)
-    ////    @DisplayName("16 - Via (filtro=vi)")
-    ////    void fetch16() {
-    ////        String filtroStart = "vi";
-    ////        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    ////        try {
-    ////            previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroStart));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(17)
-    ////    @DisplayName("17 - Via (filtro=azz)")
-    ////    void fetch17() {
-    ////        String filtroText = "azz";
-    ////        filtro = AFiltro.contains(NAME_NOME, filtroText);
-    ////        try {
-    ////            previstoIntero = service.count(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtro=%s)", listaBean.size(), filtroText));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(18)
-    ////    @DisplayName("18 - Via (filtro=p) con mappa")
-    ////    void fetch18() {
-    ////        String filtroStart = "p";
-    ////        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    ////        mappaFiltri = Collections.singletonMap(filtro.getCriteria().getKey(), filtro);
-    ////        try {
-    ////            previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////        print(listaBean, String.format("%s records di Via con (filtro=%s) con mappa", listaBean.size(), filtroStart));
-    ////    }
-    //
-    //
-    //    //    @Test
-    ////    @Order(19)
-    ////    @DisplayName("19 - Via (filtro=a+co)")
-    ////    void fetch19() {
-    ////        AFiltro filtro = null;
-    ////        String filtroStart = "23";
-    ////        filtro = AFiltro.start(NAME_NOME, filtroStart);
-    ////        mappaFiltri.put("a", filtro);
-    ////        String filtroText = "co";
-    ////        AFiltro filtro2 = AFiltro.contains(NAME_NOME, filtroText);
-    ////        mappaFiltri.put("b", filtro2);
-    ////        try {
-    ////            previstoIntero = service.count(VIA_ENTITY_CLASS, mappaFiltri);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(true);
-    ////            System.out.println(unErrore);
-    ////        }
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, mappaFiltri);
-    ////            assertNotNull(listaBean);
-    ////            assertEquals(previstoIntero, listaBean.size());
-    ////            print(listaBean, String.format("%s records di Via con (filtro=%s) + (filtro=%s)", listaBean.size(), filtroStart, filtroText));
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(true);
-    ////            System.out.println(unErrore);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(true);
-    ////            System.out.println(unErrore);
-    ////        }
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(20)
-    ////    @DisplayName("20 - Via (filtro=23+III secolo)")
-    ////    void fetch202() {
-    ////        Secolo unSecolo = null;
-    ////
-    ////        try {
-    ////            unSecolo = (Secolo) secoloService.findByKey("III secolo");
-    ////        } catch (AMongoException unErrore) {
-    ////        }
-    ////        assertNotNull(unSecolo);
-    ////        String fieldName = "secolo";
-    ////        String filtroStart = "23";
-    ////        filtro = AFiltro.start(NAME_ANNO, filtroStart);
-    ////        mappaFiltri.put(NAME_ANNO, filtro);
-    ////
-    ////        previstoIntero = 10;
-    ////        AFiltro filtro2 = AFiltro.ugualeObj(fieldName, unSecolo);
-    ////        mappaFiltri.put(fieldName, filtro2);
-    ////        try {
-    ////            listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s con mappaFiltri %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
-    ////    }
-    //
-    //
-    //    //        @Test
-    ////    @Order(3)
-    ////    @DisplayName("3 - ugualeStr")
-    ////    void ugualeStr() {
-    ////        String filtroText = "viale";
-    ////        previstoIntero = 1;
-    ////        filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////
-    ////        filtroText = "vial";
-    ////        previstoIntero = 0;
-    ////        filtro = AFiltro.ugualeStr(NAME_NOME, filtroText);
-    ////        try {
-    ////            listaBean = service.fetch(VIA_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        assertEquals(previstoIntero, listaBean.size());
-    ////    }
-    //
-    //    //    @Test
-    ////    @Order(4)
-    ////    @DisplayName("4 - ugualeObj")
-    ////    void ugualeObj() {
-    ////        Secolo unSecolo = null;
-    ////        try {
-    ////            unSecolo = (Secolo) secoloService.findByKey("XVIII secolo");
-    ////        } catch (AMongoException unErrore) {
-    ////        }
-    ////        assertNotNull(unSecolo);
-    ////        Query query;
-    ////        String fieldName = "secolo";
-    ////        int totRec = service.count(ANNO_ENTITY_CLASS);
-    ////
-    ////        previstoIntero = totRec;
-    ////        try {
-    ////            listaBean = service.fetch(ANNO_ENTITY_CLASS);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s senza filtri", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName()));
-    ////
-    ////        previstoIntero = totRec;
-    ////        try {
-    ////            listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s con filtro nullo", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName()));
-    ////
-    ////        previstoIntero = 100;
-    ////        query = new Query();
-    ////        query.addCriteria(Criteria.where(fieldName).is(unSecolo));
-    ////        listaBean = service.findAll(ANNO_ENTITY_CLASS, query);
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s con query %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
-    ////
-    ////        previstoIntero = 100;
-    ////        filtro = AFiltro.ugualeObj(fieldName, unSecolo);
-    ////        try {
-    ////            listaBean = service.fetch(ANNO_ENTITY_CLASS, filtro);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s con filtro %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
-    ////
-    ////        previstoIntero = 100;
-    ////        filtro = AFiltro.ugualeObj(fieldName, unSecolo);
-    ////        mappaFiltri.put("keyNonUsata", filtro);
-    ////        try {
-    ////            listaBean = service.fetch(ANNO_ENTITY_CLASS, mappaFiltri);
-    ////        } catch (AMongoException unErrore) {
-    ////            assertTrue(false);
-    ////        } catch (AQueryException unErrore) {
-    ////            assertTrue(false);
-    ////        }
-    ////        assertNotNull(listaBean);
-    ////        ottenutoIntero = listaBean.size();
-    ////        assertEquals(previstoIntero, ottenutoIntero);
-    ////        System.out.println(String.format("Ci sono %s entities nella collezione %s con mappaFiltri %s", ottenutoIntero, ANNO_ENTITY_CLASS.getSimpleName(), unSecolo));
-    ////    }
-    //
-    //    //    @Test
-    //    //    @Order(5)
-    //    //    @DisplayName("5 - findAllFiltri")
-    //    //    void findAllFiltri() {
-    //    //        System.out.println("una serie di filtri");
-    //    //
-    //    //        listaFiltri = new ArrayList<>();
-    //    //
-    //    //        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //
-    //    //        filtro = new AFiltro(Criteria.where("mese.$id").is("marzo"));
-    //    //        listaFiltri.add(filtro);
-    //    //        listaBean = service.findAll(Giorno.class, listaFiltri);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //
-    //    //        listaFiltri = new ArrayList<>();
-    //    //        filtro = new AFiltro(Criteria.where("secolo").is("xxsecolo"));
-    //    //        listaFiltri.add(filtro);
-    //    //        sort = Sort.by(Sort.Direction.ASC, "ordine");
-    //    //        filtro = new AFiltro(Criteria.where("ordine").gt(3970), sort);
-    //    //        listaFiltri.add(filtro);
-    //    //        listaBean = service.findAll(Anno.class, listaFiltri);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //    }
-    //    //
-    //    //
-    //    //    @Test
-    //    //    @Order(6)
-    //    //    @DisplayName("6 - findAllFiltriSort")
-    //    //    void findAllFiltriSort() {
-    //    //        System.out.println("una serie di filtri e ordinamenti vari");
-    //    //
-    //    //        listaFiltri = new ArrayList<>();
-    //    //        listaBean = service.findAll(Mese.class, (List<AFiltro>) null);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //
-    //    //        listaFiltri = new ArrayList<>();
-    //    //        sort = Sort.by(Sort.Direction.DESC, "mese");
-    //    //        filtro = new AFiltro(sort);
-    //    //        listaFiltri.add(filtro);
-    //    //        listaBean = service.findAll(Mese.class, listaFiltri);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //
-    //    //        listaFiltri = new ArrayList<>();
-    //    //        filtro = new AFiltro(Criteria.where("ordine").lt(10));
-    //    //        listaFiltri.add(filtro);
-    //    //        sort = Sort.by(Sort.Direction.ASC, "alfadue");
-    //    //        filtro = new AFiltro(Criteria.where("ue").is(true), sort);
-    //    //        listaFiltri.add(filtro);
-    //    //        listaBean = service.findAll(Stato.class, listaFiltri);
-    //    //        Assert.assertNotNull(listaBean);
-    //    //        Assert.assertTrue(listaBean.size() > 1);
-    //    //        System.out.println(VUOTA);
-    //    //        printLista(listaBean);
-    //    //    }
-    //    //
+
     //    //
     //    //    @Test
     //    //    @Order(7)
@@ -1860,34 +1465,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     ////    }
     //
     //
-    //    //    @Test
-    ////    @Order(19)
-    ////    @DisplayName("19 - findAll by property")
-    ////    void findAll2() {
-    ////        System.out.println("18 - findAll filtrato da una property");
-    ////
-    ////        sorgente = "mese";
-    ////        sorgente2 = "maggio";
-    ////        listaBean = service.findAll((Class) null, VUOTA, VUOTA);
-    ////        Assert.assertNull(listaBean);
-    ////
-    ////        listaBean = service.findAll((Class) null, sorgente, VUOTA);
-    ////        Assert.assertNull(listaBean);
-    ////
-    ////        listaBean = service.findAll((Class) null, sorgente, sorgente2);
-    ////        Assert.assertNull(listaBean);
-    ////
-    ////        previstoIntero = 366;
-    ////        listaBean = service.findAll(Giorno.class, VUOTA, VUOTA);
-    ////        Assert.assertNotNull(listaBean);
-    ////        Assert.assertEquals(previstoIntero, listaBean.size());
-    ////
-    ////        previstoIntero = 31;
-    ////        listaBean = service.findAll(Giorno.class, sorgente, sorgente2);
-    ////        Assert.assertNotNull(listaBean);
-    ////        Assert.assertEquals(previstoIntero, listaBean.size());
-    ////    }
-    //
+
     //
     //    //    @Test
     ////    @Order(20)

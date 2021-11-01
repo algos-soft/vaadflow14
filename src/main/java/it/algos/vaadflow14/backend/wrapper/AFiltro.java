@@ -57,11 +57,12 @@ public class AFiltro implements Serializable {
 
     private Class<? extends AEntity> entityClazz;
 
+    private AETypeFilter type;
+
     private String propertyField;
 
     private Object propertyValue;
 
-    private AETypeFilter type;
 
     public AFiltro() {
     }
@@ -247,5 +248,12 @@ public class AFiltro implements Serializable {
         this.type = type;
     }
 
+    public String getPropertyField() {
+        return propertyField;
+    }
+
+    public Object getPropertyValue() {
+        return propertyValue;
+    }
 
 }
