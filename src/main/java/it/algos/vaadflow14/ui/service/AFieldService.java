@@ -58,7 +58,6 @@ public class AFieldService extends AbstractService {
     public AField crea(AEntity entityBean, Binder binder, AEOperation operationForm, String fieldKey) {
         AField field = null;
         Field reflectionJavaField = null;
-        field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
 
         try {
              reflectionJavaField = reflection.getField(entityBean.getClass(), fieldKey);
@@ -66,12 +65,13 @@ public class AFieldService extends AbstractService {
             logger.warn(unErrore, this.getClass(), "crea");
         }
 
+        field = this.creaOnly(entityBean, reflectionJavaField, operationForm);
         if (field != null) {
             this.addToBinder(entityBean, binder, operationForm, reflectionJavaField, field);
         }
         else {
             AETypeField type = annotation.getFormType(reflectionJavaField);
-            logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "creaFieldsBinder");
+            logger.warn("Non sono riuscito a creare il field " + fieldKey + " di type " + type, this.getClass(), "crea");
         }
 
         return field;

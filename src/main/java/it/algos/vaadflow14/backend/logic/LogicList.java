@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.provider.*;
 import de.codecamp.vaadin.components.messagedialog.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowVar.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -410,13 +411,23 @@ public abstract class LogicList extends Logic {
     protected void fixBodyLayout() {
         //--con dataProvider standard - con filtro base (vuoto=tutta la collection) e sort di default della AEntity
         //--può essere ri-filtrato successivamente
-        grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
-        //        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
-        //        grid = appContext.getBean(AGrid.class, entityClazz, this, null);
-        int b = this.grid.getGrid().getDataProvider().size(null);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                grid = appContext.getBean(AGrid.class, entityClazz, this, mappaFiltri);
+                break;
+            case wrapFiltri:
+                wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+                grid = appContext.getBean(AGrid.class, entityClazz, this, wrapFiltri);
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixBodyLayout");
+                break;
+        }
 
         grid.fixGridHeader();
         this.addGridListeners();
+        refreshAll();
+
 
         /**
          * Regolazioni INDISPENSABILI per usare DataProvider sui DB voluminosi <br>
@@ -593,14 +604,11 @@ public abstract class LogicList extends Logic {
         }
 
         switch (azione) {
-            case searchField:
+            case searchField -> {
                 this.fixFiltroSearch(searchFieldValue);
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
-                break;
-            default:
-                status = false;
-                break;
+                refreshAll();
+            }
+            default -> status = false;
         }
 
         return status;
@@ -628,16 +636,12 @@ public abstract class LogicList extends Logic {
 
         switch (azione) {
             case valueChanged:
-                Object alfa = wrapFiltri;
                 this.fixFiltroCombo(fieldName, fieldValue);
-                Object beta = wrapFiltri;
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
+                refreshAll();
                 break;
             case check:
                 this.fixFiltroCheck(fieldName, fieldValue);
-                this.grid.getGrid().getDataProvider().refreshAll();
-                grid.fixGridHeader();
+                refreshAll();
                 break;
             default:
                 status = false;
@@ -645,6 +649,16 @@ public abstract class LogicList extends Logic {
         }
 
         return status;
+    }
+
+
+    public void refreshAll() {
+        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+        wrapFiltri.setMappaFiltri(mappaFiltri);
+        grid.getGrid().setDataProvider(dataProviderService.creaDataProvider(entityClazz, mappaFiltri));
+        this.grid.getGrid().getDataProvider().refreshAll();
+        grid.fixGridHeader();
     }
 
     /**
@@ -680,25 +694,39 @@ public abstract class LogicList extends Logic {
         String searchFieldName = annotation.getSearchPropertyName(entityClazz);
         AFiltro filtro = null;
 
-        if (text.isValid(searchFieldName)) {
-            filtro = AFiltro.start(searchFieldName, searchFieldValue);
-        }
-
-        if (text.isValid(searchFieldName)) {
-            if (wrapFiltri != null) {
-                try {
-                    wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
-                } catch (AlgosException unErrore) {
-                    logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(searchFieldName)) {
+                        filtro = AFiltro.start(searchFieldName, searchFieldValue);
+                    }
+                    mappaFiltri.remove(KEY_MAPPA_SEARCH);
+                    if (filtro != null) {
+                        mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
+                    }
                 }
-            }
-        }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(KEY_MAPPA_SEARCH);
-            if (filtro != null) {
-                mappaFiltri.put(KEY_MAPPA_SEARCH, filtro);
-            }
+                break;
+            case wrapFiltri:
+                if (wrapFiltri != null) {
+                    if (text.isValid(searchFieldName)) {
+                        if (text.isValid(searchFieldValue)) {
+                            try {
+                                wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
+                            } catch (AlgosException unErrore) {
+                                logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
+                            }
+                        }
+                        else {
+                            if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                                wrapFiltri.getMappaFiltri().remove(searchFieldName);
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroSearch");
+                break;
         }
     }
 
@@ -713,30 +741,34 @@ public abstract class LogicList extends Logic {
      */
     protected void fixFiltroCombo(final String fieldName, final Object fieldValue) {
         AFiltro filtro = null;
-//        Map<String, AFiltro> mappaFiltri;
 
-        if (text.isValid(fieldName) && fieldValue != null) {
-            filtro = AFiltro.ugualeObj(fieldName, fieldValue);
-        }
-
-        if (text.isValid(fieldName) && fieldValue != null) {
-            if (wrapFiltri != null) {
-                try {
-                    wrapFiltri.regola(AETypeFilter.link, fieldName, fieldValue);
-                } catch (AlgosException unErrore) {
-                    logger.warn(unErrore, this.getClass(), "fixFiltroCombo");
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(fieldName) && fieldValue != null) {
+                        filtro = AFiltro.ugualeObj(fieldName, fieldValue);
+                    }
+                    mappaFiltri.remove(fieldName);
+                    if (filtro != null) {
+                        mappaFiltri.put(fieldName, filtro);
+                    }
                 }
-            }
+                break;
+            case wrapFiltri:
+                if (text.isValid(fieldName) && fieldValue != null) {
+                    if (wrapFiltri != null) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.link, fieldName, fieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroCombo");
+                        }
+                    }
+                }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroCombo");
+                break;
         }
-
-//        mappaFiltri = wrapFiltri.getMappaFiltri();
-        if (mappaFiltri!=null) {
-            mappaFiltri.remove(fieldName);
-            if (filtro != null) {
-                mappaFiltri.put(fieldName, filtro);
-            }
-        }
-
     }
 
     /**

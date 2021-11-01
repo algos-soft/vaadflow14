@@ -9,6 +9,7 @@ import com.vaadin.flow.data.provider.*;
 import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.spring.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import static it.algos.vaadflow14.backend.application.FlowVar.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
@@ -165,7 +166,7 @@ public class AGrid {
      *
      * @param entityClazz (obbligatorio)  the class of type AEntity
      * @param entityLogic (obbligatorio) riferimento alla istanza (prototype) di LogicList che crea questa Grid
-     * @param wrapFiltri (obbligatorio)  per selezione e ordinamento
+     * @param wrapFiltri  (obbligatorio)  per selezione e ordinamento
      */
     public AGrid(final Class<? extends AEntity> entityClazz, final AILogic entityLogic, WrapFiltri wrapFiltri) {
         super();
@@ -189,10 +190,20 @@ public class AGrid {
         grid = new Grid(entityClazz, false);
         grid.setHeightByRows(true);
 
-        String sortProperty = annotation.getSortProperty(entityClazz);
-        BasicDBObject sort = new BasicDBObject(sortProperty, 1);
-        dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
-//        dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
+//        String sortProperty = annotation.getSortProperty(entityClazz);
+//        BasicDBObject sort = new BasicDBObject(sortProperty, 1);
+
+        switch (filtroProvider) {
+            case mappaFiltri:
+                dataProvider = dataProviderService.creaDataProvider(entityClazz, mappaFiltri);
+                break;
+            case wrapFiltri:
+                dataProvider = dataProviderService.creaDataProvider(entityClazz, wrapFiltri);
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "postConstruct");
+                break;
+        }
         grid.setDataProvider(dataProvider);
 
         if (AEPreferenza.usaDebug.is()) {
