@@ -154,6 +154,7 @@ public class FlowVar {
     //     */
     //    public static Class loginServiceClazz = UtenteService.class;
 
+
     //    /**
     //     * Classe da usare per gestire le informazioni dell'utenza loggata <br>
     //     * Di default ALogin oppure eventuale sottoclasse specializzata per applicazioni con accessi particolari <br>
