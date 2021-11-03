@@ -7,8 +7,6 @@ import com.vaadin.flow.component.dependency.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
-import com.vaadin.flow.theme.*;
-import com.vaadin.flow.theme.lumo.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -29,7 +27,6 @@ import java.util.*;
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
 public class MainLayout extends AppLayout {
-
 
     //    /**
     //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -67,7 +64,7 @@ public class MainLayout extends AppLayout {
      * @param layoutService the layout service
      */
     @Autowired
-    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService,TopbarComponent topbarComponent) {
+    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService, TopbarComponent topbarComponent) {
         setPrimarySection(Section.DRAWER);
 
         //--allinea il login alla sessione
@@ -95,13 +92,11 @@ public class MainLayout extends AppLayout {
     }
 
 
-
     private void logout() {
         VaadinSession.getCurrent().getSession().invalidate();
         UI.getCurrent().getPage().executeJavaScript("location.assign('logout')");
         //        System.exit(0); //@todo Creare una preferenza e sostituirla qui
     }
-
 
     //    private void registerAdminViewIfApplicable(AccessControl accessControl) {
     //        // register the admin view dynamically only for any admin user logged in
