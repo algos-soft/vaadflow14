@@ -58,6 +58,7 @@ public class MainLayout extends AppLayout {
     private Button logoutButton;
 
 
+
     /**
      * Costruttore con alcune classi di servizio iniettate. <br>
      *
