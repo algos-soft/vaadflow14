@@ -4,15 +4,20 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.applayout.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dependency.*;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
-import it.algos.vaadflow14.backend.application.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.service.*;
 import it.algos.vaadflow14.ui.topbar.*;
 import org.springframework.beans.factory.annotation.*;
 
+import javax.annotation.*;
 import java.util.*;
 
 /**
@@ -28,21 +33,45 @@ import java.util.*;
 @CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
 public class MainLayout extends AppLayout {
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    public AVaadinService vaadin;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AVaadinService vaadinService;
 
-    //    /**
-    //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
-    //     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
-    //     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
-    //     */
-    //    @Autowired
-    //    public ATextService text;
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALayoutService layoutService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public TextService textService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public PreferenzaService preferenzaService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    TopbarComponent topbarComponent;
 
     //    /**
     //     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -52,6 +81,8 @@ public class MainLayout extends AppLayout {
     //    @Autowired
     //    public ALogin login;
 
+    private H1 viewTitle;
+
     private Tabs menu;
 
 
@@ -59,38 +90,63 @@ public class MainLayout extends AppLayout {
 
 
     /**
-     * Costruttore con alcune classi di servizio iniettate. <br>
-     *
-     * @param layoutService the layout service
+     * Costruttore. <br>
      */
-    @Autowired
-    public MainLayout(AVaadinService vaadinService, ALayoutService layoutService, TopbarComponent topbarComponent) {
-        setPrimarySection(Section.DRAWER);
-
-        //--allinea il login alla sessione
-        //--lo crea se manca e lo rende disponibile a tutti
-        if (FlowVar.usaSecurity) {
-            vaadinService.fixLogin();
-        }
-
-        addToNavbar(true, new DrawerToggle());
-
-        menu = layoutService.creaMenuTabs();
-        addToDrawer(menu);
-
-        this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
-
-        addToNavbar(topbarComponent);
-
-        // questo non lo metterei
-        if (FlowVar.usaSecurity) {
-            logoutButton = layoutService.creaLogoutButton();//@todo Va levato quando funziona nella barra a destra
-            logoutButton.addClickListener(e -> logout());
-            menu.add(logoutButton);
-        }
+    public MainLayout() {
 
     }
 
+    /**
+     * Performing the initialization in a constructor is not suggested <br>
+     * as the state of the UI is not properly set up when the constructor is invoked. <br>
+     * <p>
+     * La injection viene fatta da SpringBoot solo alla fine del metodo init() del costruttore <br>
+     * Si usa quindi un metodo @PostConstruct per avere disponibili tutte le istanze @Autowired <br>
+     * <p>
+     * L'istanza può essere creata con  appContext.getBean(xxxClass.class);  oppure con @Autowired <br>
+     * Ci possono essere diversi metodi con @PostConstruct e firme diverse e funzionano tutti, <br>
+     * ma l'ordine con cui vengono chiamati (nella stessa classe) NON è garantito <br>
+     */
+    @PostConstruct
+    protected void postConstruct() {
+        setPrimarySection(Section.DRAWER);
+        addToNavbar(true, createHeaderContent());
+        //        addToDrawer(createDrawerContent());
+
+        //        //--allinea il login alla sessione
+        //        //--lo crea se manca e lo rende disponibile a tutti
+        //        if (FlowVar.usaSecurity) {
+        //            vaadinService.fixLogin();
+        //        }
+
+        addToNavbar(true, new DrawerToggle());
+        menu = layoutService.creaMenuTabs();
+        addToDrawer(menu);
+        this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
+        addToNavbar(topbarComponent);
+
+        //        // questo non lo metterei
+        //        if (FlowVar.usaSecurity) {
+        //            logoutButton = layoutService.creaLogoutButton();//@todo Va levato quando funziona nella barra a destra
+        //            logoutButton.addClickListener(e -> logout());
+        //            menu.add(logoutButton);
+        //        }
+    }
+
+
+    private Component createHeaderContent() {
+        DrawerToggle toggle = new DrawerToggle();
+        toggle.addClassName("text-secondary");
+        toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        toggle.getElement().setAttribute("aria-label", "Menu toggle");
+
+        viewTitle = new H1();
+        viewTitle.addClassNames("m-0", "text-l");
+
+        Header header = new Header(toggle, viewTitle);
+        header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
+        return header;
+    }
 
     private void logout() {
         VaadinSession.getCurrent().getSession().invalidate();
@@ -114,7 +170,12 @@ public class MainLayout extends AppLayout {
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-        selectTab();
+
+        if (AEPreferenza.usaEvidenziaMenuSelezionato.is()) {
+            selectTab();
+        }
+
+        viewTitle.setText(getCurrentPageTitle());
     }
 
 
@@ -125,6 +186,24 @@ public class MainLayout extends AppLayout {
             return child instanceof RouterLink && ((RouterLink) child).getHref().equals(target);
         }).findFirst();
         tabToSelect.ifPresent(tab -> menu.setSelectedTab((Tab) tab));
+    }
+
+
+    /**
+     * Prima cerca l'Annotation standard nella view <br>
+     * Se la view è un'istanza di GenericLogicList, cerca il nome del menu nella EntityClass <br>
+     */
+    private String getCurrentPageTitle() {
+        String menuName = VUOTA;
+        PageTitle title;
+        Class<?> clazz;
+
+        clazz = getContent().getClass();
+        title = clazz.getAnnotation(PageTitle.class);
+        menuName = title == null ? VUOTA : title.value();
+
+
+        return menuName;
     }
 
 

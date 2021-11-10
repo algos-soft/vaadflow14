@@ -22,13 +22,14 @@ import org.springframework.beans.factory.annotation.*;
  * Se manca, usa la classe GenericLogicList con @Route <br>
  * Gestione della 'view' di @Route e della 'business logic' <br>
  * Mantiene lo 'stato' <br>
- * L' istanza (PROTOTYPE) viene creata ad ogni chiamata del browser <br>
+ * L' istanza (PROTOTYPE) viene creata a ogni chiamata del browser <br>
  * Eventuali parametri (opzionali) devono essere passati nell'URL <br>
  * <p>
  * Annotated with @Route (obbligatorio) <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 //Vaadin flow
+@PageTitle("Via")
 @Route(value = "via", layout = MainLayout.class)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione, type = AETypeFile.list)

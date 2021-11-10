@@ -515,6 +515,8 @@ public abstract class FlowCost {
 
     public static final String PREF_USA_LOG_VIDEO = "usaLogVideo";
 
+    public static final String PREF_USA_EVIDENZIA_MENU_SELEZIONATO = "usaEvidenziaMenuSelezionato";
+
     public static final String PREF_USA_BUTTON_ONLY_ICON = "usaButtonOnlyIcon";
 
     public static final String PREF_USA_SPAN_HEADER_ROSSI = "usaSpanHeaderRossi";
