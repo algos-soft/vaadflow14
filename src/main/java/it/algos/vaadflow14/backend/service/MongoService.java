@@ -208,7 +208,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection exist
      */
-    private boolean isExistsCollection(final String collectionName) throws AlgosException {
+    public boolean isExistsCollection(final String collectionName) throws AlgosException {
         if (text.isEmpty(collectionName)) {
             throw AlgosException.stack("Manca la collection", this.getClass(), "isExistsCollection");
         }
@@ -238,7 +238,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if the collection has entities
      */
-    private boolean isValidCollection(final String collectionName) throws AlgosException {
+    public boolean isValidCollection(final String collectionName) throws AlgosException {
         return isExistsCollection(collectionName.toLowerCase()) && count(collectionName.toLowerCase()) > 0;
     }
 
