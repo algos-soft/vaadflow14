@@ -215,7 +215,6 @@ public class ClassServiceTest extends MongoTest {
     void getEntityClazzFromClazz(final Class clazzSorgente, final Class clazzPrevista) {
         String message;
         clazz = null;
-
         try {
             clazz = service.getEntityClazzFromClazz(clazzSorgente);
             System.out.print("Origine: ");
@@ -228,6 +227,7 @@ public class ClassServiceTest extends MongoTest {
             printError(unErrore);
         }
         assertEquals(clazzPrevista, clazz);
+
     }
 
     void printEntityBean(final AEntity entityBean) {

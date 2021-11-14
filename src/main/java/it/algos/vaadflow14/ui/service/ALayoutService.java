@@ -10,6 +10,7 @@ import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.springframework.beans.factory.config.*;
@@ -163,10 +164,15 @@ public class ALayoutService extends AbstractService {
         QueryParameters query = null;
         String packageName = VUOTA;
         Icon icon = annotation.getMenuIcon(menuClazz);
-        String menuName = annotation.getMenuName(menuClazz);
+        String menuName=VUOTA;
         String message;
         String canonicalName;
         Class listClazz = null;
+
+        try {
+            menuName = annotation.getMenuName(menuClazz);
+        } catch (AlgosException unErrore) {
+        }
 
         //--se è una route, va direttamente
         if (annotation.isRouteView(menuClazz) && Component.class.isAssignableFrom(menuClazz)) {

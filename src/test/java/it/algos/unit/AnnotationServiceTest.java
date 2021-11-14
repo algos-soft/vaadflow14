@@ -5,6 +5,7 @@ import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.interfaces.*;
 import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -80,17 +81,18 @@ public class AnnotationServiceTest extends ATest {
         return Stream.of(
                 Arguments.of(null, VUOTA),
                 Arguments.of(LogicList.class, VUOTA),
+                Arguments.of(GiornoLogicList.class, "Giorni"),
+                Arguments.of(Giorno.class, "Giorni"),
                 Arguments.of(Utente.class, "Utente"),
                 Arguments.of(Bolla.class, "Bolla"),
                 Arguments.of(Mese.class, "Mese"),
-                Arguments.of(Giorno.class, "Giorni"),
-                Arguments.of(GiornoLogicList.class, "Giorni"),
                 Arguments.of(Via.class, "Via"),
                 Arguments.of(ViaLogicList.class, "Via"),
                 Arguments.of(AIType.class, VUOTA),
                 Arguments.of(Company.class, "Company"),
                 Arguments.of(Stato.class, "Stato"),
-                Arguments.of(Continente.class, "Continente")
+                Arguments.of(Continente.class, "Continente"),
+                Arguments.of(CompanyLogicList.class, "Azienda")
         );
     }
 
@@ -315,22 +317,6 @@ public class AnnotationServiceTest extends ATest {
     public void getNotNull() {
         notNull = service.getNotNull(FIELD_NOME);
         assertNull(notNull);
-    }// end of single test
-
-
-    @SuppressWarnings("javadoc")
-    /**
-     * Get the name of the spring-view.
-     *
-     * @param clazz the entity class
-     *
-     * @return the name of the spring-view
-     */
-    @Test
-    public void getViewName() {
-        previsto = "Via";
-        ottenuto = service.getMenuName(VIA_ENTITY_CLASS);
-        assertEquals(previsto, ottenuto);
     }// end of single test
 
     //    @SuppressWarnings("javadoc")
@@ -1074,11 +1060,20 @@ public class AnnotationServiceTest extends ATest {
     @MethodSource(value = "CLAZZ_MENU")
     @Order(4)
     @DisplayName("4 - Menu visibile")
-    void nomeMenu(final Class clazzIn, final String menuName) {
-        clazz = clazzIn;
+    void nomeMenu(final Class clazzSorgente, final String menuName) {
+        String message;
+        clazz = clazzSorgente;
         previsto = menuName;
 
-        ottenuto = service.getMenuName(clazz);
+        try {
+            ottenuto = service.getMenuName(clazz);
+            System.out.print("Origine: ");
+            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
+            System.out.println(message);
+            System.out.println(String.format("Menu: %s", ottenuto));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         assertEquals(previsto, ottenuto);
     }
 
