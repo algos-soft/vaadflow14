@@ -9,8 +9,8 @@ import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -48,6 +48,14 @@ public class MainLayout extends AppLayout {
      */
     @Autowired
     public ALayoutService layoutService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public AnnotationService annotationService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -111,7 +119,7 @@ public class MainLayout extends AppLayout {
     protected void postConstruct() {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
-        //        addToDrawer(createDrawerContent());
+        addToDrawer(createDrawerContent());
 
         //        //--allinea il login alla sessione
         //        //--lo crea se manca e lo rende disponibile a tutti
@@ -119,11 +127,11 @@ public class MainLayout extends AppLayout {
         //            vaadinService.fixLogin();
         //        }
 
-        addToNavbar(true, new DrawerToggle());
-        menu = layoutService.creaMenuTabs();
-        addToDrawer(menu);
-        this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
-        addToNavbar(topbarComponent);
+        //        addToNavbar(true, new DrawerToggle());
+        //        menu = layoutService.creaMenuTabs();
+        //        addToDrawer(menu);
+        //        this.setDrawerOpened(false); //@todo Creare una preferenza e sostituirla qui
+        //        addToNavbar(topbarComponent);
 
         //        // questo non lo metterei
         //        if (FlowVar.usaSecurity) {
@@ -147,6 +155,75 @@ public class MainLayout extends AppLayout {
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center", "w-full");
         return header;
     }
+
+
+    private Component createDrawerContent() {
+        H2 appName = new H2("Simple");
+        appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
+
+        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName, createNavigation());
+        section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
+        return section;
+    }
+
+
+    private Nav createNavigation() {
+        Nav nav = new Nav();
+        nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
+        nav.getElement().setAttribute("aria-labelledby", "views");
+
+        H3 views = new H3(FlowVar.projectNameUpper);
+        views.addClassNames("flex", "h-m", "items-center", "mx-m", "my-0", "text-s", "text-tertiary");
+        views.setId("views");
+
+        // Wrap the links in a list; improves accessibility
+        UnorderedList list = new UnorderedList();
+        list.addClassNames("list-none", "m-0", "p-0");
+        nav.add(list);
+
+        List<RouterLink> lista = createLinks();
+        if (lista != null) {
+            for (RouterLink link : lista) {
+                ListItem item = new ListItem(link);
+                list.add(item);
+            }
+        }
+
+        return nav;
+    }
+
+    private List<RouterLink> createLinks() {
+        List<RouterLink> links = new ArrayList<>();
+
+//        MenuItemInfo[] menuItems = new MenuItemInfo[]{
+//                new MenuItemInfo("Via", "la la-eye-slash", ViaLogicList.class),
+//                new MenuItemInfo("Mese", "edit", MeseLogicList.class),
+//                new MenuItemInfo("Continente", "la edit", ContinenteLogicList.class)
+//        };
+
+        for (Class clazz : FlowVar.menuRouteList) {
+            links.add(createLink(clazz));
+        }
+        return links;
+    }
+
+        private  RouterLink createLink(Class clazz) {
+            RouterLink link = new RouterLink();
+//            link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
+//            link.setRoute(menuItemInfo.getView());
+//
+//            Span icon = new Span();
+//            icon.addClassNames("me-s", "text-l");
+//            if (!menuItemInfo.getIconClass().isEmpty()) {
+//                icon.addClassNames(menuItemInfo.getIconClass());
+//            }
+//
+//            Span text = new Span(menuItemInfo.getText());
+//            text.addClassNames("font-medium", "text-s");
+//
+//            link.add(icon, text);
+            return link;
+        }
 
     private void logout() {
         VaadinSession.getCurrent().getSession().invalidate();
@@ -172,7 +249,7 @@ public class MainLayout extends AppLayout {
         super.afterNavigation();
 
         if (AEPreferenza.usaEvidenziaMenuSelezionato.is()) {
-            selectTab();
+            //            selectTab();
         }
 
         viewTitle.setText(getCurrentPageTitle());
@@ -194,14 +271,13 @@ public class MainLayout extends AppLayout {
      * Se la view è un'istanza di GenericLogicList, cerca il nome del menu nella EntityClass <br>
      */
     private String getCurrentPageTitle() {
-        String menuName = VUOTA;
+        String menuName;
         PageTitle title;
         Class<?> clazz;
 
         clazz = getContent().getClass();
         title = clazz.getAnnotation(PageTitle.class);
         menuName = title == null ? VUOTA : title.value();
-
 
         return menuName;
     }

@@ -1,14 +1,26 @@
 package it.algos.unit;
 
+import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.interfaces.*;
+import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
+import it.algos.vaadflow14.backend.packages.company.*;
+import it.algos.vaadflow14.backend.packages.crono.giorno.*;
+import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.geografica.continente.*;
+import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+
+import java.util.stream.*;
 
 /**
  * Project vaadflow14
@@ -35,6 +47,26 @@ public class ClassServiceTest extends MongoTest {
      */
     private ClassService service;
 
+    //--clazzSorgente
+    //--clazzPrevista
+    protected static Stream<Arguments> CLAZZ_ENTITY() {
+        return Stream.of(
+                Arguments.of(null, null),
+                Arguments.of(LogicList.class, null),
+                Arguments.of(Utente.class, Utente.class),
+                Arguments.of(Bolla.class, Bolla.class),
+                Arguments.of(Mese.class, Mese.class),
+                Arguments.of(MeseService.class, Mese.class),
+                Arguments.of(Giorno.class, Giorno.class),
+                Arguments.of(GiornoLogicList.class, Giorno.class),
+                Arguments.of(Via.class, Via.class),
+                Arguments.of(ViaLogicList.class, Via.class),
+                Arguments.of(AIType.class, null),
+                Arguments.of(Company.class, Company.class),
+                Arguments.of(Stato.class, Stato.class),
+                Arguments.of(Continente.class, Continente.class)
+        );
+    }
 
     /**
      * Qui passa una volta sola, chiamato dalle sottoclassi <br>
@@ -108,7 +140,7 @@ public class ClassServiceTest extends MongoTest {
         sorgente = simpleName;
         try {
             ottenutoBooleano = service.isEsiste(sorgente);
-            System.out.println(String.format("La classe %s esiste",sorgente));
+            System.out.println(String.format("La classe %s esiste", sorgente));
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
@@ -173,6 +205,30 @@ public class ClassServiceTest extends MongoTest {
         System.out.println(String.format("Nome del progetto corrente: %s", ottenuto));
     }
 
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_ENTITY")
+    @Order(8)
+    @DisplayName("8 - getClazzEntityFromClazz")
+        //--clazzSorgente
+        //--clazzPrevista
+    void getEntityClazzFromClazz(final Class clazzSorgente, final Class clazzPrevista) {
+        String message;
+        clazz = null;
+
+        try {
+            clazz = service.getEntityClazzFromClazz(clazzSorgente);
+            System.out.print("Origine: ");
+            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
+            System.out.println(message);
+            System.out.print("AEntity: ");
+            message = clazz != null ? clazz.getSimpleName() : "(null)";
+            System.out.println(message);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+        assertEquals(clazzPrevista, clazz);
+    }
 
     void printEntityBean(final AEntity entityBean) {
         if (entityBean != null) {

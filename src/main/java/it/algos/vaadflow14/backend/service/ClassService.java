@@ -559,4 +559,39 @@ public class ClassService extends AbstractService {
         return entityBean;
     }
 
+
+    /**
+     * Recupera la classe AEntity associata a questa classe del package <br>
+     *
+     * @param genericClazz to be checked if is of type AEntity
+     *
+     * @return new entity
+     */
+    public Class getEntityClazzFromClazz(final Class genericClazz) throws AlgosException {
+        Class entityClazz = null;
+        String message = VUOTA;
+        String clazzName;
+
+        if (genericClazz == null) {
+            throw AlgosException.stack("Manca la genericClazz in ingresso", getClass(), "getEntityClazzFromClazz");
+        }
+
+        if (annotation.isEntityClass(genericClazz)) {
+            return genericClazz;
+        }
+
+        clazzName = genericClazz.getSimpleName();
+        if (clazzName.endsWith(SUFFIX_LOGIC_LIST)||clazzName.endsWith(SUFFIX_LOGIC_FORM)||clazzName.endsWith(SUFFIX_SERVICE)) {
+            clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_LIST);
+            clazzName = text.levaCoda(clazzName, SUFFIX_LOGIC_FORM);
+            clazzName = text.levaCoda(clazzName, SUFFIX_SERVICE);
+        }
+        if (text.isValid(clazzName)) {
+            return getClazzFromSimpleName(clazzName);
+        }
+
+        message = String.format("Non esiste una AEntity associata alla classe %s", genericClazz.getSimpleName());
+        throw AlgosException.stack(message, getClass(), "getEntityClazzFromClazz");
+    }
+
 }

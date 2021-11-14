@@ -228,6 +228,9 @@ public class ALayoutService extends AbstractService {
         return mappaRouter;
     }
 
+    public List<RouterLink> createLinks() {
+        return null;
+    }
 
     /**
      * Create profile button but don't add it yet; admin view might be added. <br>

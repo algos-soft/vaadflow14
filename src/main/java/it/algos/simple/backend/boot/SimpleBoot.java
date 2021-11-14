@@ -16,6 +16,7 @@ import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -125,6 +126,7 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
+        FlowVar.menuRouteList.add(Preferenza.class);
         FlowVar.menuRouteList.add(Fattura.class);
         FlowVar.menuRouteList.add(Bolla.class);
         FlowVar.menuRouteList.add(WelcomeView.class);
