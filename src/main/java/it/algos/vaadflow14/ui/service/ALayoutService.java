@@ -161,13 +161,13 @@ public class ALayoutService extends AbstractService {
     private LinkedHashMap<String, RouterLink> createMenuLink(final Class menuClazz) {
         LinkedHashMap<String, RouterLink> mappaRouter = new LinkedHashMap<>();
         RouterLink routerLink = null;
-        QueryParameters query = null;
+        QueryParameters query ;
         String packageName = VUOTA;
         Icon icon = annotation.getMenuIcon(menuClazz);
         String menuName=VUOTA;
         String message;
         String canonicalName;
-        Class listClazz = null;
+        Class listClazz =null;
 
         try {
             menuName = annotation.getMenuName(menuClazz);
@@ -183,7 +183,11 @@ public class ALayoutService extends AbstractService {
         else {
             //--se è una entity, cerca la classe specifica xxxLogicList altrimenti usa GenericLogicList
             if (annotation.isEntityClass(menuClazz)) {
-                listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
+                try {
+                    listClazz = classService.getLogicListClassFromEntityClazz(menuClazz);
+                } catch (AlgosException unErrore) {
+                   logger.info(unErrore,getClass(),"createMenuLink");
+                }
 
                 //--controllo che la classe specifica xxxLogicList esista e che contenga @Route
                 if (listClazz != null) {

@@ -827,10 +827,8 @@ public class AnnotationService extends AbstractService {
     public String getMenuName(final Class<?> entityViewClazz) throws AlgosException {
         String menuName = VUOTA;
         String viewName = VUOTA;
-        Class entityClazz = null;
-        String tagRouteVuotaDefault = "___NAMING_CONVENTION___";
+        Class entityClazz;
         AIView annotationView;
-        Route annotationRoute = null;
         String pageMenu = VUOTA;
         String routeMenu = VUOTA;
 

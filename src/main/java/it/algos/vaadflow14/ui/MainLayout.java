@@ -11,6 +11,7 @@ import com.vaadin.flow.server.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -72,6 +73,22 @@ public class MainLayout extends AppLayout {
      */
     @Autowired
     public PreferenzaService preferenzaService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ALogService logger;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ClassService classService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -194,36 +211,58 @@ public class MainLayout extends AppLayout {
 
     private List<RouterLink> createLinks() {
         List<RouterLink> links = new ArrayList<>();
+        RouterLink link;
 
-//        MenuItemInfo[] menuItems = new MenuItemInfo[]{
-//                new MenuItemInfo("Via", "la la-eye-slash", ViaLogicList.class),
-//                new MenuItemInfo("Mese", "edit", MeseLogicList.class),
-//                new MenuItemInfo("Continente", "la edit", ContinenteLogicList.class)
-//        };
+        //        MenuItemInfo[] menuItems = new MenuItemInfo[]{
+        //                new MenuItemInfo("Via", "la la-eye-slash", ViaLogicList.class),
+        //                new MenuItemInfo("Mese", "edit", MeseLogicList.class),
+        //                new MenuItemInfo("Continente", "la edit", ContinenteLogicList.class)
+        //        };
 
         for (Class clazz : FlowVar.menuRouteList) {
-            links.add(createLink(clazz));
+            try {
+                links.add(createLink(clazz));
+            } catch (AlgosException unErrore) {
+                logger.error(unErrore, getClass(), "createLinks");
+            }
+
         }
         return links;
     }
 
-        private  RouterLink createLink(Class clazz) {
-            RouterLink link = new RouterLink();
-//            link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
-//            link.setRoute(menuItemInfo.getView());
-//
-//            Span icon = new Span();
-//            icon.addClassNames("me-s", "text-l");
-//            if (!menuItemInfo.getIconClass().isEmpty()) {
-//                icon.addClassNames(menuItemInfo.getIconClass());
-//            }
-//
-//            Span text = new Span(menuItemInfo.getText());
-//            text.addClassNames("font-medium", "text-s");
-//
-//            link.add(icon, text);
-            return link;
+    private RouterLink createLink(Class clazz) throws AlgosException {
+        RouterLink link = new RouterLink();
+        link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
+
+        try {
+            if (annotationService.isRouteView(clazz)) {
+                link.setRoute(clazz);
+            }
+            else {
+                try {
+                    clazz = classService.getLogicListClassFromEntityClazz(clazz);
+                } catch (AlgosException unErrore) {
+                    throw AlgosException.stack(unErrore, this.getClass(), "createLink");
+                }
+                link.setRoute(clazz);
+                throw AlgosException.stack(String.format("Non sono riuscito a creare una @Route verso %s", clazz.getSimpleName()), getClass(), "createLink");
+            }
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, getClass(), "createLink");
         }
+
+        //            Span icon = new Span();
+        //            icon.addClassNames("me-s", "text-l");
+        //            if (!menuItemInfo.getIconClass().isEmpty()) {
+        //                icon.addClassNames(menuItemInfo.getIconClass());
+        //            }
+        //
+        Span text = new Span(clazz.getSimpleName());
+        text.addClassNames("font-medium", "text-s");
+
+        link.add(text);
+        return link;
+    }
 
     private void logout() {
         VaadinSession.getCurrent().getSession().invalidate();

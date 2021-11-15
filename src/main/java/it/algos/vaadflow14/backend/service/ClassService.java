@@ -74,7 +74,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+    public boolean isLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
         return getLogicListClassFromEntityClazz(dovrebbeEssereUnaEntityClazz) != null;
     }
 
@@ -85,7 +85,7 @@ public class ClassService extends AbstractService {
      *
      * @return classe xxxLogicList associata alla Entity
      */
-    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) {
+    public Class getLogicListClassFromEntityClazz(final Class dovrebbeEssereUnaEntityClazz) throws AlgosException{
         Class listClazz = null;
         String canonicalNameEntity;
         String canonicalNameLogicList;
