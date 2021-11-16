@@ -541,10 +541,12 @@ public abstract class ATest {
         annotationService.array = arrayService;
         annotationService.logger = loggerService;
         annotationService.reflection = reflectionService;
+        annotationService.classService = classService;
         reflectionService.array = arrayService;
         reflectionService.text = textService;
         reflectionService.logger = loggerService;
         reflectionService.annotation = annotationService;
+        reflectionService.classService = classService;
         gSonService.text = textService;
         gSonService.array = arrayService;
         jSonService.text = textService;

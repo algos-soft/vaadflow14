@@ -65,27 +65,27 @@ public class ViewTest extends ATest {
         super.setUp();
     }
 
-    @Test
-    @Order(1)
-    @DisplayName("1 - getMenuName")
-    void getMenuName() {
-        AIView view;
-        previsto = "Via";
-
-        view = VIA_ENTITY_CLASS.getAnnotation(AIView.class);
-        assertNotNull(view);
-
-        ottenuto = service.getMenuName(VIA_ENTITY_CLASS);
-        assertEquals(previsto, ottenuto);
-
-        previsto = "Via";
-        ottenuto = service.getMenuName(VIA_LIST_CLASS);
-        assertEquals(previsto, ottenuto);
-
-        previsto = "ViaService";
-        ottenuto = service.getMenuName(VIA_SERVICE_CLASS);
-        assertEquals(previsto, ottenuto);
-    }
+//    @Test
+//    @Order(1)
+//    @DisplayName("1 - getMenuName")
+//    void getMenuName() {
+//        AIView view;
+//        previsto = "Via";
+//
+//        view = VIA_ENTITY_CLASS.getAnnotation(AIView.class);
+//        assertNotNull(view);
+//
+//        ottenuto = service.getMenuName(VIA_ENTITY_CLASS);
+//        assertEquals(previsto, ottenuto);
+//
+//        previsto = "Via";
+//        ottenuto = service.getMenuName(VIA_LIST_CLASS);
+//        assertEquals(previsto, ottenuto);
+//
+//        previsto = "ViaService";
+//        ottenuto = service.getMenuName(VIA_SERVICE_CLASS);
+//        assertEquals(previsto, ottenuto);
+//    }
 
 
     @Test

@@ -121,6 +121,17 @@ public class AnnotationService extends AbstractService {
         return (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) ? entityClazz.getAnnotation(Document.class) : null;
     }
 
+    /**
+     * Get the annotation PageTitle. <br>
+     *
+     * @param entityClazz the class of type AEntity
+     *
+     * @return the specific Annotation
+     */
+    public PageTitle getPageTitle(final Class<?> entityClazz) {
+        return entityClazz != null ? entityClazz.getAnnotation(PageTitle.class) : null;
+    }
+
 
     /**
      * Get the annotation NotNull. <br>
@@ -423,6 +434,19 @@ public class AnnotationService extends AbstractService {
     public boolean isRouteView(final Class<?> genericClazz) {
         return getRoute(genericClazz) != null;
     }
+
+    /**
+     * Get the title of the page.
+     *
+     * @param genericClazz of all types
+     *
+     * @return the name of the vaadin-view @route
+     */
+    public String getPageMenu(final Class<?> genericClazz) {
+        PageTitle annotation = genericClazz != null ? this.getPageTitle(genericClazz) : null;
+        return annotation != null ? annotation.value() : VUOTA;
+    }
+
 
     /**
      * Get the name of the route.
@@ -788,46 +812,83 @@ public class AnnotationService extends AbstractService {
     /**
      * Restituisce il nome del menu. <br>
      * 1) Controlla che il parametro in ingresso non sia nullo <br>
-     * 2) Controlla che il parametro in ingresso sia della classe prevista <br>
-     * 3) Controlla che esista l' annotation specifica <br>
-     * 4) Cerca la property 'menuName' nell' Annotation @AIView della classe AViewList <br>
-     * 5) Se non la trova, di default usa la property 'value' di @Route <br>
-     * 6) Se non la trova, di default usa nome della classe <br>
+     * 2) Se la classe è una @Route, recupera @PageTitle e il value di @Route <br>
+     * 3) Se manca @PageTitle o se la classe non è una @Route, recupera la Entity corrispondente e il menuName di @AIView <br>
+     * 4) Nell'ordine usa: <br>
+     * * @PageTitle
+     * * @AIView -> menuName
+     * * @Route -> value
+     * * Entity.class.name
      *
      * @param entityViewClazz the class of type AEntity or AView
      *
      * @return the name of the spring-view
      */
-    public String getMenuName(final Class<?> entityViewClazz) {
+    public String getMenuName(final Class<?> entityViewClazz) throws AlgosException {
         String menuName = VUOTA;
-        String tagRouteVuotaDefault = "___NAMING_CONVENTION___";
-        AIView annotationView = this.getAIView(entityViewClazz);
-        Route annotationRoute = null;
+        String viewName = VUOTA;
+        Class entityClazz=null;
+        AIView annotationView;
+        String pageMenu = VUOTA;
+        String routeMenu = VUOTA;
 
+        // Se manca la classe non può esserci nessun menuName
+        if (entityViewClazz == null) {
+            throw AlgosException.stack("Manca la entityViewClazz in ingresso", getClass(), "getEntityClazzFromClazz");
+        }
+
+        // Se la classe è una @Route
+        // Recupero pageMenu e cerco di usarlo subito
+        // Recupero routeMenu da usare eventualmente dopo
+        if (isRouteView(entityViewClazz)) {
+            pageMenu = getPageMenu(entityViewClazz);
+            routeMenu = getRouteName(entityViewClazz);
+        }
+
+        // pageMenu è la prima opzione
+        if (text.isValid(pageMenu)) {
+            return text.primaMaiuscola(pageMenu);
+        }
+
+        // Se pageMenu non è valido, cerco la Entity corrispondente
+        if (isEntityClass(entityViewClazz)) {
+            entityClazz = entityViewClazz;
+        }
+        else {
+            try {
+                entityClazz = classService.getEntityClazzFromClazz(entityViewClazz);
+            } catch (AlgosException unErrore) {
+                if (!isRouteView(entityViewClazz)) {
+                    throw AlgosException.stack(unErrore, this.getClass(), "getMenuName");
+                }
+            }
+        }
+
+        // Se la classe è una Entity
         // Cerca in @AIView della classe la property 'menuName'
-        if (annotationView != null) {
-            menuName = annotationView.menuName();
+        if (entityClazz!=null) {
+            annotationView = this.getAIView(entityClazz);
+            if (annotationView != null) {
+                viewName = annotationView.menuName();
+            }
         }
 
-        // Se non la trova, di default usa la property 'value' di @Route
+        // menuName è la seconda opzione
+        if (text.isValid(viewName)) {
+            menuName = viewName;
+        }
+
+        // routeMenu è la terza opzione
         if (text.isEmpty(menuName)) {
-            annotationRoute = this.getRoute(entityViewClazz);
+            menuName = routeMenu;
         }
 
-        if (annotationRoute != null) {
-            menuName = annotationRoute.value();
-        }
-
-        if (menuName.equals(tagRouteVuotaDefault)) {
-            menuName = VUOTA;
-        }
-
-        // Se non la trova, di default usa nome della classe
+        // il nome della classe è la quarta (ultima) opzione
         if (text.isEmpty(menuName)) {
-            menuName = entityViewClazz != null ? entityViewClazz.getSimpleName() : VUOTA;
+            menuName = entityClazz.getSimpleName();
         }
 
-        return text.isValid(menuName) ? text.primaMaiuscola(menuName) : VUOTA;
+        return text.primaMaiuscola(menuName);
     }
 
 

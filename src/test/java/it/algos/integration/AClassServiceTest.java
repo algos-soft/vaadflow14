@@ -6,6 +6,7 @@ import it.algos.simple.backend.packages.fattura.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
+import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.service.*;
 import org.junit.*;
 import org.junit.jupiter.api.Test;
@@ -70,28 +71,52 @@ public class AClassServiceTest extends ATest {
         System.out.println(VUOTA);
         System.out.println(VUOTA);
 
-        ottenutoClasse = service.getLogicListClassFromEntityClazz(null);
+        try {
+            ottenutoClasse = service.getLogicListClassFromEntityClazz(null);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertNull(ottenutoClasse);
 
-        ottenutoClasse = service.getLogicListClassFromEntityClazz(ANNO_LOGIC_LIST);
+        try {
+            ottenutoClasse = service.getLogicListClassFromEntityClazz(ANNO_LOGIC_LIST);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertNull(ottenutoClasse);
 
         previstoClasse = FatturaLogicList.class;
         previsto = previstoClasse.getSimpleName();
-        ottenutoClasse = service.getLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        try {
+            ottenutoClasse = service.getLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertNotNull(ottenutoClasse);
         Assert.assertEquals(previstoClasse, ottenutoClasse);
         Assert.assertEquals(previsto, ottenutoClasse.getSimpleName());
         System.out.println("getLogicListClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoClasse.getSimpleName());
 
-        ottenutoClasse = service.getLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        try {
+            ottenutoClasse = service.getLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertNull(ottenutoClasse);
 
-        ottenutoBooleano = service.isLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        try {
+            ottenutoBooleano = service.isLogicListClassFromEntityClazz(FATTURA_ENTITY_CLASS);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertTrue(ottenutoBooleano);
         System.out.println("isLogicListClassFromEntityClazz: " + FATTURA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
 
-        ottenutoBooleano = service.isLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        try {
+            ottenutoBooleano = service.isLogicListClassFromEntityClazz(BOLLA_ENTITY_CLASS);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
         Assert.assertFalse(ottenutoBooleano);
         System.out.println("isLogicListClassFromEntityClazz: " + BOLLA_ENTITY_CLASS.getSimpleName() + " -> " + ottenutoBooleano);
 

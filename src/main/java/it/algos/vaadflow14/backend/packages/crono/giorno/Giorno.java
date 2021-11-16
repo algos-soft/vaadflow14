@@ -52,7 +52,7 @@ import javax.validation.constraints.*;
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Giorno", keyPropertyName = "titolo", usaBoot = true, usaNew = false)
-@AIView(menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine")
+@AIView(menuName = "giorni", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine")
 @AIList(usaRowIndex = false)
 @AIForm(usaSpostamentoTraSchede = false)
 public class Giorno extends AREntity {
