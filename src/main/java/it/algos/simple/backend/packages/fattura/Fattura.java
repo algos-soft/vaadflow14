@@ -53,7 +53,7 @@ import java.util.*;
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "Fattura", keyPropertyName = "code", usaBoot = true, usaCompany = false)
-@AIView(menuName = "Fattura", menuIcon = VaadinIcon.COG, sortProperty = "code")
+@AIView(menuName = "Fatture", menuIcon = VaadinIcon.COG, sortProperty = "code")
 @AIList(fields = "pageId,code,descrizione,lastModifica", usaRowIndex = true)
 @AIForm(fields = "pageId,code,descrizione,mappa,lastModifica", usaSpostamentoTraSchede = true)
 public class Fattura extends AEntity {

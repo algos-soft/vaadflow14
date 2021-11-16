@@ -5,6 +5,7 @@ import com.vaadin.flow.component.applayout.*;
 import com.vaadin.flow.component.button.*;
 import com.vaadin.flow.component.dependency.*;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.component.tabs.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
@@ -12,6 +13,7 @@ import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
+import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.ui.service.*;
@@ -89,6 +91,14 @@ public class MainLayout extends AppLayout {
      */
     @Autowired
     public ClassService classService;
+
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public ARouteService routeService;
 
     /**
      * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
@@ -223,44 +233,73 @@ public class MainLayout extends AppLayout {
             try {
                 links.add(createLink(clazz));
             } catch (AlgosException unErrore) {
-                logger.error(unErrore, getClass(), "createLinks");
+                logger.info(unErrore, getClass(), "createLinks");
             }
-
         }
         return links;
     }
 
-    private RouterLink createLink(Class clazz) throws AlgosException {
+    private RouterLink createLink(final Class clazz) throws AlgosException {
         RouterLink link = new RouterLink();
+        String message = VUOTA;
+        Class viewClazz = clazz;
+        Class entityClazz = null;
+        QueryParameters query;
+        Icon icon = null;
+        Span spanIcon = null;
+        String text;
+        Span spanText;
         link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
 
+        if (clazz == null) {
+            throw AlgosException.stack("Manca la clazz", getClass(), "createLink");
+        }
+
+        text = annotationService.getMenuName(clazz);
+        spanText = new Span(text);
+        spanText.addClassNames("font-medium", "text-s");
+        link.add(spanText);
         try {
-            if (annotationService.isRouteView(clazz)) {
-                link.setRoute(clazz);
+            if (annotationService.isRouteView(viewClazz)) {
+                link.setRoute(viewClazz);
             }
             else {
                 try {
-                    clazz = classService.getLogicListClassFromEntityClazz(clazz);
+                    viewClazz = classService.getLogicListClassFromEntityClazz(clazz);
                 } catch (AlgosException unErrore) {
                     throw AlgosException.stack(unErrore, this.getClass(), "createLink");
                 }
-                link.setRoute(clazz);
-                throw AlgosException.stack(String.format("Non sono riuscito a creare una @Route verso %s", clazz.getSimpleName()), getClass(), "createLink");
+
+                if (viewClazz == null) {
+                    //--provo a creare la classe GenericLogicList
+                    query = routeService.getQueryList(clazz);
+                    link.setQueryParameters(query);
+                    viewClazz = GenericLogicList.class;
+                    message = String.format("Non esiste la classe %s e uso GenericLogicList", clazz.getSimpleName());
+                    logger.logDebug(AETypeLog.checkMenu, message);
+                }
+
+                try {
+                    link.setRoute(viewClazz);
+                } catch (Exception unErrore) {
+                    throw AlgosException.stack(String.format("Non sono riuscito a creare una @Route verso %s", viewClazz.getSimpleName()), getClass(), "createLink");
+                }
             }
         } catch (Exception unErrore) {
             throw AlgosException.stack(unErrore, getClass(), "createLink");
         }
 
-        //            Span icon = new Span();
-        //            icon.addClassNames("me-s", "text-l");
-        //            if (!menuItemInfo.getIconClass().isEmpty()) {
-        //                icon.addClassNames(menuItemInfo.getIconClass());
-        //            }
-        //
-        Span text = new Span(clazz.getSimpleName());
-        text.addClassNames("font-medium", "text-s");
+        // ricerca dell'icona
+        entityClazz = classService.getEntityClazzFromClazz(clazz);
+        if (entityClazz != null) {
+            icon = annotationService.getMenuIcon(entityClazz);
+        }
+        if (icon != null) {
+            spanIcon = new Span();
+            spanIcon.addClassNames("me-s", "text-l");
+            link.addComponentAtIndex(0, icon);
+        }
 
-        link.add(text);
         return link;
     }
 

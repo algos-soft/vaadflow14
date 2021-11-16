@@ -827,7 +827,7 @@ public class AnnotationService extends AbstractService {
     public String getMenuName(final Class<?> entityViewClazz) throws AlgosException {
         String menuName = VUOTA;
         String viewName = VUOTA;
-        Class entityClazz;
+        Class entityClazz=null;
         AIView annotationView;
         String pageMenu = VUOTA;
         String routeMenu = VUOTA;
@@ -851,13 +851,26 @@ public class AnnotationService extends AbstractService {
         }
 
         // Se pageMenu non è valido, cerco la Entity corrispondente
-        entityClazz = isEntityClass(entityViewClazz) ? entityViewClazz : classService.getEntityClazzFromClazz(entityViewClazz);
+        if (isEntityClass(entityViewClazz)) {
+            entityClazz = entityViewClazz;
+        }
+        else {
+            try {
+                entityClazz = classService.getEntityClazzFromClazz(entityViewClazz);
+            } catch (AlgosException unErrore) {
+                if (!isRouteView(entityViewClazz)) {
+                    throw AlgosException.stack(unErrore, this.getClass(), "getMenuName");
+                }
+            }
+        }
 
         // Se la classe è una Entity
         // Cerca in @AIView della classe la property 'menuName'
-        annotationView = this.getAIView(entityClazz);
-        if (annotationView != null) {
-            viewName = annotationView.menuName();
+        if (entityClazz!=null) {
+            annotationView = this.getAIView(entityClazz);
+            if (annotationView != null) {
+                viewName = annotationView.menuName();
+            }
         }
 
         // menuName è la seconda opzione
