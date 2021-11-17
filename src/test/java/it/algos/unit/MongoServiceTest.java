@@ -268,11 +268,11 @@ public class MongoServiceTest extends MongoTest {
         ottenutoIntero = 0;
 
         try {
-            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
-            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
-            filter = wrapFiltri.getMappaFiltri() != null ? wrapFiltri.getMappaFiltri().get(propertyField).getType() : null;
-            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
-            System.out.println(message);
+//            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
+//            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+//            filter = wrapFiltri.getMappaFiltri() != null ? wrapFiltri.getMappaFiltri().get(propertyField).getType() : null;
+//            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
+//            System.out.println(message);
         } catch (Exception unErrore) {
 //            printError(unErrore);
         int b=88;
@@ -439,11 +439,11 @@ public class MongoServiceTest extends MongoTest {
         String propertyField;
 
         try {
-            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
-            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
-            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
-            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
-            System.out.println(message);
+//            wrapFiltri = appContext.getBean(WrapFiltri.class, clazz, filter, propertyName, propertyValue);
+//            propertyField = textService.levaCoda(propertyName, FIELD_NAME_ID_LINK);
+//            filter = wrapFiltri.getMappaFiltri().get(propertyField).getType();
+//            message = String.format("%s%s%s", textService.primaMaiuscola(tag), FORWARD, filter.getOperazione(propertyName, propertyValue));
+//            System.out.println(message);
         } catch (Exception unErrore) {
 //            printError(unErrore);
             int c=89;

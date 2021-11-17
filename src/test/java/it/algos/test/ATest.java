@@ -138,11 +138,11 @@ public abstract class ATest {
 
     protected static String PATH = "/Users/gac/Documents/IdeaProjects/operativi/vaadflow14/src/main/java/it/algos/vaadflow14/wizard/";
 
-    /**
-     * The App context.
-     */
-    @Mock
-    protected GenericApplicationContext appContext;
+//    /**
+//     * The App context.
+//     */
+//    @Mock
+//    protected GenericApplicationContext appContext;
 
     @InjectMocks
     protected StaticContextAccessor staticContextAccessor;
@@ -173,8 +173,8 @@ public abstract class ATest {
 
     protected AIMongoService mongoService;
 
-    @Mock
-    protected MongoTemplate mongoTemplate;
+//    @Mock
+//    protected MongoTemplate mongoTemplate;
 
     protected MongoOperations mongoOp;
 
@@ -440,8 +440,8 @@ public abstract class ATest {
         Assertions.assertNotNull(staticContextAccessor);
         staticContextAccessor.registerInstance();
 
-        MockitoAnnotations.initMocks(appContext);
-        Assertions.assertNotNull(appContext);
+//        MockitoAnnotations.initMocks(appContext);
+//        Assertions.assertNotNull(appContext);
 
         MockitoAnnotations.initMocks(textService);
         Assertions.assertNotNull(textService);
@@ -471,12 +471,12 @@ public abstract class ATest {
         Assertions.assertNotNull(mongoServiceImpl);
         mongoService = mongoServiceImpl;
 
-        MockitoAnnotations.initMocks(mongoTemplate);
-        Assertions.assertNotNull(mongoTemplate);
-        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
-        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
-        mongoOp = mongoTemplate;
-        mongoServiceImpl.mongoOp = mongoTemplate;
+//        MockitoAnnotations.initMocks(mongoTemplate);
+//        Assertions.assertNotNull(mongoTemplate);
+//        //        MockitoAnnotations.initMocks(mongoServiceImpl.mongoOp);
+//        //        Assertions.assertNotNull(mongoServiceImpl.mongoOp);
+//        mongoOp = mongoTemplate;
+//        mongoServiceImpl.mongoOp = mongoTemplate;
 
         MockitoAnnotations.initMocks(webService);
         Assertions.assertNotNull(webService);
@@ -579,7 +579,7 @@ public abstract class ATest {
         classService.text = textService;
         classService.logger = loggerService;
         classService.annotation = annotationService;
-        classService.appContext = appContext;
+//        classService.appContext = appContext;
 
         preferenzaService.mongo = mongoService;
         utilityService.text = textService;

@@ -1,6 +1,8 @@
 package it.algos.unit;
 
 import it.algos.test.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.enumeration.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -21,12 +23,12 @@ import java.util.stream.*;
  * <p>
  * Unit test di una classe di servizio (di norma) <br>
  * Estende la classe astratta ATest che contiene le regolazioni essenziali <br>
- * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
- * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
+ * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte classi di service <br>
+ * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
-@DisplayName("Java - Nuove funzioni Java +8.")
+@DisplayName("Java - Nuove funzioni Java 8 -> 17")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class JavaTest extends ATest {
 
@@ -42,18 +44,18 @@ public class JavaTest extends ATest {
      */
     @BeforeAll
     void setUpAll() {
-        super.setUpStartUp();
+        //        super.setUpStartUp();
         MockitoAnnotations.initMocks(this);
     }
 
     /**
-     * Qui passa ad ogni test delle sottoclassi <br>
+     * Qui passa a ogni test delle sottoclassi <br>
      * Invocare PRIMA il metodo setUp() della superclasse <br>
      * Si possono aggiungere regolazioni specifiche <br>
      */
     @BeforeEach
     void setUpEach() {
-        super.setUp();
+        //        super.setUp();
     }
 
     @Test
@@ -174,9 +176,9 @@ public class JavaTest extends ATest {
         lista.forEach(System.out::println);
         Object obj = null;
 
-//        if (obj instanceof String stringa) {
-//            System.out.println(stringa.contains("hello"));
-//        }
+        //        if (obj instanceof String stringa) {
+        //            System.out.println(stringa.contains("hello"));
+        //        }
 
         System.out.println("Java10 \n");
 
@@ -232,6 +234,132 @@ public class JavaTest extends ATest {
         //        assertTrue(matcher.matches());
     }
 
+    @Test
+    @Order(12)
+    @DisplayName("12 - textBlocks")
+    void textBlocks() {
+        System.out.println("12 - textBlocks");
+        System.out.println(VUOTA);
+
+        System.out.println("due spazi interni");
+        ottenuto = """
+                   {
+                      "name":"John Doe",
+                      "age":45,
+                      "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("zero spazi interni");
+        ottenuto = """
+                   {
+                    "name":"John Doe",
+                    "age":45,
+                    "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("uno spazio interno");
+        ottenuto = """
+                   {
+                     "name":"John Doe",
+                     "age":45,
+                     "address":"Doe Street, 23, Java Town"
+                   }
+                """;
+        System.out.println(ottenuto);
+
+        System.out.println("zero spazi esterni");
+        System.out.println("notare la posizione dei 3 doppi apici finali nel sorgente java");
+        ottenuto = """
+                {
+                  "name":"John Doe",
+                  "age":45,
+                  "address":"Doe Street, 23, Java Town"
+                }
+                """;
+        System.out.println(ottenuto);
+    }
+
+
+    @Test
+    @Order(13)
+    @DisplayName("13 - Switch Expressions")
+    void switchExpressions() {
+        System.out.println("13 - Switch Expressions");
+        System.out.println(VUOTA);
+        AEContinente continente = AEContinente.europa;
+
+        System.out.println("oldStyleWithoutBreak");
+        System.out.println("Senza break stampa TUTTI i casi dello switch:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+            case nordamerica, sudamerica:
+                System.out.println("America");
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithBreak");
+        System.out.println("Col break stampa correttamente SOLO il caso previsto:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+                break;
+            case nordamerica, sudamerica:
+                System.out.println("America");
+                break;
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValue");
+        ottenuto = switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        };
+        System.out.println(ottenuto);
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValueEvenShorter");
+        System.out.println(switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        });
+
+        System.out.println(VUOTA);
+        System.out.println("withYield");
+        System.out.println("more than only 1 thing in the case. Use brackets to indicate a case block and when returning a value, you use the keyword yield");
+        String text = switch (continente) {
+            case europa, asia -> {
+                System.out.println("the given fruit was: " + continente.getNome());
+                yield "Eurasia";
+            }
+            case nordamerica, sudamerica -> "Exotic fruit";
+            default -> "Undefined fruit";
+        };
+        System.out.println(text);
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithYield");
+        System.out.println("Senza break:");
+        System.out.println(switch (continente) {
+            case europa, asia:
+                yield "Eurasia";
+            case nordamerica, sudamerica:
+                yield "America";
+            default:
+                yield "Resto del Mondo";
+        });
+
+    }
 
     /**
      * Qui passa al termine di ogni singolo test <br>
