@@ -42,7 +42,7 @@ import java.util.*;
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tag("testAllValido")
+@Tag("mongoService")
 @DisplayName("Mongo Service (senza mongoOp)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoServiceTest extends MongoTest {

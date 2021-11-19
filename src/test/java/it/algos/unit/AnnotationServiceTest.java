@@ -85,7 +85,7 @@ public class AnnotationServiceTest extends ATest {
                 Arguments.of(Giorno.class, "Giorni"),
                 Arguments.of(Utente.class, "Utente"),
                 Arguments.of(Bolla.class, "Bolla"),
-                Arguments.of(Mese.class, "Mese"),
+                Arguments.of(Mese.class, "Mesi"),
                 Arguments.of(Via.class, "Via"),
                 Arguments.of(ViaLogicList.class, "Via"),
                 Arguments.of(AIType.class, VUOTA),

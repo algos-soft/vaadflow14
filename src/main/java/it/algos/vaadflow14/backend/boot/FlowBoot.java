@@ -408,8 +408,6 @@ public abstract class FlowBoot implements ServletContextListener {
      * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
      */
     protected void fixMenuRoutes() {
-        FlowVar.menuRouteList.add(Via.class);
-
         if (AEPreferenza.usaSpanHeaderRossi.is()) {
             FlowVar.menuRouteList.add(Preferenza.class);
         }

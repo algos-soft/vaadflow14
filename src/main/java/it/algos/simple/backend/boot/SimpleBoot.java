@@ -21,6 +21,7 @@ import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.preferenza.*;
+import it.algos.vaadflow14.wizard.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -130,7 +131,9 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
+        FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(Preferenza.class);
+        FlowVar.menuRouteList.add(Via.class);
         FlowVar.menuRouteList.add(FatturaLogicList.class);
         FlowVar.menuRouteList.add(Bolla.class);
         FlowVar.menuRouteList.add(WelcomeView.class);

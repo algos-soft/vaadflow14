@@ -444,14 +444,14 @@ public class GsonServiceTest extends MongoTest {
 
         sorgente = "quartiere";
         clazz = Via.class;
-        previsto = "{\"_id\":\"quartiere\",\"ordine\":11,\"nome\":\"quartiere\",\"reset\":true,\"creazione\":\"Oct 16, 2021, 2:31:17 PM\",\"modifica\":\"Oct 16, 2021, 2:31:17 PM\",\"_class\":\"via\"}";
+        previsto = "{\"_id\":\"quartiere\",\"ordine\":11,\"nome\":\"quartiere\",\"reset\":true,\"creazione\":";
         try {
             ottenuto = service.mongoToString(clazz, sorgente);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
         assertTrue(textService.isValid(ottenuto));
-        assertEquals(previsto, ottenuto);
+        assertTrue(ottenuto.startsWith(previsto));
         System.out.println(ottenuto);
     }
 

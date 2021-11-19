@@ -448,7 +448,12 @@ public abstract class LogicForm extends Logic {
                 break;
             case back:
             case annulla:
-                this.openConfirmExitForm(entityBean);
+                if (currentForm.binder.hasChanges()) {
+                    this.openConfirmExitForm(entityBean);
+                }
+                else {
+                    backToList();
+                }
                 break;
             case delete:
                 if (deleteForm()) {

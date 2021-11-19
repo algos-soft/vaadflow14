@@ -244,7 +244,9 @@ public enum AEPreferenza implements AIPreferenza {
                 valore = date.get((LocalTime) getValue());
                 break;
             case enumeration:
-                valore = ((String) getValue()).substring(((String) getValue()).indexOf(PUNTO_VIRGOLA) + 1);
+                if (getValue()!=null) {
+                    valore = ((String) getValue()).substring(((String) getValue()).indexOf(PUNTO_VIRGOLA) + 1);
+                }
                 break;
             case icona:
                 break;

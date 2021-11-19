@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
+import java.text.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
@@ -361,6 +362,133 @@ public class JavaTest extends ATest {
 
     }
 
+    @Test
+    @Order(14)
+    @DisplayName("14 - instanceof")
+    void instanceofTest() {
+        System.out.println("14 - instanceof");
+        System.out.println("Creazione della variabile SOLO se instanceof=true");
+        System.out.println(VUOTA);
+
+        Object obj = new Student(671, "Mario", "m", 27);
+        if (obj instanceof Student studente) {
+            System.out.println(String.format("Questo studente si chiama %s ed ha %d anni", studente.getName(), studente.getAge()));
+        }
+
+        System.out.println(VUOTA);
+        obj = new Student(671, "Francesca", "f", 24);
+        if (obj instanceof Student studente && studente.getAge() == 27) {
+        }
+        else {
+            System.out.println(String.format("Questo oggetto è uno studente ma NON ha 27 anni"));
+        }
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("15 - numberFormat")
+    void numberFormat() {
+        System.out.println("15 - numberFormat");
+        NumberFormat fmt;
+
+        System.out.println(VUOTA);
+        System.out.println("Inglese short");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.SHORT);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+
+        System.out.println(VUOTA);
+        System.out.println("Inglese long");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ENGLISH, NumberFormat.Style.LONG);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+
+        System.out.println(VUOTA);
+        System.out.println("Italiano long");
+        fmt = NumberFormat.getCompactNumberInstance(Locale.ITALIAN, NumberFormat.Style.LONG);
+        System.out.println(fmt.format(1000));
+        System.out.println(fmt.format(100000));
+        System.out.println(fmt.format(1000000));
+    }
+
+
+    @Test
+    @Order(16)
+    @DisplayName("16 - patternB")
+    void patternB() {
+        System.out.println("16 - patternB");
+        DateTimeFormatter dtf;
+        String sep = FORWARD;
+
+        System.out.println(VUOTA);
+        System.out.println("English Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("EN"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+
+        System.out.println(VUOTA);
+        System.out.println("Dutch Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("NL"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+
+        System.out.println(VUOTA);
+        System.out.println("Italiano Locale");
+        dtf = DateTimeFormatter.ofPattern("B").withLocale(Locale.forLanguageTag("IT"));
+        System.out.println(String.format("%s%s%s", "8", sep, dtf.format(LocalTime.of(8, 0))));
+        System.out.println(String.format("%s%s%s", "13", sep, dtf.format(LocalTime.of(13, 0))));
+        System.out.println(String.format("%s%s%s", "20", sep, dtf.format(LocalTime.of(20, 0))));
+        System.out.println(String.format("%s%s%s", "23", sep, dtf.format(LocalTime.of(23, 0))));
+        System.out.println(String.format("%s%s%s", "24", sep, dtf.format(LocalTime.of(0, 0))));
+    }
+
+
+    @Test
+    @Order(17)
+    @DisplayName("17 - stream.toList()")
+    void streamToList() {
+        System.out.println("17 - stream.toList()");
+        Stream<String> stringStream;
+        List<String> stringList;
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyle");
+        stringStream = Stream.of("a", "b", "c");
+        stringList = stringStream.collect(Collectors.toList());
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("streamToList");
+        stringStream = Stream.of("a", "b", "c");
+        stringList = stringStream.toList();
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("algosBetter");
+        stringList = Stream.of("a", "b", "c").toList();
+        for (String s : stringList) {
+            System.out.println(s);
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("algosMoreBetter");
+        for (String s : Stream.of("a", "b", "c").toList()) {
+            System.out.println(s);
+        }
+    }
+
     /**
      * Qui passa al termine di ogni singolo test <br>
      */
@@ -433,5 +561,6 @@ public class JavaTest extends ATest {
         }
 
     }
+
 
 }

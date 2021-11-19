@@ -186,7 +186,7 @@ public class MainLayout extends AppLayout {
 
 
     private Component createDrawerContent() {
-        H2 appName = new H2("Simple");
+        H2 appName = new H2(FlowVar.projectNameUpper);
         appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
 
         com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName, createNavigation());
@@ -291,7 +291,11 @@ public class MainLayout extends AppLayout {
         }
 
         // ricerca dell'icona
-        entityClazz = classService.getEntityClazzFromClazz(clazz);
+        try {
+            entityClazz = classService.getEntityClazzFromClazz(clazz);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore,getClass(),"createLink");
+        }
         if (entityClazz != null) {
             icon = annotationService.getMenuIcon(entityClazz);
         }
