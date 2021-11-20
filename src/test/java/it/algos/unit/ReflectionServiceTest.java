@@ -1,7 +1,5 @@
 package it.algos.unit;
 
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -79,7 +77,6 @@ public class ReflectionServiceTest extends ATest {
         return Stream.of(
                 Arguments.of((Class) null, 0, 0),
                 Arguments.of(Via.class, 2, 6),
-                Arguments.of(Bolla.class, 2, 3),
                 Arguments.of(AIType.class, 0, 0),
                 Arguments.of(Utente.class, 7, 12),
                 Arguments.of(LogicList.class, 0, 0),
@@ -105,7 +102,6 @@ public class ReflectionServiceTest extends ATest {
                 Arguments.of(Mese.class, "marzo", true),
                 Arguments.of(Mese.class, "Marzo", true),
                 Arguments.of(Mese.class, "marzo esatto", false),
-                Arguments.of(Delta.class, "due", false),
                 Arguments.of(Via.class, "piazza", true)
         );
     }

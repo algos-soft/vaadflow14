@@ -2,7 +2,6 @@ package it.algos.unit;
 
 import com.mongodb.*;
 import com.mongodb.client.*;
-import it.algos.simple.backend.packages.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.application.*;
@@ -466,11 +465,11 @@ public class GsonServiceTest extends MongoTest {
         System.out.println(String.format("Documento ricavato da %s.%s", clazz.getSimpleName(), sorgente));
         printDoc(doc);
 
-        clazz = Delta.class;
-        sorgente = "uno";
-        doc = getDoc(clazz, sorgente);
-        System.out.println(String.format("Documento ricavato da %s.%s", clazz.getSimpleName(), sorgente));
-        printDoc(doc);
+//        clazz = Delta.class;
+//        sorgente = "uno";
+//        doc = getDoc(clazz, sorgente);
+//        System.out.println(String.format("Documento ricavato da %s.%s", clazz.getSimpleName(), sorgente));
+//        printDoc(doc);
     }
 
 
@@ -485,12 +484,12 @@ public class GsonServiceTest extends MongoTest {
         printDoc(doc);
         printMappa(entityBean);
 
-        clazz = Delta.class;
-        sorgente = "uno";
-        doc = getDoc(clazz, sorgente);
-        entityBean = service.creaOld(doc, clazz);
-        printDoc(doc);
-        printMappa(entityBean);
+//        clazz = Delta.class;
+//        sorgente = "uno";
+//        doc = getDoc(clazz, sorgente);
+//        entityBean = service.creaOld(doc, clazz);
+//        printDoc(doc);
+//        printMappa(entityBean);
     }
 
     @Test

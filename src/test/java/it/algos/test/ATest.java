@@ -401,7 +401,6 @@ public abstract class ATest {
                 Arguments.of(VIA_ENTITY_CLASS.getSimpleName(), true),
                 Arguments.of(VIA_ENTITY_CLASS.getSimpleName() + JAVA_SUFFIX, true),
                 Arguments.of("via", true),
-                Arguments.of("Bolla", true),
                 Arguments.of("LogicList", false),
                 Arguments.of("ViaLogicList", true),
                 Arguments.of("AnnoLogicList", true)

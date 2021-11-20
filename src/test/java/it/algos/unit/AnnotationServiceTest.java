@@ -1,7 +1,6 @@
 package it.algos.unit;
 
 import com.vaadin.flow.router.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -84,7 +83,6 @@ public class AnnotationServiceTest extends ATest {
                 Arguments.of(GiornoLogicList.class, "Giorni"),
                 Arguments.of(Giorno.class, "Giorni"),
                 Arguments.of(Utente.class, "Utente"),
-                Arguments.of(Bolla.class, "Bolla"),
                 Arguments.of(Mese.class, "Mesi"),
                 Arguments.of(Via.class, "Via"),
                 Arguments.of(ViaLogicList.class, "Via"),

@@ -1,6 +1,5 @@
 package it.algos.unit;
 
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.test.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -54,7 +53,6 @@ public class ClassServiceTest extends MongoTest {
                 Arguments.of(null, null),
                 Arguments.of(LogicList.class, null),
                 Arguments.of(Utente.class, Utente.class),
-                Arguments.of(Bolla.class, Bolla.class),
                 Arguments.of(Mese.class, Mese.class),
                 Arguments.of(MeseService.class, Mese.class),
                 Arguments.of(Giorno.class, Giorno.class),
