@@ -51,6 +51,21 @@ public @interface AIEntity {
      */
     String keyPropertyName() default FIELD_ID;
 
+    /**
+     * (Optional) chiave keyId creata sempre minuscola
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaIdTuttoMinuscolo() default false;
+
+    /**
+     * (Optional) uppercase and lowercase letters are treated as distinct (case-sensitive) or equivalent (case-insensitive).
+     * Di default false
+     *
+     * @return the status
+     */
+    boolean usaCaseInsensitive() default false;
 
     /**
      * (Optional) Creazione automatica dei dati alla partenza se collezione vuota

@@ -417,7 +417,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack("Manca il wrapFilter",this.getClass(),"count");
         }
         mappaFiltri = wrapFiltri.getMappaFiltri();
-
         if (mappaFiltri == null || mappaFiltri.size() == 0) {
             return 0;
         }
@@ -2072,9 +2071,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return the founded entity
      */
-    private AEntity findBase(final Class<? extends AEntity> entityClazz,
-                             final String propertyName, final Serializable propertyValue) throws
-            AlgosException {
+    private AEntity findBase(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         Query query = new Query();
         int totRecords = 0;
         String message;
@@ -2088,6 +2085,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
+
+        //--regolo la query in modo che  il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
+        query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
 
         totRecords = (int) mongoOp.count(query, entityClazz);
         switch (totRecords) {
