@@ -131,7 +131,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Giorno.class, "_id", "2 agosto", 0, false),
                 Arguments.of(Giorno.class, "mese", "ottobre", 31, true),
                 Arguments.of(Mese.class, "mese", "ottobre", 1, true),
-                Arguments.of(Mese.class, "mese", "Ottobre", 1, true),
+                Arguments.of(Mese.class, "mese", "Ottobre", 0, false),
                 Arguments.of(Mese.class, "giorni", 31, 7, false),
                 Arguments.of(Mese.class, "giorni", 30, 4, false),
                 Arguments.of(Mese.class, "giorni", 28, 1, true),

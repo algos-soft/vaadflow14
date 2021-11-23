@@ -960,13 +960,13 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_KEY_ID")
-    @Order(60)
-    @DisplayName("60 - find (spring)")
+    @Order(61)
+    @DisplayName("61 - find (spring)")
         //--clazz
         //--propertyValue
         //--doc e/o entityBean valida
     void findSpring(final Class clazz, final Serializable propertyValue, final boolean entityValida) {
-        System.out.println("60 - find (spring)");
+        System.out.println("61 - find (spring)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
         find(clazz, propertyValue, entityValida, "query");
     }

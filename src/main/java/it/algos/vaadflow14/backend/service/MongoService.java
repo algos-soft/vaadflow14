@@ -852,32 +852,45 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * Cerca una singola entity di una collection con una determinata chiave. <br>
      *
      * @param entityClazz corrispondente ad una collection sul database mongoDB
-     * @param keyId       must not be {@literal null}.
+     * @param keyValue    must not be {@literal null}.
      *
      * @return the founded entity
      */
-    public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
-        return find(entityClazz, FlowCost.FIELD_ID, keyId instanceof String ? (String) keyId : keyId);
+    public AEntity find(final Class<? extends AEntity> entityClazz, final Serializable keyValue) throws AlgosException {
+        checkEntityClazz(entityClazz, "find");
+        checkKeyValue(keyValue);
+        Document doc;
+        MongoCollection<Document> collection;
+        String collectionName;
+        String keyValueLower = (String) keyValue;
 
-        //                collection = getCollection(entityClazz);
-        //                if (collection != null) {
-        //                    Bson condition = new Document("_id", keyId);
-        //                    iterable = collection.find(condition);
-        //                }
-        //                if (iterable != null) {
-        //                    doc = iterable.first();
-        //                }
-        //
-        //                if (doc != null) {
-        //                    try {
-        //                        entityBean = gSonService.creaId(entityClazz, (String) keyId);
-        //                    } catch (Exception unErrore) {
-        //                        throw new AlgosException(unErrore, null, (String) keyId);
-        //                    }
-        //                }
-        //                else {
-        //                    throw new AlgosException(null, null, String.format("Non sono riuscito a trovare una entity con keyId=%s", keyId));
-        //                }
+        collectionName = annotation.getCollectionName(entityClazz);
+        collection = getCollection(collectionName);
+        if (collection == null) {
+            throw AlgosException.stack(String.format("Su mongoDb non esiste la collezione %s", collectionName), this.getClass(), "find");
+        }
+
+        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
+            keyValueLower = keyValueLower.toLowerCase();
+        }
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    return findBase(entityClazz, FIELD_ID, keyValueLower);
+                }
+                else {
+                    doc = findDocByProperty(collectionName, FIELD_ID, keyValueLower);
+                    return creaByDoc(entityClazz, doc);
+                }
+            case gson:
+                doc = findDocByProperty(collectionName, FIELD_ID, keyValueLower);
+                return creaByDoc(entityClazz, doc);
+            case jackson:
+                return null;
+            default:
+                throw AlgosException.stack("Valore dello switch errato", this.getClass(), "find");
+        }
     }
 
     /**
@@ -1333,10 +1346,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             }
         }
 
-        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
-        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
-            query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
-        }
+        //solo per keyID
+        //        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
+        //        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
+        //            query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
+        //        }
 
         return query;
     }
@@ -1755,8 +1769,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the founded document
      */
     @Override
-    public Document findDocByProperty(
-            final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
+    public Document findDocByProperty(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) throws AlgosException {
         String collectionName = annotation.getCollectionName(entityClazz);
         String message;
 
@@ -1901,9 +1914,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @return the entity
      */
     @Override
-    public AEntity creaByDoc(
-            final Class<? extends AEntity> entityClazz, Document doc) throws
-            AlgosException {
+    public AEntity creaByDoc(final Class<? extends AEntity> entityClazz, Document doc) throws AlgosException {
         AEntity entityBean = null;
         String message;
         List<Field> fields = reflection.getAllFields(entityClazz);
@@ -1959,7 +1970,12 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
                 //--provvisorio - spostare in altro metodo
                 if (value instanceof Date && type != AETypeField.timestamp) {
-                    value = date.dateToLocalDateTime((Date) value);
+                    if (type == AETypeField.localDate) {
+                        value = date.dateToLocalDate((Date) value);
+                    }
+                    if (type == AETypeField.localDateTime) {
+                        value = date.dateToLocalDateTime((Date) value);
+                    }
                 }
                 //--provvisorio - spostare in altro metodo
 
