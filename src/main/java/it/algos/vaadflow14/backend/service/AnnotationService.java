@@ -963,46 +963,18 @@ public class AnnotationService extends AbstractService {
         return searchProperty;
     }
 
+
+
     /**
      * Flag per usare solo le lettere minuscole nel campo chiave keyId. <br>
+     * Uppercase and lowercase letters are treated equivalent (case-insensitive) and NOT as distinct (case-sensitive) <br>
      *
      * @param entityClazz the class of type AEntity
      *
      * @return the status
      */
-    public boolean usaIdTuttoMinuscolo(final Class<? extends AEntity> entityClazz) throws AlgosException {
-        boolean usaKeyMinuscola = false;
-        AIEntity annotation = null;
-
-        // Se manca la classe non può esserci nessuna annotation
-        if (entityClazz == null) {
-            throw AlgosException.stack("Manca la entityClazz in ingresso", getClass(), "usaIdTuttoMinuscolo");
-        }
-
-        if (AEntity.class.isAssignableFrom(entityClazz)) {
-            annotation = getAIEntity(entityClazz);
-        }
-        else {
-            throw AlgosException.stack(String.format("La entityClazz %s in ingresso NON è una AEntity", entityClazz.getSimpleName()), getClass(), "usaIdTuttoMinuscolo");
-        }
-
-        if (annotation != null) {
-            usaKeyMinuscola = annotation.usaIdTuttoMinuscolo();
-        }
-
-        return usaKeyMinuscola;
-    }
-
-
-    /**
-     * Uppercase and lowercase letters are treated as distinct (case-sensitive) or equivalent (case-insensitive) <br>
-     *
-     * @param entityClazz the class of type AEntity
-     *
-     * @return the status
-     */
-    public boolean usaCaseInsensitive(final Class<? extends AEntity> entityClazz) throws AlgosException {
-        boolean usaCaseInsensitive = false;
+    public boolean usaKeyIdMinuscolaCaseInsensitive(final Class<? extends AEntity> entityClazz) throws AlgosException {
+        boolean usaKeyIdMinuscolaCaseInsensitive = false;
         AIEntity annotation = null;
 
         // Se manca la classe non può esserci nessuna annotation
@@ -1018,10 +990,10 @@ public class AnnotationService extends AbstractService {
         }
 
         if (annotation != null) {
-            usaCaseInsensitive = annotation.usaCaseInsensitive();
+            usaKeyIdMinuscolaCaseInsensitive = annotation.usaKeyIdMinuscolaCaseInsensitive();
         }
 
-        return usaCaseInsensitive;
+        return usaKeyIdMinuscolaCaseInsensitive;
     }
 
     /**

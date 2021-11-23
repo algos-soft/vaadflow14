@@ -210,7 +210,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      */
     public boolean isExistsCollection(final String collectionName) throws AlgosException {
         if (text.isEmpty(collectionName)) {
-            throw AlgosException.stack("Manca la collection", this.getClass(), "isExistsCollection");
+            throw AlgosException.stack("Manca il nome della collection", this.getClass(), "isExistsCollection");
         }
 
         String shortName = fileService.estraeClasseFinale(collectionName).toLowerCase();
@@ -271,6 +271,44 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
     }
 
+    /**
+     * Conteggio di alcune entities selezionate di una collection. <br>
+     * La selezione è keyID=keyValue <br>
+     *
+     * @param entityClazz corrispondente ad una collection sul database mongoDB
+     * @param keyValue    (serializable) per costruire la query
+     *
+     * @return numero di entities selezionate
+     */
+    @Override
+    public int count(final Class<? extends AEntity> entityClazz, final Serializable keyValue) throws AlgosException {
+        checkEntityClazz(entityClazz, "count");
+        checkKeyValue(keyValue);
+        MongoCollection<Document> collection;
+        String collectionName;
+
+        collectionName = annotation.getCollectionName(entityClazz);
+        collection = getCollection(collectionName);
+        if (collection == null) {
+            throw AlgosException.stack(String.format("Su mongoDb non esiste la collezione %s", collectionName), this.getClass(), "count");
+        }
+
+        switch (FlowVar.typeSerializing) {
+            case spring:
+                if (isMongoOpValido()) {
+                    return (int) mongoOp.count(getKeyQuery(entityClazz, keyValue), collectionName);
+                }
+                else {
+                    return count(collection, getFilter(entityClazz, keyValue));
+                }
+            case gson:
+                return count(collection, getFilter(entityClazz, keyValue));
+            case jackson:
+                return 0;
+            default:
+                throw AlgosException.stack("Valore dello switch errato", this.getClass(), "count");
+        }
+    }
 
     /**
      * Conteggio di alcune entities selezionate di una collection. <br>
@@ -298,7 +336,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         return count(entityClazz, wrapFiltri);
     }
-
 
     /**
      * Conteggio di tutte le entities di una collection filtrate con un filtro. <br>
@@ -344,7 +381,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         switch (FlowVar.typeSerializing) {
             case spring:
                 if (isMongoOpValido()) {
-                    query = getQuery(propertyName, propertyValue);
+                    query = getQuery(collectionName, propertyName, propertyValue);
                     return (int) mongoOp.count(query, collectionName);
                 }
                 else {
@@ -389,7 +426,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         switch (FlowVar.typeSerializing) {
             case spring:
                 if (isMongoOpValido()) {
-                    query = getQuery(mappaFiltri);
+                    query = getQuery(entityClazz, mappaFiltri);
                     return (int) mongoOp.count(query, annotation.getCollectionName(entityClazz));
                 }
                 else {
@@ -414,7 +451,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         String collectionName;
 
         if (wrapFiltri == null) {
-            throw AlgosException.stack("Manca il wrapFilter",this.getClass(),"count");
+            throw AlgosException.stack("Manca il wrapFilter", this.getClass(), "count");
         }
         mappaFiltri = wrapFiltri.getMappaFiltri();
         if (mappaFiltri == null || mappaFiltri.size() == 0) {
@@ -424,13 +461,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         collectionName = annotation.getCollectionName(entityClazz);
         collection = getCollection(collectionName);
         if (collection == null) {
-            throw AlgosException.stack(String.format("Su mongoDb non esiste la collezione %s", collectionName),this.getClass(),"count");
+            throw AlgosException.stack(String.format("Su mongoDb non esiste la collezione %s", collectionName), this.getClass(), "count");
         }
 
         switch (FlowVar.typeSerializing) {
             case spring:
                 if (isMongoOpValido()) {
-                    return (int) mongoOp.count(getQuery(mappaFiltri), collectionName);
+                    return (int) mongoOp.count(getQuery(entityClazz, mappaFiltri), collectionName);
                 }
                 else {
                     return count(collection, getFilter(mappaFiltri));
@@ -696,7 +733,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     private List<AEntity> fetchSpring(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int offset, final int limit) throws AlgosException {
         List<AEntity> listaEntities;
-        Query query = getQuery(wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null);
+        Query query = getQuery(entityClazz, wrapFiltri != null ? wrapFiltri.getMappaFiltri() : null);
 
         if (offset > 0) {
             query.skip(offset);
@@ -783,6 +820,19 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             throw AlgosException.stack(String.format("La entityClazz %s non è una classe valida", entityClazz.getSimpleName()), this.getClass(), callingMethod);
         }
     }
+
+    private void checkKeyValue(final Serializable keyValue) throws AlgosException {
+        if (!(keyValue instanceof String)) {
+            throw AlgosException.stack("La keyValue non è una stringa", this.getClass(), "checkKeyValue");
+        }
+        if (keyValue == null) {
+            throw AlgosException.stack("La keyValue è nulla", this.getClass(), "checkKeyValue");
+        }
+        if (text.isEmpty((String) keyValue)) {
+            throw AlgosException.stack("La keyValue è vuota", this.getClass(), "checkKeyValue");
+        }
+    }
+
 
     /**
      * Find single entity. <br>
@@ -1231,7 +1281,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     @Deprecated
     public List<AEntity> fetch(Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri, Sort sortSpring, int offset, int limit) throws AlgosException {
         List<AEntity> listaEntities;
-        Query query = getQuery(mappaFiltri);
+        Query query = getQuery(entityClazz, mappaFiltri);
 
         //@todo purtroppo per adesso funziona SOLO per 1 filtro
         //@todo non riesco a clonare AFiltro o Criteria
@@ -1256,7 +1306,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     }
 
 
-    public Query getQuery(Map<String, AFiltro> mappaFiltri) throws AlgosException {
+    public Query getQuery(final Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query = new Query();
         Criteria criteriaFiltro;
         Criteria criteriaQuery = null;
@@ -1281,6 +1331,11 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                     }
                 }
             }
+        }
+
+        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
+        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
+            query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
         }
 
         return query;
@@ -1324,6 +1379,16 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
 
         return new Document(propertyField, propertyValue);
+    }
+
+    protected Bson getFilter(final Class<? extends AEntity> entityClazz, final Serializable propertyField) throws AlgosException {
+        String keyValue = (String) propertyField;
+
+        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
+            keyValue = keyValue.toLowerCase();
+        }
+
+        return new Document(FIELD_ID, keyValue);
     }
 
 
@@ -2086,9 +2151,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
 
-        //--regolo la query in modo che  il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
-        query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
-
         totRecords = (int) mongoOp.count(query, entityClazz);
         switch (totRecords) {
             case 0:
@@ -2288,8 +2350,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz,
-                            long keyId) throws AlgosException {
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
         return find(entityClazz, Long.toString(keyId)) != null;
     }
 
@@ -2301,9 +2362,8 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isEsiste(Class<? extends AEntity> entityClazz, String
-            keyId) throws AlgosException {
-        return find(entityClazz, keyId) != null;
+    public boolean isEsiste(final Class<? extends AEntity> entityClazz, final Serializable keyId) throws AlgosException {
+        return count(entityClazz, keyId) == 1;
     }
 
     /**
@@ -2314,8 +2374,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends
-            AEntity> entityClazz, String keyId) throws AlgosException {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, String keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -2327,8 +2386,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      *
      * @return true if exist
      */
-    public boolean isNotEsiste(Class<? extends AEntity> entityClazz,
-                               long keyId) throws AlgosException {
+    public boolean isNotEsiste(Class<? extends AEntity> entityClazz, long keyId) throws AlgosException {
         return !isEsiste(entityClazz, keyId);
     }
 
@@ -2803,7 +2861,21 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         }
     }
 
-    public Query getQuery(final String propertyName, final Serializable propertyValue) {
+
+    @Deprecated
+    public Query getQuery(final String collectionName, final String propertyName, final Serializable propertyValue) {
+        Class<? extends AEntity> entityClazz = null;
+
+        try {
+            entityClazz = classService.getEntityClazzFromCollection(collectionName);
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, getClass(), "getQuery");
+        }
+
+        return getQuery(entityClazz, propertyName, propertyValue);
+    }
+
+    public Query getQuery(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue) {
         Query query = new Query();
 
         if (text.isEmpty(propertyName)) {
@@ -2819,6 +2891,34 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         //        }
 
         query.addCriteria(Criteria.where(propertyName).is(propertyValue));
+
+        return query;
+    }
+
+    /**
+     * Crea una query per la ricerca. <br>
+     *
+     * @param keyValue del campo chiave di mongoDB.
+     *
+     * @return query
+     */
+    public Query getKeyQuery(final Class<? extends AEntity> entityClazz, final Serializable keyValue) {
+        Query query = new Query();
+
+        if (text.isEmpty((String) keyValue)) {
+            return query;
+        }
+
+        query.addCriteria(Criteria.where(FIELD_ID).is(keyValue));
+
+        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
+        try {
+            if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
+                query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
+            }
+        } catch (AlgosException unErrore) {
+            logger.error(unErrore, this.getClass(), "getKeyQuery");
+        }
 
         return query;
     }

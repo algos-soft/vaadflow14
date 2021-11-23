@@ -1082,52 +1082,27 @@ public class AnnotationServiceTest extends ATest {
     @ParameterizedTest
     @MethodSource(value = "CLAZZ_MENU")
     @Order(5)
-    @DisplayName("5 - usaIdTuttoMinuscolo")
-    void usaIdTuttoMinuscolo(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyMinuscola) {
+    @DisplayName("5 - usaKeyIdMinuscolaCaseInsensitive")
+    void usaKeyIdMinuscolaCaseInsensitive(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyIdMinuscolaCaseInsensitive) {
         String message;
         clazz = clazzSorgente;
 
         try {
-            ottenutoBooleano = service.usaIdTuttoMinuscolo(clazz);
+            ottenutoBooleano = service.usaKeyIdMinuscolaCaseInsensitive(clazz);
             System.out.print("Origine: ");
             message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
             System.out.println(message);
             if (ottenutoBooleano) {
-                System.out.println(String.format("La entityClazz %s usa solo lettere minuscole nel proprio keyId", clazz.getSimpleName()));
+                System.out.println(String.format("La entityClazz %s usa solo lettere minuscole nel proprio keyId e la ricerca è case-insensitive", clazz.getSimpleName()));
             }
             else {
-                System.out.println(String.format("La entityClazz %s usa sia lettere maiuscole che minuscole nel proprio keyId", clazz.getSimpleName()));
+                System.out.println(String.format("La entityClazz %s usa sia lettere maiuscole che minuscole nel proprio keyId e la ricerca è case-sensitive", clazz.getSimpleName()));
             }
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }
-        assertEquals(usaKeyMinuscola, ottenutoBooleano);
+        assertEquals(usaKeyIdMinuscolaCaseInsensitive, ottenutoBooleano);
     }
 
-
-    @ParameterizedTest
-    @MethodSource(value = "CLAZZ_MENU")
-    @Order(6)
-    @DisplayName("6 - usaCaseInsensitive")
-    void usaCaseInsensitive(final Class clazzSorgente, final String menuNameNonUsato, final boolean usaKeyMinuscolaNonUsato,final boolean usaCaseInsensitive) {
-        String message;
-        clazz = clazzSorgente;
-
-        try {
-            ottenutoBooleano = service.usaCaseInsensitive(clazz);
-            System.out.print("Origine: ");
-            message = clazzSorgente != null ? clazzSorgente.getSimpleName() : "(null)";
-            System.out.println(message);
-            if (ottenutoBooleano) {
-                System.out.println(String.format("Nella entityClazz %s uppercase and lowercase letters are treated as equivalent (case-insensitive)", clazz.getSimpleName()));
-            }
-            else {
-                System.out.println(String.format("Nella entityClazz %s uppercase and lowercase letters are treated as distinct (case-sensitive)", clazz.getSimpleName()));
-            }
-        } catch (AlgosException unErrore) {
-            printError(unErrore);
-        }
-        assertEquals(usaCaseInsensitive, ottenutoBooleano);
-    }
 
 }

@@ -17,6 +17,7 @@ import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
+import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import static org.junit.Assert.*;
 import org.junit.jupiter.params.provider.*;
@@ -87,7 +88,7 @@ public abstract class MongoTest extends ATest {
     }
 
     //--clazz
-    //--propertyValue
+    //--keyValue
     //--doc e/o entityBean valida
     protected static Stream<Arguments> CLAZZ_KEY_ID() {
         return Stream.of(
@@ -103,7 +104,9 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Mese.class, "Marzo", true),
                 Arguments.of(Mese.class, "marzo esatto", false),
                 Arguments.of(Regione.class, "calabria", true),
-                Arguments.of(Regione.class, "Calabria", true)
+                Arguments.of(Regione.class, "Calabria", true),
+                Arguments.of(Versione.class, "Setup", true),
+                Arguments.of(Versione.class, "setup", false)
         );
     }
 
@@ -136,6 +139,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Via.class, "belzebù", "piazza", 0, false),
                 Arguments.of(Via.class, "nome", "belzebù", 0, false),
                 Arguments.of(Via.class, "nome", "piazza", 1, true),
+                Arguments.of(Via.class, "nome", "Piazza", 0, false),
                 Arguments.of(Delta.class, "immagine", VUOTA, 0, false)
         );
     }

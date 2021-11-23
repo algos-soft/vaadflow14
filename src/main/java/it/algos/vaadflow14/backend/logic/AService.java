@@ -396,10 +396,9 @@ public abstract class AService extends AbstractService implements AIService {
         }
 
         try {
-            usaIdTuttoMinuscolo = annotation.usaIdTuttoMinuscolo(newEntityBean.getClass());
+            usaIdTuttoMinuscolo = annotation.usaKeyIdMinuscolaCaseInsensitive(newEntityBean.getClass());
         } catch (AlgosException unErrore) {
-
-
+            logger.error(unErrore,getClass(),"fixKey");
         }
 
         if (usaIdTuttoMinuscolo) {
