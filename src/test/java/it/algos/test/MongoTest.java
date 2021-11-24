@@ -16,6 +16,7 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.packages.utility.versione.*;
 import it.algos.vaadflow14.backend.wrapper.*;
@@ -106,7 +107,9 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Regione.class, "calabria", true),
                 Arguments.of(Regione.class, "Calabria", true),
                 Arguments.of(Versione.class, "Setup", true),
-                Arguments.of(Versione.class, "setup", false)
+                Arguments.of(Versione.class, "setup", false),
+                Arguments.of(Preferenza.class, "usaDebug", true),
+                Arguments.of(Preferenza.class, "usadebug", false)
         );
     }
 

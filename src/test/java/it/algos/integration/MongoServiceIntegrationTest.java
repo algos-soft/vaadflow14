@@ -10,6 +10,7 @@ import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.exceptions.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import it.algos.vaadflow14.backend.packages.preferenza.*;
 import it.algos.vaadflow14.backend.service.*;
 import it.algos.vaadflow14.backend.wrapper.*;
 import org.bson.conversions.*;
@@ -993,6 +994,9 @@ public class MongoServiceIntegrationTest extends MongoTest {
 
         if (entityBean != null) {
             System.out.println(VUOTA);
+            if (clazz.isAssignableFrom(Preferenza.class)) {
+                ((Preferenza) entityBean).value = new byte[0];
+            }
             printEntityBeanFromKeyId(clazz, propertyValue, entityBean, 0);
         }
     }

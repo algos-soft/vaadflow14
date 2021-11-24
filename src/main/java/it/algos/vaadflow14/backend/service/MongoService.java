@@ -1920,6 +1920,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         List<Field> fields = reflection.getAllFields(entityClazz);
         String key;
         Object value;
+        Object prefValue = null;
         List<AIEnum> enumItems;
         AETypeField type;
         List lista;
@@ -1995,21 +1996,41 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
                 //--provvisorio - spostare in altro metodo
                 if (annotation.getFormType(field) == AETypeField.enumeration) {
-                    enumItems = fieldService.getEnumerationItems(field);
-
-                    for (AIEnum item : enumItems) {
-                        if (item.get().equals(value)) {
-                            value = item;
-                            break;
+                    if (entityClazz.isAssignableFrom(Preferenza.class) && field.getName().equals("type")) {
+                        lista = fieldService.getEnumerationItems(field);
+                        if (lista.size() > 0) {
+                            for (Object obj : lista) {
+                                if (obj instanceof AETypePref pref) {
+                                    if (pref.getNome().equals(value)) {
+                                        value = AETypePref.bool;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        enumItems = fieldService.getEnumerationItems(field);
+                        for (AIEnum item : enumItems) {
+                            if (item.get().equals(value)) {
+                                value = item;
+                                break;
+                            }
                         }
                     }
                 }
                 //--provvisorio - spostare in altro metodo
-
                 try {
-                    reflection.setPropertyValue(entityBean, key, value);
+                    if (entityClazz.isAssignableFrom(Preferenza.class) && field.getName().equals("value")) {
+                        if (prefValue != null) {
+                            reflection.setPropertyValue(entityBean, key, prefValue);
+                        }
+                    }
+                    else {
+                        reflection.setPropertyValue(entityBean, key, value);
+                    }
                 } catch (AlgosException unErrore) {
-                    throw AlgosException.stack(unErrore, String.format("Non funziona la reflection della property %s", key), this.getClass(), "creaByDoc");
+                    throw AlgosException.stack(unErrore, String.format("Nella entityBean %s.%s non funziona la reflection della property '%s' per il valore [%s]", entityBean.getClass().getSimpleName(), entityBean, key, value), this.getClass(), "creaByDoc");
                 }
             }
         }
