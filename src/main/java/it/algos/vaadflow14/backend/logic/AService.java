@@ -285,8 +285,12 @@ public abstract class AService extends AbstractService implements AIService {
                 entityBeanWithID.creazione = LocalDateTime.now();
             }
             if (operation != AEOperation.showOnly) {
-                if (beanService.isModificata(entityBeanWithID)) {
-                    entityBeanWithID.modifica = LocalDateTime.now();
+                try {
+                    if (beanService.isModificata(entityBeanWithID)) {
+                        entityBeanWithID.modifica = LocalDateTime.now();
+                    }
+                } catch (AlgosException unErrore) {
+                    logger.info(unErrore, this.getClass(), "beforeSave");
                 }
             }
         }

@@ -137,7 +137,6 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(FatturaLogicList.class);
         FlowVar.menuRouteList.add(Bolla.class);
         FlowVar.menuRouteList.add(WelcomeView.class);
-        FlowVar.menuRouteList.add(LogicList.class);
         FlowVar.menuRouteList.add(ViaLogicList.class);
         FlowVar.menuRouteList.add(Mese.class);
         FlowVar.menuRouteList.add(Continente.class);
