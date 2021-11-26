@@ -266,9 +266,11 @@ public abstract class AService extends AbstractService implements AIService {
     public AEntity beforeSave(final AEntity entityBeanDaRegistrare, final AEOperation operation) {
         AEntity entityBeanWithID;
         Company company;
+        Class clazz = entityBeanDaRegistrare.getClass();
+        Serializable keyId = null;
 
         entityBeanWithID = fixKey(entityBeanDaRegistrare);
-
+        keyId = entityBeanDaRegistrare.getId();
         if (FlowVar.usaCompany && entityBeanWithID instanceof ACEntity) {
             company = ((ACEntity) entityBeanWithID).company;
             company = company != null ? company : vaadinService.getCompany();
@@ -286,7 +288,7 @@ public abstract class AService extends AbstractService implements AIService {
             }
             if (operation != AEOperation.showOnly) {
                 try {
-                    if (beanService.isModificata(entityBeanWithID)) {
+                    if (mongo.isEsiste(clazz, keyId) && beanService.isModificata(entityBeanWithID)) {
                         entityBeanWithID.modifica = LocalDateTime.now();
                     }
                 } catch (AlgosException unErrore) {
@@ -402,7 +404,7 @@ public abstract class AService extends AbstractService implements AIService {
         try {
             usaIdTuttoMinuscolo = annotation.usaKeyIdMinuscolaCaseInsensitive(newEntityBean.getClass());
         } catch (AlgosException unErrore) {
-            logger.error(unErrore,getClass(),"fixKey");
+            logger.error(unErrore, getClass(), "fixKey");
         }
 
         if (usaIdTuttoMinuscolo) {

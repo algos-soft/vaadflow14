@@ -2465,14 +2465,14 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
      * @param entityClazz  corrispondente ad una collection sul database mongoDB
      * @param propertyName dell'ordinamento
      */
-    public int getNewOrder(Class<? extends AEntity> entityClazz, String
-            propertyName) throws AMongoException {
+    public int getNewOrder(Class<? extends AEntity> entityClazz, String propertyName) throws AMongoException {
         int ordine = 0;
         AEntity entityBean;
         Object value;
         Sort sort = Sort.by(Sort.Direction.DESC, propertyName);
         Field field = null;
         Query query = new Query().with(sort).limit(1);
+        List lista ;
 
         try {
             field = reflection.getField(entityClazz, propertyName);
@@ -2483,11 +2483,13 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         switch (FlowVar.typeSerializing) {
             case spring:
                 try {
-                    entityBean = mongoOp.find(query, entityClazz).get(0);
-                    value = field.get(entityBean);
-                    ordine = (Integer) value;
+                    lista = mongoOp.find(query, entityClazz);
+                    if (lista != null && lista.size() > 0) {
+                        entityBean = mongoOp.find(query, entityClazz).get(0);
+                        value = field.get(entityBean);
+                        ordine = (Integer) value;
+                    }
                 } catch (Exception unErrore) {
-                    logger.error(unErrore, this.getClass(), "getNewOrder");
                     throw new AMongoException(unErrore);
                 }
                 break;
