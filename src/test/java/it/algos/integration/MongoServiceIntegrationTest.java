@@ -511,21 +511,8 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
 
-    private void countMappaFiltro(final String tag) {
-        String message;
+    private void countMappaFiltro( final String tag) {
         Class clazz = CLASSE_ESEMPIO_INCROCIATO;
-        mappaFiltri = getEsempioMappaFiltro();
-
-        if (mappaFiltri != null && mappaFiltri.size() > 0) {
-            countMappaFiltro(clazz, mappaFiltri, tag);
-        }
-        else {
-            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
-            System.out.println(message);
-        }
-    }
-
-    private void countMappaFiltro(final Class clazz, final Map<String, AFiltro> mappaFiltri, final String tag) {
         String message = String.format("Count filtrato di %s", getSimpleName(clazz));
         System.out.println(message);
         AETypeFilter filter;
@@ -534,6 +521,13 @@ public class MongoServiceIntegrationTest extends MongoTest {
         String propertyValueVideo;
         String filterText = VUOTA;
         String sep = " + ";
+        mappaFiltri = getEsempioMappaFiltro();
+
+        if (mappaFiltri == null || mappaFiltri.size() == 0) {
+            message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
+            System.out.println(message);
+            return;
+        }
 
         for (String key : mappaFiltri.keySet()) {
             filter = mappaFiltri.get(key).getType();
@@ -822,6 +816,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void fetchMappaFiltroGson() {
         System.out.println("48 - Fetch filtrato (gson) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchMappaFiltroIncrociato();
     }
 
     @Test
@@ -830,9 +825,10 @@ public class MongoServiceIntegrationTest extends MongoTest {
     void fetchMappaFiltroSpring() {
         System.out.println("49 - Fetch filtrato (spring) (Map<String, AFiltro)");
         FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchMappaFiltroIncrociato();
     }
 
-    private void fetchMappaFiltro() {
+    private void fetchMappaFiltroIncrociato() {
         String message;
         Class clazz = CLASSE_ESEMPIO_INCROCIATO;
         mappaFiltri = getEsempioMappaFiltro();

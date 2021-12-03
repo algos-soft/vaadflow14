@@ -1182,34 +1182,30 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
-        //        String propertyField ;
-        //        Class clazz = classService.getClazzFromSimpleName(collectionName);
-
-        //        if (annotation.isDBRef(clazz, propertyName)) {
-        //            propertyField += ".$id";
-        //        }
-
-        if (array.isAllValid(mappaFiltri)) {
-            for (AFiltro filtro : mappaFiltri.values()) {
-                criteria = filtro.getCriteria();
-                Object alfa = criteria.getCriteriaObject();
-                Object beta = criteria.getKey();
-                if (criteriaFilter.equals(new Criteria())) {
-                    criteriaFilter = criteria;
-                }
-                else {
-                    criteriaFilter.andOperator(criteria);
-                }
-            }
-
-            try {
-                docFilter = criteriaFilter.getCriteriaObject();
-            } catch (Exception unErrore) {
-                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
-            }
+        if (wrapFiltri==null) {
+            throw AlgosException.stack("Manca il wrapFiltri",getClass(),"getFilter");
         }
 
-        return docFilter;
+        return getFilter(wrapFiltri.getMappaFiltri());
+//        if (array.isAllValid(mappaFiltri)) {
+//            for (AFiltro filtro : mappaFiltri.values()) {
+//                criteria = filtro.getCriteria();
+//                if (criteriaFilter.equals(new Criteria())) {
+//                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
+//                }
+//                else {
+//                    criteriaFilter.andOperator(criteria);
+//                }
+//            }
+//
+//            try {
+//                docFilter = criteriaFilter.getCriteriaObject();
+//            } catch (Exception unErrore) {
+//                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
+//            }
+//        }
+//
+//        return docFilter;
     }
 
 
@@ -1350,7 +1346,6 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return query;
     }
 
-    @Deprecated
     protected Bson getFilter(Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Document docFilter = null;
         Criteria criteria;
