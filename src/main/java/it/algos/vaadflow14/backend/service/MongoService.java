@@ -1321,36 +1321,31 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
 
     public Query getQuery(final Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query = new Query();
-        Criteria criteriaFiltro;
-        Criteria criteriaQuery = null;
+        Criteria criteria;
+        Criteria criteriaQuery = new Criteria();;
 
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
-                criteriaFiltro = filtro.getCriteria();
-
-                if (criteriaQuery == null) {
-                    criteriaQuery = criteriaFiltro;
-                    query.addCriteria(criteriaQuery);
+                criteria = filtro.getCriteria();
+                if (criteriaQuery.equals(new Criteria())) {
+                    criteriaQuery = criteria;
+                    if (criteriaQuery!=null) {
+                        query.addCriteria(criteriaQuery);
+                    }
                 }
                 else {
                     //--For multiple criteria on the same field, uses a “comma” to combine them.
                     //@todo Funzionalità ancora da implementare
-                    if (criteriaFiltro.getKey().equals(criteriaQuery.getKey())) {
-                        criteriaQuery.andOperator(criteriaFiltro);
+                    if (criteria.getKey().equals(criteriaQuery.getKey())) {
+                        criteriaQuery.andOperator(criteria);
                         //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
                     }
                     else {
-                        query.addCriteria(criteriaFiltro);
+                        query.addCriteria(criteria);
                     }
                 }
             }
         }
-
-        //solo per keyID
-        //        //--regolo la query in modo che il successivo controllo effettuato dal metodo di mongo sia CASE INSENSITIVE
-        //        if (annotation.usaKeyIdMinuscolaCaseInsensitive(entityClazz)) {
-        //            query.collation(Collation.of("it").strength(Collation.ComparisonLevel.secondary()));
-        //        }
 
         return query;
     }
@@ -1365,7 +1360,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteria = filtro.getCriteria();
                 if (criteriaFilter.equals(new Criteria())) {
-                    criteriaFilter = criteria;
+                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
                 }
                 else {
                     criteriaFilter.andOperator(criteria);
@@ -2472,7 +2467,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Sort sort = Sort.by(Sort.Direction.DESC, propertyName);
         Field field = null;
         Query query = new Query().with(sort).limit(1);
-        List lista ;
+        List lista;
 
         try {
             field = reflection.getField(entityClazz, propertyName);

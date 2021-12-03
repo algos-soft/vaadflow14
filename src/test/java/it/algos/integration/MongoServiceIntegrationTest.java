@@ -299,7 +299,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         System.out.println(message);
         boolean usaKeyIdMinuscolaCaseInsensitive = false;
         try {
-            usaKeyIdMinuscolaCaseInsensitive = clazz != null ? annotationService.usaKeyIdMinuscolaCaseInsensitive(clazz) : false;
+            usaKeyIdMinuscolaCaseInsensitive = clazz != null && annotationService.usaKeyIdMinuscolaCaseInsensitive(clazz);
         } catch (AlgosException unErrore) {
             //--non serve
         }

@@ -301,6 +301,7 @@ public abstract class LogicList extends Logic {
         ComboBox combo = null;
         Checkbox check;
         IndeterminateCheckbox check3Vie;
+        String caption = VUOTA;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
 
@@ -319,7 +320,8 @@ public abstract class LogicList extends Logic {
             }
 
             if (annotation.usaCheckBox3Vie(entityClazz, fieldName)) {
-                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(fieldName));
+                caption = annotation.getFormFieldName(entityClazz, fieldName);
+                check3Vie = new IndeterminateCheckbox(text.primaMaiuscola(caption));
                 mappaComponentiTop.put(fieldName, check3Vie);
             }
         }
@@ -427,7 +429,6 @@ public abstract class LogicList extends Logic {
         grid.fixGridHeader();
         this.addGridListeners();
         refreshAll();
-
 
         /**
          * Regolazioni INDISPENSABILI per usare DataProvider sui DB voluminosi <br>

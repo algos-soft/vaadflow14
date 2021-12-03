@@ -31,11 +31,10 @@ import org.springframework.test.context.junit.jupiter.*;
 public class AClassServiceTest extends ATest {
 
         protected static Class<? extends AEntity> FATTURA_ENTITY_CLASS = Fattura.class;
-
         protected static Class<? extends AEntity> BOLLA_ENTITY_CLASS = Bolla.class;
 
     /**
-     * The Service.
+     * The Service
      */
     @InjectMocks
     ClassService service;

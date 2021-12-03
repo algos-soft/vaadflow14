@@ -122,7 +122,7 @@ public class ATopLayout extends AButtonLayout {
                 }
 
                 if (obj instanceof Button) {
-                    this.addComp(key, (Component)obj);
+                    this.addComp(key, (Component) obj);
                 }
 
                 if (obj instanceof ComboBox) {
@@ -163,7 +163,7 @@ public class ATopLayout extends AButtonLayout {
     protected void addComp(String key, Component comp) {
         mappaCorrente.put(key, comp);
 
-        if (primaRiga.getComponentCount() < maxNumeroBottoniPrimaRiga) {
+        if (primaRiga.getComponentCount() <= maxNumeroBottoniPrimaRiga) {
             primaRiga.add(comp);
         }
         else {

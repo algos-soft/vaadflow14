@@ -13,6 +13,7 @@ import it.algos.vaadflow14.backend.packages.company.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
 import it.algos.vaadflow14.backend.packages.crono.giorno.*;
 import it.algos.vaadflow14.backend.packages.crono.mese.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.geografica.continente.*;
 import it.algos.vaadflow14.backend.packages.geografica.regione.*;
 import it.algos.vaadflow14.backend.packages.geografica.stato.*;
@@ -154,27 +155,30 @@ public abstract class MongoTest extends ATest {
     //--previstoIntero
     protected static Stream<Arguments> CLAZZ_FILTER() {
         return Stream.of(
-                Arguments.of((Class) null, null, VUOTA, VUOTA, 0),
-                Arguments.of(Utente.class, null, null, null, 0),
-                Arguments.of(Utente.class, AETypeFilter.uguale, null, null, 0),
-                Arguments.of(Utente.class, AETypeFilter.uguale, VUOTA, VUOTA, 0),
-                Arguments.of(Utente.class, AETypeFilter.uguale, NAME_ANNO, "forse", 0),
-                Arguments.of(Utente.class, AETypeFilter.uguale, NAME_NOME, "forse", 0),
-                Arguments.of(Giorno.class, AETypeFilter.link, null, "ottobre", 0),
-                Arguments.of(Giorno.class, AETypeFilter.link, "mese", "ottobre", 31),
-                Arguments.of(Giorno.class, AETypeFilter.link, "mese.$id", "ottobre", 31),
-                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 31, 7),
-                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 30, 4),
-                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 28, 1),
-                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 32, 0),
-                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "viale", 1),
-                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "viale ", 0),
-                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, " viale", 0),
-                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "viale", 1),
-                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "belzebù", 0),
-                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
-                Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4),
-                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", 2)
+//                Arguments.of((Class) null, null, VUOTA, VUOTA, 0),
+//                Arguments.of(Utente.class, null, null, null, 0),
+//                Arguments.of(Utente.class, AETypeFilter.uguale, null, null, 0),
+//                Arguments.of(Utente.class, AETypeFilter.uguale, VUOTA, VUOTA, 0),
+//                Arguments.of(Utente.class, AETypeFilter.uguale, NAME_ANNO, "forse", 0),
+//                Arguments.of(Utente.class, AETypeFilter.uguale, NAME_NOME, "forse", 0),
+//                Arguments.of(Giorno.class, AETypeFilter.link, null, "ottobre", 0),
+//                Arguments.of(Giorno.class, AETypeFilter.link, "mese", "ottobre", 31),
+//                Arguments.of(Giorno.class, AETypeFilter.link, "mese.$id", "ottobre", 31),
+//                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 31, 7),
+//                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 30, 4),
+//                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 28, 1),
+//                Arguments.of(Mese.class, AETypeFilter.uguale, "giorni", 32, 0),
+//                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "viale", 1),
+//                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "viale ", 0),
+//                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, " viale", 0),
+//                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "viale", 1),
+//                Arguments.of(Via.class, AETypeFilter.uguale, NAME_NOME, "belzebù", 0),
+//                Arguments.of(Via.class, AETypeFilter.contiene, NAME_NOME, "co", 6),
+//                Arguments.of(Via.class, AETypeFilter.inizia, NAME_NOME, "v", 4),
+//                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", 2),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", true, 20),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", false, 21),
+                Arguments.of(Secolo.class, AETypeFilter.checkBox3Vie, "anteCristo", null, 41)
         );
     }
 
