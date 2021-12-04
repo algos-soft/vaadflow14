@@ -14,14 +14,9 @@ import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.backend.logic.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
-import it.algos.vaadflow14.backend.packages.crono.mese.*;
-import it.algos.vaadflow14.backend.packages.geografica.continente.*;
-import it.algos.vaadflow14.backend.packages.preferenza.*;
-import it.algos.vaadflow14.wizard.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -93,12 +88,10 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.preferenzeSpecificheList = Arrays.asList(AESimplePreferenza.values());
         FlowVar.bottoniSpecificiList = Arrays.asList(AESimpleButton.values());
 
-        if (AEPreferenza.usaDebug.is()) {
-            FlowVar.usaAdminPackages = true;
-            FlowVar.usaGestionePackages = true;
-            FlowVar.usaGeografiaPackages = true;
-            FlowVar.usaCronoPackages = true;
-        }
+        FlowVar.usaAdminPackages = true;
+        FlowVar.usaGestionePackages = true;
+        FlowVar.usaGeografiaPackages = true;
+        FlowVar.usaCronoPackages = true;
     }
 
 
@@ -131,15 +124,10 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
-        FlowVar.menuRouteList.add(Wizard.class);
-        FlowVar.menuRouteList.add(Preferenza.class);
-        FlowVar.menuRouteList.add(Via.class);
         FlowVar.menuRouteList.add(FatturaLogicList.class);
         FlowVar.menuRouteList.add(Bolla.class);
         FlowVar.menuRouteList.add(WelcomeView.class);
         FlowVar.menuRouteList.add(ViaLogicList.class);
-        FlowVar.menuRouteList.add(Mese.class);
-        FlowVar.menuRouteList.add(Continente.class);
         //        FlowVar.menuRouteList.add(ProductManagementBinderView.class);
         //        FlowVar.menuRouteList.add(ProductManagementCoversionView.class);
         //        FlowVar.menuRouteList.add(ProductManagementJakartaView.class);

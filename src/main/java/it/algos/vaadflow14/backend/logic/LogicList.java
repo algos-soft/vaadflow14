@@ -709,18 +709,16 @@ public abstract class LogicList extends Logic {
                 break;
             case wrapFiltri:
                 if (wrapFiltri != null) {
-                    if (text.isValid(searchFieldName)) {
-                        if (text.isValid(searchFieldValue)) {
-                            try {
-                                wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
-                            } catch (AlgosException unErrore) {
-                                logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
-                            }
+                    if (text.isValid(searchFieldValue)) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.inizia, searchFieldName, searchFieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroSearch");
                         }
-                        else {
-                            if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
-                                wrapFiltri.getMappaFiltri().remove(searchFieldName);
-                            }
+                    }
+                    else {
+                        if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                            wrapFiltri.getMappaFiltri().remove(searchFieldName);
                         }
                     }
                 }
@@ -783,25 +781,47 @@ public abstract class LogicList extends Logic {
     protected AFiltro fixFiltroCheck(final String fieldName, final Object fieldValue) {
         AFiltro filtro = null;
 
-        if (text.isValid(fieldName)) {
-            if (fieldValue == null) {
-                filtro = null;
-            }
-            else {
-                if ((boolean) fieldValue) {
-                    filtro = AFiltro.vero(fieldName);
+        switch (filtroProvider) {
+            case mappaFiltri:
+                if (mappaFiltri != null) {
+                    if (text.isValid(fieldName)) {
+                        if (fieldValue == null) {
+                            filtro = null;
+                        }
+                        else {
+                            if ((boolean) fieldValue) {
+                                filtro = AFiltro.vero(fieldName);
+                            }
+                            else {
+                                filtro = AFiltro.falso(fieldName);
+                            }
+                        }
+                    }
+                    mappaFiltri.remove(fieldName);
+                    if (filtro != null) {
+                        mappaFiltri.put(fieldName, filtro);
+                    }
                 }
-                else {
-                    filtro = AFiltro.falso(fieldName);
+                break;
+            case wrapFiltri:
+                if (wrapFiltri != null) {
+                    if (text.isValid(fieldName)) {
+                        try {
+                            wrapFiltri.regola(AETypeFilter.checkBox3Vie, fieldName, fieldValue);
+                        } catch (AlgosException unErrore) {
+                            logger.warn(unErrore, this.getClass(), "fixFiltroCheck");
+                        }
+                    }
+                    else {
+                        if (wrapFiltri.getMappaFiltri() != null && wrapFiltri.getMappaFiltri().size() > 0) {
+                            wrapFiltri.getMappaFiltri().remove(fieldName);
+                        }
+                    }
                 }
-            }
-        }
-
-        if (mappaFiltri != null) {
-            mappaFiltri.remove(fieldName);
-            if (filtro != null) {
-                mappaFiltri.put(fieldName, filtro);
-            }
+                break;
+            default:
+                logger.error("Switch - caso non definito", this.getClass(), "fixFiltroCheck");
+                break;
         }
 
         return filtro;
