@@ -186,7 +186,7 @@ public class ATopLayout extends AButtonLayout {
     protected void addComp(String key, Component comp) {
         mappaCorrente.put(key, comp);
 
-        if (primaRiga.getComponentCount() <= maxNumeroBottoniPrimaRiga) {
+        if (primaRiga.getComponentCount() <  maxNumeroBottoniPrimaRiga) {
             primaRiga.add(comp);
         }
         else {

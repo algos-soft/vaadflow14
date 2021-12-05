@@ -1182,30 +1182,30 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         Criteria criteria;
         Criteria criteriaFilter = new Criteria();
 
-        if (wrapFiltri==null) {
-            throw AlgosException.stack("Manca il wrapFiltri",getClass(),"getFilter");
+        if (wrapFiltri == null) {
+            throw AlgosException.stack("Manca il wrapFiltri", getClass(), "getFilter");
         }
 
         return getFilter(wrapFiltri.getMappaFiltri());
-//        if (array.isAllValid(mappaFiltri)) {
-//            for (AFiltro filtro : mappaFiltri.values()) {
-//                criteria = filtro.getCriteria();
-//                if (criteriaFilter.equals(new Criteria())) {
-//                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
-//                }
-//                else {
-//                    criteriaFilter.andOperator(criteria);
-//                }
-//            }
-//
-//            try {
-//                docFilter = criteriaFilter.getCriteriaObject();
-//            } catch (Exception unErrore) {
-//                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
-//            }
-//        }
-//
-//        return docFilter;
+        //        if (array.isAllValid(mappaFiltri)) {
+        //            for (AFiltro filtro : mappaFiltri.values()) {
+        //                criteria = filtro.getCriteria();
+        //                if (criteriaFilter.equals(new Criteria())) {
+        //                    criteriaFilter = criteria != null ? criteria : criteriaFilter;
+        //                }
+        //                else {
+        //                    criteriaFilter.andOperator(criteria);
+        //                }
+        //            }
+        //
+        //            try {
+        //                docFilter = criteriaFilter.getCriteriaObject();
+        //            } catch (Exception unErrore) {
+        //                throw new AlgosException(unErrore, null, "MongoService.getFilter()");
+        //            }
+        //        }
+        //
+        //        return docFilter;
     }
 
 
@@ -1318,14 +1318,15 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
     public Query getQuery(final Class<? extends AEntity> entityClazz, Map<String, AFiltro> mappaFiltri) throws AlgosException {
         Query query = new Query();
         Criteria criteria;
-        Criteria criteriaQuery = new Criteria();;
+        Criteria criteriaQuery = new Criteria();
+        ;
 
         if (array.isAllValid(mappaFiltri)) {
             for (AFiltro filtro : mappaFiltri.values()) {
                 criteria = filtro.getCriteria();
                 if (criteriaQuery.equals(new Criteria())) {
-                    criteriaQuery = criteria;
-                    if (criteriaQuery!=null) {
+                    criteriaQuery = criteria != null ? criteria : criteriaQuery;
+                    if (criteriaQuery != null) {
                         query.addCriteria(criteriaQuery);
                     }
                 }

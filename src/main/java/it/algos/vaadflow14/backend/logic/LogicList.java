@@ -268,12 +268,14 @@ public abstract class LogicList extends Logic {
         if (usaBottoneUpload) {
             putMappa(AEButton.upload);
         }
-        if (usaBottoneSearch) {
-            putMappa(AEButton.searchDialog);
-        }
         if (usaBottoneExport) {
             putMappa(AEButton.export);
         }
+        if (usaBottoneSearch) {
+            putMappa(AEButton.searchDialog);
+        }
+
+        this.creaComandiTop();
     }
 
     /**
@@ -297,11 +299,10 @@ public abstract class LogicList extends Logic {
      */
     @Override
     protected void creaComandiTop() {
-        super.creaComandiTop();
         ComboBox combo = null;
         Checkbox check;
         IndeterminateCheckbox check3Vie;
-        String caption = VUOTA;
+        String caption;
 
         for (String fieldName : annotation.getGridColumns(entityClazz)) {
 
@@ -331,16 +332,6 @@ public abstract class LogicList extends Logic {
             mappaComponentiTop.put(FIELD_NAME_RESET, check3Vie);
         }
     }
-
-    //    /**
-    //     * Aggiunge una enumeration alla mappa dei componenti <br>
-    //     *
-    //     * @param aiButton enumeration da aggiungere alla mappa componenti
-    //     */
-    //    protected void putMappa(final AIButton aiButton) {
-    //        mappaComponentiTop.put(aiButton.getTesto(), aiButton);
-    //    }
-
 
     /**
      * Crea un ComboBox e lo aggiunge alla mappa <br>
@@ -654,7 +645,7 @@ public abstract class LogicList extends Logic {
 
 
     public void refreshAll() {
-        Map<String, AFiltro> mappaFiltri = wrapFiltri.getMappaFiltri();
+        Map<String, AFiltro> mappaFiltri = wrapFiltri != null ? wrapFiltri.getMappaFiltri() : new HashMap<>();
         wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
         wrapFiltri.setMappaFiltri(mappaFiltri);
         grid.getGrid().setDataProvider(dataProviderService.creaDataProvider(entityClazz, mappaFiltri));

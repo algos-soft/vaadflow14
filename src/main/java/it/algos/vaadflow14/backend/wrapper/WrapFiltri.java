@@ -73,7 +73,7 @@ public class WrapFiltri {
     }
 
     public void regola(final Class<? extends AEntity> entityClazz, AETypeFilter filter, String propertyField, Object propertyValue) throws AlgosException {
-        this.mappaFiltri = new HashMap<>();
+        this.mappaFiltri = mappaFiltri != null ? mappaFiltri : new HashMap<>();
         String message;
         String keyField;
 
