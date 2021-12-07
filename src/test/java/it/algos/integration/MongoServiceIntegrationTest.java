@@ -511,7 +511,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
 
-    private void countMappaFiltro( final String tag) {
+    private void countMappaFiltro(final String tag) {
         Class clazz = CLASSE_ESEMPIO_INCROCIATO;
         String message = String.format("Count filtrato di %s", getSimpleName(clazz));
         System.out.println(message);
@@ -984,16 +984,19 @@ public class MongoServiceIntegrationTest extends MongoTest {
             printError(unErrore);
         }
 
+        System.out.println(VUOTA);
         if (entityValida) {
             Assertions.assertNotNull(entityBean);
-        }
-
-        if (entityBean != null) {
-            System.out.println(VUOTA);
             if (clazz.isAssignableFrom(Preferenza.class)) {
                 ((Preferenza) entityBean).value = new byte[0];
             }
             printEntityBeanFromKeyId(clazz, propertyValue, entityBean, 0);
+        }
+        else {
+            Assertions.assertNull(entityBean);
+            if (clazz!=null) {
+                System.out.println(String.format("Nella classe %s non esiste una entity con keyID=%s", clazz.getSimpleName(), propertyValue));
+            }
         }
     }
 
