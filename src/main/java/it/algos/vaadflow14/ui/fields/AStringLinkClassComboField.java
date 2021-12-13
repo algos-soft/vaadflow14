@@ -3,24 +3,25 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.shared.*;
 import com.vaadin.flow.spring.annotation.*;
-import it.algos.vaadflow14.backend.packages.crono.secolo.*;
+import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.entity.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 
 /**
- * Project vaadflow15
+ * Project vaadflow14
  * Created by Algos
  * User: gac
- * Date: gio, 11-giu-2020
- * Time: 22:00
+ * Date: lun, 13-dic-2021
+ * Time: 17:22
  * Simple layer around ComboBox value <br>
  * Banale, ma serve per avere tutti i fields omogenei <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AComboField<T> extends AField<Object> {
+public class AStringLinkClassComboField<T> extends AField<Object> {
 
     public ComboBox comboBox;
 
@@ -34,7 +35,7 @@ public class AComboField<T> extends AField<Object> {
      *
      * @param items collezione dei valori previsti
      */
-    public AComboField(List<String> items) {
+    public AStringLinkClassComboField(List<String> items) {
         this(items, true);
     } // end of SpringBoot constructor
 
@@ -46,7 +47,7 @@ public class AComboField<T> extends AField<Object> {
      * @param items      collezione dei valori previsti
      * @param isRequired true, se NON ammette il valore nullo
      */
-    public AComboField(List<String> items, boolean isRequired) {
+    public AStringLinkClassComboField(List<String> items, boolean isRequired) {
         this(items, isRequired, false);
     } // end of SpringBoot constructor
 
@@ -59,7 +60,7 @@ public class AComboField<T> extends AField<Object> {
      * @param isRequired true, se NON ammette il valore nullo
      * @param isRequired true, se si possono aggiungere valori direttamente
      */
-    public AComboField(List<String> items, boolean isRequired, boolean isAllowCustomValue) {
+    public AStringLinkClassComboField(List<String> items, boolean isRequired, boolean isAllowCustomValue) {
         comboBox = new ComboBox();
         this.setItems(items);
         comboBox.setClearButtonVisible(!isRequired);
@@ -80,38 +81,28 @@ public class AComboField<T> extends AField<Object> {
     /**
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, comboBox) <br>
-     *
      */
-    public AComboField(ComboBox comboBox) {
-        this.comboBox=comboBox;
+    public AStringLinkClassComboField(ComboBox comboBox) {
+        this.comboBox = comboBox;
         this.comboBox.setClearButtonVisible(false);
         add(this.comboBox);
     } // end of SpringBoot constructor
 
-
-    public void setItems(List items) {
-        if (items != null) {
-            try {
-                this.items = items;
-                comboBox.setItems(items);
-            } catch (Exception unErrore) {
-                System.out.println("Items nulli in AComboField.setItems()");
-            }
-        }
-    }
-
-
     @Override
     protected Object generateModelValue() {
-        return comboBox.getValue();
-    }
+        String stringLinkClassValue;
+        AEntity entityBeanLinkata = (AEntity) comboBox.getValue();
+        Class entityClazz = entityBeanLinkata.getClass();
+        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        stringLinkClassValue = reflection.getPropertyValueStr(entityBeanLinkata, keyPropertyName);
 
+        return stringLinkClassValue;
+    }
 
     @Override
     protected void setPresentationValue(Object value) {
         comboBox.setValue(value);
     }
-
 
     public void addCustomListener() {
         comboBox.addCustomValueSetListener(event -> {
@@ -122,18 +113,15 @@ public class AComboField<T> extends AField<Object> {
         });
     }
 
-
     @Override
     public Registration addValueChangeListener(ValueChangeListener valueChangeListener) {
         return comboBox.addValueChangeListener(valueChangeListener);
     }
 
-
     @Override
     public void setWidth(String width) {
         comboBox.setWidth(width);
     }
-
 
     @Override
     public void setErrorMessage(String errorMessage) {
@@ -142,6 +130,17 @@ public class AComboField<T> extends AField<Object> {
 
     public List getItems() {
         return items;
+    }
+
+    public void setItems(List items) {
+        if (items != null) {
+            try {
+                this.items = items;
+                comboBox.setItems(items);
+            } catch (Exception unErrore) {
+                System.out.println("Items nulli in AComboField.setItems()");
+            }
+        }
     }
 
 }

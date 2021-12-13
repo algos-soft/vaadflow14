@@ -109,7 +109,7 @@ public class Secolo extends AREntity {
      */
     @Override
     public String toString() {
-        return getSecolo();
+        return "y"+getSecolo();
     }
 
 }
