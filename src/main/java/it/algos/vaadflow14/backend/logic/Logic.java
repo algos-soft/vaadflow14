@@ -17,7 +17,7 @@ import java.util.*;
  * Date: lun, 01-mar-2021
  * Time: 21:29
  */
-public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver {
+public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver,AfterNavigationObserver {
 
 
     /**
@@ -123,13 +123,28 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
     }
 
 
+//    @Override
+//    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+//        this.fixEntityClazz();
+//        this.fixEntityService();
+//        //        this.fixLogicForm();
+//        this.fixPreferenze();
+//        this.initView();
+//    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent beforeEnterEvent) {
+        long inizio = System.currentTimeMillis();
         this.fixEntityClazz();
         this.fixEntityService();
         //        this.fixLogicForm();
         this.fixPreferenze();
         this.initView();
+        logger.info(date.deltaTextEsatto(inizio));
     }
 
 
