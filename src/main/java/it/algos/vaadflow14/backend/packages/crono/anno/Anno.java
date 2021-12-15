@@ -51,7 +51,7 @@ import javax.validation.constraints.*;
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = false)
+@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
 @AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,titolo,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "titolo,bisestile,secolo", usaSpostamentoTraSchede = false)
@@ -92,11 +92,11 @@ public class Anno extends AREntity {
      * secolo di riferimento (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
-    @NotNull
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
+//    @NotNull
+//    @DBRef
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
     @AIColumn(widthEM = 8)
-    public Secolo secolo;
+    public String secolo;
 
 
     /**

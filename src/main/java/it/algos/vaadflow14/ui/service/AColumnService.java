@@ -174,6 +174,10 @@ public class AColumnService extends AbstractService {
                         return new Label(testo);
                     }));//end of lambda expressions and anonymous inner class
                     break;
+                case stringLinkClassCombo:
+                    colonna = grid.addColumn(fieldName);
+                    sortable = true;
+                    break;
                 case enumeration:
                     colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                         Object obj = reflection.getPropertyValue((AEntity) entity, fieldName);
