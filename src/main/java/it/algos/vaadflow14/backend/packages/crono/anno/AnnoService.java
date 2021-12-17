@@ -93,7 +93,7 @@ public class AnnoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final String secolo) throws AlgosException {
+    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) throws AlgosException {
         return super.creaReset(newEntity(ordine, titolo, bisestile, secolo));
     }
 
@@ -108,7 +108,7 @@ public class AnnoService extends AService {
      */
     @Override
     public Anno newEntity() {
-        return newEntity(0, VUOTA, false,  VUOTA);
+        return newEntity(0, VUOTA, false,  null);
     }
 
 
@@ -125,7 +125,7 @@ public class AnnoService extends AService {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(final int ordine, final String titolo, final boolean bisestile, final String secolo) {
+    public Anno newEntity(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
         Anno newEntityBean = Anno.builderAnno()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .titolo(text.isValid(titolo) ? titolo : null)
@@ -275,7 +275,7 @@ public class AnnoService extends AService {
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 try {
-                    creaReset(ordine, titolo, bisestile, "x"+secolo.secolo+"z");
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
                 } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "reset");
@@ -295,7 +295,7 @@ public class AnnoService extends AService {
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 try {
-                    creaReset(ordine, titolo, bisestile, "x"+secolo.secolo+"z");
+                    creaReset(ordine, titolo, bisestile, secolo);
                     numRec++;
                 } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "reset");

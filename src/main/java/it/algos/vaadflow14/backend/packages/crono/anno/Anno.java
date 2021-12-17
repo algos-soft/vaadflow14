@@ -92,11 +92,11 @@ public class Anno extends AREntity {
      * secolo di riferimento (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
-//    @NotNull
-//    @DBRef
-    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
+    @NotNull
+    @DBRef
+    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
     @AIColumn(widthEM = 8)
-    public String secolo;
+    public Secolo secolo;
 
 
     /**
