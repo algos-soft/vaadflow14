@@ -1,12 +1,12 @@
-package it.algos.vaadflow14.backend.packages.crono.secolo;
+package it.algos.simple.backend.packages.annoString;
 
 import com.querydsl.core.annotations.*;
 import com.vaadin.flow.component.icon.*;
 import com.vaadin.flow.spring.annotation.*;
 import it.algos.vaadflow14.backend.annotation.*;
-import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.wizard.enumeration.*;
 import lombok.*;
 import org.springframework.data.annotation.*;
@@ -40,36 +40,36 @@ import javax.validation.constraints.*;
 //querydsl
 @QueryEntity
 //Spring mongodb
-@Document(collection = "secolo")
+@Document(collection = "anno2")
 //Spring data
-@TypeAlias("secolo")
+@TypeAlias("anno2")
 //Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderSecolo")
+@Builder(builderMethodName = "builderAnno2")
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Secolo", keyPropertyName = "secolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = false, usaTimeStamp = false, usaNote = false)
-@AIView(menuName = "Secolo", menuIcon = VaadinIcon.CALENDAR, searchProperty = "secolo", sortProperty = "ordine")
-@AIList(fields = "ordine,secolo,anteCristo,inizio,fine", usaRowIndex = false)
-@AIForm(fields = "secolo,anteCristo,inizio,fine", usaSpostamentoTraSchede = false)
-public class Secolo extends AREntity {
+@AIEntity(recordName = "Anno2", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
+@AIView(menuName = "Anno2", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
+@AIList(fields = "ordine,titolo,bisestile,secolo", usaRowIndex = false)
+@AIForm(fields = "titolo,bisestile,secolo", usaSpostamentoTraSchede = false)
+public class Anno2 extends AREntity {
 
     /**
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
 
-
     /**
      * ordinamento (obbligatorio, unico) <br>
      */
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.integer, caption = "progressivo", typeNum = AETypeNum.positiviOnly)
-    @AIColumn(header = "#", widthEM = 3)
+    @AIColumn(header = "#")
     public int ordine;
+
 
     /**
      * nome completo (obbligatorio, unico) <br>
@@ -77,31 +77,24 @@ public class Secolo extends AREntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn()
+    @AIColumn(widthEM = 7)
+    public String titolo;
+
+    /**
+     * flag bisestile (obbligatorio)
+     */
+    @Indexed()
+    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", usaCheckBox3Vie = true, widthEM = 6)
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 5)
+    public boolean bisestile;
+
+    /**
+     * secolo di riferimento (obbligatorio)
+     * riferimento dinamico CON @DBRef
+     */
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
+    @AIColumn(widthEM = 8)
     public String secolo;
-
-
-    /**
-     * flag di separazione (obbligatorio)
-     */
-    @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Ante Cristo", usaCheckBox3Vie = true, widthEM = 6)
-    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "A.C.")
-    public boolean anteCristo;
-
-
-    /**
-     * primo anno (obbligatorio, unico) <br>
-     */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno iniziale")
-    @AIColumn(widthEM = 6)
-    public int inizio;
-
-    /**
-     * ultimo anno (obbligatorio, unico) <br>
-     */
-    @AIField(type = AETypeField.integer, typeNum = AETypeNum.positiviOnly, caption = "Anno finale")
-    @AIColumn(widthEM = 6)
-    public int fine;
 
 
     /**
@@ -109,7 +102,7 @@ public class Secolo extends AREntity {
      */
     @Override
     public String toString() {
-        return getSecolo();
+        return getTitolo();
     }
 
 }

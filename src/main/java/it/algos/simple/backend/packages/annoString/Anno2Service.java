@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.crono.anno;
+package it.algos.simple.backend.packages.annoString;
 
 import com.google.gson.*;
 import it.algos.vaadflow14.backend.annotation.*;
@@ -41,12 +41,12 @@ import java.util.*;
 //Spring
 @Service
 //Spring
-@Qualifier("crono/annoService")
+@Qualifier("crono/anno2Service")
 //Spring
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 //Algos
 @AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
-public class AnnoService extends AService {
+public class Anno2Service extends AService {
 
     /**
      * Costanti usate nell' ordinamento delle categorie
@@ -78,8 +78,8 @@ public class AnnoService extends AService {
      * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri <br>
      * Regola la entityClazz (final) associata a questo service <br>
      */
-    public AnnoService() {
-        super(Anno.class);
+    public Anno2Service() {
+        super(Anno2.class);
     }
 
 
@@ -93,7 +93,7 @@ public class AnnoService extends AService {
      *
      * @return true se la entity è stata creata e salvata
      */
-    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) throws AlgosException {
+    private boolean creaReset(final int ordine, final String titolo, final boolean bisestile, final String secolo) throws AlgosException {
         return super.creaReset(newEntity(ordine, titolo, bisestile, secolo));
     }
 
@@ -107,8 +107,8 @@ public class AnnoService extends AService {
      * @return la nuova entityBean appena creata (non salvata)
      */
     @Override
-    public Anno newEntity() {
-        return newEntity(0, VUOTA, false,  null);
+    public Anno2 newEntity() {
+        return newEntity(0, VUOTA, false,  VUOTA);
     }
 
 
@@ -125,15 +125,15 @@ public class AnnoService extends AService {
      *
      * @return la nuova entity appena creata (non salvata e senza keyID)
      */
-    public Anno newEntity(final int ordine, final String titolo, final boolean bisestile, final Secolo secolo) {
-        Anno newEntityBean = Anno.builderAnno()
+    public Anno2 newEntity(final int ordine, final String titolo, final boolean bisestile, final String secolo) {
+        Anno2 newEntityBean = Anno2.builderAnno2()
                 .ordine(ordine > 0 ? ordine : getNewOrdine())
                 .titolo(text.isValid(titolo) ? titolo : null)
                 .bisestile(bisestile)
                 .secolo(secolo)
                 .build();
 
-        return (Anno) fixKey(newEntityBean);
+        return (Anno2) fixKey(newEntityBean);
     }
 
 
@@ -147,8 +147,8 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findById(final String keyID) throws AlgosException {
-        return (Anno) super.findById(keyID);
+    public Anno2 findById(final String keyID) throws AlgosException {
+        return (Anno2) super.findById(keyID);
     }
 
 
@@ -162,8 +162,8 @@ public class AnnoService extends AService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public Anno findByKey(final Serializable keyValue) throws AlgosException {
-        return (Anno) super.findByKey(keyValue);
+    public Anno2 findByKey(final Serializable keyValue) throws AlgosException {
+        return (Anno2) super.findByKey(keyValue);
     }
 
 
@@ -178,22 +178,22 @@ public class AnnoService extends AService {
      * @return the founded entity unique or {@literal null} if none found
      */
     @Override
-    public Anno findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
-        return (Anno) super.findByProperty(propertyName, propertyValue);
+    public Anno2 findByProperty(String propertyName, Serializable propertyValue) throws AlgosException {
+        return (Anno2) super.findByProperty(propertyName, propertyValue);
     }
 
 
-    public List<Anno> fetchAnni(final int offset, final int limit) {
-        List<Anno> lista = new ArrayList<>();
+    public List<Anno2> fetchAnni(final int offset, final int limit) {
+        List<Anno2> lista = new ArrayList<>();
         Gson gson = new Gson();
-        Anno anno;
+        Anno2 anno;
 
         List<Document> products = ((MongoService) mongo).mongoOp.getCollection("anno").find().skip(offset).limit(limit).into(new ArrayList<>());//@todo da controllare
 
         for (Document doc : products) {
 
             // 1. JSON file to Java object
-            anno = gson.fromJson(doc.toJson(), Anno.class);
+            anno = gson.fromJson(doc.toJson(), Anno2.class);
             lista.add(anno);
         }
 
@@ -202,7 +202,7 @@ public class AnnoService extends AService {
 
 
     private AIResult checkSecolo() {
-        String packageName = Anno.class.getSimpleName().toLowerCase();
+        String packageName = Anno2.class.getSimpleName().toLowerCase();
         Class clazz = Secolo.class;
         boolean isValida = false;
 
@@ -275,7 +275,7 @@ public class AnnoService extends AService {
             bisestile = false; //non ci sono anni bisestili prima di Cristo
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 try {
-                    creaReset(ordine, titolo, bisestile, secolo);
+                    creaReset(ordine, titolo, bisestile, secolo.secolo);
                     numRec++;
                 } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "reset");
@@ -295,7 +295,7 @@ public class AnnoService extends AService {
             bisestile = date.bisestile(k);
             if (ordine != ANNO_INIZIALE && secolo != null && text.isValid(titolo)) {
                 try {
-                    creaReset(ordine, titolo, bisestile, secolo);
+                    creaReset(ordine, titolo, bisestile, secolo.secolo);
                     numRec++;
                 } catch (AlgosException unErrore) {
                     logger.warn(unErrore, this.getClass(), "reset");
