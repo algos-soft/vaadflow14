@@ -15,8 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import static it.algos.vaadflow14.backend.application.FlowCost.VUOTA;
-import static java.awt.image.ImageObserver.WIDTH;
 
 /**
  * Project: @MODULELOWER@ <br>
@@ -53,7 +51,7 @@ import static java.awt.image.ImageObserver.WIDTH;
 @Builder(builderMethodName = "builder@PACKAGENAMEUPPER@")
 @EqualsAndHashCode(callSuper = false)
 //Algos
-@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
+@AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
 @AIEntity(recordName = "@ENTITYUPPER@", keyPropertyName = "@KEYPROPERTY@", usaBoot = false, usaNew = true, usaCompany = @USACOMPANY@)
 @AIView(menuName = "@ENTITYUPPER@", menuIcon = VaadinIcon.ASTERISK, searchProperty = "@SEARCHPROPERTY@", sortProperty = "@SORTPROPERTY@")
 @AIList(fields = @PROPERTIES@, usaRowIndex = @ROWINDEX@)

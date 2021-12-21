@@ -13,11 +13,14 @@ import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
+import it.algos.simple.backend.packages.annoStringProperty.AnnoStringProperty;
+import it.algos.simple.backend.packages.annoProperty.AnnoProperty;
 import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.wizard.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
@@ -125,6 +128,7 @@ public class SimpleBoot extends FlowBoot {
      */
     @Override
     protected void fixMenuRoutes() {
+        FlowVar.menuRouteList.add(Wizard.class);
         FlowVar.menuRouteList.add(FatturaLogicList.class);
         FlowVar.menuRouteList.add(Bolla.class);
         FlowVar.menuRouteList.add(WelcomeView.class);
@@ -137,6 +141,8 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Anno2.class);
 
         super.fixMenuRoutes();
+		FlowVar.menuRouteList.add(AnnoStringProperty.class);
+		FlowVar.menuRouteList.add(AnnoProperty.class);
 
         if (AEPreferenza.usaDebug.is()) {
             FlowVar.menuRouteList.add(Address.class);

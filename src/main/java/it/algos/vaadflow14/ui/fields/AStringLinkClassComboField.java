@@ -3,11 +3,12 @@ package it.algos.vaadflow14.ui.fields;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.shared.*;
 import com.vaadin.flow.spring.annotation.*;
-import static it.algos.vaadflow14.backend.application.FlowCost.*;
+import it.algos.vaadflow14.backend.application.*;
 import it.algos.vaadflow14.backend.entity.*;
 import org.springframework.beans.factory.config.*;
 import org.springframework.context.annotation.Scope;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -23,8 +24,10 @@ import java.util.*;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AStringLinkClassComboField<T> extends AField<Object> {
 
+
     public ComboBox comboBox;
 
+    private Field reflectionJavaField;
 
     private List items;
 
@@ -82,18 +85,31 @@ public class AStringLinkClassComboField<T> extends AField<Object> {
      * Costruttore con parametri <br>
      * L' istanza viene costruita con appContext.getBean(AComboField.class, comboBox) <br>
      */
-    public AStringLinkClassComboField(ComboBox comboBox) {
+    public AStringLinkClassComboField(final Field reflectionJavaField, final ComboBox comboBox) {
+        this.reflectionJavaField = reflectionJavaField;
         this.comboBox = comboBox;
         this.comboBox.setClearButtonVisible(false);
         add(this.comboBox);
     } // end of SpringBoot constructor
+
 
     @Override
     protected Object generateModelValue() {
         String stringLinkClassValue;
         AEntity entityBeanLinkata = (AEntity) comboBox.getValue();
         Class entityClazz = entityBeanLinkata.getClass();
-        String keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        String keyPropertyName;
+
+        keyPropertyName = annotation.getLinkProperty(reflectionJavaField);
+        if (text.isEmpty(keyPropertyName)) {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        }
+        if (!reflection.isEsiste(entityClazz,keyPropertyName)) {
+            keyPropertyName = annotation.getKeyPropertyName(entityClazz);
+        }
+        if (text.isEmpty(keyPropertyName)) {
+            keyPropertyName = FlowCost.FIELD_ID_PROPERTY;
+        }
         stringLinkClassValue = reflection.getPropertyValueStr(entityBeanLinkata, keyPropertyName);
 
         return stringLinkClassValue;

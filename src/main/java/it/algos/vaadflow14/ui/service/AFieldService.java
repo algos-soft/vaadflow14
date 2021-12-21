@@ -165,7 +165,7 @@ public class AFieldService extends AbstractService {
                     break;
                 case stringLinkClassCombo:
                     ComboBox linkCombo = getLinkCombo(reflectionJavaField);
-                    field = appContext.getBean(AStringLinkClassComboField.class, linkCombo);
+                    field = appContext.getBean(AStringLinkClassComboField.class,  reflectionJavaField,linkCombo);
                     break;
                 case enumeration:
                     items = getEnumerationItems(reflectionJavaField);

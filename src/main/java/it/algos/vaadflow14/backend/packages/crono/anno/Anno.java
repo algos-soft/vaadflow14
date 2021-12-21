@@ -77,7 +77,7 @@ public class Anno extends AREntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(widthEM = 7)
+    @AIColumn(widthEM = 6)
     public String titolo;
 
     /**
@@ -85,7 +85,7 @@ public class Anno extends AREntity {
      */
     @Indexed()
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", usaCheckBox3Vie = true, widthEM = 6)
-    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 5)
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 3)
     public boolean bisestile;
 
     /**
