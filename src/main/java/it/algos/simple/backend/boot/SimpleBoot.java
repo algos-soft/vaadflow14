@@ -5,7 +5,6 @@ import static it.algos.simple.backend.application.SimpleCost.*;
 import it.algos.simple.backend.data.*;
 import it.algos.simple.backend.enumeration.*;
 import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.annoString.*;
 import it.algos.simple.backend.packages.bolla.*;
 import it.algos.simple.backend.packages.fattura.*;
 import it.algos.simple.pratical.ch2.*;
@@ -13,8 +12,6 @@ import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.simple.backend.packages.annoStringProperty.AnnoStringProperty;
-import it.algos.simple.backend.packages.annoProperty.AnnoProperty;
 import it.algos.vaadflow14.backend.boot.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
@@ -138,11 +135,8 @@ public class SimpleBoot extends FlowBoot {
         //        FlowVar.menuRouteList.add(ProductManagementJakartaView.class);
         //        FlowVar.menuRouteList.add(ProductManagementManualView.class);
         //        FlowVar.menuRouteList.add(ProductManagementNestedView.class);
-        FlowVar.menuRouteList.add(Anno2.class);
 
         super.fixMenuRoutes();
-		FlowVar.menuRouteList.add(AnnoStringProperty.class);
-		FlowVar.menuRouteList.add(AnnoProperty.class);
 
         if (AEPreferenza.usaDebug.is()) {
             FlowVar.menuRouteList.add(Address.class);
