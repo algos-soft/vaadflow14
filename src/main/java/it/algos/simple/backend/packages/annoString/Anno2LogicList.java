@@ -1,20 +1,20 @@
-package it.algos.@MODULELOWER@.backend.packages.@PACKAGEPUNTI@;
+package it.algos.simple.backend.packages.annoString;
 
 import com.vaadin.flow.router.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.logic.*;
+import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.service.*;
-import it.algos.vaadflow14.backend.enumeration.*;
-import it.algos.vaadflow14.wizard.enumeration.*;
 import it.algos.vaadflow14.ui.*;
+import it.algos.vaadflow14.wizard.enumeration.*;
 import org.springframework.beans.factory.annotation.*;
 
 /**
- * Project: @MODULELOWER@ <br>
+ * Project: vaadflow14 <br>
  * Created by Algos <br>
- * User: @USER@ <br>
- * First time: @TODAY@ alle @TIME@ <br>
- * Last doc revision: @TODAY@ alle @TIME@ <br>
+ * User: gac <br>
+ * Fix date: ven, 12-mar-2021 <br>
+ * Last doc revision: mer, 19-mag-2021 alle 18:38 <br>
  * <p>
  * Classe (facoltativa) di un package con personalizzazioni <br>
  * Se manca, usa la classe GenericLogicList con @Route <br>
@@ -27,11 +27,10 @@ import org.springframework.beans.factory.annotation.*;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 //Vaadin flow
-@PageTitle("@ENTITYUPPER@")
-@Route(value = "@PACKAGENAMELOWER@", layout = MainLayout.class)
+@Route(value = "anno2", layout = MainLayout.class)
 //Algos
-@AIScript(sovraScrivibile = false, type = AETypeFile.list, doc = AEWizDoc.inizioRevisione)
-public class @ENTITYUPPER@LogicList extends LogicList {
+@AIScript(sovraScrivibile = false, doc = AEWizDoc.inizioRevisione)
+public class Anno2LogicList extends LogicList {
 
 
     /**
@@ -39,6 +38,13 @@ public class @ENTITYUPPER@LogicList extends LogicList {
      */
     private final static long serialVersionUID = 1L;
 
+    /**
+     * Istanza unica di una classe @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) di servizio <br>
+     * Iniettata automaticamente dal framework SpringBoot/Vaadin con l'Annotation @Autowired <br>
+     * Disponibile DOPO il ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    public SecoloService secoloService;
 
     /**
      * Costruttore con parametro <br>
@@ -48,22 +54,11 @@ public class @ENTITYUPPER@LogicList extends LogicList {
      * Usa un @Qualifier perché la classe AService è astratta ed ha diverse sottoclassi concrete <br>
      * Regola (nella superclasse) la entityClazz (final) associata a questa logicView <br>
      *
-     * @param @ENTITYLOWER@Service (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
+     * @param entityService (@Autowired) (@Qualifier) riferimento al service specifico correlato a questa istanza (prototype) di LogicList
      */
-    public @ENTITYUPPER@LogicList(@Autowired @Qualifier("@ENTITYLOWER@Service") final AIService @ENTITYLOWER@Service) {
-        super(@ENTITYLOWER@Service, @ENTITYUPPER@.class);
+    public Anno2LogicList(@Autowired @Qualifier("anno2Service") final AIService entityService) {
+        super(entityService, Anno2.class);
     }// end of Vaadin/@Route constructor
-
-
-    /**
-     * Preferenze usate da questa 'logica' <br>
-     * Primo metodo chiamato dopo init() (implicito del costruttore) e postConstruct() (facoltativo) <br>
-     * Può essere sovrascritto, invocando PRIMA il metodo della superclasse <br>
-     */
-    @Override
-    protected void fixPreferenze() {
-        super.fixPreferenze();
-    }
 
 
     /**
@@ -72,8 +67,10 @@ public class @ENTITYUPPER@LogicList extends LogicList {
      */
     @Override
     protected void fixAlertList() {
-        addSpanVerde("Scritta di esempio");
+        addSpanBlu("Pacchetto convenzionale di 3030 anni. 1000 anni ANTE Cristo e 2030 anni DOPO Cristo");
+        addSpanBlu("Sono indicati gli anni bisestili secondo il calendario Giuliano (fino al 1582) e Gregoriano poi");
+        addSpanRosso("Bottoni 'DeleteAll', 'Reset', 'New' (e anche questo avviso) solo in fase di debug. Sempre presente bottone 'Esporta' e comboBox selezione 'Secolo'");
+        addSpanRosso("Manca providerData e pagination. Troppi records. Browser lentissimo. Metodo refreshGrid() provvisorio per mostrare solo una trentina di records");
     }
-
 
 }// end of Route class

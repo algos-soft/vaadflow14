@@ -1,4 +1,4 @@
-package it.algos.vaadflow14.backend.packages.crono.anno;
+package it.algos.simple.backend.packages.annoString;
 
 import com.querydsl.core.annotations.*;
 import com.vaadin.flow.component.icon.*;
@@ -40,22 +40,22 @@ import javax.validation.constraints.*;
 //querydsl
 @QueryEntity
 //Spring mongodb
-@Document(collection = "anno")
+@Document(collection = "anno2")
 //Spring data
-@TypeAlias("anno")
+@TypeAlias("anno2")
 //Lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "builderAnno")
+@Builder(builderMethodName = "builderAnno2")
 @EqualsAndHashCode(callSuper = false)
 //Algos
 @AIScript(sovraScrivibile = false, type = AETypeFile.entity, doc = AEWizDoc.inizioRevisione)
-@AIEntity(recordName = "Anno", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
-@AIView(menuName = "Anno", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
+@AIEntity(recordName = "Anno2", keyPropertyName = "titolo", usaKeyIdMinuscolaCaseInsensitive = true, usaBoot = true, usaNew = true)
+@AIView(menuName = "Anno2", menuIcon = VaadinIcon.CALENDAR, searchProperty = "titolo", sortProperty = "ordine", sortDirection = "DESC")
 @AIList(fields = "ordine,titolo,bisestile,secolo", usaRowIndex = false)
 @AIForm(fields = "titolo,bisestile,secolo", usaSpostamentoTraSchede = false)
-public class Anno extends AREntity {
+public class Anno2 extends AREntity {
 
     /**
      * versione della classe per la serializzazione
@@ -77,7 +77,7 @@ public class Anno extends AREntity {
     @NotBlank()
     @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     @AIField(type = AETypeField.text, focus = true)
-    @AIColumn(widthEM = 6)
+    @AIColumn(widthEM = 7)
     public String titolo;
 
     /**
@@ -85,18 +85,16 @@ public class Anno extends AREntity {
      */
     @Indexed()
     @AIField(type = AETypeField.booleano, typeBool = AETypeBoolField.checkBox, caption = "Anno bisestile", usaCheckBox3Vie = true, widthEM = 6)
-    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 3)
+    @AIColumn(typeBool = AETypeBoolCol.yesNo, header = "BS", widthEM = 5)
     public boolean bisestile;
 
     /**
      * secolo di riferimento (obbligatorio)
      * riferimento dinamico CON @DBRef
      */
-    @NotNull
-    @DBRef
-    @AIField(type = AETypeField.combo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
+    @AIField(type = AETypeField.stringLinkClassCombo, comboClazz = Secolo.class, usaComboBox = true, widthEM = 12)
     @AIColumn(widthEM = 8)
-    public Secolo secolo;
+    public String secolo;
 
 
     /**

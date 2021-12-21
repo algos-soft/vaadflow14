@@ -7,7 +7,6 @@ import it.algos.vaadflow14.backend.entity.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.ui.interfaces.*;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -17,7 +16,7 @@ import java.util.*;
  * Date: lun, 01-mar-2021
  * Time: 21:29
  */
-public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver {
+public abstract class Logic extends LogicProperty implements AILogic, HasUrlParameter<String>, BeforeEnterObserver, AfterNavigationObserver {
 
 
     /**
@@ -125,11 +124,36 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent beforeEnterEvent) {
+        String message = VUOTA;
+        int cicli = 10;
+        int numRecords = 0;
+        List<AEntity> lista;
+        int offSet = 2850;
+        int limit = 50;
+        String clazzName = entityClazz.getSimpleName();
+        long inizio = System.currentTimeMillis();
+        try {
+            for (int k = 0; k < cicli; k++) {
+                lista = mongo.fetch(entityClazz, mappaFiltri, null, offSet, limit).stream().toList();
+            }
+            numRecords = limit * cicli;
+        } catch (AlgosException unErrore) {
+            logger.info(unErrore, getClass(), "afterNavigation");
+        }
+        message = String.format("Per leggere i %d records di %s ha impiegato %s", numRecords, clazzName, date.deltaTextEsatto(inizio));
+        logger.info(message);
+
         this.fixEntityClazz();
         this.fixEntityService();
         //        this.fixLogicForm();
         this.fixPreferenze();
         this.initView();
+                message = String.format("Per leggere i %d records di %s ha impiegato %s", numRecords, clazzName, date.deltaTextEsatto(inizio));
+                logger.info(message);
     }
 
 
