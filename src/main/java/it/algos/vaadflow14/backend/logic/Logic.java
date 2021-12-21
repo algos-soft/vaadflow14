@@ -135,11 +135,6 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         List<AEntity> lista;
         int offSet = 2850;
         int limit = 50;
-        //        try {
-        //            numRecords = mongo.count(entityClazz);
-        //        } catch (AlgosException unErrore) {
-        //            logger.info(unErrore, getClass(), "afterNavigation");
-        //        }
         String clazzName = entityClazz.getSimpleName();
         long inizio = System.currentTimeMillis();
         try {
@@ -158,8 +153,8 @@ public abstract class Logic extends LogicProperty implements AILogic, HasUrlPara
         //        this.fixLogicForm();
         this.fixPreferenze();
         this.initView();
-        //        message = String.format("Per leggere i %d records di %s ha impiegato %s", numRecords, clazzName, date.deltaTextEsatto(inizio));
-        //        logger.info(message);
+                message = String.format("Per leggere i %d records di %s ha impiegato %s", numRecords, clazzName, date.deltaTextEsatto(inizio));
+                logger.info(message);
     }
 
 
