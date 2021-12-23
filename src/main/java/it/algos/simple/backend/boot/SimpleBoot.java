@@ -13,9 +13,7 @@ import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.simple.backend.packages.annoStringProperty.AnnoStringProperty;
-import it.algos.simple.backend.packages.annoProperty.AnnoProperty;
-import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.boot.FlowBoot;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
@@ -141,8 +139,6 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.menuRouteList.add(Anno2.class);
 
         super.fixMenuRoutes();
-		FlowVar.menuRouteList.add(AnnoStringProperty.class);
-		FlowVar.menuRouteList.add(AnnoProperty.class);
 
         if (AEPreferenza.usaDebug.is()) {
             FlowVar.menuRouteList.add(Address.class);

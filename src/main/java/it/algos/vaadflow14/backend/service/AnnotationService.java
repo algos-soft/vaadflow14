@@ -1729,7 +1729,7 @@ public class AnnotationService extends AbstractService {
         AIField annotation = this.getAIField(reflectionJavaField);
         AETypeField type = this.getFormType(reflectionJavaField);
 
-        if (annotation != null && (type == AETypeField.combo || type == AETypeField.enumeration)) {
+        if (annotation != null && (type == AETypeField.combo || type == AETypeField.stringLinkClassCombo || type == AETypeField.enumeration)) {
             usaComboBoxGrid = annotation.usaComboBox();
         }
 

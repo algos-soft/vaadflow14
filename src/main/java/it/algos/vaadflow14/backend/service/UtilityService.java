@@ -224,7 +224,7 @@ public class UtilityService extends AbstractService {
      * @param width        larghezza a video del ComboBox. Se manca usa il default FlowCost.COMBO_WIDTH
      * @param initialValue eventuale valore iniziale di selezione
      */
-    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, Object initialValue) throws AlgosException{
+    public ComboBox creaComboBox(final Class<? extends AEntity> entityClazz, final String fieldName, DataProvider dataProvider, final int width, Object initialValue) throws AlgosException {
         ComboBox combo = null;
         Field reflectionJavaField = null;
         Class comboClazz = null;
@@ -239,11 +239,11 @@ public class UtilityService extends AbstractService {
 
         reflectionJavaField = reflection.getField(entityClazz, fieldName);
         type = annotation.getColumnType(reflectionJavaField);
-        widthEM = width > 0 ? width + TAG_EM : annotation.getComboBoxGridWidth(reflectionJavaField);
+        widthEM = width > 0 ? width + TAG_EM : annotation.getFormWith(reflectionJavaField);
         textInitialValue = annotation.getComboInitialValue(reflectionJavaField);
 
-        if (type != AETypeField.combo && type != AETypeField.enumeration) {
-            throw AlgosException.stack(String.format("La property non è di type combo e nemmeno di type enumeration"),this.getClass(),"creaComboBox");
+        if (type != AETypeField.combo && type != AETypeField.stringLinkClassCombo && type != AETypeField.enumeration) {
+            throw AlgosException.stack(String.format("La property non è di type combo e nemmeno di type enumeration"), this.getClass(), "creaComboBox");
         }
 
         combo = new ComboBox();
@@ -257,6 +257,14 @@ public class UtilityService extends AbstractService {
         if (type == AETypeField.combo) {
             comboClazz = annotation.getComboClass(reflectionJavaField);
             //            sortSpring = annotation.getSortSpring(comboClazz);
+            dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
+            if (dataProvider != null) {
+                combo.setDataProvider(dataProvider);
+            }
+        }
+
+        if (type == AETypeField.stringLinkClassCombo) {
+            comboClazz = annotation.getComboClass(reflectionJavaField);
             dataProvider = dataProvider != null ? dataProvider : provider.creaDataProvider(comboClazz);
             if (dataProvider != null) {
                 combo.setDataProvider(dataProvider);
