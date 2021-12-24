@@ -137,11 +137,20 @@
             <version>1.7.2</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.vaadin.addons.componentfactory</groupId>-->
-<!--            <artifactId>vcf-veight-combo-box</artifactId>-->
-<!--            <version>1.0.3</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.vaadin.addons.componentfactory</groupId>
+            <artifactId>vcf-veight-combo-box</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.32</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.vaadin.componentfactory/enhanced-dialog -->
         <!--        <dependency>-->
@@ -168,11 +177,11 @@
         </dependency>
 
         <!-- Added to provide logging output as Vaadin uses -->
-        <!-- the unbound SLF4J no-operation (NOP) logger implementation -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.slf4j</groupId>-->
-        <!--            <artifactId>slf4j-simple</artifactId>-->
-        <!--        </dependency>-->
+<!--        &lt;!&ndash; the unbound SLF4J no-operation (NOP) logger implementation &ndash;&gt;-->
+<!--                <dependency>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                    <artifactId>slf4j-simple</artifactId>-->
+<!--                </dependency>-->
 
         <!--        <dependency>-->
         <!--            <groupId>javax.servlet</groupId>-->
