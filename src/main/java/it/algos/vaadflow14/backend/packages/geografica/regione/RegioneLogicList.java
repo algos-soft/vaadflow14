@@ -1,6 +1,5 @@
 package it.algos.vaadflow14.backend.packages.geografica.regione;
 
-import com.vaadin.componentfactory.combobox.*;
 import com.vaadin.flow.component.combobox.*;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.router.*;
