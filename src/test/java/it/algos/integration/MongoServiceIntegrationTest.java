@@ -657,6 +657,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         try {
             ottenutoIntero = service.count(clazz, propertyName, propertyValue);
         } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
 
         try {
