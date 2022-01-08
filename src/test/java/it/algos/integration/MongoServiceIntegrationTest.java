@@ -589,14 +589,14 @@ public class MongoServiceIntegrationTest extends MongoTest {
     }
 
     private void fetchAll(final Class clazz, final int previstoIntero, final boolean risultatoEsatto) {
-        String message;
-        message = String.format("Fetch completo di %s", getSimpleName(clazz));
+        String message = String.format("Fetch completo di %s", getSimpleName(clazz));
         System.out.println(message);
 
         ottenutoIntero = 0;
         try {
             ottenutoIntero = service.count(clazz);
         } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
 
         try {
@@ -995,7 +995,7 @@ public class MongoServiceIntegrationTest extends MongoTest {
         }
         else {
             Assertions.assertNull(entityBean);
-            if (clazz!=null) {
+            if (clazz != null) {
                 System.out.println(String.format("Nella classe %s non esiste una entity con keyID=%s", clazz.getSimpleName(), propertyValue));
             }
         }
@@ -1060,6 +1060,85 @@ public class MongoServiceIntegrationTest extends MongoTest {
             message = String.format("Nella entityClass %s non ho trovato nessuna entities col filtro indicato", clazz.getSimpleName());
             System.out.println(message);
             return null;
+        }
+    }
+
+    @Test
+    @Order(70)
+    @DisplayName("70 - Fetch one (gson)")
+    void fetchOneGson() {
+        System.out.println("70 - Fetch one (gson)");
+        FlowVar.typeSerializing = AETypeSerializing.gson;
+        fetchOne();
+    }
+
+    @Test
+    @Order(71)
+    @DisplayName("71 - Fetch one (spring)")
+    void fetchOneSpring() {
+        System.out.println("71 - Fetch one (spring)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+        fetchOne();
+    }
+
+    void fetchOne() {
+        clazz = Mese.class;
+        previstoIntero = 12;
+        int offset = 0;
+        int limit = 0;
+        System.out.println(VUOTA);
+
+        try {
+            listaBean = service.fetch(clazz);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities", clazz.getSimpleName(), ottenutoIntero));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        previstoIntero = 12;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        limit = 1;
+        previstoIntero = 1;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        limit = 2;
+        previstoIntero = 2;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+
+        offset = 4;
+        limit = 2;
+        previstoIntero = 2;
+        try {
+            listaBean = service.fetch(clazz, null, offset, limit);
+            assertNotNull(listaBean);
+            ottenutoIntero = listaBean.size();
+            System.out.println(String.format("Nella collezione %s ho trovato %d entities con offset=%d e limit=%d", clazz.getSimpleName(), ottenutoIntero, offset, limit));
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
         }
     }
 

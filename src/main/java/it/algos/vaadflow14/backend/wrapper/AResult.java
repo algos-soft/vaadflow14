@@ -22,6 +22,8 @@ public class AResult implements AIResult {
 
     private boolean valido;
 
+    private String webTitle = VUOTA;
+
     private String wikiTitle = VUOTA;
 
     private String urlPreliminary = VUOTA;
@@ -40,11 +42,18 @@ public class AResult implements AIResult {
 
     private String response = VUOTA;
 
+    private String wikiText = VUOTA;
+
+
+    private String wikiBio = VUOTA;
+
     private String token = VUOTA;
 
     private String queryType = VUOTA;
 
-    private int value = 0;
+    private int intValue = 0;
+
+    private long longValue = 0;
 
     private List lista = null;
 
@@ -58,7 +67,7 @@ public class AResult implements AIResult {
         this(valido, message, 0);
     }
 
-    protected AResult(final boolean valido, final String message, final int value) {
+    protected AResult(final boolean valido, final String message, final int intValue) {
         this.valido = valido;
         if (valido) {
             this.validMessage = message;
@@ -66,7 +75,7 @@ public class AResult implements AIResult {
         else {
             this.errorMessage = message;
         }
-        this.value = value;
+        this.intValue = intValue;
     }
 
     public static AIResult valido() {
@@ -186,6 +195,16 @@ public class AResult implements AIResult {
     }
 
     @Override
+    public String getWebTitle() {
+        return webTitle;
+    }
+
+    @Override
+    public void setWebTitle(String webTitle) {
+        this.webTitle = webTitle;
+    }
+
+    @Override
     public String getWikiTitle() {
         return wikiTitle;
     }
@@ -207,13 +226,23 @@ public class AResult implements AIResult {
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getIntValue() {
+        return intValue;
     }
 
     @Override
-    public void setValue(int value) {
-        this.value = value;
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
+    }
+
+    @Override
+    public long getLongValue() {
+        return longValue;
+    }
+
+    @Override
+    public void setLongValue(long longValue) {
+        this.longValue = longValue;
     }
 
     @Override
@@ -284,6 +313,26 @@ public class AResult implements AIResult {
     @Override
     public void setQueryType(String queryType) {
         this.queryType = queryType;
+    }
+
+    @Override
+    public String getWikiText() {
+        return wikiText;
+    }
+
+    @Override
+    public void setWikiText(String wikiText) {
+        this.wikiText = wikiText;
+    }
+
+    @Override
+    public String getWikiBio() {
+        return wikiBio;
+    }
+
+    @Override
+    public void setWikiBio(String wikiBio) {
+        this.wikiBio = wikiBio;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package it.algos.test;
 
-import it.algos.simple.backend.packages.*;
-import it.algos.simple.backend.packages.bolla.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
 import it.algos.vaadflow14.backend.entity.*;
@@ -53,11 +51,8 @@ public abstract class MongoTest extends ATest {
         return Stream.of(
                 Arguments.of(null, 0, false),
                 Arguments.of(LogicList.class, 0, false),
-                Arguments.of(Utente.class, 0, false),
-                Arguments.of(Bolla.class, 5, false),
                 Arguments.of(Mese.class, 12, true),
                 Arguments.of(AIType.class, 0, true),
-                Arguments.of(Company.class, 3, false),
                 Arguments.of(Stato.class, 249, true)
         );
     }
@@ -73,7 +68,6 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(null, 0, false, 0, 0),
                 Arguments.of(LogicList.class, 0, false, 0, 0),
                 Arguments.of(Utente.class, 0, false, 0, 0),
-                Arguments.of(Bolla.class, 5, false, 0, 0),
                 Arguments.of(Mese.class, 12, true, 0, 0),
                 Arguments.of(Mese.class, 12, true, 5, 2),
                 Arguments.of(Mese.class, 12, true, 2, 0),
@@ -143,8 +137,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Via.class, "belzebù", "piazza", 0, false),
                 Arguments.of(Via.class, "nome", "belzebù", 0, false),
                 Arguments.of(Via.class, "nome", "piazza", 1, true),
-                Arguments.of(Via.class, "nome", "Piazza", 0, false),
-                Arguments.of(Delta.class, "immagine", VUOTA, 0, false)
+                Arguments.of(Via.class, "nome", "Piazza", 0, false)
         );
     }
 

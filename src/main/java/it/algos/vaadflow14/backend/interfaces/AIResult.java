@@ -48,11 +48,19 @@ public interface AIResult {
 
     void setValidMessage(String validMessage);
 
-    int getValue();
+    int getIntValue();
 
-    void setValue(int value);
+    void setIntValue(int intValue);
+
+    long getLongValue();
+
+    void setLongValue(long longValue);
 
     void print(final ALogService logger, final AETypeLog typeLog);
+
+    String getWebTitle();
+
+    void setWebTitle(String webTitle);
 
     String getWikiTitle();
 
@@ -73,6 +81,14 @@ public interface AIResult {
     String getQueryType();
 
     void setQueryType(String queryType);
+
+    String getWikiText();
+
+    void setWikiText(String wikiText);
+
+    String getWikiBio();
+
+    void setWikiBio(String wikiBio);
 
     List getLista();
 
