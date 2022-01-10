@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.context.*;
+import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.test.context.junit.jupiter.*;
 
@@ -937,6 +938,37 @@ public class MongoServiceIntegrationTest extends MongoTest {
         try {
             listaBean = service.fetch(clazz, null, offset, limit);
             printLimit(clazz, limit, listaBean);
+        } catch (AlgosException unErrore) {
+            printError(unErrore);
+        }
+    }
+
+
+    @ParameterizedTest
+    @MethodSource(value = "CLAZZ_SORT")
+    @Order(52)
+    @DisplayName("52 - Fetch filtrato e ordinato (spring) (propertyName, propertyValue)")
+        //--clazz
+        //--propertyName
+        //--propertyValue
+        //--previstoIntero
+        //--sortSpring
+    void fetchSortSpring(final Class clazz, final String propertyName, final Serializable propertyValue, final int previstoIntero, final Sort sort) {
+        System.out.println("52 - Fetch filtrato e ordinato (spring) (propertyName, propertyValue)");
+        FlowVar.typeSerializing = AETypeSerializing.spring;
+
+        if (clazz == null) {
+            System.out.println("La entityClazz è nulla");
+            return;
+        }
+        if (textService.isEmpty(propertyName)) {
+            System.out.println("La propertyName è nulla");
+            return;
+        }
+
+        try {
+            listaBean = service.fetch(clazz, propertyName, propertyValue, sort);
+            printLista(listaBean);
         } catch (AlgosException unErrore) {
             printError(unErrore);
         }

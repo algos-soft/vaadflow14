@@ -654,6 +654,38 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return fetch(entityClazz, wrapFiltri);
     }
 
+    /**
+     * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
+     * <p>
+     * Se la propertyName non esiste, restituisce il valore zero <br>
+     * Se la propertyValue non esiste, restituisce il valore zero <br>
+     * Se la propertyValue esiste, restituisce il numero di entities che soddisfano le condizioni (che può anche essere zero) <br>
+     *
+     * @param entityClazz   corrispondente ad una collection sul database mongoDB
+     * @param propertyName  per costruire la query
+     * @param propertyValue (serializable) per costruire la query
+     *
+     * @return numero di entities eventualmente filtrate (se esiste la propertyName)
+     */
+    @Override
+    public List<? extends AEntity> fetch(final Class<? extends AEntity> entityClazz, final String propertyName, final Serializable propertyValue, final Sort sort) throws AlgosException {
+        checkEntityClazz(entityClazz, "fetch");
+        wrapFiltri = appContext.getBean(WrapFiltri.class, entityClazz);
+
+        if (propertyValue == null) {
+            throw AlgosException.message("La propertyValue è nulla");
+        }
+
+        try {
+            wrapFiltri.regola(AETypeFilter.uguale, propertyName, propertyValue);
+            wrapFiltri.setSortSpring(sort);
+        } catch (Exception unErrore) {
+            throw AlgosException.stack(unErrore, this.getClass(), "fetch");
+        }
+
+        return fetch(entityClazz, wrapFiltri);
+    }
+
 
     /**
      * Crea un set di entities da una collection. Utilizzato (anche) da DataProvider. <br>
@@ -750,6 +782,9 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         if (limit > 0) {
             query.limit(limit);
         }
+        if (wrapFiltri != null && wrapFiltri.getSortSpring() != null) {
+            query.with(wrapFiltri.getSortSpring());
+        }
 
         try {
             listaEntities = (List<AEntity>) mongoOp.find(query, entityClazz);
@@ -760,7 +795,7 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
         return listaEntities;
     }
 
-    private List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
+    public List<AEntity> fetchGson(final Class<? extends AEntity> entityClazz, final WrapFiltri wrapFiltri, final int skip, final int limit) throws AlgosException {
         List<AEntity> listaGson;
         MongoCollection<Document> collection;
         String message;
