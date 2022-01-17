@@ -233,7 +233,7 @@ public abstract class MongoTest extends ATest {
                 Arguments.of(Mese.class, AETypeFilter.uguale, "mese", "settembre", AETypeFilter.minoreUguale, "giorni", 30),
                 Arguments.of(Mese.class, AETypeFilter.uguale, "mese", "marzo", AETypeFilter.maggiore, "giorni", 25),
                 Arguments.of(Mese.class, AETypeFilter.contiene, "mese", "emb", AETypeFilter.uguale, "giorni", 30),
-                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", AETypeFilter.uguale, "giorni", 31)
+                Arguments.of(Mese.class, AETypeFilter.inizia, "mese", "m", AETypeFilter.minoreUguale, "giorni", 30)
         );
     }
 
