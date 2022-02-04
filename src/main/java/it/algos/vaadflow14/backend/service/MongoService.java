@@ -1457,6 +1457,10 @@ public class MongoService<capture> extends AbstractService implements AIMongoSer
                 else {
                     //--For multiple criteria on the same field, uses a “comma” to combine them.
                     //@todo Funzionalità ancora da implementare
+                    if (criteria == null) {
+                        throw AlgosException.stack("Criteria is null", getClass(), "getQuery");
+                    }
+
                     if (criteria.getKey().equals(criteriaQuery.getKey())) {
                         criteriaQuery.andOperator(criteria);
                         //                        throw new AQueryException("Non riesco a gestire i filtri multipli");
