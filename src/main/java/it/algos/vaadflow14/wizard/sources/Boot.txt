@@ -73,7 +73,11 @@ public class @PROJECT@Boot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.dataClazz = @PROJECT@Data.class;
         FlowVar.usaSecurity = false;
-        FlowVar.projectName = "@MODULEUPPER@";
+
+        FlowVar.projectNameDirectoryIdea = "vaadflow14";
+        FlowVar.projectNameModulo = "@MODULELOWER@";
+        FlowVar.projectNameUpper = "@MODULEUPPER@";
+
         FlowVar.projectDescrizione = "Cambia questa descrizione nel file @PROJECT@Boot";
         FlowVar.projectVersion = Double.parseDouble(Objects.requireNonNull(environment.getProperty("algos.@PROJECTLOWER@.version")));
         FlowVar.versionDate = @VERSIONDATE@;
@@ -97,7 +101,7 @@ public class @PROJECT@Boot extends FlowBoot {
      */
     protected void fixData() {
         if (FlowVar.dataClazz != null && FlowVar.dataClazz.equals(@PROJECT@Data.class)) {
-            dataInstance.fixData();
+            dataInstance.resetData();
         }
     }
 
