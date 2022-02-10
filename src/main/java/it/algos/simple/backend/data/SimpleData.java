@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Scope;
  */
 @SpringComponent
 @Qualifier(TAG_SIMPLE_DATA)
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @AIScript(sovraScrivibile = false)
 public class SimpleData extends FlowData {
 

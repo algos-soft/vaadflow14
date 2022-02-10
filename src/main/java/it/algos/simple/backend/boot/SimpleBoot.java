@@ -13,11 +13,13 @@ import it.algos.simple.ui.enumeration.*;
 import it.algos.simple.ui.views.*;
 import it.algos.vaadflow14.backend.annotation.*;
 import it.algos.vaadflow14.backend.application.*;
-import it.algos.vaadflow14.backend.boot.FlowBoot;
+import it.algos.vaadflow14.backend.boot.*;
+import it.algos.vaadflow14.backend.data.*;
 import it.algos.vaadflow14.backend.enumeration.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.address.*;
 import it.algos.vaadflow14.backend.packages.anagrafica.via.*;
 import it.algos.vaadflow14.backend.packages.crono.anno.*;
+import it.algos.vaadflow14.backend.vers.*;
 import it.algos.vaadflow14.wizard.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -80,6 +82,7 @@ public class SimpleBoot extends FlowBoot {
         FlowVar.usaCompany = false;
         FlowVar.usaSecurity = false;
         FlowVar.dataClazz = SimpleData.class;
+        FlowVar.versionClazz = SimpleVers.class;
         FlowVar.projectNameDirectoryIdea = "vaadflow14";
         FlowVar.projectNameModulo = "simple";
         FlowVar.projectNameUpper = "Simple";
@@ -172,6 +175,8 @@ public class SimpleBoot extends FlowBoot {
     protected void fixUsers() {
     }
 
+
+
     /**
      * Set con @Autowired di una property chiamata dal costruttore <br>
      * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
@@ -180,8 +185,20 @@ public class SimpleBoot extends FlowBoot {
      */
     @Autowired
     @Qualifier(TAG_SIMPLE_DATA)
-    public void setDataInstance(SimpleData dataInstance) {
+    public void setDataInstance(AIData dataInstance) {
         this.dataInstance = dataInstance;
+    }
+
+    /**
+     * Set con @Autowired di una property chiamata dal costruttore <br>
+     * Istanza di una classe @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) <br>
+     * Chiamata dal costruttore di questa classe con valore nullo <br>
+     * Iniettata dal framework SpringBoot/Vaadin al termine del ciclo init() del costruttore di questa classe <br>
+     */
+    @Autowired
+    @Qualifier(TAG_SIMPLE_VERSION)
+    public void setVersInstance(final AIVers versInstance) {
+        this.versInstance = versInstance;
     }
 
 }

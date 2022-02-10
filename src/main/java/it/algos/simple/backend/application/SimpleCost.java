@@ -1,8 +1,6 @@
 package it.algos.simple.backend.application;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 
 /**
  * Project vaadflow14
@@ -13,7 +11,10 @@ import java.time.LocalTime;
  */
 public abstract class SimpleCost {
 
+
     public static final String TAG_SIMPLE_DATA = "simpleData";
+
+    public static final String TAG_SIMPLE_VERSION = "simpleVersion";
 
     public static final String PREF_DATA = "data";
 
