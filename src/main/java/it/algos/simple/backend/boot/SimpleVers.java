@@ -62,14 +62,5 @@ public class SimpleVers extends FlowVers {
         super.specifico(AETypeVers.setup, "Setup", "Installazione iniziale del progetto specifico Simple (di prova)");
     }
 
-    //        //--versione 1.68 del 29.1.22
-    //        //--aggiunta della preferenza usaInvioMessaggi (una per ogni croce)
-    //        //--regola il valore a false per tutte le croci
-    //        if (versioneService.isMancaByKeyUnica(PATCH_1)) {
-    //            if (addPreferenzaInvioMessaggi()) {
-    //                versioneService.creaIfNotExistKey(PATCH_1, "1.68 del 29.1.22", "Aggiunta delle preferenze usaInvioMessaggi (una per ogni croce). Regolato il valore a false per tutte le croci");
-    //            }
-    //        }
-
 }
 

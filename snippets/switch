@@ -1,0 +1,86 @@
+           ==Preferito==
+           ottenuto = switch (continente) {
+               case europa, asia -> "Eurasia";
+               case nordamerica, sudamerica -> "America";
+               default -> "Resto del Mondo";
+           };
+
+
+           ottenuto = switch (continente) {
+           case europa, asia:
+                yield "Eurasia";
+           case nordamerica, sudamerica:
+                yield "America";
+           default:
+                yield "Resto del Mondo";
+           };
+           ==Preferito==
+
+
+
+     System.out.println("oldStyleWithoutBreak");
+        System.out.println("Senza break stampa TUTTI i casi dello switch:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+            case nordamerica, sudamerica:
+                System.out.println("America");
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithBreak");
+        System.out.println("Col break stampa correttamente SOLO il caso previsto:");
+        switch (continente) {
+            case europa, asia:
+                System.out.println("Eurasia");
+                break;
+            case nordamerica, sudamerica:
+                System.out.println("America");
+                break;
+            default:
+                System.out.println("Resto del Mondo");
+        }
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValue");
+        ottenuto = switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        };
+        System.out.println(ottenuto);
+
+        System.out.println(VUOTA);
+        System.out.println("withReturnValueEvenShorter");
+        System.out.println(switch (continente) {
+            case europa, asia -> "Eurasia";
+            case nordamerica, sudamerica -> "America";
+            default -> "Resto del Mondo";
+        });
+
+        System.out.println(VUOTA);
+        System.out.println("withYield");
+        System.out.println("more than only 1 thing in the case. Use brackets to indicate a case block and when returning a value, you use the keyword yield");
+        String text = switch (continente) {
+            case europa, asia -> {
+                System.out.println("the given fruit was: " + continente.getNome());
+                yield "Eurasia";
+            }
+            case nordamerica, sudamerica -> "Exotic fruit";
+            default -> "Undefined fruit";
+        };
+        System.out.println(text);
+
+        System.out.println(VUOTA);
+        System.out.println("oldStyleWithYield");
+        System.out.println("Senza break:");
+        System.out.println(switch (continente) {
+            case europa, asia:
+                yield "Eurasia";
+            case nordamerica, sudamerica:
+                yield "America";
+            default:
+                yield "Resto del Mondo";
+        });
