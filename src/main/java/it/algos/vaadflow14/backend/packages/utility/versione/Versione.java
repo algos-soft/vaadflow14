@@ -74,7 +74,7 @@ public class Versione extends ACEntity {
      * release progetto
      */
     @AIField(type = AETypeField.doppio, widthEM = 5)
-    @AIColumn(header = "#", widthEM = 4)
+    @AIColumn(header = "#", widthEM = 5)
     public double release;
 
     /**
