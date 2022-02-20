@@ -129,16 +129,12 @@ public class VersioneLogicList extends LogicList {
      */
     @Override
     public List<String> getGridColumns() {
-        String stringaMultipla;
-
         if (FlowVar.usaCompany) {
-            stringaMultipla = "type,release,giorno,titolo,company,descrizione,vaadFlow,usaCompany";
+            return array.fromStringa("type,release,giorno,titolo,company,descrizione,vaadFlow,usaCompany");
         }
         else {
-            stringaMultipla = "type,release,giorno,titolo,company,descrizione,vaadFlow";
+            return array.fromStringa("type,release,giorno,titolo,company,descrizione,vaadFlow");
         }
-
-        return text.getArray(stringaMultipla);
     }
 
 }// end of Route class
