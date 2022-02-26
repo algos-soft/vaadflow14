@@ -39,7 +39,7 @@ import java.util.*;
  * Time: 06:27
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {SimpleApplication.class})
+//@SpringBootTest(classes = {SimpleApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Mongo Service Integration (con mongoOp)")
 @Tag("testAllIntegration")

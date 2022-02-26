@@ -1063,6 +1063,38 @@ public class TextServiceTest extends ATest {
         print(sorgente, ottenuto);
     }
 
+
+    @Test
+    @Order(31)
+    @DisplayName("30 - setRef")
+    public void setRef() {
+        previsto = "it.algos.vaadflow14.wizard.enumeration";
+        sorgente = "it/algos/vaadflow14/wizard/enumeration";
+
+        ottenuto = text.setRef(sorgente);
+        assertNotNull(ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "it.algos/vaadflow14.wizard/enumeration";
+        ottenuto = text.setRef(sorgente);
+        assertNotNull(ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = "magazzino";
+        previsto = "<ref>magazzino</ref>";
+        ottenuto = text.setRef(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+
+        sorgente = " magazzino ";
+        previsto = "<ref>magazzino</ref>";
+        ottenuto = text.setRef(sorgente);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+        print(sorgente, ottenuto);
+    }
+
     private void print(String sorgente, String ottenuto) {
         String sep = " -> ";
         System.out.println(sorgente + sep + ottenuto);

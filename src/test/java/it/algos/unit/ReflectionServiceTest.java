@@ -1,5 +1,6 @@
 package it.algos.unit;
 
+import it.algos.simple.*;
 import it.algos.test.*;
 import it.algos.vaadflow14.backend.application.*;
 import static it.algos.vaadflow14.backend.application.FlowCost.*;
@@ -15,10 +16,13 @@ import it.algos.vaadflow14.backend.packages.crono.mese.*;
 import it.algos.vaadflow14.backend.packages.crono.secolo.*;
 import it.algos.vaadflow14.backend.packages.security.utente.*;
 import it.algos.vaadflow14.backend.service.*;
+import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+import org.springframework.boot.test.context.*;
+import org.springframework.test.context.junit.jupiter.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -37,6 +41,8 @@ import java.util.stream.*;
  * Nella superclasse ATest vengono iniettate (@InjectMocks) tutte le altre classi di service <br>
  * Nella superclasse ATest vengono regolati tutti i link incrociati tra le varie classi classi singleton di service <br>
  */
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {SimpleApplication.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("testAllValido")
 @DisplayName("ReflectionService - Reflexion dei fields e delle classi.")
