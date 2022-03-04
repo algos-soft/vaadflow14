@@ -44,7 +44,6 @@ public class AResult implements AIResult {
 
     private String wikiText = VUOTA;
 
-
     private String wikiBio = VUOTA;
 
     private String token = VUOTA;
